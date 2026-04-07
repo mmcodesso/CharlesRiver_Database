@@ -1,0 +1,15 @@
+mode: standard
+profiles:
+  none:
+    enabled: false
+    description: "No planted anomalies."
+  standard:
+    enabled: true
+    description: "Moderate anomaly set for teaching analytics."
+    weekend_journal_entries_per_year: 2
+    same_creator_approver_per_year: 3
+    missing_approvals_per_year: 2
+    invoice_before_shipment_per_year: 3
+    duplicate_vendor_payments_per_year: 2
+    threshold_adjacent_entries_per_year: 3
+    related_party_address_matches_per_year: 2

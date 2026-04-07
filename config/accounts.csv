@@ -1,0 +1,88 @@
+AccountID,AccountNumber,AccountName,AccountType,AccountSubType,ParentAccountID,NormalBalance,IsActive
+1,1000,Assets,Asset,Header,,Debit,1
+2,1010,Cash and Cash Equivalents,Asset,Current Asset,1,Debit,1
+3,1020,Accounts Receivable,Asset,Current Asset,1,Debit,1
+4,1030,Allowance for Doubtful Accounts,Asset,Contra Current Asset,1,Credit,1
+5,1040,Inventory - Finished Goods,Asset,Current Asset,1,Debit,1
+6,1045,Inventory - Materials and Packaging,Asset,Current Asset,1,Debit,1
+7,1050,Prepaid Expenses,Asset,Current Asset,1,Debit,1
+8,1060,Employee Advances,Asset,Current Asset,1,Debit,1
+9,1070,Vendor Advances,Asset,Current Asset,1,Debit,1
+10,1080,Other Current Assets,Asset,Current Asset,1,Debit,1
+11,1100,Fixed Assets,Asset,Header,1,Debit,1
+12,1110,Furniture and Fixtures,Asset,Fixed Asset,11,Debit,1
+13,1120,Warehouse Equipment,Asset,Fixed Asset,11,Debit,1
+14,1130,Office Equipment,Asset,Fixed Asset,11,Debit,1
+15,1140,Leasehold Improvements,Asset,Fixed Asset,11,Debit,1
+16,1150,Accumulated Depreciation - Furniture and Fixtures,Asset,Contra Fixed Asset,11,Credit,1
+17,1160,Accumulated Depreciation - Warehouse Equipment,Asset,Contra Fixed Asset,11,Credit,1
+18,1170,Accumulated Depreciation - Office Equipment,Asset,Contra Fixed Asset,11,Credit,1
+19,1180,Intangible Assets,Asset,Noncurrent Asset,1,Debit,1
+20,1190,Other Noncurrent Assets,Asset,Noncurrent Asset,1,Debit,1
+21,2000,Liabilities,Liability,Header,,Credit,1
+22,2010,Accounts Payable,Liability,Current Liability,21,Credit,1
+23,2020,Goods Received Not Invoiced,Liability,Current Liability,21,Credit,1
+24,2030,Accrued Payroll,Liability,Current Liability,21,Credit,1
+25,2040,Accrued Expenses,Liability,Current Liability,21,Credit,1
+26,2050,Sales Tax Payable,Liability,Current Liability,21,Credit,1
+27,2060,Customer Deposits and Unapplied Cash,Liability,Current Liability,21,Credit,1
+28,2070,Deferred Revenue,Liability,Current Liability,21,Credit,1
+29,2080,Interest Payable,Liability,Current Liability,21,Credit,1
+30,2090,Other Current Liabilities,Liability,Current Liability,21,Credit,1
+31,2100,Long-Term Liabilities,Liability,Header,21,Credit,1
+32,2110,Notes Payable,Liability,Long-Term Liability,31,Credit,1
+33,2120,Lease Liability,Liability,Long-Term Liability,31,Credit,1
+34,2130,Other Long-Term Liabilities,Liability,Long-Term Liability,31,Credit,1
+35,3000,Equity,Equity,Header,,Credit,1
+36,3010,Common Stock,Equity,Equity,35,Credit,1
+37,3020,Additional Paid-In Capital,Equity,Equity,35,Credit,1
+38,3030,Retained Earnings,Equity,Equity,35,Credit,1
+39,3040,Dividends or Owner Distributions,Equity,Contra Equity,35,Debit,1
+40,3050,Current Year Earnings,Equity,Equity,35,Credit,1
+41,4000,Revenue,Revenue,Header,,Credit,1
+42,4010,Sales Revenue - Furniture,Revenue,Operating Revenue,41,Credit,1
+43,4020,Sales Revenue - Lighting,Revenue,Operating Revenue,41,Credit,1
+44,4030,Sales Revenue - Textiles,Revenue,Operating Revenue,41,Credit,1
+45,4040,Sales Revenue - Accessories,Revenue,Operating Revenue,41,Credit,1
+46,4050,Freight Revenue,Revenue,Operating Revenue,41,Credit,1
+47,4060,Sales Returns and Allowances,Revenue,Contra Revenue,41,Debit,1
+48,4070,Sales Discounts,Revenue,Contra Revenue,41,Debit,1
+49,5000,Cost of Goods Sold,Expense,Header,,Debit,1
+50,5010,COGS - Furniture,Expense,COGS,49,Debit,1
+51,5020,COGS - Lighting,Expense,COGS,49,Debit,1
+52,5030,COGS - Textiles,Expense,COGS,49,Debit,1
+53,5040,COGS - Accessories,Expense,COGS,49,Debit,1
+54,5050,Freight-Out Expense,Expense,COGS,49,Debit,1
+55,5060,Purchase Price Variance,Expense,COGS,49,Debit,1
+56,5070,Inventory Adjustments,Expense,COGS,49,Debit,1
+57,6000,Operating Expenses,Expense,Header,,Debit,1
+58,6010,Salaries Expense - Sales,Expense,Operating Expense,57,Debit,1
+59,6020,Salaries Expense - Warehouse,Expense,Operating Expense,57,Debit,1
+60,6030,Salaries Expense - Administration,Expense,Operating Expense,57,Debit,1
+61,6040,Salaries Expense - Customer Service,Expense,Operating Expense,57,Debit,1
+62,6050,Salaries Expense - Executive,Expense,Operating Expense,57,Debit,1
+63,6060,Payroll Taxes and Benefits,Expense,Operating Expense,57,Debit,1
+64,6070,Rent Expense - Warehouse,Expense,Operating Expense,57,Debit,1
+65,6080,Rent Expense - Office,Expense,Operating Expense,57,Debit,1
+66,6090,Utilities Expense,Expense,Operating Expense,57,Debit,1
+67,6100,Insurance Expense,Expense,Operating Expense,57,Debit,1
+68,6110,Office Supplies Expense,Expense,Operating Expense,57,Debit,1
+69,6120,Repairs and Maintenance Expense,Expense,Operating Expense,57,Debit,1
+70,6130,Depreciation Expense,Expense,Operating Expense,57,Debit,1
+71,6140,IT and Software Expense,Expense,Operating Expense,57,Debit,1
+72,6150,Marketing and Promotion Expense,Expense,Operating Expense,57,Debit,1
+73,6160,Travel and Entertainment Expense,Expense,Operating Expense,57,Debit,1
+74,6170,Bad Debt Expense,Expense,Operating Expense,57,Debit,1
+75,6180,Professional Fees Expense,Expense,Operating Expense,57,Debit,1
+76,6190,Bank Fees Expense,Expense,Operating Expense,57,Debit,1
+77,6200,Miscellaneous Administrative Expense,Expense,Operating Expense,57,Debit,1
+78,6210,Warehouse Supplies Expense,Expense,Operating Expense,57,Debit,1
+79,6220,Research and Development Expense,Expense,Operating Expense,57,Debit,1
+80,7000,Other Income and Expense,Revenue,Header,,Credit,1
+81,7010,Interest Income,Revenue,Other Income,80,Credit,1
+82,7020,Gain or Loss on Asset Disposal,Revenue,Other Income or Expense,80,Credit,1
+83,7030,Interest Expense,Expense,Other Expense,80,Debit,1
+84,7040,Foreign Exchange Gain or Loss,Revenue,Other Income or Expense,80,Credit,1
+85,8000,Closing and Summary,Equity,Header,,Credit,1
+86,8010,Income Summary,Equity,Closing,85,Credit,1
+87,8020,Suspense and Clearing,Asset,Current Asset,1,Debit,1

@@ -1,0 +1,843 @@
+{
+  "validation_results": {
+    "phase1": {
+      "row_counts": {
+        "Account": 87,
+        "JournalEntry": 1,
+        "GLEntry": 106355,
+        "Customer": 220,
+        "SalesOrder": 6950,
+        "SalesOrderLine": 24150,
+        "Shipment": 6352,
+        "ShipmentLine": 21186,
+        "SalesInvoice": 6332,
+        "SalesInvoiceLine": 21115,
+        "CashReceipt": 5347,
+        "Supplier": 110,
+        "PurchaseRequisition": 4155,
+        "PurchaseOrder": 3910,
+        "PurchaseOrderLine": 3910,
+        "GoodsReceipt": 3112,
+        "GoodsReceiptLine": 3112,
+        "PurchaseInvoice": 2768,
+        "PurchaseInvoiceLine": 2768,
+        "DisbursementPayment": 2210,
+        "Item": 240,
+        "Warehouse": 2,
+        "Employee": 64,
+        "CostCenter": 8,
+        "Budget": 2940
+      },
+      "exceptions": []
+    },
+    "phase2": {
+      "row_counts": {
+        "Account": 87,
+        "JournalEntry": 1,
+        "GLEntry": 106355,
+        "Customer": 220,
+        "SalesOrder": 6950,
+        "SalesOrderLine": 24150,
+        "Shipment": 6352,
+        "ShipmentLine": 21186,
+        "SalesInvoice": 6332,
+        "SalesInvoiceLine": 21115,
+        "CashReceipt": 5347,
+        "Supplier": 110,
+        "PurchaseRequisition": 4155,
+        "PurchaseOrder": 3910,
+        "PurchaseOrderLine": 3910,
+        "GoodsReceipt": 3112,
+        "GoodsReceiptLine": 3112,
+        "PurchaseInvoice": 2768,
+        "PurchaseInvoiceLine": 2768,
+        "DisbursementPayment": 2210,
+        "Item": 240,
+        "Warehouse": 2,
+        "Employee": 64,
+        "CostCenter": 8,
+        "Budget": 2940
+      },
+      "exceptions": []
+    },
+    "phase3": {
+      "row_counts": {
+        "Account": 87,
+        "JournalEntry": 1,
+        "GLEntry": 106355,
+        "Customer": 220,
+        "SalesOrder": 6950,
+        "SalesOrderLine": 24150,
+        "Shipment": 6352,
+        "ShipmentLine": 21186,
+        "SalesInvoice": 6332,
+        "SalesInvoiceLine": 21115,
+        "CashReceipt": 5347,
+        "Supplier": 110,
+        "PurchaseRequisition": 4155,
+        "PurchaseOrder": 3910,
+        "PurchaseOrderLine": 3910,
+        "GoodsReceipt": 3112,
+        "GoodsReceiptLine": 3112,
+        "PurchaseInvoice": 2768,
+        "PurchaseInvoiceLine": 2768,
+        "DisbursementPayment": 2210,
+        "Item": 240,
+        "Warehouse": 2,
+        "Employee": 64,
+        "CostCenter": 8,
+        "Budget": 2940
+      },
+      "exceptions": []
+    },
+    "phase4": {
+      "row_counts": {
+        "Account": 87,
+        "JournalEntry": 1,
+        "GLEntry": 106355,
+        "Customer": 220,
+        "SalesOrder": 6950,
+        "SalesOrderLine": 24150,
+        "Shipment": 6352,
+        "ShipmentLine": 21186,
+        "SalesInvoice": 6332,
+        "SalesInvoiceLine": 21115,
+        "CashReceipt": 5347,
+        "Supplier": 110,
+        "PurchaseRequisition": 4155,
+        "PurchaseOrder": 3910,
+        "PurchaseOrderLine": 3910,
+        "GoodsReceipt": 3112,
+        "GoodsReceiptLine": 3112,
+        "PurchaseInvoice": 2768,
+        "PurchaseInvoiceLine": 2768,
+        "DisbursementPayment": 2210,
+        "Item": 240,
+        "Warehouse": 2,
+        "Employee": 64,
+        "CostCenter": 8,
+        "Budget": 2940
+      },
+      "exceptions": []
+    },
+    "phase5": {
+      "row_counts": {
+        "Account": 87,
+        "JournalEntry": 1,
+        "GLEntry": 106355,
+        "Customer": 220,
+        "SalesOrder": 6950,
+        "SalesOrderLine": 24150,
+        "Shipment": 6352,
+        "ShipmentLine": 21186,
+        "SalesInvoice": 6332,
+        "SalesInvoiceLine": 21115,
+        "CashReceipt": 5347,
+        "Supplier": 110,
+        "PurchaseRequisition": 4155,
+        "PurchaseOrder": 3910,
+        "PurchaseOrderLine": 3910,
+        "GoodsReceipt": 3112,
+        "GoodsReceiptLine": 3112,
+        "PurchaseInvoice": 2768,
+        "PurchaseInvoiceLine": 2768,
+        "DisbursementPayment": 2210,
+        "Item": 240,
+        "Warehouse": 2,
+        "Employee": 64,
+        "CostCenter": 8,
+        "Budget": 2940
+      },
+      "exceptions": []
+    },
+    "phase6": {
+      "row_counts": {
+        "Account": 87,
+        "JournalEntry": 1,
+        "GLEntry": 106355,
+        "Customer": 220,
+        "SalesOrder": 6950,
+        "SalesOrderLine": 24150,
+        "Shipment": 6352,
+        "ShipmentLine": 21186,
+        "SalesInvoice": 6332,
+        "SalesInvoiceLine": 21115,
+        "CashReceipt": 5347,
+        "Supplier": 110,
+        "PurchaseRequisition": 4155,
+        "PurchaseOrder": 3910,
+        "PurchaseOrderLine": 3910,
+        "GoodsReceipt": 3112,
+        "GoodsReceiptLine": 3112,
+        "PurchaseInvoice": 2768,
+        "PurchaseInvoiceLine": 2768,
+        "DisbursementPayment": 2210,
+        "Item": 240,
+        "Warehouse": 2,
+        "Employee": 64,
+        "CostCenter": 8,
+        "Budget": 2940
+      },
+      "exceptions": [],
+      "gl_balance": {
+        "exception_count": 0,
+        "exceptions": []
+      },
+      "trial_balance_difference": -0.0,
+      "account_rollforward": {
+        "exception_count": 0,
+        "exceptions": []
+      }
+    },
+    "phase7": {
+      "row_counts": {
+        "Account": 87,
+        "JournalEntry": 1,
+        "GLEntry": 106355,
+        "Customer": 220,
+        "SalesOrder": 6950,
+        "SalesOrderLine": 24150,
+        "Shipment": 6352,
+        "ShipmentLine": 21186,
+        "SalesInvoice": 6332,
+        "SalesInvoiceLine": 21115,
+        "CashReceipt": 5347,
+        "Supplier": 110,
+        "PurchaseRequisition": 4155,
+        "PurchaseOrder": 3910,
+        "PurchaseOrderLine": 3910,
+        "GoodsReceipt": 3112,
+        "GoodsReceiptLine": 3112,
+        "PurchaseInvoice": 2768,
+        "PurchaseInvoiceLine": 2768,
+        "DisbursementPayment": 2210,
+        "Item": 240,
+        "Warehouse": 2,
+        "Employee": 64,
+        "CostCenter": 8,
+        "Budget": 2940
+      },
+      "exceptions": [],
+      "gl_balance": {
+        "exception_count": 0,
+        "exceptions": []
+      },
+      "trial_balance_difference": -0.0,
+      "account_rollforward": {
+        "exception_count": 0,
+        "exceptions": []
+      },
+      "anomaly_count": 76
+    }
+  },
+  "anomaly_log": [
+    {
+      "anomaly_type": "weekend_journal_entry",
+      "table_name": "JournalEntry",
+      "primary_key_value": 1,
+      "fiscal_year": 2026,
+      "description": "Journal entry created and approved on Saturday 2026-01-03.",
+      "expected_detection_test": "Weekend journal entry query using CreatedDate or ApprovedDate."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 1,
+      "fiscal_year": 2026,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 2,
+      "fiscal_year": 2026,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 3,
+      "fiscal_year": 2026,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 731,
+      "fiscal_year": 2027,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 732,
+      "fiscal_year": 2027,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 747,
+      "fiscal_year": 2027,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 1507,
+      "fiscal_year": 2028,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 1523,
+      "fiscal_year": 2028,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 1527,
+      "fiscal_year": 2028,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 2295,
+      "fiscal_year": 2029,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 2305,
+      "fiscal_year": 2029,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 2308,
+      "fiscal_year": 2029,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 3099,
+      "fiscal_year": 2030,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 3104,
+      "fiscal_year": 2030,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "same_creator_approver",
+      "table_name": "PurchaseOrder",
+      "primary_key_value": 3117,
+      "fiscal_year": 2030,
+      "description": "Purchase order creator also appears as approver.",
+      "expected_detection_test": "Creator-versus-approver segregation of duties query."
+    },
+    {
+      "anomaly_type": "missing_approval",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 1,
+      "fiscal_year": 2026,
+      "description": "Converted requisition has missing approval fields.",
+      "expected_detection_test": "Converted requisitions with null ApprovedByEmployeeID or ApprovedDate."
+    },
+    {
+      "anomaly_type": "missing_approval",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 2,
+      "fiscal_year": 2026,
+      "description": "Converted requisition has missing approval fields.",
+      "expected_detection_test": "Converted requisitions with null ApprovedByEmployeeID or ApprovedDate."
+    },
+    {
+      "anomaly_type": "missing_approval",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 838,
+      "fiscal_year": 2027,
+      "description": "Converted requisition has missing approval fields.",
+      "expected_detection_test": "Converted requisitions with null ApprovedByEmployeeID or ApprovedDate."
+    },
+    {
+      "anomaly_type": "missing_approval",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 839,
+      "fiscal_year": 2027,
+      "description": "Converted requisition has missing approval fields.",
+      "expected_detection_test": "Converted requisitions with null ApprovedByEmployeeID or ApprovedDate."
+    },
+    {
+      "anomaly_type": "missing_approval",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 1663,
+      "fiscal_year": 2028,
+      "description": "Converted requisition has missing approval fields.",
+      "expected_detection_test": "Converted requisitions with null ApprovedByEmployeeID or ApprovedDate."
+    },
+    {
+      "anomaly_type": "missing_approval",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 1664,
+      "fiscal_year": 2028,
+      "description": "Converted requisition has missing approval fields.",
+      "expected_detection_test": "Converted requisitions with null ApprovedByEmployeeID or ApprovedDate."
+    },
+    {
+      "anomaly_type": "missing_approval",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 2494,
+      "fiscal_year": 2029,
+      "description": "Converted requisition has missing approval fields.",
+      "expected_detection_test": "Converted requisitions with null ApprovedByEmployeeID or ApprovedDate."
+    },
+    {
+      "anomaly_type": "missing_approval",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 2495,
+      "fiscal_year": 2029,
+      "description": "Converted requisition has missing approval fields.",
+      "expected_detection_test": "Converted requisitions with null ApprovedByEmployeeID or ApprovedDate."
+    },
+    {
+      "anomaly_type": "missing_approval",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 3350,
+      "fiscal_year": 2030,
+      "description": "Converted requisition has missing approval fields.",
+      "expected_detection_test": "Converted requisitions with null ApprovedByEmployeeID or ApprovedDate."
+    },
+    {
+      "anomaly_type": "missing_approval",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 3351,
+      "fiscal_year": 2030,
+      "description": "Converted requisition has missing approval fields.",
+      "expected_detection_test": "Converted requisitions with null ApprovedByEmployeeID or ApprovedDate."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 1,
+      "fiscal_year": 2026,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 2,
+      "fiscal_year": 2026,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 3,
+      "fiscal_year": 2026,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 1199,
+      "fiscal_year": 2027,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 1208,
+      "fiscal_year": 2027,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 1212,
+      "fiscal_year": 2027,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 2447,
+      "fiscal_year": 2028,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 2451,
+      "fiscal_year": 2028,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 2457,
+      "fiscal_year": 2028,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 3700,
+      "fiscal_year": 2029,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 3701,
+      "fiscal_year": 2029,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 3753,
+      "fiscal_year": 2029,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 4995,
+      "fiscal_year": 2030,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 5028,
+      "fiscal_year": 2030,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "invoice_before_shipment",
+      "table_name": "SalesInvoice",
+      "primary_key_value": 5056,
+      "fiscal_year": 2030,
+      "description": "Sales invoice date intentionally precedes related shipment date.",
+      "expected_detection_test": "Invoice date before earliest shipment date by sales order."
+    },
+    {
+      "anomaly_type": "duplicate_vendor_payment_reference",
+      "table_name": "DisbursementPayment",
+      "primary_key_value": 2,
+      "fiscal_year": 2026,
+      "description": "Vendor payment shares a payment reference with another disbursement in the same fiscal year.",
+      "expected_detection_test": "Duplicate CheckNumber or payment reference query by fiscal year."
+    },
+    {
+      "anomaly_type": "duplicate_vendor_payment_reference",
+      "table_name": "DisbursementPayment",
+      "primary_key_value": 3,
+      "fiscal_year": 2026,
+      "description": "Vendor payment shares a payment reference with another disbursement in the same fiscal year.",
+      "expected_detection_test": "Duplicate CheckNumber or payment reference query by fiscal year."
+    },
+    {
+      "anomaly_type": "duplicate_vendor_payment_reference",
+      "table_name": "DisbursementPayment",
+      "primary_key_value": 346,
+      "fiscal_year": 2027,
+      "description": "Vendor payment shares a payment reference with another disbursement in the same fiscal year.",
+      "expected_detection_test": "Duplicate CheckNumber or payment reference query by fiscal year."
+    },
+    {
+      "anomaly_type": "duplicate_vendor_payment_reference",
+      "table_name": "DisbursementPayment",
+      "primary_key_value": 347,
+      "fiscal_year": 2027,
+      "description": "Vendor payment shares a payment reference with another disbursement in the same fiscal year.",
+      "expected_detection_test": "Duplicate CheckNumber or payment reference query by fiscal year."
+    },
+    {
+      "anomaly_type": "duplicate_vendor_payment_reference",
+      "table_name": "DisbursementPayment",
+      "primary_key_value": 806,
+      "fiscal_year": 2028,
+      "description": "Vendor payment shares a payment reference with another disbursement in the same fiscal year.",
+      "expected_detection_test": "Duplicate CheckNumber or payment reference query by fiscal year."
+    },
+    {
+      "anomaly_type": "duplicate_vendor_payment_reference",
+      "table_name": "DisbursementPayment",
+      "primary_key_value": 814,
+      "fiscal_year": 2028,
+      "description": "Vendor payment shares a payment reference with another disbursement in the same fiscal year.",
+      "expected_detection_test": "Duplicate CheckNumber or payment reference query by fiscal year."
+    },
+    {
+      "anomaly_type": "duplicate_vendor_payment_reference",
+      "table_name": "DisbursementPayment",
+      "primary_key_value": 1249,
+      "fiscal_year": 2029,
+      "description": "Vendor payment shares a payment reference with another disbursement in the same fiscal year.",
+      "expected_detection_test": "Duplicate CheckNumber or payment reference query by fiscal year."
+    },
+    {
+      "anomaly_type": "duplicate_vendor_payment_reference",
+      "table_name": "DisbursementPayment",
+      "primary_key_value": 1251,
+      "fiscal_year": 2029,
+      "description": "Vendor payment shares a payment reference with another disbursement in the same fiscal year.",
+      "expected_detection_test": "Duplicate CheckNumber or payment reference query by fiscal year."
+    },
+    {
+      "anomaly_type": "duplicate_vendor_payment_reference",
+      "table_name": "DisbursementPayment",
+      "primary_key_value": 1691,
+      "fiscal_year": 2030,
+      "description": "Vendor payment shares a payment reference with another disbursement in the same fiscal year.",
+      "expected_detection_test": "Duplicate CheckNumber or payment reference query by fiscal year."
+    },
+    {
+      "anomaly_type": "duplicate_vendor_payment_reference",
+      "table_name": "DisbursementPayment",
+      "primary_key_value": 1695,
+      "fiscal_year": 2030,
+      "description": "Vendor payment shares a payment reference with another disbursement in the same fiscal year.",
+      "expected_detection_test": "Duplicate CheckNumber or payment reference query by fiscal year."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 1,
+      "fiscal_year": 2026,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 2,
+      "fiscal_year": 2026,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 3,
+      "fiscal_year": 2026,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 838,
+      "fiscal_year": 2027,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 839,
+      "fiscal_year": 2027,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 840,
+      "fiscal_year": 2027,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 1663,
+      "fiscal_year": 2028,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 1664,
+      "fiscal_year": 2028,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 1665,
+      "fiscal_year": 2028,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 2494,
+      "fiscal_year": 2029,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 2495,
+      "fiscal_year": 2029,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 2496,
+      "fiscal_year": 2029,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 3350,
+      "fiscal_year": 2030,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 3351,
+      "fiscal_year": 2030,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "threshold_adjacent_requisition",
+      "table_name": "PurchaseRequisition",
+      "primary_key_value": 3352,
+      "fiscal_year": 2030,
+      "description": "Requisition amount adjusted just below a common approval threshold.",
+      "expected_detection_test": "Requisition totals immediately below approval thresholds."
+    },
+    {
+      "anomaly_type": "related_party_address_match",
+      "table_name": "Supplier",
+      "primary_key_value": 1,
+      "fiscal_year": 2026,
+      "description": "Supplier address intentionally matches an employee address.",
+      "expected_detection_test": "Supplier-to-employee address match query."
+    },
+    {
+      "anomaly_type": "related_party_address_match",
+      "table_name": "Supplier",
+      "primary_key_value": 2,
+      "fiscal_year": 2026,
+      "description": "Supplier address intentionally matches an employee address.",
+      "expected_detection_test": "Supplier-to-employee address match query."
+    },
+    {
+      "anomaly_type": "related_party_address_match",
+      "table_name": "Supplier",
+      "primary_key_value": 3,
+      "fiscal_year": 2027,
+      "description": "Supplier address intentionally matches an employee address.",
+      "expected_detection_test": "Supplier-to-employee address match query."
+    },
+    {
+      "anomaly_type": "related_party_address_match",
+      "table_name": "Supplier",
+      "primary_key_value": 4,
+      "fiscal_year": 2027,
+      "description": "Supplier address intentionally matches an employee address.",
+      "expected_detection_test": "Supplier-to-employee address match query."
+    },
+    {
+      "anomaly_type": "related_party_address_match",
+      "table_name": "Supplier",
+      "primary_key_value": 5,
+      "fiscal_year": 2028,
+      "description": "Supplier address intentionally matches an employee address.",
+      "expected_detection_test": "Supplier-to-employee address match query."
+    },
+    {
+      "anomaly_type": "related_party_address_match",
+      "table_name": "Supplier",
+      "primary_key_value": 6,
+      "fiscal_year": 2028,
+      "description": "Supplier address intentionally matches an employee address.",
+      "expected_detection_test": "Supplier-to-employee address match query."
+    },
+    {
+      "anomaly_type": "related_party_address_match",
+      "table_name": "Supplier",
+      "primary_key_value": 7,
+      "fiscal_year": 2029,
+      "description": "Supplier address intentionally matches an employee address.",
+      "expected_detection_test": "Supplier-to-employee address match query."
+    },
+    {
+      "anomaly_type": "related_party_address_match",
+      "table_name": "Supplier",
+      "primary_key_value": 8,
+      "fiscal_year": 2029,
+      "description": "Supplier address intentionally matches an employee address.",
+      "expected_detection_test": "Supplier-to-employee address match query."
+    },
+    {
+      "anomaly_type": "related_party_address_match",
+      "table_name": "Supplier",
+      "primary_key_value": 9,
+      "fiscal_year": 2030,
+      "description": "Supplier address intentionally matches an employee address.",
+      "expected_detection_test": "Supplier-to-employee address match query."
+    },
+    {
+      "anomaly_type": "related_party_address_match",
+      "table_name": "Supplier",
+      "primary_key_value": 10,
+      "fiscal_year": 2030,
+      "description": "Supplier address intentionally matches an employee address.",
+      "expected_detection_test": "Supplier-to-employee address match query."
+    }
+  ]
+}
