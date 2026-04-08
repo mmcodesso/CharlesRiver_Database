@@ -47,14 +47,13 @@ The project has two documentation layers:
 
 - Five-year dataset from 2026 through 2030
 - Order-to-cash and procure-to-pay transaction generation
-- Opening balances and budgets
+- Opening balances, recurring manual journals, year-end close, and budgets
 - Event-based postings into `GLEntry`
 - Validation outputs, anomaly injection, and exports
 
 ### Planned future extension
 
 - Manufacturing process coverage
-- Recurring manual operating journals beyond the opening balance entry
 - Broader document complexity and richer inventory behavior
 
 ## Root-Level Entry Points

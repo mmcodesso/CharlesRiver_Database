@@ -4,9 +4,9 @@
 **Purpose:** Show how the dataset can be introduced in class and how its tables support different exercise types.  
 **What you will learn:** A suggested teaching sequence, how the dataset supports classroom activities, and which table families fit each analytics topic.
 
-> **Implemented in current generator:** Five years of O2C and P2P data, opening balances, budgets, ledger postings, validations, and anomalies suitable for course exercises.
+> **Implemented in current generator:** Five years of O2C and P2P data, opening balances, recurring manual journals, year-end close, budgets, ledger postings, validations, and anomalies suitable for course exercises.
 
-> **Planned future extension:** Manufacturing process coverage and recurring manual operating journals for broader cost accounting and closing-cycle exercises.
+> **Planned future extension:** Manufacturing process coverage for broader cost accounting exercises.
 
 ## How to Position the Dataset
 
@@ -59,6 +59,7 @@ The Excel export works well for:
 | Revenue and gross margin | `SalesInvoice`, `SalesInvoiceLine`, `ShipmentLine`, `GLEntry` | Compare billing activity to shipment cost and ledger postings |
 | AR analysis | `SalesInvoice`, `CashReceipt`, `GLEntry` | Study collections, open items, and receivables reconciliation |
 | AP analysis | `PurchaseInvoice`, `DisbursementPayment`, `GLEntry` | Study liabilities, payments, and payables reconciliation |
+| Journal and close-cycle analysis | `JournalEntry`, `GLEntry`, `Account` | Study accruals, reversals, recurring expenses, and year-end close behavior |
 | Trial balance logic | `GLEntry`, `Account` | Build summarized financial views from ledger detail |
 
 ### Managerial analytics
@@ -84,7 +85,7 @@ The Excel export works well for:
 - Start with process understanding before asking students to write joins.
 - Use `GLEntry` only after students understand which source events post and which do not.
 - Make the distinction between clean data and planted anomalies explicit.
-- If you want journal-entry-heavy exercises, note that the current implementation has only the opening balance journal header.
+- If you want raw multi-year income statement activity, have students exclude the two year-end close entry types from `JournalEntry`.
 
 ## Scope Boundaries to Communicate to Students
 
@@ -93,8 +94,8 @@ Students should not assume that the dataset already includes:
 - manufacturing
 - work orders
 - bills of materials
-- payroll journals
-- recurring depreciation, rent, or utilities journals
+- payroll employee-level detail or tax withholding subledgers
+- production completions or work-in-process accounting
 
 Those are future expansion areas, not missing rows inside the current process model.
 

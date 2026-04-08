@@ -12,6 +12,7 @@ import pandas as pd
 from greenfield_dataset.anomalies import inject_anomalies
 from greenfield_dataset.budgets import generate_budgets, generate_opening_balances
 from greenfield_dataset.exporters import export_excel, export_sqlite, export_validation_report
+from greenfield_dataset.journals import generate_recurring_manual_journals, generate_year_end_close_journals
 from greenfield_dataset.master_data import (
     backfill_cost_center_managers,
     generate_cost_centers,
@@ -45,6 +46,7 @@ from greenfield_dataset.validations import (
     validate_phase5,
     validate_phase6,
     validate_phase7,
+    validate_phase8,
 )
 
 
@@ -211,6 +213,23 @@ def build_phase7(config_path: str | Path = "config/settings.yaml") -> Generation
     return context
 
 
+def build_phase8(config_path: str | Path = "config/settings.yaml") -> GenerationContext:
+    context = build_phase5(config_path)
+
+    generate_recurring_manual_journals(context)
+    post_all_transactions(context)
+    generate_year_end_close_journals(context)
+    inject_anomalies(context)
+    validate_phase8(context)
+    if context.settings.export_sqlite:
+        export_sqlite(context)
+    if context.settings.export_excel:
+        export_excel(context)
+    export_validation_report(context)
+
+    return context
+
+
 def fiscal_months(context: GenerationContext) -> Iterable[tuple[int, int]]:
     start = pd.Timestamp(context.settings.fiscal_year_start)
     end = pd.Timestamp(context.settings.fiscal_year_end)
@@ -316,19 +335,32 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
     with logged_step("Validate operational subledger data"):
         log_validation_results("phase5", validate_phase5(context))
 
+    with logged_step("Generate recurring manual journals"):
+        generate_recurring_manual_journals(context)
+        log_table_counts(context, ("JournalEntry", "GLEntry"), "manual journals")
+
     with logged_step("Post transactions to general ledger"):
         post_all_transactions(context)
         log_table_counts(context, ("JournalEntry", "GLEntry"), "posting")
+
+    with logged_step("Generate year-end close journals"):
+        generate_year_end_close_journals(context)
+        log_table_counts(context, ("JournalEntry", "GLEntry"), "year-end close")
 
     with logged_step("Validate posted ledger"):
         log_validation_results("phase6", validate_phase6(context))
 
     with logged_step("Inject configured anomalies"):
         inject_anomalies(context)
-        LOGGER.info("ANOMALIES | count=%s", len(context.anomaly_log))
+        journal_anomaly_count = sum(
+            1
+            for anomaly in context.anomaly_log
+            if anomaly["table_name"] == "JournalEntry" or anomaly["anomaly_type"].endswith("_manual_journal")
+        )
+        LOGGER.info("ANOMALIES | total_count=%s | journal_anomaly_count=%s", len(context.anomaly_log), journal_anomaly_count)
 
     with logged_step("Validate final dataset"):
-        log_validation_results("phase7", validate_phase7(context))
+        log_validation_results("phase8", validate_phase8(context))
 
     if context.settings.export_sqlite:
         with logged_step("Export SQLite database"):
@@ -355,7 +387,7 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
 
 
 def print_summary(context: GenerationContext) -> None:
-    row_counts = context.validation_results["phase7"]["row_counts"]
+    row_counts = context.validation_results["phase8"]["row_counts"]
     print("Full dataset generated.")
     print(f"Fiscal range: {context.settings.fiscal_year_start} to {context.settings.fiscal_year_end}")
     print(f"Accounts: {row_counts['Account']}")
@@ -383,8 +415,8 @@ def print_summary(context: GenerationContext) -> None:
     print(f"Purchase invoice lines: {row_counts['PurchaseInvoiceLine']}")
     print(f"Disbursements: {row_counts['DisbursementPayment']}")
     print(f"GL entries: {row_counts['GLEntry']}")
-    print(f"GL balance exceptions: {context.validation_results['phase7']['gl_balance']['exception_count']}")
-    print(f"Anomalies logged: {context.validation_results['phase7']['anomaly_count']}")
+    print(f"GL balance exceptions: {context.validation_results['phase8']['gl_balance']['exception_count']}")
+    print(f"Anomalies logged: {context.validation_results['phase8']['anomaly_count']}")
     print(f"SQLite export: {context.settings.sqlite_path}")
     print(f"Excel export: {context.settings.excel_path}")
     print(f"Validation report: {context.settings.validation_report_path}")

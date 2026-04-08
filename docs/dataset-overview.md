@@ -18,9 +18,9 @@ The project is built for:
 - subledger-to-ledger tracing
 - business process understanding
 
-> **Implemented in current generator:** A five-year dataset with master data, budgets, order-to-cash, procure-to-pay, opening balances, general ledger postings, validations, and planted anomalies.
+> **Implemented in current generator:** A five-year dataset with master data, budgets, order-to-cash, procure-to-pay, opening balances, recurring manual journals, year-end close, general ledger postings, validations, and planted anomalies.
 
-> **Planned future extension:** Manufacturing tables, production transactions, and recurring manual operating journals beyond the opening balance entry.
+> **Planned future extension:** Manufacturing tables and production transactions.
 
 ## Business Story
 
@@ -32,6 +32,8 @@ Greenfield Home Furnishings, Inc. is modeled as a mid-sized distributor and ligh
 - selected operational events create accounting entries
 
 The company context is realistic enough for classroom analysis, but still constrained enough to stay teachable.
+
+The accounting side of the dataset combines operational postings with recurring manual activity, including payroll accruals and settlements, rent, utilities, depreciation, accrued expenses with reversals, and year-end close entries.
 
 ## What the Database Contains
 
@@ -65,6 +67,7 @@ Students can:
 - reconcile purchase invoices and payments to payables
 - trace operational postings into the general ledger
 - compare budget to actuals by cost center and account
+- analyze recurring journal activity and period-end close entries
 
 ### Managerial analytics
 
@@ -93,7 +96,6 @@ The current generator does **not** yet include:
 - bills of materials
 - work centers or routings
 - production completions
-- recurring payroll, rent, utilities, or depreciation journals
 
 Those items are future expansion areas, not current features.
 

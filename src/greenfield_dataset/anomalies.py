@@ -16,7 +16,10 @@ def fiscal_years(context: GenerationContext) -> list[int]:
     return list(range(int(start), int(end) + 1))
 
 
-def load_anomaly_profile(context: GenerationContext, profile_path: str | Path = "config/anomaly_profile.yaml") -> dict[str, Any]:
+def load_anomaly_profile(
+    context: GenerationContext,
+    profile_path: str | Path = "config/anomaly_profile.yaml",
+) -> dict[str, Any]:
     path = Path(profile_path)
     if not path.exists():
         return {"enabled": False}
@@ -61,13 +64,87 @@ def first_saturday(year: int) -> str:
     return day.strftime("%Y-%m-%d")
 
 
+def used_primary_keys(
+    context: GenerationContext,
+    table_name: str,
+    anomaly_type: str | None = None,
+) -> set[int]:
+    return {
+        int(entry["primary_key_value"])
+        for entry in context.anomaly_log
+        if entry["table_name"] == table_name and (anomaly_type is None or entry["anomaly_type"] == anomaly_type)
+    }
+
+
+def compose_timestamp(new_date: str, original_value: object, default_time: str) -> str | None:
+    if pd.isna(original_value):
+        return None
+
+    text = str(original_value)
+    time_part = text.split(" ", 1)[1] if " " in text else default_time
+    return f"{new_date} {time_part}"
+
+
+def update_journal_posting_date(context: GenerationContext, journal_entry_id: int, posting_date: str) -> None:
+    posting_timestamp = pd.Timestamp(posting_date)
+    journal_mask = context.tables["JournalEntry"]["JournalEntryID"].astype(int).eq(int(journal_entry_id))
+    journal_rows = context.tables["JournalEntry"].loc[journal_mask]
+    if journal_rows.empty:
+        return
+
+    created_date = journal_rows.iloc[0]["CreatedDate"]
+    approved_date = journal_rows.iloc[0]["ApprovedDate"]
+    context.tables["JournalEntry"].loc[journal_mask, "PostingDate"] = posting_date
+    context.tables["JournalEntry"].loc[journal_mask, "CreatedDate"] = compose_timestamp(posting_date, created_date, "08:00:00")
+    context.tables["JournalEntry"].loc[journal_mask, "ApprovedDate"] = compose_timestamp(posting_date, approved_date, "09:00:00")
+
+    gl_mask = (
+        context.tables["GLEntry"]["SourceDocumentType"].eq("JournalEntry")
+        & context.tables["GLEntry"]["SourceDocumentID"].astype(int).eq(int(journal_entry_id))
+    )
+    if not gl_mask.any():
+        return
+
+    created_dates = context.tables["GLEntry"].loc[gl_mask, "CreatedDate"]
+    context.tables["GLEntry"].loc[gl_mask, "PostingDate"] = posting_date
+    context.tables["GLEntry"].loc[gl_mask, "FiscalYear"] = int(posting_timestamp.year)
+    context.tables["GLEntry"].loc[gl_mask, "FiscalPeriod"] = int(posting_timestamp.month)
+    context.tables["GLEntry"].loc[gl_mask, "CreatedDate"] = created_dates.apply(
+        lambda value: compose_timestamp(posting_date, value, "08:00:00")
+    )
+
+
+def journal_entries_for_year(
+    context: GenerationContext,
+    year: int,
+    *,
+    entry_types: set[str] | None = None,
+    exclude_used: bool = False,
+) -> pd.DataFrame:
+    journal_entries = rows_for_year(context.tables["JournalEntry"], "PostingDate", year)
+    if entry_types is not None:
+        journal_entries = journal_entries[journal_entries["EntryType"].isin(entry_types)]
+    if exclude_used:
+        used_ids = used_primary_keys(context, "JournalEntry")
+        if used_ids:
+            journal_entries = journal_entries[~journal_entries["JournalEntryID"].astype(int).isin(used_ids)]
+    return journal_entries.sort_values(["PostingDate", "JournalEntryID"]).reset_index(drop=True)
+
+
+def journal_gl_rows(context: GenerationContext, journal_entry_id: int) -> pd.DataFrame:
+    gl = context.tables["GLEntry"]
+    return gl[
+        gl["SourceDocumentType"].eq("JournalEntry")
+        & gl["SourceDocumentID"].astype(int).eq(int(journal_entry_id))
+    ].copy()
+
+
 def inject_weekend_journal_entries(context: GenerationContext, count_per_year: int) -> None:
-    journal_entries = context.tables["JournalEntry"]
-    if journal_entries.empty or count_per_year <= 0:
+    if context.tables["JournalEntry"].empty or count_per_year <= 0:
         return
 
     for year in fiscal_years(context):
-        selected = rows_for_year(journal_entries, "PostingDate", year).head(count_per_year)
+        selected = journal_entries_for_year(context, year).head(count_per_year)
         for row in selected.itertuples(index=False):
             weekend_date = first_saturday(year)
             mask = context.tables["JournalEntry"]["JournalEntryID"].astype(int).eq(int(row.JournalEntryID))
@@ -105,6 +182,40 @@ def inject_same_creator_approver(context: GenerationContext, count_per_year: int
             )
 
 
+def inject_same_creator_approver_journals(context: GenerationContext, count_per_year: int) -> None:
+    if context.tables["JournalEntry"].empty or count_per_year <= 0:
+        return
+
+    candidate_types = {
+        "Payroll Accrual",
+        "Payroll Settlement",
+        "Rent",
+        "Utilities",
+        "Depreciation",
+        "Accrual",
+        "Accrual Reversal",
+    }
+    for year in fiscal_years(context):
+        selected = journal_entries_for_year(
+            context,
+            year,
+            entry_types=candidate_types,
+            exclude_used=True,
+        ).head(count_per_year)
+        for row in selected.itertuples(index=False):
+            mask = context.tables["JournalEntry"]["JournalEntryID"].astype(int).eq(int(row.JournalEntryID))
+            context.tables["JournalEntry"].loc[mask, "ApprovedByEmployeeID"] = int(row.CreatedByEmployeeID)
+            log_anomaly(
+                context,
+                "same_creator_approver_journal",
+                "JournalEntry",
+                int(row.JournalEntryID),
+                year,
+                "Manual journal creator also appears as approver.",
+                "Segregation of duties query on JournalEntry creator and approver.",
+            )
+
+
 def inject_missing_approvals(context: GenerationContext, count_per_year: int) -> None:
     requisitions = context.tables["PurchaseRequisition"]
     if requisitions.empty or count_per_year <= 0:
@@ -125,6 +236,31 @@ def inject_missing_approvals(context: GenerationContext, count_per_year: int) ->
                 year,
                 "Converted requisition has missing approval fields.",
                 "Converted requisitions with null ApprovedByEmployeeID or ApprovedDate.",
+            )
+
+
+def inject_missing_reversal_links(context: GenerationContext, count_per_year: int) -> None:
+    if context.tables["JournalEntry"].empty or count_per_year <= 0:
+        return
+
+    for year in fiscal_years(context):
+        selected = journal_entries_for_year(
+            context,
+            year,
+            entry_types={"Accrual Reversal"},
+            exclude_used=True,
+        ).head(count_per_year)
+        for row in selected.itertuples(index=False):
+            mask = context.tables["JournalEntry"]["JournalEntryID"].astype(int).eq(int(row.JournalEntryID))
+            context.tables["JournalEntry"].loc[mask, "ReversesJournalEntryID"] = None
+            log_anomaly(
+                context,
+                "missing_reversal_link",
+                "JournalEntry",
+                int(row.JournalEntryID),
+                year,
+                "Accrual reversal is missing its link to the original accrual journal.",
+                "Journal reversals with null ReversesJournalEntryID.",
             )
 
 
@@ -158,6 +294,37 @@ def inject_invoice_before_shipment(context: GenerationContext, count_per_year: i
                 "Invoice date before earliest shipment date by sales order.",
             )
             injected += 1
+
+
+def inject_late_reversals(context: GenerationContext, count_per_year: int) -> None:
+    if context.tables["JournalEntry"].empty or count_per_year <= 0:
+        return
+
+    journal_entries = context.tables["JournalEntry"]
+    for year in fiscal_years(context):
+        reversals = journal_entries[
+            pd.to_datetime(journal_entries["PostingDate"]).dt.year.eq(year)
+            & journal_entries["EntryType"].eq("Accrual Reversal")
+            & journal_entries["ReversesJournalEntryID"].notna()
+            & ~journal_entries["JournalEntryID"].astype(int).isin(used_primary_keys(context, "JournalEntry"))
+        ].sort_values(["PostingDate", "JournalEntryID"])
+
+        for row in reversals.head(count_per_year).itertuples(index=False):
+            current_date = pd.Timestamp(row.PostingDate)
+            delayed_date = current_date + pd.Timedelta(days=5)
+            while delayed_date.day_name() in {"Saturday", "Sunday"}:
+                delayed_date = delayed_date + pd.Timedelta(days=1)
+
+            update_journal_posting_date(context, int(row.JournalEntryID), delayed_date.strftime("%Y-%m-%d"))
+            log_anomaly(
+                context,
+                "late_reversal",
+                "JournalEntry",
+                int(row.JournalEntryID),
+                year,
+                "Accrual reversal posting date was moved later than the first business day of the following month.",
+                "Reversal journals posted after the expected first-business-day window.",
+            )
 
 
 def inject_duplicate_vendor_payment_reference(context: GenerationContext, count_per_year: int) -> None:
@@ -212,6 +379,64 @@ def inject_threshold_adjacent_entries(context: GenerationContext, count_per_year
             )
 
 
+def inject_round_dollar_manual_journals(context: GenerationContext, count_per_year: int) -> None:
+    if context.tables["JournalEntry"].empty or count_per_year <= 0:
+        return
+
+    candidate_types = {
+        "Payroll Settlement",
+        "Rent",
+        "Utilities",
+        "Depreciation",
+        "Year-End Close - Income Summary to Retained Earnings",
+    }
+
+    for year in fiscal_years(context):
+        year_journals = journal_entries_for_year(
+            context,
+            year,
+            entry_types=candidate_types,
+            exclude_used=True,
+        )
+        injected = 0
+        for row in year_journals.itertuples(index=False):
+            gl_rows = journal_gl_rows(context, int(row.JournalEntryID))
+            if len(gl_rows) != 2:
+                continue
+
+            total_debit = round(float(gl_rows["Debit"].sum()), 2)
+            rounded_amount = float(round(total_debit))
+            if rounded_amount <= 0 or rounded_amount == total_debit:
+                continue
+
+            debit_rows = gl_rows[gl_rows["Debit"].astype(float).gt(0)]
+            credit_rows = gl_rows[gl_rows["Credit"].astype(float).gt(0)]
+            if len(debit_rows) != 1 or len(credit_rows) != 1:
+                continue
+
+            debit_index = debit_rows.index[0]
+            credit_index = credit_rows.index[0]
+            context.tables["GLEntry"].loc[debit_index, "Debit"] = rounded_amount
+            context.tables["GLEntry"].loc[debit_index, "Credit"] = 0.0
+            context.tables["GLEntry"].loc[credit_index, "Debit"] = 0.0
+            context.tables["GLEntry"].loc[credit_index, "Credit"] = rounded_amount
+            journal_mask = context.tables["JournalEntry"]["JournalEntryID"].astype(int).eq(int(row.JournalEntryID))
+            context.tables["JournalEntry"].loc[journal_mask, "TotalAmount"] = rounded_amount
+
+            log_anomaly(
+                context,
+                "round_dollar_manual_journal",
+                "JournalEntry",
+                int(row.JournalEntryID),
+                year,
+                "Manual journal amount was rounded to a whole dollar amount.",
+                "Round-dollar manual journal query using TotalAmount or linked GL lines.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
 def inject_related_party_address_matches(context: GenerationContext, count_per_year: int) -> None:
     suppliers = context.tables["Supplier"]
     employees = context.tables["Employee"]
@@ -220,9 +445,16 @@ def inject_related_party_address_matches(context: GenerationContext, count_per_y
 
     total_needed = count_per_year * len(fiscal_years(context))
     supplier_rows = suppliers.head(total_needed)
-    employee_rows = employees.sample(n=min(total_needed, len(employees)), random_state=context.settings.random_seed, replace=True)
-    for index, (supplier_row, employee_row) in enumerate(zip(supplier_rows.itertuples(index=False), employee_rows.itertuples(index=False))):
-        year = fiscal_years(context)[index // count_per_year]
+    employee_rows = employees.sample(
+        n=min(total_needed, len(employees)),
+        random_state=context.settings.random_seed,
+        replace=True,
+    )
+    years = fiscal_years(context)
+    for index, (supplier_row, employee_row) in enumerate(
+        zip(supplier_rows.itertuples(index=False), employee_rows.itertuples(index=False))
+    ):
+        year = years[index // count_per_year]
         mask = context.tables["Supplier"]["SupplierID"].astype(int).eq(int(supplier_row.SupplierID))
         context.tables["Supplier"].loc[mask, "Address"] = employee_row.Address
         context.tables["Supplier"].loc[mask, "City"] = employee_row.City
@@ -245,8 +477,12 @@ def inject_anomalies(context: GenerationContext) -> None:
 
     inject_weekend_journal_entries(context, int(profile.get("weekend_journal_entries_per_year", 0)))
     inject_same_creator_approver(context, int(profile.get("same_creator_approver_per_year", 0)))
+    inject_same_creator_approver_journals(context, int(profile.get("same_creator_approver_journals_per_year", 0)))
     inject_missing_approvals(context, int(profile.get("missing_approvals_per_year", 0)))
+    inject_missing_reversal_links(context, int(profile.get("missing_reversal_links_per_year", 0)))
     inject_invoice_before_shipment(context, int(profile.get("invoice_before_shipment_per_year", 0)))
+    inject_late_reversals(context, int(profile.get("late_reversals_per_year", 0)))
     inject_duplicate_vendor_payment_reference(context, int(profile.get("duplicate_vendor_payments_per_year", 0)))
     inject_threshold_adjacent_entries(context, int(profile.get("threshold_adjacent_entries_per_year", 0)))
+    inject_round_dollar_manual_journals(context, int(profile.get("round_dollar_manual_journals_per_year", 0)))
     inject_related_party_address_matches(context, int(profile.get("related_party_address_matches_per_year", 0)))

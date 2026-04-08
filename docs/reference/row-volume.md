@@ -12,7 +12,7 @@ The default configuration uses:
 
 > **Implemented in current generator:** A deterministic five-year dataset whose default counts are stable unless configuration or generation logic changes.
 
-> **Planned future extension:** More recurring journal activity, more complex P2P line structures, and future manufacturing tables that would materially increase total row count.
+> **Planned future extension:** More complex P2P line structures and future manufacturing tables that would materially increase total row count.
 
 ## Current Default Build vs Design Intent
 
@@ -20,9 +20,9 @@ The target ranges below come from `Design.md` and represent design intent, not h
 
 | Group | Table | Target rows | Current default rows |
 |---|---|---:|---:|
-| Accounting core | Account | 75 to 95 | 87 |
-| Accounting core | JournalEntry | 900 to 1,500 | 1 |
-| Accounting core | GLEntry | 60,000 to 110,000 | 106,355 |
+| Accounting core | Account | 75 to 95 | 90 |
+| Accounting core | JournalEntry | 900 to 1,500 | 1,442 |
+| Accounting core | GLEntry | 60,000 to 110,000 | 110,075 |
 | O2C | Customer | 150 to 300 | 220 |
 | O2C | SalesOrder | 4,500 to 9,000 | 6,950 |
 | O2C | SalesOrderLine | 13,000 to 30,000 | 24,150 |
@@ -49,13 +49,14 @@ The target ranges below come from `Design.md` and represent design intent, not h
 ## What Is Already at Useful Teaching Scale
 
 - O2C tables are already large enough for trend, concentration, cut-off, and margin exercises.
-- `GLEntry` is already at the top of the current design range and supports meaningful ledger analytics.
+- `GLEntry` is at the top edge of the current design range and supports meaningful ledger analytics.
 - Budget, customer, supplier, item, employee, and cost center tables are all at reasonable teaching scale.
+- `JournalEntry` is now inside the intended design range because the generator includes recurring manual journals and year-end close entries.
 
 ## Where the Current Build Is Still Intentionally Light
 
-- `JournalEntry` is far below the historical target because the generator currently creates only the opening balance journal header.
 - P2P line tables are below the original target because the current implementation mostly uses one-line purchase orders, goods receipts, and purchase invoices.
+- `GLEntry` is slightly above the original upper target because recurring manual journals and year-end close add real ledger activity on top of the existing operational posting volume.
 - No manufacturing tables exist yet, so total dataset size is smaller than a future expanded version would be.
 
 ## How to Read These Counts

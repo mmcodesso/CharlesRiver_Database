@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+import pandas as pd
+
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
 
@@ -449,3 +451,180 @@ def validate_phase7(context: GenerationContext) -> dict[str, Any]:
     }
     context.validation_results["phase7"] = phase7_results
     return phase7_results
+
+
+def fiscal_months(context: GenerationContext) -> list[tuple[int, int]]:
+    start = pd.Timestamp(context.settings.fiscal_year_start)
+    end = pd.Timestamp(context.settings.fiscal_year_end)
+    months = pd.date_range(
+        start=pd.Timestamp(year=start.year, month=start.month, day=1),
+        end=pd.Timestamp(year=end.year, month=end.month, day=1),
+        freq="MS",
+    )
+    return [(int(month.year), int(month.month)) for month in months]
+
+
+def first_business_day(year: int, month: int) -> pd.Timestamp:
+    day = pd.Timestamp(year=year, month=month, day=1)
+    while day.day_name() in {"Saturday", "Sunday"}:
+        day = day + pd.Timedelta(days=1)
+    return day
+
+
+def next_month(year: int, month: int) -> tuple[int, int]:
+    current = pd.Timestamp(year=year, month=month, day=1) + pd.DateOffset(months=1)
+    return int(current.year), int(current.month)
+
+
+def validate_journal_controls(context: GenerationContext) -> dict[str, Any]:
+    journal_entries = context.tables["JournalEntry"]
+    gl = context.tables["GLEntry"]
+    journal_gl = gl[gl["SourceDocumentType"].eq("JournalEntry")].copy()
+    gl_by_source = {int(source_id): rows for source_id, rows in journal_gl.groupby("SourceDocumentID")}
+    exceptions: list[dict[str, Any]] = []
+
+    for journal in journal_entries.itertuples(index=False):
+        source_rows = gl_by_source.get(int(journal.JournalEntryID))
+        if source_rows is None or len(source_rows) < 2:
+            exceptions.append({
+                "type": "missing_gl_rows",
+                "journal_entry_id": int(journal.JournalEntryID),
+                "message": "Journal entry does not have at least two linked GL rows.",
+            })
+            continue
+
+        debit_total = round(float(source_rows["Debit"].sum()), 2)
+        credit_total = round(float(source_rows["Credit"].sum()), 2)
+        if debit_total != credit_total:
+            exceptions.append({
+                "type": "unbalanced_journal",
+                "journal_entry_id": int(journal.JournalEntryID),
+                "message": "Journal-linked GL rows are not balanced.",
+            })
+        if round(float(journal.TotalAmount), 2) != debit_total:
+            exceptions.append({
+                "type": "header_total_mismatch",
+                "journal_entry_id": int(journal.JournalEntryID),
+                "message": "Journal header total does not match debit total of linked GL rows.",
+            })
+
+    journal_lookup = journal_entries.set_index("JournalEntryID").to_dict("index")
+    reversals = journal_entries[journal_entries["EntryType"].eq("Accrual Reversal")]
+    for reversal in reversals.itertuples(index=False):
+        reverses_id = reversal.ReversesJournalEntryID
+        if pd.isna(reverses_id):
+            exceptions.append({
+                "type": "missing_reversal_link",
+                "journal_entry_id": int(reversal.JournalEntryID),
+                "message": "Accrual reversal is missing ReversesJournalEntryID.",
+            })
+            continue
+
+        original = journal_lookup.get(int(reverses_id))
+        if original is None or original["EntryType"] != "Accrual":
+            exceptions.append({
+                "type": "invalid_reversal_link",
+                "journal_entry_id": int(reversal.JournalEntryID),
+                "message": "Accrual reversal does not reference a valid Accrual journal entry.",
+            })
+            continue
+
+        original_year = pd.Timestamp(original["PostingDate"]).year
+        original_month = pd.Timestamp(original["PostingDate"]).month
+        expected_year, expected_month = next_month(int(original_year), int(original_month))
+        expected_posting_date = first_business_day(expected_year, expected_month).strftime("%Y-%m-%d")
+        if str(reversal.PostingDate) != expected_posting_date:
+            exceptions.append({
+                "type": "late_reversal",
+                "journal_entry_id": int(reversal.JournalEntryID),
+                "message": "Accrual reversal was not posted on the first business day of the following month.",
+            })
+
+    fiscal_years = range(
+        pd.Timestamp(context.settings.fiscal_year_start).year,
+        pd.Timestamp(context.settings.fiscal_year_end).year + 1,
+    )
+    for year in fiscal_years:
+        year_entries = journal_entries[pd.to_datetime(journal_entries["PostingDate"]).dt.year.eq(year)]
+        pnl_close_count = int(year_entries["EntryType"].eq("Year-End Close - P&L to Income Summary").sum())
+        re_close_count = int(year_entries["EntryType"].eq("Year-End Close - Income Summary to Retained Earnings").sum())
+        if pnl_close_count != 1 or re_close_count != 1:
+            exceptions.append({
+                "type": "year_end_close_count",
+                "fiscal_year": int(year),
+                "message": "Fiscal year does not contain exactly two year-end close journal headers.",
+            })
+
+    expected_entry_counts = {
+        "Payroll Accrual": len(fiscal_months(context)) * len(context.tables["CostCenter"]),
+        "Payroll Settlement": max(len(fiscal_months(context)) - 1, 0) * len(context.tables["CostCenter"]),
+        "Rent": len(fiscal_months(context)) * 2,
+        "Utilities": len(fiscal_months(context)),
+        "Depreciation": len(fiscal_months(context)) * 3,
+        "Accrual": len(fiscal_months(context)),
+        "Accrual Reversal": max(len(fiscal_months(context)) - 1, 0),
+        "Year-End Close - P&L to Income Summary": len(list(fiscal_years)),
+        "Year-End Close - Income Summary to Retained Earnings": len(list(fiscal_years)),
+    }
+    actual_entry_counts = journal_entries["EntryType"].value_counts().to_dict()
+    for entry_type, expected_count in expected_entry_counts.items():
+        actual_count = int(actual_entry_counts.get(entry_type, 0))
+        if actual_count != expected_count:
+            exceptions.append({
+                "type": "entry_type_count",
+                "entry_type": entry_type,
+                "message": f"Expected {expected_count} journal entries of type {entry_type}, found {actual_count}.",
+            })
+
+    accounts = context.tables["Account"]
+    pl_account_ids = accounts[
+        accounts["AccountType"].isin(["Revenue", "Expense"])
+        & accounts["AccountSubType"].ne("Header")
+    ]["AccountID"].astype(int).tolist()
+    income_summary_id = account_id_by_number(context, "8010")
+    for year in fiscal_years:
+        year_gl = gl[gl["FiscalYear"].astype(int).eq(int(year))]
+        net_balances = year_gl.groupby("AccountID")[["Debit", "Credit"]].sum()
+        non_zero_accounts = []
+        for account_id in pl_account_ids + [income_summary_id]:
+            if int(account_id) not in net_balances.index:
+                continue
+            difference = round(
+                float(net_balances.loc[int(account_id), "Debit"]) - float(net_balances.loc[int(account_id), "Credit"]),
+                2,
+            )
+            if difference != 0:
+                non_zero_accounts.append(int(account_id))
+        if non_zero_accounts:
+            exceptions.append({
+                "type": "unclosed_profit_and_loss",
+                "fiscal_year": int(year),
+                "message": f"Revenue, expense, or income summary accounts remain open after closing: {non_zero_accounts[:5]}.",
+            })
+
+    return {
+        "exception_count": len(exceptions),
+        "exceptions": exceptions,
+        "entry_type_counts": {key: int(value) for key, value in actual_entry_counts.items()},
+    }
+
+
+def validate_phase8(context: GenerationContext) -> dict[str, Any]:
+    results = validate_phase7(context)
+    exceptions = list(results["exceptions"])
+
+    journal_controls = validate_journal_controls(context)
+    if journal_controls["exception_count"]:
+        exceptions.append(f"Journal control exceptions: {journal_controls['exception_count']}.")
+
+    phase8_results: dict[str, Any] = {
+        "row_counts": {table: int(len(df)) for table, df in context.tables.items()},
+        "exceptions": exceptions,
+        "gl_balance": results["gl_balance"],
+        "trial_balance_difference": results["trial_balance_difference"],
+        "account_rollforward": results["account_rollforward"],
+        "anomaly_count": len(context.anomaly_log),
+        "journal_controls": journal_controls,
+    }
+    context.validation_results["phase8"] = phase8_results
+    return phase8_results

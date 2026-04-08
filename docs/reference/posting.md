@@ -4,11 +4,11 @@
 **Purpose:** Document the event-based posting rules used by the current generator.  
 **What you will learn:** Which documents post, which accounts are affected, and how postings are traced back to source transactions.
 
-Posting logic is implemented in `src/greenfield_dataset/posting_engine.py`.
+Posting logic is implemented across `src/greenfield_dataset/budgets.py`, `src/greenfield_dataset/journals.py`, and `src/greenfield_dataset/posting_engine.py`.
 
-> **Implemented in current generator:** Event-based postings for shipments, sales invoices, cash receipts, goods receipts, purchase invoices, and disbursements, plus an opening balance journal created earlier in the build.
+> **Implemented in current generator:** Event-based postings for shipments, sales invoices, cash receipts, goods receipts, purchase invoices, and disbursements, plus opening, recurring manual, reversal, and year-end close journals.
 
-> **Planned future extension:** Recurring manual operating journals and future manufacturing-related posting events.
+> **Planned future extension:** Future manufacturing-related posting events.
 
 ## Non-Posting Documents
 
@@ -25,12 +25,21 @@ These documents are generated for process analysis but do **not** create `GLEntr
 | Event | Source tables | Posting date used | Debit | Credit |
 |---|---|---|---|---|
 | Opening balance journal | `JournalEntry` plus seeded GL rows from `budgets.py` | `2026-01-01` | Asset accounts and selected opening balances | Liability, equity, contra-asset balances, and retained earnings plug |
+| Payroll accrual | `JournalEntry` plus seeded GL rows from `journals.py` | Last calendar day of month | Salary expense by cost center and `6060` Payroll Taxes and Benefits | `2030` Accrued Payroll |
+| Payroll settlement | `JournalEntry` plus seeded GL rows from `journals.py` | First business day of following month | `2030` Accrued Payroll | `1010` Cash and Cash Equivalents |
+| Rent | `JournalEntry` plus seeded GL rows from `journals.py` | First business day of month | `6070` Warehouse Rent or `6080` Office Rent | `1010` Cash and Cash Equivalents |
+| Utilities | `JournalEntry` plus seeded GL rows from `journals.py` | Last business day of month | `6090` Utilities Expense | `1010` Cash and Cash Equivalents |
+| Depreciation | `JournalEntry` plus seeded GL rows from `journals.py` | Last calendar day of month | `6130` Depreciation Expense | `1150`, `1160`, or `1170` accumulated depreciation |
+| Month-end accrual | `JournalEntry` plus seeded GL rows from `journals.py` | Last business day of month | `6100`, `6140`, and `6180` operating expenses | `2040` Accrued Expenses |
+| Accrual reversal | `JournalEntry` plus seeded GL rows from `journals.py` | First business day of following month | Reverse prior accrual liability and expense lines | Reverse prior accrual liability and expense lines |
 | Shipment | `Shipment`, `ShipmentLine` | `ShipmentDate` | Item COGS account | Item inventory account |
 | Sales invoice | `SalesInvoice`, `SalesInvoiceLine` | `InvoiceDate` | Accounts receivable | Item revenue account and sales tax payable |
 | Cash receipt | `CashReceipt` | `ReceiptDate` | Cash | Accounts receivable |
 | Goods receipt | `GoodsReceipt`, `GoodsReceiptLine` | `ReceiptDate` | Item inventory account | Goods Received Not Invoiced |
 | Purchase invoice | `PurchaseInvoice`, `PurchaseInvoiceLine` | `ApprovedDate` | GRNI, purchase variance when needed, and nonrecoverable tax to variance | Accounts payable and purchase variance when needed |
 | Disbursement | `DisbursementPayment` | `PaymentDate` | Accounts payable | Cash |
+| Year-end close: P&L to income summary | `JournalEntry` plus seeded GL rows from `journals.py` | `YYYY-12-31` | Revenue or expense balances needed to close annual P&L accounts | Offset to `8010` Income Summary |
+| Year-end close: income summary to retained earnings | `JournalEntry` plus seeded GL rows from `journals.py` | `YYYY-12-31` | `8010` Income Summary for profitable years or `3030` Retained Earnings for loss years | `3030` Retained Earnings for profitable years or `8010` Income Summary for loss years |
 
 ## Core Control Accounts
 
@@ -42,9 +51,12 @@ These documents are generated for process analysis but do **not** create `GLEntr
 | `1045` | Inventory - materials and packaging |
 | `2010` | Accounts payable |
 | `2020` | Goods Received Not Invoiced |
+| `2030` | Accrued payroll |
+| `2040` | Accrued expenses |
 | `2050` | Sales tax payable |
 | `3030` | Retained earnings |
 | `5060` | Purchase price variance |
+| `8010` | Income summary |
 
 Item-specific posting relies on these `Item` fields:
 
@@ -87,7 +99,7 @@ The posting engine enforces these principles:
 
 - each voucher must balance before rows are accepted
 - only implemented posting events create GL rows
-- opening balance rows are preserved when operational postings are appended
+- opening balance and manual journal rows are preserved when operational postings are appended
 - ledger traceability fields are populated on operational postings
 
 ## Validation Coverage
@@ -101,9 +113,13 @@ The posting engine enforces these principles:
 - inventory roll-forward against goods receipts and shipments
 - COGS agreement with shipment standard cost
 - GRNI roll-forward against goods receipts and cleared purchase invoices
+- journal header-to-GL agreement
+- accrual reversal linkage and timing
+- year-end close completeness and annual P&L closure
 
 ## Current Implementation Notes
 
 - `PurchaseInvoice` postings use `ApprovedDate` as the posting date in the current code.
 - Purchase invoice tax is treated as nonrecoverable and posted to purchase variance in the current implementation.
-- The current generator does not yet call `journals.py`; recurring manual operating journals remain a future extension.
+- Year-end close entries are real posted journals in every fiscal year of the default range.
+- For raw multi-year income statement analytics, exclude `Year-End Close - P&L to Income Summary` and `Year-End Close - Income Summary to Retained Earnings`.

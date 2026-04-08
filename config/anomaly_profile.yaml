@@ -8,8 +8,12 @@ profiles:
     description: "Moderate anomaly set for teaching analytics."
     weekend_journal_entries_per_year: 2
     same_creator_approver_per_year: 3
+    same_creator_approver_journals_per_year: 2
     missing_approvals_per_year: 2
     invoice_before_shipment_per_year: 3
     duplicate_vendor_payments_per_year: 2
     threshold_adjacent_entries_per_year: 3
     related_party_address_matches_per_year: 2
+    missing_reversal_links_per_year: 1
+    late_reversals_per_year: 1
+    round_dollar_manual_journals_per_year: 2

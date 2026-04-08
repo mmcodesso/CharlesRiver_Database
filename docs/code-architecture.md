@@ -4,9 +4,9 @@
 **Purpose:** Explain the generator from entrypoint to export using the current implementation, not the historical blueprint.  
 **What you will learn:** The orchestration flow, the role of each module, and where future extensions such as manufacturing would fit.
 
-> **Implemented in current generator:** Config loading, shared generation context, schema registry, master data, budgets, monthly O2C and P2P generation, posting, validations, anomaly injection, SQLite/Excel export, JSON reporting, and generation logging.
+> **Implemented in current generator:** Config loading, shared generation context, schema registry, master data, budgets, monthly O2C and P2P generation, recurring manual journals, year-end close, posting, validations, anomaly injection, SQLite/Excel export, JSON reporting, and generation logging.
 
-> **Planned future extension:** Recurring manual operating journals and manufacturing modules that would extend schema, transaction generation, posting, validation, and documentation.
+> **Planned future extension:** Manufacturing modules that would extend schema, transaction generation, posting, validation, and documentation.
 
 ## Entrypoints
 
@@ -25,12 +25,14 @@ flowchart LR
     M[Generate Master Data]
     B[Generate Opening Balances and Budgets]
     T[Generate Monthly O2C and P2P Transactions]
+    J[Generate Recurring Manual Journals]
     P[Post to GLEntry]
+    Y[Generate Year-End Close Journals]
     V[Run Validations]
     A[Inject Anomalies]
     X[Export SQLite, Excel, JSON, and Log]
 
-    S --> C --> E --> M --> B --> T --> P --> V --> A --> X
+    S --> C --> E --> M --> B --> T --> J --> P --> Y --> V --> A --> X
 ```
 
 The current full run does the following in order:
@@ -41,10 +43,12 @@ The current full run does the following in order:
 4. generate master and organizational data
 5. create the opening balance journal and budget rows
 6. generate monthly O2C and P2P activity for each configured fiscal month
-7. post operational events into `GLEntry`
-8. validate the dataset
-9. inject configured anomalies
-10. revalidate and export outputs
+7. generate recurring manual journals directly into `JournalEntry` and `GLEntry`
+8. post operational events into `GLEntry`
+9. generate year-end close journals after operational posting is complete
+10. validate the dataset
+11. inject configured anomalies
+12. revalidate and export outputs
 
 ## Core Runtime Objects
 
@@ -83,12 +87,12 @@ This shared context is passed across generation, posting, validation, and export
 | `budgets.py` | Generates the opening balance journal and budget rows |
 | `o2c.py` | Generates sales orders, shipments, sales invoices, and cash receipts |
 | `p2p.py` | Generates requisitions, purchase orders, goods receipts, purchase invoices, and disbursements |
+| `journals.py` | Generates recurring manual journals, accrual reversals, and year-end close journals |
 | `posting_engine.py` | Converts operational events into balanced GL entries |
 | `validations.py` | Runs schema, document, ledger, and roll-forward checks |
 | `anomalies.py` | Applies configurable anomaly patterns and records them in `context.anomaly_log` |
 | `exporters.py` | Writes SQLite, Excel, and JSON outputs |
 | `utils.py` | Supports numbering, rounding, and helper logic used across modules |
-| `journals.py` | Placeholder for future recurring manual journal generation; not used in the current full build |
 | `main.py` | Orchestrates the end-to-end run and writes the generation log |
 
 ## Posting Design
@@ -102,7 +106,7 @@ The current posting model is event-based:
 - purchase invoices post GRNI clearing, AP, and purchase variance
 - disbursements post AP and cash
 
-The opening balance entry is created earlier in `budgets.py` and remains in `GLEntry` as `VoucherType = "JournalEntry"`.
+The opening balance entry is created in `budgets.py`. Recurring manual journals and year-end close entries are created in `journals.py`. Those prebuilt `VoucherType = "JournalEntry"` rows are preserved when `post_all_transactions()` appends operational postings.
 
 ## Validation and Logging
 
@@ -118,6 +122,9 @@ Current validations include:
 - voucher balance
 - trial balance equality
 - AR, AP, inventory, COGS, and GRNI roll-forwards
+- journal header-to-GL agreement
+- accrual reversal linkage and timing
+- year-end close coverage and profit-and-loss closure by fiscal year
 
 The full run also writes `outputs/generation.log`, which records:
 

@@ -8,7 +8,7 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 
 > **Implemented in current generator:** 25 tables across accounting, O2C, P2P, master data, and organizational planning.
 
-> **Planned future extension:** Additional tables for recurring manual journals and manufacturing-related processes.
+> **Planned future extension:** Manufacturing-related tables and richer operational detail in future phases.
 
 ## Table Groups
 
@@ -27,7 +27,7 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 - `GLEntry` is the reporting bridge between operational events and accounting analysis.
 - `Item` carries account-mapping fields used by the posting engine.
 - `Employee` and `CostCenter` reference each other, so generation uses a backfill step for managers.
-- `JournalEntry` exists in the current schema, but the generated dataset currently contains only the opening balance header.
+- `JournalEntry` and `GLEntry` together represent the opening balance, recurring manual journals, accrual reversals, and year-end close activity without requiring a separate journal-line table.
 
 ## Accounting Core
 
@@ -95,6 +95,6 @@ These fields make it possible to trace from posted accounting detail back to the
 
 ## Current Implementation Notes
 
-- `JournalEntry` currently holds the opening balance entry only.
+- `JournalEntry.EntryType` is actively used for opening, payroll accrual and settlement, rent, utilities, depreciation, accrual, accrual reversal, and year-end close entries.
 - Excel exports include additional worksheets such as `AnomalyLog` and `ValidationSummary`, but those are export artifacts, not schema tables.
 - For the exact column order and names, use `TABLE_COLUMNS` in `src/greenfield_dataset/schema.py`.

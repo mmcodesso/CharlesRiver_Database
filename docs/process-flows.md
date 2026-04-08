@@ -4,9 +4,9 @@
 **Purpose:** Show the O2C flow, the P2P flow, and the bridge from source documents to the general ledger.  
 **What you will learn:** Which tables represent each business step, when accounting happens, and how learners can trace transactions across the database.
 
-> **Implemented in current generator:** O2C and P2P operational flows, opening balances, and event-based postings into `GLEntry`.
+> **Implemented in current generator:** O2C and P2P operational flows, opening balances, recurring manual journals, year-end close, and event-based postings into `GLEntry`.
 
-> **Planned future extension:** Recurring manual operating journals and manufacturing process flows.
+> **Planned future extension:** Manufacturing process flows.
 
 ## Order-to-Cash Flow
 
@@ -110,13 +110,22 @@ This means a student can start from a ledger line and ask:
 - Which cost center did it affect?
 - In which fiscal period did it hit the ledger?
 
-## Current Manual Journal Scope
+## Manual Journal and Close Cycle Scope
 
-`JournalEntry` exists in the current generator, but only for the opening balance entry created at the start of 2026. That matters for teaching because:
+`JournalEntry` is fully used in the current generator. The default build includes:
 
-- the table is part of the schema
-- the table is important for future extensions
-- recurring operating journal examples are not yet part of the generated dataset
+- opening balance
+- monthly payroll accruals by cost center
+- monthly payroll settlements
+- monthly office and warehouse rent journals
+- monthly utilities journals
+- monthly depreciation journals by asset class
+- month-end accrued expense journals with next-month reversals
+- year-end close entries to `8010` Income Summary and `3030` Retained Earnings
+
+That matters for teaching because students can now work with operational postings and recurring manual ledger activity in the same database.
+
+For multi-year income statement analysis, tell students to exclude the two year-end close entry types when they want raw annual revenue and expense activity.
 
 ## How to Trace One Transaction
 

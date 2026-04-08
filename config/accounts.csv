@@ -78,6 +78,9 @@ AccountID,AccountNumber,AccountName,AccountType,AccountSubType,ParentAccountID,N
 77,6200,Miscellaneous Administrative Expense,Expense,Operating Expense,57,Debit,1
 78,6210,Warehouse Supplies Expense,Expense,Operating Expense,57,Debit,1
 79,6220,Research and Development Expense,Expense,Operating Expense,57,Debit,1
+88,6230,Salaries Expense - Purchasing,Expense,Operating Expense,57,Debit,1
+89,6240,Salaries Expense - Marketing,Expense,Operating Expense,57,Debit,1
+90,6250,Salaries Expense - Research and Development,Expense,Operating Expense,57,Debit,1
 80,7000,Other Income and Expense,Revenue,Header,,Credit,1
 81,7010,Interest Income,Revenue,Other Income,80,Credit,1
 82,7020,Gain or Loss on Asset Disposal,Revenue,Other Income or Expense,80,Credit,1

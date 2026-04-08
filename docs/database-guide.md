@@ -86,7 +86,7 @@ Not every operational document posts to the general ledger.
 | Goods receipts | Yes | Posts inventory and GRNI |
 | Purchase invoices | Yes | Posts GRNI clearing, AP, and purchase variance |
 | Disbursements | Yes | Posts AP and cash |
-| Journal entries | Yes | Current implementation includes the opening balance journal |
+| Journal entries | Yes | Current implementation includes opening, recurring manual, reversal, and year-end close journals |
 
 ## Start Here by Analytics Topic
 
@@ -143,7 +143,8 @@ Typical questions:
 
 - The SQLite export is the easiest format for SQL work.
 - The Excel export places each table on its own worksheet and also includes `AnomalyLog` and `ValidationSummary`.
-- `JournalEntry` is currently limited to the opening balance header, so recurring operating journal analysis is not yet part of the base dataset.
+- `JournalEntry` supports journal-entry testing, accrual reversal analysis, and close-cycle exercises in the current base dataset.
+- For raw multi-year income statement analysis, exclude the two year-end close entry types.
 
 ## Where to Go Next
 
