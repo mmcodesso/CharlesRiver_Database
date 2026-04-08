@@ -1,18 +1,14 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pandas as pd
-import yaml
 
-from greenfield_dataset.main import build_full_dataset, build_phase5
+from greenfield_dataset.main import build_phase5
 from greenfield_dataset.p2p import (
     generate_month_disbursements,
     generate_month_goods_receipts,
     generate_month_p2p,
     generate_month_purchase_invoices,
 )
-from greenfield_dataset.settings import load_settings
 
 
 def test_phase9_multimonth_p2p_partial_and_linked_flows() -> None:
@@ -75,23 +71,8 @@ def test_phase9_multimonth_p2p_partial_and_linked_flows() -> None:
     assert purchase_invoices["Status"].eq("Partially Paid").any()
 
 
-def test_phase9_full_dataset_p2p_volume_regression(tmp_path: Path) -> None:
-    settings = load_settings("config/settings.yaml")
-    payload = dict(vars(settings))
-    payload.update({
-        "anomaly_mode": "none",
-        "export_sqlite": False,
-        "export_excel": False,
-        "sqlite_path": str(tmp_path / "greenfield.sqlite"),
-        "excel_path": str(tmp_path / "greenfield.xlsx"),
-        "validation_report_path": str(tmp_path / "validation_report.json"),
-        "generation_log_path": str(tmp_path / "generation.log"),
-    })
-
-    config_path = tmp_path / "settings.yaml"
-    config_path.write_text(yaml.safe_dump(payload, sort_keys=False), encoding="utf-8")
-
-    context = build_full_dataset(config_path)
+def test_phase9_full_dataset_p2p_volume_regression(full_dataset_artifacts: dict[str, object]) -> None:
+    context = full_dataset_artifacts["context"]
     phase9 = context.validation_results["phase9"]
     row_counts = phase9["row_counts"]
 
@@ -100,5 +81,5 @@ def test_phase9_full_dataset_p2p_volume_regression(tmp_path: Path) -> None:
     assert row_counts["GoodsReceiptLine"] > 4500
     assert row_counts["PurchaseInvoiceLine"] > 4000
     assert row_counts["DisbursementPayment"] > 2300
-    assert (tmp_path / "validation_report.json").exists()
-    assert (tmp_path / "generation.log").exists()
+    assert full_dataset_artifacts["validation_report_path"].exists()
+    assert full_dataset_artifacts["generation_log_path"].exists()

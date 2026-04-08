@@ -146,6 +146,7 @@ Typical questions:
 ## Current Practical Tips
 
 - The SQLite export is the easiest format for SQL work.
+- The starter SQL files under `queries/` are the fastest way to move from schema understanding to analysis.
 - The Excel export places each table on its own worksheet and also includes `AnomalyLog` and `ValidationSummary`.
 - `JournalEntry` supports journal-entry testing, accrual reversal analysis, and close-cycle exercises in the current base dataset.
 - For P2P traceability, prefer `PurchaseOrderLine.RequisitionID` and `PurchaseInvoiceLine.GoodsReceiptLineID` over header-only assumptions.
@@ -154,4 +155,5 @@ Typical questions:
 ## Where to Go Next
 
 - Read [process-flows.md](process-flows.md) for the business meaning of each document chain.
+- Read [analytics/index.md](analytics/index.md) for the starter analytics layer.
 - Read [reference/schema.md](reference/schema.md) for the technical schema reference.

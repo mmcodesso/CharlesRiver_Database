@@ -14,14 +14,15 @@ The current generator already delivers:
 - event-based postings into `GLEntry`
 - validations, anomaly injection, and exports
 
-Phase 9 is now complete. The default build includes:
+Phase 10 is now complete. The default build includes:
 
 - 1,442 journal headers across opening, recurring operating journals, reversals, and year-end close
 - 176,643 GL rows in the default five-year build
 - journal-focused anomaly patterns that preserve overall GL balance while creating detectable control exceptions
 - multi-period P2P activity with 5,548 purchase-order lines, 9,163 goods-receipt lines, 12,658 purchase-invoice lines, and 13,904 disbursement records
+- a starter analytics layer with topic guides, starter SQL packs, Excel workflow guidance, and expanded instructor-facing teaching structure
 
-The next practical gap is no longer basic P2P document realism. The next high-value addition is teaching support on top of the existing dataset.
+The next practical gap is no longer starter usability. The next high-value addition is richer O2C and inventory behavior.
 
 ## Recently Delivered: Phase 8 - Manual Journals and Close Cycle
 
@@ -52,43 +53,29 @@ Phase 9 delivered:
 
 This phase materially improved three-way-match realism and pushed several P2P tables into or near their original design-intent scale.
 
-## Next Phase: Phase 10 - Analytics Starter Layer
+## Recently Delivered: Phase 10 - Analytics Starter Layer
+
+Phase 10 delivered:
+
+- analytics documentation under `docs/analytics/`
+- starter SQL packs under `queries/financial/`, `queries/managerial/`, and `queries/audit/`
+- Excel workflow guidance for the generated workbook
+- expanded instructor-facing teaching structure and learning-objective mapping
+- automated verification that starter queries run against a generated SQLite dataset
+
+This phase turned the repository into a more complete course-user package without changing the core generator model.
+
+## Next Phase: Phase 11 - O2C and Inventory Enrichment
 
 ### Why this is next
 
-The data generator is now broad enough for teaching, but the repository still relies on instructors and students to invent their own starting queries and workflows. The next highest-value step is to turn the dataset into a more usable teaching package.
+The next remaining realism gap is on the sales and inventory side. The generator already has strong O2C coverage, but it still lacks richer delivery timing, backorder behavior, returns, and inventory-availability logic.
 
 ### Goal
 
-Add starter assets that help instructors and students begin using the dataset immediately in SQL and Excel without reading the code first.
+Increase the realism of O2C and inventory behavior while keeping the dataset teachable and preserving the now-stable starter analytics layer.
 
 ### In Scope
-
-- starter SQL query sets by topic
-- starter Excel analysis paths and workbook guidance
-- optional reusable SQLite views for common teaching questions
-- example workflows for financial, managerial, and audit analytics
-- documentation updates that connect the starter assets to the existing guides
-
-### Implementation Areas
-
-- `docs/`
-- optional `queries/` or `examples/` directory
-- optional SQLite view support if kept simple and documented
-- `README.md` and instructor-facing docs
-
-### Acceptance Criteria
-
-- first-time users can run the generator and find working starter exercises immediately
-- starter materials cover financial, managerial, and audit analytics
-- examples are aligned to the current schema and row volumes
-- documentation is updated to point users to the new starter assets
-
-## Remaining Roadmap
-
-### Phase 11 - O2C and Inventory Enrichment
-
-Focus areas:
 
 - more partial-shipment behavior
 - richer late-delivery and backorder patterns
@@ -96,11 +83,24 @@ Focus areas:
 - optional returns or credit-memo flow
 - stronger inventory availability logic
 
-Why it matters:
+### Why it matters
 
 - deepens revenue-cycle analytics
 - improves fulfillment and cut-off exercises
 - creates more realistic inventory movement behavior
+
+### Implementation Areas
+
+- `src/greenfield_dataset/o2c.py`
+- posting and validation logic touched by O2C timing or return flows
+- analytics docs where new O2C behavior adds teaching value
+
+### Acceptance Criteria
+
+- O2C process timing is visibly richer across periods
+- starter analytics remain valid and only need additive extension
+- validations continue to pass on the clean build
+- documentation explains the new O2C behaviors without treating future manufacturing as implemented
 
 ### Phase 12 - Manufacturing Foundation
 
@@ -119,8 +119,7 @@ Why it matters:
 
 ## Recommended Sequence
 
-1. Phase 10 - Analytics Starter Layer
-2. Phase 11 - O2C and Inventory Enrichment
-3. Phase 12 - Manufacturing Foundation
+1. Phase 11 - O2C and Inventory Enrichment
+2. Phase 12 - Manufacturing Foundation
 
 This order adds the most teaching value first, improves current realism before major schema expansion, and prepares the project for manufacturing later without forcing a large redesign too early.

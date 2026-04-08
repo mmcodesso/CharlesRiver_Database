@@ -47,8 +47,8 @@ Generated outputs are ignored by Git and can be regenerated locally at any time.
 | If you are a... | Start here |
 |---|---|
 | Student | [docs/dataset-overview.md](docs/dataset-overview.md) and [docs/process-flows.md](docs/process-flows.md) |
-| Instructor | [docs/instructor-guide.md](docs/instructor-guide.md) |
-| Analyst learning the tables | [docs/database-guide.md](docs/database-guide.md) |
+| Instructor | [docs/instructor-guide.md](docs/instructor-guide.md) and [docs/analytics/index.md](docs/analytics/index.md) |
+| Analyst learning the tables | [docs/database-guide.md](docs/database-guide.md) and [docs/analytics/index.md](docs/analytics/index.md) |
 | Contributor or maintainer | [docs/code-architecture.md](docs/code-architecture.md) |
 | Looking for detailed technical reference | [docs/reference/schema.md](docs/reference/schema.md), [docs/reference/posting.md](docs/reference/posting.md), and [docs/reference/row-volume.md](docs/reference/row-volume.md) |
 | Looking for the historical blueprint | [Design.md](Design.md) |
@@ -59,7 +59,8 @@ Generated outputs are ignored by Git and can be regenerated locally at any time.
 |---|---|
 | 25-table dataset covering O2C, P2P, master data, budgets, recurring manual journals, year-end close, and ledger postings | Manufacturing process tables and production flows |
 | Five-year fiscal range with monthly operational and manual journal generation, plus multi-period P2P matching and settlement behavior | Richer O2C inventory constraints, returns, and broader manufacturing flows |
-| Event-based postings from shipments, invoices, receipts, goods receipts, purchase invoices, and disbursements plus seeded journal postings | Starter analytics examples and broader teaching assets |
+| Event-based postings from shipments, invoices, receipts, goods receipts, purchase invoices, and disbursements plus seeded journal postings | More advanced teaching packs and broader course extensions |
+| Starter analytics docs, runnable SQLite query packs, and Excel workflow guidance across financial, managerial, and audit analytics | Additional analytics packs for later O2C and manufacturing phases |
 | SQLite, Excel, validation report, and generation log outputs | Additional dataset extensions for broader course coverage |
 
 ## Documentation Map
@@ -68,12 +69,19 @@ Generated outputs are ignored by Git and can be regenerated locally at any time.
 - [docs/dataset-overview.md](docs/dataset-overview.md): business story, dataset purpose, and glossary
 - [docs/process-flows.md](docs/process-flows.md): O2C, P2P, and ledger traceability explained with diagrams
 - [docs/database-guide.md](docs/database-guide.md): how to navigate tables and joins
+- [docs/analytics/index.md](docs/analytics/index.md): analytics starter hub for SQL and Excel users
+- [docs/analytics/financial.md](docs/analytics/financial.md): financial accounting starter analytics
+- [docs/analytics/managerial.md](docs/analytics/managerial.md): managerial accounting starter analytics
+- [docs/analytics/audit.md](docs/analytics/audit.md): auditing starter analytics
+- [docs/analytics/sql-guide.md](docs/analytics/sql-guide.md): how to run the starter SQL files
+- [docs/analytics/excel-guide.md](docs/analytics/excel-guide.md): how to use the Excel export for analytics
 - [docs/instructor-guide.md](docs/instructor-guide.md): suggested teaching path and exercise categories
 - [docs/code-architecture.md](docs/code-architecture.md): how the Python generator works
 - [docs/reference/schema.md](docs/reference/schema.md): executable schema reference
 - [docs/reference/posting.md](docs/reference/posting.md): posting logic reference
 - [docs/reference/row-volume.md](docs/reference/row-volume.md): default row counts and target ranges
 - [docs/roadmap.md](docs/roadmap.md): next implementation phase and the remaining roadmap
+- `queries/`: starter SQLite query pack grouped into financial, managerial, and audit areas
 
 ## Project Snapshot
 
@@ -89,6 +97,7 @@ Generated outputs are ignored by Git and can be regenerated locally at any time.
 - The current generator models a distributor and light assembler, but it does **not** yet implement manufacturing transactions.
 - `JournalEntry` now includes the opening balance, recurring operating journals, accrual reversals, and year-end close entries.
 - P2P now supports batched requisition-to-PO conversion, partial receipts across periods, receipt-line invoice matching, and split disbursement settlement behavior.
+- Phase 10 adds a starter analytics layer under `docs/analytics/` plus runnable SQL files under `queries/`.
 - In the default `standard` anomaly mode, the final validation report intentionally contains planted exceptions, including journal-control findings, while keeping the GL balanced.
 - `Design.md` is now an appendix and historical blueprint. It contains future ideas that do not always match the current generator.
 

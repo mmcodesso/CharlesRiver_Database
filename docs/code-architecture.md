@@ -146,6 +146,15 @@ The current generator exports:
 - JSON validation report
 - text log file
 
+## Documentation and Starter Assets
+
+The repository now also includes a course-user starter layer outside the generator code:
+
+- `docs/analytics/` for topic guides and workflow documentation
+- `queries/` for runnable starter SQL files
+
+These assets are intentionally additive. They depend on the current implemented schema and outputs, but they do not change dataset generation behavior.
+
 ## Extension Roadmap
 
 The cleanest way to add manufacturing later is to extend the same pattern already used for O2C and P2P:

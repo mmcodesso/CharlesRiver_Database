@@ -12,7 +12,7 @@ The default configuration uses:
 
 > **Implemented in current generator:** A deterministic five-year dataset whose default counts are stable unless configuration or generation logic changes.
 
-> **Planned future extension:** Manufacturing tables, broader O2C realism, and analytics starter assets that would further change total row count.
+> **Planned future extension:** Manufacturing tables and broader O2C realism that would further change total row count.
 
 ## Current Default Build vs Design Intent
 
