@@ -153,3 +153,4 @@ Manufacturing is a roadmap item. The current generator does not yet implement it
 
 - Read [reference/schema.md](reference/schema.md) for the current table structure.
 - Read [reference/posting.md](reference/posting.md) for the detailed posting reference.
+- Read [roadmap.md](roadmap.md) for the next planned implementation phases.

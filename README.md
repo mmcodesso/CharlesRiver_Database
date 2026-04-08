@@ -73,6 +73,7 @@ Generated outputs are ignored by Git and can be regenerated locally at any time.
 - [docs/reference/schema.md](docs/reference/schema.md): executable schema reference
 - [docs/reference/posting.md](docs/reference/posting.md): posting logic reference
 - [docs/reference/row-volume.md](docs/reference/row-volume.md): default row counts and target ranges
+- [docs/roadmap.md](docs/roadmap.md): next implementation phase and the remaining roadmap
 
 ## Project Snapshot
 

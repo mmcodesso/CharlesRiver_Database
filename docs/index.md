@@ -33,6 +33,7 @@ The project has two documentation layers:
 | [reference/schema.md](reference/schema.md) | Implemented schema and key column patterns |
 | [reference/posting.md](reference/posting.md) | Current posting logic and control-account behavior |
 | [reference/row-volume.md](reference/row-volume.md) | Current default row counts versus design-intent ranges |
+| [roadmap.md](roadmap.md) | Next implementation phase and the remaining roadmap |
 
 ## Historical Appendix
 
