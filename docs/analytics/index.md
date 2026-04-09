@@ -6,7 +6,7 @@
 
 > **Implemented in current generator:** Starter analytics documentation, runnable SQLite query files, and Excel workflow guidance for financial accounting, managerial accounting, and auditing analytics.
 
-> **Planned future extension:** Additional O2C analytics packs after Phase 11 and manufacturing analytics packs after Phase 12.
+> **Planned future extension:** Manufacturing analytics packs after Phase 12.
 
 ## What This Starter Layer Includes
 
@@ -15,7 +15,7 @@
 - Excel workflow guidance using the generated workbook
 - instructor-facing mapping from learning goals to materials
 
-This layer is designed for the current stable dataset. It does not assume future manufacturing tables, credit memos, returns, or work-in-process accounting.
+This layer is designed for the current stable dataset. It does not assume future manufacturing tables or work-in-process accounting.
 
 ## Recommended Starting Path
 
@@ -74,7 +74,6 @@ The current starter layer is intentionally built around the current dataset only
 
 - manufacturing tables
 - work orders or bills of materials
-- returns or credit memos
 - WIP accounting
 - payroll subledgers or tax-withholding detail
 

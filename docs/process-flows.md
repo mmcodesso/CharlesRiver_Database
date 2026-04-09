@@ -4,7 +4,7 @@
 **Purpose:** Show the O2C flow, the P2P flow, and the bridge from source documents to the general ledger.  
 **What you will learn:** Which tables represent each business step, when accounting happens, and how learners can trace transactions across the database.
 
-> **Implemented in current generator:** O2C and P2P operational flows, opening balances, recurring manual journals, year-end close, and event-based postings into `GLEntry`.
+> **Implemented in current generator:** O2C and P2P operational flows, customer deposits and cash applications, returns and credit memos, opening balances, recurring manual journals, year-end close, and event-based postings into `GLEntry`.
 
 > **Planned future extension:** Manufacturing process flows.
 
@@ -20,23 +20,35 @@ flowchart LR
     SI[SalesInvoice]
     SIL[SalesInvoiceLine]
     CR[CashReceipt]
+    CRA[CashReceiptApplication]
+    SR[SalesReturn]
+    CM[CreditMemo]
+    RF[CustomerRefund]
     GL[GLEntry]
 
-    C --> SO --> SOL --> SH --> SHL --> SI --> SIL --> CR
+    C --> SO --> SOL --> SH --> SHL --> SI --> SIL
+    C --> CR --> CRA
+    SIL --> SR --> CM --> RF
     SH -. Posts COGS and Inventory .-> GL
     SI -. Posts AR, Revenue, and Sales Tax .-> GL
-    CR -. Posts Cash and AR .-> GL
+    CR -. Posts Cash and Unapplied Cash .-> GL
+    CRA -. Posts Unapplied Cash and AR .-> GL
+    SR -. Posts Inventory and COGS reversal .-> GL
+    CM -. Posts Contra Revenue, Sales Tax reversal, AR or Customer Credit .-> GL
+    RF -. Posts Customer Credit and Cash .-> GL
 ```
 
-In the current generator, a customer places a sales order, the company ships goods, the company bills the customer, and later collects cash. Not every document posts to accounting. The accounting events happen at shipment, invoicing, and cash receipt.
+In the current generator, a customer places a sales order, the company ships goods as inventory becomes available, the company bills the customer from exact shipment lines, and later collects cash through customer-level receipts that may be applied across multiple invoices. Some receipts remain temporarily unapplied as deposits. The generator also supports sales returns, credit memos, and customer refunds.
 
 | Business event | Main tables | When accounting happens | Typical student questions |
 |---|---|---|---|
 | Customer setup | `Customer` | No posting | Which customers drive the most revenue? |
 | Order capture | `SalesOrder`, `SalesOrderLine` | No posting | Which products and sales reps drive demand? |
-| Goods shipped | `Shipment`, `ShipmentLine` | Shipment posts COGS and inventory relief | Were orders shipped on time? What cost left inventory? |
-| Customer billed | `SalesInvoice`, `SalesInvoiceLine` | Invoice posts AR, revenue, and sales tax | What was billed, when, and at what margin? |
-| Cash collected | `CashReceipt` | Receipt posts cash and AR | Which invoices remain open? How fast do customers pay? |
+| Goods shipped | `Shipment`, `ShipmentLine` | Shipment posts COGS and inventory relief | Were orders backordered? What cost left inventory, and when? |
+| Customer billed | `SalesInvoice`, `SalesInvoiceLine` | Invoice posts AR, revenue, and sales tax | Which shipment lines were billed, when, and at what margin? |
+| Cash collected | `CashReceipt`, `CashReceiptApplication` | Receipt posts cash to unapplied cash, application clears AR | Which receipts were deposits? Which invoices remain open? |
+| Customer return | `SalesReturn`, `SalesReturnLine` | Return posts inventory back in and reverses COGS | Which shipment lines came back, and why? |
+| Credit and refund | `CreditMemo`, `CreditMemoLine`, `CustomerRefund` | Credit memo posts contra revenue and reduces AR or creates customer credit; refund clears customer credit | Which returns reduced open AR versus required cash refund? |
 
 ## Procure-to-Pay Flow
 
@@ -77,6 +89,10 @@ flowchart LR
     SH[Shipment]
     SI[SalesInvoice]
     CR[CashReceipt]
+    CRA[CashReceiptApplication]
+    SR[SalesReturn]
+    CM[CreditMemo]
+    RF[CustomerRefund]
     GR[GoodsReceipt]
     PI[PurchaseInvoice]
     DP[DisbursementPayment]
@@ -87,6 +103,10 @@ flowchart LR
     SH --> GL
     SI --> GL
     CR --> GL
+    CRA --> GL
+    SR --> GL
+    CM --> GL
+    RF --> GL
     GR --> GL
     PI --> GL
     DP --> GL
@@ -133,9 +153,10 @@ For multi-year income statement analysis, tell students to exclude the two year-
 
 1. Start with a `SalesInvoice`.
 2. Use `SalesOrderID` to find the related `SalesOrder`.
-3. Use `SalesInvoiceLine.SalesOrderLineID` to connect billed lines to the original order lines.
-4. Use `CashReceipt.SalesInvoiceID` to see collections.
-5. Use `GLEntry.SourceDocumentType = "SalesInvoice"` or `"CashReceipt"` to see the accounting effect.
+3. Use `SalesInvoiceLine.ShipmentLineID` and `SalesInvoiceLine.SalesOrderLineID` to connect billed lines to the shipment and original order line.
+4. Use `CashReceiptApplication.SalesInvoiceID` to see how cash was applied, and use `CashReceipt` to see the receipt header.
+5. If the customer returned goods, use `CreditMemo.OriginalSalesInvoiceID`, `SalesReturnLine.ShipmentLineID`, and `CustomerRefund.CreditMemoID` to trace the reversal and refund path.
+6. Use `GLEntry.SourceDocumentType = "SalesInvoice"`, `"CashReceiptApplication"`, `"SalesReturn"`, `"CreditMemo"`, or `"CustomerRefund"` to see the accounting effect.
 
 ### P2P example
 

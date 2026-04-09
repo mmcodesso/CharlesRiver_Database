@@ -4,6 +4,19 @@ from typing import Any
 
 import pandas as pd
 
+from greenfield_dataset.o2c import (
+    credit_memo_allocation_map,
+    credit_memo_refunded_amounts,
+    invoice_cash_application_amounts,
+    invoice_credit_memo_amounts,
+    invoice_settled_amounts,
+    opening_inventory_map,
+    o2c_open_state,
+    receipt_applied_amounts,
+    sales_order_line_shipped_quantities,
+    shipment_line_billed_quantities,
+    shipment_line_returned_quantities,
+)
 from greenfield_dataset.p2p import (
     goods_receipt_line_invoiced_quantities,
     invoice_paid_amounts,
@@ -12,6 +25,7 @@ from greenfield_dataset.p2p import (
 )
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
+from greenfield_dataset.utils import money
 
 
 def account_id_by_number(context: GenerationContext, account_number: str) -> int:
@@ -229,6 +243,7 @@ def validate_phase5(context: GenerationContext) -> dict[str, Any]:
         "SalesInvoice",
         "SalesInvoiceLine",
         "CashReceipt",
+        "CashReceiptApplication",
         "PurchaseInvoice",
         "PurchaseInvoiceLine",
         "DisbursementPayment",
@@ -257,6 +272,7 @@ def validate_phase5(context: GenerationContext) -> dict[str, Any]:
             exceptions.append(f"Sales invoice subtotals do not match lines: {mismatched_ids[:5]}.")
 
     cash_receipts = context.tables["CashReceipt"]
+    cash_receipt_applications = context.tables["CashReceiptApplication"]
     if not cash_receipts.empty:
         valid_invoice_ids = set(sales_invoices["SalesInvoiceID"].astype(int))
         receipt_invoice_ids = set(cash_receipts["SalesInvoiceID"].dropna().astype(int))
@@ -264,15 +280,28 @@ def validate_phase5(context: GenerationContext) -> dict[str, Any]:
         if orphan_ids:
             exceptions.append(f"Cash receipts reference missing sales invoices: {orphan_ids[:5]}.")
 
-        receipt_totals = cash_receipts.groupby("SalesInvoiceID")["Amount"].sum().round(2)
-        invoice_totals = sales_invoices.set_index("SalesInvoiceID")["GrandTotal"].astype(float).round(2)
-        overpaid = [
-            int(invoice_id)
-            for invoice_id, amount in receipt_totals.items()
-            if round(float(amount), 2) > round(float(invoice_totals.get(invoice_id, 0.0)), 2)
-        ]
-        if overpaid:
-            exceptions.append(f"Cash receipts exceed sales invoice totals: {overpaid[:5]}.")
+    if not cash_receipt_applications.empty:
+        valid_receipt_ids = set(cash_receipts["CashReceiptID"].astype(int))
+        application_receipt_ids = set(cash_receipt_applications["CashReceiptID"].astype(int))
+        orphan_receipts = sorted(application_receipt_ids - valid_receipt_ids)
+        if orphan_receipts:
+            exceptions.append(f"Cash receipt applications reference missing receipts: {orphan_receipts[:5]}.")
+
+        valid_invoice_ids = set(sales_invoices["SalesInvoiceID"].astype(int))
+        application_invoice_ids = set(cash_receipt_applications["SalesInvoiceID"].astype(int))
+        orphan_invoices = sorted(application_invoice_ids - valid_invoice_ids)
+        if orphan_invoices:
+            exceptions.append(f"Cash receipt applications reference missing sales invoices: {orphan_invoices[:5]}.")
+
+        applied_by_receipt = receipt_applied_amounts(context)
+        for receipt in cash_receipts.itertuples(index=False):
+            if round(float(applied_by_receipt.get(int(receipt.CashReceiptID), 0.0)), 2) > round(float(receipt.Amount), 2):
+                exceptions.append(f"Cash receipt applications exceed receipt amount: {int(receipt.CashReceiptID)}.")
+
+        settled_by_invoice = invoice_settled_amounts(context)
+        for invoice in sales_invoices.itertuples(index=False):
+            if round(float(settled_by_invoice.get(int(invoice.SalesInvoiceID), 0.0)), 2) > round(float(invoice.GrandTotal), 2):
+                exceptions.append(f"Sales invoice settlements exceed invoice total: {int(invoice.SalesInvoiceID)}.")
 
     purchase_invoices = context.tables["PurchaseInvoice"]
     purchase_invoice_lines = context.tables["PurchaseInvoiceLine"]
@@ -349,15 +378,37 @@ def validate_account_rollforward(context: GenerationContext) -> dict[str, Any]:
         return round(float(account_rows["Credit"].sum()) - float(account_rows["Debit"].sum()), 2)
 
     cleared_grni = round(sum(purchase_invoice_line_matched_basis_map(context).values()), 2)
+    credit_memo_allocations = credit_memo_allocation_map(context)
+    customer_credit_total = round(
+        sum(float(allocation["customer_credit_amount"]) for allocation in credit_memo_allocations.values()),
+        2,
+    )
+    cash_applications_total = round(float(context.tables["CashReceiptApplication"]["AppliedAmount"].sum()), 2)
+    ar_credit_memo_total = round(
+        sum(float(allocation["ar_amount"]) for allocation in credit_memo_allocations.values()),
+        2,
+    )
     checks = [
         {
             "name": "AR",
             "expected": round(
                 float(context.tables["SalesInvoice"]["GrandTotal"].sum())
-                - float(context.tables["CashReceipt"]["Amount"].sum()),
+                - cash_applications_total
+                - ar_credit_memo_total,
                 2,
             ),
             "actual": gl_debit_net("1020"),
+        },
+        {
+            "name": "Customer Deposits and Unapplied Cash",
+            "expected": round(
+                float(context.tables["CashReceipt"]["Amount"].sum())
+                + customer_credit_total
+                - cash_applications_total
+                - float(context.tables["CustomerRefund"]["Amount"].sum()),
+                2,
+            ),
+            "actual": gl_credit_net("2060"),
         },
         {
             "name": "AP",
@@ -372,6 +423,7 @@ def validate_account_rollforward(context: GenerationContext) -> dict[str, Any]:
             "name": "Inventory",
             "expected": round(
                 float(context.tables["GoodsReceiptLine"]["ExtendedStandardCost"].sum())
+                + float(context.tables["SalesReturnLine"]["ExtendedStandardCost"].sum())
                 - float(context.tables["ShipmentLine"]["ExtendedStandardCost"].sum()),
                 2,
             ),
@@ -379,11 +431,29 @@ def validate_account_rollforward(context: GenerationContext) -> dict[str, Any]:
         },
         {
             "name": "COGS",
-            "expected": round(float(context.tables["ShipmentLine"]["ExtendedStandardCost"].sum()), 2),
+            "expected": round(
+                float(context.tables["ShipmentLine"]["ExtendedStandardCost"].sum())
+                - float(context.tables["SalesReturnLine"]["ExtendedStandardCost"].sum()),
+                2,
+            ),
             "actual": round(
                 gl_debit_net("5010") + gl_debit_net("5020") + gl_debit_net("5030") + gl_debit_net("5040"),
                 2,
             ),
+        },
+        {
+            "name": "Sales Tax Payable",
+            "expected": round(
+                float(context.tables["SalesInvoice"]["TaxAmount"].sum())
+                - float(context.tables["CreditMemo"]["TaxAmount"].sum()),
+                2,
+            ),
+            "actual": gl_credit_net("2050"),
+        },
+        {
+            "name": "Sales Returns and Allowances",
+            "expected": round(float(context.tables["CreditMemo"]["SubTotal"].sum()), 2),
+            "actual": gl_debit_net("4060"),
         },
         {
             "name": "GRNI",
@@ -554,6 +624,213 @@ def validate_p2p_phase9_controls(context: GenerationContext) -> dict[str, Any]:
     return {
         "exception_count": len(exceptions),
         "exceptions": exceptions,
+    }
+
+
+def validate_o2c_phase11_controls(context: GenerationContext) -> dict[str, Any]:
+    sales_orders = context.tables["SalesOrder"]
+    sales_order_lines = context.tables["SalesOrderLine"]
+    shipments = context.tables["Shipment"]
+    shipment_lines = context.tables["ShipmentLine"]
+    sales_invoices = context.tables["SalesInvoice"]
+    sales_invoice_lines = context.tables["SalesInvoiceLine"]
+    cash_receipts = context.tables["CashReceipt"]
+    cash_receipt_applications = context.tables["CashReceiptApplication"]
+    sales_returns = context.tables["SalesReturn"]
+    sales_return_lines = context.tables["SalesReturnLine"]
+    credit_memos = context.tables["CreditMemo"]
+    credit_memo_lines = context.tables["CreditMemoLine"]
+    customer_refunds = context.tables["CustomerRefund"]
+    exceptions: list[dict[str, Any]] = []
+
+    shipment_lookup = shipment_lines.set_index("ShipmentLineID").to_dict("index") if not shipment_lines.empty else {}
+    sales_line_lookup = sales_order_lines.set_index("SalesOrderLineID").to_dict("index") if not sales_order_lines.empty else {}
+    invoice_lookup = sales_invoices.set_index("SalesInvoiceID").to_dict("index") if not sales_invoices.empty else {}
+    return_line_lookup = sales_return_lines.set_index("SalesReturnLineID").to_dict("index") if not sales_return_lines.empty else {}
+
+    if not sales_invoice_lines.empty:
+        linked_invoice_lines = sales_invoice_lines[sales_invoice_lines["ShipmentLineID"].notna()]
+        valid_shipment_line_ids = set(shipment_lines["ShipmentLineID"].astype(int)) if not shipment_lines.empty else set()
+        orphan_shipment_lines = sorted(set(linked_invoice_lines["ShipmentLineID"].astype(int)) - valid_shipment_line_ids)
+        if orphan_shipment_lines:
+            exceptions.append({
+                "type": "invoice_line_missing_shipment_line",
+                "message": f"Sales invoice lines reference missing shipment lines: {orphan_shipment_lines[:5]}.",
+            })
+
+        mismatched_invoice_lines = []
+        for line in linked_invoice_lines.itertuples(index=False):
+            shipment_line = shipment_lookup.get(int(line.ShipmentLineID))
+            sales_line = sales_line_lookup.get(int(line.SalesOrderLineID))
+            if shipment_line is None or sales_line is None:
+                continue
+            if int(shipment_line["SalesOrderLineID"]) != int(line.SalesOrderLineID) or int(shipment_line["ItemID"]) != int(line.ItemID) or int(sales_line["ItemID"]) != int(line.ItemID):
+                mismatched_invoice_lines.append(int(line.SalesInvoiceLineID))
+        if mismatched_invoice_lines:
+            exceptions.append({
+                "type": "invoice_line_link_mismatch",
+                "message": f"Sales invoice lines do not match linked shipment or order lines: {mismatched_invoice_lines[:5]}.",
+            })
+
+        billed_quantities = shipment_line_billed_quantities(context)
+        over_billed_shipment_lines = [
+            int(shipment_line_id)
+            for shipment_line_id, billed_quantity in billed_quantities.items()
+            if round(float(billed_quantity), 2) > round(float(shipment_lookup.get(int(shipment_line_id), {}).get("QuantityShipped", 0.0)), 2)
+        ]
+        if over_billed_shipment_lines:
+            exceptions.append({
+                "type": "over_billed_shipment_line",
+                "message": f"Shipment lines are billed above shipped quantity: {over_billed_shipment_lines[:5]}.",
+            })
+
+    shipped_by_sales_line = sales_order_line_shipped_quantities(context)
+    over_shipped_sales_lines = [
+        int(line.SalesOrderLineID)
+        for line in sales_order_lines.itertuples(index=False)
+        if round(float(shipped_by_sales_line.get(int(line.SalesOrderLineID), 0.0)), 2) > round(float(line.Quantity), 2)
+    ]
+    if over_shipped_sales_lines:
+        exceptions.append({
+            "type": "over_shipped_sales_line",
+            "message": f"Sales order lines are shipped above ordered quantity: {over_shipped_sales_lines[:5]}.",
+        })
+
+    if not cash_receipt_applications.empty:
+        valid_receipt_ids = set(cash_receipts["CashReceiptID"].astype(int)) if not cash_receipts.empty else set()
+        orphan_receipts = sorted(set(cash_receipt_applications["CashReceiptID"].astype(int)) - valid_receipt_ids)
+        if orphan_receipts:
+            exceptions.append({
+                "type": "application_missing_receipt",
+                "message": f"Cash receipt applications reference missing receipts: {orphan_receipts[:5]}.",
+            })
+
+        valid_invoice_ids = set(sales_invoices["SalesInvoiceID"].astype(int)) if not sales_invoices.empty else set()
+        orphan_invoices = sorted(set(cash_receipt_applications["SalesInvoiceID"].astype(int)) - valid_invoice_ids)
+        if orphan_invoices:
+            exceptions.append({
+                "type": "application_missing_invoice",
+                "message": f"Cash receipt applications reference missing sales invoices: {orphan_invoices[:5]}.",
+            })
+
+        applied_by_receipt = receipt_applied_amounts(context)
+        for receipt in cash_receipts.itertuples(index=False):
+            if round(float(applied_by_receipt.get(int(receipt.CashReceiptID), 0.0)), 2) > round(float(receipt.Amount), 2):
+                exceptions.append({
+                    "type": "receipt_overapplied",
+                    "cash_receipt_id": int(receipt.CashReceiptID),
+                    "message": "Cash receipt applications exceed receipt amount.",
+                })
+
+        settled_by_invoice = invoice_settled_amounts(context)
+        for invoice in sales_invoices.itertuples(index=False):
+            if round(float(settled_by_invoice.get(int(invoice.SalesInvoiceID), 0.0)), 2) > round(float(invoice.GrandTotal), 2):
+                exceptions.append({
+                    "type": "invoice_oversettled",
+                    "sales_invoice_id": int(invoice.SalesInvoiceID),
+                    "message": "Invoice settlements exceed invoice total.",
+                })
+
+    if not sales_return_lines.empty:
+        billed_quantities = shipment_line_billed_quantities(context)
+        returned_quantities = shipment_line_returned_quantities(context)
+        over_returned_shipment_lines = [
+            int(shipment_line_id)
+            for shipment_line_id, returned_quantity in returned_quantities.items()
+            if round(float(returned_quantity), 2) > round(float(billed_quantities.get(int(shipment_line_id), 0.0)), 2)
+        ]
+        if over_returned_shipment_lines:
+            exceptions.append({
+                "type": "over_returned_shipment_line",
+                "message": f"Shipment lines are returned above billed quantity: {over_returned_shipment_lines[:5]}.",
+            })
+
+    if not credit_memo_lines.empty:
+        line_mismatches = []
+        pricing_mismatches = []
+        invoice_lines_by_id = sales_invoice_lines.set_index("SalesInvoiceLineID").to_dict("index") if not sales_invoice_lines.empty else {}
+        for credit_memo_line in credit_memo_lines.itertuples(index=False):
+            return_line = return_line_lookup.get(int(credit_memo_line.SalesReturnLineID))
+            if return_line is None:
+                line_mismatches.append(int(credit_memo_line.CreditMemoLineID))
+                continue
+            memo = credit_memos[credit_memos["CreditMemoID"].astype(int).eq(int(credit_memo_line.CreditMemoID))].iloc[0]
+            original_invoice_id = int(memo.OriginalSalesInvoiceID)
+            original_invoice_line = sales_invoice_lines[
+                sales_invoice_lines["SalesInvoiceID"].astype(int).eq(original_invoice_id)
+                & sales_invoice_lines["ShipmentLineID"].astype(int).eq(int(return_line["ShipmentLineID"]))
+            ]
+            if original_invoice_line.empty:
+                line_mismatches.append(int(credit_memo_line.CreditMemoLineID))
+                continue
+            original_line = original_invoice_line.iloc[0]
+            expected_line_total = money(
+                float(credit_memo_line.Quantity) * float(original_line["UnitPrice"]) * (1 - float(original_line["Discount"]))
+            )
+            if round(float(credit_memo_line.UnitPrice), 2) != round(float(original_line["UnitPrice"]), 2) or money(float(credit_memo_line.LineTotal)) != expected_line_total:
+                pricing_mismatches.append(int(credit_memo_line.CreditMemoLineID))
+        if line_mismatches:
+            exceptions.append({
+                "type": "credit_memo_line_return_mismatch",
+                "message": f"Credit memo lines do not match valid return lines and original invoices: {line_mismatches[:5]}.",
+            })
+        if pricing_mismatches:
+            exceptions.append({
+                "type": "credit_memo_pricing_mismatch",
+                "message": f"Credit memo lines do not match original billed pricing: {pricing_mismatches[:5]}.",
+            })
+
+    credit_memo_allocations = credit_memo_allocation_map(context)
+    refunded_amounts = credit_memo_refunded_amounts(context)
+    over_refunded_credit_memos = [
+        int(credit_memo_id)
+        for credit_memo_id, refunded_amount in refunded_amounts.items()
+        if round(float(refunded_amount), 2) > round(float(credit_memo_allocations.get(int(credit_memo_id), {}).get("customer_credit_amount", 0.0)), 2)
+    ]
+    if over_refunded_credit_memos:
+        exceptions.append({
+            "type": "over_refunded_credit_memo",
+            "message": f"Customer refunds exceed available customer credit on credit memos: {over_refunded_credit_memos[:5]}.",
+        })
+
+    inventory = opening_inventory_map(context)
+    events: list[tuple[pd.Timestamp, int, int, float, str, int]] = []
+    goods_receipt_headers = context.tables["GoodsReceipt"].set_index("GoodsReceiptID")[["ReceiptDate", "WarehouseID"]].to_dict("index") if not context.tables["GoodsReceipt"].empty else {}
+    for line in context.tables["GoodsReceiptLine"].itertuples(index=False):
+        header = goods_receipt_headers.get(int(line.GoodsReceiptID))
+        if header is None:
+            continue
+        events.append((pd.Timestamp(header["ReceiptDate"]), 0, int(line.ItemID), int(header["WarehouseID"]), float(line.QuantityReceived), int(line.GoodsReceiptLineID)))
+    shipment_headers = shipments.set_index("ShipmentID")[["ShipmentDate", "WarehouseID"]].to_dict("index") if not shipments.empty else {}
+    for line in shipment_lines.itertuples(index=False):
+        header = shipment_headers.get(int(line.ShipmentID))
+        if header is None:
+            continue
+        events.append((pd.Timestamp(header["ShipmentDate"]), 1, int(line.ItemID), int(header["WarehouseID"]), float(line.QuantityShipped), int(line.ShipmentLineID)))
+    sales_return_headers = sales_returns.set_index("SalesReturnID")[["ReturnDate", "WarehouseID"]].to_dict("index") if not sales_returns.empty else {}
+    for line in sales_return_lines.itertuples(index=False):
+        header = sales_return_headers.get(int(line.SalesReturnID))
+        if header is None:
+            continue
+        events.append((pd.Timestamp(header["ReturnDate"]), 0, int(line.ItemID), int(header["WarehouseID"]), float(line.QuantityReturned), int(line.SalesReturnLineID)))
+    for event_date, event_order, item_id, warehouse_id, quantity, source_id in sorted(events, key=lambda item: (item[0], item[1], item[5])):
+        key = (int(item_id), int(warehouse_id))
+        if event_order == 0:
+            inventory[key] = round(float(inventory.get(key, 0.0)) + float(quantity), 2)
+            continue
+        available = round(float(inventory.get(key, 0.0)), 2)
+        if available < round(float(quantity), 2):
+            exceptions.append({
+                "type": "inventory_availability_breach",
+                "shipment_line_id": int(source_id),
+                "message": "Shipment consumes more inventory than available in the shadow inventory model.",
+            })
+        inventory[key] = round(available - float(quantity), 2)
+
+    return {
+        "exception_count": len(exceptions),
+        "exceptions": exceptions,
+        "open_state": o2c_open_state(context),
     }
 
 
@@ -760,9 +1037,13 @@ def validate_journal_controls(context: GenerationContext) -> dict[str, Any]:
     }
 
 
-def validate_phase9(context: GenerationContext, store: bool = True) -> dict[str, Any]:
+def validate_phase11(context: GenerationContext, store: bool = True) -> dict[str, Any]:
     results = validate_phase6(context)
     exceptions = list(results["exceptions"])
+
+    o2c_controls = validate_o2c_phase11_controls(context)
+    if o2c_controls["exception_count"]:
+        exceptions.append(f"O2C phase 11 control exceptions: {o2c_controls['exception_count']}.")
 
     p2p_controls = validate_p2p_phase9_controls(context)
     if p2p_controls["exception_count"]:
@@ -772,22 +1053,28 @@ def validate_phase9(context: GenerationContext, store: bool = True) -> dict[str,
     if journal_controls["exception_count"]:
         exceptions.append(f"Journal control exceptions: {journal_controls['exception_count']}.")
 
-    phase9_results: dict[str, Any] = {
+    phase11_results: dict[str, Any] = {
         "row_counts": {table: int(len(df)) for table, df in context.tables.items()},
         "exceptions": exceptions,
         "gl_balance": results["gl_balance"],
         "trial_balance_difference": results["trial_balance_difference"],
         "account_rollforward": results["account_rollforward"],
+        "o2c_controls": o2c_controls,
         "p2p_controls": p2p_controls,
         "journal_controls": journal_controls,
     }
     if store:
-        context.validation_results["phase9"] = phase9_results
-    return phase9_results
+        context.validation_results["phase11"] = phase11_results
+        context.validation_results["phase9"] = phase11_results
+    return phase11_results
+
+
+def validate_phase9(context: GenerationContext, store: bool = True) -> dict[str, Any]:
+    return validate_phase11(context, store=store)
 
 
 def validate_phase8(context: GenerationContext) -> dict[str, Any]:
-    results = validate_phase9(context, store=False)
+    results = validate_phase11(context, store=False)
     exceptions = list(results["exceptions"])
 
     if context.settings.anomaly_mode != "none" and not context.anomaly_log:
@@ -800,6 +1087,7 @@ def validate_phase8(context: GenerationContext) -> dict[str, Any]:
         "trial_balance_difference": results["trial_balance_difference"],
         "account_rollforward": results["account_rollforward"],
         "anomaly_count": len(context.anomaly_log),
+        "o2c_controls": results["o2c_controls"],
         "p2p_controls": results["p2p_controls"],
         "journal_controls": results["journal_controls"],
     }

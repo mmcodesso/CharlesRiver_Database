@@ -6,7 +6,7 @@
 
 Posting logic is implemented across `src/greenfield_dataset/budgets.py`, `src/greenfield_dataset/journals.py`, and `src/greenfield_dataset/posting_engine.py`.
 
-> **Implemented in current generator:** Event-based postings for shipments, sales invoices, cash receipts, goods receipts, purchase invoices, and disbursements, plus opening, recurring manual, reversal, and year-end close journals.
+> **Implemented in current generator:** Event-based postings for shipments, sales invoices, cash receipts, cash receipt applications, sales returns, credit memos, customer refunds, goods receipts, purchase invoices, and disbursements, plus opening, recurring manual, reversal, and year-end close journals.
 
 > **Planned future extension:** Future manufacturing-related posting events.
 
@@ -34,7 +34,11 @@ These documents are generated for process analysis but do **not** create `GLEntr
 | Accrual reversal | `JournalEntry` plus seeded GL rows from `journals.py` | First business day of following month | Reverse prior accrual liability and expense lines | Reverse prior accrual liability and expense lines |
 | Shipment | `Shipment`, `ShipmentLine` | `ShipmentDate` | Item COGS account | Item inventory account |
 | Sales invoice | `SalesInvoice`, `SalesInvoiceLine` | `InvoiceDate` | Accounts receivable | Item revenue account and sales tax payable |
-| Cash receipt | `CashReceipt` | `ReceiptDate` | Cash | Accounts receivable |
+| Cash receipt | `CashReceipt` | `ReceiptDate` | Cash | `2060` Customer Deposits and Unapplied Cash |
+| Cash receipt application | `CashReceiptApplication` | `ApplicationDate` | `2060` Customer Deposits and Unapplied Cash | Accounts receivable |
+| Sales return | `SalesReturn`, `SalesReturnLine` | `ReturnDate` | Item inventory account | Item COGS account |
+| Credit memo | `CreditMemo`, `CreditMemoLine` | `CreditMemoDate` | `4060` Sales Returns and Allowances and sales tax payable reversal | Accounts receivable or `2060` Customer Deposits and Unapplied Cash |
+| Customer refund | `CustomerRefund` | `RefundDate` | `2060` Customer Deposits and Unapplied Cash | Cash |
 | Goods receipt | `GoodsReceipt`, `GoodsReceiptLine` | `ReceiptDate` | Item inventory account using receipt-line posting basis | Goods Received Not Invoiced |
 | Purchase invoice | `PurchaseInvoice`, `PurchaseInvoiceLine` | `ApprovedDate` | GRNI cleared at matched receipt-line basis, purchase variance when needed, and nonrecoverable tax to variance | Accounts payable and purchase variance when needed |
 | Disbursement | `DisbursementPayment` | `PaymentDate` | Accounts payable | Cash |
@@ -49,6 +53,8 @@ These documents are generated for process analysis but do **not** create `GLEntr
 | `1020` | Accounts receivable |
 | `1040` | Inventory - finished goods |
 | `1045` | Inventory - materials and packaging |
+| `2060` | Customer deposits and unapplied cash |
+| `4060` | Sales returns and allowances |
 | `2010` | Accounts payable |
 | `2020` | Goods Received Not Invoiced |
 | `2030` | Accrued payroll |
@@ -89,6 +95,7 @@ The current implementation uses cost centers where they are operationally meanin
 
 - shipment postings inherit `CostCenterID` from the related sales order
 - sales revenue postings inherit `CostCenterID` from the related sales order
+- sales return and credit memo postings inherit `CostCenterID` from the related sales order
 - goods receipt postings inherit `CostCenterID` from the originating requisition through `PurchaseOrderLine.RequisitionID` when available
 - purchase invoice postings inherit `CostCenterID` from the matched receipt or purchase-order line when available
 - disbursements inherit a cost center only when the related purchase invoice resolves cleanly to one cost center
@@ -111,10 +118,12 @@ The posting engine enforces these principles:
 
 - voucher-level balance
 - overall trial balance equality
-- AR roll-forward against sales invoices and cash receipts
+- AR roll-forward against sales invoices, cash receipt applications, and credit memos
 - AP roll-forward against purchase invoices and disbursements
-- inventory roll-forward against goods receipts and shipments
-- COGS agreement with shipment standard cost
+- inventory roll-forward against goods receipts, shipments, and sales returns
+- COGS agreement with shipment standard cost net of sales returns
+- customer deposit and unapplied cash roll-forward against receipts, applications, credit memos, and refunds
+- sales tax payable and contra-revenue roll-forwards
 - GRNI roll-forward against goods receipts and cleared purchase invoices
 - journal header-to-GL agreement
 - accrual reversal linkage and timing
@@ -123,6 +132,7 @@ The posting engine enforces these principles:
 ## Current Implementation Notes
 
 - `PurchaseInvoice` postings use `ApprovedDate` as the posting date in the current code.
+- `CashReceipt` is now only the cash-movement header. Customer settlement lives on `CashReceiptApplication`.
 - Clean P2P matching uses `PurchaseInvoiceLine.GoodsReceiptLineID` first and falls back to `POLineID` only for legacy or exceptional rows.
 - Purchase invoice tax is treated as nonrecoverable and posted to purchase variance in the current implementation.
 - Year-end close entries are real posted journals in every fiscal year of the default range.

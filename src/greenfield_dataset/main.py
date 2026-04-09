@@ -25,9 +25,12 @@ from greenfield_dataset.master_data import (
 )
 from greenfield_dataset.o2c import (
     generate_month_cash_receipts,
+    generate_month_customer_refunds,
     generate_month_o2c,
+    generate_month_sales_returns,
     generate_month_sales_invoices,
     generate_month_shipments,
+    o2c_open_state,
 )
 from greenfield_dataset.p2p import (
     generate_month_disbursements,
@@ -49,6 +52,7 @@ from greenfield_dataset.validations import (
     validate_phase7,
     validate_phase8,
     validate_phase9,
+    validate_phase11,
 )
 
 
@@ -79,6 +83,12 @@ def configure_generation_logging(log_path: str | Path) -> None:
 
     LOGGER.addHandler(console_handler)
     LOGGER.addHandler(file_handler)
+
+
+def close_generation_logging() -> None:
+    for handler in list(LOGGER.handlers):
+        LOGGER.removeHandler(handler)
+        handler.close()
 
 
 @contextmanager
@@ -244,6 +254,20 @@ def build_phase9(config_path: str | Path = "config/settings.yaml") -> Generation
     return context
 
 
+def build_phase11(config_path: str | Path = "config/settings.yaml") -> GenerationContext:
+    context = build_phase5(config_path)
+
+    generate_month_sales_returns(context, 2026, 1)
+    generate_month_customer_refunds(context, 2026, 1)
+    generate_recurring_manual_journals(context)
+    post_all_transactions(context)
+    generate_year_end_close_journals(context)
+    validate_phase11(context)
+    export_validation_report(context)
+
+    return context
+
+
 def fiscal_months(context: GenerationContext) -> Iterable[tuple[int, int]]:
     start = pd.Timestamp(context.settings.fiscal_year_start)
     end = pd.Timestamp(context.settings.fiscal_year_end)
@@ -259,10 +283,12 @@ def generate_all_months(context: GenerationContext) -> None:
     for year, month in fiscal_months(context):
         generate_month_o2c(context, year, month)
         generate_month_p2p(context, year, month)
-        generate_month_shipments(context, year, month)
         generate_month_goods_receipts(context, year, month)
+        generate_month_shipments(context, year, month)
         generate_month_sales_invoices(context, year, month)
         generate_month_cash_receipts(context, year, month)
+        generate_month_sales_returns(context, year, month)
+        generate_month_customer_refunds(context, year, month)
         generate_month_purchase_invoices(context, year, month)
         generate_month_disbursements(context, year, month)
 
@@ -318,21 +344,60 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
             requisitions_converted_before = int(context.tables["PurchaseRequisition"]["Status"].eq("Converted to PO").sum())
             po_line_count_before = len(context.tables["PurchaseOrderLine"])
             receipt_line_count_before = len(context.tables["GoodsReceiptLine"])
+            shipment_line_count_before = len(context.tables["ShipmentLine"])
             invoice_line_count_before = len(context.tables["PurchaseInvoiceLine"])
             disbursement_count_before = len(context.tables["DisbursementPayment"])
             generate_month_o2c(context, year, month)
             generate_month_p2p(context, year, month)
-            generate_month_shipments(context, year, month)
             generate_month_goods_receipts(context, year, month)
+            generate_month_shipments(context, year, month)
             generate_month_sales_invoices(context, year, month)
             generate_month_cash_receipts(context, year, month)
+            generate_month_sales_returns(context, year, month)
+            generate_month_customer_refunds(context, year, month)
             generate_month_purchase_invoices(context, year, month)
             generate_month_disbursements(context, year, month)
             requisitions_converted_after = int(context.tables["PurchaseRequisition"]["Status"].eq("Converted to PO").sum())
+            new_shipment_lines = context.tables["ShipmentLine"].iloc[shipment_line_count_before:]
             new_receipt_lines = context.tables["GoodsReceiptLine"].iloc[receipt_line_count_before:]
             new_invoice_lines = context.tables["PurchaseInvoiceLine"].iloc[invoice_line_count_before:]
             new_disbursements = context.tables["DisbursementPayment"].iloc[disbursement_count_before:]
             open_state = p2p_open_state(context)
+            revenue_state = o2c_open_state(context)
+            new_cash_receipts = context.tables["CashReceipt"][
+                pd.to_datetime(context.tables["CashReceipt"]["ReceiptDate"]).dt.year.eq(year)
+                & pd.to_datetime(context.tables["CashReceipt"]["ReceiptDate"]).dt.month.eq(month)
+            ]
+            new_sales_returns = context.tables["SalesReturn"][
+                pd.to_datetime(context.tables["SalesReturn"]["ReturnDate"]).dt.year.eq(year)
+                & pd.to_datetime(context.tables["SalesReturn"]["ReturnDate"]).dt.month.eq(month)
+            ]
+            new_credit_memos = context.tables["CreditMemo"][
+                pd.to_datetime(context.tables["CreditMemo"]["CreditMemoDate"]).dt.year.eq(year)
+                & pd.to_datetime(context.tables["CreditMemo"]["CreditMemoDate"]).dt.month.eq(month)
+            ]
+            new_refunds = context.tables["CustomerRefund"][
+                pd.to_datetime(context.tables["CustomerRefund"]["RefundDate"]).dt.year.eq(year)
+                & pd.to_datetime(context.tables["CustomerRefund"]["RefundDate"]).dt.month.eq(month)
+            ]
+            LOGGER.info(
+                "O2C CHECKPOINT | %s-%02d | shipment_lines_created=%s | shipped_quantity=%s | cash_receipts_created=%s | cash_received=%s | returns_created=%s | credit_memos_created=%s | refunds_created=%s | open_order_quantity=%s | backordered_quantity=%s | unbilled_shipment_quantity=%s | open_ar_amount=%s | unapplied_cash_amount=%s | customer_credit_amount=%s",
+                year,
+                month,
+                len(new_shipment_lines),
+                round(float(new_shipment_lines["QuantityShipped"].sum()), 2) if not new_shipment_lines.empty else 0.0,
+                len(new_cash_receipts),
+                round(float(new_cash_receipts["Amount"].sum()), 2) if not new_cash_receipts.empty else 0.0,
+                len(new_sales_returns),
+                len(new_credit_memos),
+                len(new_refunds),
+                revenue_state["open_order_quantity"],
+                revenue_state["backordered_quantity"],
+                revenue_state["unbilled_shipment_quantity"],
+                revenue_state["open_ar_amount"],
+                revenue_state["unapplied_cash_amount"],
+                revenue_state["customer_credit_amount"],
+            )
             LOGGER.info(
                 "P2P CHECKPOINT | %s-%02d | converted_requisitions=%s | po_lines_created=%s | receipt_lines_created=%s | receipt_quantity=%s | invoice_lines_created=%s | invoiced_quantity=%s | disbursements_created=%s | amount_paid=%s | open_requisitions=%s | open_po_quantity=%s | open_receipt_quantity=%s | open_invoice_amount=%s",
                 year,
@@ -389,7 +454,7 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
         log_table_counts(context, ("JournalEntry", "GLEntry"), "year-end close")
 
     with logged_step("Validate clean final dataset"):
-        log_validation_results("phase9", validate_phase9(context))
+        log_validation_results("phase11", validate_phase11(context))
 
     with logged_step("Inject configured anomalies"):
         inject_anomalies(context)
@@ -423,12 +488,13 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
 
     log_all_table_counts(context, "final")
     LOGGER.info("Finished Greenfield dataset generation.")
+    close_generation_logging()
 
     return context
 
 
 def print_summary(context: GenerationContext) -> None:
-    row_counts = context.validation_results["phase9"]["row_counts"]
+    row_counts = context.validation_results["phase11"]["row_counts"]
     print("Full dataset generated.")
     print(f"Fiscal range: {context.settings.fiscal_year_start} to {context.settings.fiscal_year_end}")
     print(f"Accounts: {row_counts['Account']}")
@@ -452,11 +518,17 @@ def print_summary(context: GenerationContext) -> None:
     print(f"Sales invoices: {row_counts['SalesInvoice']}")
     print(f"Sales invoice lines: {row_counts['SalesInvoiceLine']}")
     print(f"Cash receipts: {row_counts['CashReceipt']}")
+    print(f"Cash receipt applications: {row_counts['CashReceiptApplication']}")
+    print(f"Sales returns: {row_counts['SalesReturn']}")
+    print(f"Sales return lines: {row_counts['SalesReturnLine']}")
+    print(f"Credit memos: {row_counts['CreditMemo']}")
+    print(f"Credit memo lines: {row_counts['CreditMemoLine']}")
+    print(f"Customer refunds: {row_counts['CustomerRefund']}")
     print(f"Purchase invoices: {row_counts['PurchaseInvoice']}")
     print(f"Purchase invoice lines: {row_counts['PurchaseInvoiceLine']}")
     print(f"Disbursements: {row_counts['DisbursementPayment']}")
     print(f"GL entries: {row_counts['GLEntry']}")
-    print(f"GL balance exceptions: {context.validation_results['phase9']['gl_balance']['exception_count']}")
+    print(f"GL balance exceptions: {context.validation_results['phase11']['gl_balance']['exception_count']}")
     print(f"Anomalies logged: {len(context.anomaly_log)}")
     print(f"SQLite export: {context.settings.sqlite_path}")
     print(f"Excel export: {context.settings.excel_path}")

@@ -6,12 +6,12 @@
 
 ## How the Database Is Organized
 
-The current implementation contains 25 tables grouped into five areas:
+The current implementation contains 31 tables grouped into five areas:
 
 | Area | Tables |
 |---|---|
 | Accounting core | `Account`, `JournalEntry`, `GLEntry` |
-| O2C | `Customer`, `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt` |
+| O2C | `Customer`, `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt`, `CashReceiptApplication`, `SalesReturn`, `SalesReturnLine`, `CreditMemo`, `CreditMemoLine`, `CustomerRefund` |
 | P2P | `Supplier`, `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment` |
 | Master data | `Item`, `Warehouse`, `Employee` |
 | Organizational planning | `CostCenter`, `Budget` |
@@ -35,7 +35,7 @@ If you are new to the database, start from the header table to understand the do
 
 | Key | Use |
 |---|---|
-| `CustomerID` | Connect customers to orders, invoices, and cash receipts |
+| `CustomerID` | Connect customers to orders, invoices, receipts, returns, credit memos, and refunds |
 | `SupplierID` | Connect suppliers to purchase orders, invoices, and payments |
 | `RequisitionID` | Connect requisitions to purchase-order headers and purchase-order lines |
 | `SalesOrderID` | Connect sales order header to shipments and invoices |
@@ -51,7 +51,11 @@ If you are new to the database, start from the header table to understand the do
 
 ### O2C path
 
-`Customer -> SalesOrder -> SalesOrderLine -> Shipment -> ShipmentLine -> SalesInvoice -> SalesInvoiceLine -> CashReceipt`
+`Customer -> SalesOrder -> SalesOrderLine -> Shipment -> ShipmentLine -> SalesInvoice -> SalesInvoiceLine -> CashReceipt -> CashReceiptApplication`
+
+Returns, credits, and refunds branch from the billed shipment path:
+
+`SalesInvoiceLine -> SalesReturn -> SalesReturnLine -> CreditMemo -> CreditMemoLine -> CustomerRefund`
 
 Use this path when studying revenue, fulfillment, billing, collections, customer behavior, or receivables.
 
@@ -84,7 +88,11 @@ Not every operational document posts to the general ledger.
 | Purchase orders | No | External commitment document |
 | Shipments | Yes | Posts COGS and inventory relief |
 | Sales invoices | Yes | Posts AR, revenue, and sales tax |
-| Cash receipts | Yes | Posts cash and AR |
+| Cash receipts | Yes | Posts cash and unapplied cash; applications clear AR |
+| Cash receipt applications | Yes | Moves customer cash from unapplied cash to AR settlement |
+| Sales returns | Yes | Posts inventory back in and reverses COGS |
+| Credit memos | Yes | Posts contra revenue, tax reversal, and AR or customer credit reduction |
+| Customer refunds | Yes | Posts customer credit and cash |
 | Goods receipts | Yes | Posts inventory and GRNI using receipt-line posting basis |
 | Purchase invoices | Yes | Posts GRNI clearing, AP, and purchase variance using matched receipt-line linkage when available |
 | Disbursements | Yes | Posts AP and cash |
@@ -99,7 +107,8 @@ Start with:
 - `GLEntry`
 - `Account`
 - `SalesInvoice`
-- `CashReceipt`
+- `CashReceiptApplication`
+- `CreditMemo`
 - `PurchaseInvoice`
 - `DisbursementPayment`
 

@@ -85,7 +85,7 @@ This shared context is passed across generation, posting, validation, and export
 | `schema.py` | Defines `TABLE_COLUMNS` and creates empty DataFrames |
 | `master_data.py` | Loads accounts and generates cost centers, employees, warehouses, items, customers, and suppliers |
 | `budgets.py` | Generates the opening balance journal and budget rows |
-| `o2c.py` | Generates sales orders, shipments, sales invoices, and cash receipts |
+| `o2c.py` | Generates sales orders, inventory-constrained shipments, sales invoices, cash receipts, receipt applications, sales returns, credit memos, refunds, and shared O2C state maps |
 | `p2p.py` | Generates requisitions, batched purchase orders, open-line goods receipts, matched purchase invoices, disbursements, and shared P2P state maps |
 | `journals.py` | Generates recurring manual journals, accrual reversals, and year-end close journals |
 | `posting_engine.py` | Converts operational events into balanced GL entries |
@@ -101,7 +101,11 @@ The current posting model is event-based:
 
 - shipments post COGS and inventory
 - sales invoices post AR, revenue, and sales tax
-- cash receipts post cash and AR
+- cash receipts post cash and unapplied cash
+- cash receipt applications clear AR from unapplied cash
+- sales returns reverse COGS and restore inventory
+- credit memos reverse revenue and tax while reducing AR or creating customer credit
+- customer refunds clear customer credit and cash
 - goods receipts post inventory and GRNI
 - purchase invoices post matched GRNI clearing, AP, and purchase variance
 - disbursements post AP and cash
@@ -118,11 +122,12 @@ Current validations include:
 - header-to-line totals
 - orphan line detection
 - over-shipment and over-receipt checks
+- shipment-to-invoice, application, return, and refund integrity checks for O2C
 - over-invoicing and status-consistency checks for P2P receipt and payment flows
 - overpayment checks
 - voucher balance
 - trial balance equality
-- AR, AP, inventory, COGS, and GRNI roll-forwards
+- AR, AP, inventory, COGS, sales-tax, customer-deposit, and GRNI roll-forwards
 - journal header-to-GL agreement
 - accrual reversal linkage and timing
 - year-end close coverage and profit-and-loss closure by fiscal year
@@ -132,6 +137,7 @@ The full run also writes `outputs/generation.log`, which records:
 - configuration values
 - timed step boundaries
 - monthly generation progress
+- monthly O2C checkpoints for shipment volume, open orders, open AR, unapplied cash, customer credit, and return/refund activity
 - monthly P2P checkpoints for converted requisitions, receipt volume, invoiced quantity, payments, and open-state balances
 - row-count checkpoints
 - validation summaries

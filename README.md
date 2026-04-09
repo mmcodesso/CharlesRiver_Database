@@ -57,9 +57,9 @@ Generated outputs are ignored by Git and can be regenerated locally at any time.
 
 | Implemented in current generator | Planned later |
 |---|---|
-| 25-table dataset covering O2C, P2P, master data, budgets, recurring manual journals, year-end close, and ledger postings | Manufacturing process tables and production flows |
-| Five-year fiscal range with monthly operational and manual journal generation, plus multi-period P2P matching and settlement behavior | Richer O2C inventory constraints, returns, and broader manufacturing flows |
-| Event-based postings from shipments, invoices, receipts, goods receipts, purchase invoices, and disbursements plus seeded journal postings | More advanced teaching packs and broader course extensions |
+| 31-table dataset covering O2C, P2P, master data, budgets, recurring manual journals, year-end close, and ledger postings | Manufacturing process tables and production flows |
+| Five-year fiscal range with monthly operational and manual journal generation, plus multi-period O2C and P2P matching and settlement behavior | Broader manufacturing flows |
+| Event-based postings from shipments, invoices, receipt applications, goods receipts, purchase invoices, disbursements, returns, credit memos, and refunds plus seeded journal postings | More advanced teaching packs and broader course extensions |
 | Starter analytics docs, runnable SQLite query packs, and Excel workflow guidance across financial, managerial, and audit analytics | Additional analytics packs for later O2C and manufacturing phases |
 | SQLite, Excel, validation report, and generation log outputs | Additional dataset extensions for broader course coverage |
 
@@ -87,17 +87,18 @@ Generated outputs are ignored by Git and can be regenerated locally at any time.
 
 - Company: Greenfield Home Furnishings, Inc.
 - Fiscal range: 2026 through 2030
-- Implemented tables: 25
+- Implemented tables: 31
 - Core processes: order-to-cash, procure-to-pay, opening balances, recurring manual journals, year-end close, budgets, and ledger postings
-- Default build counts: `Account` 90, `JournalEntry` 1,442, `GLEntry` 176,643, `SalesOrder` 6,929, `PurchaseOrder` 5,413, `PurchaseInvoice` 12,597, `DisbursementPayment` 13,904, `Budget` 2,940
+- Default build counts: `Account` 90, `JournalEntry` 1,442, `GLEntry` 469,567, `SalesOrder` 6,903, `Shipment` 25,606, `SalesInvoice` 33,089, `CashReceipt` 9,113, `SalesReturn` 24,813, `CreditMemo` 24,813, `PurchaseOrder` 5,384, `PurchaseInvoice` 12,440, `DisbursementPayment` 13,833, `Budget` 2,940
 - Primary teaching uses: financial analytics, managerial analytics, audit analytics, SQL practice, Excel analysis, and subledger-to-ledger reconciliation
 
 ## Notes on Scope
 
 - The current generator models a distributor and light assembler, but it does **not** yet implement manufacturing transactions.
 - `JournalEntry` now includes the opening balance, recurring operating journals, accrual reversals, and year-end close entries.
+- O2C now supports inventory-constrained shipments, backorders, exact shipment-to-invoice linkage, cash receipt applications, customer deposits, sales returns, credit memos, and customer refunds.
 - P2P now supports batched requisition-to-PO conversion, partial receipts across periods, receipt-line invoice matching, and split disbursement settlement behavior.
-- Phase 10 adds a starter analytics layer under `docs/analytics/` plus runnable SQL files under `queries/`.
+- Phase 10 and Phase 11 together add a starter analytics layer under `docs/analytics/` plus runnable SQL files under `queries/` that now cover returns, customer credits, and richer O2C timing.
 - In the default `standard` anomaly mode, the final validation report intentionally contains planted exceptions, including journal-control findings, while keeping the GL balanced.
 - `Design.md` is now an appendix and historical blueprint. It contains future ideas that do not always match the current generator.
 

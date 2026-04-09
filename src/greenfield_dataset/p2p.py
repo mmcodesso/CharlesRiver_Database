@@ -462,33 +462,33 @@ def update_purchase_order_statuses(context: GenerationContext) -> None:
         return
 
     received_quantities = po_line_received_quantities(context)
+    line_metrics = purchase_order_lines[["PurchaseOrderID", "POLineID", "Quantity"]].copy()
+    line_metrics["ReceivedQuantity"] = line_metrics["POLineID"].astype(int).map(received_quantities).fillna(0.0)
+    line_metrics["FullyReceived"] = (
+        line_metrics["ReceivedQuantity"].round(2) >= line_metrics["Quantity"].astype(float).round(2)
+    )
+    order_totals = (
+        line_metrics.groupby("PurchaseOrderID")[["ReceivedQuantity", "FullyReceived"]]
+        .agg({"ReceivedQuantity": "sum", "FullyReceived": "all"})
+        .to_dict("index")
+    )
+
     status_updates: dict[int, str] = {}
-
     for purchase_order in purchase_orders.itertuples(index=False):
-        related_lines = purchase_order_lines[
-            purchase_order_lines["PurchaseOrderID"].astype(int).eq(int(purchase_order.PurchaseOrderID))
-        ]
-        if related_lines.empty:
+        totals = order_totals.get(int(purchase_order.PurchaseOrderID))
+        if totals is None:
             continue
-
-        received_total = 0.0
-        all_fully_received = True
-        for line in related_lines.itertuples(index=False):
-            received_quantity = float(received_quantities.get(int(line.POLineID), 0.0))
-            received_total += received_quantity
-            if qty(received_quantity) < qty(float(line.Quantity)):
-                all_fully_received = False
-
-        if qty(received_total) <= 0:
+        received_total = qty(float(totals["ReceivedQuantity"]))
+        all_fully_received = bool(totals["FullyReceived"])
+        if received_total <= 0:
             status_updates[int(purchase_order.PurchaseOrderID)] = "Open"
         elif all_fully_received:
             status_updates[int(purchase_order.PurchaseOrderID)] = "Received"
         else:
             status_updates[int(purchase_order.PurchaseOrderID)] = "Partially Received"
 
-    for purchase_order_id, status in status_updates.items():
-        mask = context.tables["PurchaseOrder"]["PurchaseOrderID"].astype(int).eq(purchase_order_id)
-        context.tables["PurchaseOrder"].loc[mask, "Status"] = status
+    purchase_order_ids = context.tables["PurchaseOrder"]["PurchaseOrderID"].astype(int)
+    context.tables["PurchaseOrder"]["Status"] = purchase_order_ids.map(status_updates).fillna(context.tables["PurchaseOrder"]["Status"])
 
 
 def update_purchase_invoice_statuses(context: GenerationContext) -> None:
@@ -497,6 +497,7 @@ def update_purchase_invoice_statuses(context: GenerationContext) -> None:
         return
 
     paid_amounts = invoice_paid_amounts(context)
+    status_updates: dict[int, str] = {}
     for invoice in invoices.itertuples(index=False):
         paid_amount = float(paid_amounts.get(int(invoice.PurchaseInvoiceID), 0.0))
         outstanding_amount = money(float(invoice.GrandTotal) - paid_amount)
@@ -506,8 +507,10 @@ def update_purchase_invoice_statuses(context: GenerationContext) -> None:
             status = "Paid"
         else:
             status = "Partially Paid"
-        mask = context.tables["PurchaseInvoice"]["PurchaseInvoiceID"].astype(int).eq(int(invoice.PurchaseInvoiceID))
-        context.tables["PurchaseInvoice"].loc[mask, "Status"] = status
+        status_updates[int(invoice.PurchaseInvoiceID)] = status
+
+    invoice_ids = context.tables["PurchaseInvoice"]["PurchaseInvoiceID"].astype(int)
+    context.tables["PurchaseInvoice"]["Status"] = invoice_ids.map(status_updates).fillna(context.tables["PurchaseInvoice"]["Status"])
 
 
 def generate_month_requisitions(context: GenerationContext, year: int, month: int) -> None:

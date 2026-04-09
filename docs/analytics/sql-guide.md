@@ -6,7 +6,7 @@
 
 > **Implemented in current generator:** SQLite-first starter SQL files for financial accounting, managerial accounting, and auditing analytics.
 
-> **Planned future extension:** Additional SQL packs for richer O2C behavior and manufacturing once those phases exist.
+> **Planned future extension:** Additional SQL packs for manufacturing once that phase exists.
 
 ## Starter SQL Package Layout
 
@@ -80,7 +80,7 @@ The starter pack follows these rules:
 - no dependency on future schema changes
 - readable CTE-based structure where it improves clarity
 - no dependency on exact row counts
-- no dependency on manufacturing, returns, or WIP accounting
+- no dependency on manufacturing or WIP accounting
 
 ## How to Adapt the Starter Queries
 
@@ -93,7 +93,7 @@ Safe ways to extend the starter pack:
 
 Changes to avoid in this phase:
 
-- rewriting queries around future returns or manufacturing flows
+- rewriting queries around future manufacturing flows
 - assuming anomaly rows will always exist
 - assuming every control-account or balance-sheet line carries a cost center
 

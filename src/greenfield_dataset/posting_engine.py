@@ -10,6 +10,7 @@ from greenfield_dataset.p2p import (
     purchase_invoice_line_matched_basis_map,
     purchase_invoice_unique_cost_center_map,
 )
+from greenfield_dataset.o2c import credit_memo_allocation_map
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
 from greenfield_dataset.utils import money, next_id
@@ -201,7 +202,7 @@ def post_cash_receipts(context: GenerationContext) -> list[dict[str, Any]]:
         return []
 
     cash_account_id = account_id_by_number(context, "1010")
-    ar_account_id = account_id_by_number(context, "1020")
+    unapplied_cash_account_id = account_id_by_number(context, "2060")
     rows: list[dict[str, Any]] = []
     for receipt in receipts.itertuples(index=False):
         voucher_rows = [
@@ -223,7 +224,7 @@ def post_cash_receipts(context: GenerationContext) -> list[dict[str, Any]]:
             build_gl_row(
                 context,
                 receipt.ReceiptDate,
-                ar_account_id,
+                unapplied_cash_account_id,
                 0.0,
                 float(receipt.Amount),
                 "CashReceipt",
@@ -232,11 +233,262 @@ def post_cash_receipts(context: GenerationContext) -> list[dict[str, Any]]:
                 int(receipt.CashReceiptID),
                 None,
                 None,
-                "Apply cash receipt to receivable",
+                "Record customer deposit or unapplied cash",
                 int(receipt.RecordedByEmployeeID),
             ),
         ]
         assert_balanced(voucher_rows, receipt.ReceiptNumber)
+        rows.extend(voucher_rows)
+
+    return rows
+
+
+def post_cash_receipt_applications(context: GenerationContext) -> list[dict[str, Any]]:
+    applications = context.tables["CashReceiptApplication"]
+    receipts = context.tables["CashReceipt"]
+    if applications.empty or receipts.empty:
+        return []
+
+    receipt_lookup = receipts.set_index("CashReceiptID").to_dict("index")
+    ar_account_id = account_id_by_number(context, "1020")
+    unapplied_cash_account_id = account_id_by_number(context, "2060")
+    rows: list[dict[str, Any]] = []
+    for application in applications.itertuples(index=False):
+        receipt = receipt_lookup[int(application.CashReceiptID)]
+        voucher_number = f"{receipt['ReceiptNumber']}-APP-{int(application.CashReceiptApplicationID):06d}"
+        voucher_rows = [
+            build_gl_row(
+                context,
+                application.ApplicationDate,
+                unapplied_cash_account_id,
+                float(application.AppliedAmount),
+                0.0,
+                "CashReceiptApplication",
+                voucher_number,
+                "CashReceiptApplication",
+                int(application.CashReceiptApplicationID),
+                None,
+                None,
+                "Apply customer deposit or receipt",
+                int(application.AppliedByEmployeeID),
+            ),
+            build_gl_row(
+                context,
+                application.ApplicationDate,
+                ar_account_id,
+                0.0,
+                float(application.AppliedAmount),
+                "CashReceiptApplication",
+                voucher_number,
+                "CashReceiptApplication",
+                int(application.CashReceiptApplicationID),
+                None,
+                None,
+                "Reduce accounts receivable",
+                int(application.AppliedByEmployeeID),
+            ),
+        ]
+        assert_balanced(voucher_rows, voucher_number)
+        rows.extend(voucher_rows)
+
+    return rows
+
+
+def post_sales_returns(context: GenerationContext) -> list[dict[str, Any]]:
+    sales_returns = context.tables["SalesReturn"]
+    return_lines = context.tables["SalesReturnLine"]
+    if sales_returns.empty or return_lines.empty:
+        return []
+
+    items = context.tables["Item"].set_index("ItemID").to_dict("index")
+    return_headers = sales_returns.set_index("SalesReturnID").to_dict("index")
+    shipment_lines = context.tables["ShipmentLine"].set_index("ShipmentLineID").to_dict("index")
+    shipments = context.tables["Shipment"].set_index("ShipmentID").to_dict("index")
+    sales_orders = context.tables["SalesOrder"].set_index("SalesOrderID").to_dict("index")
+    rows: list[dict[str, Any]] = []
+
+    for line in return_lines.itertuples(index=False):
+        sales_return = return_headers[int(line.SalesReturnID)]
+        shipment_line = shipment_lines[int(line.ShipmentLineID)]
+        shipment = shipments[int(shipment_line["ShipmentID"])]
+        sales_order = sales_orders[int(shipment["SalesOrderID"])]
+        item = items[int(line.ItemID)]
+        voucher_rows = [
+            build_gl_row(
+                context,
+                sales_return["ReturnDate"],
+                int(item["InventoryAccountID"]),
+                float(line.ExtendedStandardCost),
+                0.0,
+                "SalesReturn",
+                sales_return["ReturnNumber"],
+                "SalesReturn",
+                int(line.SalesReturnID),
+                int(line.SalesReturnLineID),
+                int(sales_order["CostCenterID"]),
+                "Return inventory to stock",
+                int(sales_return["ReceivedByEmployeeID"]),
+            ),
+            build_gl_row(
+                context,
+                sales_return["ReturnDate"],
+                int(item["COGSAccountID"]),
+                0.0,
+                float(line.ExtendedStandardCost),
+                "SalesReturn",
+                sales_return["ReturnNumber"],
+                "SalesReturn",
+                int(line.SalesReturnID),
+                int(line.SalesReturnLineID),
+                int(sales_order["CostCenterID"]),
+                "Reverse COGS for customer return",
+                int(sales_return["ReceivedByEmployeeID"]),
+            ),
+        ]
+        assert_balanced(voucher_rows, sales_return["ReturnNumber"])
+        rows.extend(voucher_rows)
+
+    return rows
+
+
+def post_credit_memos(context: GenerationContext) -> list[dict[str, Any]]:
+    credit_memos = context.tables["CreditMemo"]
+    credit_memo_lines = context.tables["CreditMemoLine"]
+    if credit_memos.empty or credit_memo_lines.empty:
+        return []
+
+    contra_revenue_account_id = account_id_by_number(context, "4060")
+    tax_account_id = account_id_by_number(context, "2050")
+    ar_account_id = account_id_by_number(context, "1020")
+    unapplied_cash_account_id = account_id_by_number(context, "2060")
+    sales_orders = context.tables["SalesOrder"].set_index("SalesOrderID").to_dict("index")
+    lines_by_credit_memo = {key: value for key, value in credit_memo_lines.groupby("CreditMemoID")}
+    allocations = credit_memo_allocation_map(context)
+    rows: list[dict[str, Any]] = []
+
+    for credit_memo in credit_memos.itertuples(index=False):
+        sales_order = sales_orders[int(credit_memo.SalesOrderID)]
+        voucher_rows: list[dict[str, Any]] = []
+        credit_memo_line_group = lines_by_credit_memo.get(int(credit_memo.CreditMemoID))
+        if credit_memo_line_group is None or credit_memo_line_group.empty:
+            continue
+
+        for line in credit_memo_line_group.itertuples(index=False):
+            voucher_rows.append(build_gl_row(
+                context,
+                credit_memo.CreditMemoDate,
+                contra_revenue_account_id,
+                float(line.LineTotal),
+                0.0,
+                "CreditMemo",
+                credit_memo.CreditMemoNumber,
+                "CreditMemo",
+                int(credit_memo.CreditMemoID),
+                int(line.CreditMemoLineID),
+                int(sales_order["CostCenterID"]),
+                "Record sales return and allowance",
+                int(credit_memo.ApprovedByEmployeeID),
+            ))
+
+        if float(credit_memo.TaxAmount) > 0:
+            voucher_rows.append(build_gl_row(
+                context,
+                credit_memo.CreditMemoDate,
+                tax_account_id,
+                float(credit_memo.TaxAmount),
+                0.0,
+                "CreditMemo",
+                credit_memo.CreditMemoNumber,
+                "CreditMemo",
+                int(credit_memo.CreditMemoID),
+                None,
+                int(sales_order["CostCenterID"]),
+                "Reverse sales tax payable",
+                int(credit_memo.ApprovedByEmployeeID),
+            ))
+
+        allocation = allocations.get(int(credit_memo.CreditMemoID), {"ar_amount": 0.0, "customer_credit_amount": 0.0})
+        if round(float(allocation["ar_amount"]), 2) > 0:
+            voucher_rows.append(build_gl_row(
+                context,
+                credit_memo.CreditMemoDate,
+                ar_account_id,
+                0.0,
+                float(allocation["ar_amount"]),
+                "CreditMemo",
+                credit_memo.CreditMemoNumber,
+                "CreditMemo",
+                int(credit_memo.CreditMemoID),
+                None,
+                int(sales_order["CostCenterID"]),
+                "Reduce accounts receivable through credit memo",
+                int(credit_memo.ApprovedByEmployeeID),
+            ))
+        if round(float(allocation["customer_credit_amount"]), 2) > 0:
+            voucher_rows.append(build_gl_row(
+                context,
+                credit_memo.CreditMemoDate,
+                unapplied_cash_account_id,
+                0.0,
+                float(allocation["customer_credit_amount"]),
+                "CreditMemo",
+                credit_memo.CreditMemoNumber,
+                "CreditMemo",
+                int(credit_memo.CreditMemoID),
+                None,
+                int(sales_order["CostCenterID"]),
+                "Create customer credit balance",
+                int(credit_memo.ApprovedByEmployeeID),
+            ))
+
+        assert_balanced(voucher_rows, credit_memo.CreditMemoNumber)
+        rows.extend(voucher_rows)
+
+    return rows
+
+
+def post_customer_refunds(context: GenerationContext) -> list[dict[str, Any]]:
+    refunds = context.tables["CustomerRefund"]
+    if refunds.empty:
+        return []
+
+    cash_account_id = account_id_by_number(context, "1010")
+    unapplied_cash_account_id = account_id_by_number(context, "2060")
+    rows: list[dict[str, Any]] = []
+    for refund in refunds.itertuples(index=False):
+        voucher_rows = [
+            build_gl_row(
+                context,
+                refund.RefundDate,
+                unapplied_cash_account_id,
+                float(refund.Amount),
+                0.0,
+                "CustomerRefund",
+                refund.RefundNumber,
+                "CustomerRefund",
+                int(refund.CustomerRefundID),
+                None,
+                None,
+                "Reduce customer credit balance",
+                int(refund.ApprovedByEmployeeID),
+            ),
+            build_gl_row(
+                context,
+                refund.RefundDate,
+                cash_account_id,
+                0.0,
+                float(refund.Amount),
+                "CustomerRefund",
+                refund.RefundNumber,
+                "CustomerRefund",
+                int(refund.CustomerRefundID),
+                None,
+                None,
+                "Issue customer refund",
+                int(refund.ApprovedByEmployeeID),
+            ),
+        ]
+        assert_balanced(voucher_rows, refund.RefundNumber)
         rows.extend(voucher_rows)
 
     return rows
@@ -468,6 +720,10 @@ def post_all_transactions(context: GenerationContext) -> None:
     operational_rows.extend(post_shipments(context))
     operational_rows.extend(post_sales_invoices(context))
     operational_rows.extend(post_cash_receipts(context))
+    operational_rows.extend(post_cash_receipt_applications(context))
+    operational_rows.extend(post_sales_returns(context))
+    operational_rows.extend(post_credit_memos(context))
+    operational_rows.extend(post_customer_refunds(context))
     operational_rows.extend(post_goods_receipts(context))
     operational_rows.extend(post_purchase_invoices(context))
     operational_rows.extend(post_disbursements(context))

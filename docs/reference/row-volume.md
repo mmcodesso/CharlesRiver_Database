@@ -12,7 +12,7 @@ The default configuration uses:
 
 > **Implemented in current generator:** A deterministic five-year dataset whose default counts are stable unless configuration or generation logic changes.
 
-> **Planned future extension:** Manufacturing tables and broader O2C realism that would further change total row count.
+> **Planned future extension:** Manufacturing tables that would further change total row count.
 
 ## Current Default Build vs Design Intent
 
@@ -22,24 +22,30 @@ The target ranges below come from `Design.md` and represent design intent, not h
 |---|---|---:|---:|
 | Accounting core | Account | 75 to 95 | 90 |
 | Accounting core | JournalEntry | 900 to 1,500 | 1,442 |
-| Accounting core | GLEntry | 60,000 to 110,000 | 176,643 |
+| Accounting core | GLEntry | 60,000 to 110,000 | 469,567 |
 | O2C | Customer | 150 to 300 | 220 |
-| O2C | SalesOrder | 4,500 to 9,000 | 6,929 |
-| O2C | SalesOrderLine | 13,000 to 30,000 | 24,035 |
-| O2C | Shipment | 4,200 to 8,500 | 6,317 |
-| O2C | ShipmentLine | 12,000 to 28,000 | 21,032 |
-| O2C | SalesInvoice | 4,200 to 8,500 | 6,296 |
-| O2C | SalesInvoiceLine | 12,000 to 28,000 | 20,960 |
-| O2C | CashReceipt | 4,000 to 9,500 | 5,356 |
+| O2C | SalesOrder | 4,500 to 9,000 | 6,903 |
+| O2C | SalesOrderLine | 13,000 to 30,000 | 27,637 |
+| O2C | Shipment | 4,200 to 8,500 | 25,606 |
+| O2C | ShipmentLine | 12,000 to 28,000 | 36,427 |
+| O2C | SalesInvoice | 4,200 to 8,500 | 33,089 |
+| O2C | SalesInvoiceLine | 12,000 to 28,000 | 36,329 |
+| O2C | CashReceipt | 4,000 to 9,500 | 9,113 |
+| O2C | CashReceiptApplication | Not specified in original design | 17,950 |
+| O2C | SalesReturn | Not specified in original design | 24,813 |
+| O2C | SalesReturnLine | Not specified in original design | 24,864 |
+| O2C | CreditMemo | Not specified in original design | 24,813 |
+| O2C | CreditMemoLine | Not specified in original design | 24,864 |
+| O2C | CustomerRefund | Not specified in original design | 13,197 |
 | P2P | Supplier | 80 to 160 | 110 |
-| P2P | PurchaseRequisition | 2,500 to 6,000 | 5,766 |
-| P2P | PurchaseOrder | 2,200 to 5,500 | 5,413 |
-| P2P | PurchaseOrderLine | 7,000 to 18,000 | 5,548 |
-| P2P | GoodsReceipt | 2,100 to 5,000 | 9,150 |
-| P2P | GoodsReceiptLine | 6,500 to 17,000 | 9,163 |
-| P2P | PurchaseInvoice | 2,100 to 5,000 | 12,597 |
-| P2P | PurchaseInvoiceLine | 6,500 to 17,000 | 12,658 |
-| P2P | DisbursementPayment | 2,300 to 5,500 | 13,904 |
+| P2P | PurchaseRequisition | 2,500 to 6,000 | 5,743 |
+| P2P | PurchaseOrder | 2,200 to 5,500 | 5,384 |
+| P2P | PurchaseOrderLine | 7,000 to 18,000 | 5,507 |
+| P2P | GoodsReceipt | 2,100 to 5,000 | 8,992 |
+| P2P | GoodsReceiptLine | 6,500 to 17,000 | 9,006 |
+| P2P | PurchaseInvoice | 2,100 to 5,000 | 12,440 |
+| P2P | PurchaseInvoiceLine | 6,500 to 17,000 | 12,495 |
+| P2P | DisbursementPayment | 2,300 to 5,500 | 13,833 |
 | Master data | Item | 180 to 350 | 240 |
 | Master data | Warehouse | 2 to 3 | 2 |
 | Master data | Employee | 55 to 75 | 64 |
@@ -50,6 +56,7 @@ The target ranges below come from `Design.md` and represent design intent, not h
 
 - O2C tables are already large enough for trend, concentration, cut-off, and margin exercises.
 - `GLEntry` is now well above the original design range and supports substantial ledger analytics.
+- Phase 11 made O2C much denser because shipments, invoices, receipts, returns, credits, and refunds now flow across periods instead of staying close to a one-pass monthly cycle.
 - Budget, customer, supplier, item, employee, and cost center tables are all at reasonable teaching scale.
 - `JournalEntry` is now inside the intended design range because the generator includes recurring manual journals and year-end close entries.
 - `GoodsReceiptLine` and `PurchaseInvoiceLine` are now inside their original design-intent bands after Phase 9.
@@ -57,7 +64,7 @@ The target ranges below come from `Design.md` and represent design intent, not h
 ## Where the Current Build Is Still Intentionally Light
 
 - `PurchaseOrderLine` is still below its original target band even after batched PO generation.
-- `GLEntry`, `GoodsReceipt`, `PurchaseInvoice`, and `DisbursementPayment` now exceed the historical design bands because Phase 9 intentionally introduced partial receipts, partial invoicing, and split settlements across periods.
+- `GLEntry`, `Shipment`, `SalesInvoice`, `SalesReturn`, `CreditMemo`, `CustomerRefund`, `GoodsReceipt`, `PurchaseInvoice`, and `DisbursementPayment` now exceed the historical design bands or original scope because Phases 9 through 11 intentionally introduced multi-period matching, partial settlement, and returns/refund flows.
 - No manufacturing tables exist yet, so total dataset size is smaller than a future expanded version would be.
 
 ## How to Read These Counts

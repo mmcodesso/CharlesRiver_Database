@@ -6,7 +6,7 @@
 
 > **Implemented in current generator:** A workbook with one sheet per table plus `AnomalyLog` and `ValidationSummary`, suitable for Excel-based starter analytics.
 
-> **Planned future extension:** Additional workbook guidance for richer O2C behavior and manufacturing analytics after those phases are implemented.
+> **Planned future extension:** Additional workbook guidance for manufacturing analytics after that phase is implemented.
 
 ## Workbook Setup
 
@@ -57,14 +57,17 @@ Use:
 
 - `SalesInvoice`
 - `CashReceipt`
+- `CashReceiptApplication`
+- `CreditMemo`
 - `Customer`
 
 Recommended steps:
 
-1. summarize cash receipts by `SalesInvoiceID`
-2. join or look up receipt totals to invoice rows
-3. compute open amount
-4. compute aging bucket from `DueDate`
+1. summarize cash applications by `SalesInvoiceID`
+2. summarize credit memos by `OriginalSalesInvoiceID`
+3. join or look up those totals to invoice rows
+4. compute open amount
+5. compute aging bucket from `DueDate`
 
 Suggested outputs:
 
@@ -253,7 +256,6 @@ The Excel starter layer does **not** assume:
 - prebuilt pivot tables inside the exported workbook
 - manufacturing sheets
 - work-in-process analysis
-- returns or credit-memo tabs
 
 Those are future teaching extensions, not missing pieces of the current workbook.
 

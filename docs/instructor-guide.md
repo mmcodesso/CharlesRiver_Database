@@ -6,7 +6,7 @@
 
 > **Implemented in current generator:** Five years of O2C and P2P data, opening balances, recurring manual journals, year-end close, budgets, ledger postings, anomalies, and starter analytics materials for financial, managerial, and audit analytics.
 
-> **Planned future extension:** Richer O2C behavior and manufacturing coverage for later course modules.
+> **Planned future extension:** Manufacturing coverage for later course modules.
 
 ## How to Position the Dataset
 
@@ -157,7 +157,6 @@ The current dataset does **not** yet include:
 - bills of materials
 - work orders
 - work-in-process accounting
-- returns or credit memos
 - payroll employee-level subledger detail
 - production completion or manufacturing variance flows
 

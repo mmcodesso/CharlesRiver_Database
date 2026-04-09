@@ -6,7 +6,7 @@
 
 The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUMNS`.
 
-> **Implemented in current generator:** 25 tables across accounting, O2C, P2P, master data, and organizational planning.
+> **Implemented in current generator:** 31 tables across accounting, O2C, P2P, master data, and organizational planning.
 
 > **Planned future extension:** Manufacturing-related tables and richer operational detail in future phases.
 
@@ -15,11 +15,11 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 | Group | Tables | Count |
 |---|---|---:|
 | Accounting core | `Account`, `JournalEntry`, `GLEntry` | 3 |
-| O2C | `Customer`, `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt` | 8 |
+| O2C | `Customer`, `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt`, `CashReceiptApplication`, `SalesReturn`, `SalesReturnLine`, `CreditMemo`, `CreditMemoLine`, `CustomerRefund` | 14 |
 | P2P | `Supplier`, `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment` | 9 |
 | Master data | `Item`, `Warehouse`, `Employee` | 3 |
 | Organizational planning | `CostCenter`, `Budget` | 2 |
-| Total |  | 25 |
+| Total |  | 31 |
 
 ## Design Patterns That Matter
 
@@ -47,8 +47,14 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 | `Shipment` | Shipment header | `ShipmentNumber`, `SalesOrderID`, `ShipmentDate`, `WarehouseID`, `Status`, `DeliveryDate` |
 | `ShipmentLine` | Shipment detail used for fulfillment and COGS | `ShipmentID`, `SalesOrderLineID`, `ItemID`, `QuantityShipped`, `ExtendedStandardCost` |
 | `SalesInvoice` | Sales invoice header | `InvoiceNumber`, `InvoiceDate`, `DueDate`, `SalesOrderID`, `CustomerID`, `SubTotal`, `TaxAmount`, `GrandTotal`, `Status` |
-| `SalesInvoiceLine` | Sales invoice detail | `SalesInvoiceID`, `SalesOrderLineID`, `ItemID`, `Quantity`, `UnitPrice`, `Discount`, `LineTotal` |
-| `CashReceipt` | Customer payment record | `ReceiptNumber`, `ReceiptDate`, `CustomerID`, `SalesInvoiceID`, `Amount`, `PaymentMethod`, `ReferenceNumber`, `RecordedByEmployeeID` |
+| `SalesInvoiceLine` | Sales invoice detail | `SalesInvoiceID`, `SalesOrderLineID`, `ShipmentLineID`, `ItemID`, `Quantity`, `UnitPrice`, `Discount`, `LineTotal` |
+| `CashReceipt` | Customer payment header | `ReceiptNumber`, `ReceiptDate`, `CustomerID`, `SalesInvoiceID`, `Amount`, `PaymentMethod`, `ReferenceNumber`, `RecordedByEmployeeID` |
+| `CashReceiptApplication` | Receipt-to-invoice application detail | `CashReceiptID`, `SalesInvoiceID`, `ApplicationDate`, `AppliedAmount`, `AppliedByEmployeeID` |
+| `SalesReturn` | Customer return header | `ReturnNumber`, `ReturnDate`, `CustomerID`, `SalesOrderID`, `WarehouseID`, `ReasonCode`, `Status` |
+| `SalesReturnLine` | Returned item detail used for inventory restoration | `SalesReturnID`, `ShipmentLineID`, `ItemID`, `QuantityReturned`, `ExtendedStandardCost` |
+| `CreditMemo` | Customer credit memo header | `CreditMemoNumber`, `CreditMemoDate`, `SalesReturnID`, `OriginalSalesInvoiceID`, `SubTotal`, `TaxAmount`, `GrandTotal`, `Status` |
+| `CreditMemoLine` | Customer credit memo detail | `CreditMemoID`, `SalesReturnLineID`, `ItemID`, `Quantity`, `UnitPrice`, `LineTotal` |
+| `CustomerRefund` | Customer refund payment record | `RefundNumber`, `RefundDate`, `CustomerID`, `CreditMemoID`, `Amount`, `PaymentMethod`, `ReferenceNumber` |
 
 ## Procure-to-Pay
 
@@ -85,6 +91,14 @@ The most important lineage fields in the implementation are:
 
 - `PurchaseOrder.RequisitionID`
 - `PurchaseOrderLine.RequisitionID`
+- `SalesInvoiceLine.ShipmentLineID`
+- `CashReceiptApplication.CashReceiptID`
+- `CashReceiptApplication.SalesInvoiceID`
+- `SalesReturnLine.ShipmentLineID`
+- `CreditMemo.SalesReturnID`
+- `CreditMemo.OriginalSalesInvoiceID`
+- `CreditMemoLine.SalesReturnLineID`
+- `CustomerRefund.CreditMemoID`
 - `GoodsReceiptLine.POLineID`
 - `PurchaseInvoiceLine.POLineID`
 - `PurchaseInvoiceLine.GoodsReceiptLineID`
@@ -94,6 +108,8 @@ The most important lineage fields in the implementation are:
 
 `PurchaseOrder.RequisitionID` is compatibility metadata. When a PO batches multiple requisitions, the authoritative requisition linkage is on `PurchaseOrderLine.RequisitionID`.
 
+`CashReceipt.SalesInvoiceID` is now compatibility metadata only. The authoritative settlement link in O2C is `CashReceiptApplication`.
+
 `PurchaseInvoiceLine.GoodsReceiptLineID` is the authoritative clean-match link for three-way-match style analysis in the current P2P design.
 
 These fields make it possible to trace from posted accounting detail back to the source document that created the entry.
@@ -101,6 +117,7 @@ These fields make it possible to trace from posted accounting detail back to the
 ## Current Implementation Notes
 
 - `JournalEntry.EntryType` is actively used for opening, payroll accrual and settlement, rent, utilities, depreciation, accrual, accrual reversal, and year-end close entries.
+- O2C now uses line-level shipment-to-invoice linkage and explicit application, return, credit memo, and refund tables.
 - `GoodsReceiptLine.ExtendedStandardCost` currently stores the receipt posting basis used for inventory and GRNI, derived from PO cost in the clean generator.
 - `PurchaseOrder`, `GoodsReceipt`, `PurchaseInvoice`, and `DisbursementPayment` can now span multiple periods for the same underlying requisition or receipt chain.
 - Excel exports include additional worksheets such as `AnomalyLog` and `ValidationSummary`, but those are export artifacts, not schema tables.

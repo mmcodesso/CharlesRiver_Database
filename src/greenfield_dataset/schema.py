@@ -48,12 +48,37 @@ TABLE_COLUMNS = {
         "CustomerID", "SubTotal", "TaxAmount", "GrandTotal", "Status", "PaymentDate",
     ],
     "SalesInvoiceLine": [
-        "SalesInvoiceLineID", "SalesInvoiceID", "SalesOrderLineID", "LineNumber",
-        "ItemID", "Quantity", "UnitPrice", "Discount", "LineTotal",
+        "SalesInvoiceLineID", "SalesInvoiceID", "SalesOrderLineID", "ShipmentLineID",
+        "LineNumber", "ItemID", "Quantity", "UnitPrice", "Discount", "LineTotal",
     ],
     "CashReceipt": [
         "CashReceiptID", "ReceiptNumber", "ReceiptDate", "CustomerID", "SalesInvoiceID",
         "Amount", "PaymentMethod", "ReferenceNumber", "DepositDate", "RecordedByEmployeeID",
+    ],
+    "CashReceiptApplication": [
+        "CashReceiptApplicationID", "CashReceiptID", "SalesInvoiceID", "ApplicationDate",
+        "AppliedAmount", "AppliedByEmployeeID",
+    ],
+    "SalesReturn": [
+        "SalesReturnID", "ReturnNumber", "ReturnDate", "CustomerID", "SalesOrderID",
+        "WarehouseID", "ReceivedByEmployeeID", "ReasonCode", "Status",
+    ],
+    "SalesReturnLine": [
+        "SalesReturnLineID", "SalesReturnID", "ShipmentLineID", "LineNumber", "ItemID",
+        "QuantityReturned", "ExtendedStandardCost",
+    ],
+    "CreditMemo": [
+        "CreditMemoID", "CreditMemoNumber", "CreditMemoDate", "SalesReturnID", "SalesOrderID",
+        "CustomerID", "OriginalSalesInvoiceID", "SubTotal", "TaxAmount", "GrandTotal", "Status",
+        "ApprovedByEmployeeID", "ApprovedDate",
+    ],
+    "CreditMemoLine": [
+        "CreditMemoLineID", "CreditMemoID", "SalesReturnLineID", "LineNumber", "ItemID",
+        "Quantity", "UnitPrice", "LineTotal",
+    ],
+    "CustomerRefund": [
+        "CustomerRefundID", "RefundNumber", "RefundDate", "CustomerID", "CreditMemoID",
+        "Amount", "PaymentMethod", "ReferenceNumber", "ApprovedByEmployeeID", "ClearedDate",
     ],
     "Supplier": [
         "SupplierID", "SupplierName", "ContactName", "Address", "City", "State",

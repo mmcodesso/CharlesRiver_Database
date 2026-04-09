@@ -6,7 +6,7 @@
 
 > **Implemented in current generator:** Budget rows, cost centers, detailed O2C and P2P volume, item master data, warehouse movement, and cost-center-tagged operational and journal activity where meaningful.
 
-> **Planned future extension:** Stronger inventory constraints, richer O2C behavior, and manufacturing cost-accounting analytics.
+> **Planned future extension:** Manufacturing cost-accounting analytics.
 
 ## Learning Goals
 
@@ -98,7 +98,6 @@
 
 ### Planned future extension
 
-- richer inventory availability logic after Phase 11
 - manufacturing and cost-accounting analytics after Phase 12
 
 ## Where to Go Next
