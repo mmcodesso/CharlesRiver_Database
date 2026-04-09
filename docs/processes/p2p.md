@@ -4,13 +4,13 @@
 **Purpose:** Show how Greenfield moves from internal demand to supplier payment.  
 **What you will learn:** The business storyline, the main P2P tables, when accounting happens, and what questions the P2P data can answer.
 
-> **Implemented in current generator:** Requisitions, batched purchase orders, partial goods receipts across periods, matched supplier invoices, and split disbursement settlement.
+> **Implemented in current generator:** Requisitions, batched purchase orders, manufacturing-driven material demand, partial goods receipts across periods, matched supplier invoices, and split disbursement settlement.
 
-> **Planned future extension:** Manufacturing-driven purchasing demand and broader production-linked inventory behavior.
+> **Planned future extension:** More advanced supplier planning and sourcing behavior.
 
 ## Business Storyline
 
-Greenfield does not buy inventory randomly. Employees identify a need, purchasing groups that demand into supplier orders, warehouse staff receive the goods over time, suppliers send invoices, and finance pays those invoices when approved.
+Greenfield does not buy inventory randomly. Employees identify a need, purchasing groups that demand into supplier orders, warehouse staff receive the goods over time, suppliers send invoices, and finance pays those invoices when approved. That demand now comes from both normal business replenishment and manufacturing-driven raw-material and packaging needs.
 
 That gives students a realistic three-way-match style environment where ordering, receiving, invoicing, and payment do not always happen on the same day or even in the same month.
 
@@ -41,11 +41,12 @@ Requisitions and purchase orders do not post to the ledger. Receiving, supplier 
 ## Step-by-Step Walkthrough
 
 1. An employee requests an item through `PurchaseRequisition`.
-2. Purchasing batches compatible requisitions into `PurchaseOrder` and `PurchaseOrderLine`.
-3. The warehouse receives inventory over one or more dates, creating `GoodsReceipt` and `GoodsReceiptLine`.
-4. The supplier sends one or more invoices that match the received lines, recorded in `PurchaseInvoice` and `PurchaseInvoiceLine`.
-5. Treasury or AP issues one or more `DisbursementPayment` records against approved supplier invoices.
-6. Posted activity lands in `GLEntry` for AP, inventory, GRNI, and cash analysis.
+2. Manufacturing can add additional requisitions when raw materials or packaging are needed for planned work orders.
+3. Purchasing batches compatible requisitions into `PurchaseOrder` and `PurchaseOrderLine`.
+4. The warehouse receives inventory over one or more dates, creating `GoodsReceipt` and `GoodsReceiptLine`.
+5. The supplier sends one or more invoices that match the received lines, recorded in `PurchaseInvoice` and `PurchaseInvoiceLine`.
+6. Treasury or AP issues one or more `DisbursementPayment` records against approved supplier invoices.
+7. Posted activity lands in `GLEntry` for AP, inventory, GRNI, and cash analysis.
 
 ## Main Tables in This Process
 

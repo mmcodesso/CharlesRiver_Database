@@ -4,7 +4,7 @@ from greenfield_dataset.anomalies import inject_anomalies
 from greenfield_dataset.journals import generate_recurring_manual_journals, generate_year_end_close_journals
 from greenfield_dataset.main import build_phase5
 from greenfield_dataset.posting_engine import post_all_transactions
-from greenfield_dataset.validations import validate_phase8, validate_phase9
+from greenfield_dataset.validations import validate_phase8, validate_phase12
 
 
 def test_generate_recurring_manual_journals_counts_and_links() -> None:
@@ -13,15 +13,18 @@ def test_generate_recurring_manual_journals_counts_and_links() -> None:
     generate_recurring_manual_journals(context)
 
     entry_type_counts = context.tables["JournalEntry"]["EntryType"].value_counts().to_dict()
+    cost_center_count = len(context.tables["CostCenter"])
+    fiscal_month_count = 60
+
     assert int(entry_type_counts["Opening"]) == 1
-    assert int(entry_type_counts["Payroll Accrual"]) == 480
-    assert int(entry_type_counts["Payroll Settlement"]) == 472
-    assert int(entry_type_counts["Rent"]) == 120
-    assert int(entry_type_counts["Utilities"]) == 60
-    assert int(entry_type_counts["Depreciation"]) == 180
-    assert int(entry_type_counts["Accrual"]) == 60
-    assert int(entry_type_counts["Accrual Reversal"]) == 59
-    assert len(context.tables["JournalEntry"]) == 1432
+    assert int(entry_type_counts["Payroll Accrual"]) == cost_center_count * fiscal_month_count
+    assert int(entry_type_counts["Payroll Settlement"]) == cost_center_count * (fiscal_month_count - 1)
+    assert int(entry_type_counts["Rent"]) == fiscal_month_count * 2
+    assert int(entry_type_counts["Utilities"]) == fiscal_month_count
+    assert int(entry_type_counts["Depreciation"]) == fiscal_month_count * 3
+    assert int(entry_type_counts["Accrual"]) == fiscal_month_count
+    assert int(entry_type_counts["Accrual Reversal"]) == fiscal_month_count - 1
+    assert len(context.tables["JournalEntry"]) == sum(int(count) for count in entry_type_counts.values())
 
     reversals = context.tables["JournalEntry"][context.tables["JournalEntry"]["EntryType"].eq("Accrual Reversal")]
     assert reversals["ReversesJournalEntryID"].notna().all()
@@ -29,24 +32,25 @@ def test_generate_recurring_manual_journals_counts_and_links() -> None:
     assert 2000 <= len(context.tables["Budget"]) <= 4500
 
 
-def test_generate_year_end_close_journals_clean_phase9_validation() -> None:
+def test_generate_year_end_close_journals_clean_phase12_validation() -> None:
     context = build_phase5()
     context.settings = replace(context.settings, anomaly_mode="none")
 
     generate_recurring_manual_journals(context)
     post_all_transactions(context)
     generate_year_end_close_journals(context)
-    results = validate_phase9(context)
+    results = validate_phase12(context)
 
     entry_type_counts = context.tables["JournalEntry"]["EntryType"].value_counts().to_dict()
     assert int(entry_type_counts["Year-End Close - P&L to Income Summary"]) == 5
     assert int(entry_type_counts["Year-End Close - Income Summary to Retained Earnings"]) == 5
-    assert len(context.tables["JournalEntry"]) == 1442
+    assert len(context.tables["JournalEntry"]) == sum(int(count) for count in entry_type_counts.values())
     assert results["exceptions"] == []
     assert results["gl_balance"]["exception_count"] == 0
     assert results["trial_balance_difference"] == 0
     assert results["journal_controls"]["exception_count"] == 0
     assert results["p2p_controls"]["exception_count"] == 0
+    assert results["manufacturing_controls"]["exception_count"] == 0
 
 
 def test_phase8_journal_anomalies_preserve_gl_balance() -> None:

@@ -37,6 +37,8 @@ OPENING_STOCK_RANGES = {
     "Lighting": (90, 160),
     "Textiles": (120, 220),
     "Accessories": (140, 260),
+    "Packaging": (180, 340),
+    "Raw Materials": (220, 420),
 }
 
 RETURN_REASON_CODES = ["Damaged", "Wrong Item", "Customer Remorse", "Quality Concern", "Late Delivery"]
@@ -390,6 +392,16 @@ def inventory_position_before_month(context: GenerationContext, year: int, month
             key = (int(line.ItemID), int(sales_return["WarehouseID"]))
             inventory[key] = round(float(inventory.get(key, 0.0)) + float(line.QuantityReturned), 2)
 
+    completions = context.tables["ProductionCompletion"]
+    if not completions.empty and not context.tables["ProductionCompletionLine"].empty:
+        completion_headers = completions.set_index("ProductionCompletionID")[["CompletionDate", "WarehouseID"]].to_dict("index")
+        for line in context.tables["ProductionCompletionLine"].itertuples(index=False):
+            completion = completion_headers.get(int(line.ProductionCompletionID))
+            if completion is None or pd.Timestamp(completion["CompletionDate"]) >= start:
+                continue
+            key = (int(line.ItemID), int(completion["WarehouseID"]))
+            inventory[key] = round(float(inventory.get(key, 0.0)) + float(line.QuantityCompleted), 2)
+
     return inventory
 
 
@@ -673,7 +685,7 @@ def generate_month_shipments(context: GenerationContext, year: int, month: int) 
     rng = context.rng
     month_start, month_end = month_bounds(year, month)
     shipped_quantities = sales_order_line_shipped_quantities(context)
-    inventory = shadow_inventory_state(context)
+    inventory = inventory_position_before_month(context, year, month)
     items = context.tables["Item"].set_index("ItemID").to_dict("index")
     warehouses = warehouse_ids(context)
 
@@ -682,14 +694,27 @@ def generate_month_shipments(context: GenerationContext, year: int, month: int) 
         if not context.tables["GoodsReceipt"].empty
         else {}
     )
-    receipt_events: dict[pd.Timestamp, list[tuple[int, int, float]]] = defaultdict(list)
+    availability_events: dict[pd.Timestamp, list[tuple[int, int, float]]] = defaultdict(list)
     for line in context.tables["GoodsReceiptLine"].itertuples(index=False):
         receipt = receipt_headers.get(int(line.GoodsReceiptID))
         if receipt is None:
             continue
         receipt_date = pd.Timestamp(receipt["ReceiptDate"])
         if month_start <= receipt_date <= month_end:
-            receipt_events[receipt_date.normalize()].append((int(line.ItemID), int(receipt["WarehouseID"]), float(line.QuantityReceived)))
+            availability_events[receipt_date.normalize()].append((int(line.ItemID), int(receipt["WarehouseID"]), float(line.QuantityReceived)))
+
+    completion_headers = (
+        context.tables["ProductionCompletion"].set_index("ProductionCompletionID")[["CompletionDate", "WarehouseID"]].to_dict("index")
+        if not context.tables["ProductionCompletion"].empty
+        else {}
+    )
+    for line in context.tables["ProductionCompletionLine"].itertuples(index=False):
+        completion = completion_headers.get(int(line.ProductionCompletionID))
+        if completion is None:
+            continue
+        completion_date = pd.Timestamp(completion["CompletionDate"])
+        if month_start <= completion_date <= month_end:
+            availability_events[completion_date.normalize()].append((int(line.ItemID), int(completion["WarehouseID"]), float(line.QuantityCompleted)))
 
     open_order_lines = order_lines.copy()
     open_order_lines["ShippedQuantity"] = open_order_lines["SalesOrderLineID"].map(shipped_quantities).fillna(0.0)
@@ -729,10 +754,10 @@ def generate_month_shipments(context: GenerationContext, year: int, month: int) 
         shipment_plans.append((preferred_ship_date.normalize(), int(order.SalesOrderID), order, related_lines))
 
     for shipment_date, _, order, related_lines in sorted(shipment_plans, key=lambda item: (item[0], item[1])):
-        for receipt_date in sorted(date for date in receipt_events if date <= shipment_date):
+        for receipt_date in sorted(date for date in availability_events if date <= shipment_date):
             if receipt_date in processed_receipt_dates:
                 continue
-            for item_id, warehouse_id, quantity_received in receipt_events[receipt_date]:
+            for item_id, warehouse_id, quantity_received in availability_events[receipt_date]:
                 inventory[(item_id, warehouse_id)] = round(
                     float(inventory.get((item_id, warehouse_id), 0.0)) + float(quantity_received),
                     2,
@@ -796,8 +821,8 @@ def generate_month_shipments(context: GenerationContext, year: int, month: int) 
             "DeliveryDate": delivery_date.strftime("%Y-%m-%d"),
         })
 
-    for receipt_date in sorted(date for date in receipt_events if date not in processed_receipt_dates):
-        for item_id, warehouse_id, quantity_received in receipt_events[receipt_date]:
+    for receipt_date in sorted(date for date in availability_events if date not in processed_receipt_dates):
+        for item_id, warehouse_id, quantity_received in availability_events[receipt_date]:
             inventory[(item_id, warehouse_id)] = round(
                 float(inventory.get((item_id, warehouse_id), 0.0)) + float(quantity_received),
                 2,
@@ -805,6 +830,7 @@ def generate_month_shipments(context: GenerationContext, year: int, month: int) 
 
     append_rows(context, "Shipment", shipment_rows)
     append_rows(context, "ShipmentLine", shipment_line_rows)
+    setattr(context, "_o2c_shadow_inventory", inventory)
 
 
 def generate_month_sales_invoices(context: GenerationContext, year: int, month: int) -> None:

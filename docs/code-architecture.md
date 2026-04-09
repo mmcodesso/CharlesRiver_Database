@@ -2,19 +2,17 @@
 
 **Audience:** Contributors, teaching assistants, and advanced users who want to understand how the generator works.  
 **Purpose:** Explain the codebase from entrypoint to export using the current implementation.  
-**What you will learn:** The orchestration flow, the role of each module, and where future extensions such as manufacturing would fit.
+**What you will learn:** The orchestration flow, the role of each module, and where the next extension should plug in.
 
-> **Implemented in current generator:** Config loading, shared generation context, schema registry, master data, budgets, monthly O2C and P2P generation, recurring manual journals, year-end close, posting, validations, anomaly injection, SQLite/Excel export, JSON reporting, and generation logging.
+> **Implemented in current generator:** Config loading, shared generation context, schema registry, master data, BOMs, budgets, monthly O2C/P2P/manufacturing generation, recurring manual journals, year-end close, posting, validations, anomaly injection, SQLite/Excel export, JSON reporting, and generation logging.
 
-> **Planned future extension:** Manufacturing modules that would extend schema, transaction generation, posting, validation, and documentation.
+> **Planned future extension:** A payroll subledger and payroll process cycle.
 
 ## Entrypoints
 
 - `generate_dataset.py` is the simplest way to run the project from the repository root.
 - `src/greenfield_dataset/main.py` contains the orchestration logic for the full build.
-- [technical-guide.md](technical-guide.md) is the best system-level companion to this page if you need both the data-design and code-design view.
-
-The full build path uses `build_full_dataset()` and `main()`.
+- [technical-guide.md](technical-guide.md) is the best system-level companion to this page.
 
 ## End-to-End Build Flow
 
@@ -23,39 +21,26 @@ flowchart LR
     S[Load Settings]
     C[Initialize GenerationContext]
     E[Create Empty Tables]
-    M[Generate Master Data]
+    M[Generate Master Data and BOMs]
     B[Generate Opening Balances and Budgets]
-    T[Generate Monthly O2C and P2P Transactions]
-    J[Generate Recurring Manual Journals]
+    T[Generate Monthly O2C Demand]
+    R[Generate Monthly P2P Demand]
+    F[Generate Monthly Manufacturing Activity]
+    J[Generate Recurring Journals]
     P[Post to GLEntry]
     Y[Generate Year-End Close Journals]
     V[Run Validations]
     A[Inject Anomalies]
     X[Export SQLite, Excel, JSON, and Log]
 
-    S --> C --> E --> M --> B --> T --> J --> P --> Y --> V --> A --> X
+    S --> C --> E --> M --> B --> T --> R --> F --> J --> P --> Y --> V --> A --> X
 ```
-
-The current full run does the following in order:
-
-1. load `config/settings.yaml`
-2. initialize a shared `GenerationContext`
-3. create empty DataFrames for all schema tables
-4. generate master and organizational data
-5. create the opening balance journal and budget rows
-6. generate monthly O2C and P2P activity for each configured fiscal month
-7. generate recurring manual journals directly into `JournalEntry` and `GLEntry`
-8. post operational events into `GLEntry`
-9. generate year-end close journals after operational posting is complete
-10. validate the dataset
-11. inject configured anomalies
-12. revalidate and export outputs
 
 ## Core Runtime Objects
 
 ### `Settings`
 
-Defined in `src/greenfield_dataset/settings.py`. This frozen dataclass stores the run configuration, including:
+Defined in `src/greenfield_dataset/settings.py`. This frozen dataclass stores:
 
 - fiscal range
 - dataset scale parameters
@@ -67,15 +52,13 @@ Defined in `src/greenfield_dataset/settings.py`. This frozen dataclass stores th
 
 Also defined in `settings.py`. This object carries:
 
-- the loaded settings
+- loaded settings
 - the random number generator
 - the fiscal calendar DataFrame
 - all generated tables
 - per-table ID counters
 - the anomaly log
 - validation results
-
-This shared context is passed across generation, posting, validation, and export functions.
 
 ## Module Responsibilities
 
@@ -85,12 +68,13 @@ This shared context is passed across generation, posting, validation, and export
 | `calendar.py` | Builds the fiscal calendar used during generation |
 | `schema.py` | Defines `TABLE_COLUMNS` and creates empty DataFrames |
 | `master_data.py` | Loads accounts and generates cost centers, employees, warehouses, items, customers, and suppliers |
+| `manufacturing.py` | Generates BOMs, work orders, material issues, completions, work-order close, and manufacturing state helpers |
 | `budgets.py` | Generates the opening balance journal and budget rows |
-| `o2c.py` | Generates sales orders, inventory-constrained shipments, sales invoices, cash receipts, receipt applications, sales returns, credit memos, refunds, and shared O2C state maps |
-| `p2p.py` | Generates requisitions, batched purchase orders, open-line goods receipts, matched purchase invoices, disbursements, and shared P2P state maps |
-| `journals.py` | Generates recurring manual journals, accrual reversals, and year-end close journals |
+| `o2c.py` | Generates sales orders, shipments, sales invoices, cash receipts, applications, sales returns, credit memos, refunds, and O2C state maps |
+| `p2p.py` | Generates requisitions, purchase orders, goods receipts, purchase invoices, disbursements, and P2P state maps |
+| `journals.py` | Generates recurring journals, reversals, factory overhead, manufacturing conversion reclasses, and year-end close journals |
 | `posting_engine.py` | Converts operational events into balanced GL entries |
-| `validations.py` | Runs schema, document, ledger, and roll-forward checks |
+| `validations.py` | Runs schema, document, ledger, and manufacturing checks |
 | `anomalies.py` | Applies configurable anomaly patterns and records them in `context.anomaly_log` |
 | `exporters.py` | Writes SQLite, Excel, and JSON outputs |
 | `utils.py` | Supports numbering, rounding, and helper logic used across modules |
@@ -98,20 +82,35 @@ This shared context is passed across generation, posting, validation, and export
 
 ## Posting Design
 
-The current posting model is event-based:
+The current posting model is event-based.
+
+Operational posting events:
 
 - shipments post COGS and inventory
 - sales invoices post AR, revenue, and sales tax
-- cash receipts post cash and unapplied cash
-- cash receipt applications clear AR from unapplied cash
+- cash receipts post cash and customer deposits / unapplied cash
+- cash receipt applications clear AR from customer deposits / unapplied cash
 - sales returns reverse COGS and restore inventory
 - credit memos reverse revenue and tax while reducing AR or creating customer credit
 - customer refunds clear customer credit and cash
 - goods receipts post inventory and GRNI
 - purchase invoices post matched GRNI clearing, AP, and purchase variance
 - disbursements post AP and cash
+- material issues post WIP and materials inventory
+- production completions post finished goods, WIP, and manufacturing clearing
+- work-order close posts manufacturing variance
 
-The opening balance entry is created in `budgets.py`. Recurring manual journals and year-end close entries are created in `journals.py`. Those prebuilt `VoucherType = "JournalEntry"` rows are preserved when `post_all_transactions()` appends operational postings.
+Journal-sourced posting events:
+
+- opening
+- payroll accrual and settlement
+- rent
+- utilities
+- factory overhead
+- manufacturing conversion reclass
+- depreciation
+- accrual and accrual reversal
+- year-end close
 
 ## Validation and Logging
 
@@ -121,25 +120,22 @@ Current validations include:
 
 - schema consistency
 - header-to-line totals
-- orphan line detection
-- over-shipment and over-receipt checks
-- shipment-to-invoice, application, return, and refund integrity checks for O2C
-- over-invoicing and status-consistency checks for P2P receipt and payment flows
-- overpayment checks
+- orphan row detection
+- O2C controls
+- P2P controls
+- manufacturing controls
 - voucher balance
 - trial balance equality
-- AR, AP, inventory, COGS, sales-tax, customer-deposit, and GRNI roll-forwards
-- journal header-to-GL agreement
-- accrual reversal linkage and timing
-- year-end close coverage and profit-and-loss closure by fiscal year
+- account roll-forwards
+- journal-entry controls
 
-The full run also writes `outputs/generation.log`, which records:
+The full run also writes `generation.log`, which records:
 
 - configuration values
 - timed step boundaries
-- monthly generation progress
-- monthly O2C checkpoints for shipment volume, open orders, open AR, unapplied cash, customer credit, and return/refund activity
-- monthly P2P checkpoints for converted requisitions, receipt volume, invoiced quantity, payments, and open-state balances
+- monthly O2C checkpoints
+- monthly P2P checkpoints
+- monthly manufacturing checkpoints
 - row-count checkpoints
 - validation summaries
 - export locations
@@ -153,30 +149,8 @@ The current generator exports:
 - JSON validation report
 - text log file
 
-## Documentation and Starter Assets
+## Next Extension Point
 
-The repository now also includes a course-user starter layer outside the generator code:
+The next clean extension point is **Phase 13 - Payroll Cycle**.
 
-- `docs/analytics/` for topic guides and workflow documentation
-- `queries/` for runnable starter SQL files
-
-These assets are intentionally additive. They depend on the current implemented schema and outputs, but they do not change dataset generation behavior.
-
-## Extension Roadmap
-
-The cleanest way to add manufacturing later is to extend the same pattern already used for O2C and P2P:
-
-1. add new schema tables for manufacturing master and transaction data
-2. add a new generation module for production activity
-3. extend posting logic for work-in-process, production completion, and variance accounting
-4. extend validations for manufacturing-specific controls
-5. update the process-flow and database docs so course users can understand the new cycle
-
-Manufacturing is a roadmap item. The current generator does not yet implement it.
-
-## Where to Go Next
-
-- Read [technical-guide.md](technical-guide.md) for the system-level design view.
-- Read [reference/schema.md](reference/schema.md) for the current table structure.
-- Read [reference/posting.md](reference/posting.md) for the detailed posting reference.
-- Read [roadmap.md](roadmap.md) for the next planned implementation phases.
+That phase should fit beside existing journals and manufacturing logic without changing the current O2C, P2P, or manufacturing foundation.

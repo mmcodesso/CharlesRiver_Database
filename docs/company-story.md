@@ -1,82 +1,100 @@
 # Company Story
 
 **Audience:** Students, instructors, and analysts who need business context before reading tables or SQL.  
-**Purpose:** Explain who Greenfield Home Furnishings is and how the business operates.  
-**What you will learn:** The company narrative, its operating model, and why the current process design is useful for accounting and analytics coursework.
+**Purpose:** Explain who Greenfield Home Furnishings is and how the company operates.  
+**What you will learn:** The company narrative, why the processes exist, and how the operating model supports accounting analytics coursework.
 
-> **Implemented in current generator:** A merchandising-style company story with O2C, P2P, returns, recurring journals, and year-end close.
+> **Implemented in current generator:** A hybrid manufacturer-distributor with O2C, P2P, manufacturing, recurring journals, and year-end close.
 
-> **Planned future extension:** Manufacturing activity that would move Greenfield from a light-assembler story into a fuller production setting.
+> **Planned future extension:** A payroll subledger and deeper production-costing detail.
 
 ## The Company in Plain Language
 
-Greenfield Home Furnishings, Inc. is a fictional mid-sized home furnishings company. It buys inventory from suppliers, stores it in two warehouses, sells finished goods to customers, and runs a finance function that records recurring journals and closes the books each year.
+Greenfield Home Furnishings, Inc. is a fictional mid-sized U.S. company that sells home furnishings to commercial and design-oriented customers.
 
-For teaching purposes, Greenfield is large enough to create realistic document volume and control questions, but simple enough that students can still understand the full business cycle.
+Greenfield operates in two ways at the same time:
 
-## What Greenfield Sells and Who It Serves
+- it **buys** some finished goods from suppliers and resells them
+- it **manufactures** a selected subset of finished goods in-house from raw materials and packaging
 
-Greenfield sells home furnishings and related product lines that are easy for business students to picture:
+That hybrid model connects:
 
-- furniture and decor items
-- inventory-managed finished goods
-- products sold to different customer types and regions
+- customer demand
+- supplier purchasing
+- production activity
+- inventory movement
+- accounting results
 
-The dataset supports customer, item, region, and cost-center analysis, so students can ask both business and accounting questions from the same data.
+## What Greenfield Sells
 
-## How the Business Operates
+Greenfield sells product families that are easy to visualize and analyze:
 
-Greenfield's business story has four main parts.
+- furniture
+- lighting
+- textiles
+- accessories
 
-### 1. Selling to customers
+Some of those products are purchased ready-made. Others are produced internally from raw materials and packaging.
 
-The sales team takes customer orders. Warehouse operations ship items when inventory is available. Accounting bills customers from the actual shipment lines, and treasury records and applies cash receipts.
+## How Greenfield Operates
 
-Some customers pay one invoice at a time. Others send larger payments that must be applied across several invoices. Some receipts arrive before the related invoice is fully settled, which creates temporary customer deposits or unapplied cash.
+Greenfield’s business story has five main threads.
 
-### 2. Correcting sales activity
+### 1. Sell and ship to customers
 
-Not every sale ends cleanly. Some goods come back because of damage, wrong-item shipments, or customer changes in demand. In those cases, warehouse staff receive the return, accounting issues a credit memo, and treasury may refund the customer if the original invoice was already paid.
+The sales team enters customer orders. Warehouse operations ship goods when inventory is available. Accounting invoices from shipment lines, not directly from order lines. Treasury records customer receipts and applies them to invoices.
 
-That gives students a realistic revenue-side exception path instead of a perfect one-way sales cycle.
+### 2. Correct customer-side exceptions
 
-### 3. Buying and receiving inventory
+Some shipments come back because of damage, order changes, or service problems. Warehouse staff receive the return, accounting issues a credit memo, and treasury refunds the customer if the original invoice had already been settled.
 
-The purchasing cycle starts inside the company. Employees request items through requisitions. Purchasing groups those needs into purchase orders. Warehouses receive inventory over time, suppliers invoice the company, and finance pays approved invoices.
+### 3. Buy raw materials, packaging, and finished goods
 
-Because receiving, invoicing, and payment do not always happen in the same month, students can study timing, matching, and open-balance behavior.
+Employees create purchase requisitions. Purchasing converts them into purchase orders. Warehouses receive goods, suppliers invoice the company, and treasury pays approved invoices.
 
-### 4. Closing the books
+That means the same dataset supports both:
 
-Greenfield is not only an operational database. The finance team also books recurring monthly journals for payroll, rent, utilities, depreciation, and accruals. Some accruals reverse in the following month. At year end, the company posts closing entries so students can work with a realistic annual reporting cycle.
+- resale purchasing for finished goods
+- manufacturing replenishment for materials and packaging
+
+### 4. Manufacture selected products
+
+The manufacturing team plans work orders for selected finished goods. Raw materials and packaging are issued to production, finished goods are completed into inventory, and work orders are closed with manufacturing variance when actual and standard amounts differ.
+
+### 5. Close the books
+
+Finance records opening balances, recurring journals, accrual reversals, factory overhead and manufacturing conversion reclasses, and year-end close entries.
+
+That gives students a full accounting environment, not only an operational database.
 
 ## Why This Story Works for Business Students
 
-This company story is useful because it creates one connected learning environment:
+The company is intentionally realistic but still teachable.
 
-- operations students can understand why a document exists
-- accounting students can see when a transaction posts
-- analytics students can aggregate and compare trends
-- audit students can test completeness, approval, timing, and exception patterns
+Students can ask:
 
-The goal is not to simulate every ERP feature. The goal is to give students one business they can understand deeply enough to analyze from several perspectives.
+- What happened operationally?
+- When did accounting recognize it?
+- Which ledger accounts changed?
+- Which documents and controls were involved?
+- How do purchased and manufactured products behave differently?
 
-## What Is Intentionally Simplified
+## What Is Still Simplified
 
-The current story is still a teaching model, not a full corporate simulation.
+The current dataset is a teaching model, not a full ERP simulation.
 
-The dataset currently does **not** include:
+The current implementation does **not** include:
 
-- manufacturing orders
-- bills of materials
-- work-in-process accounting
-- production completions
-- detailed payroll subledgers
+- routings or work centers
+- labor-time capture by employee
+- capacity planning
+- subassemblies or multi-level BOMs
+- a payroll subledger with paychecks, withholdings, and liability clearance
 
-Those topics remain future expansions.
+Those topics remain future extensions.
 
 ## Recommended Next Reading
 
-1. Read [dataset-overview.md](dataset-overview.md) for the database scope and glossary.
-2. Read [process-flows.md](process-flows.md) for the detailed process map.
+1. Read [dataset-overview.md](dataset-overview.md) for scope and glossary.
+2. Read [process-flows.md](process-flows.md) for the process map.
 3. Read [database-guide.md](database-guide.md) when you are ready to navigate the tables.

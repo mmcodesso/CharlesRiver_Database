@@ -6,6 +6,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from greenfield_dataset.manufacturing import work_order_conversion_factor, work_order_conversion_salary_share
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
 from greenfield_dataset.utils import money, next_id
@@ -25,6 +26,7 @@ COST_CENTER_MULTIPLIERS = {
     "Executive": 1.15,
     "Sales": 1.05,
     "Warehouse": 0.90,
+    "Manufacturing": 0.96,
     "Purchasing": 1.00,
     "Administration": 1.00,
     "Customer Service": 0.88,
@@ -36,6 +38,7 @@ SALARY_ACCOUNT_BY_COST_CENTER = {
     "Executive": "6050",
     "Sales": "6010",
     "Warehouse": "6020",
+    "Manufacturing": "6260",
     "Purchasing": "6230",
     "Administration": "6030",
     "Customer Service": "6040",
@@ -537,6 +540,147 @@ def generate_utilities_journal(context: GenerationContext, year: int, month: int
     )
 
 
+def manufacturing_completion_lines_for_month(context: GenerationContext, year: int, month: int) -> list[dict[str, Any]]:
+    completion_headers = context.tables["ProductionCompletion"]
+    completion_lines = context.tables["ProductionCompletionLine"]
+    if completion_headers.empty or completion_lines.empty:
+        return []
+
+    month_mask = (
+        pd.to_datetime(completion_headers["CompletionDate"]).dt.year.eq(year)
+        & pd.to_datetime(completion_headers["CompletionDate"]).dt.month.eq(month)
+    )
+    monthly_headers = completion_headers.loc[month_mask, ["ProductionCompletionID", "WorkOrderID", "CompletionDate"]]
+    if monthly_headers.empty:
+        return []
+
+    work_order_lookup = monthly_headers.set_index("ProductionCompletionID").to_dict("index")
+    rows: list[dict[str, Any]] = []
+    for line in completion_lines.itertuples(index=False):
+        header = work_order_lookup.get(int(line.ProductionCompletionID))
+        if header is None:
+            continue
+        rows.append({
+            "WorkOrderID": int(header["WorkOrderID"]),
+            "CompletionDate": str(header["CompletionDate"]),
+            "StandardConversionCost": float(line.ExtendedStandardConversionCost),
+        })
+    return rows
+
+
+def monthly_manufacturing_conversion_totals(context: GenerationContext, year: int, month: int) -> dict[str, float]:
+    monthly_completion_lines = manufacturing_completion_lines_for_month(context, year, month)
+    if not monthly_completion_lines:
+        return {"actual_total": 0.0, "salary_total": 0.0, "overhead_total": 0.0}
+
+    actual_total = 0.0
+    salary_total = 0.0
+    overhead_total = 0.0
+    for line in monthly_completion_lines:
+        work_order_id = int(line["WorkOrderID"])
+        standard_conversion_cost = float(line["StandardConversionCost"])
+        actual_conversion_cost = money(standard_conversion_cost * work_order_conversion_factor(context, work_order_id))
+        salary_share = work_order_conversion_salary_share(context, work_order_id)
+        salary_amount = money(actual_conversion_cost * salary_share)
+        overhead_amount = money(actual_conversion_cost - salary_amount)
+        actual_total += actual_conversion_cost
+        salary_total += salary_amount
+        overhead_total += overhead_amount
+
+    return {
+        "actual_total": money(actual_total),
+        "salary_total": money(salary_total),
+        "overhead_total": money(overhead_total),
+    }
+
+
+def manufacturing_journal_creator_id(context: GenerationContext) -> int:
+    return employee_id_by_titles(context, "Production Manager", "Controller", "Accounting Manager") or first_executive_id(context)
+
+
+def manufacturing_journal_approver_id(context: GenerationContext) -> int:
+    return employee_id_by_titles(context, "Controller", "Chief Financial Officer") or first_executive_id(context)
+
+
+def generate_factory_overhead_journal(context: GenerationContext, year: int, month: int) -> None:
+    totals = monthly_manufacturing_conversion_totals(context, year, month)
+    overhead_total = float(totals["overhead_total"])
+    if overhead_total <= 0:
+        return
+
+    posting_date = last_business_day(year, month).strftime("%Y-%m-%d")
+    creator_id = manufacturing_journal_creator_id(context)
+    approver_id = manufacturing_journal_approver_id(context)
+    create_journal(
+        context,
+        posting_date,
+        "Factory Overhead",
+        f"Factory overhead for {year}-{month:02d}",
+        [
+            {
+                "AccountNumber": "6270",
+                "Debit": overhead_total,
+                "Credit": 0.0,
+                "Description": "Factory overhead expense",
+                "CostCenterID": None,
+            },
+            {
+                "AccountNumber": "1010",
+                "Debit": 0.0,
+                "Credit": overhead_total,
+                "Description": "Factory overhead cash payment",
+                "CostCenterID": None,
+            },
+        ],
+        creator_id,
+        approver_id,
+    )
+
+
+def generate_manufacturing_conversion_reclass_journal(context: GenerationContext, year: int, month: int) -> None:
+    totals = monthly_manufacturing_conversion_totals(context, year, month)
+    actual_total = float(totals["actual_total"])
+    salary_total = float(totals["salary_total"])
+    overhead_total = float(totals["overhead_total"])
+    if actual_total <= 0:
+        return
+
+    posting_date = last_business_day(year, month).strftime("%Y-%m-%d")
+    creator_id = manufacturing_journal_creator_id(context)
+    approver_id = manufacturing_journal_approver_id(context)
+    create_journal(
+        context,
+        posting_date,
+        "Manufacturing Conversion Reclass",
+        f"Manufacturing conversion reclass for {year}-{month:02d}",
+        [
+            {
+                "AccountNumber": "1090",
+                "Debit": actual_total,
+                "Credit": 0.0,
+                "Description": "Reclass manufacturing conversion cost to clearing",
+                "CostCenterID": None,
+            },
+            {
+                "AccountNumber": "6260",
+                "Debit": 0.0,
+                "Credit": salary_total,
+                "Description": "Reclass manufacturing payroll to conversion clearing",
+                "CostCenterID": None,
+            },
+            {
+                "AccountNumber": "6270",
+                "Debit": 0.0,
+                "Credit": overhead_total,
+                "Description": "Reclass factory overhead to conversion clearing",
+                "CostCenterID": None,
+            },
+        ],
+        creator_id,
+        approver_id,
+    )
+
+
 def generate_depreciation_journals(context: GenerationContext, year: int, month: int) -> None:
     posting_date = last_calendar_day(year, month).strftime("%Y-%m-%d")
     creator_id = close_journal_creator_id(context)
@@ -671,6 +815,8 @@ def generate_recurring_manual_journals(context: GenerationContext) -> None:
         generate_rent_journals(context, year, month)
         generate_utilities_journal(context, year, month)
         generate_payroll_accruals(context, year, month)
+        generate_factory_overhead_journal(context, year, month)
+        generate_manufacturing_conversion_reclass_journal(context, year, month)
         generate_depreciation_journals(context, year, month)
         previous_month_accrual = generate_month_end_accrual(context, year, month)
         previous_year, previous_month = year, month

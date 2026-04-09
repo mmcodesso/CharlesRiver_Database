@@ -4,9 +4,9 @@
 **Purpose:** Show how to turn the generated workbook into a practical starter environment for pivots, charts, aging schedules, and anomaly review.  
 **What you will learn:** Which sheets matter for each analytics area, how to structure pivots, and how to separate clean analysis from anomaly-focused review.
 
-> **Implemented in current generator:** A workbook with one sheet per table plus `AnomalyLog` and `ValidationSummary`, suitable for Excel-based starter analytics.
+> **Implemented in current generator:** A workbook with one sheet per table plus `AnomalyLog` and `ValidationSummary`, suitable for Excel-based starter analytics across O2C, P2P, journals, and manufacturing.
 
-> **Planned future extension:** Additional workbook guidance for manufacturing analytics after that phase is implemented.
+> **Planned future extension:** Payroll workbook guidance after the payroll process cycle is implemented.
 
 ## Workbook Setup
 
@@ -181,6 +181,43 @@ Suggested pivots:
 - ordered value by supplier risk rating
 - item-group purchasing by month
 
+### Manufacturing workflows
+
+Use:
+
+- `Item`
+- `BillOfMaterial`
+- `BillOfMaterialLine`
+- `WorkOrder`
+- `MaterialIssueLine`
+- `ProductionCompletionLine`
+- `WorkOrderClose`
+- `GLEntry`
+- `Account`
+
+Suggested outputs:
+
+- BOM cost rollup by manufactured item
+- work-order throughput by month and warehouse
+- issued material versus completed output by work order
+- WIP, manufacturing clearing, and manufacturing variance review by period
+
+Recommended pivots:
+
+- rows: `FiscalYear`, `FiscalPeriod`, or `WarehouseID`
+- columns: `ItemGroup` or `SupplyMode`
+- values:
+  - planned quantity
+  - completed quantity
+  - issue cost
+  - variance amount
+
+Suggested charts:
+
+- monthly work-order releases versus closes
+- monthly production quantity by item group
+- manufacturing variance trend by month
+
 ## Audit Analytics Workflows
 
 ### Document-chain completeness
@@ -254,8 +291,8 @@ Suggested workflow:
 The Excel starter layer does **not** assume:
 
 - prebuilt pivot tables inside the exported workbook
-- manufacturing sheets
-- work-in-process analysis
+- payroll sheets or payroll register detail
+- routings or capacity-planning tables
 
 Those are future teaching extensions, not missing pieces of the current workbook.
 

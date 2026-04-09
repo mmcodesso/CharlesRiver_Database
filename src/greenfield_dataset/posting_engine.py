@@ -494,6 +494,295 @@ def post_customer_refunds(context: GenerationContext) -> list[dict[str, Any]]:
     return rows
 
 
+def post_material_issues(context: GenerationContext) -> list[dict[str, Any]]:
+    issues = context.tables["MaterialIssue"]
+    issue_lines = context.tables["MaterialIssueLine"]
+    work_orders = context.tables["WorkOrder"]
+    if issues.empty or issue_lines.empty or work_orders.empty:
+        return []
+
+    wip_account_id = account_id_by_number(context, "1046")
+    items = context.tables["Item"].set_index("ItemID").to_dict("index")
+    issue_headers = issues.set_index("MaterialIssueID").to_dict("index")
+    work_order_lookup = work_orders.set_index("WorkOrderID").to_dict("index")
+    rows: list[dict[str, Any]] = []
+
+    for line in issue_lines.itertuples(index=False):
+        issue = issue_headers[int(line.MaterialIssueID)]
+        work_order = work_order_lookup[int(issue["WorkOrderID"])]
+        item = items[int(line.ItemID)]
+        voucher_rows = [
+            build_gl_row(
+                context,
+                issue["IssueDate"],
+                wip_account_id,
+                float(line.ExtendedStandardCost),
+                0.0,
+                "MaterialIssue",
+                issue["IssueNumber"],
+                "MaterialIssue",
+                int(line.MaterialIssueID),
+                int(line.MaterialIssueLineID),
+                int(work_order["CostCenterID"]),
+                "Issue material to work in process",
+                int(issue["IssuedByEmployeeID"]),
+            ),
+            build_gl_row(
+                context,
+                issue["IssueDate"],
+                int(item["InventoryAccountID"]),
+                0.0,
+                float(line.ExtendedStandardCost),
+                "MaterialIssue",
+                issue["IssueNumber"],
+                "MaterialIssue",
+                int(line.MaterialIssueID),
+                int(line.MaterialIssueLineID),
+                int(work_order["CostCenterID"]),
+                "Relieve materials inventory for work order",
+                int(issue["IssuedByEmployeeID"]),
+            ),
+        ]
+        assert_balanced(voucher_rows, issue["IssueNumber"])
+        rows.extend(voucher_rows)
+
+    return rows
+
+
+def post_production_completions(context: GenerationContext) -> list[dict[str, Any]]:
+    completions = context.tables["ProductionCompletion"]
+    completion_lines = context.tables["ProductionCompletionLine"]
+    work_orders = context.tables["WorkOrder"]
+    if completions.empty or completion_lines.empty or work_orders.empty:
+        return []
+
+    wip_account_id = account_id_by_number(context, "1046")
+    manufacturing_clearing_account_id = account_id_by_number(context, "1090")
+    items = context.tables["Item"].set_index("ItemID").to_dict("index")
+    completion_headers = completions.set_index("ProductionCompletionID").to_dict("index")
+    work_order_lookup = work_orders.set_index("WorkOrderID").to_dict("index")
+    rows: list[dict[str, Any]] = []
+
+    for line in completion_lines.itertuples(index=False):
+        completion = completion_headers[int(line.ProductionCompletionID)]
+        work_order = work_order_lookup[int(completion["WorkOrderID"])]
+        item = items[int(line.ItemID)]
+        voucher_rows = [
+            build_gl_row(
+                context,
+                completion["CompletionDate"],
+                int(item["InventoryAccountID"]),
+                float(line.ExtendedStandardTotalCost),
+                0.0,
+                "ProductionCompletion",
+                completion["CompletionNumber"],
+                "ProductionCompletion",
+                int(line.ProductionCompletionID),
+                int(line.ProductionCompletionLineID),
+                int(work_order["CostCenterID"]),
+                "Receive finished goods from production",
+                int(completion["ReceivedByEmployeeID"]),
+            ),
+            build_gl_row(
+                context,
+                completion["CompletionDate"],
+                wip_account_id,
+                0.0,
+                float(line.ExtendedStandardMaterialCost),
+                "ProductionCompletion",
+                completion["CompletionNumber"],
+                "ProductionCompletion",
+                int(line.ProductionCompletionID),
+                int(line.ProductionCompletionLineID),
+                int(work_order["CostCenterID"]),
+                "Relieve work in process for material component",
+                int(completion["ReceivedByEmployeeID"]),
+            ),
+            build_gl_row(
+                context,
+                completion["CompletionDate"],
+                manufacturing_clearing_account_id,
+                0.0,
+                float(line.ExtendedStandardConversionCost),
+                "ProductionCompletion",
+                completion["CompletionNumber"],
+                "ProductionCompletion",
+                int(line.ProductionCompletionID),
+                int(line.ProductionCompletionLineID),
+                int(work_order["CostCenterID"]),
+                "Relieve manufacturing conversion clearing",
+                int(completion["ReceivedByEmployeeID"]),
+            ),
+        ]
+        assert_balanced(voucher_rows, completion["CompletionNumber"])
+        rows.extend(voucher_rows)
+
+    return rows
+
+
+def post_work_order_closes(context: GenerationContext) -> list[dict[str, Any]]:
+    closes = context.tables["WorkOrderClose"]
+    work_orders = context.tables["WorkOrder"]
+    if closes.empty or work_orders.empty:
+        return []
+
+    wip_account_id = account_id_by_number(context, "1046")
+    manufacturing_clearing_account_id = account_id_by_number(context, "1090")
+    variance_account_id = account_id_by_number(context, "5080")
+    work_order_lookup = work_orders.set_index("WorkOrderID").to_dict("index")
+    rows: list[dict[str, Any]] = []
+
+    for close in closes.itertuples(index=False):
+        work_order = work_order_lookup[int(close.WorkOrderID)]
+        voucher_number = f"WOCL-{int(close.WorkOrderCloseID):06d}"
+        voucher_rows: list[dict[str, Any]] = []
+
+        material_variance = round(float(close.MaterialVarianceAmount), 2)
+        if material_variance > 0:
+            voucher_rows.extend([
+                build_gl_row(
+                    context,
+                    close.CloseDate,
+                    variance_account_id,
+                    material_variance,
+                    0.0,
+                    "WorkOrderClose",
+                    voucher_number,
+                    "WorkOrderClose",
+                    int(close.WorkOrderCloseID),
+                    None,
+                    int(work_order["CostCenterID"]),
+                    "Close unfavorable material variance",
+                    int(close.ClosedByEmployeeID),
+                ),
+                build_gl_row(
+                    context,
+                    close.CloseDate,
+                    wip_account_id,
+                    0.0,
+                    material_variance,
+                    "WorkOrderClose",
+                    voucher_number,
+                    "WorkOrderClose",
+                    int(close.WorkOrderCloseID),
+                    None,
+                    int(work_order["CostCenterID"]),
+                    "Clear residual WIP balance",
+                    int(close.ClosedByEmployeeID),
+                ),
+            ])
+        elif material_variance < 0:
+            favorable = abs(material_variance)
+            voucher_rows.extend([
+                build_gl_row(
+                    context,
+                    close.CloseDate,
+                    wip_account_id,
+                    favorable,
+                    0.0,
+                    "WorkOrderClose",
+                    voucher_number,
+                    "WorkOrderClose",
+                    int(close.WorkOrderCloseID),
+                    None,
+                    int(work_order["CostCenterID"]),
+                    "Clear favorable material variance from WIP",
+                    int(close.ClosedByEmployeeID),
+                ),
+                build_gl_row(
+                    context,
+                    close.CloseDate,
+                    variance_account_id,
+                    0.0,
+                    favorable,
+                    "WorkOrderClose",
+                    voucher_number,
+                    "WorkOrderClose",
+                    int(close.WorkOrderCloseID),
+                    None,
+                    int(work_order["CostCenterID"]),
+                    "Record favorable material variance",
+                    int(close.ClosedByEmployeeID),
+                ),
+            ])
+
+        conversion_variance = round(float(close.ConversionVarianceAmount), 2)
+        if conversion_variance > 0:
+            voucher_rows.extend([
+                build_gl_row(
+                    context,
+                    close.CloseDate,
+                    variance_account_id,
+                    conversion_variance,
+                    0.0,
+                    "WorkOrderClose",
+                    voucher_number,
+                    "WorkOrderClose",
+                    int(close.WorkOrderCloseID),
+                    None,
+                    int(work_order["CostCenterID"]),
+                    "Close unfavorable conversion variance",
+                    int(close.ClosedByEmployeeID),
+                ),
+                build_gl_row(
+                    context,
+                    close.CloseDate,
+                    manufacturing_clearing_account_id,
+                    0.0,
+                    conversion_variance,
+                    "WorkOrderClose",
+                    voucher_number,
+                    "WorkOrderClose",
+                    int(close.WorkOrderCloseID),
+                    None,
+                    int(work_order["CostCenterID"]),
+                    "Clear residual manufacturing conversion balance",
+                    int(close.ClosedByEmployeeID),
+                ),
+            ])
+        elif conversion_variance < 0:
+            favorable = abs(conversion_variance)
+            voucher_rows.extend([
+                build_gl_row(
+                    context,
+                    close.CloseDate,
+                    manufacturing_clearing_account_id,
+                    favorable,
+                    0.0,
+                    "WorkOrderClose",
+                    voucher_number,
+                    "WorkOrderClose",
+                    int(close.WorkOrderCloseID),
+                    None,
+                    int(work_order["CostCenterID"]),
+                    "Clear favorable conversion variance from manufacturing clearing",
+                    int(close.ClosedByEmployeeID),
+                ),
+                build_gl_row(
+                    context,
+                    close.CloseDate,
+                    variance_account_id,
+                    0.0,
+                    favorable,
+                    "WorkOrderClose",
+                    voucher_number,
+                    "WorkOrderClose",
+                    int(close.WorkOrderCloseID),
+                    None,
+                    int(work_order["CostCenterID"]),
+                    "Record favorable conversion variance",
+                    int(close.ClosedByEmployeeID),
+                ),
+            ])
+
+        if not voucher_rows:
+            continue
+        assert_balanced(voucher_rows, voucher_number)
+        rows.extend(voucher_rows)
+
+    return rows
+
+
 def post_goods_receipts(context: GenerationContext) -> list[dict[str, Any]]:
     receipts = context.tables["GoodsReceipt"]
     receipt_lines = context.tables["GoodsReceiptLine"]
@@ -724,6 +1013,9 @@ def post_all_transactions(context: GenerationContext) -> None:
     operational_rows.extend(post_sales_returns(context))
     operational_rows.extend(post_credit_memos(context))
     operational_rows.extend(post_customer_refunds(context))
+    operational_rows.extend(post_material_issues(context))
+    operational_rows.extend(post_production_completions(context))
+    operational_rows.extend(post_work_order_closes(context))
     operational_rows.extend(post_goods_receipts(context))
     operational_rows.extend(post_purchase_invoices(context))
     operational_rows.extend(post_disbursements(context))

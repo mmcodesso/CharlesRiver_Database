@@ -6,9 +6,9 @@
 
 The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUMNS`.
 
-> **Implemented in current generator:** 31 tables across accounting, O2C, P2P, master data, and organizational planning.
+> **Implemented in current generator:** 39 tables across accounting, O2C, P2P, manufacturing, master data, and organizational planning.
 
-> **Planned future extension:** Manufacturing-related tables and richer operational detail in future phases.
+> **Planned future extension:** Payroll-cycle tables and deeper production detail.
 
 ## Table Groups
 
@@ -17,17 +17,17 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 | Accounting core | `Account`, `JournalEntry`, `GLEntry` | 3 |
 | O2C | `Customer`, `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt`, `CashReceiptApplication`, `SalesReturn`, `SalesReturnLine`, `CreditMemo`, `CreditMemoLine`, `CustomerRefund` | 14 |
 | P2P | `Supplier`, `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment` | 9 |
+| Manufacturing | `BillOfMaterial`, `BillOfMaterialLine`, `WorkOrder`, `MaterialIssue`, `MaterialIssueLine`, `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose` | 8 |
 | Master data | `Item`, `Warehouse`, `Employee` | 3 |
 | Organizational planning | `CostCenter`, `Budget` | 2 |
-| Total |  | 31 |
+| Total |  | 39 |
 
 ## Design Patterns That Matter
 
-- Header-line tables are used for sales orders, shipments, sales invoices, purchase orders, goods receipts, and purchase invoices.
+- Header-line tables are used for orders, shipments, invoices, purchase orders, goods receipts, purchase invoices, material issues, and production completions.
 - `GLEntry` is the reporting bridge between operational events and accounting analysis.
-- `Item` carries account-mapping fields used by the posting engine.
-- `Employee` and `CostCenter` reference each other, so generation uses a backfill step for managers.
-- `JournalEntry` and `GLEntry` together represent the opening balance, recurring manual journals, accrual reversals, and year-end close activity without requiring a separate journal-line table.
+- `Item` carries account-mapping fields plus manufacturing attributes such as `SupplyMode`, `ProductionLeadTimeDays`, and `StandardConversionCost`.
+- `JournalEntry` and `GLEntry` together represent opening, recurring, manufacturing, reversal, and close-cycle activity without a separate journal-line table.
 
 ## Accounting Core
 
@@ -51,7 +51,7 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 | `CashReceipt` | Customer payment header | `ReceiptNumber`, `ReceiptDate`, `CustomerID`, `SalesInvoiceID`, `Amount`, `PaymentMethod`, `ReferenceNumber`, `RecordedByEmployeeID` |
 | `CashReceiptApplication` | Receipt-to-invoice application detail | `CashReceiptID`, `SalesInvoiceID`, `ApplicationDate`, `AppliedAmount`, `AppliedByEmployeeID` |
 | `SalesReturn` | Customer return header | `ReturnNumber`, `ReturnDate`, `CustomerID`, `SalesOrderID`, `WarehouseID`, `ReasonCode`, `Status` |
-| `SalesReturnLine` | Returned item detail used for inventory restoration | `SalesReturnID`, `ShipmentLineID`, `ItemID`, `QuantityReturned`, `ExtendedStandardCost` |
+| `SalesReturnLine` | Returned item detail | `SalesReturnID`, `ShipmentLineID`, `ItemID`, `QuantityReturned`, `ExtendedStandardCost` |
 | `CreditMemo` | Customer credit memo header | `CreditMemoNumber`, `CreditMemoDate`, `SalesReturnID`, `OriginalSalesInvoiceID`, `SubTotal`, `TaxAmount`, `GrandTotal`, `Status` |
 | `CreditMemoLine` | Customer credit memo detail | `CreditMemoID`, `SalesReturnLineID`, `ItemID`, `Quantity`, `UnitPrice`, `LineTotal` |
 | `CustomerRefund` | Customer refund payment record | `RefundNumber`, `RefundDate`, `CustomerID`, `CreditMemoID`, `Amount`, `PaymentMethod`, `ReferenceNumber` |
@@ -70,11 +70,24 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 | `PurchaseInvoiceLine` | Supplier invoice detail | `PurchaseInvoiceID`, `POLineID`, `GoodsReceiptLineID`, `LineNumber`, `ItemID`, `Quantity`, `UnitCost`, `LineTotal` |
 | `DisbursementPayment` | Supplier payment record | `PaymentNumber`, `PaymentDate`, `SupplierID`, `PurchaseInvoiceID`, `Amount`, `PaymentMethod`, `CheckNumber`, `ApprovedByEmployeeID`, `ClearedDate` |
 
+## Manufacturing
+
+| Table | Purpose | High-value columns |
+|---|---|---|
+| `BillOfMaterial` | BOM header for manufactured items | `ParentItemID`, `VersionNumber`, `Status`, `StandardBatchQuantity` |
+| `BillOfMaterialLine` | BOM component detail | `BOMID`, `ComponentItemID`, `LineNumber`, `QuantityPerUnit`, `ScrapFactorPct` |
+| `WorkOrder` | Production order header | `ItemID`, `BOMID`, `WarehouseID`, `PlannedQuantity`, `ReleasedDate`, `DueDate`, `CompletedDate`, `ClosedDate`, `Status`, `CostCenterID` |
+| `MaterialIssue` | Material issue header | `WorkOrderID`, `IssueDate`, `WarehouseID`, `IssuedByEmployeeID`, `Status` |
+| `MaterialIssueLine` | Material issue detail | `MaterialIssueID`, `BOMLineID`, `ItemID`, `QuantityIssued`, `ExtendedStandardCost` |
+| `ProductionCompletion` | Production completion header | `WorkOrderID`, `CompletionDate`, `WarehouseID`, `ReceivedByEmployeeID`, `Status` |
+| `ProductionCompletionLine` | Production completion detail | `ProductionCompletionID`, `ItemID`, `QuantityCompleted`, `ExtendedStandardMaterialCost`, `ExtendedStandardConversionCost`, `ExtendedStandardTotalCost` |
+| `WorkOrderClose` | Work-order close and variance record | `WorkOrderID`, `CloseDate`, `MaterialVarianceAmount`, `ConversionVarianceAmount`, `TotalVarianceAmount`, `Status` |
+
 ## Master Data
 
 | Table | Purpose | High-value columns |
 |---|---|---|
-| `Item` | Product master and account mapping | `ItemCode`, `ItemGroup`, `ItemType`, `StandardCost`, `ListPrice`, `InventoryAccountID`, `RevenueAccountID`, `COGSAccountID`, `PurchaseVarianceAccountID`, `TaxCategory` |
+| `Item` | Product master and account mapping | `ItemCode`, `ItemGroup`, `SupplyMode`, `ProductionLeadTimeDays`, `StandardConversionCost`, `StandardCost`, `InventoryAccountID`, `RevenueAccountID`, `COGSAccountID`, `PurchaseVarianceAccountID` |
 | `Warehouse` | Inventory storage locations | `WarehouseName`, `ManagerID`, address fields |
 | `Employee` | Employee and approval metadata | `CostCenterID`, `JobTitle`, `ManagerID`, `AuthorizationLevel`, `MaxApprovalAmount`, `IsActive` |
 
@@ -89,36 +102,27 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 
 The most important lineage fields in the implementation are:
 
-- `PurchaseOrder.RequisitionID`
 - `PurchaseOrderLine.RequisitionID`
+- `PurchaseInvoiceLine.GoodsReceiptLineID`
 - `SalesInvoiceLine.ShipmentLineID`
 - `CashReceiptApplication.CashReceiptID`
 - `CashReceiptApplication.SalesInvoiceID`
 - `SalesReturnLine.ShipmentLineID`
 - `CreditMemo.SalesReturnID`
 - `CreditMemo.OriginalSalesInvoiceID`
-- `CreditMemoLine.SalesReturnLineID`
 - `CustomerRefund.CreditMemoID`
-- `GoodsReceiptLine.POLineID`
-- `PurchaseInvoiceLine.POLineID`
-- `PurchaseInvoiceLine.GoodsReceiptLineID`
+- `WorkOrder.BOMID`
+- `MaterialIssueLine.BOMLineID`
+- `ProductionCompletion.WorkOrderID`
+- `WorkOrderClose.WorkOrderID`
 - `GLEntry.SourceDocumentType`
 - `GLEntry.SourceDocumentID`
 - `GLEntry.SourceLineID`
 
-`PurchaseOrder.RequisitionID` is compatibility metadata. When a PO batches multiple requisitions, the authoritative requisition linkage is on `PurchaseOrderLine.RequisitionID`.
-
-`CashReceipt.SalesInvoiceID` is now compatibility metadata only. The authoritative settlement link in O2C is `CashReceiptApplication`.
-
-`PurchaseInvoiceLine.GoodsReceiptLineID` is the authoritative clean-match link for three-way-match style analysis in the current P2P design.
-
-These fields make it possible to trace from posted accounting detail back to the source document that created the entry.
-
 ## Current Implementation Notes
 
-- `JournalEntry.EntryType` is actively used for opening, payroll accrual and settlement, rent, utilities, depreciation, accrual, accrual reversal, and year-end close entries.
-- O2C now uses line-level shipment-to-invoice linkage and explicit application, return, credit memo, and refund tables.
-- `GoodsReceiptLine.ExtendedStandardCost` currently stores the receipt posting basis used for inventory and GRNI, derived from PO cost in the clean generator.
-- `PurchaseOrder`, `GoodsReceipt`, `PurchaseInvoice`, and `DisbursementPayment` can now span multiple periods for the same underlying requisition or receipt chain.
-- Excel exports include additional worksheets such as `AnomalyLog` and `ValidationSummary`, but those are export artifacts, not schema tables.
-- For the exact column order and names, use `TABLE_COLUMNS` in `src/greenfield_dataset/schema.py`.
+- `CashReceipt.SalesInvoiceID` is compatibility metadata only. The authoritative settlement link is `CashReceiptApplication`.
+- `PurchaseOrder.RequisitionID` is compatibility metadata when a PO batches multiple requisitions.
+- `GoodsReceiptLine.ExtendedStandardCost` stores the receipt posting basis used for inventory and GRNI.
+- The manufacturing foundation uses single-level BOMs only.
+- For exact column order and names, use `TABLE_COLUMNS` in `src/greenfield_dataset/schema.py`.

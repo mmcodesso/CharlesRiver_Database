@@ -4,9 +4,9 @@
 **Purpose:** Show how recurring journals, reversals, and year-end close work in the current dataset.  
 **What you will learn:** The journal storyline, the journal categories, when entries occur, and how those entries affect analysis.
 
-> **Implemented in current generator:** Opening balance, recurring monthly operating journals, accrual reversals, and year-end close entries.
+> **Implemented in current generator:** Opening balance, recurring monthly operating journals, factory overhead journals, manufacturing conversion reclass journals, accrual reversals, and year-end close entries.
 
-> **Planned future extension:** Manufacturing-related close activity once production accounting is added.
+> **Planned future extension:** Payroll-subledger-driven journals after the payroll cycle is implemented.
 
 ## Business Storyline
 
@@ -74,6 +74,8 @@ Current recurring categories:
 - rent
 - utilities
 - depreciation
+- factory overhead
+- manufacturing conversion reclass
 - accrual
 - accrual reversal
 - year-end close

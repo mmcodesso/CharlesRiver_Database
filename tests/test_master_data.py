@@ -1,3 +1,4 @@
+from greenfield_dataset.manufacturing import generate_boms
 from greenfield_dataset.master_data import (
     backfill_cost_center_managers,
     generate_cost_centers,
@@ -23,9 +24,9 @@ def test_load_accounts_uses_configured_chart() -> None:
 
     load_accounts(context, "config/accounts.csv")
 
-    assert len(context.tables["Account"]) == 90
+    assert len(context.tables["Account"]) == 95
     assert context.tables["Account"]["AccountNumber"].is_unique
-    assert context.counters["Account"] == 91
+    assert context.counters["Account"] == 96
 
 
 def test_generate_phase1_master_data() -> None:
@@ -37,7 +38,7 @@ def test_generate_phase1_master_data() -> None:
     backfill_cost_center_managers(context)
     generate_warehouses(context)
 
-    assert len(context.tables["CostCenter"]) == 8
+    assert len(context.tables["CostCenter"]) == 9
     assert len(context.tables["Employee"]) == context.settings.employee_count
     assert len(context.tables["Warehouse"]) == context.settings.warehouse_count
     assert context.tables["CostCenter"]["ManagerID"].notna().all()
@@ -53,13 +54,17 @@ def test_generate_phase2_master_data() -> None:
     backfill_cost_center_managers(context)
     generate_warehouses(context)
     generate_items(context)
+    generate_boms(context)
     generate_customers(context)
     generate_suppliers(context)
 
     assert len(context.tables["Item"]) == context.settings.item_count
+    assert len(context.tables["BillOfMaterial"]) > 0
+    assert len(context.tables["BillOfMaterialLine"]) > 0
     assert len(context.tables["Customer"]) == context.settings.customer_count
     assert len(context.tables["Supplier"]) == context.settings.supplier_count
     assert context.tables["Item"]["ItemCode"].is_unique
     assert context.tables["Item"]["InventoryAccountID"].notna().all()
+    assert context.tables["Item"]["SupplyMode"].isin(["Purchased", "Manufactured"]).all()
     assert context.tables["Customer"]["SalesRepEmployeeID"].notna().all()
     assert context.tables["Supplier"]["DefaultCurrency"].eq("USD").all()

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 try:
@@ -18,6 +19,7 @@ COST_CENTER_ROWS = [
     ("Executive", None, 1),
     ("Sales", None, 1),
     ("Warehouse", None, 1),
+    ("Manufacturing", None, 1),
     ("Purchasing", None, 1),
     ("Administration", None, 1),
     ("Customer Service", None, 1),
@@ -29,6 +31,14 @@ JOB_TITLES_BY_COST_CENTER = {
     "Executive": ["Chief Executive Officer", "Chief Financial Officer", "Controller"],
     "Sales": ["Sales Manager", "Account Executive", "Sales Representative"],
     "Warehouse": ["Warehouse Manager", "Inventory Specialist", "Shipping Clerk"],
+    "Manufacturing": [
+        "Production Manager",
+        "Production Supervisor",
+        "Production Planner",
+        "Assembler",
+        "Machine Operator",
+        "Quality Technician",
+    ],
     "Purchasing": ["Purchasing Manager", "Buyer", "Procurement Analyst"],
     "Administration": ["Accounting Manager", "Staff Accountant", "Administrative Specialist"],
     "Customer Service": ["Customer Service Manager", "Customer Service Representative"],
@@ -50,6 +60,41 @@ ITEM_GROUP_CONFIG = {
     "Accessories": ("ACC", "Finished Good", "Each", "1040", "4040", "5040", (8, 95), (1.90, 2.80)),
     "Packaging": ("PKG", "Purchased Material", "Box", "1045", None, None, (1, 18), None),
     "Raw Materials": ("RAW", "Purchased Material", "Roll", "1045", None, None, (5, 55), None),
+}
+
+MANUFACTURED_SUPPLY_MODE_PROBABILITY = {
+    "Furniture": 0.62,
+    "Lighting": 0.55,
+    "Textiles": 0.28,
+    "Accessories": 0.12,
+}
+
+PRODUCTION_LEAD_TIME_DAYS = {
+    "Furniture": (5, 10),
+    "Lighting": (4, 8),
+    "Textiles": (3, 7),
+    "Accessories": (2, 5),
+}
+
+CONVERSION_COST_RATE = {
+    "Furniture": (0.22, 0.34),
+    "Lighting": (0.18, 0.28),
+    "Textiles": (0.14, 0.24),
+    "Accessories": (0.10, 0.18),
+}
+
+MANUFACTURED_SHARE_TARGET = 0.40
+MANUFACTURED_PROMOTION_PRIORITY = {
+    "Furniture": 0,
+    "Lighting": 1,
+    "Textiles": 2,
+    "Accessories": 3,
+}
+MANUFACTURED_DEMOTION_PRIORITY = {
+    "Accessories": 0,
+    "Textiles": 1,
+    "Lighting": 2,
+    "Furniture": 3,
 }
 
 REGIONS = {
@@ -252,12 +297,17 @@ def generate_warehouses(context: GenerationContext) -> None:
     fake = make_faker(context.settings.random_seed + 1)
 
     employees = context.tables["Employee"]
+    cost_centers = context.tables["CostCenter"]
     if employees.empty:
         raise ValueError("Generate employees before warehouses.")
+    if cost_centers.empty:
+        raise ValueError("Generate cost centers before warehouses.")
 
+    warehouse_matches = cost_centers.loc[cost_centers["CostCenterName"].eq("Warehouse"), "CostCenterID"]
+    warehouse_cost_center_id = int(warehouse_matches.iloc[0]) if not warehouse_matches.empty else None
     warehouse_managers = employees[
-        (employees["CostCenterID"] == 3)
-        & (employees["AuthorizationLevel"].isin(["Manager", "Executive"]))
+        employees["CostCenterID"].eq(warehouse_cost_center_id)
+        & employees["AuthorizationLevel"].isin(["Manager", "Executive"])
     ]["EmployeeID"].tolist()
     fallback_manager = int(employees.iloc[0]["EmployeeID"])
     base_names = ["East Distribution Center", "West Distribution Center", "Central Overflow Warehouse"]
@@ -294,7 +344,16 @@ def generate_items(context: GenerationContext) -> None:
         prefix, item_type, unit, inventory, revenue, cogs, cost_range, markup_range = ITEM_GROUP_CONFIG[item_group]
         standard_cost = money(rng.uniform(*cost_range))
         list_price = None
+        supply_mode = "Purchased"
+        production_lead_time_days = 0
+        standard_conversion_cost = 0.0
         if markup_range is not None:
+            if rng.random() <= MANUFACTURED_SUPPLY_MODE_PROBABILITY.get(item_group, 0.0):
+                supply_mode = "Manufactured"
+                lead_low, lead_high = PRODUCTION_LEAD_TIME_DAYS[item_group]
+                production_lead_time_days = int(rng.integers(lead_low, lead_high + 1))
+                conversion_low, conversion_high = CONVERSION_COST_RATE[item_group]
+                standard_conversion_cost = money(standard_cost * rng.uniform(conversion_low, conversion_high))
             list_price = money(standard_cost * rng.uniform(*markup_range))
 
         item_id = next_id(context, "Item")
@@ -307,6 +366,9 @@ def generate_items(context: GenerationContext) -> None:
             "StandardCost": standard_cost,
             "ListPrice": list_price,
             "UnitOfMeasure": unit,
+            "SupplyMode": supply_mode,
+            "ProductionLeadTimeDays": production_lead_time_days,
+            "StandardConversionCost": standard_conversion_cost,
             "InventoryAccountID": account_id_by_number(context, inventory),
             "RevenueAccountID": account_id_by_number(context, revenue),
             "COGSAccountID": account_id_by_number(context, cogs),
@@ -315,7 +377,41 @@ def generate_items(context: GenerationContext) -> None:
             "IsActive": 1 if rng.random() > 0.03 else 0,
         })
 
-    context.tables["Item"] = pd.DataFrame(records, columns=TABLE_COLUMNS["Item"])
+    items = pd.DataFrame(records, columns=TABLE_COLUMNS["Item"])
+    sellable_active_mask = items["RevenueAccountID"].notna() & items["IsActive"].eq(1)
+    target_manufactured_count = int(round(int(sellable_active_mask.sum()) * MANUFACTURED_SHARE_TARGET))
+    manufactured_active_mask = sellable_active_mask & items["SupplyMode"].eq("Manufactured")
+    manufactured_count = int(manufactured_active_mask.sum())
+
+    if manufactured_count > target_manufactured_count:
+        candidates = items.loc[manufactured_active_mask].copy()
+        candidates["Priority"] = candidates["ItemGroup"].map(MANUFACTURED_DEMOTION_PRIORITY).fillna(99)
+        candidates = candidates.sort_values(["Priority", "ItemID"], ascending=[True, False])
+        demote_count = manufactured_count - target_manufactured_count
+        demote_ids = set(candidates.head(demote_count)["ItemID"].astype(int).tolist())
+        mask = items["ItemID"].astype(int).isin(demote_ids)
+        items.loc[mask, "SupplyMode"] = "Purchased"
+        items.loc[mask, "ProductionLeadTimeDays"] = 0
+        items.loc[mask, "StandardConversionCost"] = 0.0
+    elif manufactured_count < target_manufactured_count:
+        candidates = items.loc[sellable_active_mask & items["SupplyMode"].eq("Purchased")].copy()
+        candidates["Priority"] = candidates["ItemGroup"].map(MANUFACTURED_PROMOTION_PRIORITY).fillna(99)
+        candidates = candidates.sort_values(["Priority", "ItemID"])
+        promote_count = target_manufactured_count - manufactured_count
+        promote_ids = candidates.head(promote_count)["ItemID"].astype(int).tolist()
+        for item_id in promote_ids:
+            row_index = items.index[items["ItemID"].astype(int).eq(int(item_id))][0]
+            item_group = str(items.loc[row_index, "ItemGroup"])
+            rng = np.random.default_rng(context.settings.random_seed + int(item_id) * 97)
+            lead_low, lead_high = PRODUCTION_LEAD_TIME_DAYS[item_group]
+            conversion_low, conversion_high = CONVERSION_COST_RATE[item_group]
+            items.loc[row_index, "SupplyMode"] = "Manufactured"
+            items.loc[row_index, "ProductionLeadTimeDays"] = int(rng.integers(lead_low, lead_high + 1))
+            items.loc[row_index, "StandardConversionCost"] = money(
+                float(items.loc[row_index, "StandardCost"]) * rng.uniform(conversion_low, conversion_high)
+            )
+
+    context.tables["Item"] = items
 
 
 def generate_customers(context: GenerationContext) -> None:

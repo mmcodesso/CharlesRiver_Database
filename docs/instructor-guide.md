@@ -4,9 +4,9 @@
 **Purpose:** Show how the dataset can be adopted as a teaching package and how the new starter analytics layer fits into class delivery.  
 **What you will learn:** A recommended teaching sequence, how to map learning goals to documents and query sets, and how to separate student-ready materials from instructor enrichment notes.
 
-> **Implemented in current generator:** Five years of O2C and P2P data, opening balances, recurring manual journals, year-end close, budgets, ledger postings, anomalies, and starter analytics materials for financial, managerial, and audit analytics.
+> **Implemented in current generator:** Five years of O2C, P2P, and manufacturing data, opening balances, recurring manual journals, year-end close, budgets, ledger postings, anomalies, and starter analytics materials for financial, managerial, and audit analytics.
 
-> **Planned future extension:** Manufacturing coverage for later course modules.
+> **Planned future extension:** Payroll process-cycle coverage after the payroll phase is implemented.
 
 ## How to Position the Dataset
 
@@ -33,6 +33,7 @@ Use these directly with students:
 - [processes/o2c.md](processes/o2c.md)
 - [processes/o2c-returns-credits-refunds.md](processes/o2c-returns-credits-refunds.md)
 - [processes/p2p.md](processes/p2p.md)
+- [processes/manufacturing.md](processes/manufacturing.md)
 - [processes/manual-journals-and-close.md](processes/manual-journals-and-close.md)
 - [database-guide.md](database-guide.md)
 - [analytics/index.md](analytics/index.md)
@@ -61,13 +62,13 @@ Use these to frame the course and answer implementation questions:
 | Week or module | Teaching goal | Main docs | Main starter assets |
 |---|---|---|---|
 | 1. Business orientation | Explain the company, scope, and why the dataset exists | [company-story.md](company-story.md), [dataset-overview.md](dataset-overview.md) | None yet |
-| 2. Process mapping | Show O2C, returns, P2P, and close-cycle flow | [process-flows.md](process-flows.md), [processes/o2c.md](processes/o2c.md), [processes/p2p.md](processes/p2p.md) | None yet |
+| 2. Process mapping | Show O2C, returns, P2P, manufacturing, and close-cycle flow | [process-flows.md](process-flows.md), [processes/o2c.md](processes/o2c.md), [processes/p2p.md](processes/p2p.md), [processes/manufacturing.md](processes/manufacturing.md) | None yet |
 | 3. Exception paths | Show returns, credits, refunds, and manual journal activity | [processes/o2c-returns-credits-refunds.md](processes/o2c-returns-credits-refunds.md), [processes/manual-journals-and-close.md](processes/manual-journals-and-close.md) | None yet |
 | 4. Table navigation and joins | Teach keys, header-line patterns, and traceability | [database-guide.md](database-guide.md) | Introductory ad hoc joins |
 | 5. Source-to-ledger bridge | Show how operational activity becomes accounting data | [reference/posting.md](reference/posting.md) | Ledger-oriented examples |
 | 6. Financial analytics | Teach revenue, AR, AP, trial balance, and close cycle | [analytics/financial.md](analytics/financial.md) | `queries/financial/` |
-| 7. Managerial analytics | Teach budgeting, cost centers, sales mix, and inventory movement | [analytics/managerial.md](analytics/managerial.md) | `queries/managerial/` |
-| 8. Audit analytics | Teach completeness, approvals, cut-off, duplicates, and exception logic | [analytics/audit.md](analytics/audit.md) | `queries/audit/` |
+| 7. Managerial analytics | Teach budgeting, cost centers, sales mix, inventory movement, BOMs, and work-order behavior | [analytics/managerial.md](analytics/managerial.md) | `queries/managerial/` |
+| 8. Audit analytics | Teach completeness, approvals, cut-off, duplicates, manufacturing controls, and exception logic | [analytics/audit.md](analytics/audit.md) | `queries/audit/` |
 | 9. Anomaly-focused work | Move from clean analysis to exception-oriented work | [analytics/audit.md](analytics/audit.md), [analytics/excel-guide.md](analytics/excel-guide.md) | `AnomalyLog`, `ValidationSummary`, audit query pack |
 
 This sequence can be compressed into fewer weeks or expanded into several assignments. The important sequencing rule is: process understanding first, analytics second.
@@ -104,7 +105,7 @@ The current workbook works well for:
 - budget-versus-actual analysis
 - aging views for receivables and payables
 - anomaly review using `AnomalyLog`
-- charting seasonality, mix, and timing gaps
+- charting seasonality, mix, timing gaps, and manufacturing variance
 
 ## Topic Coverage by Area
 
@@ -130,6 +131,9 @@ Use the starter layer for:
 - inventory movement
 - supplier and category spend
 - simple profitability analysis
+- BOM cost rollup
+- work-order throughput
+- manufacturing variance review
 
 ### Auditing
 
@@ -140,6 +144,7 @@ Use the starter layer for:
 - cut-off and timing analysis
 - duplicate payment or invoice reference review
 - anomaly-focused exercises
+- BOM integrity and work-order close review
 
 ## Clean Dataset vs Anomaly-Enabled Dataset
 
@@ -162,12 +167,9 @@ Use the starter layer for:
 
 The current dataset does **not** yet include:
 
-- manufacturing
-- bills of materials
-- work orders
-- work-in-process accounting
 - payroll employee-level subledger detail
-- production completion or manufacturing variance flows
+- payroll registers, withholdings, or net-pay settlement
+- labor-time detail inside work orders
 
 These are future expansion areas, not hidden parts of the current model.
 

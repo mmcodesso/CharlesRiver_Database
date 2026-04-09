@@ -1,55 +1,66 @@
 # Greenfield Accounting Dataset
 
-Greenfield Accounting Dataset is a synthetic accounting database for business students who need to connect business processes, operational documents, subledgers, and the general ledger in one teachable system.
+Greenfield Accounting Dataset is a synthetic business database for AIS, accounting analytics, auditing analytics, SQL, and Excel coursework.
 
-Most users should start with the pre-generated release files, not the Python generator. The project is built for SQL work, Excel analysis, accounting analytics, AIS courses, and audit-style document tracing.
+The repository is designed for users who mostly want the generated release artifacts:
+
+- `greenfield_2026_2030.sqlite`
+- `greenfield_2026_2030.xlsx`
+- `validation_report.json`
+- `generation.log`
+
+Most students and instructors should start with those files, not the Python generator.
 
 ## Meet the Company
 
-The fictional company is **Greenfield Home Furnishings, Inc.**, a mid-sized home furnishings distributor with two warehouses, a multi-department operating structure, and a finance team that books recurring journals and closes the books each year.
+**Greenfield Home Furnishings, Inc.** is a fictional mid-sized U.S. company.
 
-In the current implementation, Greenfield behaves like a merchandising business:
+In the current implementation, Greenfield is a **hybrid manufacturer-distributor**:
 
-- customers place sales orders
-- warehouses ship goods when inventory is available
-- accounting invoices customers and applies cash receipts
-- some sales flow into returns, credit memos, and refunds
-- employees request purchases, purchasing issues POs, warehouses receive goods, suppliers invoice the company, and treasury pays the invoices
-- finance also books opening balances, monthly operating journals, accrual reversals, and year-end close entries
+- it sells finished goods to customers
+- it buys raw materials, packaging, and some finished goods from suppliers
+- it manufactures a selected subset of products in-house
+- it stores inventory in two warehouses
+- it ships, invoices, collects cash, processes returns, and issues credit memos and refunds
+- it records recurring journals, manufacturing reclasses, and year-end close entries
 
-That operating model is detailed enough for classroom analysis, but still constrained enough to remain readable for students.
+That makes the dataset useful across:
+
+- financial accounting
+- managerial accounting
+- auditing and controls
+- business process analysis
+- SQL and Excel exercises
 
 ## What the Database Contains
 
-The current generator produces a five-year dataset covering fiscal years **2026 through 2030**.
+The current default build covers fiscal years **2026 through 2030** and contains **39 implemented tables** across:
 
-Current scope:
+- accounting core
+- order-to-cash
+- procure-to-pay
+- manufacturing
+- master data
+- organizational planning
 
-- `31` implemented tables
-- order-to-cash with backorders, invoice matching, cash applications, returns, credit memos, and refunds
-- procure-to-pay with batched purchase orders, partial receipts, receipt-line invoice matching, and split payments
-- chart of accounts, budgets, recurring manual journals, year-end close, and posted `GLEntry` detail
-- validation outputs, anomaly logging, SQLite export, Excel export, and generation logs
+Current implemented scope includes:
 
-Primary teaching uses:
-
-- financial accounting analytics
-- managerial accounting analytics
-- auditing and controls analytics
-- SQL exercises
-- Excel pivot-table and chart work
-- source-to-ledger traceability
+- O2C with backorders, shipment-to-invoice linkage, cash applications, returns, credit memos, and refunds
+- P2P with requisitions, batched purchase orders, partial receipts, matched supplier invoices, and split disbursements
+- manufacturing with BOMs, work orders, material issues, production completions, and work-order close
+- recurring manual journals, factory overhead, manufacturing conversion reclasses, and year-end close
+- posted `GLEntry` detail, validation reporting, anomaly logging, SQLite export, Excel export, and generation logs
 
 ## Release Files
 
-Each generated release is intended to be usable as a standalone teaching package.
+Each release is intended to function as a ready-to-use teaching package.
 
-Expected artifacts:
-
-- `greenfield_2026_2030.sqlite`: best starting point for SQL work
-- `greenfield_2026_2030.xlsx`: easiest starting point for Excel work
-- `validation_report.json`: structured validation results
-- `generation.log`: run log with generation checkpoints and summaries
+| File | Best use |
+|---|---|
+| `greenfield_2026_2030.sqlite` | SQL exercises and database analysis |
+| `greenfield_2026_2030.xlsx` | Excel pivots, charts, and classroom workbook use |
+| `validation_report.json` | Validation review and control documentation |
+| `generation.log` | Run diagnostics, timing, and row-volume checkpoints |
 
 ## Start Here
 
@@ -62,36 +73,37 @@ Expected artifacts:
 
 ## Documentation Map
 
-- [docs/index.md](docs/index.md): documentation hub and reading paths by audience
-- [docs/company-story.md](docs/company-story.md): business context for the fictional company
-- [docs/dataset-overview.md](docs/dataset-overview.md): what the dataset is, what it includes, and the core glossary
-- [docs/process-flows.md](docs/process-flows.md): process documentation hub and traceability overview
-- [docs/processes/o2c.md](docs/processes/o2c.md): order-to-cash step by step
-- [docs/processes/o2c-returns-credits-refunds.md](docs/processes/o2c-returns-credits-refunds.md): returns, credit memos, and refunds step by step
-- [docs/processes/p2p.md](docs/processes/p2p.md): procure-to-pay step by step
-- [docs/processes/manual-journals-and-close.md](docs/processes/manual-journals-and-close.md): recurring journals and close-cycle documentation
-- [docs/database-guide.md](docs/database-guide.md): table families, keys, and navigation patterns
-- [docs/analytics/index.md](docs/analytics/index.md): analytics starter hub for SQL and Excel users
-- [docs/instructor-guide.md](docs/instructor-guide.md): teaching path and exercise framing
-- [docs/technical-guide.md](docs/technical-guide.md): system-level technical guide for the dataset and generator
-- [docs/code-architecture.md](docs/code-architecture.md): module-level explanation of the Python codebase
+- [docs/index.md](docs/index.md): documentation hub
+- [docs/company-story.md](docs/company-story.md): business storyline and operating context
+- [docs/dataset-overview.md](docs/dataset-overview.md): dataset scope and glossary
+- [docs/process-flows.md](docs/process-flows.md): process hub and ledger traceability
+- [docs/processes/o2c.md](docs/processes/o2c.md): order-to-cash
+- [docs/processes/o2c-returns-credits-refunds.md](docs/processes/o2c-returns-credits-refunds.md): returns, credits, and refunds
+- [docs/processes/p2p.md](docs/processes/p2p.md): procure-to-pay
+- [docs/processes/manufacturing.md](docs/processes/manufacturing.md): manufacturing flow
+- [docs/processes/manual-journals-and-close.md](docs/processes/manual-journals-and-close.md): recurring journals and close
+- [docs/database-guide.md](docs/database-guide.md): table families, keys, and joins
+- [docs/analytics/index.md](docs/analytics/index.md): analytics starter layer
+- [docs/instructor-guide.md](docs/instructor-guide.md): teaching path
+- [docs/technical-guide.md](docs/technical-guide.md): system-level technical guide
+- [docs/code-architecture.md](docs/code-architecture.md): module-level code map
 - [docs/reference/schema.md](docs/reference/schema.md): implemented schema reference
 - [docs/reference/posting.md](docs/reference/posting.md): posting logic reference
-- [docs/reference/row-volume.md](docs/reference/row-volume.md): scale expectations and current row volumes
-- [docs/roadmap.md](docs/roadmap.md): future phases
+- [docs/reference/row-volume.md](docs/reference/row-volume.md): current deterministic row volumes
+- [docs/roadmap.md](docs/roadmap.md): next planned phase
 
 ## Implemented Now vs Planned Later
 
 | Implemented in current generator | Planned future extension |
 |---|---|
-| Five years of O2C, P2P, budgets, recurring journals, close-cycle activity, and posted ledger data | Manufacturing tables and production flows |
-| Separate customer receipt applications and customer-credit flows | Manufacturing analytics packs |
-| Multi-period receiving, billing, collection, and settlement behavior | Broader production and cost-accounting coverage |
-| Starter analytics docs, runnable SQL packs, and Excel workflow guidance | Additional advanced analytics packs |
+| Hybrid manufacturing plus distributor operations | Payroll subledger and payroll process cycle |
+| Manufacturing analytics starter queries and process docs | Advanced manufacturing topics such as routings, capacity, and deeper cost accounting |
+| O2C, P2P, recurring journals, close-cycle activity, and posted ledger data | Additional advanced analytics packs |
+| SQLite, Excel, validation, anomaly, and log outputs | Broader process extensions beyond the current teaching core |
 
 ## Build It Yourself
 
-Most users do not need to run the generator locally. If you do want to regenerate the dataset, use the commands below from the repository root.
+Most users do not need to run the generator locally. If you do, run the commands below from the repository root.
 
 ### Linux and macOS
 

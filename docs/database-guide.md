@@ -6,13 +6,14 @@
 
 ## How the Database Is Organized
 
-The current implementation contains 31 tables grouped into five areas:
+The current implementation contains **39 tables** grouped into six areas:
 
 | Area | Tables |
 |---|---|
 | Accounting core | `Account`, `JournalEntry`, `GLEntry` |
 | O2C | `Customer`, `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt`, `CashReceiptApplication`, `SalesReturn`, `SalesReturnLine`, `CreditMemo`, `CreditMemoLine`, `CustomerRefund` |
 | P2P | `Supplier`, `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment` |
+| Manufacturing | `BillOfMaterial`, `BillOfMaterialLine`, `WorkOrder`, `MaterialIssue`, `MaterialIssueLine`, `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose` |
 | Master data | `Item`, `Warehouse`, `Employee` |
 | Organizational planning | `CostCenter`, `Budget` |
 
@@ -34,8 +35,8 @@ Many business documents use a header table and a line table.
 | `PurchaseOrder` | `PurchaseOrderLine` | One PO can contain many ordered lines |
 | `GoodsReceipt` | `GoodsReceiptLine` | One receipt can contain many received lines |
 | `PurchaseInvoice` | `PurchaseInvoiceLine` | One supplier invoice can contain many billed lines |
-
-If you are new to the database, start from the header table to understand the document, then use the line table to analyze quantities, prices, and amounts.
+| `MaterialIssue` | `MaterialIssueLine` | One material issue can contain many component lines |
+| `ProductionCompletion` | `ProductionCompletionLine` | One production completion can contain one or more completion lines |
 
 ## Most Important Keys
 
@@ -43,14 +44,17 @@ If you are new to the database, start from the header table to understand the do
 |---|---|
 | `CustomerID` | Connect customers to orders, invoices, receipts, returns, credit memos, and refunds |
 | `SupplierID` | Connect suppliers to purchase orders, invoices, and payments |
-| `RequisitionID` | Connect requisitions to purchase-order headers and purchase-order lines |
 | `SalesOrderID` | Connect sales order header to shipments and invoices |
 | `SalesOrderLineID` | Connect order lines to shipment lines and sales invoice lines |
 | `ShipmentLineID` | Connect billed and returned lines to the exact shipped line |
+| `RequisitionID` | Connect requisitions to purchase-order headers and purchase-order lines |
 | `PurchaseOrderID` | Connect purchase order header to goods receipts and purchase invoices |
 | `POLineID` | Connect purchase order lines to goods receipt lines and purchase invoice lines |
-| `GoodsReceiptLineID` | Connect purchase invoice lines to specific receipt lines in the clean Phase 9 match design |
-| `ItemID` | Analyze quantities, prices, standard costs, and item account mappings |
+| `GoodsReceiptLineID` | Connect purchase invoice lines to exact receipt lines |
+| `BOMID` | Connect manufactured items to their BOM headers |
+| `BOMLineID` | Connect component issues back to BOM detail |
+| `WorkOrderID` | Connect work-order activity across issue, completion, and close tables |
+| `ItemID` | Analyze quantities, prices, standard costs, supply mode, and account mappings |
 | `AccountID` | Connect `GLEntry` and `Budget` to the chart of accounts |
 | `CostCenterID` | Connect operational activity, employees, and budgets to organizational reporting |
 
@@ -68,25 +72,32 @@ Returns, credits, and refunds branch from the billed shipment path:
 
 `SalesInvoiceLine -> SalesReturn -> SalesReturnLine -> CreditMemo -> CreditMemoLine -> CustomerRefund`
 
-Use this path when studying revenue, fulfillment, billing, collections, customer behavior, or receivables.
-
 ### P2P path
 
 `Supplier -> PurchaseRequisition -> PurchaseOrder -> PurchaseOrderLine -> GoodsReceipt -> GoodsReceiptLine -> PurchaseInvoice -> PurchaseInvoiceLine -> DisbursementPayment`
 
-Use this path when studying approvals, PO batching, receiving, invoice matching, payables, and cash disbursements.
+### Manufacturing path
+
+`Item -> BillOfMaterial -> BillOfMaterialLine -> WorkOrder -> MaterialIssue -> MaterialIssueLine -> ProductionCompletion -> ProductionCompletionLine -> WorkOrderClose`
+
+Manufacturing also touches P2P and O2C:
+
+- P2P replenishes raw materials and packaging
+- O2C consumes completed finished goods
 
 ### Ledger path
 
 `GLEntry -> Account`
 
-Then use the source-trace fields on `GLEntry` to move back to the originating document:
+Then use:
 
 - `SourceDocumentType`
 - `SourceDocumentID`
 - `SourceLineID`
 - `VoucherType`
 - `VoucherNumber`
+
+to move back to the originating transaction.
 
 ## How to Move From Operations to Accounting
 
@@ -97,6 +108,8 @@ Not every operational document posts to the general ledger.
 | Sales orders | No | Operational demand document |
 | Purchase requisitions | No | Internal approval document |
 | Purchase orders | No | External commitment document |
+| Bills of material | No | Standard manufacturing structure |
+| Work orders | No | Production planning document |
 | Shipments | Yes | Posts COGS and inventory relief |
 | Sales invoices | Yes | Posts AR, revenue, and sales tax |
 | Cash receipts | Yes | Posts cash and customer deposits / unapplied cash |
@@ -104,10 +117,13 @@ Not every operational document posts to the general ledger.
 | Sales returns | Yes | Posts inventory back in and reverses COGS |
 | Credit memos | Yes | Posts contra revenue, tax reversal, and AR or customer credit reduction |
 | Customer refunds | Yes | Posts customer credit and cash |
-| Goods receipts | Yes | Posts inventory and GRNI using receipt-line posting basis |
-| Purchase invoices | Yes | Posts GRNI clearing, AP, and purchase variance using matched receipt-line linkage when available |
+| Goods receipts | Yes | Posts inventory and GRNI |
+| Material issues | Yes | Posts WIP and materials inventory |
+| Production completions | Yes | Posts finished goods, WIP, and manufacturing clearing |
+| Work-order close | Yes | Posts manufacturing variance |
+| Purchase invoices | Yes | Posts GRNI clearing, AP, and purchase variance |
 | Disbursements | Yes | Posts AP and cash |
-| Journal entries | Yes | Current implementation includes opening, recurring manual, reversal, and year-end close journals |
+| Journal entries | Yes | Opening, recurring manual, manufacturing reclass, reversal, and year-end close journals |
 
 ## Start Here by Analytics Topic
 
@@ -120,16 +136,9 @@ Start with:
 - `SalesInvoice`
 - `CashReceiptApplication`
 - `CreditMemo`
-- `CustomerRefund`
 - `PurchaseInvoice`
 - `DisbursementPayment`
-
-Typical questions:
-
-- What are revenue, COGS, and gross margin by month?
-- What remains open in AR and AP?
-- How much customer cash is unapplied or held as credit?
-- Does the subledger reconcile to the control accounts?
+- `WorkOrderClose`
 
 ### Managerial analytics
 
@@ -138,44 +147,31 @@ Start with:
 - `Budget`
 - `CostCenter`
 - `Item`
-- `SalesOrderLine`
+- `BillOfMaterial`
+- `WorkOrder`
+- `MaterialIssueLine`
+- `ProductionCompletionLine`
 - `ShipmentLine`
-- `GoodsReceiptLine`
 - `PurchaseOrderLine`
-- `PurchaseInvoiceLine`
-
-Typical questions:
-
-- How do budget and actual activity compare by cost center?
-- Which products or regions drive sales?
-- Which items move most through the warehouses?
-- Which suppliers and categories drive purchasing activity?
 
 ### Audit analytics
 
 Start with:
 
-- `SalesOrder`, `Shipment`, `SalesInvoice`, `CashReceipt`, `CashReceiptApplication`, `SalesReturn`, `CreditMemo`
-- `PurchaseRequisition`, `PurchaseOrder`, `GoodsReceipt`, `PurchaseInvoice`, `DisbursementPayment`
+- O2C chain tables
+- P2P chain tables
+- manufacturing chain tables
 - `GLEntry`
-- output files such as `validation_report.json` and the anomaly log in Excel
-
-Typical questions:
-
-- Are document chains complete?
-- Are there approval exceptions?
-- Are there timing, duplicate-reference, or segregation-of-duties issues?
-- Do the control accounts reconcile to the subledger logic?
+- `validation_report.json`
+- the anomaly log in Excel
 
 ## Current Practical Tips
 
 - The SQLite export is the easiest format for SQL work.
-- The starter SQL files under `queries/` are the fastest way to move from schema understanding to analysis.
-- The Excel export places each table on its own worksheet and also includes `AnomalyLog` and `ValidationSummary`.
 - `CashReceiptApplication` is the authoritative invoice-settlement link in O2C.
-- `JournalEntry` supports journal-entry testing, accrual reversal analysis, and close-cycle exercises in the current base dataset.
-- For P2P traceability, prefer `PurchaseOrderLine.RequisitionID` and `PurchaseInvoiceLine.GoodsReceiptLineID` over header-only assumptions.
-- For raw multi-year income statement analysis, exclude the two year-end close entry types.
+- For P2P traceability, prefer `PurchaseOrderLine.RequisitionID` and `PurchaseInvoiceLine.GoodsReceiptLineID`.
+- For manufacturing traceability, start from `WorkOrderID`.
+- For raw multi-year income-statement analysis, exclude the two year-end close entry types.
 
 ## Where to Go Next
 

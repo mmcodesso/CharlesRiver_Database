@@ -1,9 +1,19 @@
 from __future__ import annotations
 
+from collections import defaultdict
 from typing import Any
 
 import pandas as pd
 
+from greenfield_dataset.manufacturing import (
+    manufacturing_open_state,
+    open_work_order_remaining_quantity_map,
+    work_order_actual_conversion_cost_map,
+    work_order_completed_quantity_map,
+    work_order_material_issue_cost_map,
+    work_order_standard_conversion_cost_map,
+    work_order_standard_material_cost_map,
+)
 from greenfield_dataset.o2c import (
     credit_memo_allocation_map,
     credit_memo_refunded_amounts,
@@ -25,7 +35,7 @@ from greenfield_dataset.p2p import (
 )
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
-from greenfield_dataset.utils import money
+from greenfield_dataset.utils import money, qty
 
 
 def account_id_by_number(context: GenerationContext, account_number: str) -> int:
@@ -372,6 +382,16 @@ def validate_account_rollforward(context: GenerationContext) -> dict[str, Any]:
         account_rows = operational_gl[operational_gl["AccountID"].astype(int).eq(account_id)]
         return round(float(account_rows["Debit"].sum()) - float(account_rows["Credit"].sum()), 2)
 
+    def gl_debit_net_all(account_number: str) -> float:
+        account_id = account_id_by_number(context, account_number)
+        account_rows = gl[gl["AccountID"].astype(int).eq(account_id)]
+        return round(float(account_rows["Debit"].sum()) - float(account_rows["Credit"].sum()), 2)
+
+    def gl_debit_net_all(account_number: str) -> float:
+        account_id = account_id_by_number(context, account_number)
+        account_rows = gl[gl["AccountID"].astype(int).eq(account_id)]
+        return round(float(account_rows["Debit"].sum()) - float(account_rows["Credit"].sum()), 2)
+
     def gl_credit_net(account_number: str) -> float:
         account_id = account_id_by_number(context, account_number)
         account_rows = operational_gl[operational_gl["AccountID"].astype(int).eq(account_id)]
@@ -423,7 +443,9 @@ def validate_account_rollforward(context: GenerationContext) -> dict[str, Any]:
             "name": "Inventory",
             "expected": round(
                 float(context.tables["GoodsReceiptLine"]["ExtendedStandardCost"].sum())
+                + float(context.tables["ProductionCompletionLine"]["ExtendedStandardTotalCost"].sum())
                 + float(context.tables["SalesReturnLine"]["ExtendedStandardCost"].sum())
+                - float(context.tables["MaterialIssueLine"]["ExtendedStandardCost"].sum())
                 - float(context.tables["ShipmentLine"]["ExtendedStandardCost"].sum()),
                 2,
             ),
@@ -462,6 +484,31 @@ def validate_account_rollforward(context: GenerationContext) -> dict[str, Any]:
                 2,
             ),
             "actual": gl_credit_net("2020"),
+        },
+        {
+            "name": "WIP",
+            "expected": round(
+                float(context.tables["MaterialIssueLine"]["ExtendedStandardCost"].sum())
+                - float(context.tables["ProductionCompletionLine"]["ExtendedStandardMaterialCost"].sum())
+                - float(context.tables["WorkOrderClose"]["MaterialVarianceAmount"].sum()),
+                2,
+            ),
+            "actual": gl_debit_net("1046"),
+        },
+        {
+            "name": "Manufacturing Cost Clearing",
+            "expected": round(
+                float(sum(work_order_actual_conversion_cost_map(context).values()))
+                - float(context.tables["ProductionCompletionLine"]["ExtendedStandardConversionCost"].sum())
+                - float(context.tables["WorkOrderClose"]["ConversionVarianceAmount"].sum()),
+                2,
+            ),
+            "actual": gl_debit_net_all("1090"),
+        },
+        {
+            "name": "Manufacturing Variance",
+            "expected": round(float(context.tables["WorkOrderClose"]["TotalVarianceAmount"].sum()), 2),
+            "actual": gl_debit_net("5080"),
         },
     ]
 
@@ -827,6 +874,12 @@ def validate_o2c_phase11_controls(context: GenerationContext) -> dict[str, Any]:
         if header is None:
             continue
         events.append((pd.Timestamp(header["ReceiptDate"]), 0, int(line.ItemID), int(header["WarehouseID"]), float(line.QuantityReceived), int(line.GoodsReceiptLineID)))
+    completion_headers = context.tables["ProductionCompletion"].set_index("ProductionCompletionID")[["CompletionDate", "WarehouseID"]].to_dict("index") if not context.tables["ProductionCompletion"].empty else {}
+    for line in context.tables["ProductionCompletionLine"].itertuples(index=False):
+        header = completion_headers.get(int(line.ProductionCompletionID))
+        if header is None:
+            continue
+        events.append((pd.Timestamp(header["CompletionDate"]), 0, int(line.ItemID), int(header["WarehouseID"]), float(line.QuantityCompleted), int(line.ProductionCompletionLineID)))
     shipment_headers = shipments.set_index("ShipmentID")[["ShipmentDate", "WarehouseID"]].to_dict("index") if not shipments.empty else {}
     for line in shipment_lines.itertuples(index=False):
         header = shipment_headers.get(int(line.ShipmentID))
@@ -1063,23 +1116,273 @@ def validate_journal_controls(context: GenerationContext) -> dict[str, Any]:
     }
 
 
-def validate_phase11(context: GenerationContext, store: bool = True) -> dict[str, Any]:
+def validate_manufacturing_controls(context: GenerationContext) -> dict[str, Any]:
+    exceptions: list[dict[str, Any]] = []
+    items = context.tables["Item"]
+    boms = context.tables["BillOfMaterial"]
+    bom_lines = context.tables["BillOfMaterialLine"]
+    work_orders = context.tables["WorkOrder"]
+    material_issues = context.tables["MaterialIssue"]
+    material_issue_lines = context.tables["MaterialIssueLine"]
+    completions = context.tables["ProductionCompletion"]
+    completion_lines = context.tables["ProductionCompletionLine"]
+    closes = context.tables["WorkOrderClose"]
+    gl = context.tables["GLEntry"]
+
+    manufactured_items = items[
+        items["SupplyMode"].eq("Manufactured")
+        & items["RevenueAccountID"].notna()
+        & items["IsActive"].eq(1)
+    ]
+    purchased_items = items[
+        items["SupplyMode"].eq("Purchased")
+        & items["RevenueAccountID"].notna()
+        & items["IsActive"].eq(1)
+    ]
+
+    active_bom_counts = boms[boms["Status"].eq("Active")]["ParentItemID"].astype(int).value_counts()
+    missing_boms = sorted(
+        set(manufactured_items["ItemID"].astype(int)) - set(active_bom_counts.index.astype(int))
+    )
+    duplicate_boms = sorted(active_bom_counts[active_bom_counts.ne(1)].index.astype(int).tolist())
+    if missing_boms:
+        exceptions.append({
+            "type": "manufactured_item_missing_bom",
+            "message": f"Manufactured items are missing an active BOM: {missing_boms[:5]}.",
+        })
+    if duplicate_boms:
+        exceptions.append({
+            "type": "manufactured_item_duplicate_bom",
+            "message": f"Manufactured items have more than one active BOM: {duplicate_boms[:5]}.",
+        })
+
+    purchased_boms = sorted(
+        set(purchased_items["ItemID"].astype(int)) & set(active_bom_counts.index.astype(int))
+    )
+    if purchased_boms:
+        exceptions.append({
+            "type": "purchased_item_has_bom",
+            "message": f"Purchased finished goods should not have active BOMs: {purchased_boms[:5]}.",
+        })
+
+    item_lookup = items.set_index("ItemID").to_dict("index") if not items.empty else {}
+    for bom in boms.itertuples(index=False):
+        parent = item_lookup.get(int(bom.ParentItemID))
+        if parent is None or pd.isna(parent.get("RevenueAccountID")):
+            exceptions.append({
+                "type": "invalid_bom_parent",
+                "message": f"BOM parent is not a sellable finished good: {int(bom.ParentItemID)}.",
+            })
+
+    bom_lookup = boms.set_index("BOMID").to_dict("index") if not boms.empty else {}
+    for line in bom_lines.itertuples(index=False):
+        component = item_lookup.get(int(line.ComponentItemID))
+        if component is None or str(component.get("ItemGroup")) not in {"Raw Materials", "Packaging"}:
+            exceptions.append({
+                "type": "invalid_bom_component",
+                "message": f"BOM component must be raw materials or packaging: {int(line.ComponentItemID)}.",
+            })
+
+    work_order_lookup = work_orders.set_index("WorkOrderID").to_dict("index") if not work_orders.empty else {}
+    completion_qty_map = work_order_completed_quantity_map(context)
+    work_order_item_supply_modes = work_orders["ItemID"].astype(int).map(
+        items.set_index("ItemID")["SupplyMode"].to_dict()
+    ) if not work_orders.empty else pd.Series(dtype=object)
+    if not work_orders.empty and work_order_item_supply_modes.ne("Manufactured").any():
+        invalid_work_orders = work_orders.loc[work_order_item_supply_modes.ne("Manufactured"), "WorkOrderID"].astype(int).tolist()
+        exceptions.append({
+            "type": "work_order_non_manufactured_item",
+            "message": f"Work orders exist for non-manufactured items: {invalid_work_orders[:5]}.",
+        })
+
+    if not work_orders.empty:
+        over_completed = [
+            int(work_order.WorkOrderID)
+            for work_order in work_orders.itertuples(index=False)
+            if round(float(completion_qty_map.get(int(work_order.WorkOrderID), 0.0)), 2) > round(float(work_order.PlannedQuantity), 2)
+        ]
+        if over_completed:
+            exceptions.append({
+                "type": "work_order_over_completed",
+                "message": f"Work orders complete above planned quantity: {over_completed[:5]}.",
+            })
+
+    issue_header_lookup = material_issues.set_index("MaterialIssueID").to_dict("index") if not material_issues.empty else {}
+    bom_line_lookup = bom_lines.set_index("BOMLineID").to_dict("index") if not bom_lines.empty else {}
+    issue_qty_by_work_order_line: dict[tuple[int, int], float] = defaultdict(float)
+    for line in material_issue_lines.itertuples(index=False):
+        issue_header = issue_header_lookup.get(int(line.MaterialIssueID))
+        bom_line = bom_line_lookup.get(int(line.BOMLineID))
+        if issue_header is None or bom_line is None:
+            exceptions.append({
+                "type": "material_issue_invalid_reference",
+                "message": f"Material issue line {int(line.MaterialIssueLineID)} has an invalid header or BOM line.",
+            })
+            continue
+        work_order = work_order_lookup.get(int(issue_header["WorkOrderID"]))
+        if work_order is None or int(work_order["BOMID"]) != int(bom_line["BOMID"]) or int(line.ItemID) != int(bom_line["ComponentItemID"]):
+            exceptions.append({
+                "type": "material_issue_bom_mismatch",
+                "message": f"Material issue line {int(line.MaterialIssueLineID)} does not match its work-order BOM.",
+            })
+            continue
+        issue_qty_by_work_order_line[(int(issue_header["WorkOrderID"]), int(line.BOMLineID))] += float(line.QuantityIssued)
+
+    for (work_order_id, bom_line_id), issued_quantity in issue_qty_by_work_order_line.items():
+        work_order = work_order_lookup.get(int(work_order_id))
+        bom_line = bom_line_lookup.get(int(bom_line_id))
+        if work_order is None or bom_line is None:
+            continue
+        planned_quantity = float(work_order["PlannedQuantity"])
+        allowed_quantity = qty(
+            planned_quantity
+            * float(bom_line["QuantityPerUnit"])
+            * (1 + float(bom_line["ScrapFactorPct"]))
+            * 1.10
+        )
+        if round(float(issued_quantity), 2) > round(float(allowed_quantity), 2):
+            exceptions.append({
+                "type": "material_issue_exceeds_allowed_quantity",
+                "message": f"Material issue quantity exceeds planned BOM quantity plus tolerance for work order {work_order_id}.",
+            })
+
+    completion_header_lookup = completions.set_index("ProductionCompletionID").to_dict("index") if not completions.empty else {}
+    final_activity_dates: dict[int, pd.Timestamp] = {}
+    for issue in material_issues.itertuples(index=False):
+        final_activity_dates[int(issue.WorkOrderID)] = max(
+            final_activity_dates.get(int(issue.WorkOrderID), pd.Timestamp.min),
+            pd.Timestamp(issue.IssueDate),
+        )
+    for completion in completions.itertuples(index=False):
+        final_activity_dates[int(completion.WorkOrderID)] = max(
+            final_activity_dates.get(int(completion.WorkOrderID), pd.Timestamp.min),
+            pd.Timestamp(completion.CompletionDate),
+        )
+    for close in closes.itertuples(index=False):
+        if pd.Timestamp(close.CloseDate) < final_activity_dates.get(int(close.WorkOrderID), pd.Timestamp.min):
+            exceptions.append({
+                "type": "work_order_close_before_final_activity",
+                "message": f"Work order close occurs before the final issue or completion for work order {int(close.WorkOrderID)}.",
+            })
+
+    inventory = {
+        (item_id, warehouse_id): float(quantity)
+        for (item_id, warehouse_id), quantity in opening_inventory_map(context).items()
+        if str(item_lookup.get(int(item_id), {}).get("ItemGroup")) in {"Raw Materials", "Packaging"}
+    }
+    events: list[tuple[pd.Timestamp, int, pd.Timestamp, int, int, float, int]] = []
+    goods_receipt_headers = context.tables["GoodsReceipt"].set_index("GoodsReceiptID")[["ReceiptDate", "WarehouseID"]].to_dict("index") if not context.tables["GoodsReceipt"].empty else {}
+    for line in context.tables["GoodsReceiptLine"].itertuples(index=False):
+        header = goods_receipt_headers.get(int(line.GoodsReceiptID))
+        if header is None or str(item_lookup.get(int(line.ItemID), {}).get("ItemGroup")) not in {"Raw Materials", "Packaging"}:
+            continue
+        receipt_date = pd.Timestamp(header["ReceiptDate"])
+        month_start = pd.Timestamp(year=receipt_date.year, month=receipt_date.month, day=1)
+        events.append((
+            month_start,
+            0,
+            receipt_date,
+            int(line.ItemID),
+            int(header["WarehouseID"]),
+            float(line.QuantityReceived),
+            int(line.GoodsReceiptLineID),
+        ))
+    for line in material_issue_lines.itertuples(index=False):
+        header = issue_header_lookup.get(int(line.MaterialIssueID))
+        if header is None or str(item_lookup.get(int(line.ItemID), {}).get("ItemGroup")) not in {"Raw Materials", "Packaging"}:
+            continue
+        issue_date = pd.Timestamp(header["IssueDate"])
+        month_start = pd.Timestamp(year=issue_date.year, month=issue_date.month, day=1)
+        events.append((
+            month_start,
+            1,
+            issue_date,
+            int(line.ItemID),
+            int(header["WarehouseID"]),
+            float(line.QuantityIssued),
+            int(line.MaterialIssueLineID),
+        ))
+
+    for _, event_order, event_date, item_id, warehouse_id, quantity, source_id in sorted(
+        events,
+        key=lambda item: (item[0], item[1], item[2], item[6]),
+    ):
+        key = (int(item_id), int(warehouse_id))
+        if event_order == 0:
+            inventory[key] = round(float(inventory.get(key, 0.0)) + float(quantity), 2)
+            continue
+        available = round(float(inventory.get(key, 0.0)), 2)
+        if available < round(float(quantity), 2):
+            exceptions.append({
+                "type": "negative_inventory_shadow",
+                "message": f"Inventory goes negative for item {item_id} in warehouse {warehouse_id} at source {source_id}.",
+            })
+        inventory[key] = round(available - float(quantity), 2)
+
+    operational_gl = gl[~gl["SourceDocumentType"].eq("JournalEntry")].copy()
+
+    def gl_debit_net(account_number: str) -> float:
+        account_id = account_id_by_number(context, account_number)
+        account_rows = operational_gl[operational_gl["AccountID"].astype(int).eq(account_id)]
+        return round(float(account_rows["Debit"].sum()) - float(account_rows["Credit"].sum()), 2)
+
+    def gl_debit_net_all(account_number: str) -> float:
+        account_id = account_id_by_number(context, account_number)
+        account_rows = gl[gl["AccountID"].astype(int).eq(account_id)]
+        return round(float(account_rows["Debit"].sum()) - float(account_rows["Credit"].sum()), 2)
+
+    expected_wip = round(
+        float(context.tables["MaterialIssueLine"]["ExtendedStandardCost"].sum())
+        - float(context.tables["ProductionCompletionLine"]["ExtendedStandardMaterialCost"].sum())
+        - float(context.tables["WorkOrderClose"]["MaterialVarianceAmount"].sum()),
+        2,
+    )
+    if round(expected_wip - gl_debit_net("1046"), 2) != 0:
+        exceptions.append({
+            "type": "wip_rollforward_mismatch",
+            "message": "WIP roll-forward does not reconcile to the ledger.",
+        })
+
+    expected_clearing = round(
+        float(sum(work_order_actual_conversion_cost_map(context).values()))
+        - float(context.tables["ProductionCompletionLine"]["ExtendedStandardConversionCost"].sum())
+        - float(context.tables["WorkOrderClose"]["ConversionVarianceAmount"].sum()),
+        2,
+    )
+    if round(expected_clearing - gl_debit_net_all("1090"), 2) != 0:
+        exceptions.append({
+            "type": "manufacturing_clearing_mismatch",
+            "message": "Manufacturing conversion clearing roll-forward does not reconcile to the ledger.",
+        })
+
+    return {
+        "exception_count": len(exceptions),
+        "exceptions": exceptions,
+        "open_state": manufacturing_open_state(context),
+    }
+
+
+def validate_phase12(context: GenerationContext, store: bool = True) -> dict[str, Any]:
     results = validate_phase6(context)
     exceptions = list(results["exceptions"])
 
     o2c_controls = validate_o2c_phase11_controls(context)
     if o2c_controls["exception_count"]:
-        exceptions.append(f"O2C phase 11 control exceptions: {o2c_controls['exception_count']}.")
+        exceptions.append(f"O2C control exceptions: {o2c_controls['exception_count']}.")
 
     p2p_controls = validate_p2p_phase9_controls(context)
     if p2p_controls["exception_count"]:
-        exceptions.append(f"P2P phase 9 control exceptions: {p2p_controls['exception_count']}.")
+        exceptions.append(f"P2P control exceptions: {p2p_controls['exception_count']}.")
 
     journal_controls = validate_journal_controls(context)
     if journal_controls["exception_count"]:
         exceptions.append(f"Journal control exceptions: {journal_controls['exception_count']}.")
 
-    phase11_results: dict[str, Any] = {
+    manufacturing_controls = validate_manufacturing_controls(context)
+    if manufacturing_controls["exception_count"]:
+        exceptions.append(f"Manufacturing control exceptions: {manufacturing_controls['exception_count']}.")
+
+    phase12_results: dict[str, Any] = {
         "row_counts": {table: int(len(df)) for table, df in context.tables.items()},
         "exceptions": exceptions,
         "gl_balance": results["gl_balance"],
@@ -1088,19 +1391,31 @@ def validate_phase11(context: GenerationContext, store: bool = True) -> dict[str
         "o2c_controls": o2c_controls,
         "p2p_controls": p2p_controls,
         "journal_controls": journal_controls,
+        "manufacturing_controls": manufacturing_controls,
     }
     if store:
-        context.validation_results["phase11"] = phase11_results
-        context.validation_results["phase9"] = phase11_results
-    return phase11_results
+        context.validation_results["phase12"] = phase12_results
+        context.validation_results["phase11"] = phase12_results
+        context.validation_results["phase9"] = phase12_results
+    return phase12_results
+
+
+def validate_phase11(context: GenerationContext, store: bool = True) -> dict[str, Any]:
+    results = validate_phase12(context, store=False)
+    if store:
+        context.validation_results["phase11"] = results
+    return results
 
 
 def validate_phase9(context: GenerationContext, store: bool = True) -> dict[str, Any]:
-    return validate_phase11(context, store=store)
+    results = validate_phase12(context, store=False)
+    if store:
+        context.validation_results["phase9"] = results
+    return results
 
 
 def validate_phase8(context: GenerationContext) -> dict[str, Any]:
-    results = validate_phase11(context, store=False)
+    results = validate_phase12(context, store=False)
     exceptions = list(results["exceptions"])
 
     if context.settings.anomaly_mode != "none" and not context.anomaly_log:
@@ -1116,6 +1431,7 @@ def validate_phase8(context: GenerationContext) -> dict[str, Any]:
         "o2c_controls": results["o2c_controls"],
         "p2p_controls": results["p2p_controls"],
         "journal_controls": results["journal_controls"],
+        "manufacturing_controls": results["manufacturing_controls"],
     }
     context.validation_results["phase8"] = phase8_results
     return phase8_results

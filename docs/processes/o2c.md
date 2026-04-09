@@ -6,11 +6,11 @@
 
 > **Implemented in current generator:** Customer orders, inventory-constrained shipments, backorders, sales invoices from shipment lines, customer-level cash receipts, and receipt applications.
 
-> **Planned future extension:** Additional O2C behaviors such as broader service or manufacturing-linked fulfillment scenarios.
+> **Planned future extension:** Payroll-driven customer-service analytics and other non-core O2C extensions.
 
 ## Business Storyline
 
-A customer places an order with Greenfield. Sales records the demand. Warehouse operations ship the goods when inventory is available. Accounting bills the customer from the shipped lines, not from the original order alone. Treasury records the cash receipt, and accounting applies that cash to one or more invoices.
+A customer places an order with Greenfield. Sales records the demand. Warehouse operations ship the goods when inventory is available. Those finished goods may come from purchased inventory or from Greenfield's own production completions. Accounting bills the customer from the shipped lines, not from the original order alone. Treasury records the cash receipt, and accounting applies that cash to one or more invoices.
 
 That means students can see the difference between:
 

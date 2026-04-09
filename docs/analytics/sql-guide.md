@@ -4,17 +4,17 @@
 **Purpose:** Explain how the starter SQL files are organized, how to run them, and how to adapt them without breaking alignment to the current dataset.  
 **What you will learn:** Where the starter queries live, how to execute them, and how to extend them safely for class use.
 
-> **Implemented in current generator:** SQLite-first starter SQL files for financial accounting, managerial accounting, and auditing analytics.
+> **Implemented in current generator:** SQLite-first starter SQL files for financial accounting, managerial accounting, and auditing analytics, including manufacturing-focused starter analysis.
 
-> **Planned future extension:** Additional SQL packs for manufacturing once that phase exists.
+> **Planned future extension:** Payroll analytics after the payroll process cycle is implemented.
 
 ## Starter SQL Package Layout
 
 | Folder | Coverage |
 |---|---|
-| [../../queries/financial](../../queries/financial) | Revenue, margin, AR, AP, trial balance, and control-account work |
-| [../../queries/managerial](../../queries/managerial) | Budgeting, cost centers, sales mix, inventory movement, purchasing, and basic profitability |
-| [../../queries/audit](../../queries/audit) | Document-chain completeness, approvals, cut-off, duplicate checks, and anomaly review |
+| [../../queries/financial](../../queries/financial) | Revenue, margin, AR, AP, trial balance, control-account work, and manufacturing balance review |
+| [../../queries/managerial](../../queries/managerial) | Budgeting, cost centers, sales mix, inventory movement, purchasing, BOMs, work orders, and profitability |
+| [../../queries/audit](../../queries/audit) | Document-chain completeness, approvals, cut-off, duplicate checks, anomaly review, and manufacturing controls |
 
 Each file is a single SQLite-friendly `SELECT` statement with short comment headers that explain:
 
@@ -67,7 +67,7 @@ print(df.head())
 
 If the `sqlite3` command-line tool is installed on your system, you can also run:
 
-```powershell
+```bash
 sqlite3 outputs/greenfield_2026_2030.sqlite < queries/financial/01_monthly_revenue_and_gross_margin.sql
 ```
 
@@ -80,7 +80,7 @@ The starter pack follows these rules:
 - no dependency on future schema changes
 - readable CTE-based structure where it improves clarity
 - no dependency on exact row counts
-- no dependency on manufacturing or WIP accounting
+- current manufacturing logic is allowed where it improves teaching value
 
 ## How to Adapt the Starter Queries
 
@@ -93,7 +93,7 @@ Safe ways to extend the starter pack:
 
 Changes to avoid in this phase:
 
-- rewriting queries around future manufacturing flows
+- rewriting queries around future payroll flows
 - assuming anomaly rows will always exist
 - assuming every control-account or balance-sheet line carries a cost center
 
@@ -122,6 +122,11 @@ Changes to avoid in this phase:
 4. purchasing activity
 5. cost center summary
 6. basic profitability
+7. BOM standard cost rollup
+8. work-order throughput
+9. material usage and scrap
+10. production completion and FG availability
+11. manufacturing variance
 
 ### Audit
 
@@ -131,6 +136,9 @@ Changes to avoid in this phase:
 4. cut-off and timing analysis
 5. duplicate review
 6. potential anomaly review
+7. BOM and supply-mode conflict review
+8. over-issue and open WIP review
+9. work-order close timing review
 
 ## Where to Go Next
 

@@ -123,8 +123,42 @@ TABLE_COLUMNS = {
     ],
     "Item": [
         "ItemID", "ItemCode", "ItemName", "ItemGroup", "ItemType", "StandardCost",
-        "ListPrice", "UnitOfMeasure", "InventoryAccountID", "RevenueAccountID",
+        "ListPrice", "UnitOfMeasure", "SupplyMode", "ProductionLeadTimeDays",
+        "StandardConversionCost", "InventoryAccountID", "RevenueAccountID",
         "COGSAccountID", "PurchaseVarianceAccountID", "TaxCategory", "IsActive",
+    ],
+    "BillOfMaterial": [
+        "BOMID", "ParentItemID", "VersionNumber", "EffectiveStartDate", "EffectiveEndDate",
+        "Status", "StandardBatchQuantity",
+    ],
+    "BillOfMaterialLine": [
+        "BOMLineID", "BOMID", "ComponentItemID", "LineNumber", "QuantityPerUnit", "ScrapFactorPct",
+    ],
+    "WorkOrder": [
+        "WorkOrderID", "WorkOrderNumber", "ItemID", "BOMID", "WarehouseID", "PlannedQuantity",
+        "ReleasedDate", "DueDate", "CompletedDate", "ClosedDate", "Status", "CostCenterID",
+        "ReleasedByEmployeeID", "ClosedByEmployeeID",
+    ],
+    "MaterialIssue": [
+        "MaterialIssueID", "IssueNumber", "WorkOrderID", "IssueDate", "WarehouseID",
+        "IssuedByEmployeeID", "Status",
+    ],
+    "MaterialIssueLine": [
+        "MaterialIssueLineID", "MaterialIssueID", "BOMLineID", "LineNumber", "ItemID",
+        "QuantityIssued", "ExtendedStandardCost",
+    ],
+    "ProductionCompletion": [
+        "ProductionCompletionID", "CompletionNumber", "WorkOrderID", "CompletionDate",
+        "WarehouseID", "ReceivedByEmployeeID", "Status",
+    ],
+    "ProductionCompletionLine": [
+        "ProductionCompletionLineID", "ProductionCompletionID", "LineNumber", "ItemID",
+        "QuantityCompleted", "ExtendedStandardMaterialCost", "ExtendedStandardConversionCost",
+        "ExtendedStandardTotalCost",
+    ],
+    "WorkOrderClose": [
+        "WorkOrderCloseID", "WorkOrderID", "CloseDate", "MaterialVarianceAmount",
+        "ConversionVarianceAmount", "TotalVarianceAmount", "Status", "ClosedByEmployeeID",
     ],
     "Warehouse": [
         "WarehouseID", "WarehouseName", "Address", "City", "State", "ManagerID",

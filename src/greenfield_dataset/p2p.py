@@ -135,6 +135,10 @@ def active_purchasable_items(context: GenerationContext) -> pd.DataFrame:
         items["IsActive"].eq(1)
         & items["InventoryAccountID"].notna()
         & items["StandardCost"].notna()
+        & (
+            items["SupplyMode"].fillna("Purchased").eq("Purchased")
+            | items["RevenueAccountID"].isna()
+        )
     ].copy()
     if purchasable.empty:
         raise ValueError("Generate active purchasable items before P2P transactions.")
