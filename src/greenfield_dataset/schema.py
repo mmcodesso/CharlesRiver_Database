@@ -124,8 +124,9 @@ TABLE_COLUMNS = {
     "Item": [
         "ItemID", "ItemCode", "ItemName", "ItemGroup", "ItemType", "StandardCost",
         "ListPrice", "UnitOfMeasure", "SupplyMode", "ProductionLeadTimeDays",
-        "StandardConversionCost", "InventoryAccountID", "RevenueAccountID",
-        "COGSAccountID", "PurchaseVarianceAccountID", "TaxCategory", "IsActive",
+        "StandardLaborHoursPerUnit", "StandardDirectLaborCost", "StandardVariableOverheadCost",
+        "StandardFixedOverheadCost", "StandardConversionCost", "InventoryAccountID",
+        "RevenueAccountID", "COGSAccountID", "PurchaseVarianceAccountID", "TaxCategory", "IsActive",
     ],
     "BillOfMaterial": [
         "BOMID", "ParentItemID", "VersionNumber", "EffectiveStartDate", "EffectiveEndDate",
@@ -153,19 +154,48 @@ TABLE_COLUMNS = {
     ],
     "ProductionCompletionLine": [
         "ProductionCompletionLineID", "ProductionCompletionID", "LineNumber", "ItemID",
-        "QuantityCompleted", "ExtendedStandardMaterialCost", "ExtendedStandardConversionCost",
-        "ExtendedStandardTotalCost",
+        "QuantityCompleted", "ExtendedStandardMaterialCost", "ExtendedStandardDirectLaborCost",
+        "ExtendedStandardVariableOverheadCost", "ExtendedStandardFixedOverheadCost",
+        "ExtendedStandardConversionCost", "ExtendedStandardTotalCost",
     ],
     "WorkOrderClose": [
         "WorkOrderCloseID", "WorkOrderID", "CloseDate", "MaterialVarianceAmount",
-        "ConversionVarianceAmount", "TotalVarianceAmount", "Status", "ClosedByEmployeeID",
+        "DirectLaborVarianceAmount", "OverheadVarianceAmount", "ConversionVarianceAmount",
+        "TotalVarianceAmount", "Status", "ClosedByEmployeeID",
+    ],
+    "PayrollPeriod": [
+        "PayrollPeriodID", "PeriodNumber", "PeriodStartDate", "PeriodEndDate", "PayDate",
+        "FiscalYear", "FiscalPeriod", "Status",
+    ],
+    "LaborTimeEntry": [
+        "LaborTimeEntryID", "PayrollPeriodID", "EmployeeID", "WorkOrderID", "WorkDate",
+        "LaborType", "RegularHours", "OvertimeHours", "HourlyRateUsed", "ExtendedLaborCost",
+        "ApprovedByEmployeeID", "ApprovedDate",
+    ],
+    "PayrollRegister": [
+        "PayrollRegisterID", "PayrollPeriodID", "EmployeeID", "CostCenterID", "GrossPay",
+        "EmployeeWithholdings", "EmployerPayrollTax", "EmployerBenefits", "NetPay", "Status",
+        "ApprovedByEmployeeID", "ApprovedDate",
+    ],
+    "PayrollRegisterLine": [
+        "PayrollRegisterLineID", "PayrollRegisterID", "LineNumber", "LineType", "Hours",
+        "Rate", "Amount", "WorkOrderID", "LaborTimeEntryID",
+    ],
+    "PayrollPayment": [
+        "PayrollPaymentID", "PayrollRegisterID", "PaymentDate", "PaymentMethod",
+        "ReferenceNumber", "ClearedDate", "RecordedByEmployeeID",
+    ],
+    "PayrollLiabilityRemittance": [
+        "PayrollLiabilityRemittanceID", "PayrollPeriodID", "LiabilityType", "RemittanceDate",
+        "Amount", "AgencyOrVendor", "ReferenceNumber", "ClearedDate", "ApprovedByEmployeeID",
     ],
     "Warehouse": [
         "WarehouseID", "WarehouseName", "Address", "City", "State", "ManagerID",
     ],
     "Employee": [
         "EmployeeID", "EmployeeName", "CostCenterID", "JobTitle", "Email", "Address",
-        "City", "State", "HireDate", "ManagerID", "IsActive", "AuthorizationLevel",
+        "City", "State", "HireDate", "ManagerID", "IsActive", "AuthorizationLevel", "PayClass",
+        "BaseHourlyRate", "BaseAnnualSalary", "StandardHoursPerWeek", "OvertimeEligible",
         "MaxApprovalAmount",
     ],
     "CostCenter": [

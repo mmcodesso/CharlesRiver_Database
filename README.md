@@ -34,12 +34,13 @@ That makes the dataset useful across:
 
 ## What the Database Contains
 
-The current default build covers fiscal years **2026 through 2030** and contains **39 implemented tables** across:
+The current default build covers fiscal years **2026 through 2030** and contains **45 implemented tables** across:
 
 - accounting core
 - order-to-cash
 - procure-to-pay
 - manufacturing
+- payroll
 - master data
 - organizational planning
 
@@ -48,7 +49,8 @@ Current implemented scope includes:
 - O2C with backorders, shipment-to-invoice linkage, cash applications, returns, credit memos, and refunds
 - P2P with requisitions, batched purchase orders, partial receipts, matched supplier invoices, and split disbursements
 - manufacturing with BOMs, work orders, material issues, production completions, and work-order close
-- recurring manual journals, factory overhead, manufacturing conversion reclasses, and year-end close
+- payroll with labor time, payroll registers, payments, liability remittances, and manufacturing labor integration
+- recurring manual journals, factory overhead, direct-labor reclasses, manufacturing-overhead reclasses, and year-end close
 - posted `GLEntry` detail, validation reporting, anomaly logging, SQLite export, Excel export, and generation logs
 
 ## Release Files
@@ -81,6 +83,7 @@ Each release is intended to function as a ready-to-use teaching package.
 - [docs/processes/o2c-returns-credits-refunds.md](docs/processes/o2c-returns-credits-refunds.md): returns, credits, and refunds
 - [docs/processes/p2p.md](docs/processes/p2p.md): procure-to-pay
 - [docs/processes/manufacturing.md](docs/processes/manufacturing.md): manufacturing flow
+- [docs/processes/payroll.md](docs/processes/payroll.md): payroll cycle and labor integration
 - [docs/processes/manual-journals-and-close.md](docs/processes/manual-journals-and-close.md): recurring journals and close
 - [docs/database-guide.md](docs/database-guide.md): table families, keys, and joins
 - [docs/analytics/index.md](docs/analytics/index.md): analytics starter layer
@@ -96,8 +99,8 @@ Each release is intended to function as a ready-to-use teaching package.
 
 | Implemented in current generator | Planned future extension |
 |---|---|
-| Hybrid manufacturing plus distributor operations | Payroll subledger and payroll process cycle |
-| Manufacturing analytics starter queries and process docs | Advanced manufacturing topics such as routings, capacity, and deeper cost accounting |
+| Hybrid manufacturing plus distributor operations with an operational payroll subledger | Advanced manufacturing topics such as routings, capacity, and deeper production planning |
+| Payroll, manufacturing, and cost analytics starter queries and process docs | More advanced payroll-control and labor-planning scenarios |
 | O2C, P2P, recurring journals, close-cycle activity, and posted ledger data | Additional advanced analytics packs |
 | SQLite, Excel, validation, anomaly, and log outputs | Broader process extensions beyond the current teaching core |
 

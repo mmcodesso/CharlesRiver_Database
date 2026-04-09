@@ -53,6 +53,63 @@ APPROVAL_LIMITS = {
     "Executive": 250000.0,
 }
 
+ANNUAL_SALARY_BY_LEVEL = {
+    "Staff": 54000.0,
+    "Supervisor": 78000.0,
+    "Manager": 115000.0,
+    "Executive": 210000.0,
+}
+
+COST_CENTER_SALARY_MULTIPLIERS = {
+    "Executive": 1.15,
+    "Sales": 1.05,
+    "Warehouse": 0.90,
+    "Manufacturing": 0.96,
+    "Purchasing": 1.00,
+    "Administration": 1.00,
+    "Customer Service": 0.88,
+    "Research and Development": 1.10,
+    "Marketing": 1.08,
+}
+
+HOURLY_TITLE_RANGES = {
+    "Shipping Clerk": (20.0, 26.0),
+    "Inventory Specialist": (22.0, 29.0),
+    "Assembler": (22.0, 30.0),
+    "Machine Operator": (24.0, 32.0),
+    "Quality Technician": (25.0, 33.0),
+    "Customer Service Representative": (19.0, 25.0),
+    "Administrative Specialist": (21.0, 28.0),
+}
+
+STANDARD_LABOR_HOURS_RANGE = {
+    "Furniture": (1.10, 2.25),
+    "Lighting": (0.60, 1.35),
+    "Textiles": (0.75, 1.55),
+    "Accessories": (0.35, 0.85),
+}
+
+STANDARD_LABOR_RATE_RANGE = {
+    "Furniture": (26.0, 32.0),
+    "Lighting": (24.0, 30.0),
+    "Textiles": (23.0, 28.0),
+    "Accessories": (22.0, 27.0),
+}
+
+VARIABLE_OVERHEAD_RATE_RANGE = {
+    "Furniture": (0.32, 0.48),
+    "Lighting": (0.28, 0.44),
+    "Textiles": (0.26, 0.40),
+    "Accessories": (0.22, 0.36),
+}
+
+FIXED_OVERHEAD_RATE_RANGE = {
+    "Furniture": (0.24, 0.38),
+    "Lighting": (0.20, 0.34),
+    "Textiles": (0.18, 0.30),
+    "Accessories": (0.16, 0.28),
+}
+
 ITEM_GROUP_CONFIG = {
     "Furniture": ("FUR", "Finished Good", "Each", "1040", "4010", "5010", (95, 850), (1.65, 2.25)),
     "Lighting": ("LGT", "Finished Good", "Each", "1040", "4020", "5020", (35, 260), (1.75, 2.45)),
@@ -175,6 +232,26 @@ def choose(rng, values: list, probabilities: list[float] | None = None):
     return values[int(rng.choice(len(values), p=probabilities))]
 
 
+def manufacturing_cost_profile(seed: int, item_group: str) -> dict[str, float]:
+    rng = np.random.default_rng(seed)
+    labor_hours = money(rng.uniform(*STANDARD_LABOR_HOURS_RANGE[item_group]))
+    labor_rate = money(rng.uniform(*STANDARD_LABOR_RATE_RANGE[item_group]))
+    direct_labor_cost = money(labor_hours * labor_rate)
+    variable_overhead_cost = money(direct_labor_cost * rng.uniform(*VARIABLE_OVERHEAD_RATE_RANGE[item_group]))
+    fixed_overhead_cost = money(direct_labor_cost * rng.uniform(*FIXED_OVERHEAD_RATE_RANGE[item_group]))
+    standard_conversion_cost = money(direct_labor_cost + variable_overhead_cost + fixed_overhead_cost)
+    lead_low, lead_high = PRODUCTION_LEAD_TIME_DAYS[item_group]
+    production_lead_time_days = int(rng.integers(lead_low, lead_high + 1))
+    return {
+        "ProductionLeadTimeDays": production_lead_time_days,
+        "StandardLaborHoursPerUnit": labor_hours,
+        "StandardDirectLaborCost": direct_labor_cost,
+        "StandardVariableOverheadCost": variable_overhead_cost,
+        "StandardFixedOverheadCost": fixed_overhead_cost,
+        "StandardConversionCost": standard_conversion_cost,
+    }
+
+
 def generate_cost_centers(context: GenerationContext) -> None:
     records = []
     for name, parent_id, is_active in COST_CENTER_ROWS:
@@ -258,10 +335,35 @@ def generate_employees(context: GenerationContext) -> None:
             "ManagerID": None,
             "IsActive": 1,
             "AuthorizationLevel": authorization_level,
+            "PayClass": None,
+            "BaseHourlyRate": 0.0,
+            "BaseAnnualSalary": 0.0,
+            "StandardHoursPerWeek": 40.0,
+            "OvertimeEligible": 0,
             "MaxApprovalAmount": APPROVAL_LIMITS[authorization_level],
         })
 
     employees = pd.DataFrame(records, columns=TABLE_COLUMNS["Employee"])
+    for row in employees.itertuples():
+        seed = context.settings.random_seed + int(row.EmployeeID) * 17
+        rng = np.random.default_rng(seed)
+        title = str(row.JobTitle)
+        cost_center_name = cost_center_names[int(row.CostCenterID)]
+        if title in HOURLY_TITLE_RANGES:
+            low, high = HOURLY_TITLE_RANGES[title]
+            employees.loc[row.Index, "PayClass"] = "Hourly"
+            employees.loc[row.Index, "BaseHourlyRate"] = money(rng.uniform(low, high))
+            employees.loc[row.Index, "BaseAnnualSalary"] = 0.0
+            employees.loc[row.Index, "StandardHoursPerWeek"] = 40.0
+            employees.loc[row.Index, "OvertimeEligible"] = 1
+        else:
+            salary_base = ANNUAL_SALARY_BY_LEVEL[str(row.AuthorizationLevel)]
+            multiplier = COST_CENTER_SALARY_MULTIPLIERS.get(cost_center_name, 1.0)
+            employees.loc[row.Index, "PayClass"] = "Salary"
+            employees.loc[row.Index, "BaseHourlyRate"] = 0.0
+            employees.loc[row.Index, "BaseAnnualSalary"] = money(salary_base * multiplier * rng.uniform(0.96, 1.04))
+            employees.loc[row.Index, "StandardHoursPerWeek"] = 40.0
+            employees.loc[row.Index, "OvertimeEligible"] = 0
     manager_by_cost_center = (
         employees[employees["AuthorizationLevel"].isin(["Manager", "Executive"])]
         .groupby("CostCenterID")["EmployeeID"]
@@ -341,19 +443,27 @@ def generate_items(context: GenerationContext) -> None:
     for _ in range(context.settings.item_count):
         item_group = choose(rng, group_names, group_probabilities)
         group_counts[item_group] += 1
+        planned_item_id = context.counters["Item"]
         prefix, item_type, unit, inventory, revenue, cogs, cost_range, markup_range = ITEM_GROUP_CONFIG[item_group]
         standard_cost = money(rng.uniform(*cost_range))
         list_price = None
         supply_mode = "Purchased"
         production_lead_time_days = 0
+        standard_labor_hours = 0.0
+        standard_direct_labor_cost = 0.0
+        standard_variable_overhead_cost = 0.0
+        standard_fixed_overhead_cost = 0.0
         standard_conversion_cost = 0.0
         if markup_range is not None:
             if rng.random() <= MANUFACTURED_SUPPLY_MODE_PROBABILITY.get(item_group, 0.0):
                 supply_mode = "Manufactured"
-                lead_low, lead_high = PRODUCTION_LEAD_TIME_DAYS[item_group]
-                production_lead_time_days = int(rng.integers(lead_low, lead_high + 1))
-                conversion_low, conversion_high = CONVERSION_COST_RATE[item_group]
-                standard_conversion_cost = money(standard_cost * rng.uniform(conversion_low, conversion_high))
+                cost_profile = manufacturing_cost_profile(context.settings.random_seed + planned_item_id * 97, item_group)
+                production_lead_time_days = int(cost_profile["ProductionLeadTimeDays"])
+                standard_labor_hours = float(cost_profile["StandardLaborHoursPerUnit"])
+                standard_direct_labor_cost = float(cost_profile["StandardDirectLaborCost"])
+                standard_variable_overhead_cost = float(cost_profile["StandardVariableOverheadCost"])
+                standard_fixed_overhead_cost = float(cost_profile["StandardFixedOverheadCost"])
+                standard_conversion_cost = float(cost_profile["StandardConversionCost"])
             list_price = money(standard_cost * rng.uniform(*markup_range))
 
         item_id = next_id(context, "Item")
@@ -368,6 +478,10 @@ def generate_items(context: GenerationContext) -> None:
             "UnitOfMeasure": unit,
             "SupplyMode": supply_mode,
             "ProductionLeadTimeDays": production_lead_time_days,
+            "StandardLaborHoursPerUnit": standard_labor_hours,
+            "StandardDirectLaborCost": standard_direct_labor_cost,
+            "StandardVariableOverheadCost": standard_variable_overhead_cost,
+            "StandardFixedOverheadCost": standard_fixed_overhead_cost,
             "StandardConversionCost": standard_conversion_cost,
             "InventoryAccountID": account_id_by_number(context, inventory),
             "RevenueAccountID": account_id_by_number(context, revenue),
@@ -392,6 +506,10 @@ def generate_items(context: GenerationContext) -> None:
         mask = items["ItemID"].astype(int).isin(demote_ids)
         items.loc[mask, "SupplyMode"] = "Purchased"
         items.loc[mask, "ProductionLeadTimeDays"] = 0
+        items.loc[mask, "StandardLaborHoursPerUnit"] = 0.0
+        items.loc[mask, "StandardDirectLaborCost"] = 0.0
+        items.loc[mask, "StandardVariableOverheadCost"] = 0.0
+        items.loc[mask, "StandardFixedOverheadCost"] = 0.0
         items.loc[mask, "StandardConversionCost"] = 0.0
     elif manufactured_count < target_manufactured_count:
         candidates = items.loc[sellable_active_mask & items["SupplyMode"].eq("Purchased")].copy()
@@ -402,14 +520,14 @@ def generate_items(context: GenerationContext) -> None:
         for item_id in promote_ids:
             row_index = items.index[items["ItemID"].astype(int).eq(int(item_id))][0]
             item_group = str(items.loc[row_index, "ItemGroup"])
-            rng = np.random.default_rng(context.settings.random_seed + int(item_id) * 97)
-            lead_low, lead_high = PRODUCTION_LEAD_TIME_DAYS[item_group]
-            conversion_low, conversion_high = CONVERSION_COST_RATE[item_group]
+            cost_profile = manufacturing_cost_profile(context.settings.random_seed + int(item_id) * 97, item_group)
             items.loc[row_index, "SupplyMode"] = "Manufactured"
-            items.loc[row_index, "ProductionLeadTimeDays"] = int(rng.integers(lead_low, lead_high + 1))
-            items.loc[row_index, "StandardConversionCost"] = money(
-                float(items.loc[row_index, "StandardCost"]) * rng.uniform(conversion_low, conversion_high)
-            )
+            items.loc[row_index, "ProductionLeadTimeDays"] = int(cost_profile["ProductionLeadTimeDays"])
+            items.loc[row_index, "StandardLaborHoursPerUnit"] = float(cost_profile["StandardLaborHoursPerUnit"])
+            items.loc[row_index, "StandardDirectLaborCost"] = float(cost_profile["StandardDirectLaborCost"])
+            items.loc[row_index, "StandardVariableOverheadCost"] = float(cost_profile["StandardVariableOverheadCost"])
+            items.loc[row_index, "StandardFixedOverheadCost"] = float(cost_profile["StandardFixedOverheadCost"])
+            items.loc[row_index, "StandardConversionCost"] = float(cost_profile["StandardConversionCost"])
 
     context.tables["Item"] = items
 

@@ -4,9 +4,9 @@
 **Purpose:** Explain the codebase from entrypoint to export using the current implementation.  
 **What you will learn:** The orchestration flow, the role of each module, and where the next extension should plug in.
 
-> **Implemented in current generator:** Config loading, shared generation context, schema registry, master data, BOMs, budgets, monthly O2C/P2P/manufacturing generation, recurring manual journals, year-end close, posting, validations, anomaly injection, SQLite/Excel export, JSON reporting, and generation logging.
+> **Implemented in current generator:** Config loading, shared generation context, schema registry, master data, BOMs, budgets, monthly O2C/P2P/manufacturing/payroll generation, recurring manual journals, year-end close, posting, validations, anomaly injection, SQLite/Excel export, JSON reporting, and generation logging.
 
-> **Planned future extension:** A payroll subledger and payroll process cycle.
+> **Planned future extension:** Advanced manufacturing planning and richer labor scheduling.
 
 ## Entrypoints
 
@@ -26,6 +26,7 @@ flowchart LR
     T[Generate Monthly O2C Demand]
     R[Generate Monthly P2P Demand]
     F[Generate Monthly Manufacturing Activity]
+    L[Generate Monthly Payroll and Labor Activity]
     J[Generate Recurring Journals]
     P[Post to GLEntry]
     Y[Generate Year-End Close Journals]
@@ -33,7 +34,7 @@ flowchart LR
     A[Inject Anomalies]
     X[Export SQLite, Excel, JSON, and Log]
 
-    S --> C --> E --> M --> B --> T --> R --> F --> J --> P --> Y --> V --> A --> X
+    S --> C --> E --> M --> B --> T --> R --> F --> L --> J --> P --> Y --> V --> A --> X
 ```
 
 ## Core Runtime Objects
@@ -69,12 +70,13 @@ Also defined in `settings.py`. This object carries:
 | `schema.py` | Defines `TABLE_COLUMNS` and creates empty DataFrames |
 | `master_data.py` | Loads accounts and generates cost centers, employees, warehouses, items, customers, and suppliers |
 | `manufacturing.py` | Generates BOMs, work orders, material issues, completions, work-order close, and manufacturing state helpers |
+| `payroll.py` | Generates payroll periods, labor time, payroll registers, payroll payments, remittances, and manufacturing labor allocations |
 | `budgets.py` | Generates the opening balance journal and budget rows |
 | `o2c.py` | Generates sales orders, shipments, sales invoices, cash receipts, applications, sales returns, credit memos, refunds, and O2C state maps |
 | `p2p.py` | Generates requisitions, purchase orders, goods receipts, purchase invoices, disbursements, and P2P state maps |
-| `journals.py` | Generates recurring journals, reversals, factory overhead, manufacturing conversion reclasses, and year-end close journals |
-| `posting_engine.py` | Converts operational events into balanced GL entries |
-| `validations.py` | Runs schema, document, ledger, and manufacturing checks |
+| `journals.py` | Generates recurring journals, reversals, factory overhead, direct-labor reclasses, manufacturing-overhead reclasses, and year-end close journals |
+| `posting_engine.py` | Converts operational and payroll events into balanced GL entries |
+| `validations.py` | Runs schema, document, payroll, ledger, and manufacturing checks |
 | `anomalies.py` | Applies configurable anomaly patterns and records them in `context.anomaly_log` |
 | `exporters.py` | Writes SQLite, Excel, and JSON outputs |
 | `utils.py` | Supports numbering, rounding, and helper logic used across modules |
@@ -99,15 +101,18 @@ Operational posting events:
 - material issues post WIP and materials inventory
 - production completions post finished goods, WIP, and manufacturing clearing
 - work-order close posts manufacturing variance
+- payroll registers post wage expense plus payroll liabilities
+- payroll payments clear accrued payroll
+- payroll liability remittances clear payroll tax and deduction liabilities
 
 Journal-sourced posting events:
 
 - opening
-- payroll accrual and settlement
 - rent
 - utilities
 - factory overhead
-- manufacturing conversion reclass
+- direct labor reclass
+- manufacturing overhead reclass
 - depreciation
 - accrual and accrual reversal
 - year-end close
@@ -124,6 +129,7 @@ Current validations include:
 - O2C controls
 - P2P controls
 - manufacturing controls
+- payroll controls
 - voucher balance
 - trial balance equality
 - account roll-forwards
@@ -136,6 +142,7 @@ The full run also writes `generation.log`, which records:
 - monthly O2C checkpoints
 - monthly P2P checkpoints
 - monthly manufacturing checkpoints
+- monthly payroll checkpoints
 - row-count checkpoints
 - validation summaries
 - export locations
@@ -151,6 +158,6 @@ The current generator exports:
 
 ## Next Extension Point
 
-The next clean extension point is **Phase 13 - Payroll Cycle**.
+The next clean extension point is advanced manufacturing and labor planning.
 
-That phase should fit beside existing journals and manufacturing logic without changing the current O2C, P2P, or manufacturing foundation.
+That work should extend the current payroll and manufacturing foundation without rewriting the O2C, P2P, or payroll subledger model.

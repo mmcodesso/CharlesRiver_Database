@@ -4,9 +4,9 @@
 **Purpose:** Organize the business-process documentation and explain how operational events connect to accounting entries.  
 **What you will learn:** Which process guides to read, how the major business cycles fit together, and how learners can trace source documents into `GLEntry`.
 
-> **Implemented in current generator:** O2C, returns and credits, P2P, manufacturing, recurring journals, year-end close, and event-based posting into `GLEntry`.
+> **Implemented in current generator:** O2C, returns and credits, P2P, manufacturing, payroll, recurring journals, year-end close, and event-based posting into `GLEntry`.
 
-> **Planned future extension:** A payroll process cycle and payroll subledger.
+> **Planned future extension:** Advanced manufacturing planning, richer labor scheduling, and deeper process detail.
 
 ## How to Use This Section
 
@@ -18,7 +18,8 @@ Use this page as the hub for the detailed process guides:
 | Returns and credits | [processes/o2c-returns-credits-refunds.md](processes/o2c-returns-credits-refunds.md) | Returned goods, credit memos, customer credits, and refunds |
 | P2P | [processes/p2p.md](processes/p2p.md) | Requisition through PO, goods receipt, supplier invoice, and payment |
 | Manufacturing | [processes/manufacturing.md](processes/manufacturing.md) | BOMs, work orders, material issues, completions, and work-order close |
-| Journals and close | [processes/manual-journals-and-close.md](processes/manual-journals-and-close.md) | Recurring journals, reversals, factory overhead, conversion reclasses, and year-end close |
+| Payroll | [processes/payroll.md](processes/payroll.md) | Pay periods, labor time, payroll registers, payments, remittances, and labor integration |
+| Journals and close | [processes/manual-journals-and-close.md](processes/manual-journals-and-close.md) | Recurring journals, reversals, reclasses, and year-end close |
 
 ## Greenfield Process Map
 
@@ -29,6 +30,7 @@ flowchart LR
     RET[Returns Credits Refunds]
     P2P[Procure-to-Pay]
     MFG[Manufacturing]
+    PAY[Payroll]
     JE[Manual Journals and Close]
     GL[GLEntry]
     AN[Analytics and Coursework]
@@ -36,22 +38,25 @@ flowchart LR
     STORY --> O2C
     STORY --> P2P
     STORY --> MFG
+    STORY --> PAY
     O2C --> RET
     P2P --> MFG
     O2C --> GL
     RET --> GL
     P2P --> GL
     MFG --> GL
+    PAY --> GL
     JE --> GL
     GL --> AN
 ```
 
-At Greenfield, students can think of the database as one business with five accounting-relevant threads:
+At Greenfield, students can think of the database as one business with six accounting-relevant threads:
 
 - selling and collecting from customers
 - correcting customer-side exceptions through returns and credits
 - buying inventory and materials from suppliers
 - manufacturing selected finished goods internally
+- paying employees and tracing labor into product cost
 - recording recurring finance activity and year-end close
 
 Each of those threads eventually reaches `GLEntry`.
@@ -72,6 +77,9 @@ flowchart LR
     MI[MaterialIssue]
     PC[ProductionCompletion]
     WC[WorkOrderClose]
+    PR[PayrollRegister]
+    PP[PayrollPayment]
+    RM[PayrollLiabilityRemittance]
     JE[JournalEntry]
     GL[GLEntry]
     R[Reporting and Analytics]
@@ -88,6 +96,9 @@ flowchart LR
     MI --> GL
     PC --> GL
     WC --> GL
+    PR --> GL
+    PP --> GL
+    RM --> GL
     JE --> GL
     GL --> R
 ```
@@ -110,8 +121,9 @@ The most important traceability fields are:
 2. Read [processes/o2c.md](processes/o2c.md) and [processes/p2p.md](processes/p2p.md).
 3. Read [processes/o2c-returns-credits-refunds.md](processes/o2c-returns-credits-refunds.md) for the sales-side exception path.
 4. Read [processes/manufacturing.md](processes/manufacturing.md) for the production flow.
-5. Read [processes/manual-journals-and-close.md](processes/manual-journals-and-close.md) for finance-team activity outside the operational cycles.
-6. Read [database-guide.md](database-guide.md) once you are ready to navigate tables and joins.
+5. Read [processes/payroll.md](processes/payroll.md) for payroll and labor-cost flow.
+6. Read [processes/manual-journals-and-close.md](processes/manual-journals-and-close.md) for finance-team activity outside the operational cycles.
+7. Read [database-guide.md](database-guide.md) once you are ready to navigate tables and joins.
 
 ## Where to Go Next
 

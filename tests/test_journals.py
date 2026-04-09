@@ -4,7 +4,7 @@ from greenfield_dataset.anomalies import inject_anomalies
 from greenfield_dataset.journals import generate_recurring_manual_journals, generate_year_end_close_journals
 from greenfield_dataset.main import build_phase5
 from greenfield_dataset.posting_engine import post_all_transactions
-from greenfield_dataset.validations import validate_phase8, validate_phase12
+from greenfield_dataset.validations import validate_phase8, validate_phase13
 
 
 def test_generate_recurring_manual_journals_counts_and_links() -> None:
@@ -13,12 +13,9 @@ def test_generate_recurring_manual_journals_counts_and_links() -> None:
     generate_recurring_manual_journals(context)
 
     entry_type_counts = context.tables["JournalEntry"]["EntryType"].value_counts().to_dict()
-    cost_center_count = len(context.tables["CostCenter"])
     fiscal_month_count = 60
 
     assert int(entry_type_counts["Opening"]) == 1
-    assert int(entry_type_counts["Payroll Accrual"]) == cost_center_count * fiscal_month_count
-    assert int(entry_type_counts["Payroll Settlement"]) == cost_center_count * (fiscal_month_count - 1)
     assert int(entry_type_counts["Rent"]) == fiscal_month_count * 2
     assert int(entry_type_counts["Utilities"]) == fiscal_month_count
     assert int(entry_type_counts["Depreciation"]) == fiscal_month_count * 3
@@ -39,7 +36,7 @@ def test_generate_year_end_close_journals_clean_phase12_validation() -> None:
     generate_recurring_manual_journals(context)
     post_all_transactions(context)
     generate_year_end_close_journals(context)
-    results = validate_phase12(context)
+    results = validate_phase13(context)
 
     entry_type_counts = context.tables["JournalEntry"]["EntryType"].value_counts().to_dict()
     assert int(entry_type_counts["Year-End Close - P&L to Income Summary"]) == 5
@@ -51,6 +48,7 @@ def test_generate_year_end_close_journals_clean_phase12_validation() -> None:
     assert results["journal_controls"]["exception_count"] == 0
     assert results["p2p_controls"]["exception_count"] == 0
     assert results["manufacturing_controls"]["exception_count"] == 0
+    assert results["payroll_controls"]["exception_count"] == 0
 
 
 def test_phase8_journal_anomalies_preserve_gl_balance() -> None:

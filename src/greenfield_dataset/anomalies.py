@@ -187,10 +187,11 @@ def inject_same_creator_approver_journals(context: GenerationContext, count_per_
         return
 
     candidate_types = {
-        "Payroll Accrual",
-        "Payroll Settlement",
         "Rent",
         "Utilities",
+        "Factory Overhead",
+        "Direct Labor Reclass",
+        "Manufacturing Overhead Reclass",
         "Depreciation",
         "Accrual",
         "Accrual Reversal",
@@ -384,9 +385,11 @@ def inject_round_dollar_manual_journals(context: GenerationContext, count_per_ye
         return
 
     candidate_types = {
-        "Payroll Settlement",
         "Rent",
         "Utilities",
+        "Factory Overhead",
+        "Direct Labor Reclass",
+        "Manufacturing Overhead Reclass",
         "Depreciation",
         "Year-End Close - Income Summary to Retained Earnings",
     }

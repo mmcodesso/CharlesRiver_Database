@@ -4,11 +4,11 @@
 **Purpose:** Document the event-based posting rules used by the current generator.  
 **What you will learn:** Which documents post, which accounts are affected, and how postings are traced back to source transactions.
 
-Posting logic is implemented across `src/greenfield_dataset/budgets.py`, `src/greenfield_dataset/journals.py`, and `src/greenfield_dataset/posting_engine.py`.
+Posting logic is implemented across `src/greenfield_dataset/journals.py`, `src/greenfield_dataset/payroll.py`, and `src/greenfield_dataset/posting_engine.py`.
 
-> **Implemented in current generator:** Event-based postings for O2C, P2P, manufacturing, opening balances, recurring manual journals, reversal journals, manufacturing reclasses, and year-end close.
+> **Implemented in current generator:** Event-based postings for O2C, P2P, manufacturing, payroll, opening balances, recurring manual journals, reversal journals, manufacturing reclasses, and year-end close.
 
-> **Planned future extension:** Payroll-cycle posting events beyond the current journal-only payroll treatment.
+> **Planned future extension:** Advanced manufacturing-planning and labor-scheduling events beyond the current payroll and production foundation.
 
 ## Non-Posting Documents
 
@@ -22,18 +22,19 @@ These documents are generated for process analysis but do **not** create `GLEntr
 - `BillOfMaterial`
 - `BillOfMaterialLine`
 - `WorkOrder`
+- `PayrollPeriod`
+- `LaborTimeEntry`
 
 ## Posting Matrix
 
 | Event | Source tables | Posting date used | Debit | Credit |
 |---|---|---|---|---|
 | Opening balance journal | `JournalEntry` plus seeded GL rows | `2026-01-01` | Asset accounts and selected opening balances | Liability, equity, contra-asset balances, and retained earnings plug |
-| Payroll accrual | `JournalEntry` plus seeded GL rows | Last calendar day of month | Salary expense by cost center and `6060` Payroll Taxes and Benefits | `2030` Accrued Payroll |
-| Payroll settlement | `JournalEntry` plus seeded GL rows | First business day of following month | `2030` Accrued Payroll | `1010` Cash and Cash Equivalents |
 | Rent | `JournalEntry` plus seeded GL rows | First business day of month | `6070` Warehouse Rent or `6080` Office Rent | `1010` Cash and Cash Equivalents |
 | Utilities | `JournalEntry` plus seeded GL rows | Last business day of month | `6090` Utilities Expense | `1010` Cash and Cash Equivalents |
 | Factory overhead | `JournalEntry` plus seeded GL rows | Last business day of month | `6270` Factory Overhead Expense | `1010` Cash and Cash Equivalents |
-| Manufacturing conversion reclass | `JournalEntry` plus seeded GL rows | Last business day of month | `1090` Manufacturing Cost Clearing | `6260` Salaries Expense - Manufacturing and `6270` Factory Overhead Expense |
+| Direct labor reclass | `JournalEntry` plus seeded GL rows | Last business day of month | `1090` Manufacturing Cost Clearing | `6260` Salaries Expense - Manufacturing |
+| Manufacturing overhead reclass | `JournalEntry` plus seeded GL rows | Last business day of month | `1090` Manufacturing Cost Clearing | `6270` Factory Overhead Expense |
 | Depreciation | `JournalEntry` plus seeded GL rows | Last calendar day of month | `6130` Depreciation Expense | accumulated depreciation accounts |
 | Month-end accrual | `JournalEntry` plus seeded GL rows | Last business day of month | selected operating expenses | `2040` Accrued Expenses |
 | Accrual reversal | `JournalEntry` plus seeded GL rows | First business day of following month | Reverse prior accrual liability and expense lines | Reverse prior accrual liability and expense lines |
@@ -48,6 +49,9 @@ These documents are generated for process analysis but do **not** create `GLEntr
 | Material issue | `MaterialIssue`, `MaterialIssueLine` | `IssueDate` | `1046` Inventory - Work in Process | `1045` Inventory - Materials and Packaging |
 | Production completion | `ProductionCompletion`, `ProductionCompletionLine` | `CompletionDate` | `1040` Inventory - Finished Goods | `1046` Inventory - Work in Process and `1090` Manufacturing Cost Clearing |
 | Work-order close | `WorkOrderClose` | `CloseDate` | or credit `5080` Manufacturing Variance depending on sign | offset `1046` or `1090` residual balances |
+| Payroll register | `PayrollRegister`, `PayrollRegisterLine` | `ApprovedDate` | Salary and wage expense by cost center, `6060` nonmanufacturing payroll burden, `6270` manufacturing-indirect burden | `2030` Accrued Payroll, `2031` Payroll Tax Withholdings Payable, `2032` Employer Payroll Taxes Payable, `2033` Employee Benefits and Other Deductions Payable |
+| Payroll payment | `PayrollPayment` | `PaymentDate` | `2030` Accrued Payroll | Cash |
+| Payroll liability remittance | `PayrollLiabilityRemittance` | `RemittanceDate` | `2031`, `2032`, or `2033` | Cash |
 | Purchase invoice | `PurchaseInvoice`, `PurchaseInvoiceLine` | `ApprovedDate` | GRNI cleared at matched receipt-line basis, purchase variance when needed, and nonrecoverable tax to variance | Accounts payable and purchase variance when needed |
 | Disbursement | `DisbursementPayment` | `PaymentDate` | Accounts payable | Cash |
 | Year-end close: P&L to income summary | `JournalEntry` plus seeded GL rows | `YYYY-12-31` | Revenue or expense balances needed to close annual P&L accounts | `8010` Income Summary |
@@ -66,6 +70,9 @@ These documents are generated for process analysis but do **not** create `GLEntr
 | `2010` | Accounts payable |
 | `2020` | Goods Received Not Invoiced |
 | `2030` | Accrued payroll |
+| `2031` | Payroll tax withholdings payable |
+| `2032` | Employer payroll taxes payable |
+| `2033` | Employee benefits and other deductions payable |
 | `2040` | Accrued expenses |
 | `2050` | Sales tax payable |
 | `2060` | Customer deposits and unapplied cash |
@@ -98,6 +105,7 @@ Each operational posting written to `GLEntry` includes:
 - AP roll-forward
 - inventory roll-forward
 - customer deposit and unapplied cash roll-forward
+- payroll liability roll-forwards for `2030`, `2031`, `2032`, and `2033`
 - sales tax and contra-revenue roll-forwards
 - GRNI roll-forward
 - WIP roll-forward

@@ -24,9 +24,9 @@ def test_load_accounts_uses_configured_chart() -> None:
 
     load_accounts(context, "config/accounts.csv")
 
-    assert len(context.tables["Account"]) == 95
+    assert len(context.tables["Account"]) == 98
     assert context.tables["Account"]["AccountNumber"].is_unique
-    assert context.counters["Account"] == 96
+    assert context.counters["Account"] == 99
 
 
 def test_generate_phase1_master_data() -> None:

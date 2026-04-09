@@ -6,7 +6,11 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from greenfield_dataset.manufacturing import work_order_conversion_factor, work_order_conversion_salary_share
+from greenfield_dataset.payroll import (
+    monthly_direct_labor_reclass_amount,
+    monthly_factory_overhead_amount,
+    monthly_manufacturing_overhead_pool_amount,
+)
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
 from greenfield_dataset.utils import money, next_id
@@ -569,28 +573,12 @@ def manufacturing_completion_lines_for_month(context: GenerationContext, year: i
 
 
 def monthly_manufacturing_conversion_totals(context: GenerationContext, year: int, month: int) -> dict[str, float]:
-    monthly_completion_lines = manufacturing_completion_lines_for_month(context, year, month)
-    if not monthly_completion_lines:
-        return {"actual_total": 0.0, "salary_total": 0.0, "overhead_total": 0.0}
-
-    actual_total = 0.0
-    salary_total = 0.0
-    overhead_total = 0.0
-    for line in monthly_completion_lines:
-        work_order_id = int(line["WorkOrderID"])
-        standard_conversion_cost = float(line["StandardConversionCost"])
-        actual_conversion_cost = money(standard_conversion_cost * work_order_conversion_factor(context, work_order_id))
-        salary_share = work_order_conversion_salary_share(context, work_order_id)
-        salary_amount = money(actual_conversion_cost * salary_share)
-        overhead_amount = money(actual_conversion_cost - salary_amount)
-        actual_total += actual_conversion_cost
-        salary_total += salary_amount
-        overhead_total += overhead_amount
-
+    salary_total = monthly_direct_labor_reclass_amount(context, year, month)
+    overhead_total = monthly_manufacturing_overhead_pool_amount(context, year, month)
     return {
-        "actual_total": money(actual_total),
-        "salary_total": money(salary_total),
-        "overhead_total": money(overhead_total),
+        "actual_total": money(float(salary_total) + float(overhead_total)),
+        "salary_total": money(float(salary_total)),
+        "overhead_total": money(float(overhead_total)),
     }
 
 
@@ -603,8 +591,7 @@ def manufacturing_journal_approver_id(context: GenerationContext) -> int:
 
 
 def generate_factory_overhead_journal(context: GenerationContext, year: int, month: int) -> None:
-    totals = monthly_manufacturing_conversion_totals(context, year, month)
-    overhead_total = float(totals["overhead_total"])
+    overhead_total = float(monthly_factory_overhead_amount(context, year, month))
     if overhead_total <= 0:
         return
 
@@ -637,12 +624,9 @@ def generate_factory_overhead_journal(context: GenerationContext, year: int, mon
     )
 
 
-def generate_manufacturing_conversion_reclass_journal(context: GenerationContext, year: int, month: int) -> None:
-    totals = monthly_manufacturing_conversion_totals(context, year, month)
-    actual_total = float(totals["actual_total"])
-    salary_total = float(totals["salary_total"])
-    overhead_total = float(totals["overhead_total"])
-    if actual_total <= 0:
+def generate_direct_labor_reclass_journal(context: GenerationContext, year: int, month: int) -> None:
+    salary_total = float(monthly_direct_labor_reclass_amount(context, year, month))
+    if salary_total <= 0:
         return
 
     posting_date = last_business_day(year, month).strftime("%Y-%m-%d")
@@ -651,28 +635,55 @@ def generate_manufacturing_conversion_reclass_journal(context: GenerationContext
     create_journal(
         context,
         posting_date,
-        "Manufacturing Conversion Reclass",
-        f"Manufacturing conversion reclass for {year}-{month:02d}",
+        "Direct Labor Reclass",
+        f"Direct labor reclass for {year}-{month:02d}",
         [
             {
                 "AccountNumber": "1090",
-                "Debit": actual_total,
+                "Debit": salary_total,
                 "Credit": 0.0,
-                "Description": "Reclass manufacturing conversion cost to clearing",
+                "Description": "Reclass direct labor to manufacturing clearing",
                 "CostCenterID": None,
             },
             {
                 "AccountNumber": "6260",
                 "Debit": 0.0,
                 "Credit": salary_total,
-                "Description": "Reclass manufacturing payroll to conversion clearing",
+                "Description": "Credit manufacturing labor expense",
+                "CostCenterID": None,
+            },
+        ],
+        creator_id,
+        approver_id,
+    )
+
+
+def generate_manufacturing_overhead_reclass_journal(context: GenerationContext, year: int, month: int) -> None:
+    overhead_total = float(monthly_manufacturing_overhead_pool_amount(context, year, month))
+    if overhead_total <= 0:
+        return
+
+    posting_date = last_business_day(year, month).strftime("%Y-%m-%d")
+    creator_id = manufacturing_journal_creator_id(context)
+    approver_id = manufacturing_journal_approver_id(context)
+    create_journal(
+        context,
+        posting_date,
+        "Manufacturing Overhead Reclass",
+        f"Manufacturing overhead reclass for {year}-{month:02d}",
+        [
+            {
+                "AccountNumber": "1090",
+                "Debit": overhead_total,
+                "Credit": 0.0,
+                "Description": "Reclass manufacturing overhead to clearing",
                 "CostCenterID": None,
             },
             {
                 "AccountNumber": "6270",
                 "Debit": 0.0,
                 "Credit": overhead_total,
-                "Description": "Reclass factory overhead to conversion clearing",
+                "Description": "Credit manufacturing overhead expense",
                 "CostCenterID": None,
             },
         ],
@@ -802,24 +813,18 @@ def generate_recurring_manual_journals(context: GenerationContext) -> None:
         raise ValueError("Recurring manual journals have already been generated.")
 
     previous_month_accrual: dict[str, Any] | None = None
-    previous_year: int | None = None
-    previous_month: int | None = None
 
     for year, month in fiscal_months(context):
-        if previous_year is not None and previous_month is not None:
-            settlement_year, settlement_month = year, month
-            generate_payroll_settlements(context, previous_year, previous_month, settlement_year, settlement_month)
-            if previous_month_accrual is not None:
-                generate_accrual_reversal(context, settlement_year, settlement_month, previous_month_accrual)
+        if previous_month_accrual is not None:
+            generate_accrual_reversal(context, year, month, previous_month_accrual)
 
         generate_rent_journals(context, year, month)
         generate_utilities_journal(context, year, month)
-        generate_payroll_accruals(context, year, month)
         generate_factory_overhead_journal(context, year, month)
-        generate_manufacturing_conversion_reclass_journal(context, year, month)
+        generate_direct_labor_reclass_journal(context, year, month)
+        generate_manufacturing_overhead_reclass_journal(context, year, month)
         generate_depreciation_journals(context, year, month)
         previous_month_accrual = generate_month_end_accrual(context, year, month)
-        previous_year, previous_month = year, month
 
 
 def close_account_lines_for_year(context: GenerationContext, year: int) -> list[dict[str, Any]]:

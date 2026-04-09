@@ -1,12 +1,12 @@
 # Financial Analytics Starter Guide
 
 **Audience:** Students, instructors, and analysts starting with financial accounting questions in the dataset.  
-**Purpose:** Show how to study revenue, COGS, receivables, payables, manufacturing balances, and journal activity.  
+**Purpose:** Show how to study revenue, COGS, receivables, payables, payroll liabilities, manufacturing balances, and journal activity.  
 **What you will learn:** Which tables matter most, which joins are common, which starter SQL files to run, and how to reproduce the same ideas in Excel.
 
-> **Implemented in current generator:** Revenue-cycle postings, receipt applications, customer deposits, returns and refunds, P2P liability postings, recurring manual journals, manufacturing balance flows, and a full `GLEntry` ledger suitable for multi-period analysis.
+> **Implemented in current generator:** Revenue-cycle postings, receipt applications, customer deposits, returns and refunds, P2P liability postings, payroll liability postings, recurring manual journals, manufacturing balance flows, and a full `GLEntry` ledger suitable for multi-period analysis.
 
-> **Planned future extension:** Payroll analytics after the payroll process cycle is implemented.
+> **Planned future extension:** More advanced cash-flow, planning, and payroll-anomaly packs.
 
 ## Relevant Tables
 
@@ -15,6 +15,7 @@
 | Revenue and margin | `GLEntry`, `Account`, `SalesInvoice`, `SalesInvoiceLine`, `ShipmentLine`, `CreditMemo` |
 | AR | `SalesInvoice`, `CashReceipt`, `CashReceiptApplication`, `CreditMemo`, `CustomerRefund`, `Customer`, `GLEntry` |
 | AP | `PurchaseInvoice`, `DisbursementPayment`, `Supplier`, `GLEntry` |
+| Payroll liabilities | `PayrollPeriod`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance`, `GLEntry`, `Account` |
 | Manufacturing balances | `WorkOrderClose`, `ProductionCompletionLine`, `MaterialIssueLine`, `JournalEntry`, `GLEntry`, `Account` |
 | Trial balance and journals | `GLEntry`, `JournalEntry`, `Account` |
 
@@ -30,10 +31,14 @@
 | Control-account reconciliation | [06_control_account_reconciliation.sql](../../queries/financial/06_control_account_reconciliation.sql) |
 | Customer credit and refunds | [07_customer_credit_and_refunds.sql](../../queries/financial/07_customer_credit_and_refunds.sql) |
 | Manufacturing balances | [08_manufacturing_wip_clearing_variance.sql](../../queries/financial/08_manufacturing_wip_clearing_variance.sql) |
+| Payroll liability roll-forward | [09_payroll_liability_rollforward.sql](../../queries/financial/09_payroll_liability_rollforward.sql) |
+| Gross-to-net payroll review | [10_gross_to_net_payroll_review.sql](../../queries/financial/10_gross_to_net_payroll_review.sql) |
+| Payroll cash payments and remittances | [11_payroll_cash_payments_and_remittances.sql](../../queries/financial/11_payroll_cash_payments_and_remittances.sql) |
 
 ## Interpretation Notes
 
 - Revenue posts at invoicing. COGS posts at shipment.
 - `CashReceipt` does not equal settled AR by itself. Use `CashReceiptApplication`.
+- Payroll register activity records liabilities first; cash leaves through payroll payments and remittances later.
 - Manufacturing balance analysis should focus on `1046`, `1090`, and `5080`.
 - Year-end close entries are real posted journals and should be filtered when you want raw multi-year P&L activity.

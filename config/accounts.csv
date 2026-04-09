@@ -23,6 +23,9 @@ AccountID,AccountNumber,AccountName,AccountType,AccountSubType,ParentAccountID,N
 22,2010,Accounts Payable,Liability,Current Liability,21,Credit,1
 23,2020,Goods Received Not Invoiced,Liability,Current Liability,21,Credit,1
 24,2030,Accrued Payroll,Liability,Current Liability,21,Credit,1
+96,2031,Payroll Tax Withholdings Payable,Liability,Current Liability,21,Credit,1
+97,2032,Employer Payroll Taxes Payable,Liability,Current Liability,21,Credit,1
+98,2033,Employee Benefits and Other Deductions Payable,Liability,Current Liability,21,Credit,1
 25,2040,Accrued Expenses,Liability,Current Liability,21,Credit,1
 26,2050,Sales Tax Payable,Liability,Current Liability,21,Credit,1
 27,2060,Customer Deposits and Unapplied Cash,Liability,Current Liability,21,Credit,1

@@ -8,6 +8,11 @@ import pandas as pd
 
 from greenfield_dataset.master_data import ITEM_GROUP_CONFIG
 from greenfield_dataset.o2c import opening_inventory_map, sales_order_line_shipped_quantities, shadow_inventory_state
+from greenfield_dataset.payroll import (
+    labor_time_direct_cost_by_work_order,
+    next_business_day,
+    work_order_overhead_cost_map,
+)
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
 from greenfield_dataset.utils import format_doc_number, money, next_id, qty
@@ -54,8 +59,6 @@ WORK_ORDER_PARTIAL_COMPLETION_RANGE = (0.45, 0.82)
 ISSUE_EVENT_COUNT_PROBABILITIES = ((1, 0.68), (2, 0.32))
 COMPLETION_EVENT_COUNT_PROBABILITIES = ((1, 0.72), (2, 0.28))
 ISSUE_FACTOR_RANGE = (0.98, 1.04)
-ACTUAL_CONVERSION_FACTOR_RANGE = (0.95, 1.07)
-ACTUAL_CONVERSION_SALARY_SHARE_RANGE = (0.68, 0.78)
 MATERIAL_REQUISITION_BUFFER_FACTOR = (1.03, 1.08)
 
 
@@ -339,17 +342,7 @@ def work_order_standard_conversion_cost_map(context: GenerationContext) -> dict[
     return {key: money(value) for key, value in totals.items()}
 
 
-def work_order_conversion_factor(context: GenerationContext, work_order_id: int) -> float:
-    rng = np.random.default_rng(context.settings.random_seed + int(work_order_id) * 701)
-    return float(rng.uniform(*ACTUAL_CONVERSION_FACTOR_RANGE))
-
-
-def work_order_conversion_salary_share(context: GenerationContext, work_order_id: int) -> float:
-    rng = np.random.default_rng(context.settings.random_seed + int(work_order_id) * 709)
-    return float(rng.uniform(*ACTUAL_CONVERSION_SALARY_SHARE_RANGE))
-
-
-def work_order_actual_conversion_cost_map(context: GenerationContext) -> dict[int, float]:
+def work_order_standard_direct_labor_cost_map(context: GenerationContext) -> dict[int, float]:
     completions = context.tables["ProductionCompletion"]
     completion_lines = context.tables["ProductionCompletionLine"]
     if completions.empty or completion_lines.empty:
@@ -361,8 +354,38 @@ def work_order_actual_conversion_cost_map(context: GenerationContext) -> dict[in
         work_order_id = work_order_lookup.get(int(line.ProductionCompletionID))
         if work_order_id is None:
             continue
-        factor = work_order_conversion_factor(context, int(work_order_id))
-        totals[int(work_order_id)] += money(float(line.ExtendedStandardConversionCost) * factor)
+        totals[int(work_order_id)] += float(line.ExtendedStandardDirectLaborCost)
+    return {key: money(value) for key, value in totals.items()}
+
+
+def work_order_standard_overhead_cost_map(context: GenerationContext) -> dict[int, float]:
+    completions = context.tables["ProductionCompletion"]
+    completion_lines = context.tables["ProductionCompletionLine"]
+    if completions.empty or completion_lines.empty:
+        return {}
+
+    work_order_lookup = completions.set_index("ProductionCompletionID")["WorkOrderID"].astype(int).to_dict()
+    totals: dict[int, float] = defaultdict(float)
+    for line in completion_lines.itertuples(index=False):
+        work_order_id = work_order_lookup.get(int(line.ProductionCompletionID))
+        if work_order_id is None:
+            continue
+        totals[int(work_order_id)] += (
+            float(line.ExtendedStandardVariableOverheadCost)
+            + float(line.ExtendedStandardFixedOverheadCost)
+        )
+    return {key: money(value) for key, value in totals.items()}
+
+
+def work_order_actual_conversion_cost_map(context: GenerationContext) -> dict[int, float]:
+    direct_labor = labor_time_direct_cost_by_work_order(context)
+    overhead = work_order_overhead_cost_map(context)
+    totals: dict[int, float] = defaultdict(float)
+    for work_order_id in set(direct_labor) | set(overhead):
+        totals[int(work_order_id)] = money(
+            float(direct_labor.get(int(work_order_id), 0.0))
+            + float(overhead.get(int(work_order_id), 0.0))
+        )
     return {key: money(value) for key, value in totals.items()}
 
 
@@ -414,7 +437,7 @@ def manufacturing_open_state(context: GenerationContext) -> dict[str, float]:
         for work_order_id in set(actual_conversion) | set(standard_conversion) | set(conversion_close)
     )
     variance_posted = float(closes["TotalVarianceAmount"].sum()) if not closes.empty else 0.0
-    open_work_orders = int(work_orders["Status"].isin(["Released", "In Progress"]).sum()) if not work_orders.empty else 0
+    open_work_orders = int(work_orders["Status"].isin(["Released", "In Progress", "Completed"]).sum()) if not work_orders.empty else 0
 
     return {
         "manufactured_item_count": float(len(manufactured_items(context))),
@@ -662,7 +685,6 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
     issue_lines: list[dict[str, Any]] = []
     completion_headers: list[dict[str, Any]] = []
     completion_lines: list[dict[str, Any]] = []
-    close_rows: list[dict[str, Any]] = []
 
     for work_order in candidates.itertuples(index=False):
         work_order_id = int(work_order.WorkOrderID)
@@ -777,7 +799,14 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
                 "Status": "Completed",
             })
             standard_material_cost = money(completion_qty * standard_material_unit)
-            standard_conversion_cost = money(completion_qty * float(item["StandardConversionCost"]))
+            standard_direct_labor_cost = money(completion_qty * float(item["StandardDirectLaborCost"]))
+            standard_variable_overhead_cost = money(completion_qty * float(item["StandardVariableOverheadCost"]))
+            standard_fixed_overhead_cost = money(completion_qty * float(item["StandardFixedOverheadCost"]))
+            standard_conversion_cost = money(
+                standard_direct_labor_cost
+                + standard_variable_overhead_cost
+                + standard_fixed_overhead_cost
+            )
             total_cost = money(standard_material_cost + standard_conversion_cost)
             completion_lines.append({
                 "ProductionCompletionLineID": next_id(context, "ProductionCompletionLine"),
@@ -786,6 +815,9 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
                 "ItemID": int(work_order.ItemID),
                 "QuantityCompleted": completion_qty,
                 "ExtendedStandardMaterialCost": standard_material_cost,
+                "ExtendedStandardDirectLaborCost": standard_direct_labor_cost,
+                "ExtendedStandardVariableOverheadCost": standard_variable_overhead_cost,
+                "ExtendedStandardFixedOverheadCost": standard_fixed_overhead_cost,
                 "ExtendedStandardConversionCost": standard_conversion_cost,
                 "ExtendedStandardTotalCost": total_cost,
             })
@@ -794,68 +826,11 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
 
         completed_total = qty(float(completed_quantities.get(work_order_id, 0.0)) + sum(completion_quantities))
         if completed_total >= qty(float(work_order.PlannedQuantity)):
-            prior_issue_cost = float(work_order_material_issue_cost_map(context).get(work_order_id, 0.0))
-            prior_standard_material = float(work_order_standard_material_cost_map(context).get(work_order_id, 0.0))
-            prior_standard_conversion = float(work_order_standard_conversion_cost_map(context).get(work_order_id, 0.0))
-            prior_actual_conversion = float(work_order_actual_conversion_cost_map(context).get(work_order_id, 0.0))
-            current_completion_header_ids = {
-                int(header["ProductionCompletionID"])
-                for header in completion_headers
-                if int(header["WorkOrderID"]) == work_order_id
-            }
-            current_issue_cost = sum(
-                float(line["ExtendedStandardCost"])
-                for line in issue_lines
-                if int(line["MaterialIssueID"]) in {
-                    int(header["MaterialIssueID"])
-                    for header in issue_headers
-                    if int(header["WorkOrderID"]) == work_order_id
-                }
-            )
-            current_standard_material = sum(
-                float(line["ExtendedStandardMaterialCost"])
-                for line in completion_lines
-                if int(line["ProductionCompletionID"]) in {
-                    int(header["ProductionCompletionID"])
-                    for header in completion_headers
-                    if int(header["WorkOrderID"]) == work_order_id
-                }
-            )
-            current_standard_conversion = sum(
-                float(line["ExtendedStandardConversionCost"])
-                for line in completion_lines
-                if int(line["ProductionCompletionID"]) in current_completion_header_ids
-            )
-            current_actual_conversion = sum(
-                money(float(line["ExtendedStandardConversionCost"]) * work_order_conversion_factor(context, work_order_id))
-                for line in completion_lines
-                if int(line["ProductionCompletionID"]) in current_completion_header_ids
-            )
-
-            total_issue_cost = money(prior_issue_cost + current_issue_cost)
-            total_standard_material = money(prior_standard_material + current_standard_material)
-            total_standard_conversion = money(prior_standard_conversion + current_standard_conversion)
-            total_actual_conversion = money(prior_actual_conversion + current_actual_conversion)
-            material_variance = money(total_issue_cost - total_standard_material)
-            conversion_variance = money(total_actual_conversion - total_standard_conversion)
-            close_date = min(month_end, completion_dates[-1] + pd.Timedelta(days=int(rng.integers(0, 3))))
-            close_rows.append({
-                "WorkOrderCloseID": next_id(context, "WorkOrderClose"),
-                "WorkOrderID": work_order_id,
-                "CloseDate": close_date.strftime("%Y-%m-%d"),
-                "MaterialVarianceAmount": material_variance,
-                "ConversionVarianceAmount": conversion_variance,
-                "TotalVarianceAmount": money(material_variance + conversion_variance),
-                "Status": "Closed",
-                "ClosedByEmployeeID": int(rng.choice(manufacturing_employee_ids)),
-            })
             update_work_order_row(
                 context,
                 work_order_id,
-                "Closed",
+                "Completed",
                 completed_date=completion_dates[-1].strftime("%Y-%m-%d"),
-                closed_date=close_date.strftime("%Y-%m-%d"),
-                closed_by_employee_id=int(close_rows[-1]["ClosedByEmployeeID"]),
             )
         else:
             update_work_order_row(context, work_order_id, "In Progress")
@@ -864,4 +839,96 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
     append_rows(context, "MaterialIssueLine", issue_lines)
     append_rows(context, "ProductionCompletion", completion_headers)
     append_rows(context, "ProductionCompletionLine", completion_lines)
+
+
+def final_work_order_activity_dates(context: GenerationContext) -> dict[int, pd.Timestamp]:
+    final_dates: dict[int, pd.Timestamp] = {}
+    issues = context.tables["MaterialIssue"]
+    completions = context.tables["ProductionCompletion"]
+    for issue in issues.itertuples(index=False):
+        final_dates[int(issue.WorkOrderID)] = max(
+            final_dates.get(int(issue.WorkOrderID), pd.Timestamp.min),
+            pd.Timestamp(issue.IssueDate),
+        )
+    for completion in completions.itertuples(index=False):
+        final_dates[int(completion.WorkOrderID)] = max(
+            final_dates.get(int(completion.WorkOrderID), pd.Timestamp.min),
+            pd.Timestamp(completion.CompletionDate),
+        )
+    return final_dates
+
+
+def close_eligible_work_orders(context: GenerationContext, year: int, month: int) -> None:
+    work_orders = context.tables["WorkOrder"]
+    if work_orders.empty:
+        return
+
+    month_start, month_end = month_bounds(year, month)
+    completed_map = work_order_completed_quantity_map(context)
+    issue_cost_map = work_order_material_issue_cost_map(context)
+    standard_material_map = work_order_standard_material_cost_map(context)
+    standard_direct_labor_map = work_order_standard_direct_labor_cost_map(context)
+    standard_overhead_map = work_order_standard_overhead_cost_map(context)
+    actual_direct_labor_map = labor_time_direct_cost_by_work_order(context)
+    actual_overhead_map = work_order_overhead_cost_map(context)
+    activity_dates = final_work_order_activity_dates(context)
+    manufacturing_employee_ids = employee_ids_for_cost_center(context, "Manufacturing")
+    close_rows: list[dict[str, Any]] = []
+
+    for work_order in work_orders.sort_values("WorkOrderID").itertuples(index=False):
+        if str(work_order.Status) == "Closed":
+            continue
+        if pd.isna(work_order.CompletedDate):
+            continue
+        completed_quantity = float(completed_map.get(int(work_order.WorkOrderID), 0.0))
+        if round(completed_quantity, 2) < round(float(work_order.PlannedQuantity), 2):
+            continue
+
+        completed_date = pd.Timestamp(work_order.CompletedDate)
+        if completed_date > month_end:
+            continue
+        if int(work_order.WorkOrderID) not in actual_direct_labor_map:
+            continue
+
+        activity_date = max(activity_dates.get(int(work_order.WorkOrderID), completed_date), completed_date)
+        close_date = min(month_end, next_business_day(activity_date + pd.Timedelta(days=2)))
+        if close_date < month_start:
+            close_date = month_start
+
+        material_variance = money(
+            float(issue_cost_map.get(int(work_order.WorkOrderID), 0.0))
+            - float(standard_material_map.get(int(work_order.WorkOrderID), 0.0))
+        )
+        direct_labor_variance = money(
+            float(actual_direct_labor_map.get(int(work_order.WorkOrderID), 0.0))
+            - float(standard_direct_labor_map.get(int(work_order.WorkOrderID), 0.0))
+        )
+        overhead_variance = money(
+            float(actual_overhead_map.get(int(work_order.WorkOrderID), 0.0))
+            - float(standard_overhead_map.get(int(work_order.WorkOrderID), 0.0))
+        )
+        conversion_variance = money(direct_labor_variance + overhead_variance)
+        close_rows.append({
+            "WorkOrderCloseID": next_id(context, "WorkOrderClose"),
+            "WorkOrderID": int(work_order.WorkOrderID),
+            "CloseDate": close_date.strftime("%Y-%m-%d"),
+            "MaterialVarianceAmount": material_variance,
+            "DirectLaborVarianceAmount": direct_labor_variance,
+            "OverheadVarianceAmount": overhead_variance,
+            "ConversionVarianceAmount": conversion_variance,
+            "TotalVarianceAmount": money(material_variance + conversion_variance),
+            "Status": "Closed",
+            "ClosedByEmployeeID": int(
+                manufacturing_employee_ids[(int(work_order.WorkOrderID) + year + month) % len(manufacturing_employee_ids)]
+            ),
+        })
+        update_work_order_row(
+            context,
+            int(work_order.WorkOrderID),
+            "Closed",
+            completed_date=completed_date.strftime("%Y-%m-%d"),
+            closed_date=close_date.strftime("%Y-%m-%d"),
+            closed_by_employee_id=int(close_rows[-1]["ClosedByEmployeeID"]),
+        )
+
     append_rows(context, "WorkOrderClose", close_rows)

@@ -6,9 +6,9 @@
 
 The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUMNS`.
 
-> **Implemented in current generator:** 39 tables across accounting, O2C, P2P, manufacturing, master data, and organizational planning.
+> **Implemented in current generator:** 45 tables across accounting, O2C, P2P, manufacturing, payroll, master data, and organizational planning.
 
-> **Planned future extension:** Payroll-cycle tables and deeper production detail.
+> **Planned future extension:** Advanced manufacturing planning, richer labor scheduling, and deeper production detail.
 
 ## Table Groups
 
@@ -18,16 +18,18 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 | O2C | `Customer`, `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt`, `CashReceiptApplication`, `SalesReturn`, `SalesReturnLine`, `CreditMemo`, `CreditMemoLine`, `CustomerRefund` | 14 |
 | P2P | `Supplier`, `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment` | 9 |
 | Manufacturing | `BillOfMaterial`, `BillOfMaterialLine`, `WorkOrder`, `MaterialIssue`, `MaterialIssueLine`, `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose` | 8 |
+| Payroll | `PayrollPeriod`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance` | 6 |
 | Master data | `Item`, `Warehouse`, `Employee` | 3 |
 | Organizational planning | `CostCenter`, `Budget` | 2 |
-| Total |  | 39 |
+| Total |  | 45 |
 
 ## Design Patterns That Matter
 
-- Header-line tables are used for orders, shipments, invoices, purchase orders, goods receipts, purchase invoices, material issues, and production completions.
+- Header-line tables are used for orders, shipments, invoices, purchase orders, goods receipts, purchase invoices, material issues, production completions, and payroll registers.
 - `GLEntry` is the reporting bridge between operational events and accounting analysis.
-- `Item` carries account-mapping fields plus manufacturing attributes such as `SupplyMode`, `ProductionLeadTimeDays`, and `StandardConversionCost`.
+- `Item` carries account-mapping fields plus manufacturing and costing attributes such as `SupplyMode`, `ProductionLeadTimeDays`, `StandardLaborHoursPerUnit`, and `StandardConversionCost`.
 - `JournalEntry` and `GLEntry` together represent opening, recurring, manufacturing, reversal, and close-cycle activity without a separate journal-line table.
+- Payroll is now operationally modeled through payroll-period, register, payment, and remittance tables rather than clean-build payroll accrual journals.
 
 ## Accounting Core
 
@@ -80,16 +82,27 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 | `MaterialIssue` | Material issue header | `WorkOrderID`, `IssueDate`, `WarehouseID`, `IssuedByEmployeeID`, `Status` |
 | `MaterialIssueLine` | Material issue detail | `MaterialIssueID`, `BOMLineID`, `ItemID`, `QuantityIssued`, `ExtendedStandardCost` |
 | `ProductionCompletion` | Production completion header | `WorkOrderID`, `CompletionDate`, `WarehouseID`, `ReceivedByEmployeeID`, `Status` |
-| `ProductionCompletionLine` | Production completion detail | `ProductionCompletionID`, `ItemID`, `QuantityCompleted`, `ExtendedStandardMaterialCost`, `ExtendedStandardConversionCost`, `ExtendedStandardTotalCost` |
-| `WorkOrderClose` | Work-order close and variance record | `WorkOrderID`, `CloseDate`, `MaterialVarianceAmount`, `ConversionVarianceAmount`, `TotalVarianceAmount`, `Status` |
+| `ProductionCompletionLine` | Production completion detail | `ProductionCompletionID`, `ItemID`, `QuantityCompleted`, `ExtendedStandardMaterialCost`, `ExtendedStandardDirectLaborCost`, `ExtendedStandardVariableOverheadCost`, `ExtendedStandardFixedOverheadCost`, `ExtendedStandardConversionCost`, `ExtendedStandardTotalCost` |
+| `WorkOrderClose` | Work-order close and variance record | `WorkOrderID`, `CloseDate`, `MaterialVarianceAmount`, `DirectLaborVarianceAmount`, `OverheadVarianceAmount`, `ConversionVarianceAmount`, `TotalVarianceAmount`, `Status` |
+
+## Payroll
+
+| Table | Purpose | High-value columns |
+|---|---|---|
+| `PayrollPeriod` | Biweekly payroll calendar | `PeriodNumber`, `PeriodStartDate`, `PeriodEndDate`, `PayDate`, `FiscalYear`, `FiscalPeriod`, `Status` |
+| `LaborTimeEntry` | Employee labor detail used for payroll and costing | `PayrollPeriodID`, `EmployeeID`, `WorkOrderID`, `WorkDate`, `LaborType`, `RegularHours`, `OvertimeHours`, `HourlyRateUsed`, `ExtendedLaborCost` |
+| `PayrollRegister` | Employee payroll header | `PayrollPeriodID`, `EmployeeID`, `CostCenterID`, `GrossPay`, `EmployeeWithholdings`, `EmployerPayrollTax`, `EmployerBenefits`, `NetPay`, `Status` |
+| `PayrollRegisterLine` | Earnings and deduction detail | `PayrollRegisterID`, `LineType`, `Hours`, `Rate`, `Amount`, `WorkOrderID`, `LaborTimeEntryID` |
+| `PayrollPayment` | Net-pay settlement record | `PayrollRegisterID`, `PaymentDate`, `PaymentMethod`, `ReferenceNumber`, `ClearedDate` |
+| `PayrollLiabilityRemittance` | Liability-clearance record | `PayrollPeriodID`, `LiabilityType`, `RemittanceDate`, `Amount`, `AgencyOrVendor`, `ReferenceNumber`, `ClearedDate` |
 
 ## Master Data
 
 | Table | Purpose | High-value columns |
 |---|---|---|
-| `Item` | Product master and account mapping | `ItemCode`, `ItemGroup`, `SupplyMode`, `ProductionLeadTimeDays`, `StandardConversionCost`, `StandardCost`, `InventoryAccountID`, `RevenueAccountID`, `COGSAccountID`, `PurchaseVarianceAccountID` |
+| `Item` | Product master and account mapping | `ItemCode`, `ItemGroup`, `SupplyMode`, `ProductionLeadTimeDays`, `StandardLaborHoursPerUnit`, `StandardDirectLaborCost`, `StandardVariableOverheadCost`, `StandardFixedOverheadCost`, `StandardConversionCost`, `StandardCost`, `InventoryAccountID`, `RevenueAccountID`, `COGSAccountID`, `PurchaseVarianceAccountID` |
 | `Warehouse` | Inventory storage locations | `WarehouseName`, `ManagerID`, address fields |
-| `Employee` | Employee and approval metadata | `CostCenterID`, `JobTitle`, `ManagerID`, `AuthorizationLevel`, `MaxApprovalAmount`, `IsActive` |
+| `Employee` | Employee and approval metadata | `CostCenterID`, `JobTitle`, `ManagerID`, `AuthorizationLevel`, `PayClass`, `BaseHourlyRate`, `BaseAnnualSalary`, `StandardHoursPerWeek`, `OvertimeEligible`, `IsActive` |
 
 ## Organizational Planning
 
@@ -115,6 +128,12 @@ The most important lineage fields in the implementation are:
 - `MaterialIssueLine.BOMLineID`
 - `ProductionCompletion.WorkOrderID`
 - `WorkOrderClose.WorkOrderID`
+- `LaborTimeEntry.WorkOrderID`
+- `PayrollRegister.PayrollPeriodID`
+- `PayrollRegisterLine.PayrollRegisterID`
+- `PayrollRegisterLine.LaborTimeEntryID`
+- `PayrollPayment.PayrollRegisterID`
+- `PayrollLiabilityRemittance.PayrollPeriodID`
 - `GLEntry.SourceDocumentType`
 - `GLEntry.SourceDocumentID`
 - `GLEntry.SourceLineID`
@@ -125,4 +144,5 @@ The most important lineage fields in the implementation are:
 - `PurchaseOrder.RequisitionID` is compatibility metadata when a PO batches multiple requisitions.
 - `GoodsReceiptLine.ExtendedStandardCost` stores the receipt posting basis used for inventory and GRNI.
 - The manufacturing foundation uses single-level BOMs only.
+- Payroll is operationally modeled, but manufacturing still uses standard-cost valuation rather than full actual-cost inventory.
 - For exact column order and names, use `TABLE_COLUMNS` in `src/greenfield_dataset/schema.py`.

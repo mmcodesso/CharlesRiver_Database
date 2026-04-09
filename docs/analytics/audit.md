@@ -1,12 +1,12 @@
 # Audit Analytics Starter Guide
 
 **Audience:** Students, instructors, and analysts using the dataset for controls, exception review, and process-traceability work.  
-**Purpose:** Show how to use the dataset for document-chain testing, approval review, cut-off analysis, duplicate detection, and manufacturing-control exercises.  
+**Purpose:** Show how to use the dataset for document-chain testing, approval review, cut-off analysis, duplicate detection, manufacturing-control exercises, and payroll-control review.  
 **What you will learn:** Which document links matter most and which audit-oriented SQL files to run first.
 
-> **Implemented in current generator:** O2C, P2P, and manufacturing process chains; approval fields; detailed posting traceability; validation outputs; and planted anomalies in the default `standard` mode.
+> **Implemented in current generator:** O2C, P2P, manufacturing, and payroll process chains; approval fields; detailed posting traceability; validation outputs; and planted anomalies in the default `standard` mode.
 
-> **Planned future extension:** Payroll controls after the payroll process cycle is implemented.
+> **Planned future extension:** More advanced payroll and production-control anomaly packs.
 
 ## Relevant Tables
 
@@ -14,10 +14,11 @@
 |---|---|
 | O2C completeness | O2C header and line tables plus `CashReceiptApplication` |
 | P2P completeness | P2P header and line tables |
-| Approvals and SOD | `PurchaseRequisition`, `PurchaseOrder`, `PurchaseInvoice`, `JournalEntry`, `CreditMemo`, `CustomerRefund`, `Employee` |
+| Approvals and SOD | `PurchaseRequisition`, `PurchaseOrder`, `PurchaseInvoice`, `JournalEntry`, `CreditMemo`, `CustomerRefund`, `Employee`, `PayrollRegister` |
 | Manufacturing controls | `Item`, `BillOfMaterial`, `BillOfMaterialLine`, `WorkOrder`, `MaterialIssueLine`, `ProductionCompletionLine`, `WorkOrderClose` |
+| Payroll controls | `PayrollPeriod`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance`, `Employee` |
 | Cut-off and timing | operational header and line tables plus date fields |
-| Duplicate and anomaly review | `DisbursementPayment`, `PurchaseInvoice`, `JournalEntry`, `SalesInvoice`, `CreditMemo`, Excel `AnomalyLog` |
+| Duplicate and anomaly review | `DisbursementPayment`, `PurchaseInvoice`, `JournalEntry`, `SalesInvoice`, `CreditMemo`, `PayrollPayment`, Excel `AnomalyLog` |
 
 ## Starter SQL Map
 
@@ -33,6 +34,8 @@
 | BOM and supply-mode conflicts | [08_missing_bom_or_supply_mode_conflict.sql](../../queries/audit/08_missing_bom_or_supply_mode_conflict.sql) |
 | Over-issue and open WIP review | [09_over_issue_and_open_wip_review.sql](../../queries/audit/09_over_issue_and_open_wip_review.sql) |
 | Work-order close timing | [10_work_order_close_timing_review.sql](../../queries/audit/10_work_order_close_timing_review.sql) |
+| Payroll control review | [11_payroll_control_review.sql](../../queries/audit/11_payroll_control_review.sql) |
+| Labor-time-after-close and paid-without-time review | [12_labor_time_after_close_and_paid_without_time.sql](../../queries/audit/12_labor_time_after_close_and_paid_without_time.sql) |
 
 ## Interpretation Notes
 
@@ -40,3 +43,4 @@
 - The default `standard` build is better for controls teaching because anomalies are present while the GL remains balanced.
 - O2C completeness should be checked at the line and application level.
 - Manufacturing controls should start from BOM integrity and work-order close timing before moving to ledger balances.
+- Payroll-control review should distinguish between normal processing lag and true exceptions such as missing payment, time after close, or hourly pay without time.

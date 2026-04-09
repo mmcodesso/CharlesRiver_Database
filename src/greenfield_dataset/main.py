@@ -14,6 +14,7 @@ from greenfield_dataset.budgets import generate_budgets, generate_opening_balanc
 from greenfield_dataset.exporters import export_excel, export_sqlite, export_validation_report
 from greenfield_dataset.journals import generate_recurring_manual_journals, generate_year_end_close_journals
 from greenfield_dataset.manufacturing import (
+    close_eligible_work_orders,
     generate_boms,
     generate_month_manufacturing_activity,
     generate_month_work_orders_and_requisitions,
@@ -47,6 +48,7 @@ from greenfield_dataset.p2p import (
     generate_month_purchase_invoices,
     p2p_open_state,
 )
+from greenfield_dataset.payroll import generate_month_payroll, generate_payroll_periods, monthly_payroll_state
 from greenfield_dataset.posting_engine import post_all_transactions
 from greenfield_dataset.schema import create_empty_tables
 from greenfield_dataset.settings import GenerationContext, Settings, initialize_context, load_settings
@@ -62,6 +64,7 @@ from greenfield_dataset.validations import (
     validate_phase9,
     validate_phase11,
     validate_phase12,
+    validate_phase13,
 )
 
 
@@ -280,6 +283,7 @@ def build_phase11(config_path: str | Path = "config/settings.yaml") -> Generatio
 
 def build_phase12(config_path: str | Path = "config/settings.yaml") -> GenerationContext:
     context = build_phase2(config_path)
+    generate_payroll_periods(context)
 
     for year, month in [(2026, 1), (2026, 2), (2026, 3), (2026, 4)]:
         generate_month_o2c(context, year, month)
@@ -288,6 +292,8 @@ def build_phase12(config_path: str | Path = "config/settings.yaml") -> Generatio
         generate_month_purchase_orders(context, year, month)
         generate_month_goods_receipts(context, year, month)
         generate_month_manufacturing_activity(context, year, month)
+        generate_month_payroll(context, year, month)
+        close_eligible_work_orders(context, year, month)
         generate_month_shipments(context, year, month)
         generate_month_sales_invoices(context, year, month)
         generate_month_cash_receipts(context, year, month)
@@ -299,6 +305,35 @@ def build_phase12(config_path: str | Path = "config/settings.yaml") -> Generatio
     post_all_transactions(context)
     generate_year_end_close_journals(context)
     validate_phase12(context)
+    export_validation_report(context)
+
+    return context
+
+
+def build_phase13(config_path: str | Path = "config/settings.yaml") -> GenerationContext:
+    context = build_phase2(config_path)
+    generate_payroll_periods(context)
+
+    for year, month in [(2026, 1), (2026, 2), (2026, 3), (2026, 4)]:
+        generate_month_o2c(context, year, month)
+        generate_month_requisitions(context, year, month)
+        generate_month_work_orders_and_requisitions(context, year, month)
+        generate_month_purchase_orders(context, year, month)
+        generate_month_goods_receipts(context, year, month)
+        generate_month_manufacturing_activity(context, year, month)
+        generate_month_payroll(context, year, month)
+        close_eligible_work_orders(context, year, month)
+        generate_month_shipments(context, year, month)
+        generate_month_sales_invoices(context, year, month)
+        generate_month_cash_receipts(context, year, month)
+        generate_month_sales_returns(context, year, month)
+        generate_month_customer_refunds(context, year, month)
+        generate_month_purchase_invoices(context, year, month)
+        generate_month_disbursements(context, year, month)
+    generate_recurring_manual_journals(context)
+    post_all_transactions(context)
+    generate_year_end_close_journals(context)
+    validate_phase13(context)
     export_validation_report(context)
 
     return context
@@ -323,6 +358,8 @@ def generate_all_months(context: GenerationContext) -> None:
         generate_month_purchase_orders(context, year, month)
         generate_month_goods_receipts(context, year, month)
         generate_month_manufacturing_activity(context, year, month)
+        generate_month_payroll(context, year, month)
+        close_eligible_work_orders(context, year, month)
         generate_month_shipments(context, year, month)
         generate_month_sales_invoices(context, year, month)
         generate_month_cash_receipts(context, year, month)
@@ -361,9 +398,20 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
         generate_suppliers(context)
         generate_opening_balances(context)
         generate_budgets(context)
+        generate_payroll_periods(context)
         log_table_counts(
             context,
-            ("Item", "BillOfMaterial", "BillOfMaterialLine", "Customer", "Supplier", "JournalEntry", "GLEntry", "Budget"),
+            (
+                "Item",
+                "BillOfMaterial",
+                "BillOfMaterialLine",
+                "Customer",
+                "Supplier",
+                "JournalEntry",
+                "GLEntry",
+                "Budget",
+                "PayrollPeriod",
+            ),
             "phase 2",
         )
 
@@ -391,12 +439,18 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
             issue_line_count_before = len(context.tables["MaterialIssueLine"])
             completion_line_count_before = len(context.tables["ProductionCompletionLine"])
             work_order_close_count_before = len(context.tables["WorkOrderClose"])
+            labor_entry_count_before = len(context.tables["LaborTimeEntry"])
+            payroll_register_count_before = len(context.tables["PayrollRegister"])
+            payroll_payment_count_before = len(context.tables["PayrollPayment"])
+            payroll_remittance_count_before = len(context.tables["PayrollLiabilityRemittance"])
             generate_month_o2c(context, year, month)
             generate_month_requisitions(context, year, month)
             generate_month_work_orders_and_requisitions(context, year, month)
             generate_month_purchase_orders(context, year, month)
             generate_month_goods_receipts(context, year, month)
             generate_month_manufacturing_activity(context, year, month)
+            generate_month_payroll(context, year, month)
+            close_eligible_work_orders(context, year, month)
             generate_month_shipments(context, year, month)
             generate_month_sales_invoices(context, year, month)
             generate_month_cash_receipts(context, year, month)
@@ -413,6 +467,7 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
             new_issue_lines = context.tables["MaterialIssueLine"].iloc[issue_line_count_before:]
             new_completion_lines = context.tables["ProductionCompletionLine"].iloc[completion_line_count_before:]
             new_work_order_closes = context.tables["WorkOrderClose"].iloc[work_order_close_count_before:]
+            payroll_state = monthly_payroll_state(context, year, month)
             open_state = p2p_open_state(context)
             revenue_state = o2c_open_state(context)
             manufacturing_state = manufacturing_open_state(context)
@@ -473,6 +528,18 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
                 manufacturing_state["manufacturing_variance_posted"],
             )
             LOGGER.info(
+                "PAYROLL CHECKPOINT | %s-%02d | periods_processed=%s | labor_entries_created=%s | payroll_registers_created=%s | payroll_payments_created=%s | liability_remittances_created=%s | direct_labor_reclass_amount=%s | manufacturing_overhead_reclass_amount=%s",
+                year,
+                month,
+                int(payroll_state["periods_processed"]),
+                len(context.tables["LaborTimeEntry"]) - labor_entry_count_before,
+                len(context.tables["PayrollRegister"]) - payroll_register_count_before,
+                len(context.tables["PayrollPayment"]) - payroll_payment_count_before,
+                len(context.tables["PayrollLiabilityRemittance"]) - payroll_remittance_count_before,
+                payroll_state["direct_labor_reclass_amount"],
+                payroll_state["manufacturing_overhead_reclass_amount"],
+            )
+            LOGGER.info(
                 "P2P CHECKPOINT | %s-%02d | converted_requisitions=%s | po_lines_created=%s | receipt_lines_created=%s | receipt_quantity=%s | invoice_lines_created=%s | invoiced_quantity=%s | disbursements_created=%s | amount_paid=%s | open_requisitions=%s | open_po_quantity=%s | open_receipt_quantity=%s | open_invoice_amount=%s",
                 year,
                 month,
@@ -503,6 +570,7 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
                 "PurchaseRequisition",
                 "PurchaseOrder",
                 "WorkOrder",
+                "PayrollRegister",
                 "Shipment",
                 "GoodsReceipt",
                 "SalesInvoice",
@@ -529,7 +597,7 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
         log_table_counts(context, ("JournalEntry", "GLEntry"), "year-end close")
 
     with logged_step("Validate clean final dataset"):
-        log_validation_results("phase12", validate_phase12(context))
+        log_validation_results("phase13", validate_phase13(context))
 
     with logged_step("Inject configured anomalies"):
         inject_anomalies(context)
@@ -569,7 +637,7 @@ def build_full_dataset(config_path: str | Path = "config/settings.yaml") -> Gene
 
 
 def print_summary(context: GenerationContext) -> None:
-    row_counts = context.validation_results["phase12"]["row_counts"]
+    row_counts = context.validation_results["phase13"]["row_counts"]
     print("Full dataset generated.")
     print(f"Fiscal range: {context.settings.fiscal_year_start} to {context.settings.fiscal_year_end}")
     print(f"Accounts: {row_counts['Account']}")
@@ -602,8 +670,14 @@ def print_summary(context: GenerationContext) -> None:
     print(f"Purchase invoices: {row_counts['PurchaseInvoice']}")
     print(f"Purchase invoice lines: {row_counts['PurchaseInvoiceLine']}")
     print(f"Disbursements: {row_counts['DisbursementPayment']}")
+    print(f"Payroll periods: {row_counts['PayrollPeriod']}")
+    print(f"Labor time entries: {row_counts['LaborTimeEntry']}")
+    print(f"Payroll registers: {row_counts['PayrollRegister']}")
+    print(f"Payroll register lines: {row_counts['PayrollRegisterLine']}")
+    print(f"Payroll payments: {row_counts['PayrollPayment']}")
+    print(f"Payroll liability remittances: {row_counts['PayrollLiabilityRemittance']}")
     print(f"GL entries: {row_counts['GLEntry']}")
-    print(f"GL balance exceptions: {context.validation_results['phase12']['gl_balance']['exception_count']}")
+    print(f"GL balance exceptions: {context.validation_results['phase13']['gl_balance']['exception_count']}")
     print(f"Anomalies logged: {len(context.anomaly_log)}")
     print(f"SQLite export: {context.settings.sqlite_path}")
     print(f"Excel export: {context.settings.excel_path}")

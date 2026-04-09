@@ -24,9 +24,9 @@ The project is built for:
 - auditing and controls analytics
 - document tracing and business-process understanding
 
-> **Implemented in current generator:** A five-year dataset with 39 tables covering O2C, P2P, manufacturing, accounting core, master data, budgets, recurring journals, year-end close, validations, anomalies, and exports.
+> **Implemented in current generator:** A five-year dataset with 45 tables covering O2C, P2P, manufacturing, payroll, accounting core, master data, budgets, recurring journals, year-end close, validations, anomalies, and exports.
 
-> **Planned future extension:** A payroll subledger and payroll process cycle.
+> **Planned future extension:** Advanced manufacturing planning, richer labor analytics, and deeper cost-accounting detail.
 
 ## Business Context
 
@@ -44,7 +44,7 @@ Read [company-story.md](company-story.md) for the narrative version of that oper
 
 ## What the Database Contains
 
-The current implementation contains **39 tables** across six areas:
+The current implementation contains **45 tables** across seven areas:
 
 | Area | Example tables | Count |
 |---|---|---:|
@@ -52,6 +52,7 @@ The current implementation contains **39 tables** across six areas:
 | Order-to-cash | `Customer`, `SalesOrder`, `Shipment`, `SalesInvoice`, `CashReceiptApplication`, `SalesReturn`, `CreditMemo`, `CustomerRefund` | 14 |
 | Procure-to-pay | `Supplier`, `PurchaseRequisition`, `PurchaseOrder`, `GoodsReceipt`, `PurchaseInvoice`, `DisbursementPayment` | 9 |
 | Manufacturing | `BillOfMaterial`, `BillOfMaterialLine`, `WorkOrder`, `MaterialIssue`, `ProductionCompletion`, `WorkOrderClose` | 8 |
+| Payroll | `PayrollPeriod`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance` | 6 |
 | Master data | `Item`, `Warehouse`, `Employee` | 3 |
 | Organizational planning | `CostCenter`, `Budget` | 2 |
 
@@ -72,6 +73,7 @@ Students can:
 - reconcile AR using invoices, cash applications, credit memos, and refunds
 - reconcile AP using purchase invoices and disbursements
 - review WIP, manufacturing clearing, and manufacturing variance balances
+- review payroll liabilities, gross-to-net payroll, and payroll cash flows
 - trace source transactions into `GLEntry`
 
 ### Managerial accounting
@@ -82,13 +84,15 @@ Students can:
 - analyze sales mix by product, customer, region, and segment
 - study warehouse movement and supplier concentration
 - roll up BOM-based standard costs
-- analyze work-order throughput, completions, and production variance
+- analyze work-order throughput, completions, production variance, and direct labor cost
+- compare absorption cost and contribution margin for manufactured versus purchased items
 
 ### Auditing
 
 Students can:
 
 - test O2C, P2P, and manufacturing document chains
+- test payroll approvals, time-entry linkage, and payroll-control behavior
 - review approvals and segregation-of-duties patterns
 - examine timing and cut-off behavior
 - detect duplicate references and planted anomalies
@@ -98,11 +102,10 @@ Students can:
 
 The current generator does **not** yet include:
 
-- payroll registers and payroll settlements by employee
-- employer tax and withholding detail
 - routings or work-center capacity
+- time clocks or shift scheduling
 - multi-level BOMs or subassemblies
-- detailed labor-time capture
+- detailed labor planning beyond the current payroll-period model
 
 Those topics are future roadmap items, not hidden functionality.
 
@@ -118,6 +121,8 @@ Those topics are future roadmap items, not hidden functionality.
 | Control account | A GL account such as AR, AP, inventory, GRNI, customer deposits, WIP, or manufacturing clearing that summarizes detailed activity. |
 | GRNI | Goods Received Not Invoiced. A liability recorded when inventory is received before the supplier invoice is approved. |
 | Manufacturing variance | The difference between actual and standard manufacturing cost that is closed from work orders. |
+| Absorption cost | Full product cost including direct material, direct labor, variable overhead, and fixed overhead. |
+| Contribution margin | Revenue less variable product cost. In this dataset, fixed overhead is excluded from contribution-margin analysis. |
 | Cost center | An organizational unit used for planning and performance analysis. |
 | Anomaly | A deliberately planted exception or unusual pattern for analytics and audit exercises. |
 

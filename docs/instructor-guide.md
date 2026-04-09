@@ -1,12 +1,12 @@
 # Instructor Guide
 
 **Audience:** Instructors designing AIS, accounting analytics, audit analytics, or SQL/Excel coursework around the dataset.  
-**Purpose:** Show how the dataset can be adopted as a teaching package and how the new starter analytics layer fits into class delivery.  
+**Purpose:** Show how the dataset can be adopted as a teaching package and how the starter analytics layer fits into class delivery.  
 **What you will learn:** A recommended teaching sequence, how to map learning goals to documents and query sets, and how to separate student-ready materials from instructor enrichment notes.
 
-> **Implemented in current generator:** Five years of O2C, P2P, and manufacturing data, opening balances, recurring manual journals, year-end close, budgets, ledger postings, anomalies, and starter analytics materials for financial, managerial, and audit analytics.
+> **Implemented in current generator:** Five years of O2C, P2P, manufacturing, and payroll data, opening balances, recurring manual journals, year-end close, budgets, ledger postings, anomalies, and starter analytics materials for financial, managerial, and audit analytics.
 
-> **Planned future extension:** Payroll process-cycle coverage after the payroll phase is implemented.
+> **Planned future extension:** Advanced manufacturing planning and richer labor-planning detail.
 
 ## How to Position the Dataset
 
@@ -19,7 +19,7 @@ This project works best when students need to connect:
 - Excel analysis
 - audit-style reasoning
 
-The dataset is especially strong when a course wants students to see that operational documents, subledgers, and financial reporting belong to one system rather than separate topics.
+The dataset is especially strong when a course wants students to see that operational documents, payroll, subledgers, and financial reporting belong to one system rather than separate topics.
 
 ## Student-Ready Materials vs Instructor Enrichment
 
@@ -34,6 +34,7 @@ Use these directly with students:
 - [processes/o2c-returns-credits-refunds.md](processes/o2c-returns-credits-refunds.md)
 - [processes/p2p.md](processes/p2p.md)
 - [processes/manufacturing.md](processes/manufacturing.md)
+- [processes/payroll.md](processes/payroll.md)
 - [processes/manual-journals-and-close.md](processes/manual-journals-and-close.md)
 - [database-guide.md](database-guide.md)
 - [analytics/index.md](analytics/index.md)
@@ -62,13 +63,13 @@ Use these to frame the course and answer implementation questions:
 | Week or module | Teaching goal | Main docs | Main starter assets |
 |---|---|---|---|
 | 1. Business orientation | Explain the company, scope, and why the dataset exists | [company-story.md](company-story.md), [dataset-overview.md](dataset-overview.md) | None yet |
-| 2. Process mapping | Show O2C, returns, P2P, manufacturing, and close-cycle flow | [process-flows.md](process-flows.md), [processes/o2c.md](processes/o2c.md), [processes/p2p.md](processes/p2p.md), [processes/manufacturing.md](processes/manufacturing.md) | None yet |
-| 3. Exception paths | Show returns, credits, refunds, and manual journal activity | [processes/o2c-returns-credits-refunds.md](processes/o2c-returns-credits-refunds.md), [processes/manual-journals-and-close.md](processes/manual-journals-and-close.md) | None yet |
+| 2. Process mapping | Show O2C, returns, P2P, manufacturing, payroll, and close-cycle flow | [process-flows.md](process-flows.md), [processes/o2c.md](processes/o2c.md), [processes/p2p.md](processes/p2p.md), [processes/manufacturing.md](processes/manufacturing.md), [processes/payroll.md](processes/payroll.md) | None yet |
+| 3. Exception paths | Show returns, credits, refunds, payroll liability clearance, and manual journal activity | [processes/o2c-returns-credits-refunds.md](processes/o2c-returns-credits-refunds.md), [processes/payroll.md](processes/payroll.md), [processes/manual-journals-and-close.md](processes/manual-journals-and-close.md) | None yet |
 | 4. Table navigation and joins | Teach keys, header-line patterns, and traceability | [database-guide.md](database-guide.md) | Introductory ad hoc joins |
 | 5. Source-to-ledger bridge | Show how operational activity becomes accounting data | [reference/posting.md](reference/posting.md) | Ledger-oriented examples |
-| 6. Financial analytics | Teach revenue, AR, AP, trial balance, and close cycle | [analytics/financial.md](analytics/financial.md) | `queries/financial/` |
-| 7. Managerial analytics | Teach budgeting, cost centers, sales mix, inventory movement, BOMs, and work-order behavior | [analytics/managerial.md](analytics/managerial.md) | `queries/managerial/` |
-| 8. Audit analytics | Teach completeness, approvals, cut-off, duplicates, manufacturing controls, and exception logic | [analytics/audit.md](analytics/audit.md) | `queries/audit/` |
+| 6. Financial analytics | Teach revenue, AR, AP, payroll liabilities, trial balance, and close cycle | [analytics/financial.md](analytics/financial.md) | `queries/financial/` |
+| 7. Managerial analytics | Teach budgeting, cost centers, sales mix, product cost, labor, inventory movement, BOMs, and work-order behavior | [analytics/managerial.md](analytics/managerial.md) | `queries/managerial/` |
+| 8. Audit analytics | Teach completeness, approvals, cut-off, duplicates, manufacturing controls, payroll controls, and exception logic | [analytics/audit.md](analytics/audit.md) | `queries/audit/` |
 | 9. Anomaly-focused work | Move from clean analysis to exception-oriented work | [analytics/audit.md](analytics/audit.md), [analytics/excel-guide.md](analytics/excel-guide.md) | `AnomalyLog`, `ValidationSummary`, audit query pack |
 
 This sequence can be compressed into fewer weeks or expanded into several assignments. The important sequencing rule is: process understanding first, analytics second.
@@ -78,11 +79,11 @@ This sequence can be compressed into fewer weeks or expanded into several assign
 | Learning objective | Best starting docs | Best starter SQL set | Best Excel path |
 |---|---|---|---|
 | Understand the company and business model | [company-story.md](company-story.md), [dataset-overview.md](dataset-overview.md) | None required | Workbook orientation |
-| Understand the business cycles | [process-flows.md](process-flows.md), [processes/o2c.md](processes/o2c.md), [processes/p2p.md](processes/p2p.md) | None required | Process walkthrough in workbook sheets |
+| Understand the business cycles | [process-flows.md](process-flows.md), [processes/o2c.md](processes/o2c.md), [processes/p2p.md](processes/p2p.md), [processes/payroll.md](processes/payroll.md) | None required | Process walkthrough in workbook sheets |
 | Learn the table structure | [database-guide.md](database-guide.md) | Any topic folder | Sheet-by-sheet workbook tour |
 | Trace source documents to postings | [reference/posting.md](reference/posting.md) | Financial and audit packs | `GLEntry` plus source-document sheets |
-| Analyze revenue, AR, AP, and journals | [analytics/financial.md](analytics/financial.md) | `queries/financial/` | Financial section in [analytics/excel-guide.md](analytics/excel-guide.md) |
-| Analyze budgets, mix, and operations | [analytics/managerial.md](analytics/managerial.md) | `queries/managerial/` | Managerial section in [analytics/excel-guide.md](analytics/excel-guide.md) |
+| Analyze revenue, AR, AP, journals, and payroll liabilities | [analytics/financial.md](analytics/financial.md) | `queries/financial/` | Financial section in [analytics/excel-guide.md](analytics/excel-guide.md) |
+| Analyze budgets, mix, labor, and operations | [analytics/managerial.md](analytics/managerial.md) | `queries/managerial/` | Managerial section in [analytics/excel-guide.md](analytics/excel-guide.md) |
 | Analyze controls and anomalies | [analytics/audit.md](analytics/audit.md) | `queries/audit/` | Audit section in [analytics/excel-guide.md](analytics/excel-guide.md) |
 
 ## How the Dataset Supports SQL and Excel
@@ -92,18 +93,19 @@ This sequence can be compressed into fewer weeks or expanded into several assign
 The current dataset works well for:
 
 - joins across headers and lines
-- aggregation by month, customer, supplier, item, and cost center
+- aggregation by month, customer, supplier, item, cost center, pay period, and work order
 - subledger-to-ledger reconciliation
-- exception detection using dates, approvals, and duplicate references
+- exception detection using dates, approvals, duplicate references, and missing linkages
 - trend analysis across five fiscal years
 
 ### Excel use
 
 The current workbook works well for:
 
-- pivots by month, customer segment, supplier category, account, and cost center
+- pivots by month, customer segment, supplier category, account, cost center, and pay period
 - budget-versus-actual analysis
 - aging views for receivables and payables
+- payroll cash-flow and liability analysis
 - anomaly review using `AnomalyLog`
 - charting seasonality, mix, timing gaps, and manufacturing variance
 
@@ -120,6 +122,8 @@ Use the starter layer for:
 - journal-entry review
 - close-cycle analysis
 - control-account reconciliation
+- payroll liability roll-forward
+- gross-to-net payroll review
 
 ### Managerial accounting
 
@@ -133,6 +137,10 @@ Use the starter layer for:
 - simple profitability analysis
 - BOM cost rollup
 - work-order throughput
+- direct labor by work order
+- unit-cost bridges
+- absorption-margin versus contribution-margin analysis
+- labor rate and efficiency variance
 - manufacturing variance review
 
 ### Auditing
@@ -145,6 +153,7 @@ Use the starter layer for:
 - duplicate payment or invoice reference review
 - anomaly-focused exercises
 - BOM integrity and work-order close review
+- payroll-control and labor-time exception review
 
 ## Clean Dataset vs Anomaly-Enabled Dataset
 
@@ -160,16 +169,16 @@ Use the starter layer for:
 - Teach the distinction between:
   - clean baseline analysis
   - anomaly-enabled exception analysis
-- If you want raw multi-year income statement activity, have students exclude the two year-end close entry types from `JournalEntry`.
+- If you want raw multi-year income-statement activity, have students exclude the two year-end close entry types from `JournalEntry`.
 - If you want the simplest student onboarding path, begin from the starter SQL files rather than from blank query prompts.
 
 ## What to Avoid Teaching as If It Already Exists
 
 The current dataset does **not** yet include:
 
-- payroll employee-level subledger detail
-- payroll registers, withholdings, or net-pay settlement
-- labor-time detail inside work orders
+- routings or work-center capacity
+- time clocks or shift scheduling
+- labor planning beyond the payroll-period model
 
 These are future expansion areas, not hidden parts of the current model.
 

@@ -4,17 +4,17 @@
 **Purpose:** Explain how the starter SQL files are organized, how to run them, and how to adapt them without breaking alignment to the current dataset.  
 **What you will learn:** Where the starter queries live, how to execute them, and how to extend them safely for class use.
 
-> **Implemented in current generator:** SQLite-first starter SQL files for financial accounting, managerial accounting, and auditing analytics, including manufacturing-focused starter analysis.
+> **Implemented in current generator:** SQLite-first starter SQL files for financial accounting, managerial accounting, and auditing analytics, including payroll and manufacturing-focused starter analysis.
 
-> **Planned future extension:** Payroll analytics after the payroll process cycle is implemented.
+> **Planned future extension:** Additional advanced planning and anomaly packs built on the same starter structure.
 
 ## Starter SQL Package Layout
 
 | Folder | Coverage |
 |---|---|
-| [../../queries/financial](../../queries/financial) | Revenue, margin, AR, AP, trial balance, control-account work, and manufacturing balance review |
-| [../../queries/managerial](../../queries/managerial) | Budgeting, cost centers, sales mix, inventory movement, purchasing, BOMs, work orders, and profitability |
-| [../../queries/audit](../../queries/audit) | Document-chain completeness, approvals, cut-off, duplicate checks, anomaly review, and manufacturing controls |
+| [../../queries/financial](../../queries/financial) | Revenue, margin, AR, AP, payroll liabilities, trial balance, control-account work, and manufacturing balance review |
+| [../../queries/managerial](../../queries/managerial) | Budgeting, cost centers, sales mix, inventory movement, purchasing, BOMs, work orders, labor, unit cost, and profitability |
+| [../../queries/audit](../../queries/audit) | Document-chain completeness, approvals, cut-off, duplicate checks, anomaly review, manufacturing controls, and payroll controls |
 
 Each file is a single SQLite-friendly `SELECT` statement with short comment headers that explain:
 
@@ -80,20 +80,20 @@ The starter pack follows these rules:
 - no dependency on future schema changes
 - readable CTE-based structure where it improves clarity
 - no dependency on exact row counts
-- current manufacturing logic is allowed where it improves teaching value
+- current manufacturing and payroll logic is allowed where it improves teaching value
 
 ## How to Adapt the Starter Queries
 
 Safe ways to extend the starter pack:
 
-- add a `WHERE` filter for a fiscal year, region, supplier, or cost center
+- add a `WHERE` filter for a fiscal year, region, supplier, cost center, or pay period
 - add additional grouping columns
 - convert detail listings into summarized pivots by month or year
 - join `Employee`, `Customer`, or `Supplier` for descriptive fields
 
 Changes to avoid in this phase:
 
-- rewriting queries around future payroll flows
+- rewriting queries around future routing or capacity flows
 - assuming anomaly rows will always exist
 - assuming every control-account or balance-sheet line carries a cost center
 
@@ -110,9 +110,11 @@ Changes to avoid in this phase:
 1. monthly revenue and gross margin
 2. AR aging
 3. AP aging
-4. trial balance
-5. journal and close-cycle review
-6. control-account reconciliation
+4. payroll liability roll-forward
+5. gross-to-net payroll review
+6. trial balance
+7. journal and close-cycle review
+8. control-account reconciliation
 
 ### Managerial
 
@@ -124,9 +126,10 @@ Changes to avoid in this phase:
 6. basic profitability
 7. BOM standard cost rollup
 8. work-order throughput
-9. material usage and scrap
-10. production completion and FG availability
-11. manufacturing variance
+9. direct labor by work order
+10. unit-cost bridge
+11. absorption vs contribution margin
+12. labor efficiency and rate variance
 
 ### Audit
 
@@ -139,6 +142,8 @@ Changes to avoid in this phase:
 7. BOM and supply-mode conflict review
 8. over-issue and open WIP review
 9. work-order close timing review
+10. payroll control review
+11. labor-time-after-close and paid-without-time review
 
 ## Where to Go Next
 

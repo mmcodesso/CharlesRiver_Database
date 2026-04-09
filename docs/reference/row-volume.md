@@ -2,7 +2,7 @@
 
 **Audience:** Contributors, instructors, and advanced users who need current scale expectations for the dataset.  
 **Purpose:** Compare historical design-intent row ranges with the current deterministic default build.  
-**What you will learn:** Which tables are already at useful teaching scale, which ones now exceed the original design bands, and how much manufacturing changed total volume.
+**What you will learn:** Which tables are already at useful teaching scale, which ones now exceed the original design bands, and how payroll and manufacturing changed total volume.
 
 The default configuration uses:
 
@@ -10,70 +10,76 @@ The default configuration uses:
 - fiscal years `2026-01-01` through `2030-12-31`
 - random seed `20260401`
 
-> **Implemented in current generator:** A deterministic five-year hybrid manufacturer-distributor dataset whose default counts are stable unless configuration or generation logic changes.
+> **Implemented in current generator:** A deterministic five-year hybrid manufacturer-distributor dataset with payroll, manufacturing, and posted-ledger detail whose default counts are stable unless configuration or generation logic changes.
 
-> **Planned future extension:** A payroll process cycle that will add operational payroll tables and more ledger volume.
+> **Planned future extension:** Advanced manufacturing planning, richer labor scheduling, and additional scenario packs that may increase operational and ledger volume further.
 
 ## Current Default Build vs Historical Design Intent
 
-The target ranges below come from the project’s earlier design-planning model. They are useful context, not strict quality thresholds.
+The target ranges below come from the project's earlier design-planning model. They are useful context, not strict quality thresholds.
 
 | Group | Table | Target rows | Current default rows |
 |---|---|---:|---:|
-| Accounting core | Account | 75 to 95 | 95 |
-| Accounting core | JournalEntry | 900 to 1,500 | 1,681 |
-| Accounting core | GLEntry | 60,000 to 110,000 | 517,871 |
+| Accounting core | Account | 75 to 95 | 98 |
+| Accounting core | JournalEntry | 900 to 1,500 | 670 |
+| Accounting core | GLEntry | 60,000 to 110,000 | 620,706 |
 | O2C | Customer | 150 to 300 | 220 |
-| O2C | SalesOrder | 4,500 to 9,000 | 6,777 |
-| O2C | SalesOrderLine | 13,000 to 30,000 | 26,422 |
-| O2C | Shipment | 4,200 to 8,500 | 23,573 |
-| O2C | ShipmentLine | 12,000 to 28,000 | 32,873 |
-| O2C | SalesInvoice | 4,200 to 8,500 | 29,839 |
-| O2C | SalesInvoiceLine | 12,000 to 28,000 | 32,807 |
-| O2C | CashReceipt | 4,000 to 9,500 | 9,242 |
-| O2C | CashReceiptApplication | Not specified in original design | 18,165 |
-| O2C | SalesReturn | Not specified in original design | 916 |
-| O2C | SalesReturnLine | Not specified in original design | 930 |
-| O2C | CreditMemo | Not specified in original design | 916 |
-| O2C | CreditMemoLine | Not specified in original design | 930 |
-| O2C | CustomerRefund | Not specified in original design | 52 |
+| O2C | SalesOrder | 4,500 to 9,000 | 6,916 |
+| O2C | SalesOrderLine | 13,000 to 30,000 | 26,795 |
+| O2C | Shipment | 4,200 to 8,500 | 23,440 |
+| O2C | ShipmentLine | 12,000 to 28,000 | 32,942 |
+| O2C | SalesInvoice | 4,200 to 8,500 | 30,008 |
+| O2C | SalesInvoiceLine | 12,000 to 28,000 | 32,895 |
+| O2C | CashReceipt | 4,000 to 9,500 | 9,271 |
+| O2C | CashReceiptApplication | Not specified in original design | 18,106 |
+| O2C | SalesReturn | Not specified in original design | 922 |
+| O2C | SalesReturnLine | Not specified in original design | 929 |
+| O2C | CreditMemo | Not specified in original design | 922 |
+| O2C | CreditMemoLine | Not specified in original design | 929 |
+| O2C | CustomerRefund | Not specified in original design | 56 |
 | P2P | Supplier | 80 to 160 | 110 |
-| P2P | PurchaseRequisition | 2,500 to 6,000 | 14,494 |
-| P2P | PurchaseOrder | 2,200 to 5,500 | 11,759 |
-| P2P | PurchaseOrderLine | 7,000 to 18,000 | 14,225 |
-| P2P | GoodsReceipt | 2,100 to 5,000 | 23,192 |
-| P2P | GoodsReceiptLine | 6,500 to 17,000 | 23,364 |
-| P2P | PurchaseInvoice | 2,100 to 5,000 | 31,990 |
-| P2P | PurchaseInvoiceLine | 6,500 to 17,000 | 32,363 |
-| P2P | DisbursementPayment | 2,300 to 5,500 | 33,331 |
-| Manufacturing | BillOfMaterial | Not specified in original design | 80 |
-| Manufacturing | BillOfMaterialLine | Not specified in original design | 282 |
-| Manufacturing | WorkOrder | Not specified in original design | 3,932 |
-| Manufacturing | MaterialIssue | Not specified in original design | 6,789 |
-| Manufacturing | MaterialIssueLine | Not specified in original design | 24,249 |
-| Manufacturing | ProductionCompletion | Not specified in original design | 6,572 |
-| Manufacturing | ProductionCompletionLine | Not specified in original design | 6,572 |
-| Manufacturing | WorkOrderClose | Not specified in original design | 2,867 |
+| P2P | PurchaseRequisition | 2,500 to 6,000 | 15,023 |
+| P2P | PurchaseOrder | 2,200 to 5,500 | 12,133 |
+| P2P | PurchaseOrderLine | 7,000 to 18,000 | 14,787 |
+| P2P | GoodsReceipt | 2,100 to 5,000 | 24,355 |
+| P2P | GoodsReceiptLine | 6,500 to 17,000 | 24,512 |
+| P2P | PurchaseInvoice | 2,100 to 5,000 | 33,845 |
+| P2P | PurchaseInvoiceLine | 6,500 to 17,000 | 34,218 |
+| P2P | DisbursementPayment | 2,300 to 5,500 | 35,643 |
+| Manufacturing | BillOfMaterial | Not specified in original design | 77 |
+| Manufacturing | BillOfMaterialLine | Not specified in original design | 281 |
+| Manufacturing | WorkOrder | Not specified in original design | 3,981 |
+| Manufacturing | MaterialIssue | Not specified in original design | 7,132 |
+| Manufacturing | MaterialIssueLine | Not specified in original design | 26,314 |
+| Manufacturing | ProductionCompletion | Not specified in original design | 6,980 |
+| Manufacturing | ProductionCompletionLine | Not specified in original design | 6,980 |
+| Manufacturing | WorkOrderClose | Not specified in original design | 2,943 |
+| Payroll | PayrollPeriod | Not specified in original design | 131 |
+| Payroll | LaborTimeEntry | Not specified in original design | 11,120 |
+| Payroll | PayrollRegister | Not specified in original design | 8,320 |
+| Payroll | PayrollRegisterLine | Not specified in original design | 52,332 |
+| Payroll | PayrollPayment | Not specified in original design | 8,320 |
+| Payroll | PayrollLiabilityRemittance | Not specified in original design | 387 |
 | Master data | Item | 180 to 350 | 240 |
 | Master data | Warehouse | 2 to 3 | 2 |
 | Master data | Employee | 55 to 75 | 64 |
 | Organizational planning | CostCenter | 8 to 14 | 9 |
 | Organizational planning | Budget | 2,000 to 4,500 | 3,300 |
 
-## What Changed in Phase 12
+## What Changed in Phase 13
 
-Phase 12 added a manufacturing foundation and materially increased total row volume through:
+Phase 13 materially changed total row volume through:
 
-- manufacturing-driven requisitions
-- work orders
-- material issues
-- production completions
-- work-order close activity
-- factory overhead and manufacturing conversion reclass journals
-- larger posted-ledger volume from manufacturing events
+- payroll periods and employee-level payroll registers
+- payroll register lines for gross pay, withholdings, taxes, and benefits
+- payroll payments and payroll liability remittances
+- labor-time detail tied to work orders
+- larger ledger volume from payroll postings
+- lower recurring-journal counts because clean-build payroll is no longer simulated through payroll accrual and payroll settlement journals
 
 ## How to Read These Counts
 
 - Treat the current default counts as the best guide for classroom planning.
 - Treat the target ranges as historical design guidance, not strict quality thresholds.
 - Expect counts to change if you alter settings, anomaly behavior, or later phases.
+- The historical journal-entry target assumed journal-mode payroll. Phase 13 moved payroll into operational tables, so `JournalEntry` is now lower while payroll tables and `GLEntry` are materially higher.

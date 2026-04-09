@@ -6,7 +6,7 @@
 
 ## How the Database Is Organized
 
-The current implementation contains **39 tables** grouped into six areas:
+The current implementation contains **45 tables** grouped into seven areas:
 
 | Area | Tables |
 |---|---|
@@ -14,6 +14,7 @@ The current implementation contains **39 tables** grouped into six areas:
 | O2C | `Customer`, `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt`, `CashReceiptApplication`, `SalesReturn`, `SalesReturnLine`, `CreditMemo`, `CreditMemoLine`, `CustomerRefund` |
 | P2P | `Supplier`, `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment` |
 | Manufacturing | `BillOfMaterial`, `BillOfMaterialLine`, `WorkOrder`, `MaterialIssue`, `MaterialIssueLine`, `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose` |
+| Payroll | `PayrollPeriod`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance` |
 | Master data | `Item`, `Warehouse`, `Employee` |
 | Organizational planning | `CostCenter`, `Budget` |
 
@@ -37,6 +38,7 @@ Many business documents use a header table and a line table.
 | `PurchaseInvoice` | `PurchaseInvoiceLine` | One supplier invoice can contain many billed lines |
 | `MaterialIssue` | `MaterialIssueLine` | One material issue can contain many component lines |
 | `ProductionCompletion` | `ProductionCompletionLine` | One production completion can contain one or more completion lines |
+| `PayrollRegister` | `PayrollRegisterLine` | One employee payroll register can contain many earnings and deduction lines |
 
 ## Most Important Keys
 
@@ -53,10 +55,12 @@ Many business documents use a header table and a line table.
 | `GoodsReceiptLineID` | Connect purchase invoice lines to exact receipt lines |
 | `BOMID` | Connect manufactured items to their BOM headers |
 | `BOMLineID` | Connect component issues back to BOM detail |
-| `WorkOrderID` | Connect work-order activity across issue, completion, and close tables |
+| `WorkOrderID` | Connect work-order activity across issue, completion, close, and direct labor |
+| `PayrollPeriodID` | Connect labor time, payroll registers, and liability remittances to a pay period |
+| `PayrollRegisterID` | Connect payroll headers to line detail and payroll payments |
 | `ItemID` | Analyze quantities, prices, standard costs, supply mode, and account mappings |
 | `AccountID` | Connect `GLEntry` and `Budget` to the chart of accounts |
-| `CostCenterID` | Connect operational activity, employees, and budgets to organizational reporting |
+| `CostCenterID` | Connect operational activity, employees, payroll, and budgets to organizational reporting |
 
 ## Core Navigation Paths
 
@@ -80,10 +84,19 @@ Returns, credits, and refunds branch from the billed shipment path:
 
 `Item -> BillOfMaterial -> BillOfMaterialLine -> WorkOrder -> MaterialIssue -> MaterialIssueLine -> ProductionCompletion -> ProductionCompletionLine -> WorkOrderClose`
 
-Manufacturing also touches P2P and O2C:
+Manufacturing also touches P2P, payroll, and O2C:
 
 - P2P replenishes raw materials and packaging
+- payroll provides direct labor and manufacturing-overhead inputs
 - O2C consumes completed finished goods
+
+### Payroll path
+
+`PayrollPeriod -> LaborTimeEntry -> PayrollRegister -> PayrollRegisterLine -> PayrollPayment`
+
+Liability clearance is tracked through:
+
+`PayrollPeriod -> PayrollLiabilityRemittance`
 
 ### Ledger path
 
@@ -110,6 +123,8 @@ Not every operational document posts to the general ledger.
 | Purchase orders | No | External commitment document |
 | Bills of material | No | Standard manufacturing structure |
 | Work orders | No | Production planning document |
+| Labor time entries | No | Operational labor detail that feeds payroll and costing |
+| Payroll periods | No | Calendar/control structure |
 | Shipments | Yes | Posts COGS and inventory relief |
 | Sales invoices | Yes | Posts AR, revenue, and sales tax |
 | Cash receipts | Yes | Posts cash and customer deposits / unapplied cash |
@@ -121,6 +136,9 @@ Not every operational document posts to the general ledger.
 | Material issues | Yes | Posts WIP and materials inventory |
 | Production completions | Yes | Posts finished goods, WIP, and manufacturing clearing |
 | Work-order close | Yes | Posts manufacturing variance |
+| Payroll registers | Yes | Posts wages and payroll liabilities |
+| Payroll payments | Yes | Posts accrued payroll and cash |
+| Payroll liability remittances | Yes | Posts payroll liabilities and cash |
 | Purchase invoices | Yes | Posts GRNI clearing, AP, and purchase variance |
 | Disbursements | Yes | Posts AP and cash |
 | Journal entries | Yes | Opening, recurring manual, manufacturing reclass, reversal, and year-end close journals |
@@ -138,6 +156,8 @@ Start with:
 - `CreditMemo`
 - `PurchaseInvoice`
 - `DisbursementPayment`
+- `PayrollRegister`
+- `PayrollLiabilityRemittance`
 - `WorkOrderClose`
 
 ### Managerial analytics
@@ -151,6 +171,7 @@ Start with:
 - `WorkOrder`
 - `MaterialIssueLine`
 - `ProductionCompletionLine`
+- `LaborTimeEntry`
 - `ShipmentLine`
 - `PurchaseOrderLine`
 
@@ -161,6 +182,7 @@ Start with:
 - O2C chain tables
 - P2P chain tables
 - manufacturing chain tables
+- payroll chain tables
 - `GLEntry`
 - `validation_report.json`
 - the anomaly log in Excel
@@ -171,6 +193,7 @@ Start with:
 - `CashReceiptApplication` is the authoritative invoice-settlement link in O2C.
 - For P2P traceability, prefer `PurchaseOrderLine.RequisitionID` and `PurchaseInvoiceLine.GoodsReceiptLineID`.
 - For manufacturing traceability, start from `WorkOrderID`.
+- For payroll traceability, start from `PayrollPeriodID` and `PayrollRegisterID`.
 - For raw multi-year income-statement analysis, exclude the two year-end close entry types.
 
 ## Where to Go Next

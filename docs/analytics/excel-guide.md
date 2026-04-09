@@ -1,12 +1,12 @@
 # Excel Starter Guide
 
 **Audience:** Students, instructors, and analysts using the Excel export for classroom analysis.  
-**Purpose:** Show how to turn the generated workbook into a practical starter environment for pivots, charts, aging schedules, and anomaly review.  
+**Purpose:** Show how to turn the generated workbook into a practical starter environment for pivots, charts, aging schedules, payroll review, and anomaly analysis.  
 **What you will learn:** Which sheets matter for each analytics area, how to structure pivots, and how to separate clean analysis from anomaly-focused review.
 
-> **Implemented in current generator:** A workbook with one sheet per table plus `AnomalyLog` and `ValidationSummary`, suitable for Excel-based starter analytics across O2C, P2P, journals, and manufacturing.
+> **Implemented in current generator:** A workbook with one sheet per table plus `AnomalyLog` and `ValidationSummary`, suitable for Excel-based starter analytics across O2C, P2P, manufacturing, payroll, and journals.
 
-> **Planned future extension:** Payroll workbook guidance after the payroll process cycle is implemented.
+> **Planned future extension:** More advanced workbook guidance for planning, routing, and labor-scheduling analysis.
 
 ## Workbook Setup
 
@@ -89,6 +89,35 @@ Recommended outputs:
 - open AP by supplier category
 - overdue AP by aging bucket
 
+### Payroll liability and cash-flow review
+
+Use:
+
+- `PayrollRegister`
+- `PayrollRegisterLine`
+- `PayrollPayment`
+- `PayrollLiabilityRemittance`
+- `GLEntry`
+- `Account`
+
+Recommended outputs:
+
+- payroll liability by account and month
+- net-pay cash by month
+- liability remittances by month and liability type
+- gross-to-net bridge by employee or cost center
+
+Suggested pivot layout:
+
+- rows: `FiscalYear`, `FiscalPeriod`
+- columns: liability type or cost center
+- values:
+  - gross pay
+  - withholdings
+  - employer taxes
+  - employer benefits
+  - net pay
+
 ### Journal and close-cycle analysis
 
 Use:
@@ -157,6 +186,8 @@ Use:
 - `GoodsReceiptLine`
 - `Shipment`
 - `ShipmentLine`
+- `SalesReturnLine`
+- `ProductionCompletionLine`
 - `Warehouse`
 - `Item`
 
@@ -181,6 +212,31 @@ Suggested pivots:
 - ordered value by supplier risk rating
 - item-group purchasing by month
 
+### Product costing and labor analysis
+
+Use:
+
+- `Item`
+- `WorkOrder`
+- `ProductionCompletionLine`
+- `WorkOrderClose`
+- `LaborTimeEntry`
+- `Employee`
+
+Suggested outputs:
+
+- unit-cost bridge by manufactured item
+- direct labor by work order and employee class
+- labor efficiency and rate variance by work order
+- absorption margin vs contribution margin
+- manufactured vs purchased product margin comparison
+
+Suggested charts:
+
+- contribution margin by item group
+- labor-cost trend by month
+- work-order variance bridge by cost component
+
 ### Manufacturing workflows
 
 Use:
@@ -202,22 +258,6 @@ Suggested outputs:
 - issued material versus completed output by work order
 - WIP, manufacturing clearing, and manufacturing variance review by period
 
-Recommended pivots:
-
-- rows: `FiscalYear`, `FiscalPeriod`, or `WarehouseID`
-- columns: `ItemGroup` or `SupplyMode`
-- values:
-  - planned quantity
-  - completed quantity
-  - issue cost
-  - variance amount
-
-Suggested charts:
-
-- monthly work-order releases versus closes
-- monthly production quantity by item group
-- manufacturing variance trend by month
-
 ## Audit Analytics Workflows
 
 ### Document-chain completeness
@@ -226,6 +266,7 @@ Use:
 
 - O2C document sheets for sales-side completeness
 - P2P document sheets for purchasing-side completeness
+- payroll sheets for payroll chain completeness
 
 Recommended approach:
 
@@ -234,6 +275,7 @@ Recommended approach:
 - focus on:
   - partially shipped or billed sales activity
   - requisitions with missing later-stage activity
+  - payroll registers with missing payment or remittance follow-up
 
 ### Approval and segregation-of-duties review
 
@@ -243,6 +285,7 @@ Use:
 - `PurchaseOrder`
 - `PurchaseInvoice`
 - `JournalEntry`
+- `PayrollRegister`
 - `Employee`
 
 Suggested checks:
@@ -257,6 +300,7 @@ Use:
 
 - `Shipment` and `SalesInvoice`
 - `PurchaseRequisition`, `PurchaseOrder`, `GoodsReceipt`, and `PurchaseInvoice`
+- `PayrollPeriod`, `PayrollPayment`, and `PayrollLiabilityRemittance`
 
 Suggested measures:
 
@@ -264,6 +308,8 @@ Suggested measures:
 - days from requisition to order
 - days from order to receipt
 - days from receipt to invoice
+- days from payroll approval to payment
+- days from payroll period to liability remittance
 
 ### Anomaly review
 
@@ -291,8 +337,8 @@ Suggested workflow:
 The Excel starter layer does **not** assume:
 
 - prebuilt pivot tables inside the exported workbook
-- payroll sheets or payroll register detail
 - routings or capacity-planning tables
+- time-clock or shift-level labor detail
 
 Those are future teaching extensions, not missing pieces of the current workbook.
 

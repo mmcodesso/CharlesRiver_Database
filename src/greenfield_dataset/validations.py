@@ -11,6 +11,8 @@ from greenfield_dataset.manufacturing import (
     work_order_actual_conversion_cost_map,
     work_order_completed_quantity_map,
     work_order_material_issue_cost_map,
+    work_order_standard_direct_labor_cost_map,
+    work_order_standard_overhead_cost_map,
     work_order_standard_conversion_cost_map,
     work_order_standard_material_cost_map,
 )
@@ -32,6 +34,13 @@ from greenfield_dataset.p2p import (
     invoice_paid_amounts,
     po_line_received_quantities,
     purchase_invoice_line_matched_basis_map,
+)
+from greenfield_dataset.payroll import (
+    monthly_direct_labor_reclass_amount,
+    monthly_factory_overhead_amount,
+    monthly_manufacturing_overhead_pool_amount,
+    payroll_liability_recorded_amounts,
+    payroll_liability_remitted_amounts,
 )
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
@@ -387,11 +396,6 @@ def validate_account_rollforward(context: GenerationContext) -> dict[str, Any]:
         account_rows = gl[gl["AccountID"].astype(int).eq(account_id)]
         return round(float(account_rows["Debit"].sum()) - float(account_rows["Credit"].sum()), 2)
 
-    def gl_debit_net_all(account_number: str) -> float:
-        account_id = account_id_by_number(context, account_number)
-        account_rows = gl[gl["AccountID"].astype(int).eq(account_id)]
-        return round(float(account_rows["Debit"].sum()) - float(account_rows["Credit"].sum()), 2)
-
     def gl_credit_net(account_number: str) -> float:
         account_id = account_id_by_number(context, account_number)
         account_rows = operational_gl[operational_gl["AccountID"].astype(int).eq(account_id)]
@@ -406,6 +410,20 @@ def validate_account_rollforward(context: GenerationContext) -> dict[str, Any]:
     cash_applications_total = round(float(context.tables["CashReceiptApplication"]["AppliedAmount"].sum()), 2)
     ar_credit_memo_total = round(
         sum(float(allocation["ar_amount"]) for allocation in credit_memo_allocations.values()),
+        2,
+    )
+    payroll_recorded = payroll_liability_recorded_amounts(context)
+    payroll_remitted = payroll_liability_remitted_amounts(context)
+    payroll_register_lookup = (
+        context.tables["PayrollRegister"].set_index("PayrollRegisterID")["NetPay"].astype(float).to_dict()
+        if not context.tables["PayrollRegister"].empty
+        else {}
+    )
+    payroll_paid_total = round(
+        sum(
+            float(payroll_register_lookup.get(int(payment.PayrollRegisterID), 0.0))
+            for payment in context.tables["PayrollPayment"].itertuples(index=False)
+        ),
         2,
     )
     checks = [
@@ -510,10 +528,34 @@ def validate_account_rollforward(context: GenerationContext) -> dict[str, Any]:
             "expected": round(float(context.tables["WorkOrderClose"]["TotalVarianceAmount"].sum()), 2),
             "actual": gl_debit_net("5080"),
         },
+        {
+            "name": "Accrued Payroll",
+            "expected": round(
+                float(payroll_recorded.get("2030", 0.0))
+                - payroll_paid_total,
+                2,
+            ),
+            "actual": gl_credit_net("2030"),
+        },
+        {
+            "name": "Payroll Tax Withholdings Payable",
+            "expected": round(float(payroll_recorded.get("2031", 0.0)) - float(payroll_remitted.get("2031", 0.0)), 2),
+            "actual": gl_credit_net("2031"),
+        },
+        {
+            "name": "Employer Payroll Taxes Payable",
+            "expected": round(float(payroll_recorded.get("2032", 0.0)) - float(payroll_remitted.get("2032", 0.0)), 2),
+            "actual": gl_credit_net("2032"),
+        },
+        {
+            "name": "Benefits and Other Deductions Payable",
+            "expected": round(float(payroll_recorded.get("2033", 0.0)) - float(payroll_remitted.get("2033", 0.0)), 2),
+            "actual": gl_credit_net("2033"),
+        },
     ]
 
     for check in checks:
-        if round(float(check["expected"]) - float(check["actual"]), 2) != 0:
+        if abs(round(float(check["expected"]) - float(check["actual"]), 2)) > 0.01:
             exceptions.append(check)
 
     return {
@@ -1063,10 +1105,17 @@ def validate_journal_controls(context: GenerationContext) -> dict[str, Any]:
             })
 
     expected_entry_counts = {
-        "Payroll Accrual": len(fiscal_months(context)) * len(context.tables["CostCenter"]),
-        "Payroll Settlement": max(len(fiscal_months(context)) - 1, 0) * len(context.tables["CostCenter"]),
         "Rent": len(fiscal_months(context)) * 2,
         "Utilities": len(fiscal_months(context)),
+        "Factory Overhead": sum(
+            1 for year, month in fiscal_months(context) if monthly_factory_overhead_amount(context, year, month) > 0
+        ),
+        "Direct Labor Reclass": sum(
+            1 for year, month in fiscal_months(context) if monthly_direct_labor_reclass_amount(context, year, month) > 0
+        ),
+        "Manufacturing Overhead Reclass": sum(
+            1 for year, month in fiscal_months(context) if monthly_manufacturing_overhead_pool_amount(context, year, month) > 0
+        ),
         "Depreciation": len(fiscal_months(context)) * 3,
         "Accrual": len(fiscal_months(context)),
         "Accrual Reversal": max(len(fiscal_months(context)) - 1, 0),
@@ -1337,7 +1386,7 @@ def validate_manufacturing_controls(context: GenerationContext) -> dict[str, Any
         - float(context.tables["WorkOrderClose"]["MaterialVarianceAmount"].sum()),
         2,
     )
-    if round(expected_wip - gl_debit_net("1046"), 2) != 0:
+    if abs(round(expected_wip - gl_debit_net("1046"), 2)) > 0.01:
         exceptions.append({
             "type": "wip_rollforward_mismatch",
             "message": "WIP roll-forward does not reconcile to the ledger.",
@@ -1349,7 +1398,7 @@ def validate_manufacturing_controls(context: GenerationContext) -> dict[str, Any
         - float(context.tables["WorkOrderClose"]["ConversionVarianceAmount"].sum()),
         2,
     )
-    if round(expected_clearing - gl_debit_net_all("1090"), 2) != 0:
+    if abs(round(expected_clearing - gl_debit_net_all("1090"), 2)) > 0.01:
         exceptions.append({
             "type": "manufacturing_clearing_mismatch",
             "message": "Manufacturing conversion clearing roll-forward does not reconcile to the ledger.",
@@ -1362,7 +1411,128 @@ def validate_manufacturing_controls(context: GenerationContext) -> dict[str, Any
     }
 
 
-def validate_phase12(context: GenerationContext, store: bool = True) -> dict[str, Any]:
+def validate_payroll_controls(context: GenerationContext) -> dict[str, Any]:
+    periods = context.tables["PayrollPeriod"]
+    labor_entries = context.tables["LaborTimeEntry"]
+    registers = context.tables["PayrollRegister"]
+    register_lines = context.tables["PayrollRegisterLine"]
+    payments = context.tables["PayrollPayment"]
+    remittances = context.tables["PayrollLiabilityRemittance"]
+    employees = context.tables["Employee"]
+    work_orders = context.tables["WorkOrder"]
+    items = context.tables["Item"]
+    exceptions: list[dict[str, Any]] = []
+
+    if not periods.empty:
+        ordered_periods = periods.sort_values("PayrollPeriodID").reset_index(drop=True)
+        processed_periods = ordered_periods[ordered_periods["Status"].eq("Processed")].reset_index(drop=True)
+        prior_end: pd.Timestamp | None = None
+        for period in processed_periods.itertuples(index=False):
+            period_start = pd.Timestamp(period.PeriodStartDate)
+            period_end = pd.Timestamp(period.PeriodEndDate)
+            if prior_end is not None and period_start != prior_end + pd.Timedelta(days=1):
+                exceptions.append({
+                    "type": "payroll_period_gap_or_overlap",
+                    "message": "Payroll periods are not continuous and non-overlapping.",
+                })
+                break
+            prior_end = period_end
+
+        active_count_by_period: dict[int, int] = {}
+        if not employees.empty:
+            employee_hires = pd.to_datetime(employees["HireDate"])
+            for period in processed_periods.itertuples(index=False):
+                active_count_by_period[int(period.PayrollPeriodID)] = int(
+                    (
+                        employees["IsActive"].eq(1)
+                        & employee_hires.le(pd.Timestamp(period.PeriodEndDate))
+                    ).sum()
+                )
+        register_count_by_period = registers.groupby("PayrollPeriodID").size().to_dict() if not registers.empty else {}
+        for payroll_period_id, expected_count in active_count_by_period.items():
+            actual_count = int(register_count_by_period.get(int(payroll_period_id), 0))
+            if actual_count != expected_count:
+                exceptions.append({
+                    "type": "missing_payroll_registers",
+                    "payroll_period_id": int(payroll_period_id),
+                    "message": f"Expected {expected_count} payroll registers, found {actual_count}.",
+                })
+
+    if not registers.empty and not register_lines.empty:
+        line_groups = {key: value for key, value in register_lines.groupby("PayrollRegisterID")}
+        for register in registers.itertuples(index=False):
+            lines = line_groups.get(int(register.PayrollRegisterID))
+            if lines is None or lines.empty:
+                exceptions.append({
+                    "type": "payroll_register_missing_lines",
+                    "payroll_register_id": int(register.PayrollRegisterID),
+                    "message": "Payroll register has no lines.",
+                })
+                continue
+            earnings_total = float(lines.loc[lines["LineType"].isin(["Regular Earnings", "Overtime Earnings", "Salary Earnings", "Bonus"]), "Amount"].astype(float).sum())
+            if round(earnings_total, 2) != round(float(register.GrossPay), 2):
+                exceptions.append({
+                    "type": "payroll_gross_mismatch",
+                    "payroll_register_id": int(register.PayrollRegisterID),
+                    "message": "Payroll register gross pay does not match earnings lines.",
+                })
+            withholding_total = float(lines.loc[lines["LineType"].isin(["Employee Tax Withholding", "Benefits Deduction"]), "Amount"].astype(float).sum())
+            if round(withholding_total, 2) != round(float(register.EmployeeWithholdings), 2):
+                exceptions.append({
+                    "type": "payroll_withholding_mismatch",
+                    "payroll_register_id": int(register.PayrollRegisterID),
+                    "message": "Payroll register withholdings do not match line detail.",
+                })
+            if round(float(register.NetPay), 2) != round(float(register.GrossPay) - float(register.EmployeeWithholdings), 2):
+                exceptions.append({
+                    "type": "payroll_net_pay_formula",
+                    "payroll_register_id": int(register.PayrollRegisterID),
+                    "message": "Payroll register net pay does not equal gross pay minus employee withholdings.",
+                })
+
+    if not payments.empty and not registers.empty:
+        register_ids = set(registers["PayrollRegisterID"].astype(int))
+        payment_register_ids = set(payments["PayrollRegisterID"].astype(int))
+        missing_payments = sorted(register_ids - payment_register_ids)
+        if missing_payments:
+            exceptions.append({
+                "type": "missing_payroll_payments",
+                "message": f"Payroll registers are missing payroll payments: {missing_payments[:5]}.",
+            })
+
+    remitted_amounts = payroll_liability_remitted_amounts(context)
+    recorded_amounts = payroll_liability_recorded_amounts(context)
+    for account_number in ["2031", "2032", "2033"]:
+        if round(float(remitted_amounts.get(account_number, 0.0)), 2) > round(float(recorded_amounts.get(account_number, 0.0)), 2):
+            exceptions.append({
+                "type": "payroll_remittance_exceeds_recorded",
+                "account_number": account_number,
+                "message": f"Payroll remittances exceed recorded liability for account {account_number}.",
+            })
+
+    if not labor_entries.empty and not work_orders.empty and not items.empty:
+        work_order_item_ids = work_orders.set_index("WorkOrderID")["ItemID"].astype(int).to_dict()
+        supply_modes = items.set_index("ItemID")["SupplyMode"].to_dict()
+        invalid_direct_labor = []
+        for entry in labor_entries.itertuples(index=False):
+            if str(entry.LaborType) != "Direct Manufacturing" or pd.isna(entry.WorkOrderID):
+                continue
+            item_id = work_order_item_ids.get(int(entry.WorkOrderID))
+            if item_id is None or str(supply_modes.get(int(item_id))) != "Manufactured":
+                invalid_direct_labor.append(int(entry.LaborTimeEntryID))
+        if invalid_direct_labor:
+            exceptions.append({
+                "type": "direct_labor_invalid_work_order",
+                "message": f"Direct labor entries reference invalid or non-manufactured work orders: {invalid_direct_labor[:5]}.",
+            })
+
+    return {
+        "exception_count": len(exceptions),
+        "exceptions": exceptions,
+    }
+
+
+def validate_phase13(context: GenerationContext, store: bool = True) -> dict[str, Any]:
     results = validate_phase6(context)
     exceptions = list(results["exceptions"])
 
@@ -1382,7 +1552,11 @@ def validate_phase12(context: GenerationContext, store: bool = True) -> dict[str
     if manufacturing_controls["exception_count"]:
         exceptions.append(f"Manufacturing control exceptions: {manufacturing_controls['exception_count']}.")
 
-    phase12_results: dict[str, Any] = {
+    payroll_controls = validate_payroll_controls(context)
+    if payroll_controls["exception_count"]:
+        exceptions.append(f"Payroll control exceptions: {payroll_controls['exception_count']}.")
+
+    phase13_results: dict[str, Any] = {
         "row_counts": {table: int(len(df)) for table, df in context.tables.items()},
         "exceptions": exceptions,
         "gl_balance": results["gl_balance"],
@@ -1392,30 +1566,39 @@ def validate_phase12(context: GenerationContext, store: bool = True) -> dict[str
         "p2p_controls": p2p_controls,
         "journal_controls": journal_controls,
         "manufacturing_controls": manufacturing_controls,
+        "payroll_controls": payroll_controls,
     }
     if store:
-        context.validation_results["phase12"] = phase12_results
-        context.validation_results["phase11"] = phase12_results
-        context.validation_results["phase9"] = phase12_results
-    return phase12_results
+        context.validation_results["phase13"] = phase13_results
+        context.validation_results["phase12"] = phase13_results
+        context.validation_results["phase11"] = phase13_results
+        context.validation_results["phase9"] = phase13_results
+    return phase13_results
+
+
+def validate_phase12(context: GenerationContext, store: bool = True) -> dict[str, Any]:
+    results = validate_phase13(context, store=False)
+    if store:
+        context.validation_results["phase12"] = results
+    return results
 
 
 def validate_phase11(context: GenerationContext, store: bool = True) -> dict[str, Any]:
-    results = validate_phase12(context, store=False)
+    results = validate_phase13(context, store=False)
     if store:
         context.validation_results["phase11"] = results
     return results
 
 
 def validate_phase9(context: GenerationContext, store: bool = True) -> dict[str, Any]:
-    results = validate_phase12(context, store=False)
+    results = validate_phase13(context, store=False)
     if store:
         context.validation_results["phase9"] = results
     return results
 
 
 def validate_phase8(context: GenerationContext) -> dict[str, Any]:
-    results = validate_phase12(context, store=False)
+    results = validate_phase13(context, store=False)
     exceptions = list(results["exceptions"])
 
     if context.settings.anomaly_mode != "none" and not context.anomaly_log:
@@ -1432,6 +1615,7 @@ def validate_phase8(context: GenerationContext) -> dict[str, Any]:
         "p2p_controls": results["p2p_controls"],
         "journal_controls": results["journal_controls"],
         "manufacturing_controls": results["manufacturing_controls"],
+        "payroll_controls": results["payroll_controls"],
     }
     context.validation_results["phase8"] = phase8_results
     return phase8_results

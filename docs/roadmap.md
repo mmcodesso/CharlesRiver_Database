@@ -15,45 +15,45 @@ The current generator already delivers:
 - event-based postings into `GLEntry`
 - validations, anomaly injection, starter analytics assets, and exports
 
-## Recently Delivered: Phase 12 - Hybrid Manufacturing Foundation
+## Recently Delivered: Phase 13 - Payroll Cycle With Manufacturing Direct Labor
 
-Phase 12 delivered:
+Phase 13 delivered:
 
-- manufactured-item master attributes on `Item`
-- BOM headers and BOM lines
-- work orders, material issues, production completions, and work-order close
-- manufacturing-driven raw-material replenishment through the normal P2P flow
-- WIP, manufacturing clearing, and manufacturing variance accounting
-- manufacturing controls in validation
-- manufacturing process documentation and starter analytics coverage
+- payroll periods, labor time, payroll registers, payroll payments, and payroll liability remittances
+- payroll posting into accrued payroll and payroll liability accounts
+- payroll-driven direct labor and manufacturing-overhead integration
+- manufactured-item cost components for direct material, direct labor, variable overhead, and fixed overhead
+- unit-cost and contribution-margin starter analytics
+- payroll controls in validation
+- payroll process documentation and starter analytics coverage
 
-This phase turned Greenfield into a hybrid manufacturer-distributor instead of a pure distributor-style dataset.
+This phase turned Greenfield into a hybrid manufacturer-distributor with an operational payroll subledger instead of journal-only payroll.
 
-## Next Phase: Phase 13 - Payroll Cycle
+## Next Phase: Advanced Manufacturing and Labor Planning
 
 ### Why this is next
 
-Payroll currently exists only as journal activity. That is enough for the current manufacturing foundation, but it is not enough for a true operational payroll cycle.
+The dataset now has operational payroll, direct labor, and manufacturing cost components. The next high-value gap is not payroll basic processing. It is deeper production-planning realism.
 
-The next high-value addition is a payroll subledger that can support:
+The next high-value addition is advanced manufacturing and labor-planning detail that can support:
 
-- payroll process understanding
-- payroll liability analysis
-- audit testing of payroll controls
-- future labor-based manufacturing analytics
+- routings and work centers
+- time-clock or shift-level labor capture
+- capacity and schedule analytics
+- deeper manufacturing efficiency analysis
 
 ### Planned scope
 
-Phase 13 should add:
+The next phase should add:
 
-- pay periods and payroll registers
-- employer taxes and withholdings
-- employee net pay and settlement
-- payroll liability clearance
-- optional labor detail that can later refine manufacturing analytics
+- routings or operation sequences for manufactured items
+- time-clock or shift scheduling detail
+- richer open-work-order and bottleneck analysis
+- deeper labor and overhead planning analytics
+- more advanced manufacturing-control anomalies
 
 ## Recommended Sequence
 
-1. Phase 13 - Payroll Cycle
-2. Advanced manufacturing extensions such as routings, capacity, and richer cost-accounting detail
-3. Additional analytics packs built on top of those new operational layers
+1. Advanced manufacturing and labor-planning extensions
+2. Additional analytics packs built on top of those new operational layers
+3. Broader scenario and anomaly packs for teaching controls and planning
