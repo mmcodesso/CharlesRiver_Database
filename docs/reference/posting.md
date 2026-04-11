@@ -35,8 +35,6 @@ These documents are generated for process analysis but do **not** create `GLEntr
 - `PayrollPeriod`
 - `LaborTimeEntry`
 
-Approved time-clock and shift rows drive hourly payroll logic and labor analysis, but they do **not** post directly to `GLEntry`.
-
 ## Posting Matrix
 
 | Event | Source tables | Posting date used | Debit | Credit |

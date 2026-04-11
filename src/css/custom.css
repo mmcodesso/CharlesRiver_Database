@@ -111,3 +111,39 @@ html[data-theme="dark"] .theme-doc-markdown .docusaurus-mermaid-container {
     linear-gradient(180deg, rgba(24, 43, 35, 0.96), rgba(20, 35, 28, 0.92));
   box-shadow: none;
 }
+
+@media (max-width: 996px) {
+  .navbar-sidebar {
+    background-color: var(--ifm-background-surface-color);
+  }
+
+  .navbar-sidebar__brand {
+    background-color: var(--ifm-background-surface-color);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .navbar-sidebar__items {
+    height: calc(100vh - var(--ifm-navbar-height));
+    height: calc(100dvh - var(--ifm-navbar-height));
+  }
+
+  .navbar-sidebar__item {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .navbar-sidebar__back {
+    position: sticky;
+    top: -0.5rem;
+    z-index: 1;
+  }
+
+  .theme-doc-sidebar-menu {
+    padding-bottom: 1rem;
+  }
+}
