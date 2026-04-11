@@ -35,6 +35,13 @@ function getSvgDimensions(svg) {
   };
 }
 
+function getViewportCenter(viewport) {
+  return {
+    x: viewport.clientWidth / 2,
+    y: viewport.clientHeight / 2,
+  };
+}
+
 function MermaidMarkup({ renderResult, containerRef, className }) {
   useEffect(() => {
     bindDiagramInteractions(renderResult, containerRef);
@@ -148,8 +155,23 @@ function MermaidRenderer({ value }) {
     return null;
   }
 
-  const zoomIn = () => panzoomRef.current?.zoomIn();
-  const zoomOut = () => panzoomRef.current?.zoomOut();
+  const zoomIn = () => {
+    if (!panzoomRef.current || !viewportRef.current) {
+      return;
+    }
+
+    const center = getViewportCenter(viewportRef.current);
+    panzoomRef.current.smoothZoom(center.x, center.y, 1.2);
+  };
+
+  const zoomOut = () => {
+    if (!panzoomRef.current || !viewportRef.current) {
+      return;
+    }
+
+    const center = getViewportCenter(viewportRef.current);
+    panzoomRef.current.smoothZoom(center.x, center.y, 1 / 1.2);
+  };
   const resetZoom = () => {
     if (!panzoomRef.current || !svgRef.current || !viewportRef.current) {
       return;
