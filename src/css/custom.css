@@ -47,6 +47,11 @@ html[data-theme="dark"] {
   border-bottom: 1px solid rgba(31, 107, 82, 0.12);
 }
 
+.navbar-sidebar--show.navbar {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .navbar__title,
 .hero__title,
 h1,
@@ -113,6 +118,11 @@ html[data-theme="dark"] .theme-doc-markdown .docusaurus-mermaid-container {
 }
 
 @media (max-width: 996px) {
+  .navbar {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
   .navbar-sidebar {
     background-color: var(--ifm-background-surface-color);
   }
