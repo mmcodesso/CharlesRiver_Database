@@ -1,11 +1,14 @@
 ---
 title: Posting Reference
-description: Technical guide to how business events become posted ledger entries in Greenfield.
+description: Student-friendly guide to how Greenfield business events become posted ledger entries.
 sidebar_label: Posting Reference
 ---
 
 # Posting Reference
 
+Use this page when you need to confirm which business events post to `GLEntry`, which documents remain operational only, which accounts move, and which posting date the dataset uses.
+
+Students can use it with the process guides and Schema Reference to understand how source documents turn into accounting results.
 
 Posting logic is implemented across `src/greenfield_dataset/journals.py`, `src/greenfield_dataset/payroll.py`, and `src/greenfield_dataset/posting_engine.py`.
 

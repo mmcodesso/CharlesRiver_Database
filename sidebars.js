@@ -40,13 +40,13 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Teach With Greenfield",
-      items: ["instructor-guide"],
+      label: "Reference",
+      items: ["reference/schema", "reference/posting"],
     },
     {
       type: "category",
-      label: "Reference",
-      items: ["reference/schema", "reference/posting"],
+      label: "Teach With Greenfield",
+      items: ["instructor-guide"],
     },
     {
       type: "category",

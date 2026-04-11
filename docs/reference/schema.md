@@ -1,11 +1,14 @@
 ---
 title: Schema Reference
-description: Compact reference for the 55 implemented Greenfield tables and key column patterns.
+description: Student-friendly reference for the 55 implemented Greenfield tables, key columns, and join patterns.
 sidebar_label: Schema Reference
 ---
 
 # Schema Reference
 
+Use this page when you need to confirm which tables belong to each business area, which columns matter most for joins, and how process documents connect across the dataset.
+
+Students, instructors, and analysts can use this page alongside the process guides, analytics pages, and SQL work.
 
 The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUMNS`.
 
@@ -23,7 +26,7 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 | Organizational planning | `CostCenter`, `Budget` | 2 |
 | Total |  | 55 |
 
-## Design Patterns That Matter
+## Design Patterns
 
 - Header-line tables are used for orders, shipments, invoices, purchase orders, goods receipts, purchase invoices, material issues, production completions, and payroll registers.
 - `GLEntry` is the reporting bridge between operational events and accounting analysis.

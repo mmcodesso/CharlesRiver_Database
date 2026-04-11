@@ -7,14 +7,14 @@ sidebar_label: Docs Home
 
 # Documentation Home
 
-Greenfield Accounting Dataset is a synthetic business database for accounting analytics courses. This site is organized to help students understand the business first, then move into tables, SQL, Excel, controls, and teaching use.
+Greenfield Accounting Dataset is a synthetic business database for accounting analytics courses. This site is organized to help students understand the business first, then use the schema and posting references alongside SQL, Excel, controls, and teaching materials.
 
 ## Start by Audience
 
 | If you are a... | Start here | Then continue with |
 |---|---|---|
-| Student | [Student Quick Start](student-quickstart.md) | [Company Story](company-story.md), [Process Flows](process-flows.md), [Analytics Hub](analytics/index.md) |
-| Instructor | [Instructor Adoption Guide](instructor-guide.md) | [Student Quick Start](student-quickstart.md), [Analytics Hub](analytics/index.md), [Schema Reference](reference/schema.md) |
+| Student | [Student Quick Start](student-quickstart.md) | [Company Story](company-story.md), [Process Flows](process-flows.md), [Schema Reference](reference/schema.md), [Posting Reference](reference/posting.md), [Analytics Hub](analytics/index.md) |
+| Instructor | [Instructor Adoption Guide](instructor-guide.md) | [Student Quick Start](student-quickstart.md), [Schema Reference](reference/schema.md), [Posting Reference](reference/posting.md), [Analytics Hub](analytics/index.md) |
 | Analyst | [Dataset Guide](dataset-overview.md) | [Analytics Hub](analytics/index.md), [Schema Reference](reference/schema.md), [Posting Reference](reference/posting.md) |
 | Contributor | [Technical Guide](technical-guide.md) | [Code Architecture](code-architecture.md), [Schema Reference](reference/schema.md), [Posting Reference](reference/posting.md) |
 
@@ -26,9 +26,11 @@ If you are new to the dataset, use this sequence:
 2. [Company Story](company-story.md)
 3. [Process Flows](process-flows.md)
 4. [Dataset Guide](dataset-overview.md)
-5. [Analytics Hub](analytics/index.md)
+5. [Schema Reference](reference/schema.md)
+6. [Posting Reference](reference/posting.md)
+7. [Analytics Hub](analytics/index.md)
 
-That path is designed to keep students out of implementation detail until they actually need it.
+That path gives students the business context first, then the table and posting references they need to trace documents into the ledger.
 
 ## Site Map
 
@@ -59,14 +61,14 @@ That path is designed to keep students out of implementation detail until they a
 - [Excel Guide](analytics/excel-guide.md)
 - [Analytics Cases](analytics/cases/index.md)
 
-### Teach With Greenfield
-
-- [Instructor Adoption Guide](instructor-guide.md)
-
 ### Reference
 
 - [Schema Reference](reference/schema.md)
 - [Posting Reference](reference/posting.md)
+
+### Teach With Greenfield
+
+- [Instructor Adoption Guide](instructor-guide.md)
 
 ### Technical
 

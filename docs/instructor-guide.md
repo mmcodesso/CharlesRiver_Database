@@ -52,7 +52,7 @@ Suggested student sequence:
 - Make the distinction explicit to students. Some audit queries are supposed to return exceptions only when the anomaly-enabled build is used.
 - Use [Dataset Delivery and Build Setup](/docs/technical/dataset-delivery) for the exact local build commands and profile choices.
 
-## What to Share With Students vs Keep as Instructor Reference
+## What to Share With Students vs Keep for Teaching Setup
 
 ### Student-ready material
 
@@ -62,6 +62,8 @@ Share these directly with students:
 - [Company Story](company-story.md)
 - [Dataset Guide](dataset-overview.md)
 - [Process Flows](process-flows.md)
+- [Schema Reference](reference/schema.md)
+- [Posting Reference](reference/posting.md)
 - [Analytics Hub](analytics/index.md)
 - [Financial Analytics](analytics/financial.md)
 - [Managerial Analytics](analytics/managerial.md)
@@ -70,13 +72,11 @@ Share these directly with students:
 - [Excel Guide](analytics/excel-guide.md)
 - [Analytics Cases](analytics/cases/index.md)
 
-### Instructor and advanced-reference material
+### Instructor-only or setup-focused material
 
-Use these when you need implementation detail, schema precision, or generator context:
+Use these when you need local build setup, generator context, or release-planning detail:
 
 - [Dataset Delivery and Build Setup](/docs/technical/dataset-delivery)
-- [Schema Reference](reference/schema.md)
-- [Posting Reference](reference/posting.md)
 - [Row Counts and Volume](reference/row-volume.md)
 - [Technical Guide](technical-guide.md)
 - [Code Architecture](code-architecture.md)
@@ -118,4 +118,4 @@ This sequence compresses cleanly into fewer modules or expands into a full semes
 
 - Use [Student Quick Start](student-quickstart.md) as the student-facing launch page.
 - Use [Analytics Hub](analytics/index.md) to choose the first topic pack.
-- Use [Schema Reference](reference/schema.md) when you need exact table-level detail.
+- Use [Schema Reference](reference/schema.md) and [Posting Reference](reference/posting.md) as shared student and instructor references during assignments.

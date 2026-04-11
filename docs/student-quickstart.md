@@ -58,10 +58,13 @@ It is designed for accounting analytics classes where you need to connect proces
 
 If you do not want to start from a blank page, use the guided walkthroughs in [Analytics Cases](analytics/cases/index.md). They pair process context with starter SQL and interpretation prompts.
 
-## When You Need More Technical Detail
+## Use the Reference Pages While You Work
 
-Most students do not need the technical reference first. Reach for it only when an assignment requires it:
+These pages are normal student resources when you need to trace a process, check a join path, or confirm what posts to the ledger:
 
 - [Schema Reference](reference/schema.md)
 - [Posting Reference](reference/posting.md)
+
+Use the deeper system page only when an assignment needs generator detail:
+
 - [Technical Guide](technical-guide.md)

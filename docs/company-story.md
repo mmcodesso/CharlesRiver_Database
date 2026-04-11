@@ -4,10 +4,8 @@ description: Business context for students before they move into tables, SQL, or
 sidebar_label: Company Story
 ---
 
-# Company Story
+# The Company
 
-
-## The Company in Plain Language
 
 Greenfield Home Furnishings, Inc. is a fictional mid-sized U.S. company that sells home furnishings to commercial buyers, interior-design firms, and repeat regional customers.
 

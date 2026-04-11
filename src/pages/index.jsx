@@ -7,7 +7,7 @@ import styles from "./index.module.css";
 const audienceCards = [
   {
     title: "Students",
-    text: "Start with the company story, process guides, and starter SQL or Excel paths without getting pulled into implementation detail.",
+    text: "Start with the company story, process guides, schema reference, and posting reference before moving into starter SQL or Excel paths.",
     href: "/docs/student-quickstart",
     cta: "Open the student quick start",
   },
@@ -121,7 +121,7 @@ export default function Home() {
             </Link>
             <Link className={styles.pathCard} to="/docs/reference/schema">
               <strong>Reference the model</strong>
-              <span>Schema groups, posting behavior, and technical scale expectations.</span>
+              <span>Schema groups, join paths, and posting behavior for student and instructor work.</span>
             </Link>
           </div>
         </section>
