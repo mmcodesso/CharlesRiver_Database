@@ -92,6 +92,7 @@ from greenfield_dataset.validations import (
     validate_phase18,
     validate_phase19,
     validate_phase20,
+    validate_phase21,
 )
 
 
@@ -269,7 +270,7 @@ def build_phase7(config_path: str | Path = "config/settings.yaml") -> Generation
 
 
 def build_phase8(config_path: str | Path = "config/settings.yaml") -> GenerationContext:
-    context = build_phase20(config_path)
+    context = build_phase21(config_path)
     inject_anomalies(context)
     validate_phase8(context)
     if context.settings.export_sqlite:
@@ -594,6 +595,16 @@ def build_phase20(
     return context
 
 
+def build_phase21(
+    config_path: str | Path = "config/settings.yaml",
+    validation_scope: str = "full",
+) -> GenerationContext:
+    context = build_phase20(config_path, validation_scope=validation_scope)
+    validate_phase21(context, scope=validation_scope)
+    export_validation_report(context)
+    return context
+
+
 def fiscal_months(context: GenerationContext) -> Iterable[tuple[int, int]]:
     start = pd.Timestamp(context.settings.fiscal_year_start)
     end = pd.Timestamp(context.settings.fiscal_year_end)
@@ -709,7 +720,11 @@ def build_full_dataset(
             issue_line_count_before = len(context.tables["MaterialIssueLine"])
             completion_line_count_before = len(context.tables["ProductionCompletionLine"])
             work_order_close_count_before = len(context.tables["WorkOrderClose"])
+            shift_roster_count_before = len(context.tables["EmployeeShiftRoster"])
+            absence_count_before = len(context.tables["EmployeeAbsence"])
+            overtime_approval_count_before = len(context.tables["OvertimeApproval"])
             time_clock_count_before = len(context.tables["TimeClockEntry"])
+            time_clock_punch_count_before = len(context.tables["TimeClockPunch"])
             labor_entry_count_before = len(context.tables["LaborTimeEntry"])
             payroll_register_count_before = len(context.tables["PayrollRegister"])
             payroll_payment_count_before = len(context.tables["PayrollPayment"])
@@ -820,11 +835,15 @@ def build_full_dataset(
                 capacity_state["open_backlog_hours"],
             )
             LOGGER.info(
-                "PAYROLL CHECKPOINT | %s-%02d | periods_processed=%s | time_clock_entries_created=%s | labor_entries_created=%s | payroll_registers_created=%s | payroll_payments_created=%s | liability_remittances_created=%s | direct_labor_reclass_amount=%s | manufacturing_overhead_reclass_amount=%s",
+                "PAYROLL CHECKPOINT | %s-%02d | periods_processed=%s | shift_rosters_created=%s | absences_created=%s | overtime_approvals_created=%s | time_clock_entries_created=%s | punch_rows_created=%s | labor_entries_created=%s | payroll_registers_created=%s | payroll_payments_created=%s | liability_remittances_created=%s | direct_labor_reclass_amount=%s | manufacturing_overhead_reclass_amount=%s",
                 year,
                 month,
                 int(payroll_state["periods_processed"]),
+                len(context.tables["EmployeeShiftRoster"]) - shift_roster_count_before,
+                len(context.tables["EmployeeAbsence"]) - absence_count_before,
+                len(context.tables["OvertimeApproval"]) - overtime_approval_count_before,
                 len(context.tables["TimeClockEntry"]) - time_clock_count_before,
+                len(context.tables["TimeClockPunch"]) - time_clock_punch_count_before,
                 len(context.tables["LaborTimeEntry"]) - labor_entry_count_before,
                 len(context.tables["PayrollRegister"]) - payroll_register_count_before,
                 len(context.tables["PayrollPayment"]) - payroll_payment_count_before,
@@ -865,7 +884,11 @@ def build_full_dataset(
                 "WorkOrder",
                 "WorkOrderOperation",
                 "WorkOrderOperationSchedule",
+                "EmployeeShiftRoster",
+                "EmployeeAbsence",
+                "OvertimeApproval",
                 "TimeClockEntry",
+                "TimeClockPunch",
                 "LaborTimeEntry",
                 "PayrollRegister",
                 "Shipment",
@@ -906,7 +929,7 @@ def build_full_dataset(
         log_table_counts(context, ("JournalEntry", "GLEntry"), "year-end close")
 
     with logged_step("Validate clean final dataset"):
-        log_validation_results("phase20", validate_phase20(context, scope=validation_scope))
+        log_validation_results("phase21", validate_phase21(context, scope=validation_scope))
 
     with logged_step("Inject configured anomalies"):
         inject_anomalies(context)
@@ -956,7 +979,7 @@ def build_full_dataset(
 
 
 def print_summary(context: GenerationContext) -> None:
-    row_counts = context.validation_results["phase20"]["row_counts"]
+    row_counts = context.validation_results["phase21"]["row_counts"]
     print("Full dataset generated.")
     print(f"Fiscal range: {context.settings.fiscal_year_start} to {context.settings.fiscal_year_end}")
     print(f"Accounts: {row_counts['Account']}")
@@ -970,6 +993,9 @@ def print_summary(context: GenerationContext) -> None:
     print(f"Routing operations: {row_counts['RoutingOperation']}")
     print(f"Shift definitions: {row_counts['ShiftDefinition']}")
     print(f"Employee shift assignments: {row_counts['EmployeeShiftAssignment']}")
+    print(f"Employee shift rosters: {row_counts['EmployeeShiftRoster']}")
+    print(f"Employee absences: {row_counts['EmployeeAbsence']}")
+    print(f"Overtime approvals: {row_counts['OvertimeApproval']}")
     print(f"Customers: {row_counts['Customer']}")
     print(f"Suppliers: {row_counts['Supplier']}")
     print(f"Journal entries: {row_counts['JournalEntry']}")
@@ -1000,13 +1026,14 @@ def print_summary(context: GenerationContext) -> None:
     print(f"Disbursements: {row_counts['DisbursementPayment']}")
     print(f"Payroll periods: {row_counts['PayrollPeriod']}")
     print(f"Time-clock entries: {row_counts['TimeClockEntry']}")
+    print(f"Time-clock punches: {row_counts['TimeClockPunch']}")
     print(f"Labor time entries: {row_counts['LaborTimeEntry']}")
     print(f"Payroll registers: {row_counts['PayrollRegister']}")
     print(f"Payroll register lines: {row_counts['PayrollRegisterLine']}")
     print(f"Payroll payments: {row_counts['PayrollPayment']}")
     print(f"Payroll liability remittances: {row_counts['PayrollLiabilityRemittance']}")
     print(f"GL entries: {row_counts['GLEntry']}")
-    print(f"GL balance exceptions: {context.validation_results['phase20']['gl_balance']['exception_count']}")
+    print(f"GL balance exceptions: {context.validation_results['phase21']['gl_balance']['exception_count']}")
     print(f"Anomalies logged: {len(context.anomaly_log)}")
     print(f"SQLite export: {context.settings.sqlite_path}")
     print(f"Excel export: {context.settings.excel_path}")

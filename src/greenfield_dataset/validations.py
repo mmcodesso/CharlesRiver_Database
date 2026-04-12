@@ -45,12 +45,15 @@ from greenfield_dataset.p2p import (
 )
 from greenfield_dataset.payroll import (
     approved_time_clock_hours_by_employee_period,
+    employee_shift_roster_lookup,
+    overtime_approval_lookup,
     monthly_direct_labor_reclass_amount,
     monthly_factory_overhead_amount,
     monthly_manufacturing_overhead_pool_amount,
     payroll_liability_recorded_amounts,
     payroll_liability_remitted_amounts,
     time_clock_entry_lookup,
+    time_clock_punches_by_entry,
 )
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
@@ -2116,6 +2119,7 @@ def validate_time_clock_controls(context: GenerationContext) -> dict[str, Any]:
         employees.loc[employees["PayClass"].eq("Salary"), "EmployeeID"].astype(int).tolist()
     )
     shift_lookup = shift_definitions.set_index("ShiftDefinitionID").to_dict("index") if not shift_definitions.empty else {}
+    roster_lookup = employee_shift_roster_lookup(context)
     time_clock_lookup = time_clock_entry_lookup(context)
     labor_lookup = labor_entries.set_index("LaborTimeEntryID").to_dict("index") if not labor_entries.empty else {}
     work_order_lookup = work_orders.set_index("WorkOrderID").to_dict("index") if not work_orders.empty else {}
@@ -2162,9 +2166,17 @@ def validate_time_clock_controls(context: GenerationContext) -> dict[str, Any]:
                 })
 
             shift_definition = shift_lookup.get(int(row.ShiftDefinitionID)) if pd.notna(row.ShiftDefinitionID) else None
-            if shift_definition is not None:
+            roster = roster_lookup.get(int(row.EmployeeShiftRosterID)) if pd.notna(row.EmployeeShiftRosterID) else None
+            if roster is not None:
+                shift_start = pd.Timestamp(f"{row.WorkDate} {roster['ScheduledStartTime']}")
+                shift_end = pd.Timestamp(f"{row.WorkDate} {roster['ScheduledEndTime']}")
+            elif shift_definition is not None:
                 shift_start = pd.Timestamp(f"{row.WorkDate} {shift_definition['StartTime']}")
                 shift_end = pd.Timestamp(f"{row.WorkDate} {shift_definition['EndTime']}")
+            else:
+                shift_start = None
+                shift_end = None
+            if shift_start is not None and shift_end is not None:
                 clock_in = pd.Timestamp(row.ClockInTime)
                 clock_out = pd.Timestamp(row.ClockOutTime)
                 if abs((clock_in - shift_start).total_seconds() / 60.0) > 45:
@@ -2281,6 +2293,250 @@ def validate_time_clock_controls(context: GenerationContext) -> dict[str, Any]:
                     "type": "hourly_register_without_clock_coverage",
                     "payroll_register_id": int(register.PayrollRegisterID),
                     "message": f"Hourly payroll register {int(register.PayrollRegisterID)} has pay but no approved time-clock coverage.",
+                })
+
+    return {
+        "exception_count": len(exceptions),
+        "exceptions": exceptions,
+    }
+
+
+def validate_workforce_planning_controls(context: GenerationContext) -> dict[str, Any]:
+    employees = context.tables["Employee"]
+    assignments = context.tables["EmployeeShiftAssignment"]
+    rosters = context.tables["EmployeeShiftRoster"]
+    absences = context.tables["EmployeeAbsence"]
+    time_clocks = context.tables["TimeClockEntry"]
+    punches = context.tables["TimeClockPunch"]
+    work_center_calendar = context.tables["WorkCenterCalendar"]
+    exceptions: list[dict[str, Any]] = []
+
+    if employees.empty or rosters.empty:
+        return {"exception_count": 0, "exceptions": []}
+
+    employee_lookup = employees.set_index("EmployeeID").to_dict("index")
+    roster_lookup = employee_shift_roster_lookup(context)
+    overtime_lookup = overtime_approval_lookup(context)
+    punches_by_entry = time_clock_punches_by_entry(context)
+    assignments_by_employee: dict[int, list[dict[str, Any]]] = defaultdict(list)
+    if not assignments.empty:
+        for row in assignments.sort_values(["EmployeeID", "EffectiveStartDate", "EmployeeShiftAssignmentID"]).to_dict(orient="records"):
+            assignments_by_employee[int(row["EmployeeID"])].append(row)
+    calendar_lookup: dict[tuple[int, str], dict[str, Any]] = {}
+    if not work_center_calendar.empty:
+        calendar_lookup = {
+            (int(row.WorkCenterID), str(row.CalendarDate)): row._asdict()
+            for row in work_center_calendar.itertuples(index=False)
+        }
+
+    absent_roster_ids = set()
+    for roster in rosters.itertuples(index=False):
+        roster_id = int(roster.EmployeeShiftRosterID)
+        employee_id = int(roster.EmployeeID)
+        work_date = pd.Timestamp(roster.RosterDate)
+        employee = employee_lookup.get(employee_id)
+        if employee is None:
+            exceptions.append({
+                "type": "roster_missing_employee",
+                "employee_shift_roster_id": roster_id,
+                "message": f"Shift roster {roster_id} references a missing employee.",
+            })
+            continue
+        if str(employee["PayClass"]) != "Hourly":
+            exceptions.append({
+                "type": "salary_employee_roster",
+                "employee_shift_roster_id": roster_id,
+                "message": f"Shift roster {roster_id} was generated for salaried employee {employee_id}.",
+            })
+        hire_date = pd.Timestamp(employee["HireDate"])
+        termination_date = pd.Timestamp(employee["TerminationDate"]) if pd.notna(employee["TerminationDate"]) else None
+        if work_date < hire_date or (termination_date is not None and work_date > termination_date):
+            exceptions.append({
+                "type": "roster_outside_employment_dates",
+                "employee_shift_roster_id": roster_id,
+                "message": f"Shift roster {roster_id} falls outside employee {employee_id} employment dates.",
+            })
+        matching_assignment = None
+        for assignment in assignments_by_employee.get(employee_id, []):
+            start_date = pd.Timestamp(assignment["EffectiveStartDate"])
+            end_date = pd.Timestamp(assignment["EffectiveEndDate"])
+            if start_date <= work_date <= end_date:
+                matching_assignment = assignment
+                break
+        if matching_assignment is None:
+            exceptions.append({
+                "type": "roster_outside_shift_assignment",
+                "employee_shift_roster_id": roster_id,
+                "message": f"Shift roster {roster_id} falls outside the employee shift-assignment range.",
+            })
+        if pd.notna(roster.WorkCenterID):
+            calendar_row = calendar_lookup.get((int(roster.WorkCenterID), str(roster.RosterDate)))
+            if calendar_row is None or int(calendar_row["IsWorkingDay"]) != 1:
+                exceptions.append({
+                    "type": "roster_on_nonworking_day",
+                    "employee_shift_roster_id": roster_id,
+                    "message": f"Shift roster {roster_id} falls on a non-working day for work center {int(roster.WorkCenterID)}.",
+                })
+        if str(roster.RosterStatus) == "Absent":
+            absent_roster_ids.add(roster_id)
+
+    for absence in absences.itertuples(index=False):
+        employee = employee_lookup.get(int(absence.EmployeeID))
+        roster = roster_lookup.get(int(absence.EmployeeShiftRosterID)) if pd.notna(absence.EmployeeShiftRosterID) else None
+        if employee is None or roster is None:
+            exceptions.append({
+                "type": "absence_missing_roster_or_employee",
+                "employee_absence_id": int(absence.EmployeeAbsenceID),
+                "message": f"Employee absence {int(absence.EmployeeAbsenceID)} is missing a valid roster or employee link.",
+            })
+            continue
+        if int(roster["EmployeeID"]) != int(absence.EmployeeID) or str(roster["RosterDate"]) != str(absence.AbsenceDate):
+            exceptions.append({
+                "type": "absence_roster_mismatch",
+                "employee_absence_id": int(absence.EmployeeAbsenceID),
+                "message": f"Employee absence {int(absence.EmployeeAbsenceID)} does not match its linked roster row.",
+            })
+
+    if not punches.empty:
+        grouped = punches.sort_values(["EmployeeID", "WorkDate", "SequenceNumber", "TimeClockPunchID"]).groupby(["EmployeeID", "WorkDate"])
+        for (employee_id, work_date), group in grouped:
+            sequence = group["SequenceNumber"].astype(int).tolist()
+            if sequence != list(range(1, len(sequence) + 1)):
+                exceptions.append({
+                    "type": "noncontiguous_punch_sequence",
+                    "employee_id": int(employee_id),
+                    "work_date": str(work_date),
+                    "message": f"Punch sequence for employee {int(employee_id)} on {work_date} is not contiguous.",
+                })
+            timestamps = pd.to_datetime(group["PunchTimestamp"], errors="coerce")
+            if timestamps.isna().any() or not timestamps.is_monotonic_increasing:
+                exceptions.append({
+                    "type": "invalid_punch_order",
+                    "employee_id": int(employee_id),
+                    "work_date": str(work_date),
+                    "message": f"Punch timestamps for employee {int(employee_id)} on {work_date} are invalid or out of order.",
+                })
+            punch_types = group.sort_values("SequenceNumber")["PunchType"].astype(str).tolist()
+            if punch_types not in (["Clock In", "Clock Out"], ["Clock In", "Meal Start", "Meal End", "Clock Out"]):
+                exceptions.append({
+                    "type": "invalid_punch_pattern",
+                    "employee_id": int(employee_id),
+                    "work_date": str(work_date),
+                    "message": f"Punch pattern for employee {int(employee_id)} on {work_date} is invalid: {punch_types}.",
+                })
+            roster_ids = group["EmployeeShiftRosterID"].dropna().astype(int).unique().tolist()
+            if not roster_ids:
+                exceptions.append({
+                    "type": "punch_without_roster",
+                    "employee_id": int(employee_id),
+                    "work_date": str(work_date),
+                    "message": f"Punches exist for employee {int(employee_id)} on {work_date} without a linked roster row.",
+                })
+
+    for row in time_clocks.itertuples(index=False):
+        roster_id = None if pd.isna(row.EmployeeShiftRosterID) else int(row.EmployeeShiftRosterID)
+        roster = roster_lookup.get(roster_id) if roster_id is not None else None
+        if roster is None:
+            exceptions.append({
+                "type": "time_clock_missing_roster",
+                "time_clock_entry_id": int(row.TimeClockEntryID),
+                "message": f"Time-clock entry {int(row.TimeClockEntryID)} does not link to a valid shift roster row.",
+            })
+            continue
+        if int(roster["EmployeeID"]) != int(row.EmployeeID) or str(roster["RosterDate"]) != str(row.WorkDate):
+            exceptions.append({
+                "type": "time_clock_roster_mismatch",
+                "time_clock_entry_id": int(row.TimeClockEntryID),
+                "message": f"Time-clock entry {int(row.TimeClockEntryID)} does not match its linked shift roster row.",
+            })
+        recorded_hours = round(float(row.RegularHours) + float(row.OvertimeHours), 2)
+        scheduled_hours = round(float(roster["ScheduledHours"]), 2)
+        if recorded_hours > scheduled_hours + 0.02 and pd.isna(row.OvertimeApprovalID):
+            exceptions.append({
+                "type": "overtime_without_approval",
+                "time_clock_entry_id": int(row.TimeClockEntryID),
+                "message": f"Time-clock entry {int(row.TimeClockEntryID)} exceeds rostered hours without overtime approval.",
+            })
+        if pd.notna(row.OvertimeApprovalID):
+            approval = overtime_lookup.get(int(row.OvertimeApprovalID))
+            if approval is None:
+                exceptions.append({
+                    "type": "missing_overtime_approval",
+                    "time_clock_entry_id": int(row.TimeClockEntryID),
+                    "message": f"Time-clock entry {int(row.TimeClockEntryID)} references a missing overtime approval.",
+                })
+            else:
+                if int(approval["EmployeeID"]) != int(row.EmployeeID) or str(approval["WorkDate"]) != str(row.WorkDate):
+                    exceptions.append({
+                        "type": "overtime_approval_mismatch",
+                        "time_clock_entry_id": int(row.TimeClockEntryID),
+                        "message": f"Overtime approval {int(row.OvertimeApprovalID)} does not match the employee/date on time-clock entry {int(row.TimeClockEntryID)}.",
+                    })
+                if float(approval["ApprovedHours"]) + 0.02 < float(row.OvertimeHours):
+                    exceptions.append({
+                        "type": "insufficient_overtime_approval_hours",
+                        "time_clock_entry_id": int(row.TimeClockEntryID),
+                        "message": f"Overtime approval {int(row.OvertimeApprovalID)} is below recorded overtime hours on entry {int(row.TimeClockEntryID)}.",
+                    })
+        punch_rows = punches_by_entry.get(int(row.TimeClockEntryID), [])
+        if not punch_rows:
+            exceptions.append({
+                "type": "time_clock_without_punches",
+                "time_clock_entry_id": int(row.TimeClockEntryID),
+                "message": f"Time-clock entry {int(row.TimeClockEntryID)} does not reconcile to raw punch rows.",
+            })
+            continue
+        ordered_punches = sorted(punch_rows, key=lambda item: (int(item["SequenceNumber"]), int(item["TimeClockPunchID"])))
+        first_punch = ordered_punches[0]
+        last_punch = ordered_punches[-1]
+        if str(first_punch["PunchType"]) != "Clock In" or str(last_punch["PunchType"]) != "Clock Out":
+            exceptions.append({
+                "type": "time_clock_punch_boundary_mismatch",
+                "time_clock_entry_id": int(row.TimeClockEntryID),
+                "message": f"Time-clock entry {int(row.TimeClockEntryID)} does not begin with Clock In and end with Clock Out punch types.",
+            })
+        if str(first_punch["PunchTimestamp"]) != str(row.ClockInTime) or str(last_punch["PunchTimestamp"]) != str(row.ClockOutTime):
+            exceptions.append({
+                "type": "time_clock_punch_timestamp_mismatch",
+                "time_clock_entry_id": int(row.TimeClockEntryID),
+                "message": f"Time-clock entry {int(row.TimeClockEntryID)} does not reconcile to its first/last punch timestamps.",
+            })
+        meal_gap_minutes = 0.0
+        for start_punch, end_punch in zip(ordered_punches, ordered_punches[1:], strict=False):
+            if str(start_punch["PunchType"]) == "Meal Start" and str(end_punch["PunchType"]) == "Meal End":
+                meal_gap_minutes += (
+                    pd.Timestamp(end_punch["PunchTimestamp"]) - pd.Timestamp(start_punch["PunchTimestamp"])
+                ).total_seconds() / 60.0
+        if round(meal_gap_minutes, 2) != round(float(row.BreakMinutes), 2):
+            exceptions.append({
+                "type": "break_minutes_punch_mismatch",
+                "time_clock_entry_id": int(row.TimeClockEntryID),
+                "message": f"Time-clock entry {int(row.TimeClockEntryID)} does not reconcile break minutes to meal punches.",
+            })
+
+    if absent_roster_ids:
+        time_clock_roster_ids = pd.to_numeric(time_clocks["EmployeeShiftRosterID"], errors="coerce").astype("Int64")
+        absent_time_clocks = time_clocks[
+            time_clock_roster_ids.notna()
+            & time_clock_roster_ids.isin(absent_roster_ids)
+        ]
+        for row in absent_time_clocks.head(20).itertuples(index=False):
+            exceptions.append({
+                "type": "absence_with_worked_time",
+                "time_clock_entry_id": int(row.TimeClockEntryID),
+                "message": f"Absent roster row {int(row.EmployeeShiftRosterID)} still has worked time.",
+            })
+        punch_roster_ids = pd.to_numeric(punches["EmployeeShiftRosterID"], errors="coerce").astype("Int64")
+        absent_punches = punches[
+            punch_roster_ids.notna()
+            & punch_roster_ids.isin(absent_roster_ids)
+        ]
+        if not absent_punches.empty:
+            for row in absent_punches.head(20).itertuples(index=False):
+                exceptions.append({
+                    "type": "absence_with_punches",
+                    "time_clock_punch_id": int(row.TimeClockPunchID),
+                    "message": f"Absent roster row {int(row.EmployeeShiftRosterID)} still has punch activity.",
                 })
 
     return {
@@ -2878,6 +3134,58 @@ def validate_phase20(
     return phase20_results
 
 
+def validate_phase21(
+    context: GenerationContext,
+    scope: str = "full",
+    store: bool = True,
+) -> dict[str, Any]:
+    results = validate_phase20(context, scope=scope, store=False)
+    exceptions = list(results["exceptions"])
+
+    normalized_scope = str(scope).strip().lower()
+    workforce_planning_controls: dict[str, Any] = {"exception_count": 0, "exceptions": []}
+    if normalized_scope in {"operational", "full"}:
+        workforce_planning_controls = validate_workforce_planning_controls(context)
+        if workforce_planning_controls["exception_count"]:
+            exceptions.append(
+                f"Workforce planning control exceptions: {workforce_planning_controls['exception_count']}."
+            )
+
+    phase21_results: dict[str, Any] = {
+        "row_counts": {table: int(len(df)) for table, df in context.tables.items()},
+        "exceptions": exceptions,
+        "validation_scope": normalized_scope,
+        "gl_balance": results["gl_balance"],
+        "trial_balance_difference": results["trial_balance_difference"],
+        "account_rollforward": results["account_rollforward"],
+        "o2c_controls": results["o2c_controls"],
+        "p2p_controls": results["p2p_controls"],
+        "journal_controls": results["journal_controls"],
+        "manufacturing_controls": results["manufacturing_controls"],
+        "payroll_controls": results["payroll_controls"],
+        "routing_controls": results["routing_controls"],
+        "capacity_controls": results["capacity_controls"],
+        "time_clock_controls": results["time_clock_controls"],
+        "master_data_controls": results["master_data_controls"],
+        "workforce_planning_controls": workforce_planning_controls,
+    }
+    if store:
+        context.validation_results["phase21"] = phase21_results
+        context.validation_results["phase20"] = phase21_results
+        context.validation_results["phase19"] = phase21_results
+        context.validation_results["phase18"] = phase21_results
+        context.validation_results["phase17"] = phase21_results
+        context.validation_results["phase16"] = phase21_results
+        context.validation_results["phase15_2"] = phase21_results
+        context.validation_results["phase15"] = phase21_results
+        context.validation_results["phase14"] = phase21_results
+        context.validation_results["phase13"] = phase21_results
+        context.validation_results["phase12"] = phase21_results
+        context.validation_results["phase11"] = phase21_results
+        context.validation_results["phase9"] = phase21_results
+    return phase21_results
+
+
 def validate_phase12(context: GenerationContext, store: bool = True) -> dict[str, Any]:
     results = validate_phase15(context, store=False)
     if store:
@@ -2900,7 +3208,7 @@ def validate_phase9(context: GenerationContext, store: bool = True) -> dict[str,
 
 
 def validate_phase8(context: GenerationContext, scope: str = "full") -> dict[str, Any]:
-    results = validate_phase20(context, scope=scope, store=False)
+    results = validate_phase21(context, scope=scope, store=False)
     exceptions = list(results["exceptions"])
 
     if context.settings.anomaly_mode != "none" and not context.anomaly_log:
@@ -2922,6 +3230,7 @@ def validate_phase8(context: GenerationContext, scope: str = "full") -> dict[str
         "capacity_controls": results["capacity_controls"],
         "time_clock_controls": results.get("time_clock_controls", {"exception_count": 0, "exceptions": []}),
         "master_data_controls": results.get("master_data_controls", {"exception_count": 0, "exceptions": []}),
+        "workforce_planning_controls": results.get("workforce_planning_controls", {"exception_count": 0, "exceptions": []}),
     }
     context.validation_results["phase8"] = phase8_results
     return phase8_results

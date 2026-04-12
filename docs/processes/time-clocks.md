@@ -12,6 +12,10 @@ This page is about the workforce side of the story: when employees were expected
 flowchart LR
     SD[ShiftDefinition]
     ESA[EmployeeShiftAssignment]
+    ESR[EmployeeShiftRoster]
+    ABS[EmployeeAbsence]
+    TCP[TimeClockPunch]
+    OTA[OvertimeApproval]
     TCE[TimeClockEntry]
     AE[AttendanceException]
     LTE[LaborTimeEntry]
@@ -23,7 +27,12 @@ flowchart LR
     GL[GLEntry]
 
     SD --> ESA
-    ESA --> TCE
+    ESA --> ESR
+    ESR --> ABS
+    ESR --> TCP
+    ESR --> TCE
+    OTA --> TCE
+    TCP --> TCE
     WOO --> TCE
     TCE --> LTE
     TCE --> PR
@@ -57,9 +66,36 @@ Main table:
 
 - `EmployeeShiftAssignment`
 
-### 3. Record approved daily time clocks
+### 3. Build the daily shift roster
 
-For each worked day, the dataset records one approved `TimeClockEntry` row that captures the daily attendance summary:
+Greenfield now adds a daily planned roster beneath the approved daily time summary. The roster tells students who was supposed to work, on which date, in which work center, and for how many scheduled hours.
+
+Main table:
+
+- `EmployeeShiftRoster`
+
+### 4. Capture absences and overtime approvals
+
+The dataset now separates planned-shift exceptions from worked-time records:
+
+- `EmployeeAbsence` records planned absence from the roster
+- `OvertimeApproval` records approved overtime support when worked hours exceed the planned shift
+
+Main tables:
+
+- `EmployeeAbsence`
+- `OvertimeApproval`
+
+### 5. Record raw punches and derive approved daily time clocks
+
+For each worked day, Greenfield now records raw badge-style punches first. Those punches roll up into one approved `TimeClockEntry` row that captures the daily attendance summary:
+
+- `Clock In`
+- `Meal Start`
+- `Meal End`
+- `Clock Out`
+
+The approved daily summary then carries:
 
 - `ClockInTime`
 - `ClockOutTime`
@@ -74,9 +110,10 @@ For direct manufacturing workers, the same daily clock can also point to:
 
 Main table:
 
+- `TimeClockPunch`
 - `TimeClockEntry`
 
-### 4. Link approved attendance to labor support
+### 6. Link approved attendance to labor support
 
 Approved attendance does not stay isolated in the time-clock table. It feeds `LaborTimeEntry`, where direct manufacturing labor can be tied back to the work order, the routing operation, and the supporting time-clock row.
 
@@ -84,7 +121,7 @@ Main table:
 
 - `LaborTimeEntry`
 
-### 5. Use attendance for payroll and costing
+### 7. Use attendance for payroll and costing
 
 Payroll uses approved clock hours as the source for hourly earnings, while manufacturing uses the same support to trace labor into product-cost analysis. Salaried employees remain outside the routine time-clock flow.
 
@@ -93,7 +130,7 @@ Main downstream tables:
 - `PayrollRegister`
 - `PayrollRegisterLine`
 
-### 6. Review exceptions
+### 8. Review exceptions
 
 The clean build keeps attendance exceptions limited, but anomaly mode can add issues such as:
 
@@ -113,6 +150,10 @@ Main table:
 |---|---|
 | `ShiftDefinition` | Standard shift template |
 | `EmployeeShiftAssignment` | Employee-to-shift assignment |
+| `EmployeeShiftRoster` | Daily planned work schedule for hourly employees |
+| `EmployeeAbsence` | Planned absence tied to the rostered shift |
+| `TimeClockPunch` | Raw attendance punch event |
+| `OvertimeApproval` | Approval support for worked overtime |
 | `TimeClockEntry` | Approved daily attendance row for hourly employees |
 | `AttendanceException` | Logged time-and-attendance issues, mainly in anomaly mode |
 | `LaborTimeEntry` | Labor allocation record used for costing and payroll traceability |
@@ -147,10 +188,11 @@ The posting events happen later in the payroll process:
 
 ## What to Notice in the Data
 
-- The clean build uses one approved `TimeClockEntry` row per worked day, not separate punch-in and punch-out event tables.
+- The clean build now includes raw `TimeClockPunch` rows beneath the approved daily `TimeClockEntry`.
 - Salaried employees do not receive routine time-clock rows in the clean build.
 - Hourly payroll earnings use approved time-clock hours as the source for regular and overtime pay.
 - Direct manufacturing time clocks can link to `WorkOrderOperationID`, which makes operation-level labor analytics possible.
+- Daily roster rows make it possible to compare scheduled hours to worked hours, absence hours, and overtime approvals.
 - Attendance exceptions are most useful in anomaly-enabled builds.
 
 ## Subprocess Spotlight: Shift Expectation to Approved Hours
@@ -159,12 +201,16 @@ The posting events happen later in the payroll process:
 flowchart LR
     SD[ShiftDefinition]
     ESA[EmployeeShiftAssignment]
+    ESR[EmployeeShiftRoster]
+    TCP[TimeClockPunch]
     TCE[TimeClockEntry]
     LTE[LaborTimeEntry]
     PR[PayrollRegister]
+    OTA[OvertimeApproval]
     AE[AttendanceException]
 
-    SD --> ESA --> TCE --> LTE
+    SD --> ESA --> ESR --> TCP --> TCE --> LTE
+    ESR --> OTA --> TCE
     TCE --> PR
     TCE --> AE
 ```
@@ -172,7 +218,9 @@ flowchart LR
 This view highlights the main learning path on this page:
 
 - shifts define the expected work pattern
-- approved time clocks show what happened on the day worked
+- rosters define who was scheduled to work that day
+- punches show the raw attendance sequence
+- approved time clocks show the summarized worked day
 - labor support carries that attendance into costing
 - payroll later uses the approved hours for hourly earnings
 - exception analysis sits beside the normal flow as a control lens

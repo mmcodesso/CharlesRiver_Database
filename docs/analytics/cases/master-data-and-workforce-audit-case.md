@@ -24,6 +24,10 @@ This case asks students to test whether operational activity, approvals, and pay
 - `PayrollRegister`
 - `TimeClockEntry`
 - `LaborTimeEntry`
+- `EmployeeShiftRoster`
+- `EmployeeAbsence`
+- `TimeClockPunch`
+- `OvertimeApproval`
 - `PurchaseOrder`
 - `JournalEntry`
 - `greenfield_support.xlsx` sheets:
@@ -38,7 +42,9 @@ This case asks students to test whether operational activity, approvals, and pay
 3. Run [../../../queries/audit/34_current_state_employee_assignment_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/34_current_state_employee_assignment_review.sql).
 4. Run [../../../queries/audit/28_approval_role_review_by_org_position.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/28_approval_role_review_by_org_position.sql).
 5. Run [../../../queries/audit/35_approval_authority_limit_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/35_approval_authority_limit_review.sql).
-6. Open `greenfield_support.xlsx` and filter `AnomalyLog` to the workforce-related anomaly types.
+6. Run [../../../queries/audit/41_roster_after_termination_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/41_roster_after_termination_review.sql).
+7. Run [../../../queries/audit/38_overtime_without_approval_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/38_overtime_without_approval_review.sql).
+8. Open `greenfield_support.xlsx` and filter `AnomalyLog` to the workforce-related anomaly types.
 
 ## Suggested Excel Sequence
 
@@ -53,6 +59,7 @@ This case asks students to test whether operational activity, approvals, and pay
 - The employee master should support both org-structure analysis and transaction-date validity testing.
 - Approval review becomes more meaningful when executive and finance roles are unique and stable.
 - Current-state assignment ownership is a different control question from post-termination transaction activity.
+- Workforce-planning controls now let students test the schedule, punch, absence, and overtime layers separately from the payroll summary.
 - Terminated employees remain in the dataset for audit traceability, but clean operational activity should stop at the termination date.
 
 ## Follow-Up Questions

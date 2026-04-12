@@ -19,10 +19,12 @@ sidebar_label: Analytics Cases
 | [Financial Statement Bridge Case](financial-statement-bridge-case.md) | Clean or default | financial + audit |
 | [Product Portfolio Profitability Case](product-portfolio-profitability-case.md) | Default anomaly-enabled or clean | managerial + financial |
 | [Workforce Cost and Org-Control Case](workforce-cost-and-org-control-case.md) | Default anomaly-enabled | managerial + audit + financial |
+| [Workforce Coverage and Attendance Case](workforce-coverage-and-attendance-case.md) | Default anomaly-enabled or clean | managerial + audit |
 | [Audit Review Pack Case](audit-review-pack-case.md) | Default anomaly-enabled | audit + support workbook |
+| [Attendance Control Audit Case](attendance-control-audit-case.md) | Default anomaly-enabled | audit + support workbook |
 | [Audit Exception Lab](audit-exception-lab.md) | Default anomaly-enabled | audit |
 
-## Suggested Phase 19 Sequence
+## Suggested Phase 19 to Phase 21 Sequence
 
 1. start with the topic page in [Financial Analytics](../financial.md), [Managerial Analytics](../managerial.md), or [Audit Analytics](../audit.md)
 2. run the paired SQL files in order

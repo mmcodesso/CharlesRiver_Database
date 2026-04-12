@@ -39,7 +39,7 @@ The current dataset models a company that:
 - buys finished goods, raw materials, and packaging from suppliers
 - manufactures selected finished goods internally
 - ships, invoices, collects cash, processes returns, and issues credit memos and refunds
-- assigns shifts, records approved daily time clocks for hourly employees, and runs payroll
+- assigns shifts, builds daily rosters, records raw punches and approved daily time clocks for hourly employees, and runs payroll
 - keeps a more realistic employee master with unique executive roles, repeatable frontline roles, and terminated employees retained for history
 - keeps a richer product catalog with collections, style families, materials, finishes, colors, lifecycle status, and launch dates
 - records recurring journals, manufacturing reclasses, and year-end close
@@ -48,7 +48,7 @@ Read [Company Story](company-story.md) for the full narrative version of that op
 
 ## What the Dataset Contains
 
-The current implementation contains **55 tables** across seven areas:
+The current implementation contains **59 tables** across seven areas:
 
 | Area | Example tables | Count |
 |---|---|---:|
@@ -56,7 +56,7 @@ The current implementation contains **55 tables** across seven areas:
 | Order-to-cash | `Customer`, `SalesOrder`, `Shipment`, `SalesInvoice`, `CashReceiptApplication`, `SalesReturn`, `CreditMemo`, `CustomerRefund` | 14 |
 | Procure-to-pay | `Supplier`, `PurchaseRequisition`, `PurchaseOrder`, `GoodsReceipt`, `PurchaseInvoice`, `DisbursementPayment` | 9 |
 | Manufacturing | `BillOfMaterial`, `BillOfMaterialLine`, `WorkCenter`, `WorkCenterCalendar`, `Routing`, `RoutingOperation`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `MaterialIssue`, `ProductionCompletion`, `WorkOrderClose` | 14 |
-| Payroll and time | `ShiftDefinition`, `EmployeeShiftAssignment`, `TimeClockEntry`, `AttendanceException`, `PayrollPeriod`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance` | 10 |
+| Payroll and time | `ShiftDefinition`, `EmployeeShiftAssignment`, `EmployeeShiftRoster`, `EmployeeAbsence`, `OvertimeApproval`, `TimeClockEntry`, `TimeClockPunch`, `AttendanceException`, `PayrollPeriod`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance` | 14 |
 | Master data | `Item`, `Warehouse`, `Employee` | 3 |
 | Organizational planning | `CostCenter`, `Budget` | 2 |
 
@@ -104,6 +104,7 @@ Many business documents use a header table and a line table.
 | `WorkOrderID` | Connect work-order activity across issue, completion, close, and direct labor |
 | `WorkOrderOperationID` | Connect operation-level schedules and direct labor to one work-order operation |
 | `ShiftDefinitionID` | Connect shift templates to employee assignments and time-clock rows |
+| `EmployeeShiftRosterID` | Connect planned roster rows to absences, punch events, overtime approvals, and approved daily time |
 | `TimeClockEntryID` | Connect approved time-clock support to labor allocation and attendance exceptions |
 | `PayrollPeriodID` | Connect labor time, payroll registers, and liability remittances to a pay period |
 | `PayrollRegisterID` | Connect payroll headers to line detail and payroll payments |
@@ -146,7 +147,7 @@ Manufacturing also touches P2P, payroll, and O2C:
 
 ### Payroll path
 
-`ShiftDefinition -> EmployeeShiftAssignment -> TimeClockEntry -> LaborTimeEntry -> PayrollPeriod -> PayrollRegister -> PayrollRegisterLine -> PayrollPayment`
+`ShiftDefinition -> EmployeeShiftAssignment -> EmployeeShiftRoster -> TimeClockPunch -> TimeClockEntry -> LaborTimeEntry -> PayrollPeriod -> PayrollRegister -> PayrollRegisterLine -> PayrollPayment`
 
 Liability clearance is tracked through:
 
@@ -289,7 +290,7 @@ Start with:
 - `CashReceiptApplication` is the authoritative invoice-settlement link in O2C.
 - For P2P traceability, prefer `PurchaseOrderLine.RequisitionID`, `PurchaseInvoiceLine.GoodsReceiptLineID`, and `PurchaseInvoiceLine.AccrualJournalEntryID`.
 - For manufacturing traceability, start from `WorkOrderID`.
-- For time-and-attendance traceability, start from `TimeClockEntryID` or `ShiftDefinitionID`.
+- For time-and-attendance traceability, start from `EmployeeShiftRosterID`, `TimeClockEntryID`, or `ShiftDefinitionID`.
 - For payroll traceability, start from `PayrollPeriodID`, `PayrollRegisterID`, and then move back to `LaborTimeEntry` and `TimeClockEntry` for hourly earnings support.
 - For employee-master review, combine `EmployeeNumber`, `EmploymentStatus`, `TerminationDate`, `JobFamily`, and `JobLevel`.
 - For portfolio review, combine `CollectionName`, `StyleFamily`, `PrimaryMaterial`, `LifecycleStatus`, and `LaunchDate`.
@@ -299,8 +300,8 @@ Start with:
 
 The current model does **not** yet include:
 
-- raw punch-event tables beneath the current approved daily time-clock rows
-- rotating shift rosters or shift-level capacity calendars
+- detailed punch-device geography or biometric-device metadata
+- employee leave-balance accrual history
 - multi-level BOMs or subassemblies
 
 Those topics are future roadmap items, not hidden functionality.

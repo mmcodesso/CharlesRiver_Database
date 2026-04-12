@@ -13,6 +13,10 @@ flowchart LR
     PP[PayrollPeriod]
     SD[ShiftDefinition]
     ESA[EmployeeShiftAssignment]
+    ESR[EmployeeShiftRoster]
+    ABS[EmployeeAbsence]
+    TCP[TimeClockPunch]
+    OTA[OvertimeApproval]
     TCE[TimeClockEntry]
     LTE[LaborTimeEntry]
     WOO[WorkOrderOperation]
@@ -25,8 +29,10 @@ flowchart LR
     GL[GLEntry]
     WO[WorkOrderClose]
 
-    SD --> ESA
-    ESA --> TCE
+    SD --> ESA --> ESR
+    ESR --> ABS
+    ESR --> TCP --> TCE
+    ESR --> OTA --> TCE
     PP --> LTE
     PP --> TCE
     TCE --> LTE
@@ -66,6 +72,10 @@ Before payroll can calculate wages, it needs support. Hourly employees contribut
 
 Main supporting tables:
 
+- `EmployeeShiftRoster`
+- `EmployeeAbsence`
+- `TimeClockPunch`
+- `OvertimeApproval`
 - `TimeClockEntry`
 - `LaborTimeEntry`
 - `WorkOrder`
@@ -144,6 +154,10 @@ This is how payroll integrates with product cost for manufactured items without 
 | Table | Role |
 |---|---|
 | `PayrollPeriod` | Biweekly payroll calendar |
+| `EmployeeShiftRoster` | Daily planned shift row for hourly employees |
+| `EmployeeAbsence` | Planned absence record tied to the roster |
+| `TimeClockPunch` | Raw punch-event detail beneath the approved daily summary |
+| `OvertimeApproval` | Approved overtime support tied to the roster and worked day |
 | `TimeClockEntry` | Approved daily attendance support for hourly payroll |
 | `LaborTimeEntry` | Operational labor detail used for costing and payroll traceability |
 | `WorkOrderOperation` | Production operation record used for routing-aware direct labor analysis |
@@ -181,9 +195,10 @@ Payroll creates several accounting events:
 - Payroll is now an operational subledger, not only a recurring journal pattern.
 - The clean build no longer uses payroll accrual or payroll settlement journals.
 - Hourly payroll hours are sourced from approved `TimeClockEntry` rows.
+- Approved `TimeClockEntry` rows are now derived from raw punches plus roster context.
 - Direct labor affects manufacturing through reclass journals and work-order close, not through a separate job-cost ledger.
 - Direct labor is assigned at the routing-operation level for manufactured work orders.
-- The clean model uses one approved time-clock row per worked day rather than a separate punch-event table.
+- The clean model now separates planned roster rows, raw punches, absences, overtime approvals, and approved daily time summaries.
 - The manufacturing model remains standard-cost based even though payroll provides actual labor detail.
 
 ## Subprocess Spotlight: Gross-to-Net and Liability Remittance

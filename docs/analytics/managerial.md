@@ -15,7 +15,7 @@ sidebar_label: Managerial Analytics
 | Inventory and purchasing | `GoodsReceiptLine`, `ShipmentLine`, `SalesReturnLine`, `ProductionCompletionLine`, `PurchaseOrderLine`, `Supplier`, `Warehouse`, `Item` |
 | BOM, routing, and work-center planning | `BillOfMaterial`, `BillOfMaterialLine`, `Routing`, `RoutingOperation`, `WorkCenter`, `WorkCenterCalendar`, `Item` |
 | Work-order throughput and variance | `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `MaterialIssueLine`, `ProductionCompletionLine`, `WorkOrderClose` |
-| Labor, headcount, and payroll mix | `Employee`, `TimeClockEntry`, `LaborTimeEntry`, `PayrollRegister`, `WorkCenter`, `CostCenter` |
+| Labor, headcount, payroll mix, and workforce planning | `Employee`, `EmployeeShiftRoster`, `EmployeeAbsence`, `OvertimeApproval`, `TimeClockPunch`, `TimeClockEntry`, `LaborTimeEntry`, `PayrollRegister`, `WorkCenter`, `CostCenter` |
 
 ## Starter SQL Map
 
@@ -56,11 +56,18 @@ sidebar_label: Managerial Analytics
 | Customer-service impact by collection and style | [33_customer_service_impact_by_collection_style.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/33_customer_service_impact_by_collection_style.sql) |
 | Labor and headcount by work location, job family, and cost center | [34_labor_and_headcount_by_work_location_job_family_cost_center.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/34_labor_and_headcount_by_work_location_job_family_cost_center.sql) |
 | Portfolio return and refund impact by collection and lifecycle | [35_portfolio_return_refund_impact_by_collection_lifecycle.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/35_portfolio_return_refund_impact_by_collection_lifecycle.sql) |
+| Staffing coverage versus planned work-center load | [36_staffing_coverage_vs_work_center_planned_load.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/36_staffing_coverage_vs_work_center_planned_load.sql) |
+| Rostered versus approved worked hours by work center and shift | [37_rostered_vs_worked_hours_by_work_center_shift.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/37_rostered_vs_worked_hours_by_work_center_shift.sql) |
+| Absence rate by work location, job family, and month | [38_absence_rate_by_work_location_job_family_month.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/38_absence_rate_by_work_location_job_family_month.sql) |
+| Overtime approval coverage and concentration | [39_overtime_approval_coverage_and_concentration.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/39_overtime_approval_coverage_and_concentration.sql) |
+| Punch-to-pay bridge for hourly workers | [40_punch_to_pay_bridge_for_hourly_workers.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/40_punch_to_pay_bridge_for_hourly_workers.sql) |
+| Late arrival and early departure by shift and department | [41_late_arrival_early_departure_by_shift_department.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/41_late_arrival_early_departure_by_shift_department.sql) |
 
-## Phase 19 Pairings
+## Phase 19 to Phase 21 Pairings
 
 - Use [Product Portfolio Profitability Case](cases/product-portfolio-profitability-case.md) when you want a portfolio, lifecycle, and contribution-margin sequence.
 - Use [Workforce Cost and Org-Control Case](cases/workforce-cost-and-org-control-case.md) when you want workforce structure, labor mix, and approval concentration in one lab.
+- Use [Workforce Coverage and Attendance Case](cases/workforce-coverage-and-attendance-case.md) when you want planned staffing, approved time, absences, and overtime in one operational lab.
 - Use [Product Portfolio Case](cases/product-portfolio-and-lifecycle-case.md) when you want a lighter Phase 18-style entry point before moving into the fuller Phase 19 pack.
 
 ## Interpretation Notes
@@ -70,4 +77,5 @@ sidebar_label: Managerial Analytics
 - Supply mode changes the meaning of cost analysis. Manufactured items can support both absorption and contribution-margin work because fixed overhead is stored separately.
 - Portfolio mix and profitability should be read together with service-level measures such as fill rate, shipment lag, and return pressure.
 - Work location and cost center answer different questions. Use both when students compare workforce structure to payroll or labor usage.
+- Workforce-planning analysis is stronger now that rostered hours, approved worked hours, absences, raw punches, and overtime approvals can be compared directly.
 - The current manufacturing model is still a foundation. It supports operations, labor, and contribution-margin analysis without switching inventory valuation to actual cost.

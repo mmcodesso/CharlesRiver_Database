@@ -1,6 +1,6 @@
 ---
 title: Schema Reference
-description: Student-friendly reference for the 55 implemented Greenfield tables, key columns, and join patterns.
+description: Student-friendly reference for the 59 implemented Greenfield tables, key columns, and join patterns.
 sidebar_label: Schema Reference
 ---
 
@@ -21,10 +21,10 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 | O2C | `Customer`, `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt`, `CashReceiptApplication`, `SalesReturn`, `SalesReturnLine`, `CreditMemo`, `CreditMemoLine`, `CustomerRefund` | 14 |
 | P2P | `Supplier`, `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment` | 9 |
 | Manufacturing | `BillOfMaterial`, `BillOfMaterialLine`, `WorkCenter`, `WorkCenterCalendar`, `Routing`, `RoutingOperation`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `MaterialIssue`, `MaterialIssueLine`, `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose` | 14 |
-| Payroll and time | `ShiftDefinition`, `EmployeeShiftAssignment`, `TimeClockEntry`, `AttendanceException`, `PayrollPeriod`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance` | 10 |
+| Payroll and time | `ShiftDefinition`, `EmployeeShiftAssignment`, `EmployeeShiftRoster`, `EmployeeAbsence`, `OvertimeApproval`, `TimeClockEntry`, `TimeClockPunch`, `AttendanceException`, `PayrollPeriod`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance` | 14 |
 | Master data | `Item`, `Warehouse`, `Employee` | 3 |
 | Organizational planning | `CostCenter`, `Budget` | 2 |
-| Total |  | 55 |
+| Total |  | 59 |
 
 ## Design Patterns
 
@@ -100,8 +100,12 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 |---|---|---|
 | `ShiftDefinition` | Standard shift template for hourly work | `ShiftCode`, `ShiftName`, `Department`, `WorkCenterID`, `StartTime`, `EndTime`, `StandardBreakMinutes`, `ShiftType`, `IsOvernight` |
 | `EmployeeShiftAssignment` | Employee-to-shift assignment | `EmployeeID`, `ShiftDefinitionID`, `EffectiveStartDate`, `EffectiveEndDate`, `WorkCenterID`, `IsPrimary` |
-| `TimeClockEntry` | Approved daily time and attendance row | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `ShiftDefinitionID`, `WorkCenterID`, `WorkOrderID`, `WorkOrderOperationID`, `ClockInTime`, `ClockOutTime`, `RegularHours`, `OvertimeHours`, `ClockStatus` |
-| `AttendanceException` | Logged time-and-attendance issue | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `ShiftDefinitionID`, `TimeClockEntryID`, `ExceptionType`, `Severity`, `MinutesVariance`, `Status` |
+| `EmployeeShiftRoster` | Daily planned roster row for hourly work | `EmployeeID`, `RosterDate`, `ShiftDefinitionID`, `WorkCenterID`, `ScheduledStartTime`, `ScheduledEndTime`, `ScheduledHours`, `RosterStatus` |
+| `EmployeeAbsence` | Absence record tied to the planned roster | `EmployeeID`, `PayrollPeriodID`, `AbsenceDate`, `EmployeeShiftRosterID`, `AbsenceType`, `HoursAbsent`, `IsPaid`, `Status` |
+| `OvertimeApproval` | Overtime approval linked to rostered worked time | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `EmployeeShiftRosterID`, `WorkCenterID`, `RequestedHours`, `ApprovedHours`, `ReasonCode`, `Status` |
+| `TimeClockEntry` | Approved daily time and attendance row | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `ShiftDefinitionID`, `EmployeeShiftRosterID`, `OvertimeApprovalID`, `WorkCenterID`, `WorkOrderID`, `WorkOrderOperationID`, `ClockInTime`, `ClockOutTime`, `RegularHours`, `OvertimeHours`, `ClockStatus` |
+| `TimeClockPunch` | Raw punch-event layer beneath the approved daily summary | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `EmployeeShiftRosterID`, `TimeClockEntryID`, `WorkCenterID`, `PunchTimestamp`, `PunchType`, `PunchSource`, `SequenceNumber` |
+| `AttendanceException` | Logged time-and-attendance issue | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `ShiftDefinitionID`, `EmployeeShiftRosterID`, `TimeClockEntryID`, `ExceptionType`, `Severity`, `MinutesVariance`, `Status` |
 | `PayrollPeriod` | Biweekly payroll calendar | `PeriodNumber`, `PeriodStartDate`, `PeriodEndDate`, `PayDate`, `FiscalYear`, `FiscalPeriod`, `Status` |
 | `LaborTimeEntry` | Employee labor detail used for payroll and costing | `PayrollPeriodID`, `EmployeeID`, `TimeClockEntryID`, `WorkOrderID`, `WorkOrderOperationID`, `WorkDate`, `LaborType`, `RegularHours`, `OvertimeHours`, `HourlyRateUsed`, `ExtendedLaborCost` |
 | `PayrollRegister` | Employee payroll header | `PayrollPeriodID`, `EmployeeID`, `CostCenterID`, `GrossPay`, `EmployeeWithholdings`, `EmployerPayrollTax`, `EmployerBenefits`, `NetPay`, `Status` |
@@ -143,8 +147,15 @@ The most important lineage fields in the implementation are:
 - `WorkOrderOperation.RoutingOperationID`
 - `WorkOrderOperationSchedule.WorkOrderOperationID`
 - `EmployeeShiftAssignment.ShiftDefinitionID`
+- `EmployeeShiftRoster.ShiftDefinitionID`
+- `EmployeeAbsence.EmployeeShiftRosterID`
+- `OvertimeApproval.EmployeeShiftRosterID`
 - `TimeClockEntry.ShiftDefinitionID`
+- `TimeClockEntry.EmployeeShiftRosterID`
+- `TimeClockEntry.OvertimeApprovalID`
 - `TimeClockEntry.WorkOrderOperationID`
+- `TimeClockPunch.EmployeeShiftRosterID`
+- `TimeClockPunch.TimeClockEntryID`
 - `AttendanceException.TimeClockEntryID`
 - `MaterialIssueLine.BOMLineID`
 - `ProductionCompletion.WorkOrderID`
@@ -172,5 +183,6 @@ The most important lineage fields in the implementation are:
 - `WorkCenterCalendar` and `WorkOrderOperationSchedule` add daily work-center capacity and scheduled-load detail.
 - `WorkOrderOperation` is the operation-level planning and actual-flow bridge between routing design, scheduling, and payroll labor detail.
 - Approved `TimeClockEntry` rows are the clean-build hour source for hourly payroll.
+- `EmployeeShiftRoster`, `EmployeeAbsence`, `TimeClockPunch`, and `OvertimeApproval` now sit beneath the approved `TimeClockEntry` layer.
 - Payroll is operationally modeled, but manufacturing still uses standard-cost valuation rather than full actual-cost inventory.
 - For exact column order and names, use `TABLE_COLUMNS` in `src/greenfield_dataset/schema.py`.

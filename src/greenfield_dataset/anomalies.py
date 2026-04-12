@@ -138,6 +138,7 @@ def append_attendance_exception(
     payroll_period_id: int,
     work_date: str,
     shift_definition_id: int | None,
+    employee_shift_roster_id: int | None,
     time_clock_entry_id: int | None,
     exception_type: str,
     severity: str,
@@ -149,6 +150,7 @@ def append_attendance_exception(
         "PayrollPeriodID": int(payroll_period_id),
         "WorkDate": str(work_date),
         "ShiftDefinitionID": shift_definition_id,
+        "EmployeeShiftRosterID": employee_shift_roster_id,
         "TimeClockEntryID": time_clock_entry_id,
         "ExceptionType": exception_type,
         "Severity": severity,
@@ -1105,6 +1107,7 @@ def inject_missing_clock_out(context: GenerationContext, count_per_year: int) ->
                 int(row.PayrollPeriodID),
                 str(row.WorkDate),
                 None if pd.isna(row.ShiftDefinitionID) else int(row.ShiftDefinitionID),
+                None if pd.isna(row.EmployeeShiftRosterID) else int(row.EmployeeShiftRosterID),
                 int(row.TimeClockEntryID),
                 "Missing Clock Out",
                 "High",
@@ -1151,6 +1154,7 @@ def inject_duplicate_time_clock_day(context: GenerationContext, count_per_year: 
                 int(second["PayrollPeriodID"]),
                 target_date,
                 None if pd.isna(second["ShiftDefinitionID"]) else int(second["ShiftDefinitionID"]),
+                None if pd.isna(second["EmployeeShiftRosterID"]) else int(second["EmployeeShiftRosterID"]),
                 int(second["TimeClockEntryID"]),
                 "Duplicate Clock Day",
                 "High",
@@ -1201,6 +1205,7 @@ def inject_off_shift_clocking(context: GenerationContext, count_per_year: int) -
                 int(row.PayrollPeriodID),
                 str(row.WorkDate),
                 int(row.ShiftDefinitionID),
+                None if pd.isna(row.EmployeeShiftRosterID) else int(row.EmployeeShiftRosterID),
                 int(row.TimeClockEntryID),
                 "Off Shift Clocking",
                 "Medium",
@@ -1256,6 +1261,7 @@ def inject_paid_without_clock(context: GenerationContext, count_per_year: int) -
                 int(labor_entry["EmployeeID"]),
                 int(labor_entry["PayrollPeriodID"]),
                 str(labor_entry["WorkDate"]),
+                None,
                 None,
                 time_clock_id,
                 "Paid Without Approved Clock",
@@ -1320,6 +1326,7 @@ def inject_labor_after_operation_close(context: GenerationContext, count_per_yea
                 int(row.PayrollPeriodID),
                 shifted_date,
                 None,
+                None if pd.isna(row.TimeClockEntryID) else int(context.tables["TimeClockEntry"].loc[time_clock_mask, "EmployeeShiftRosterID"].iloc[0]) if time_clock_mask.any() else None,
                 time_clock_id,
                 "Labor After Close",
                 "High",
@@ -1854,6 +1861,290 @@ def inject_item_status_alignment_conflict(context: GenerationContext, count_per_
                 break
 
 
+def inject_missing_final_punch(context: GenerationContext, count_per_year: int) -> None:
+    punches = context.tables["TimeClockPunch"]
+    time_clocks = context.tables["TimeClockEntry"]
+    if punches.empty or time_clocks.empty or count_per_year <= 0:
+        return
+
+    for year in fiscal_years(context):
+        used_ids = used_primary_keys(context, "TimeClockEntry", "missing_final_punch")
+        year_entries = rows_for_year(time_clocks, "WorkDate", year)
+        if used_ids:
+            year_entries = year_entries[~year_entries["TimeClockEntryID"].astype(int).isin(used_ids)]
+        injected = 0
+        for row in year_entries.sort_values(["WorkDate", "TimeClockEntryID"]).itertuples(index=False):
+            entry_punches = punches[
+                punches["TimeClockEntryID"].astype(int).eq(int(row.TimeClockEntryID))
+            ].sort_values(["SequenceNumber", "TimeClockPunchID"])
+            clock_out_rows = entry_punches[entry_punches["PunchType"].eq("Clock Out")]
+            if clock_out_rows.empty:
+                continue
+            target_punch_id = int(clock_out_rows.iloc[-1]["TimeClockPunchID"])
+            context.tables["TimeClockPunch"] = context.tables["TimeClockPunch"][
+                ~context.tables["TimeClockPunch"]["TimeClockPunchID"].astype(int).eq(target_punch_id)
+            ].reset_index(drop=True)
+            time_clock_mask = context.tables["TimeClockEntry"]["TimeClockEntryID"].astype(int).eq(int(row.TimeClockEntryID))
+            context.tables["TimeClockEntry"].loc[time_clock_mask, "ClockOutTime"] = None
+            context.tables["TimeClockEntry"].loc[time_clock_mask, "ClockStatus"] = "Pending"
+            append_attendance_exception(
+                context,
+                int(row.EmployeeID),
+                int(row.PayrollPeriodID),
+                str(row.WorkDate),
+                None if pd.isna(row.ShiftDefinitionID) else int(row.ShiftDefinitionID),
+                None if pd.isna(row.EmployeeShiftRosterID) else int(row.EmployeeShiftRosterID),
+                int(row.TimeClockEntryID),
+                "Missing Final Punch",
+                "High",
+                0.0,
+            )
+            log_anomaly(
+                context,
+                "missing_final_punch",
+                "TimeClockEntry",
+                int(row.TimeClockEntryID),
+                year,
+                "Clock-out punch was removed from a worked day, leaving the time summary incomplete.",
+                "Overlapping or incomplete punch review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_punch_without_roster(context: GenerationContext, count_per_year: int) -> None:
+    punches = context.tables["TimeClockPunch"]
+    if punches.empty or count_per_year <= 0:
+        return
+
+    for year in fiscal_years(context):
+        year_rows = rows_for_year(punches, "WorkDate", year)
+        used_ids = used_primary_keys(context, "TimeClockPunch", "punch_without_roster")
+        if used_ids:
+            year_rows = year_rows[~year_rows["TimeClockPunchID"].astype(int).isin(used_ids)]
+        injected = 0
+        for row in year_rows.sort_values(["WorkDate", "TimeClockPunchID"]).itertuples(index=False):
+            if pd.isna(row.EmployeeShiftRosterID):
+                continue
+            punch_mask = context.tables["TimeClockPunch"]["TimeClockPunchID"].astype(int).eq(int(row.TimeClockPunchID))
+            context.tables["TimeClockPunch"].loc[punch_mask, "EmployeeShiftRosterID"] = None
+            log_anomaly(
+                context,
+                "punch_without_roster",
+                "TimeClockPunch",
+                int(row.TimeClockPunchID),
+                year,
+                "Raw punch row was detached from its scheduled roster row while the worked day remained otherwise intact.",
+                "Scheduled-without-punch and punch-without-schedule review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_absence_with_worked_time(context: GenerationContext, count_per_year: int) -> None:
+    time_clocks = context.tables["TimeClockEntry"]
+    rosters = context.tables["EmployeeShiftRoster"]
+    absences = context.tables["EmployeeAbsence"]
+    if time_clocks.empty or rosters.empty or count_per_year <= 0:
+        return
+
+    for year in fiscal_years(context):
+        year_rows = rows_for_year(time_clocks, "WorkDate", year)
+        used_ids = used_primary_keys(context, "TimeClockEntry", "absence_with_worked_time")
+        if used_ids:
+            year_rows = year_rows[~year_rows["TimeClockEntryID"].astype(int).isin(used_ids)]
+        injected = 0
+        for row in year_rows.sort_values(["WorkDate", "TimeClockEntryID"]).itertuples(index=False):
+            if pd.isna(row.EmployeeShiftRosterID):
+                continue
+            roster_id = int(row.EmployeeShiftRosterID)
+            roster_mask = context.tables["EmployeeShiftRoster"]["EmployeeShiftRosterID"].astype(int).eq(roster_id)
+            if not roster_mask.any():
+                continue
+            context.tables["EmployeeShiftRoster"].loc[roster_mask, "RosterStatus"] = "Absent"
+            existing_absence = absences[
+                absences["EmployeeShiftRosterID"].astype(float).eq(float(roster_id))
+            ] if not absences.empty else absences
+            if existing_absence.empty:
+                context.tables["EmployeeAbsence"] = pd.concat(
+                    [
+                        context.tables["EmployeeAbsence"],
+                        pd.DataFrame(
+                            [{
+                                "EmployeeAbsenceID": next_id(context, "EmployeeAbsence"),
+                                "EmployeeID": int(row.EmployeeID),
+                                "PayrollPeriodID": int(row.PayrollPeriodID),
+                                "AbsenceDate": str(row.WorkDate),
+                                "EmployeeShiftRosterID": roster_id,
+                                "AbsenceType": "Sick",
+                                "HoursAbsent": money(float(row.RegularHours) + float(row.OvertimeHours)),
+                                "IsPaid": 1,
+                                "ApprovedByEmployeeID": None if pd.isna(row.ApprovedByEmployeeID) else int(row.ApprovedByEmployeeID),
+                                "ApprovedDate": str(row.WorkDate),
+                                "Status": "Approved",
+                            }],
+                            columns=TABLE_COLUMNS["EmployeeAbsence"],
+                        ),
+                    ],
+                    ignore_index=True,
+                )
+            log_anomaly(
+                context,
+                "absence_with_worked_time",
+                "TimeClockEntry",
+                int(row.TimeClockEntryID),
+                year,
+                "Roster status was changed to Absent and an absence row was added even though worked time remained recorded.",
+                "Absence-with-worked-time review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_overtime_without_approval(context: GenerationContext, count_per_year: int) -> None:
+    time_clocks = context.tables["TimeClockEntry"]
+    if time_clocks.empty or count_per_year <= 0:
+        return
+
+    for year in fiscal_years(context):
+        candidates = rows_for_year(time_clocks, "WorkDate", year)
+        candidates = candidates[
+            candidates["OvertimeApprovalID"].notna()
+            & candidates["OvertimeHours"].astype(float).gt(0.5)
+        ]
+        used_ids = used_primary_keys(context, "TimeClockEntry", "overtime_without_approval")
+        if used_ids:
+            candidates = candidates[~candidates["TimeClockEntryID"].astype(int).isin(used_ids)]
+        injected = 0
+        for row in candidates.sort_values(["WorkDate", "TimeClockEntryID"]).itertuples(index=False):
+            mask = context.tables["TimeClockEntry"]["TimeClockEntryID"].astype(int).eq(int(row.TimeClockEntryID))
+            context.tables["TimeClockEntry"].loc[mask, "OvertimeApprovalID"] = None
+            log_anomaly(
+                context,
+                "overtime_without_approval",
+                "TimeClockEntry",
+                int(row.TimeClockEntryID),
+                year,
+                "Recorded overtime remained on the time summary after the linked overtime approval was removed.",
+                "Overtime without approval review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_roster_after_termination(context: GenerationContext, count_per_year: int) -> None:
+    rosters = context.tables["EmployeeShiftRoster"]
+    if rosters.empty or count_per_year <= 0:
+        return
+    terminated = terminated_employee_rows(context)
+    terminated = terminated[terminated["PayClass"].eq("Hourly")].copy()
+    if terminated.empty:
+        return
+
+    for year in fiscal_years(context):
+        year_rows = rows_for_year(rosters, "RosterDate", year)
+        used_ids = used_primary_keys(context, "EmployeeShiftRoster", "roster_after_termination")
+        if used_ids:
+            year_rows = year_rows[~year_rows["EmployeeShiftRosterID"].astype(int).isin(used_ids)]
+        injected = 0
+        for row in year_rows.sort_values(["RosterDate", "EmployeeShiftRosterID"]).itertuples(index=False):
+            roster_date = pd.Timestamp(row.RosterDate)
+            eligible = terminated[terminated["TerminationDateValue"].lt(roster_date)]
+            if eligible.empty:
+                continue
+            employee_id = int(eligible.iloc[0]["EmployeeID"])
+            roster_mask = context.tables["EmployeeShiftRoster"]["EmployeeShiftRosterID"].astype(int).eq(int(row.EmployeeShiftRosterID))
+            context.tables["EmployeeShiftRoster"].loc[roster_mask, "EmployeeID"] = employee_id
+            time_clock_mask = (
+                context.tables["TimeClockEntry"]["EmployeeShiftRosterID"].notna()
+                & context.tables["TimeClockEntry"]["EmployeeShiftRosterID"].astype(int).eq(int(row.EmployeeShiftRosterID))
+            )
+            if time_clock_mask.any():
+                context.tables["TimeClockEntry"].loc[time_clock_mask, "EmployeeID"] = employee_id
+                linked_time_clock_ids = context.tables["TimeClockEntry"].loc[time_clock_mask, "TimeClockEntryID"].astype(int).tolist()
+                if linked_time_clock_ids:
+                    punch_mask = (
+                        context.tables["TimeClockPunch"]["TimeClockEntryID"].notna()
+                        & context.tables["TimeClockPunch"]["TimeClockEntryID"].astype(int).isin(linked_time_clock_ids)
+                    )
+                    if punch_mask.any():
+                        context.tables["TimeClockPunch"].loc[punch_mask, "EmployeeID"] = employee_id
+                    labor_mask = (
+                        context.tables["LaborTimeEntry"]["TimeClockEntryID"].notna()
+                        & context.tables["LaborTimeEntry"]["TimeClockEntryID"].astype(int).isin(linked_time_clock_ids)
+                    )
+                    if labor_mask.any():
+                        context.tables["LaborTimeEntry"].loc[labor_mask, "EmployeeID"] = employee_id
+            absence_mask = (
+                context.tables["EmployeeAbsence"]["EmployeeShiftRosterID"].notna()
+                & context.tables["EmployeeAbsence"]["EmployeeShiftRosterID"].astype(int).eq(int(row.EmployeeShiftRosterID))
+            ) if not context.tables["EmployeeAbsence"].empty else pd.Series(dtype=bool)
+            if not context.tables["EmployeeAbsence"].empty and absence_mask.any():
+                context.tables["EmployeeAbsence"].loc[absence_mask, "EmployeeID"] = employee_id
+            overtime_mask = (
+                context.tables["OvertimeApproval"]["EmployeeShiftRosterID"].notna()
+                & context.tables["OvertimeApproval"]["EmployeeShiftRosterID"].astype(int).eq(int(row.EmployeeShiftRosterID))
+            ) if not context.tables["OvertimeApproval"].empty else pd.Series(dtype=bool)
+            if not context.tables["OvertimeApproval"].empty and overtime_mask.any():
+                context.tables["OvertimeApproval"].loc[overtime_mask, "EmployeeID"] = employee_id
+            log_anomaly(
+                context,
+                "roster_after_termination",
+                "EmployeeShiftRoster",
+                int(row.EmployeeShiftRosterID),
+                year,
+                "Shift roster and linked attendance rows were reassigned to an employee terminated before the roster date.",
+                "Roster-after-termination review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_overlapping_punch_sequence(context: GenerationContext, count_per_year: int) -> None:
+    punches = context.tables["TimeClockPunch"]
+    if punches.empty or count_per_year <= 0:
+        return
+
+    for year in fiscal_years(context):
+        year_rows = rows_for_year(punches, "WorkDate", year)
+        if year_rows.empty:
+            continue
+        used_ids = used_primary_keys(context, "TimeClockEntry", "overlapping_punch_sequence")
+        grouped = year_rows.sort_values(["TimeClockEntryID", "SequenceNumber", "TimeClockPunchID"]).groupby("TimeClockEntryID")
+        injected = 0
+        for time_clock_entry_id, group in grouped:
+            if int(time_clock_entry_id) in used_ids or len(group) < 4:
+                continue
+            meal_start = group[group["PunchType"].eq("Meal Start")]
+            meal_end = group[group["PunchType"].eq("Meal End")]
+            if meal_start.empty or meal_end.empty:
+                continue
+            meal_start_row = meal_start.iloc[0]
+            meal_end_row = meal_end.iloc[0]
+            overlap_timestamp = (
+                pd.Timestamp(meal_start_row["PunchTimestamp"]) - pd.Timedelta(minutes=10)
+            ).strftime("%Y-%m-%d %H:%M:%S")
+            punch_mask = context.tables["TimeClockPunch"]["TimeClockPunchID"].astype(int).eq(int(meal_end_row["TimeClockPunchID"]))
+            context.tables["TimeClockPunch"].loc[punch_mask, "PunchTimestamp"] = overlap_timestamp
+            log_anomaly(
+                context,
+                "overlapping_punch_sequence",
+                "TimeClockEntry",
+                int(time_clock_entry_id),
+                year,
+                "Meal-end punch was moved before meal-start punch so the raw punch sequence overlaps.",
+                "Overlapping or incomplete punch review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
 def inject_anomalies(context: GenerationContext) -> None:
     profile = load_anomaly_profile(context)
     if not profile.get("enabled", False):
@@ -1895,4 +2186,10 @@ def inject_anomalies(context: GenerationContext) -> None:
     inject_inactive_employee_current_assignment(context, int(profile.get("inactive_employee_current_assignment_per_year", 0)))
     inject_prelaunch_item_in_new_activity(context, int(profile.get("prelaunch_item_in_new_activity_per_year", 0)))
     inject_item_status_alignment_conflict(context, int(profile.get("item_status_alignment_conflict_per_year", 0)))
+    inject_missing_final_punch(context, int(profile.get("missing_final_punch_per_year", 0)))
+    inject_punch_without_roster(context, int(profile.get("punch_without_roster_per_year", 0)))
+    inject_absence_with_worked_time(context, int(profile.get("absence_with_worked_time_per_year", 0)))
+    inject_overtime_without_approval(context, int(profile.get("overtime_without_approval_per_year", 0)))
+    inject_roster_after_termination(context, int(profile.get("roster_after_termination_per_year", 0)))
+    inject_overlapping_punch_sequence(context, int(profile.get("overlapping_punch_sequence_per_year", 0)))
     invalidate_all_caches(context)

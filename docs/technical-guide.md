@@ -10,7 +10,7 @@ Use this page when you need the codebase-level view of how Greenfield is generat
 
 For table structure and join fields, use [Schema Reference](reference/schema.md). For event-to-ledger behavior, use [GLEntry Posting Reference](reference/posting.md). For planned future changes, use [Roadmap](roadmap.md).
 
-Phase 19 does not add a new operational model. It expands the teaching layer through starter SQL, analytics docs, and walkthrough cases on top of the existing Phase 18 dataset.
+Phase 21 adds a workforce-planning layer beneath the existing approved daily time-clock model. The current system now includes daily rosters, explicit absences, raw punch events, and overtime approvals while keeping `TimeClockEntry` as the approved payroll-hour summary.
 
 ## Current System at a Glance
 
@@ -75,7 +75,7 @@ In plain language, the build:
 | `schema.py` | Define `TABLE_COLUMNS` and create empty DataFrames |
 | `master_data.py` | Generate accounts, cost centers, employees, warehouses, items, customers, and suppliers, including employee lifecycle and richer item-catalog attributes |
 | `manufacturing.py` | Generate BOMs, work centers, capacity calendars, routings, work orders, schedules, issues, completions, and work-order close activity |
-| `payroll.py` | Generate shifts, assignments, time clocks, payroll periods, labor time, payroll registers, payments, remittances, and manufacturing labor helpers |
+| `payroll.py` | Generate shifts, assignments, daily rosters, absences, raw punches, approved time clocks, overtime approvals, payroll periods, labor time, payroll registers, payments, remittances, and manufacturing labor helpers |
 | `budgets.py` | Generate opening balances and budgets |
 | `o2c.py` | Generate orders, shipments, invoices, receipts, applications, returns, credits, and refunds |
 | `p2p.py` | Generate requisitions, purchase orders, receipts, supplier invoices, and disbursements |
@@ -88,13 +88,14 @@ In plain language, the build:
 | `utils.py` | Support numbering, rounding, and shared helper logic |
 | `main.py` | Orchestrate the full run and write the generation log |
 
-## Phase 19 Teaching Layer
+## Phase 19 to Phase 21 Teaching Layer
 
 The current analytics layer now includes:
 
 - broader starter SQL coverage across financial, managerial, and audit topics
 - case-based walkthroughs under `docs/analytics/cases/`
 - default-build-first documentation that treats the anomaly-enabled package as the main classroom artifact
+- workforce-planning detail for rosters, absences, punches, and overtime approvals that supports new attendance and staffing analytics
 
 This is intentionally a teaching-pack expansion, not a new generator phase that changes business behavior, schema, or posting logic.
 

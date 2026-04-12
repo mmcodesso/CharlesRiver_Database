@@ -140,10 +140,15 @@ Suggested outputs:
 - payroll cost by cost center and job level
 - approved clock hours versus direct labor usage
 - workforce mix by employment status
+- staffing coverage versus planned work-center load
+- rostered hours versus approved worked hours by shift
+- absence rate by work location and job family
+- overtime approval coverage and punch-to-pay bridges
 
 Best paired case:
 
 - [Workforce Cost and Org-Control Case](cases/workforce-cost-and-org-control-case.md)
+- [Workforce Coverage and Attendance Case](cases/workforce-coverage-and-attendance-case.md)
 
 ### Manufacturing, routing, and capacity
 
@@ -189,6 +194,11 @@ Suggested outputs:
 - missing item-master attributes by item group
 - discontinued or pre-launch item activity
 - approval concentration by expected role family
+- scheduled-without-punch and punch-without-schedule review
+- overtime without approval review
+- absence with worked time review
+- overlapping or incomplete punch review
+- roster after termination review
 
 ### Support-workbook-assisted review
 
@@ -209,6 +219,7 @@ Suggested workflow:
 Best paired cases:
 
 - [Audit Review Pack Case](cases/audit-review-pack-case.md)
+- [Attendance Control Audit Case](cases/attendance-control-audit-case.md)
 - [Audit Exception Lab](cases/audit-exception-lab.md)
 
 ## Clean vs Default Build in Excel

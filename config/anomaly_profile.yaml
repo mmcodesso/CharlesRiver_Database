@@ -42,3 +42,9 @@ profiles:
     inactive_employee_current_assignment_per_year: 1
     prelaunch_item_in_new_activity_per_year: 1
     item_status_alignment_conflict_per_year: 1
+    missing_final_punch_per_year: 1
+    punch_without_roster_per_year: 1
+    absence_with_worked_time_per_year: 1
+    overtime_without_approval_per_year: 1
+    roster_after_termination_per_year: 1
+    overlapping_punch_sequence_per_year: 1

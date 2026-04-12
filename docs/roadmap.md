@@ -89,11 +89,13 @@ Planned focus:
 
 This phase should improve audit teaching coverage without turning the base dataset into an exception-heavy build.
 
-## Planned Follow-On Phase: Phase 21 - Workforce Planning Detail
+## Phase 21 - Workforce Planning Detail
+
+Status: implemented
 
 Only after Phase 20 should the roadmap return to deeper workforce-operating detail beneath the current daily time-clock model.
 
-Planned focus:
+Implemented focus:
 
 - raw punch-event detail beneath approved daily time-clock rows
 - rotating shift rosters
@@ -102,7 +104,7 @@ Planned focus:
 
 This work still matters, but it is no longer the immediate next step because master-data realism and analytics expansion now deliver broader teaching value.
 
-## Recommended Sequence
+## Recently Completed Sequence
 
 1. Phase 20 - Master Data and Workforce Audit Anomaly Expansion
 2. Phase 21 - Workforce Planning Detail

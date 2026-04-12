@@ -205,16 +205,35 @@ TABLE_COLUMNS = {
         "EmployeeShiftAssignmentID", "EmployeeID", "ShiftDefinitionID", "EffectiveStartDate",
         "EffectiveEndDate", "WorkCenterID", "IsPrimary",
     ],
+    "EmployeeShiftRoster": [
+        "EmployeeShiftRosterID", "EmployeeID", "RosterDate", "ShiftDefinitionID", "WorkCenterID",
+        "ScheduledStartTime", "ScheduledEndTime", "ScheduledHours", "RosterStatus",
+        "CreatedByEmployeeID", "CreatedDate",
+    ],
+    "EmployeeAbsence": [
+        "EmployeeAbsenceID", "EmployeeID", "PayrollPeriodID", "AbsenceDate", "EmployeeShiftRosterID",
+        "AbsenceType", "HoursAbsent", "IsPaid", "ApprovedByEmployeeID", "ApprovedDate", "Status",
+    ],
+    "OvertimeApproval": [
+        "OvertimeApprovalID", "EmployeeID", "PayrollPeriodID", "WorkDate", "EmployeeShiftRosterID",
+        "WorkCenterID", "WorkOrderID", "WorkOrderOperationID", "RequestedHours", "ApprovedHours",
+        "ReasonCode", "ApprovedByEmployeeID", "ApprovedDate", "Status",
+    ],
     "TimeClockEntry": [
         "TimeClockEntryID", "EmployeeID", "PayrollPeriodID", "WorkDate", "ShiftDefinitionID",
-        "WorkCenterID", "WorkOrderID", "WorkOrderOperationID", "ClockInTime", "ClockOutTime",
-        "BreakMinutes", "RegularHours", "OvertimeHours", "ClockStatus", "ApprovedByEmployeeID",
-        "ApprovedDate",
+        "EmployeeShiftRosterID", "OvertimeApprovalID", "WorkCenterID", "WorkOrderID",
+        "WorkOrderOperationID", "ClockInTime", "ClockOutTime", "BreakMinutes", "RegularHours",
+        "OvertimeHours", "ClockStatus", "ApprovedByEmployeeID", "ApprovedDate",
+    ],
+    "TimeClockPunch": [
+        "TimeClockPunchID", "EmployeeID", "PayrollPeriodID", "WorkDate", "EmployeeShiftRosterID",
+        "TimeClockEntryID", "WorkCenterID", "PunchTimestamp", "PunchType", "PunchSource",
+        "SequenceNumber",
     ],
     "AttendanceException": [
         "AttendanceExceptionID", "EmployeeID", "PayrollPeriodID", "WorkDate", "ShiftDefinitionID",
-        "TimeClockEntryID", "ExceptionType", "Severity", "MinutesVariance", "Status",
-        "ReviewedByEmployeeID", "ReviewedDate",
+        "EmployeeShiftRosterID", "TimeClockEntryID", "ExceptionType", "Severity",
+        "MinutesVariance", "Status", "ReviewedByEmployeeID", "ReviewedDate",
     ],
     "PayrollRegister": [
         "PayrollRegisterID", "PayrollPeriodID", "EmployeeID", "CostCenterID", "GrossPay",

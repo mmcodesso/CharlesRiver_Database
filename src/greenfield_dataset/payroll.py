@@ -124,6 +124,15 @@ STANDARD_SHIFT_OVERTIME_RANGE = (0.0, 2.25)
 DIRECT_SUPPORT_TOPUP_HOURS_RANGE = (74.0, 82.0)
 MAX_CLOCK_HOURS_PER_DAY = 11.5
 TIMECLOCK_APPROVED_STATUS = "Approved"
+ROSTER_STATUSES = {"Scheduled", "Absent", "Reassigned", "Cancelled"}
+ABSENCE_TYPES = ("Vacation", "Sick", "Personal")
+OVERTIME_REASON_CODES = ("Load Surge", "Late Operation", "Backlog Recovery", "Month-End Support")
+PUNCH_SOURCE_BADGE = "Badge"
+SHORT_DAY_NO_MEAL_THRESHOLD_HOURS = 6.0
+ABSENCE_EMPLOYEE_PERIOD_MODULUS = 17
+ABSENCE_EMPLOYEE_PERIOD_TRIGGER = 5
+WAREHOUSE_LATE_SHIFT_START_TIME = "12:00:00"
+WAREHOUSE_LATE_SHIFT_END_TIME = "20:30:00"
 
 
 def append_rows(context: GenerationContext, table_name: str, rows: list[dict[str, Any]]) -> None:
@@ -143,10 +152,20 @@ def invalidate_payroll_caches(context: GenerationContext, table_name: str) -> No
         ],
         "ShiftDefinition": ["_shift_definition_by_code_cache", "_shift_definition_lookup_cache"],
         "EmployeeShiftAssignment": ["_shift_assignment_map_cache", "_shift_assignment_rows_by_employee_cache"],
+        "EmployeeShiftRoster": [
+            "_employee_shift_roster_lookup_cache",
+            "_employee_shift_roster_by_employee_date_cache",
+        ],
+        "EmployeeAbsence": ["_employee_absence_rows_cache"],
+        "OvertimeApproval": ["_overtime_approval_lookup_cache"],
         "TimeClockEntry": [
             "_time_clock_entries_cache",
             "_time_clock_entry_lookup_cache",
             "_approved_time_clock_hours_by_employee_period_cache",
+        ],
+        "TimeClockPunch": [
+            "_time_clock_punch_rows_cache",
+            "_time_clock_punches_by_entry_cache",
         ],
         "LaborTimeEntry": [
             "_labor_time_entries_cache",
@@ -407,6 +426,65 @@ def shift_assignment_for_employee_on_date(
         if start_date <= timestamp <= end_date:
             return assignment
     return primary_shift_assignment_map(context).get(int(employee_id), {})
+
+
+def shift_duration_hours(start_time: str, end_time: str, break_minutes: int | float) -> float:
+    start_timestamp = pd.Timestamp(f"2000-01-01 {start_time}")
+    end_timestamp = pd.Timestamp(f"2000-01-01 {end_time}")
+    if end_timestamp <= start_timestamp:
+        end_timestamp = end_timestamp + pd.Timedelta(days=1)
+    total_minutes = (end_timestamp - start_timestamp).total_seconds() / 60.0
+    return qty(max(total_minutes - float(break_minutes), 0.0) / 60.0)
+
+
+def roster_schedule_for_employee_date(
+    context: GenerationContext,
+    employee: pd.Series | dict[str, Any],
+    work_date: pd.Timestamp | str,
+) -> dict[str, Any]:
+    payload = employee if isinstance(employee, dict) else employee.to_dict()
+    assignment = shift_assignment_for_employee_on_date(context, int(payload["EmployeeID"]), work_date)
+    shift_lookup = shift_definition_lookup(context)
+    shift_by_code = shift_definition_by_code(context)
+    shift_definition_id = assignment.get("ShiftDefinitionID")
+    shift_definition = (
+        shift_lookup.get(int(shift_definition_id))
+        if pd.notna(shift_definition_id)
+        else None
+    )
+
+    start_time = "08:00:00" if shift_definition is None else str(shift_definition["StartTime"])
+    end_time = "16:30:00" if shift_definition is None else str(shift_definition["EndTime"])
+    break_minutes = 30 if shift_definition is None else int(shift_definition["StandardBreakMinutes"])
+    roster_status = "Scheduled"
+    timestamp = pd.Timestamp(work_date)
+    iso_week = int(timestamp.isocalendar().week)
+    job_title = str(payload["JobTitle"])
+
+    if job_title in DIRECT_MANUFACTURING_TITLES and (int(payload["EmployeeID"]) + iso_week) % 4 == 0:
+        late_shift = shift_by_code.get("MFG-LATE")
+        if late_shift is not None:
+            shift_definition_id = int(late_shift["ShiftDefinitionID"])
+            shift_definition = late_shift
+            start_time = str(late_shift["StartTime"])
+            end_time = str(late_shift["EndTime"])
+            break_minutes = int(late_shift["StandardBreakMinutes"])
+            if assignment.get("ShiftDefinitionID") != shift_definition_id:
+                roster_status = "Reassigned"
+    elif job_title in {"Shipping Clerk", "Inventory Specialist"} and (int(payload["EmployeeID"]) + iso_week) % 6 == 0:
+        start_time = WAREHOUSE_LATE_SHIFT_START_TIME
+        end_time = WAREHOUSE_LATE_SHIFT_END_TIME
+        roster_status = "Reassigned"
+
+    return {
+        "ShiftDefinitionID": None if pd.isna(shift_definition_id) else int(shift_definition_id),
+        "WorkCenterID": None if pd.isna(assignment.get("WorkCenterID")) else int(assignment["WorkCenterID"]),
+        "ScheduledStartTime": start_time,
+        "ScheduledEndTime": end_time,
+        "StandardBreakMinutes": int(break_minutes),
+        "StandardHours": shift_duration_hours(start_time, end_time, break_minutes),
+        "RosterStatus": roster_status,
+    }
 
 
 def employee_available_for_work_date(employee: pd.Series | dict[str, Any], work_date: pd.Timestamp | str) -> bool:
@@ -997,24 +1075,193 @@ def build_hourly_support_time_clock_specs(
             remaining_overtime = qty(max(remaining_overtime - overtime_hours, 0.0))
 
 
+def build_clean_absence_plan(
+    context: GenerationContext,
+    payroll_period_id: int,
+    employees: pd.DataFrame,
+    specs: dict[tuple[int, str], dict[str, Any]],
+) -> dict[tuple[int, str], dict[str, Any]]:
+    hourly_support = employees[
+        employees["PayClass"].eq("Hourly")
+        & ~employees["JobTitle"].isin(DIRECT_MANUFACTURING_TITLES)
+    ].copy()
+    if hourly_support.empty or not specs:
+        return {}
+
+    employee_lookup = hourly_support.set_index("EmployeeID").to_dict("index")
+    selected: dict[tuple[int, str], dict[str, Any]] = {}
+
+    for employee in hourly_support.sort_values("EmployeeID").itertuples(index=False):
+        if (int(employee.EmployeeID) + int(payroll_period_id)) % ABSENCE_EMPLOYEE_PERIOD_MODULUS != ABSENCE_EMPLOYEE_PERIOD_TRIGGER:
+            continue
+        candidate_keys = [
+            key
+            for key, spec in sorted(specs.items(), key=lambda item: item[0][1])
+            if int(key[0]) == int(employee.EmployeeID) and str(spec["LaborType"]) != "Direct Manufacturing"
+        ]
+        if not candidate_keys:
+            continue
+        selected_key = candidate_keys[len(candidate_keys) // 2]
+        spec = specs.pop(selected_key)
+        absence_type = ABSENCE_TYPES[(int(employee.EmployeeID) + int(payroll_period_id)) % len(ABSENCE_TYPES)]
+        selected[selected_key] = {
+            "EmployeeID": int(employee.EmployeeID),
+            "PayrollPeriodID": int(payroll_period_id),
+            "WorkDate": str(spec["WorkDate"]),
+            "ShiftDefinitionID": spec.get("ShiftDefinitionID"),
+            "WorkCenterID": spec.get("WorkCenterID"),
+            "AbsenceType": absence_type,
+            "LaborType": spec.get("LaborType"),
+        }
+    return selected
+
+
+def build_roster_absence_and_overtime_rows(
+    context: GenerationContext,
+    payroll_period_id: int,
+    period_start: pd.Timestamp,
+    employees: pd.DataFrame,
+    specs: dict[tuple[int, str], dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    employee_lookup = employees.set_index("EmployeeID", drop=False).to_dict("index")
+    absence_plan = build_clean_absence_plan(context, payroll_period_id, employees, specs)
+    roster_rows: list[dict[str, Any]] = []
+    absence_rows: list[dict[str, Any]] = []
+    overtime_rows: list[dict[str, Any]] = []
+
+    for spec in sorted(specs.values(), key=lambda row: (row["WorkDate"], row["EmployeeID"])):
+        employee = employee_lookup[int(spec["EmployeeID"])]
+        schedule = roster_schedule_for_employee_date(context, employee, spec["WorkDate"])
+        total_hours = float(spec["RegularHours"]) + float(spec["OvertimeHours"])
+        if float(spec["OvertimeHours"]) > 0.5:
+            scheduled_hours = qty(max(
+                float(spec["RegularHours"]),
+                min(total_hours, float(schedule["StandardHours"])),
+            ))
+        else:
+            scheduled_hours = qty(total_hours)
+        created_by = employee_clock_approver_id(employee) or accounting_manager_id(context)
+        roster_id = next_id(context, "EmployeeShiftRoster")
+        roster_created_date = max(period_start, pd.Timestamp(spec["WorkDate"]) - pd.Timedelta(days=7)).strftime("%Y-%m-%d")
+        roster_rows.append({
+            "EmployeeShiftRosterID": roster_id,
+            "EmployeeID": int(spec["EmployeeID"]),
+            "RosterDate": str(spec["WorkDate"]),
+            "ShiftDefinitionID": schedule["ShiftDefinitionID"],
+            "WorkCenterID": spec["WorkCenterID"] if spec["WorkCenterID"] is not None else schedule["WorkCenterID"],
+            "ScheduledStartTime": schedule["ScheduledStartTime"],
+            "ScheduledEndTime": schedule["ScheduledEndTime"],
+            "ScheduledHours": scheduled_hours,
+            "RosterStatus": schedule["RosterStatus"] if schedule["RosterStatus"] in ROSTER_STATUSES else "Scheduled",
+            "CreatedByEmployeeID": int(created_by),
+            "CreatedDate": roster_created_date,
+        })
+        spec["ShiftDefinitionID"] = schedule["ShiftDefinitionID"]
+        if spec["WorkCenterID"] is None:
+            spec["WorkCenterID"] = schedule["WorkCenterID"]
+        spec["EmployeeShiftRosterID"] = int(roster_id)
+        spec["ScheduledStartTime"] = schedule["ScheduledStartTime"]
+        spec["ScheduledEndTime"] = schedule["ScheduledEndTime"]
+        spec["ScheduledHours"] = scheduled_hours
+        spec["StandardBreakMinutes"] = int(schedule["StandardBreakMinutes"])
+
+        overtime_hours = float(spec["OvertimeHours"])
+        if overtime_hours > 0.5:
+            reason_code = OVERTIME_REASON_CODES[
+                (int(spec["EmployeeID"]) + int(payroll_period_id) + pd.Timestamp(spec["WorkDate"]).day) % len(OVERTIME_REASON_CODES)
+            ]
+            approval_id = next_id(context, "OvertimeApproval")
+            overtime_rows.append({
+                "OvertimeApprovalID": approval_id,
+                "EmployeeID": int(spec["EmployeeID"]),
+                "PayrollPeriodID": int(payroll_period_id),
+                "WorkDate": str(spec["WorkDate"]),
+                "EmployeeShiftRosterID": int(roster_id),
+                "WorkCenterID": spec["WorkCenterID"],
+                "WorkOrderID": spec["WorkOrderID"],
+                "WorkOrderOperationID": spec["WorkOrderOperationID"],
+                "RequestedHours": qty(overtime_hours),
+                "ApprovedHours": qty(overtime_hours),
+                "ReasonCode": reason_code,
+                "ApprovedByEmployeeID": int(spec["ApprovedByEmployeeID"]),
+                "ApprovedDate": str(spec["ApprovedDate"]),
+                "Status": "Approved",
+            })
+            spec["OvertimeApprovalID"] = int(approval_id)
+        else:
+            spec["OvertimeApprovalID"] = None
+
+    for (employee_id, work_date), absence in sorted(absence_plan.items(), key=lambda item: (item[0][1], item[0][0])):
+        employee = employee_lookup[int(employee_id)]
+        schedule = roster_schedule_for_employee_date(context, employee, work_date)
+        created_by = employee_clock_approver_id(employee) or accounting_manager_id(context)
+        roster_id = next_id(context, "EmployeeShiftRoster")
+        roster_created_date = max(period_start, pd.Timestamp(work_date) - pd.Timedelta(days=7)).strftime("%Y-%m-%d")
+        absence_hours = qty(float(schedule["StandardHours"]))
+        roster_rows.append({
+            "EmployeeShiftRosterID": roster_id,
+            "EmployeeID": int(employee_id),
+            "RosterDate": str(work_date),
+            "ShiftDefinitionID": schedule["ShiftDefinitionID"],
+            "WorkCenterID": absence.get("WorkCenterID") if absence.get("WorkCenterID") is not None else schedule["WorkCenterID"],
+            "ScheduledStartTime": schedule["ScheduledStartTime"],
+            "ScheduledEndTime": schedule["ScheduledEndTime"],
+            "ScheduledHours": absence_hours,
+            "RosterStatus": "Absent",
+            "CreatedByEmployeeID": int(created_by),
+            "CreatedDate": roster_created_date,
+        })
+        absence_rows.append({
+            "EmployeeAbsenceID": next_id(context, "EmployeeAbsence"),
+            "EmployeeID": int(employee_id),
+            "PayrollPeriodID": int(payroll_period_id),
+            "AbsenceDate": str(work_date),
+            "EmployeeShiftRosterID": int(roster_id),
+            "AbsenceType": str(absence["AbsenceType"]),
+            "HoursAbsent": absence_hours,
+            "IsPaid": 0 if str(absence["AbsenceType"]) == "Personal" else 1,
+            "ApprovedByEmployeeID": int(created_by),
+            "ApprovedDate": str(work_date),
+            "Status": "Approved",
+        })
+
+    return roster_rows, absence_rows, overtime_rows
+
+
 def materialize_time_clocks_and_labor_entries(
     context: GenerationContext,
+    payroll_period_id: int,
+    period_start: pd.Timestamp,
     specs: dict[tuple[int, str], dict[str, Any]],
     employees: pd.DataFrame,
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    if not specs:
-        return [], []
+) -> tuple[
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+]:
+    if employees.empty:
+        return [], [], [], [], [], []
 
     employee_lookup = employees.set_index("EmployeeID").to_dict("index")
-    shift_lookup = shift_definition_lookup(context)
+    roster_rows, absence_rows, overtime_rows = build_roster_absence_and_overtime_rows(
+        context,
+        payroll_period_id,
+        period_start,
+        employees,
+        specs,
+    )
+    if not specs:
+        return roster_rows, absence_rows, overtime_rows, [], [], []
+
     time_clock_rows: list[dict[str, Any]] = []
+    time_clock_punch_rows: list[dict[str, Any]] = []
     labor_rows: list[dict[str, Any]] = []
 
     for spec in sorted(specs.values(), key=lambda row: (row["WorkDate"], row["EmployeeID"])):
         employee = employee_lookup[int(spec["EmployeeID"])]
-        shift_definition = shift_lookup.get(int(spec["ShiftDefinitionID"])) if pd.notna(spec["ShiftDefinitionID"]) else None
-        base_start_time = "08:00:00" if shift_definition is None else str(shift_definition["StartTime"])
-        break_minutes = 30 if shift_definition is None else int(shift_definition["StandardBreakMinutes"])
         rng = stable_rng(
             context,
             "time-clock",
@@ -1023,12 +1270,18 @@ def materialize_time_clocks_and_labor_entries(
             str(spec["WorkDate"]),
             spec.get("WorkOrderOperationID"),
         )
-        clock_in_time = apply_minutes_to_time(base_start_time, int(rng.integers(*SHIFT_CLOCK_IN_VARIANCE_MINUTES)))
         total_hours = float(spec["RegularHours"]) + float(spec["OvertimeHours"])
+        base_start_time = str(spec.get("ScheduledStartTime") or "08:00:00")
+        base_break_minutes = int(spec.get("StandardBreakMinutes", 30))
+        break_minutes = 0 if total_hours < SHORT_DAY_NO_MEAL_THRESHOLD_HOURS else base_break_minutes
+        clock_in_offset = int(rng.integers(*SHIFT_CLOCK_IN_VARIANCE_MINUTES))
+        if total_hours < SHORT_DAY_NO_MEAL_THRESHOLD_HOURS:
+            clock_in_offset = max(clock_in_offset, 0)
+        clock_in_time = apply_minutes_to_time(base_start_time, clock_in_offset)
+        clock_in_timestamp = pd.Timestamp(combine_timestamp(spec["WorkDate"], clock_in_time))
         scheduled_minutes = int(round(total_hours * 60.0)) + int(break_minutes)
-        clock_out_base = pd.Timestamp(combine_timestamp(spec["WorkDate"], clock_in_time)) + pd.Timedelta(minutes=scheduled_minutes)
-        clock_out_time = clock_out_base.strftime("%Y-%m-%d %H:%M:%S")
-        clock_in_timestamp = combine_timestamp(spec["WorkDate"], clock_in_time)
+        clock_out_timestamp = clock_in_timestamp + pd.Timedelta(minutes=scheduled_minutes)
+        clock_out_time = clock_out_timestamp.strftime("%Y-%m-%d %H:%M:%S")
         hourly_rate = implied_hourly_rate(employee, pd.Timestamp(spec["WorkDate"]).year)
         time_clock_entry_id = next_id(context, "TimeClockEntry")
 
@@ -1038,10 +1291,12 @@ def materialize_time_clocks_and_labor_entries(
             "PayrollPeriodID": int(spec["PayrollPeriodID"]),
             "WorkDate": str(spec["WorkDate"]),
             "ShiftDefinitionID": spec["ShiftDefinitionID"],
+            "EmployeeShiftRosterID": spec.get("EmployeeShiftRosterID"),
+            "OvertimeApprovalID": spec.get("OvertimeApprovalID"),
             "WorkCenterID": spec["WorkCenterID"],
             "WorkOrderID": spec["WorkOrderID"],
             "WorkOrderOperationID": spec["WorkOrderOperationID"],
-            "ClockInTime": clock_in_timestamp,
+            "ClockInTime": clock_in_timestamp.strftime("%Y-%m-%d %H:%M:%S"),
             "ClockOutTime": clock_out_time,
             "BreakMinutes": int(break_minutes),
             "RegularHours": qty(spec["RegularHours"]),
@@ -1050,6 +1305,29 @@ def materialize_time_clocks_and_labor_entries(
             "ApprovedByEmployeeID": int(spec["ApprovedByEmployeeID"]),
             "ApprovedDate": str(spec["ApprovedDate"]),
         })
+        worked_minutes = int(round(total_hours * 60.0))
+        punch_events: list[tuple[pd.Timestamp, str]] = [(clock_in_timestamp, "Clock In")]
+        if break_minutes > 0:
+            first_segment_minutes = max(120, min(worked_minutes - 60, worked_minutes // 2))
+            meal_start_timestamp = clock_in_timestamp + pd.Timedelta(minutes=first_segment_minutes)
+            meal_end_timestamp = meal_start_timestamp + pd.Timedelta(minutes=break_minutes)
+            punch_events.append((meal_start_timestamp, "Meal Start"))
+            punch_events.append((meal_end_timestamp, "Meal End"))
+        punch_events.append((clock_out_timestamp, "Clock Out"))
+        for sequence_number, (punch_timestamp, punch_type) in enumerate(punch_events, start=1):
+            time_clock_punch_rows.append({
+                "TimeClockPunchID": next_id(context, "TimeClockPunch"),
+                "EmployeeID": int(spec["EmployeeID"]),
+                "PayrollPeriodID": int(spec["PayrollPeriodID"]),
+                "WorkDate": str(spec["WorkDate"]),
+                "EmployeeShiftRosterID": spec.get("EmployeeShiftRosterID"),
+                "TimeClockEntryID": int(time_clock_entry_id),
+                "WorkCenterID": spec["WorkCenterID"],
+                "PunchTimestamp": punch_timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+                "PunchType": punch_type,
+                "PunchSource": PUNCH_SOURCE_BADGE,
+                "SequenceNumber": int(sequence_number),
+            })
         labor_rows.append({
             "LaborTimeEntryID": next_id(context, "LaborTimeEntry"),
             "PayrollPeriodID": int(spec["PayrollPeriodID"]),
@@ -1070,7 +1348,7 @@ def materialize_time_clocks_and_labor_entries(
             "ApprovedDate": str(spec["ApprovedDate"]),
         })
 
-    return time_clock_rows, labor_rows
+    return roster_rows, absence_rows, overtime_rows, time_clock_rows, time_clock_punch_rows, labor_rows
 
 
 def build_time_clock_and_labor_rows_for_period(
@@ -1079,11 +1357,18 @@ def build_time_clock_and_labor_rows_for_period(
     period_start: pd.Timestamp,
     period_end: pd.Timestamp,
     employees: pd.DataFrame,
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+) -> tuple[
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+]:
     specs: dict[tuple[int, str], dict[str, Any]] = {}
     build_direct_time_clock_specs(context, payroll_period_id, period_start, period_end, employees, specs)
     build_hourly_support_time_clock_specs(context, payroll_period_id, period_start, period_end, employees, specs)
-    return materialize_time_clocks_and_labor_entries(context, specs, employees)
+    return materialize_time_clocks_and_labor_entries(context, payroll_period_id, period_start, specs, employees)
 
 
 def labor_entries_by_employee(
@@ -1308,14 +1593,18 @@ def generate_month_payroll(context: GenerationContext, year: int, month: int) ->
         pay_date = pd.Timestamp(period["PayDate"])
         timekeeping_employees = active_employees_for_period(context, period_end, pay_date=period_end)
         payroll_employees = active_employees_for_period(context, period_end, pay_date=pay_date)
-        time_clock_rows, labor_rows = build_time_clock_and_labor_rows_for_period(
+        roster_rows, absence_rows, overtime_rows, time_clock_rows, time_clock_punch_rows, labor_rows = build_time_clock_and_labor_rows_for_period(
             context,
             int(period["PayrollPeriodID"]),
             period_start,
             period_end,
             timekeeping_employees,
         )
+        append_rows(context, "EmployeeShiftRoster", roster_rows)
+        append_rows(context, "EmployeeAbsence", absence_rows)
+        append_rows(context, "OvertimeApproval", overtime_rows)
         append_rows(context, "TimeClockEntry", time_clock_rows)
+        append_rows(context, "TimeClockPunch", time_clock_punch_rows)
         append_rows(context, "LaborTimeEntry", labor_rows)
 
         register_rows, register_line_rows = build_payroll_registers_for_period(context, period, payroll_employees, labor_rows)
@@ -1377,6 +1666,70 @@ def time_clock_entry_lookup(context: GenerationContext) -> dict[int, dict[str, A
         return time_clocks.set_index("TimeClockEntryID").to_dict("index")
 
     return get_or_build_cache(context, "_time_clock_entry_lookup_cache", builder)
+
+
+def employee_shift_roster_lookup(context: GenerationContext) -> dict[int, dict[str, Any]]:
+    def builder() -> dict[int, dict[str, Any]]:
+        rosters = context.tables["EmployeeShiftRoster"]
+        if rosters.empty:
+            return {}
+        return rosters.set_index("EmployeeShiftRosterID").to_dict("index")
+
+    return get_or_build_cache(context, "_employee_shift_roster_lookup_cache", builder)
+
+
+def employee_shift_roster_by_employee_date(context: GenerationContext) -> dict[tuple[int, str], list[dict[str, Any]]]:
+    def builder() -> dict[tuple[int, str], list[dict[str, Any]]]:
+        rosters = context.tables["EmployeeShiftRoster"]
+        if rosters.empty:
+            return {}
+        grouped: dict[tuple[int, str], list[dict[str, Any]]] = defaultdict(list)
+        ordered = rosters.sort_values(["EmployeeID", "RosterDate", "EmployeeShiftRosterID"])
+        for row in ordered.to_dict(orient="records"):
+            grouped[(int(row["EmployeeID"]), str(row["RosterDate"]))].append(row)
+        return dict(grouped)
+
+    return get_or_build_cache(context, "_employee_shift_roster_by_employee_date_cache", builder)
+
+
+def employee_absence_rows(context: GenerationContext) -> pd.DataFrame:
+    def builder() -> pd.DataFrame:
+        return context.tables["EmployeeAbsence"].copy()
+
+    return get_or_build_cache(context, "_employee_absence_rows_cache", builder).copy()
+
+
+def overtime_approval_lookup(context: GenerationContext) -> dict[int, dict[str, Any]]:
+    def builder() -> dict[int, dict[str, Any]]:
+        approvals = context.tables["OvertimeApproval"]
+        if approvals.empty:
+            return {}
+        return approvals.set_index("OvertimeApprovalID").to_dict("index")
+
+    return get_or_build_cache(context, "_overtime_approval_lookup_cache", builder)
+
+
+def time_clock_punch_rows(context: GenerationContext) -> pd.DataFrame:
+    def builder() -> pd.DataFrame:
+        return context.tables["TimeClockPunch"].copy()
+
+    return get_or_build_cache(context, "_time_clock_punch_rows_cache", builder).copy()
+
+
+def time_clock_punches_by_entry(context: GenerationContext) -> dict[int, list[dict[str, Any]]]:
+    def builder() -> dict[int, list[dict[str, Any]]]:
+        punches = context.tables["TimeClockPunch"]
+        if punches.empty:
+            return {}
+        grouped: dict[int, list[dict[str, Any]]] = defaultdict(list)
+        ordered = punches.sort_values(["TimeClockEntryID", "SequenceNumber", "TimeClockPunchID"])
+        for row in ordered.to_dict(orient="records"):
+            if pd.isna(row["TimeClockEntryID"]):
+                continue
+            grouped[int(row["TimeClockEntryID"])].append(row)
+        return dict(grouped)
+
+    return get_or_build_cache(context, "_time_clock_punches_by_entry_cache", builder)
 
 
 def payroll_register_lines_with_headers(context: GenerationContext) -> pd.DataFrame:

@@ -19,6 +19,8 @@ flowchart LR
     CAL[Work-center calendar and operation schedule]
     WO[Work order]
     WOO[Work-order operations]
+    ESR[Employee shift roster]
+    TCP[Raw punches]
     MI[Material issue]
     LT[Labor time and payroll]
     PC[Production completion]
@@ -33,8 +35,11 @@ flowchart LR
     WO --> PR
     WO --> WOO
     CAL --> WOO
+    CAL --> ESR
     PR --> PO --> GR --> MI
     WOO --> MI
+    WOO --> ESR
+    ESR --> TCP --> LT
     WOO --> LT
     MI --> PC
     LT --> PC
@@ -120,6 +125,8 @@ Manufacturing does not stop at materials. Direct workers are assigned to shifts,
 
 Main linked tables:
 
+- `EmployeeShiftRoster`
+- `TimeClockPunch`
 - `TimeClockEntry`
 - `ShiftDefinition`
 - `EmployeeShiftAssignment`
@@ -175,6 +182,8 @@ Once finished goods are back in inventory, the normal O2C shipment process can c
 | `WorkOrderOperationSchedule` | Daily scheduled hours for each work-order operation |
 | `ShiftDefinition` | Standard shift template used by hourly manufacturing labor |
 | `EmployeeShiftAssignment` | Primary shift assignment for hourly employees |
+| `EmployeeShiftRoster` | Daily planned manufacturing or support shift row |
+| `TimeClockPunch` | Raw attendance event tied to the planned roster |
 | `TimeClockEntry` | Approved daily time and attendance row for hourly labor |
 | `MaterialIssue` | Header for component issue to production |
 | `MaterialIssueLine` | Component issue detail |
@@ -240,7 +249,9 @@ flowchart LR
 This mini-flow is the bridge students need for product-cost teaching:
 
 - scheduling explains when work should happen
-- time clocks show when hourly labor was approved
+- the roster shows who was planned against that schedule
+- raw punches show what attendance actually occurred
+- time clocks show the approved worked summary
 - labor entries allocate that approved time to production
 - payroll turns labor into pay and later manufacturing reclass activity
 - completion and work-order close tie those pieces back into product cost and variance

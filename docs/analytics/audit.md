@@ -13,7 +13,7 @@ sidebar_label: Audit Analytics
 | O2C and P2P completeness | O2C and P2P header and line tables plus `CashReceiptApplication` |
 | Approvals and segregation of duties | `PurchaseRequisition`, `PurchaseOrder`, `PurchaseInvoice`, `JournalEntry`, `CreditMemo`, `CustomerRefund`, `PayrollRegister`, `Employee` |
 | Manufacturing controls | `Item`, `BillOfMaterial`, `Routing`, `WorkCenter`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `MaterialIssueLine`, `ProductionCompletionLine`, `WorkOrderClose` |
-| Payroll and time controls | `ShiftDefinition`, `EmployeeShiftAssignment`, `TimeClockEntry`, `AttendanceException`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance`, `Employee` |
+| Payroll and time controls | `ShiftDefinition`, `EmployeeShiftAssignment`, `EmployeeShiftRoster`, `EmployeeAbsence`, `OvertimeApproval`, `TimeClockPunch`, `TimeClockEntry`, `AttendanceException`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance`, `Employee` |
 | Master-data controls | `Employee`, `Item`, plus operational tables that reuse those masters |
 | Support-workbook-assisted review | `greenfield_support.xlsx` sheets `AnomalyLog`, `ValidationStages`, `ValidationChecks`, and `ValidationExceptions` |
 
@@ -56,6 +56,11 @@ sidebar_label: Audit Analytics
 | Current-state employee assignment review | [34_current_state_employee_assignment_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/34_current_state_employee_assignment_review.sql) |
 | Approval authority-limit review | [35_approval_authority_limit_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/35_approval_authority_limit_review.sql) |
 | Item status alignment review | [36_item_status_alignment_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/36_item_status_alignment_review.sql) |
+| Scheduled-without-punch and punch-without-schedule review | [37_scheduled_without_punch_and_punch_without_schedule_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/37_scheduled_without_punch_and_punch_without_schedule_review.sql) |
+| Overtime without approval review | [38_overtime_without_approval_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/38_overtime_without_approval_review.sql) |
+| Absence with worked time review | [39_absence_with_worked_time_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/39_absence_with_worked_time_review.sql) |
+| Overlapping or incomplete punch review | [40_overlapping_or_incomplete_punch_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/40_overlapping_or_incomplete_punch_review.sql) |
+| Roster after termination review | [41_roster_after_termination_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/41_roster_after_termination_review.sql) |
 
 ## Baseline Control Queries
 
@@ -74,6 +79,7 @@ Use these when you want the default anomaly-enabled build to surface teachable e
 - payroll control review
 - routing and operation-link review
 - time-clock and labor exception review
+- roster, punch, absence, and overtime-approval review
 - terminated-employee activity review
 - item-master completeness review
 - discontinued or pre-launch item activity review
@@ -127,3 +133,8 @@ Pair those sheets with [Audit Review Pack Case](cases/audit-review-pack-case.md)
 | [34_current_state_employee_assignment_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/34_current_state_employee_assignment_review.sql) | `standard` | `inactive_employee_current_assignment` | `CostCenter`, `Warehouse`, `WorkCenter`, `Customer`, `Employee` |
 | [35_approval_authority_limit_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/35_approval_authority_limit_review.sql) | `standard` | `approval_above_authority_limit`, `unexpected_role_family_approval` | `PurchaseOrder`, `PurchaseInvoice`, `CreditMemo`, `CustomerRefund`, `JournalEntry`, `PayrollRegister`, `Employee` |
 | [36_item_status_alignment_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/36_item_status_alignment_review.sql) | `standard` | `item_status_alignment_conflict` | `Item` |
+| [37_scheduled_without_punch_and_punch_without_schedule_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/37_scheduled_without_punch_and_punch_without_schedule_review.sql) | `standard` | `punch_without_roster`, `missing_final_punch` | `EmployeeShiftRoster`, `TimeClockEntry`, `TimeClockPunch`, `Employee` |
+| [38_overtime_without_approval_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/38_overtime_without_approval_review.sql) | `standard` | `overtime_without_approval` | `TimeClockEntry`, `OvertimeApproval`, `Employee`, `WorkCenter` |
+| [39_absence_with_worked_time_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/39_absence_with_worked_time_review.sql) | `standard` | `absence_with_worked_time` | `EmployeeAbsence`, `EmployeeShiftRoster`, `TimeClockEntry`, `TimeClockPunch` |
+| [40_overlapping_or_incomplete_punch_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/40_overlapping_or_incomplete_punch_review.sql) | `standard` | `missing_final_punch`, `overlapping_punch_sequence` | `TimeClockPunch`, `TimeClockEntry`, `Employee` |
+| [41_roster_after_termination_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/41_roster_after_termination_review.sql) | `standard` | `roster_after_termination` | `EmployeeShiftRoster`, `Employee`, `TimeClockEntry`, `TimeClockPunch` |

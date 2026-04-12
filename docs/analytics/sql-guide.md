@@ -79,7 +79,7 @@ sqlite3 greenfield.sqlite < queries/financial/19_working_capital_bridge_by_month
 - The main SQLite export contains dataset tables only.
 - Anomaly and validation companion content lives in the support workbook, not in SQLite.
 
-## Suggested Phase 19 Sequence
+## Suggested Phase 19 to Phase 21 Sequence
 
 ### Financial
 
@@ -104,9 +104,16 @@ sqlite3 greenfield.sqlite < queries/financial/19_working_capital_bridge_by_month
 4. contribution margin by collection, material, lifecycle, and supply mode
 5. customer-service impact by collection and style
 6. labor and headcount by work location, job family, and cost center
-7. portfolio return and refund impact by collection and lifecycle
-8. paired case:
+7. staffing coverage vs work-center planned load
+8. rostered hours vs approved worked hours by work center and shift
+9. absence rate by work location, job family, and month
+10. overtime approval coverage and concentration
+11. punch-to-pay bridge for hourly workers
+12. late arrival and early departure by shift and department
+13. portfolio return and refund impact by collection and lifecycle
+14. paired cases:
    - [Product Portfolio Profitability Case](cases/product-portfolio-profitability-case.md)
+   - [Workforce Coverage and Attendance Case](cases/workforce-coverage-and-attendance-case.md)
 
 ### Audit
 
@@ -118,9 +125,15 @@ sqlite3 greenfield.sqlite < queries/financial/19_working_capital_bridge_by_month
 6. discontinued or pre-launch item activity review
 7. approval-authority review by expected role family
 8. terminated-employee activity detail and rollup review
-9. paired cases:
+9. scheduled-without-punch and punch-without-schedule review
+10. overtime without approval review
+11. absence-with-worked-time review
+12. overlapping or incomplete punch review
+13. roster-after-termination review
+14. paired cases:
    - [Workforce Cost and Org-Control Case](cases/workforce-cost-and-org-control-case.md)
    - [Audit Review Pack Case](cases/audit-review-pack-case.md)
+   - [Attendance Control Audit Case](cases/attendance-control-audit-case.md)
 
 ## Where to Go Next
 

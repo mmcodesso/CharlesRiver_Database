@@ -1,6 +1,6 @@
 ---
 title: Audit Review Pack Case
-description: Guided walkthrough for running a default anomaly-enabled audit review pack with the support workbook and the expanded Phase 20 audit queries.
+description: Guided walkthrough for running a default anomaly-enabled audit review pack with the support workbook and the expanded Phase 20 and Phase 21 audit queries.
 sidebar_label: Audit Review Pack
 ---
 
@@ -43,6 +43,11 @@ The internal-audit team receives the normal five-year package and needs to triag
 7. Run [../../../queries/audit/31_discontinued_or_prelaunch_item_activity_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/31_discontinued_or_prelaunch_item_activity_review.sql).
 8. Run [../../../queries/audit/32_approval_authority_review_by_expected_role_family.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/32_approval_authority_review_by_expected_role_family.sql).
 9. Run [../../../queries/audit/33_terminated_employee_activity_rollup_by_process_area.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/33_terminated_employee_activity_rollup_by_process_area.sql).
+10. Run [../../../queries/audit/37_scheduled_without_punch_and_punch_without_schedule_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/37_scheduled_without_punch_and_punch_without_schedule_review.sql).
+11. Run [../../../queries/audit/38_overtime_without_approval_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/38_overtime_without_approval_review.sql).
+12. Run [../../../queries/audit/39_absence_with_worked_time_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/39_absence_with_worked_time_review.sql).
+13. Run [../../../queries/audit/40_overlapping_or_incomplete_punch_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/40_overlapping_or_incomplete_punch_review.sql).
+14. Run [../../../queries/audit/41_roster_after_termination_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/41_roster_after_termination_review.sql).
 
 ## Suggested Excel Sequence
 
@@ -54,6 +59,7 @@ The internal-audit team receives the normal five-year package and needs to triag
 
 - The support workbook is a guide, not a substitute for source-document review.
 - Several audit queries now focus on master data and org structure, not only document timing.
+- The audit pack now also separates roster issues, punch issues, absence issues, and overtime-approval issues.
 - Current-state assignment issues and approval-limit exceptions can be reviewed separately from broader role-family questions.
 - The same anomaly family can appear in both a summary query and a more detailed control query.
 - An anomaly-enabled dataset should still be explainable. It should not feel random.
