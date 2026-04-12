@@ -20,7 +20,7 @@ The current implementation has six layers:
 | Operational data layer | O2C, P2P, manufacturing, payroll, time, and master-data tables |
 | Accounting layer | `JournalEntry`, `GLEntry`, and the chart of accounts |
 | Control layer | Validations, anomaly injection, validation reporting, and generation logging |
-| Delivery layer | SQLite, Excel, JSON, and text-log exports |
+| Delivery layer | SQLite, Excel, support-workbook, CSV zip, and text-log exports |
 | Configuration layer | settings, runtime context, fiscal calendar, and validation scopes |
 
 The implemented schema is defined in `src/greenfield_dataset/schema.py` through `TABLE_COLUMNS`.
@@ -51,7 +51,7 @@ flowchart LR
     Y[Generate Year-End Close Journals]
     V[Run Validations]
     A[Inject Anomalies]
-    X[Export SQLite, Excel, JSON, and Log]
+    X[Export SQLite, Excel, Support Workbook, CSV Zip, and Log]
 
     S --> C --> E --> M --> B --> O --> J --> P --> Y --> V --> A --> X
 ```
@@ -71,7 +71,7 @@ In plain language, the build:
 | `settings.py` | Load YAML configuration and initialize the runtime context |
 | `calendar.py` | Build the fiscal calendar |
 | `schema.py` | Define `TABLE_COLUMNS` and create empty DataFrames |
-| `master_data.py` | Generate accounts, cost centers, employees, warehouses, items, customers, and suppliers |
+| `master_data.py` | Generate accounts, cost centers, employees, warehouses, items, customers, and suppliers, including employee lifecycle and richer item-catalog attributes |
 | `manufacturing.py` | Generate BOMs, work centers, capacity calendars, routings, work orders, schedules, issues, completions, and work-order close activity |
 | `payroll.py` | Generate shifts, assignments, time clocks, payroll periods, labor time, payroll registers, payments, remittances, and manufacturing labor helpers |
 | `budgets.py` | Generate opening balances and budgets |
@@ -82,7 +82,7 @@ In plain language, the build:
 | `validations.py` | Run document, accounting, payroll, manufacturing, and roll-forward checks |
 | `anomalies.py` | Inject configured anomalies and record them in the anomaly log |
 | `state_cache.py` | Provide shared cache helpers used by generation and validation |
-| `exporters.py` | Write SQLite, Excel, and JSON outputs |
+| `exporters.py` | Write SQLite, dataset Excel, support workbook, and CSV zip outputs |
 | `utils.py` | Support numbering, rounding, and shared helper logic |
 | `main.py` | Orchestrate the full run and write the generation log |
 
@@ -95,6 +95,7 @@ The validation layer checks:
 - schema consistency and orphan-row integrity
 - header-to-line totals and status consistency
 - O2C, P2P, manufacturing, payroll, and time-clock controls
+- master-data controls for employee roles, employment validity, item catalog completeness, and launch-date usage
 - voucher balance, trial balance, and control-account roll-forwards
 - journal-header-to-GL agreement and close-cycle completeness
 
@@ -113,8 +114,9 @@ The main entrypoint also supports validation scopes:
 The current generator exports:
 
 - SQLite database
-- Excel workbook with table sheets plus anomaly and validation summary sheets
-- JSON validation report
+- Excel workbook with dataset table sheets only
+- support workbook for anomaly and validation content
+- CSV zip package with one CSV per dataset table
 - text generation log
 
 Most course users should start with those generated files rather than the Python code.

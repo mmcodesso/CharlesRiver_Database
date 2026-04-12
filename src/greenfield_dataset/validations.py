@@ -1080,9 +1080,6 @@ def validate_phase7(context: GenerationContext) -> dict[str, Any]:
     results = validate_phase6(context)
     exceptions = list(results["exceptions"])
 
-    if context.settings.anomaly_mode != "none" and not context.anomaly_log:
-        exceptions.append("Anomaly mode is enabled but no anomalies were logged.")
-
     phase7_results: dict[str, Any] = {
         "row_counts": {table: int(len(df)) for table, df in context.tables.items()},
         "exceptions": exceptions,
@@ -1974,11 +1971,14 @@ def validate_payroll_controls(context: GenerationContext) -> dict[str, Any]:
         active_count_by_period: dict[int, int] = {}
         if not employees.empty:
             employee_hires = pd.to_datetime(employees["HireDate"])
+            employee_terminations = pd.to_datetime(employees["TerminationDate"], errors="coerce")
             for period in processed_periods.itertuples(index=False):
+                period_end = pd.Timestamp(period.PeriodEndDate)
+                pay_date = pd.Timestamp(period.PayDate)
                 active_count_by_period[int(period.PayrollPeriodID)] = int(
                     (
-                        employees["IsActive"].eq(1)
-                        & employee_hires.le(pd.Timestamp(period.PeriodEndDate))
+                        employee_hires.le(period_end)
+                        & (employee_terminations.isna() | employee_terminations.ge(pay_date))
                     ).sum()
                 )
         register_count_by_period = registers.groupby("PayrollPeriodID").size().to_dict() if not registers.empty else {}
@@ -2289,6 +2289,237 @@ def validate_time_clock_controls(context: GenerationContext) -> dict[str, Any]:
     }
 
 
+def validate_master_data_controls(context: GenerationContext) -> dict[str, Any]:
+    employees = context.tables["Employee"].copy()
+    items = context.tables["Item"].copy()
+    exceptions: list[dict[str, Any]] = []
+
+    if not employees.empty:
+        unique_roles = [
+            "Chief Executive Officer",
+            "Chief Financial Officer",
+            "Controller",
+            "Production Manager",
+            "Accounting Manager",
+        ]
+        for job_title in unique_roles:
+            role_count = int(employees["JobTitle"].eq(job_title).sum())
+            if role_count != 1:
+                exceptions.append({
+                    "type": "unique_role_count_mismatch",
+                    "job_title": job_title,
+                    "message": f"Expected exactly one {job_title}, found {role_count}.",
+                })
+
+        hires = pd.to_datetime(employees["HireDate"], errors="coerce")
+        terminations = pd.to_datetime(employees["TerminationDate"], errors="coerce")
+        terminated_mask = employees["EmploymentStatus"].eq("Terminated")
+        active_mask = employees["EmploymentStatus"].eq("Active")
+        leave_mask = employees["EmploymentStatus"].eq("Leave")
+
+        invalid_status_rows = employees[
+            (terminated_mask & (terminations.isna() | employees["IsActive"].astype(int).ne(0)))
+            | ((active_mask | leave_mask) & (terminations.notna() | employees["IsActive"].astype(int).ne(1)))
+            | (terminations.notna() & hires.notna() & terminations.lt(hires))
+        ]
+        for row in invalid_status_rows.head(10).itertuples(index=False):
+            exceptions.append({
+                "type": "employee_status_alignment",
+                "employee_id": int(row.EmployeeID),
+                "message": f"Employee {int(row.EmployeeID)} has inconsistent employment status, termination date, or IsActive flag.",
+            })
+
+        terminated_share = round(float(terminated_mask.sum()) / max(len(employees), 1), 4)
+        if terminated_share < 0.08 or terminated_share > 0.15:
+            exceptions.append({
+                "type": "terminated_share_out_of_band",
+                "share": terminated_share,
+                "message": f"Terminated employee share {terminated_share:.4f} is outside the 8% to 15% target band.",
+            })
+
+        active_employee_ids = set(employees.loc[employees["IsActive"].astype(int).eq(1), "EmployeeID"].astype(int).tolist())
+        current_ref_specs = [
+            ("CostCenter", "ManagerID"),
+            ("Warehouse", "ManagerID"),
+            ("WorkCenter", "ManagerEmployeeID"),
+            ("Customer", "SalesRepEmployeeID"),
+        ]
+        for table_name, employee_column in current_ref_specs:
+            table = context.tables[table_name]
+            if table.empty or employee_column not in table.columns:
+                continue
+            invalid_refs = table[
+                table[employee_column].notna()
+                & ~table[employee_column].astype(int).isin(active_employee_ids)
+            ]
+            for row in invalid_refs.head(10).itertuples(index=False):
+                exceptions.append({
+                    "type": "inactive_current_master_reference",
+                    "table_name": table_name,
+                    "employee_column": employee_column,
+                    "message": f"{table_name}.{employee_column} points to an employee who is not active at end of range.",
+                })
+
+        employee_lookup = employees.set_index("EmployeeID")[["HireDate", "TerminationDate"]].to_dict("index")
+        employee_date_specs = [
+            ("SalesOrder", "OrderDate", ["SalesRepEmployeeID"]),
+            ("CashReceipt", "ReceiptDate", ["RecordedByEmployeeID"]),
+            ("CashReceiptApplication", "ApplicationDate", ["AppliedByEmployeeID"]),
+            ("SalesReturn", "ReturnDate", ["ReceivedByEmployeeID"]),
+            ("CreditMemo", "ApprovedDate", ["ApprovedByEmployeeID"]),
+            ("CustomerRefund", "RefundDate", ["ApprovedByEmployeeID"]),
+            ("PurchaseRequisition", "RequestDate", ["RequestedByEmployeeID"]),
+            ("PurchaseRequisition", "ApprovedDate", ["ApprovedByEmployeeID"]),
+            ("PurchaseOrder", "OrderDate", ["CreatedByEmployeeID", "ApprovedByEmployeeID"]),
+            ("GoodsReceipt", "ReceiptDate", ["ReceivedByEmployeeID"]),
+            ("PurchaseInvoice", "ApprovedDate", ["ApprovedByEmployeeID"]),
+            ("DisbursementPayment", "PaymentDate", ["ApprovedByEmployeeID"]),
+            ("WorkOrder", "ReleasedDate", ["ReleasedByEmployeeID"]),
+            ("WorkOrder", "ClosedDate", ["ClosedByEmployeeID"]),
+            ("MaterialIssue", "IssueDate", ["IssuedByEmployeeID"]),
+            ("ProductionCompletion", "CompletionDate", ["ReceivedByEmployeeID"]),
+            ("WorkOrderClose", "CloseDate", ["ClosedByEmployeeID"]),
+            ("TimeClockEntry", "WorkDate", ["EmployeeID", "ApprovedByEmployeeID"]),
+            ("LaborTimeEntry", "WorkDate", ["EmployeeID", "ApprovedByEmployeeID"]),
+            ("PayrollRegister", "ApprovedDate", ["EmployeeID", "ApprovedByEmployeeID"]),
+            ("PayrollPayment", "PaymentDate", ["RecordedByEmployeeID"]),
+            ("PayrollLiabilityRemittance", "RemittanceDate", ["ApprovedByEmployeeID"]),
+            ("JournalEntry", "CreatedDate", ["CreatedByEmployeeID"]),
+            ("JournalEntry", "ApprovedDate", ["ApprovedByEmployeeID"]),
+            ("Budget", "ApprovedDate", ["ApprovedByEmployeeID"]),
+        ]
+        for table_name, date_column, employee_columns in employee_date_specs:
+            table = context.tables[table_name]
+            if table.empty or date_column not in table.columns:
+                continue
+            event_dates = pd.to_datetime(table[date_column], errors="coerce")
+            for employee_column in employee_columns:
+                if employee_column not in table.columns:
+                    continue
+                active_rows = table[table[employee_column].notna()].copy()
+                if active_rows.empty:
+                    continue
+                for row_index, row in active_rows.head(len(active_rows)).iterrows():
+                    employee = employee_lookup.get(int(row[employee_column]))
+                    event_date = event_dates.loc[row_index]
+                    if employee is None or pd.isna(event_date):
+                        continue
+                    hire_date = pd.Timestamp(employee["HireDate"])
+                    termination_date = pd.Timestamp(employee["TerminationDate"]) if pd.notna(employee["TerminationDate"]) else None
+                    if event_date < hire_date or (termination_date is not None and event_date > termination_date):
+                        exceptions.append({
+                            "type": "employee_activity_outside_employment_dates",
+                            "table_name": table_name,
+                            "employee_column": employee_column,
+                            "employee_id": int(row[employee_column]),
+                            "message": f"{table_name}.{employee_column} references employee {int(row[employee_column])} outside the employee's valid employment dates.",
+                        })
+                        if len(exceptions) >= 250:
+                            break
+                if len(exceptions) >= 250:
+                    break
+            if len(exceptions) >= 250:
+                break
+
+    if not items.empty:
+        sellable = items[items["RevenueAccountID"].notna()].copy()
+        generic_names = sellable["ItemName"].astype(str).str.fullmatch(r"(Furniture|Lighting|Textiles|Accessories) Item \d{4}")
+        if generic_names.any():
+            for row in sellable[generic_names].head(10).itertuples(index=False):
+                exceptions.append({
+                    "type": "generic_item_name",
+                    "item_id": int(row.ItemID),
+                    "message": f"Sellable item {int(row.ItemID)} still uses the old generic naming pattern.",
+                })
+
+        required_columns_by_group = {
+            "Furniture": ["CollectionName", "StyleFamily", "PrimaryMaterial", "Finish", "SizeDescriptor", "LifecycleStatus", "LaunchDate"],
+            "Lighting": ["CollectionName", "StyleFamily", "PrimaryMaterial", "Finish", "LifecycleStatus", "LaunchDate"],
+            "Textiles": ["CollectionName", "StyleFamily", "PrimaryMaterial", "Color", "SizeDescriptor", "LifecycleStatus", "LaunchDate"],
+            "Accessories": ["StyleFamily", "PrimaryMaterial", "Finish", "LifecycleStatus", "LaunchDate"],
+            "Raw Materials": ["PrimaryMaterial", "SizeDescriptor", "LifecycleStatus", "LaunchDate"],
+            "Packaging": ["PrimaryMaterial", "SizeDescriptor", "LifecycleStatus", "LaunchDate"],
+            "Services": ["LifecycleStatus", "LaunchDate"],
+        }
+        for item_group, required_columns in required_columns_by_group.items():
+            rows = items[items["ItemGroup"].eq(item_group)]
+            for column_name in required_columns:
+                invalid_rows = rows[rows[column_name].isna() | rows[column_name].astype(str).eq("")]
+                for row in invalid_rows.head(5).itertuples(index=False):
+                    exceptions.append({
+                        "type": "missing_item_catalog_attribute",
+                        "item_id": int(row.ItemID),
+                        "column_name": column_name,
+                        "message": f"Item {int(row.ItemID)} is missing required catalog attribute {column_name}.",
+                    })
+
+        lifecycle = items["LifecycleStatus"].astype(str)
+        launch_dates = pd.to_datetime(items["LaunchDate"], errors="coerce")
+        invalid_lifecycle_rows = items[
+            launch_dates.isna()
+            | ((lifecycle == "Discontinued") & items["IsActive"].astype(int).ne(0))
+            | ((lifecycle.isin(["Core", "Seasonal"])) & items["IsActive"].astype(int).ne(1))
+        ]
+        for row in invalid_lifecycle_rows.head(10).itertuples(index=False):
+            exceptions.append({
+                "type": "item_lifecycle_alignment",
+                "item_id": int(row.ItemID),
+                "message": f"Item {int(row.ItemID)} has inconsistent lifecycle, launch date, or IsActive state.",
+            })
+
+        item_launch_lookup = items.set_index("ItemID")["LaunchDate"].to_dict()
+        item_current_active_lookup = items.set_index("ItemID")["IsActive"].astype(int).to_dict()
+        item_lifecycle_lookup = items.set_index("ItemID")["LifecycleStatus"].astype(str).to_dict()
+        item_date_specs = [
+            ("SalesOrderLine", "ItemID", context.tables["SalesOrder"][["SalesOrderID", "OrderDate"]], "SalesOrderID", "OrderDate"),
+            ("PurchaseRequisition", "ItemID", None, None, "RequestDate"),
+            ("PurchaseOrderLine", "ItemID", context.tables["PurchaseOrder"][["PurchaseOrderID", "OrderDate"]], "PurchaseOrderID", "OrderDate"),
+            ("GoodsReceiptLine", "ItemID", context.tables["GoodsReceipt"][["GoodsReceiptID", "ReceiptDate"]], "GoodsReceiptID", "ReceiptDate"),
+            ("PurchaseInvoiceLine", "ItemID", context.tables["PurchaseInvoice"][["PurchaseInvoiceID", "InvoiceDate"]], "PurchaseInvoiceID", "InvoiceDate"),
+            ("WorkOrder", "ItemID", None, None, "ReleasedDate"),
+            ("ShipmentLine", "ItemID", context.tables["Shipment"][["ShipmentID", "ShipmentDate"]], "ShipmentID", "ShipmentDate"),
+            ("SalesInvoiceLine", "ItemID", context.tables["SalesInvoice"][["SalesInvoiceID", "InvoiceDate"]], "SalesInvoiceID", "InvoiceDate"),
+            ("SalesReturnLine", "ItemID", context.tables["SalesReturn"][["SalesReturnID", "ReturnDate"]], "SalesReturnID", "ReturnDate"),
+            ("ProductionCompletionLine", "ItemID", context.tables["ProductionCompletion"][["ProductionCompletionID", "CompletionDate"]], "ProductionCompletionID", "CompletionDate"),
+        ]
+        for table_name, item_column, header_df, link_column, date_column in item_date_specs:
+            table = context.tables[table_name]
+            if table.empty or item_column not in table.columns:
+                continue
+            dated_rows = table.copy()
+            if header_df is not None and link_column is not None:
+                dated_rows = dated_rows.merge(header_df, on=link_column, how="left")
+            event_dates = pd.to_datetime(dated_rows[date_column], errors="coerce")
+            for row_index, row in dated_rows[dated_rows[item_column].notna()].iterrows():
+                item_id = int(row[item_column])
+                launch_date = item_launch_lookup.get(item_id)
+                if launch_date is None or pd.isna(event_dates.loc[row_index]):
+                    continue
+                if pd.Timestamp(event_dates.loc[row_index]) < pd.Timestamp(launch_date):
+                    exceptions.append({
+                        "type": "item_used_before_launch",
+                        "table_name": table_name,
+                        "item_id": item_id,
+                        "message": f"{table_name} references item {item_id} before its launch date.",
+                    })
+                if int(item_current_active_lookup.get(item_id, 1)) != 1 and str(item_lifecycle_lookup.get(item_id, "")) == "Discontinued":
+                    exceptions.append({
+                        "type": "inactive_item_in_activity",
+                        "table_name": table_name,
+                        "item_id": item_id,
+                        "message": f"{table_name} references discontinued item {item_id}.",
+                    })
+                if len(exceptions) >= 250:
+                    break
+            if len(exceptions) >= 250:
+                break
+
+    return {
+        "exception_count": len(exceptions),
+        "exceptions": exceptions,
+    }
+
+
 def validate_phase13(context: GenerationContext, store: bool = True) -> dict[str, Any]:
     results = validate_phase6(context)
     exceptions = list(results["exceptions"])
@@ -2522,6 +2753,52 @@ def validate_phase17(
     return phase17_results
 
 
+def validate_phase18(
+    context: GenerationContext,
+    scope: str = "full",
+    store: bool = True,
+) -> dict[str, Any]:
+    results = validate_phase17(context, scope=scope, store=False)
+    exceptions = list(results["exceptions"])
+
+    normalized_scope = str(scope).strip().lower()
+    master_data_controls: dict[str, Any] = {"exception_count": 0, "exceptions": []}
+    if normalized_scope in {"operational", "full"}:
+        master_data_controls = validate_master_data_controls(context)
+        if master_data_controls["exception_count"]:
+            exceptions.append(f"Master data control exceptions: {master_data_controls['exception_count']}.")
+
+    phase18_results: dict[str, Any] = {
+        "row_counts": {table: int(len(df)) for table, df in context.tables.items()},
+        "exceptions": exceptions,
+        "validation_scope": normalized_scope,
+        "gl_balance": results["gl_balance"],
+        "trial_balance_difference": results["trial_balance_difference"],
+        "account_rollforward": results["account_rollforward"],
+        "o2c_controls": results["o2c_controls"],
+        "p2p_controls": results["p2p_controls"],
+        "journal_controls": results["journal_controls"],
+        "manufacturing_controls": results["manufacturing_controls"],
+        "payroll_controls": results["payroll_controls"],
+        "routing_controls": results["routing_controls"],
+        "capacity_controls": results["capacity_controls"],
+        "time_clock_controls": results["time_clock_controls"],
+        "master_data_controls": master_data_controls,
+    }
+    if store:
+        context.validation_results["phase18"] = phase18_results
+        context.validation_results["phase17"] = phase18_results
+        context.validation_results["phase16"] = phase18_results
+        context.validation_results["phase15_2"] = phase18_results
+        context.validation_results["phase15"] = phase18_results
+        context.validation_results["phase14"] = phase18_results
+        context.validation_results["phase13"] = phase18_results
+        context.validation_results["phase12"] = phase18_results
+        context.validation_results["phase11"] = phase18_results
+        context.validation_results["phase9"] = phase18_results
+    return phase18_results
+
+
 def validate_phase12(context: GenerationContext, store: bool = True) -> dict[str, Any]:
     results = validate_phase15(context, store=False)
     if store:
@@ -2544,7 +2821,7 @@ def validate_phase9(context: GenerationContext, store: bool = True) -> dict[str,
 
 
 def validate_phase8(context: GenerationContext, scope: str = "full") -> dict[str, Any]:
-    results = validate_phase17(context, scope=scope, store=False)
+    results = validate_phase18(context, scope=scope, store=False)
     exceptions = list(results["exceptions"])
 
     if context.settings.anomaly_mode != "none" and not context.anomaly_log:
@@ -2565,6 +2842,7 @@ def validate_phase8(context: GenerationContext, scope: str = "full") -> dict[str
         "routing_controls": results["routing_controls"],
         "capacity_controls": results["capacity_controls"],
         "time_clock_controls": results.get("time_clock_controls", {"exception_count": 0, "exceptions": []}),
+        "master_data_controls": results.get("master_data_controls", {"exception_count": 0, "exceptions": []}),
     }
     context.validation_results["phase8"] = phase8_results
     return phase8_results

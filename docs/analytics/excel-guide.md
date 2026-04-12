@@ -10,6 +10,7 @@ sidebar_label: Excel Guide
 ## Workbook Setup
 
 The dataset workbook contains one worksheet for each dataset table.
+Each worksheet is already exported as a formatted Excel Table with filters and a frozen header row.
 
 The companion support workbook contains:
 
@@ -22,10 +23,9 @@ The companion support workbook contains:
 Recommended first steps:
 
 1. open `greenfield.xlsx`
-2. convert the most-used sheets into Excel Tables
-3. freeze the top row on large sheets
-4. format date and amount columns consistently
-5. add slicers or timeline filters for year and month where helpful
+2. confirm which sheets you want to use for the exercise
+3. add slicers or timeline filters for year and month where helpful
+4. create a working sheet for pivots, lookups, and charts
 
 For anomaly-focused teaching, use the standard course dataset workbook together with the companion support workbook, then filter pivots or tables to one fiscal year when you want a narrower lab. If you are preparing that package yourself, use [Dataset Delivery and Build Setup](../teach-with-greenfield/dataset-delivery.md).
 
@@ -248,6 +248,20 @@ Recommended outputs:
 - employer burden by cost center
 - net-pay mix by month
 
+### Workforce composition and lifecycle review
+
+Use:
+
+- `Employee`
+- `CostCenter`
+
+Recommended outputs:
+
+- headcount by cost center, job family, and employment status
+- active versus terminated end-state mix
+- average tenure by cost center and job family
+- unique executive-role review
+
 ## Managerial Accounting Workflows
 
 ### Budget vs actual
@@ -460,6 +474,23 @@ Suggested outputs:
 - unallocated paid hours by work center
 - direct productive share percentage
 
+### Product portfolio and lifecycle analysis
+
+Use:
+
+- `Item`
+- `SalesInvoiceLine`
+- `CreditMemoLine`
+- `ShipmentLine`
+- `SalesReturnLine`
+
+Suggested outputs:
+
+- billed sales by collection and style family
+- credits and returns by lifecycle status
+- gross margin by material and lifecycle status
+- seasonal versus core product mix
+
 ## Audit Analytics Workflows
 
 ### Document-chain completeness
@@ -495,6 +526,7 @@ Suggested checks:
 - same creator and approver
 - missing approver on approved status
 - concentration of approvals by one employee
+- approvals concentrated in roles that do not fit the expected organization design
 
 ### Cut-off and timing review
 
@@ -571,6 +603,24 @@ Recommended outputs:
 - off-shift clocking review
 - paid-without-clock and clock-without-pay review
 - labor outside scheduled operation windows
+
+### Employee master-data control review
+
+Use:
+
+- `Employee`
+- `PayrollRegister`
+- `TimeClockEntry`
+- `LaborTimeEntry`
+- `PurchaseOrder`
+- `JournalEntry`
+- `greenfield_support.xlsx`
+
+Recommended outputs:
+
+- post-termination activity by employee and source table
+- duplicate executive-role assignments in anomaly-enabled builds
+- inactive employee activity counts by control area
 
 ### Accrued-service, customer-deposit, and bridge exception review
 

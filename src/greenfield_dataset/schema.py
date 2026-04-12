@@ -126,7 +126,9 @@ TABLE_COLUMNS = {
         "ListPrice", "UnitOfMeasure", "SupplyMode", "ProductionLeadTimeDays",
         "StandardLaborHoursPerUnit", "StandardDirectLaborCost", "StandardVariableOverheadCost",
         "StandardFixedOverheadCost", "StandardConversionCost", "RoutingID", "InventoryAccountID",
-        "RevenueAccountID", "COGSAccountID", "PurchaseVarianceAccountID", "TaxCategory", "IsActive",
+        "RevenueAccountID", "COGSAccountID", "PurchaseVarianceAccountID", "TaxCategory",
+        "CollectionName", "StyleFamily", "PrimaryMaterial", "Finish", "Color", "SizeDescriptor",
+        "LifecycleStatus", "LaunchDate", "IsActive",
     ],
     "BillOfMaterial": [
         "BOMID", "ParentItemID", "VersionNumber", "EffectiveStartDate", "EffectiveEndDate",
@@ -236,9 +238,10 @@ TABLE_COLUMNS = {
     ],
     "Employee": [
         "EmployeeID", "EmployeeName", "CostCenterID", "JobTitle", "Email", "Address",
-        "City", "State", "HireDate", "ManagerID", "IsActive", "AuthorizationLevel", "PayClass",
-        "BaseHourlyRate", "BaseAnnualSalary", "StandardHoursPerWeek", "OvertimeEligible",
-        "MaxApprovalAmount",
+        "City", "State", "HireDate", "ManagerID", "EmployeeNumber", "EmploymentStatus",
+        "TerminationDate", "TerminationReason", "JobFamily", "JobLevel", "WorkLocation",
+        "IsActive", "AuthorizationLevel", "PayClass", "BaseHourlyRate", "BaseAnnualSalary",
+        "StandardHoursPerWeek", "OvertimeEligible", "MaxApprovalAmount",
     ],
     "CostCenter": [
         "CostCenterID", "CostCenterName", "ParentCostCenterID", "ManagerID", "IsActive",

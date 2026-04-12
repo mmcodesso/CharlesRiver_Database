@@ -1132,6 +1132,296 @@ def inject_labor_after_operation_close(context: GenerationContext, count_per_yea
                 break
 
 
+def terminated_employee_rows(context: GenerationContext) -> pd.DataFrame:
+    employees = context.tables["Employee"]
+    if employees.empty or "TerminationDate" not in employees.columns:
+        return employees.head(0)
+    terminated = employees[
+        employees["EmploymentStatus"].eq("Terminated")
+        & employees["TerminationDate"].notna()
+    ].copy()
+    if terminated.empty:
+        return terminated
+    terminated["TerminationDateValue"] = pd.to_datetime(terminated["TerminationDate"], errors="coerce")
+    return terminated.sort_values(["TerminationDateValue", "EmployeeID"]).reset_index(drop=True)
+
+
+def inject_terminated_employee_on_payroll(context: GenerationContext, count_per_year: int) -> None:
+    if count_per_year <= 0:
+        return
+    terminated = terminated_employee_rows(context)
+    registers = context.tables["PayrollRegister"]
+    periods = context.tables["PayrollPeriod"]
+    if terminated.empty or registers.empty or periods.empty:
+        return
+
+    registers_with_periods = registers.merge(
+        periods[["PayrollPeriodID", "PayDate"]],
+        on="PayrollPeriodID",
+        how="left",
+    ).sort_values(["PayDate", "PayrollRegisterID"])
+    period_lookup = periods.set_index("PayrollPeriodID")["PayDate"].to_dict()
+
+    for year in fiscal_years(context):
+        used_ids = used_primary_keys(context, "PayrollRegister", "terminated_employee_on_payroll")
+        candidates = registers_with_periods[
+            pd.to_datetime(registers_with_periods["PayDate"]).dt.year.eq(year)
+            & ~registers_with_periods["PayrollRegisterID"].astype(int).isin(used_ids)
+        ].copy()
+        if candidates.empty:
+            continue
+        injected = 0
+        for register in candidates.itertuples(index=False):
+            pay_date = pd.Timestamp(register.PayDate)
+            eligible_employees = terminated[
+                terminated["TerminationDateValue"].lt(pay_date)
+                & terminated["CostCenterID"].astype(int).eq(int(register.CostCenterID))
+            ]
+            if eligible_employees.empty:
+                eligible_employees = terminated[terminated["TerminationDateValue"].lt(pay_date)]
+            if eligible_employees.empty:
+                continue
+            employee_id = int(eligible_employees.iloc[0]["EmployeeID"])
+            mask = context.tables["PayrollRegister"]["PayrollRegisterID"].astype(int).eq(int(register.PayrollRegisterID))
+            context.tables["PayrollRegister"].loc[mask, "EmployeeID"] = employee_id
+            log_anomaly(
+                context,
+                "terminated_employee_on_payroll",
+                "PayrollRegister",
+                int(register.PayrollRegisterID),
+                year,
+                "Payroll register employee was changed to an employee terminated before the pay date.",
+                "Terminated employee payroll activity review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_terminated_employee_approval(context: GenerationContext, count_per_year: int) -> None:
+    if count_per_year <= 0:
+        return
+    terminated = terminated_employee_rows(context)
+    if terminated.empty:
+        return
+
+    approval_specs = [
+        ("PurchaseOrder", "OrderDate", "ApprovedByEmployeeID", "purchase order approval after termination date"),
+        ("PurchaseRequisition", "ApprovedDate", "ApprovedByEmployeeID", "requisition approval after termination date"),
+        ("JournalEntry", "ApprovedDate", "ApprovedByEmployeeID", "journal approval after termination date"),
+    ]
+    for year in fiscal_years(context):
+        injected = 0
+        for table_name, date_column, employee_column, description in approval_specs:
+            table = context.tables[table_name]
+            if table.empty or employee_column not in table.columns or date_column not in table.columns:
+                continue
+            used_ids = used_primary_keys(context, table_name, "terminated_employee_approval")
+            candidates = table[
+                table[employee_column].notna()
+                & pd.to_datetime(table[date_column], errors="coerce").dt.year.eq(year)
+                & ~table.iloc[:, 0].astype(int).isin(used_ids)
+            ].copy()
+            if candidates.empty:
+                continue
+            for row in candidates.itertuples(index=False):
+                event_date = pd.Timestamp(getattr(row, date_column))
+                eligible_employees = terminated[terminated["TerminationDateValue"].lt(event_date)]
+                if eligible_employees.empty:
+                    continue
+                employee_id = int(eligible_employees.iloc[0]["EmployeeID"])
+                pk_column = table.columns[0]
+                mask = context.tables[table_name][pk_column].astype(int).eq(int(getattr(row, pk_column)))
+                context.tables[table_name].loc[mask, employee_column] = employee_id
+                log_anomaly(
+                    context,
+                    "terminated_employee_approval",
+                    table_name,
+                    int(getattr(row, pk_column)),
+                    year,
+                    f"{table_name} approver was changed to an employee terminated before the approval date.",
+                    "Approvals recorded after employee termination.",
+                )
+                injected += 1
+                break
+            if injected >= count_per_year:
+                break
+
+
+def inject_inactive_employee_time_or_labor(context: GenerationContext, count_per_year: int) -> None:
+    if count_per_year <= 0:
+        return
+    terminated = terminated_employee_rows(context)
+    time_clocks = context.tables["TimeClockEntry"]
+    labor_entries = context.tables["LaborTimeEntry"]
+    if terminated.empty or time_clocks.empty:
+        return
+
+    terminated_hourly = terminated[terminated["PayClass"].eq("Hourly")].copy()
+    if terminated_hourly.empty:
+        terminated_hourly = terminated
+
+    for year in fiscal_years(context):
+        used_ids = used_primary_keys(context, "TimeClockEntry", "inactive_employee_time_or_labor")
+        candidates = time_clocks[
+            pd.to_datetime(time_clocks["WorkDate"], errors="coerce").dt.year.eq(year)
+            & ~time_clocks["TimeClockEntryID"].astype(int).isin(used_ids)
+        ].copy()
+        injected = 0
+        for row in candidates.itertuples(index=False):
+            work_date = pd.Timestamp(row.WorkDate)
+            eligible_employees = terminated_hourly[terminated_hourly["TerminationDateValue"].lt(work_date)]
+            if eligible_employees.empty:
+                continue
+            employee_id = int(eligible_employees.iloc[0]["EmployeeID"])
+            time_clock_mask = context.tables["TimeClockEntry"]["TimeClockEntryID"].astype(int).eq(int(row.TimeClockEntryID))
+            context.tables["TimeClockEntry"].loc[time_clock_mask, "EmployeeID"] = employee_id
+            labor_mask = (
+                labor_entries["TimeClockEntryID"].notna()
+                & labor_entries["TimeClockEntryID"].astype(int).eq(int(row.TimeClockEntryID))
+            ) if not labor_entries.empty else pd.Series(dtype=bool)
+            if not labor_entries.empty and labor_mask.any():
+                context.tables["LaborTimeEntry"].loc[labor_mask, "EmployeeID"] = employee_id
+            log_anomaly(
+                context,
+                "inactive_employee_time_or_labor",
+                "TimeClockEntry",
+                int(row.TimeClockEntryID),
+                year,
+                "Time-clock and labor records were reassigned to an employee inactive as of the work date.",
+                "Inactive employee time or labor activity review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_duplicate_executive_title_assignment(context: GenerationContext, count_per_year: int) -> None:
+    if count_per_year <= 0:
+        return
+    employees = context.tables["Employee"]
+    if employees.empty:
+        return
+    target_titles = [
+        ("Chief Financial Officer", "Executive Leadership", "Executive", "Executive"),
+        ("Controller", "Finance and Accounting", "Executive", "Executive"),
+    ]
+    current_role_ids = {
+        title: employees.loc[employees["JobTitle"].eq(title), "EmployeeID"].astype(int).tolist()
+        for title, _, _, _ in target_titles
+    }
+
+    for year in fiscal_years(context):
+        used_ids = used_primary_keys(context, "Employee", "duplicate_executive_title_assignment")
+        candidates = employees[
+            employees["IsActive"].astype(int).eq(1)
+            & ~employees["EmployeeID"].astype(int).isin(used_ids)
+            & ~employees["EmployeeID"].astype(int).isin([employee_id for ids in current_role_ids.values() for employee_id in ids])
+        ].sort_values("EmployeeID")
+        injected = 0
+        for row in candidates.itertuples(index=False):
+            title, family, authorization_level, job_level = target_titles[injected % len(target_titles)]
+            mask = context.tables["Employee"]["EmployeeID"].astype(int).eq(int(row.EmployeeID))
+            context.tables["Employee"].loc[mask, "JobTitle"] = title
+            context.tables["Employee"].loc[mask, "JobFamily"] = family
+            context.tables["Employee"].loc[mask, "AuthorizationLevel"] = authorization_level
+            context.tables["Employee"].loc[mask, "JobLevel"] = job_level
+            context.tables["Employee"].loc[mask, "MaxApprovalAmount"] = 250000.0
+            log_anomaly(
+                context,
+                "duplicate_executive_title_assignment",
+                "Employee",
+                int(row.EmployeeID),
+                year,
+                f"Employee title was changed to create a duplicate {title} assignment.",
+                "Executive role uniqueness review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_missing_item_catalog_attribute(context: GenerationContext, count_per_year: int) -> None:
+    if count_per_year <= 0:
+        return
+    items = context.tables["Item"]
+    if items.empty:
+        return
+    required_columns_by_group = {
+        "Furniture": "CollectionName",
+        "Lighting": "Finish",
+        "Textiles": "Color",
+        "Accessories": "PrimaryMaterial",
+    }
+
+    for year in fiscal_years(context):
+        used_ids = used_primary_keys(context, "Item", "missing_item_catalog_attribute")
+        injected = 0
+        for item_group, column_name in required_columns_by_group.items():
+            candidates = items[
+                items["ItemGroup"].eq(item_group)
+                & items["IsActive"].astype(int).eq(1)
+                & ~items["ItemID"].astype(int).isin(used_ids)
+            ].sort_values("ItemID")
+            if candidates.empty:
+                continue
+            row = candidates.iloc[0]
+            mask = context.tables["Item"]["ItemID"].astype(int).eq(int(row["ItemID"]))
+            context.tables["Item"].loc[mask, column_name] = None
+            log_anomaly(
+                context,
+                "missing_item_catalog_attribute",
+                "Item",
+                int(row["ItemID"]),
+                year,
+                f"Item catalog attribute {column_name} was cleared for an active {item_group} item.",
+                "Missing product catalog attribute review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_discontinued_item_in_new_activity(context: GenerationContext, count_per_year: int) -> None:
+    if count_per_year <= 0:
+        return
+    sales_orders = context.tables["SalesOrder"]
+    order_lines = context.tables["SalesOrderLine"]
+    if sales_orders.empty or order_lines.empty:
+        return
+
+    order_dates = sales_orders.set_index("SalesOrderID")["OrderDate"].to_dict()
+    item_usage = order_lines.copy()
+    item_usage["OrderDate"] = item_usage["SalesOrderID"].astype(int).map(order_dates)
+
+    for year in fiscal_years(context):
+        used_ids = used_primary_keys(context, "Item", "discontinued_item_in_new_activity")
+        candidates = item_usage[
+            pd.to_datetime(item_usage["OrderDate"], errors="coerce").dt.year.eq(year)
+            & ~item_usage["ItemID"].astype(int).isin(used_ids)
+        ].sort_values(["OrderDate", "ItemID"])
+        injected = 0
+        for row in candidates.itertuples(index=False):
+            mask = context.tables["Item"]["ItemID"].astype(int).eq(int(row.ItemID))
+            item_rows = context.tables["Item"].loc[mask]
+            if item_rows.empty or str(item_rows.iloc[0]["ItemGroup"]) not in {"Furniture", "Lighting", "Textiles", "Accessories"}:
+                continue
+            context.tables["Item"].loc[mask, "LifecycleStatus"] = "Discontinued"
+            context.tables["Item"].loc[mask, "IsActive"] = 0
+            log_anomaly(
+                context,
+                "discontinued_item_in_new_activity",
+                "Item",
+                int(row.ItemID),
+                year,
+                "Item was marked discontinued even though new operational activity still references it.",
+                "Discontinued item activity review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
 def inject_anomalies(context: GenerationContext) -> None:
     profile = load_anomaly_profile(context)
     if not profile.get("enabled", False):
@@ -1162,4 +1452,10 @@ def inject_anomalies(context: GenerationContext) -> None:
     inject_off_shift_clocking(context, int(profile.get("off_shift_clocking_per_year", 0)))
     inject_paid_without_clock(context, int(profile.get("paid_without_clock_per_year", 0)))
     inject_labor_after_operation_close(context, int(profile.get("labor_after_operation_close_per_year", 0)))
+    inject_terminated_employee_on_payroll(context, int(profile.get("terminated_employee_on_payroll_per_year", 0)))
+    inject_terminated_employee_approval(context, int(profile.get("terminated_employee_approval_per_year", 0)))
+    inject_inactive_employee_time_or_labor(context, int(profile.get("inactive_employee_time_or_labor_per_year", 0)))
+    inject_duplicate_executive_title_assignment(context, int(profile.get("duplicate_executive_title_assignment_per_year", 0)))
+    inject_missing_item_catalog_attribute(context, int(profile.get("missing_item_catalog_attribute_per_year", 0)))
+    inject_discontinued_item_in_new_activity(context, int(profile.get("discontinued_item_in_new_activity_per_year", 0)))
     invalidate_all_caches(context)

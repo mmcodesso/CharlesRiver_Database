@@ -14,6 +14,8 @@ sidebar_label: Analytics Cases
 | [O2C Trace Case](o2c-trace-case.md) | Clean or default | financial + audit |
 | [P2P Accrual Case](p2p-accrual-settlement-case.md) | Clean or default | financial + audit |
 | [Manufacturing Labor Case](manufacturing-labor-cost-case.md) | Clean or default | managerial + financial |
+| [Workforce Audit Case](master-data-and-workforce-audit-case.md) | Default anomaly-enabled | audit + managerial |
+| [Product Portfolio Case](product-portfolio-and-lifecycle-case.md) | Clean or default | managerial + cost accounting |
 | [Audit Exception Lab](audit-exception-lab.md) | Default anomaly-enabled | audit |
 
 ## Suggested Use

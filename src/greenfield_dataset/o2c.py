@@ -6,6 +6,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from greenfield_dataset.master_data import employee_active_mask, employee_ids_for_cost_center_as_of, eligible_item_mask
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
 from greenfield_dataset.utils import format_doc_number, money, next_id, qty, random_date_in_month
@@ -123,17 +124,12 @@ def sales_cost_center_id(context: GenerationContext) -> int:
     return int(matches.iloc[0])
 
 
-def employee_ids_for_cost_center(context: GenerationContext, cost_center_name: str) -> list[int]:
-    cost_centers = context.tables["CostCenter"]
-    matches = cost_centers.loc[cost_centers["CostCenterName"].eq(cost_center_name), "CostCenterID"]
-    if matches.empty:
-        return context.tables["Employee"]["EmployeeID"].astype(int).tolist()
-
-    employee_ids = context.tables["Employee"].loc[
-        context.tables["Employee"]["CostCenterID"].eq(int(matches.iloc[0])),
-        "EmployeeID",
-    ].astype(int).tolist()
-    return employee_ids or context.tables["Employee"]["EmployeeID"].astype(int).tolist()
+def employee_ids_for_cost_center(
+    context: GenerationContext,
+    cost_center_name: str,
+    event_date: pd.Timestamp | str | None = None,
+) -> list[int]:
+    return employee_ids_for_cost_center_as_of(context, cost_center_name, event_date)
 
 
 def warehouse_ids(context: GenerationContext) -> list[int]:
@@ -216,16 +212,29 @@ def select_return_quantity(
     return min(qty(returned_quantity), qty(eligible_quantity))
 
 
-def active_sellable_items(context: GenerationContext) -> pd.DataFrame:
+def active_sellable_items(context: GenerationContext, event_date: pd.Timestamp | str | None = None) -> pd.DataFrame:
     items = context.tables["Item"]
     sellable = items[
-        items["IsActive"].eq(1)
+        eligible_item_mask(items, event_date)
         & items["ListPrice"].notna()
         & items["RevenueAccountID"].notna()
     ].copy()
     if sellable.empty:
         raise ValueError("Generate active sellable items before O2C transactions.")
     return sellable
+
+
+def sales_rep_employee_id(context: GenerationContext, customer: pd.Series, event_date: pd.Timestamp | str) -> int:
+    employees = context.tables["Employee"].copy()
+    valid_mask = employee_active_mask(employees, event_date)
+    preferred_id = int(customer["SalesRepEmployeeID"])
+    preferred_rows = employees[valid_mask & employees["EmployeeID"].astype(int).eq(preferred_id)]
+    if not preferred_rows.empty:
+        return preferred_id
+    sales_rep_ids = employee_ids_for_cost_center(context, "Sales", event_date)
+    if sales_rep_ids:
+        return int(sales_rep_ids[0])
+    return int(employees.sort_values("EmployeeID").iloc[0]["EmployeeID"])
 
 
 def select_customer(context: GenerationContext) -> pd.Series:
@@ -688,7 +697,6 @@ def o2c_open_state(context: GenerationContext) -> dict[str, float]:
 
 
 def generate_month_sales_orders(context: GenerationContext, year: int, month: int) -> None:
-    sellable_items = active_sellable_items(context)
     sales_center_id = sales_cost_center_id(context)
     rng = context.rng
     order_count = int(rng.integers(95, 126))
@@ -701,6 +709,7 @@ def generate_month_sales_orders(context: GenerationContext, year: int, month: in
         customer = select_customer(context)
         order_id = next_id(context, "SalesOrder")
         order_date = random_date_in_month(rng, year, month)
+        sellable_items = active_sellable_items(context, order_date)
         requested_delivery_date = order_date + pd.Timedelta(days=int(rng.integers(3, 15)))
         segment = str(customer["CustomerSegment"])
         line_min, line_max = SEGMENT_LINE_RANGES[segment]
@@ -743,7 +752,7 @@ def generate_month_sales_orders(context: GenerationContext, year: int, month: in
             "CustomerID": int(customer["CustomerID"]),
             "RequestedDeliveryDate": requested_delivery_date.strftime("%Y-%m-%d"),
             "Status": "Open",
-            "SalesRepEmployeeID": int(customer["SalesRepEmployeeID"]),
+            "SalesRepEmployeeID": sales_rep_employee_id(context, customer, order_date),
             "CostCenterID": sales_center_id,
             "OrderTotal": order_total,
             "Notes": None,
@@ -997,7 +1006,6 @@ def generate_month_cash_receipts(context: GenerationContext, year: int, month: i
     customers = context.tables["Customer"].set_index("CustomerID").to_dict("index")
     sales_orders = context.tables["SalesOrder"]
     sales_invoices = context.tables["SalesInvoice"]
-    recorders = employee_ids_for_cost_center(context, "Customer Service")
 
     receipt_rows: list[dict[str, Any]] = []
     application_rows: list[dict[str, Any]] = []
@@ -1015,6 +1023,7 @@ def generate_month_cash_receipts(context: GenerationContext, year: int, month: i
         receipt_id = next_id(context, "CashReceipt")
         receipt_date = clamp_date_to_month(pd.Timestamp(order.OrderDate) + pd.Timedelta(days=int(rng.integers(0, 6))), year, month)
         amount = money(float(order.OrderTotal) * rng.uniform(0.12, 0.35))
+        receipt_recorders = employee_ids_for_cost_center(context, "Customer Service", receipt_date)
         receipt_rows.append({
             "CashReceiptID": receipt_id,
             "ReceiptNumber": format_doc_number("CR", year, receipt_id),
@@ -1025,7 +1034,7 @@ def generate_month_cash_receipts(context: GenerationContext, year: int, month: i
             "PaymentMethod": str(rng.choice(PAYMENT_METHODS)),
             "ReferenceNumber": f"DEP{receipt_id:08d}",
             "DepositDate": receipt_date.strftime("%Y-%m-%d"),
-            "RecordedByEmployeeID": int(rng.choice(recorders)),
+            "RecordedByEmployeeID": int(rng.choice(receipt_recorders)),
         })
 
     receipts_view = pd.concat(
@@ -1067,13 +1076,14 @@ def generate_month_cash_receipts(context: GenerationContext, year: int, month: i
             if applied_amount <= 0:
                 continue
             application_date = clamp_date_to_month(earliest_application_date + pd.Timedelta(days=int(rng.integers(0, 3))), year, month)
+            application_recorders = employee_ids_for_cost_center(context, "Customer Service", application_date)
             application_rows.append({
                 "CashReceiptApplicationID": next_id(context, "CashReceiptApplication"),
                 "CashReceiptID": int(receipt.CashReceiptID),
                 "SalesInvoiceID": int(invoice.SalesInvoiceID),
                 "ApplicationDate": application_date.strftime("%Y-%m-%d"),
                 "AppliedAmount": money(applied_amount),
-                "AppliedByEmployeeID": int(rng.choice(recorders)),
+                "AppliedByEmployeeID": int(rng.choice(application_recorders)),
             })
             current_applied_amounts[int(receipt.CashReceiptID)] = round(float(current_applied_amounts.get(int(receipt.CashReceiptID), 0.0)) + applied_amount, 2)
             settled_amounts[int(invoice.SalesInvoiceID)] = round(float(settled_amounts.get(int(invoice.SalesInvoiceID), 0.0)) + applied_amount, 2)
@@ -1115,6 +1125,7 @@ def generate_month_cash_receipts(context: GenerationContext, year: int, month: i
             month,
         )
         receipt_id = next_id(context, "CashReceipt")
+        receipt_recorders = employee_ids_for_cost_center(context, "Customer Service", receipt_date)
         receipt_rows.append({
             "CashReceiptID": receipt_id,
             "ReceiptNumber": format_doc_number("CR", year, receipt_id),
@@ -1125,7 +1136,7 @@ def generate_month_cash_receipts(context: GenerationContext, year: int, month: i
             "PaymentMethod": str(rng.choice(PAYMENT_METHODS)),
             "ReferenceNumber": f"AR{receipt_id:08d}",
             "DepositDate": clamp_date_to_month(receipt_date + pd.Timedelta(days=int(rng.integers(0, 3))), year, month).strftime("%Y-%m-%d"),
-            "RecordedByEmployeeID": int(rng.choice(recorders)),
+            "RecordedByEmployeeID": int(rng.choice(receipt_recorders)),
         })
 
         remaining_receipt_amount = receipt_amount
@@ -1136,13 +1147,14 @@ def generate_month_cash_receipts(context: GenerationContext, year: int, month: i
             if applied_amount <= 0:
                 continue
             application_date = clamp_date_to_month(max(receipt_date, pd.Timestamp(invoice.InvoiceDate)) + pd.Timedelta(days=int(rng.integers(0, 3))), year, month)
+            application_recorders = employee_ids_for_cost_center(context, "Customer Service", application_date)
             application_rows.append({
                 "CashReceiptApplicationID": next_id(context, "CashReceiptApplication"),
                 "CashReceiptID": receipt_id,
                 "SalesInvoiceID": int(invoice.SalesInvoiceID),
                 "ApplicationDate": application_date.strftime("%Y-%m-%d"),
                 "AppliedAmount": money(applied_amount),
-                "AppliedByEmployeeID": int(rng.choice(recorders)),
+                "AppliedByEmployeeID": int(rng.choice(application_recorders)),
             })
             remaining_receipt_amount = round(remaining_receipt_amount - applied_amount, 2)
 
@@ -1166,8 +1178,6 @@ def generate_month_sales_returns(context: GenerationContext, year: int, month: i
         for invoice_id, rows in sales_invoice_lines[sales_invoice_lines["ShipmentLineID"].notna()].groupby("SalesInvoiceID")
     }
     returned_quantities = shipment_line_returned_quantities(context)
-    warehouse_receivers = employee_ids_for_cost_center(context, "Warehouse")
-    approvers = employee_ids_for_cost_center(context, "Customer Service")
     already_returned_invoices = returned_invoice_ids(context)
 
     return_rows: list[dict[str, Any]] = []
@@ -1205,7 +1215,7 @@ def generate_month_sales_returns(context: GenerationContext, year: int, month: i
             "CustomerID": int(invoice_record["CustomerID"]),
             "SalesOrderID": int(invoice_record["SalesOrderID"]),
             "WarehouseID": int(first_shipment["WarehouseID"]),
-            "ReceivedByEmployeeID": int(invoice_rng.choice(warehouse_receivers)),
+            "ReceivedByEmployeeID": int(invoice_rng.choice(employee_ids_for_cost_center(context, "Warehouse", return_date))),
             "ReasonCode": reason_code,
             "Status": "Received",
         })
@@ -1288,7 +1298,7 @@ def generate_month_sales_returns(context: GenerationContext, year: int, month: i
             "TaxAmount": tax_amount,
             "GrandTotal": money(subtotal + tax_amount),
             "Status": "Issued",
-            "ApprovedByEmployeeID": int(invoice_rng.choice(approvers)),
+            "ApprovedByEmployeeID": int(invoice_rng.choice(employee_ids_for_cost_center(context, "Customer Service", credit_memo_date))),
             "ApprovedDate": credit_memo_date.strftime("%Y-%m-%d"),
         })
         already_returned_invoices.add(sales_invoice_id)
@@ -1319,7 +1329,6 @@ def generate_month_customer_refunds(context: GenerationContext, year: int, month
     month_start, month_end = month_bounds(year, month)
     allocations = credit_memo_allocation_map(context)
     refunded_amounts = credit_memo_refunded_amounts(context)
-    approvers = employee_ids_for_cost_center(context, "Administration")
     refund_rows: list[dict[str, Any]] = []
 
     for credit_memo in credit_memos.sort_values(["CreditMemoDate", "CreditMemoID"]).itertuples(index=False):
@@ -1334,6 +1343,7 @@ def generate_month_customer_refunds(context: GenerationContext, year: int, month
         if rng.random() > 0.84:
             continue
         refund_id = next_id(context, "CustomerRefund")
+        refund_approvers = employee_ids_for_cost_center(context, "Administration", refund_date)
         refund_rows.append({
             "CustomerRefundID": refund_id,
             "RefundNumber": format_doc_number("RF", year, refund_id),
@@ -1343,7 +1353,7 @@ def generate_month_customer_refunds(context: GenerationContext, year: int, month
             "Amount": money(refundable_amount),
             "PaymentMethod": str(rng.choice(PAYMENT_METHODS)),
             "ReferenceNumber": f"RF{refund_id:08d}",
-            "ApprovedByEmployeeID": int(rng.choice(approvers)),
+            "ApprovedByEmployeeID": int(rng.choice(refund_approvers)),
             "ClearedDate": clamp_date_to_month(refund_date + pd.Timedelta(days=int(rng.integers(0, 4))), year, month).strftime("%Y-%m-%d"),
         })
 

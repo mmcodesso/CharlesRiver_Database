@@ -55,10 +55,13 @@ sidebar_label: Managerial Analytics
 | Returns and refund impact by customer and item | [26_returns_and_refund_impact_by_customer_and_item.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/26_returns_and_refund_impact_by_customer_and_item.sql) |
 | Supplier lead time and receipt reliability | [27_supplier_lead_time_and_receipt_reliability.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/27_supplier_lead_time_and_receipt_reliability.sql) |
 | Paid hours versus productive labor by work center | [28_paid_hours_vs_productive_labor_by_work_center.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/28_paid_hours_vs_productive_labor_by_work_center.sql) |
+| Headcount by cost center, job family, and employment status | [29_headcount_by_cost_center_job_family_status.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/29_headcount_by_cost_center_job_family_status.sql) |
+| Sales and margin by collection, style family, material, and lifecycle | [30_sales_margin_by_collection_style_material.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/30_sales_margin_by_collection_style_material.sql) |
 
 ## Interpretation Notes
 
 - The item master now mixes purchased and manufactured finished goods.
+- The item master now also carries collection, style family, material, finish, color, size, lifecycle, and launch-date context.
 - `StandardCost` on manufactured items includes BOM-based material cost plus standard direct labor, variable overhead, and fixed overhead.
 - Routing tables explain how manufactured items move through operations and which work centers perform the work.
 - Work-center calendars and operation schedules now support daily load-versus-capacity and backlog analysis.
@@ -66,6 +69,7 @@ sidebar_label: Managerial Analytics
 - `TimeClockEntry` adds an attendance layer for hourly employees, which makes overtime and shift-adherence analysis possible.
 - Shipment lag and backorder review belong in managerial analysis because they show how inventory and production capacity affect customer service.
 - Returns and refund review belongs here when the goal is operational performance and margin impact rather than audit exception work.
+- Workforce composition analysis is now more useful because the employee master distinguishes job family, job level, employment status, and current-state active flags.
 - Contribution margin excludes fixed overhead. Absorption margin includes it.
 - Manufacturing variance analysis belongs with `WorkOrderClose`, not only with `GLEntry`.
 - The current model is still a foundation: it includes shift assignments and approved daily time clocks, but it does not yet include raw punch-event tables, rotating shift rosters, or multi-level BOMs.

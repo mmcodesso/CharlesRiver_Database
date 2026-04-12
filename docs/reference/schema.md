@@ -113,9 +113,9 @@ The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUM
 
 | Table | Purpose | High-value columns |
 |---|---|---|
-| `Item` | Product master and account mapping | `ItemCode`, `ItemGroup`, `SupplyMode`, `ProductionLeadTimeDays`, `RoutingID`, `StandardLaborHoursPerUnit`, `StandardDirectLaborCost`, `StandardVariableOverheadCost`, `StandardFixedOverheadCost`, `StandardConversionCost`, `StandardCost`, `InventoryAccountID`, `RevenueAccountID`, `COGSAccountID`, `PurchaseVarianceAccountID` |
+| `Item` | Product master and account mapping | `ItemCode`, `ItemName`, `ItemGroup`, `CollectionName`, `StyleFamily`, `PrimaryMaterial`, `Finish`, `Color`, `SizeDescriptor`, `LifecycleStatus`, `LaunchDate`, `SupplyMode`, `ProductionLeadTimeDays`, `RoutingID`, `StandardLaborHoursPerUnit`, `StandardDirectLaborCost`, `StandardVariableOverheadCost`, `StandardFixedOverheadCost`, `StandardConversionCost`, `StandardCost`, `InventoryAccountID`, `RevenueAccountID`, `COGSAccountID`, `PurchaseVarianceAccountID` |
 | `Warehouse` | Inventory storage locations | `WarehouseName`, `ManagerID`, address fields |
-| `Employee` | Employee and approval metadata | `CostCenterID`, `JobTitle`, `ManagerID`, `AuthorizationLevel`, `PayClass`, `BaseHourlyRate`, `BaseAnnualSalary`, `StandardHoursPerWeek`, `OvertimeEligible`, `IsActive` |
+| `Employee` | Employee and approval metadata | `EmployeeNumber`, `CostCenterID`, `JobTitle`, `JobFamily`, `JobLevel`, `WorkLocation`, `HireDate`, `EmploymentStatus`, `TerminationDate`, `ManagerID`, `AuthorizationLevel`, `PayClass`, `BaseHourlyRate`, `BaseAnnualSalary`, `StandardHoursPerWeek`, `OvertimeEligible`, `IsActive` |
 
 ## Organizational Planning
 

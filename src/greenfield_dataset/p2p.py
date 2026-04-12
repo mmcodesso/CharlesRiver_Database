@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 from greenfield_dataset.journals import ACCRUAL_ACCOUNT_METADATA, accrual_journal_details
+from greenfield_dataset.master_data import approver_employee_id, employee_ids_for_cost_center_as_of, eligible_item_mask
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
 from greenfield_dataset.utils import format_doc_number, money, next_id, qty, random_date_in_month
@@ -168,25 +169,26 @@ def cost_center_id(context: GenerationContext, cost_center_name: str) -> int:
     return int(matches.iloc[0])
 
 
-def employee_ids_for_cost_center(context: GenerationContext, cost_center_id_value: int) -> list[int]:
-    employees = context.tables["Employee"]
-    ids = employees.loc[employees["CostCenterID"].eq(cost_center_id_value), "EmployeeID"].astype(int).tolist()
-    if not ids:
-        ids = employees["EmployeeID"].astype(int).tolist()
-    return ids
+def employee_ids_for_cost_center(
+    context: GenerationContext,
+    cost_center_id_value: int,
+    event_date: pd.Timestamp | str | None = None,
+) -> list[int]:
+    return employee_ids_for_cost_center_as_of(context, int(cost_center_id_value), event_date)
 
 
-def approver_id(context: GenerationContext, minimum_amount: float = 0.0) -> int:
-    employees = context.tables["Employee"].copy()
-    eligible = employees[
-        employees["AuthorizationLevel"].isin(["Manager", "Executive"])
-        & (employees["MaxApprovalAmount"].astype(float) >= minimum_amount)
-    ]
-    if eligible.empty:
-        eligible = employees[employees["AuthorizationLevel"].isin(["Manager", "Executive"])]
-    if eligible.empty:
-        eligible = employees
-    return int(eligible.iloc[0]["EmployeeID"])
+def approver_id(
+    context: GenerationContext,
+    minimum_amount: float = 0.0,
+    event_date: pd.Timestamp | str | None = None,
+) -> int:
+    return approver_employee_id(
+        context,
+        event_date,
+        preferred_titles=["Chief Financial Officer", "Controller", "Accounting Manager"],
+        minimum_amount=minimum_amount,
+        fallback_cost_center_name="Purchasing",
+    )
 
 
 def payment_term_days(payment_terms: str) -> int:
@@ -226,10 +228,10 @@ def preferred_service_supplier_by_account(context: GenerationContext) -> dict[st
     }
 
 
-def active_purchasable_items(context: GenerationContext) -> pd.DataFrame:
+def active_purchasable_items(context: GenerationContext, event_date: pd.Timestamp | str | None = None) -> pd.DataFrame:
     items = context.tables["Item"]
     purchasable = items[
-        items["IsActive"].eq(1)
+        eligible_item_mask(items, event_date)
         & items["InventoryAccountID"].notna()
         & items["StandardCost"].notna()
         & (
@@ -681,7 +683,6 @@ def update_purchase_invoice_statuses(context: GenerationContext) -> None:
 
 def generate_month_requisitions(context: GenerationContext, year: int, month: int) -> None:
     rng = context.rng
-    items = active_purchasable_items(context)
     warehouse_id = cost_center_id(context, "Warehouse")
     purchasing_id = cost_center_id(context, "Purchasing")
     administration_id = cost_center_id(context, "Administration")
@@ -691,16 +692,20 @@ def generate_month_requisitions(context: GenerationContext, year: int, month: in
 
     rows: list[dict] = []
     for _ in range(requisition_count):
+        request_date = random_date_in_month(rng, year, month)
+        items = active_purchasable_items(context, request_date)
         item = select_requisition_item(context, items)
         cost_center = int(rng.choice(cost_center_choices, p=cost_center_weights))
-        requestors = employee_ids_for_cost_center(context, cost_center)
-        request_date = random_date_in_month(rng, year, month)
+        requestors = employee_ids_for_cost_center(context, cost_center, request_date)
         quantity_range = (16, 95) if item["ItemGroup"] in ["Packaging", "Raw Materials"] else (4, 30)
         quantity = qty(int(rng.integers(*quantity_range)))
         estimated_unit_cost = money(float(item["StandardCost"]) * rng.uniform(0.96, 1.06))
         estimated_total = quantity * estimated_unit_cost
         approved = rng.random() <= REQUISITION_APPROVAL_RATE
         requisition_id = next_id(context, "PurchaseRequisition")
+        approved_date = (
+            request_date + pd.Timedelta(days=int(rng.integers(0, 3)))
+        ) if approved else None
 
         rows.append({
             "RequisitionID": requisition_id,
@@ -712,10 +717,8 @@ def generate_month_requisitions(context: GenerationContext, year: int, month: in
             "Quantity": quantity,
             "EstimatedUnitCost": estimated_unit_cost,
             "Justification": f"Monthly replenishment for {item['ItemGroup']}",
-            "ApprovedByEmployeeID": approver_id(context, estimated_total) if approved else None,
-            "ApprovedDate": (
-                request_date + pd.Timedelta(days=int(rng.integers(0, 3)))
-            ).strftime("%Y-%m-%d") if approved else None,
+            "ApprovedByEmployeeID": approver_id(context, estimated_total, approved_date) if approved else None,
+            "ApprovedDate": approved_date.strftime("%Y-%m-%d") if approved_date is not None else None,
             "Status": "Approved" if approved else "Pending",
         })
 
@@ -739,8 +742,6 @@ def generate_month_purchase_orders(context: GenerationContext, year: int, month:
         return
 
     item_map = context.tables["Item"].set_index("ItemID").to_dict("index")
-    purchasing_agents = employee_ids_for_cost_center(context, cost_center_id(context, "Purchasing"))
-
     prepared_requisitions: list[dict] = []
     for requisition in candidates.sort_values(["RequestDate", "RequisitionID"]).itertuples(index=False):
         request_date = pd.Timestamp(requisition.RequestDate)
@@ -791,6 +792,7 @@ def generate_month_purchase_orders(context: GenerationContext, year: int, month:
                 [str(entry["item"]["ItemGroup"]) for entry in batch],
                 order_date,
             )
+            purchasing_agents = employee_ids_for_cost_center(context, cost_center_id(context, "Purchasing"), order_date)
 
             purchase_order_id = next_id(context, "PurchaseOrder")
             order_total = 0.0
@@ -826,7 +828,7 @@ def generate_month_purchase_orders(context: GenerationContext, year: int, month:
                 "ExpectedDeliveryDate": expected_delivery_date.strftime("%Y-%m-%d"),
                 "Status": "Open",
                 "CreatedByEmployeeID": int(rng.choice(purchasing_agents)),
-                "ApprovedByEmployeeID": approver_id(context, order_total),
+                "ApprovedByEmployeeID": approver_id(context, order_total, order_date),
                 "OrderTotal": order_total,
             })
             index += len(batch)
@@ -851,7 +853,6 @@ def generate_month_goods_receipts(context: GenerationContext, year: int, month: 
         raise ValueError("Generate warehouses before goods receipts.")
 
     warehouse_ids = warehouses["WarehouseID"].astype(int).tolist()
-    receivers = employee_ids_for_cost_center(context, cost_center_id(context, "Warehouse"))
     received_quantities = po_line_received_quantities(context)
     receipt_event_counts = po_line_receipt_event_counts(context)
 
@@ -886,6 +887,7 @@ def generate_month_goods_receipts(context: GenerationContext, year: int, month: 
             continue
 
         receipt_date = random_date_between(rng, max(month_start, expected_delivery_date), month_end)
+        receivers = employee_ids_for_cost_center(context, cost_center_id(context, "Warehouse"), receipt_date)
         header_key = (int(line.PurchaseOrderID), receipt_date.strftime("%Y-%m-%d"))
         if header_key not in receipt_headers:
             goods_receipt_id = next_id(context, "GoodsReceipt")
@@ -1042,7 +1044,7 @@ def generate_month_purchase_invoices(context: GenerationContext, year: int, mont
         header["SubTotal"] = subtotal
         header["TaxAmount"] = tax_amount
         header["GrandTotal"] = grand_total
-        header["ApprovedByEmployeeID"] = approver_id(context, grand_total)
+        header["ApprovedByEmployeeID"] = approver_id(context, grand_total, header["ApprovedDate"])
         invoice_rows.append(header)
 
     append_rows(context, "PurchaseInvoice", invoice_rows)
@@ -1092,7 +1094,7 @@ def generate_month_disbursements(context: GenerationContext, year: int, month: i
             "Amount": amount,
             "PaymentMethod": payment_method,
             "CheckNumber": f"CHK{disbursement_id:07d}" if payment_method == "Check" else None,
-            "ApprovedByEmployeeID": approver_id(context, amount),
+            "ApprovedByEmployeeID": approver_id(context, amount, payment_date),
             "ClearedDate": (payment_date + pd.Timedelta(days=int(rng.integers(1, 5)))).strftime("%Y-%m-%d"),
         })
 
@@ -1156,7 +1158,7 @@ def generate_accrued_service_settlements(context: GenerationContext) -> None:
             "TaxAmount": 0.0,
             "GrandTotal": subtotal,
             "Status": "Approved",
-            "ApprovedByEmployeeID": approver_id(context, subtotal),
+            "ApprovedByEmployeeID": approver_id(context, subtotal, received_date),
             "ApprovedDate": received_date.strftime("%Y-%m-%d"),
         })
         invoice_line_rows.append({
@@ -1187,7 +1189,7 @@ def generate_accrued_service_settlements(context: GenerationContext) -> None:
                 "Amount": subtotal,
                 "PaymentMethod": payment_method,
                 "CheckNumber": f"CHK{disbursement_id:07d}" if payment_method == "Check" else None,
-                "ApprovedByEmployeeID": approver_id(context, subtotal),
+                "ApprovedByEmployeeID": approver_id(context, subtotal, payment_date),
                 "ClearedDate": min(payment_date + pd.Timedelta(days=int(rng.integers(1, 5))), fiscal_end).strftime("%Y-%m-%d"),
             })
 

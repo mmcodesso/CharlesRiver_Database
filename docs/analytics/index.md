@@ -13,6 +13,7 @@ sidebar_label: Analytics Hub
 - topic guides for financial, managerial, and audit analytics
 - a SQLite-first starter SQL package in the repository under `queries/`
 - Excel workflow guidance using the generated workbook
+- richer employee and item master fields for role, lifecycle, and catalog analysis
 - instructor-facing mapping from learning goals to materials
 
 ## Coverage Map
@@ -25,6 +26,15 @@ sidebar_label: Analytics Hub
 | SQL workflow | [SQL Guide](sql-guide.md) | All starter SQL folders | SQLite database |
 | Excel workflow | [Excel Guide](excel-guide.md) | Use SQL results as a comparison point | Excel workbook |
 | Guided walkthroughs | [Analytics Cases](cases/index.md) | Mix financial, managerial, and audit packs in sequence | SQLite plus workbook side-by-side |
+
+## Phase 18 Focus Areas
+
+Use the new master-data starter additions when you want more realistic people-and-product analysis:
+
+- workforce composition by cost center, job family, and employment status
+- terminated-employee activity review in the anomaly-enabled build
+- approval-role review by organization position
+- product sales and margin by collection, style family, material, and lifecycle status
 
 ## Recommended Starter Package
 

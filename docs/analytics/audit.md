@@ -48,6 +48,8 @@ sidebar_label: Audit Analytics
 | Customer deposits and unapplied cash exception review | [24_customer_deposits_and_unapplied_cash_exception_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/24_customer_deposits_and_unapplied_cash_exception_review.sql) |
 | Time-clock, payroll, and labor bridge review | [25_time_clock_payroll_labor_bridge_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/25_time_clock_payroll_labor_bridge_review.sql) |
 | Duplicate AP reference detail review | [26_duplicate_ap_reference_detail_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/26_duplicate_ap_reference_detail_review.sql) |
+| Terminated-employee activity review | [27_terminated_employee_activity_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/27_terminated_employee_activity_review.sql) |
+| Approval-role review by organization position | [28_approval_role_review_by_org_position.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/28_approval_role_review_by_org_position.sql) |
 
 ## Interpretation Notes
 
@@ -58,6 +60,7 @@ sidebar_label: Audit Analytics
 - Payroll-control review should distinguish between normal processing lag and true exceptions such as missing payment, time after close, or hourly pay without time.
 - Time-clock review should distinguish clean scheduling variance from planted attendance anomalies such as missing clock-out or off-shift clocking.
 - Accrued-expense review should distinguish receipt-matched inventory AP from direct service invoices that intentionally clear prior accruals.
+- Employee-master review should distinguish current-state `IsActive` from the historical employment validity driven by `HireDate` and `TerminationDate`.
 
 ## Anomaly Coverage Matrix
 
@@ -77,3 +80,4 @@ sidebar_label: Audit Analytics
 | [21_paid_without_clock_and_clock_without_pay_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/21_paid_without_clock_and_clock_without_pay_review.sql) | `standard` | `paid_without_clock`, `missing_clock_out` | `PayrollRegisterLine`, `LaborTimeEntry`, `TimeClockEntry` |
 | [25_time_clock_payroll_labor_bridge_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/25_time_clock_payroll_labor_bridge_review.sql) | `standard` | `paid_without_clock`, `missing_clock_out`, `labor_after_operation_close` | `TimeClockEntry`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine` |
 | [26_duplicate_ap_reference_detail_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/26_duplicate_ap_reference_detail_review.sql) | `standard` | `duplicate_vendor_payment_reference`, `duplicate_supplier_invoice_number` | `PurchaseInvoice`, `DisbursementPayment`, `Supplier` |
+| [27_terminated_employee_activity_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/27_terminated_employee_activity_review.sql) | `standard` | `terminated_employee_on_payroll`, `terminated_employee_approval`, `inactive_employee_time_or_labor` | `Employee`, `PayrollRegister`, `TimeClockEntry`, `LaborTimeEntry`, `PurchaseOrder`, `JournalEntry` |

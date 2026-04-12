@@ -38,6 +38,8 @@ The current dataset models a company that:
 - manufactures selected finished goods internally
 - ships, invoices, collects cash, processes returns, and issues credit memos and refunds
 - assigns shifts, records approved daily time clocks for hourly employees, and runs payroll
+- keeps a more realistic employee master with unique executive roles, repeatable frontline roles, and terminated employees retained for history
+- keeps a richer product catalog with collections, style families, materials, finishes, colors, lifecycle status, and launch dates
 - records recurring journals, manufacturing reclasses, and year-end close
 
 Read [Company Story](company-story.md) for the full narrative version of that operating model.
@@ -104,6 +106,7 @@ Many business documents use a header table and a line table.
 | `PayrollPeriodID` | Connect labor time, payroll registers, and liability remittances to a pay period |
 | `PayrollRegisterID` | Connect payroll headers to line detail and payroll payments |
 | `ItemID` | Analyze quantities, prices, standard costs, supply mode, and account mappings |
+| `EmployeeNumber` | Human-readable employee master key for workforce and audit analysis |
 | `AccountID` | Connect `GLEntry` and `Budget` to the chart of accounts |
 | `CostCenterID` | Connect operational activity, employees, payroll, and budgets to organizational reporting |
 
@@ -282,6 +285,8 @@ Start with:
 - For manufacturing traceability, start from `WorkOrderID`.
 - For time-and-attendance traceability, start from `TimeClockEntryID` or `ShiftDefinitionID`.
 - For payroll traceability, start from `PayrollPeriodID`, `PayrollRegisterID`, and then move back to `LaborTimeEntry` and `TimeClockEntry` for hourly earnings support.
+- For employee-master review, combine `EmployeeNumber`, `EmploymentStatus`, `TerminationDate`, `JobFamily`, and `JobLevel`.
+- For portfolio review, combine `CollectionName`, `StyleFamily`, `PrimaryMaterial`, `LifecycleStatus`, and `LaunchDate`.
 - For raw multi-year income-statement analysis, exclude the two year-end close entry types.
 
 ## What Is Not in Scope Yet

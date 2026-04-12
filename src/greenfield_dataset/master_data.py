@@ -11,6 +11,7 @@ except ModuleNotFoundError:
     Faker = None
 
 from greenfield_dataset.schema import TABLE_COLUMNS
+from greenfield_dataset.state_cache import drop_context_attributes, get_or_build_cache
 from greenfield_dataset.settings import GenerationContext
 from greenfield_dataset.utils import money, next_id
 
@@ -179,6 +180,276 @@ REGIONS = {
     "West": ["CA", "WA", "OR", "CO", "AZ"],
 }
 
+TERMINATION_REASON_OPTIONS = [
+    "Resigned",
+    "Career Change",
+    "Relocated",
+    "Performance",
+    "Retirement",
+]
+EMPLOYMENT_CHANGE_PERIOD_LENGTH_DAYS = 14
+EMPLOYMENT_CHANGE_PAYDATE_LAG_DAYS = 5
+
+UNIQUE_ACTIVE_ROLE_SPECS = [
+    ("Executive", "Chief Executive Officer"),
+    ("Executive", "Chief Financial Officer"),
+    ("Executive", "Controller"),
+    ("Manufacturing", "Production Manager"),
+    ("Administration", "Accounting Manager"),
+]
+
+CORE_ACTIVE_ROLE_SPECS = [
+    ("Sales", "Sales Manager"),
+    ("Warehouse", "Warehouse Manager"),
+    ("Manufacturing", "Production Supervisor"),
+    ("Manufacturing", "Production Planner"),
+    ("Purchasing", "Purchasing Manager"),
+    ("Customer Service", "Customer Service Manager"),
+    ("Marketing", "Marketing Manager"),
+    ("Research and Development", "Product Analyst"),
+]
+
+REPEATABLE_ROLE_SEQUENCE = [
+    ("Sales", "Account Executive"),
+    ("Sales", "Sales Representative"),
+    ("Warehouse", "Inventory Specialist"),
+    ("Warehouse", "Shipping Clerk"),
+    ("Manufacturing", "Assembler"),
+    ("Manufacturing", "Machine Operator"),
+    ("Manufacturing", "Quality Technician"),
+    ("Purchasing", "Buyer"),
+    ("Purchasing", "Procurement Analyst"),
+    ("Administration", "Staff Accountant"),
+    ("Administration", "Administrative Specialist"),
+    ("Customer Service", "Customer Service Representative"),
+    ("Research and Development", "Design Coordinator"),
+    ("Marketing", "Marketing Specialist"),
+]
+
+ROLE_METADATA = {
+    "Chief Executive Officer": {
+        "AuthorizationLevel": "Executive",
+        "JobFamily": "Executive Leadership",
+        "JobLevel": "Executive",
+    },
+    "Chief Financial Officer": {
+        "AuthorizationLevel": "Executive",
+        "JobFamily": "Executive Leadership",
+        "JobLevel": "Executive",
+    },
+    "Controller": {
+        "AuthorizationLevel": "Executive",
+        "JobFamily": "Finance and Accounting",
+        "JobLevel": "Executive",
+    },
+    "Production Manager": {
+        "AuthorizationLevel": "Manager",
+        "JobFamily": "Manufacturing Operations",
+        "JobLevel": "Manager",
+    },
+    "Accounting Manager": {
+        "AuthorizationLevel": "Manager",
+        "JobFamily": "Finance and Accounting",
+        "JobLevel": "Manager",
+    },
+    "Sales Manager": {
+        "AuthorizationLevel": "Manager",
+        "JobFamily": "Sales",
+        "JobLevel": "Manager",
+    },
+    "Warehouse Manager": {
+        "AuthorizationLevel": "Manager",
+        "JobFamily": "Warehouse Operations",
+        "JobLevel": "Manager",
+    },
+    "Production Supervisor": {
+        "AuthorizationLevel": "Supervisor",
+        "JobFamily": "Manufacturing Operations",
+        "JobLevel": "Supervisor",
+    },
+    "Production Planner": {
+        "AuthorizationLevel": "Supervisor",
+        "JobFamily": "Manufacturing Operations",
+        "JobLevel": "Supervisor",
+    },
+    "Purchasing Manager": {
+        "AuthorizationLevel": "Manager",
+        "JobFamily": "Purchasing and Procurement",
+        "JobLevel": "Manager",
+    },
+    "Customer Service Manager": {
+        "AuthorizationLevel": "Manager",
+        "JobFamily": "Customer Service",
+        "JobLevel": "Manager",
+    },
+    "Marketing Manager": {
+        "AuthorizationLevel": "Manager",
+        "JobFamily": "Marketing",
+        "JobLevel": "Manager",
+    },
+    "Product Analyst": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Research and Development",
+        "JobLevel": "Professional",
+    },
+    "Account Executive": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Sales",
+        "JobLevel": "Professional",
+    },
+    "Sales Representative": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Sales",
+        "JobLevel": "Staff",
+    },
+    "Inventory Specialist": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Warehouse Operations",
+        "JobLevel": "Staff",
+    },
+    "Shipping Clerk": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Warehouse Operations",
+        "JobLevel": "Staff",
+    },
+    "Assembler": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Manufacturing Operations",
+        "JobLevel": "Operator",
+    },
+    "Machine Operator": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Manufacturing Operations",
+        "JobLevel": "Operator",
+    },
+    "Quality Technician": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Manufacturing Operations",
+        "JobLevel": "Professional",
+    },
+    "Buyer": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Purchasing and Procurement",
+        "JobLevel": "Professional",
+    },
+    "Procurement Analyst": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Purchasing and Procurement",
+        "JobLevel": "Professional",
+    },
+    "Staff Accountant": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Finance and Accounting",
+        "JobLevel": "Professional",
+    },
+    "Administrative Specialist": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Finance and Accounting",
+        "JobLevel": "Staff",
+    },
+    "Customer Service Representative": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Customer Service",
+        "JobLevel": "Staff",
+    },
+    "Design Coordinator": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Research and Development",
+        "JobLevel": "Professional",
+    },
+    "Marketing Specialist": {
+        "AuthorizationLevel": "Staff",
+        "JobFamily": "Marketing",
+        "JobLevel": "Professional",
+    },
+}
+
+WORK_LOCATION_BY_COST_CENTER = {
+    "Executive": "Headquarters",
+    "Sales": "Headquarters",
+    "Warehouse": "East Distribution Center",
+    "Manufacturing": "Manufacturing Plant",
+    "Purchasing": "Headquarters",
+    "Administration": "Headquarters",
+    "Customer Service": "Headquarters",
+    "Research and Development": "Headquarters",
+    "Marketing": "Headquarters",
+}
+
+WAREHOUSE_WORK_LOCATIONS = ["East Distribution Center", "West Distribution Center"]
+
+FURNITURE_COLLECTIONS = ["Harbor", "Willow", "Alder", "Summit", "Mason", "Brookside"]
+FURNITURE_STYLE_FAMILIES = ["Modern", "Transitional", "Industrial", "Coastal", "Farmhouse"]
+FURNITURE_PRODUCTS = [
+    ("Dining Table", "TBL"),
+    ("Coffee Table", "CTB"),
+    ("Bookcase", "BKC"),
+    ("Desk", "DSK"),
+    ("Console Table", "CON"),
+    ("Nightstand", "NGT"),
+    ("Bench", "BNH"),
+    ("Sideboard", "SDB"),
+]
+FURNITURE_MATERIALS = ["Oak", "Walnut", "Maple", "Ash", "Acacia"]
+FURNITURE_FINISHES = ["Natural", "Warm Walnut", "Matte Black", "Whitewash", "Driftwood"]
+FURNITURE_SIZES = ["48 in", "60 in", "72 in", "84 in"]
+
+LIGHTING_COLLECTIONS = ["Beacon", "Atlas", "Solace", "Wren", "Northline", "Crescent"]
+LIGHTING_STYLE_FAMILIES = ["Modern", "Minimal", "Classic", "Industrial", "Transitional"]
+LIGHTING_PRODUCTS = [
+    ("Pendant", "PND"),
+    ("Floor Lamp", "FLR"),
+    ("Table Lamp", "TBL"),
+    ("Wall Sconce", "SCN"),
+    ("Chandelier", "CHD"),
+]
+LIGHTING_MATERIALS = ["Brass", "Steel", "Glass", "Aluminum", "Ceramic"]
+LIGHTING_FINISHES = ["Brushed Brass", "Matte Black", "Polished Nickel", "White", "Bronze"]
+
+TEXTILE_COLLECTIONS = ["Loom", "Haven", "Drift", "Ember", "Oakline", "Meadow"]
+TEXTILE_STYLE_FAMILIES = ["Textured", "Striped", "Neutral", "Heritage", "Contemporary"]
+TEXTILE_PRODUCTS = [
+    ("Area Rug", "RUG"),
+    ("Throw Blanket", "THR"),
+    ("Curtain Panel", "CRT"),
+    ("Pillow Cover", "PIL"),
+]
+TEXTILE_MATERIALS = ["Cotton", "Linen", "Wool Blend", "Poly Blend", "Jute"]
+TEXTILE_COLORS = ["Ivory", "Slate", "Sand", "Terracotta", "Sage", "Navy"]
+TEXTILE_SIZES = ["Small", "Medium", "Large", "King", "Set of 2"]
+
+ACCESSORY_STYLE_FAMILIES = ["Foundry", "Harbor", "Meadow", "Northline", "Studio"]
+ACCESSORY_PRODUCTS = [
+    ("Mirror", "MIR"),
+    ("Tray", "TRY"),
+    ("Planter", "PLN"),
+    ("Candle Holder", "CDL"),
+    ("Decor Vase", "VAS"),
+    ("Wall Art", "ART"),
+]
+ACCESSORY_MATERIALS = ["Wood", "Metal", "Glass", "Ceramic", "Stone"]
+ACCESSORY_FINISHES = ["Natural", "Blackened", "Aged Brass", "Soft White", "Sandstone"]
+
+RAW_MATERIAL_PRODUCTS = [
+    ("Oak Veneer", "OVN", "Sheet"),
+    ("Walnut Veneer", "WVN", "Sheet"),
+    ("Steel Tube", "STL", "Tube"),
+    ("Cotton Fabric", "CTN", "Roll"),
+    ("Linen Fabric", "LIN", "Roll"),
+    ("Brass Hardware", "BRS", "Pack"),
+    ("Glass Shade", "GLS", "Case"),
+    ("LED Module", "LED", "Pack"),
+]
+
+PACKAGING_PRODUCTS = [
+    ("Corrugated Carton", "CRT", "Small"),
+    ("Foam Insert", "FMI", "Medium"),
+    ("Protective Sleeve", "SLV", "Large"),
+    ("Label Kit", "LBL", "Pack"),
+    ("Inner Box", "BOX", "Medium"),
+    ("Pallet Wrap", "PLW", "Large"),
+]
+
 
 class SimpleFaker:
     def __init__(self) -> None:
@@ -231,6 +502,206 @@ def make_faker(seed: int):
     fake = Faker("en_US") if Faker is not None else SimpleFaker()
     fake.seed_instance(seed)
     return fake
+
+
+def fiscal_start_end(context: GenerationContext) -> tuple[pd.Timestamp, pd.Timestamp]:
+    return pd.Timestamp(context.settings.fiscal_year_start), pd.Timestamp(context.settings.fiscal_year_end)
+
+
+def next_business_day(timestamp: pd.Timestamp) -> pd.Timestamp:
+    candidate = pd.Timestamp(timestamp)
+    while candidate.day_name() in {"Saturday", "Sunday"}:
+        candidate = candidate + pd.Timedelta(days=1)
+    return candidate
+
+
+def payroll_pay_dates(context: GenerationContext) -> list[pd.Timestamp]:
+    fiscal_start, fiscal_end = fiscal_start_end(context)
+    dates: list[pd.Timestamp] = []
+    period_start = fiscal_start
+    while period_start <= fiscal_end:
+        period_end = min(
+            period_start + pd.Timedelta(days=EMPLOYMENT_CHANGE_PERIOD_LENGTH_DAYS - 1),
+            fiscal_end,
+        )
+        pay_date = next_business_day(period_end + pd.Timedelta(days=EMPLOYMENT_CHANGE_PAYDATE_LAG_DAYS))
+        dates.append(pay_date)
+        period_start = period_end + pd.Timedelta(days=1)
+    return dates
+
+
+def clear_master_data_caches(context: GenerationContext) -> None:
+    drop_context_attributes(
+        context,
+        [
+            "_employee_master_cache",
+            "_item_master_cache",
+            "_current_employee_lookup_cache",
+        ],
+    )
+
+
+def employee_master(context: GenerationContext) -> pd.DataFrame:
+    def builder() -> pd.DataFrame:
+        employees = context.tables["Employee"].copy()
+        if employees.empty:
+            return employees
+        employees["HireDateValue"] = pd.to_datetime(employees["HireDate"])
+        employees["TerminationDateValue"] = pd.to_datetime(employees["TerminationDate"], errors="coerce")
+        return employees
+
+    return get_or_build_cache(context, "_employee_master_cache", builder)
+
+
+def item_master(context: GenerationContext) -> pd.DataFrame:
+    def builder() -> pd.DataFrame:
+        items = context.tables["Item"].copy()
+        if items.empty:
+            return items
+        items["LaunchDateValue"] = pd.to_datetime(items["LaunchDate"], errors="coerce")
+        return items
+
+    return get_or_build_cache(context, "_item_master_cache", builder)
+
+
+def employee_active_mask(employees: pd.DataFrame, event_date: pd.Timestamp | str | None) -> pd.Series:
+    if employees.empty:
+        return pd.Series(dtype=bool)
+    if event_date is None:
+        return employees["IsActive"].astype(int).eq(1)
+    timestamp = pd.Timestamp(event_date)
+    hire_date = pd.to_datetime(employees["HireDate"], errors="coerce")
+    termination_date = pd.to_datetime(employees["TerminationDate"], errors="coerce")
+    return hire_date.le(timestamp) & (termination_date.isna() | termination_date.ge(timestamp))
+
+
+def current_active_employees(context: GenerationContext) -> pd.DataFrame:
+    _, fiscal_end = fiscal_start_end(context)
+    employees = employee_master(context)
+    return employees[employee_active_mask(employees, fiscal_end)].copy()
+
+
+def valid_employees(
+    context: GenerationContext,
+    event_date: pd.Timestamp | str | None = None,
+    *,
+    cost_center_id: int | None = None,
+    cost_center_name: str | None = None,
+    job_titles: list[str] | tuple[str, ...] | None = None,
+    authorization_levels: list[str] | tuple[str, ...] | None = None,
+    minimum_approval_amount: float | None = None,
+) -> pd.DataFrame:
+    employees = employee_master(context)
+    if employees.empty:
+        return employees.copy()
+
+    rows = employees[employee_active_mask(employees, event_date)].copy()
+    if cost_center_name is not None:
+        cost_centers = context.tables["CostCenter"]
+        matches = cost_centers.loc[cost_centers["CostCenterName"].eq(cost_center_name), "CostCenterID"]
+        if matches.empty:
+            return rows.head(0)
+        cost_center_id = int(matches.iloc[0])
+    if cost_center_id is not None:
+        rows = rows[rows["CostCenterID"].astype(int).eq(int(cost_center_id))]
+    if job_titles:
+        rows = rows[rows["JobTitle"].isin(list(job_titles))]
+    if authorization_levels:
+        rows = rows[rows["AuthorizationLevel"].isin(list(authorization_levels))]
+    if minimum_approval_amount is not None and "MaxApprovalAmount" in rows.columns:
+        rows = rows[rows["MaxApprovalAmount"].astype(float) >= float(minimum_approval_amount)]
+    return rows.copy()
+
+
+def employee_ids_for_cost_center_as_of(
+    context: GenerationContext,
+    cost_center_name_or_id: str | int,
+    event_date: pd.Timestamp | str | None = None,
+) -> list[int]:
+    rows = (
+        valid_employees(context, event_date, cost_center_name=str(cost_center_name_or_id))
+        if isinstance(cost_center_name_or_id, str)
+        else valid_employees(context, event_date, cost_center_id=int(cost_center_name_or_id))
+    )
+    if rows.empty:
+        rows = valid_employees(context, event_date)
+    if rows.empty:
+        rows = context.tables["Employee"].copy()
+    return rows.sort_values("EmployeeID")["EmployeeID"].astype(int).tolist()
+
+
+def employee_id_by_titles(
+    context: GenerationContext,
+    *job_titles: str,
+    event_date: pd.Timestamp | str | None = None,
+) -> int | None:
+    rows = valid_employees(context, event_date, job_titles=job_titles)
+    if rows.empty:
+        return None
+    for title in job_titles:
+        matches = rows.loc[rows["JobTitle"].eq(title), "EmployeeID"]
+        if not matches.empty:
+            return int(matches.sort_values().iloc[0])
+    return int(rows.sort_values("EmployeeID").iloc[0]["EmployeeID"])
+
+
+def approver_employee_id(
+    context: GenerationContext,
+    event_date: pd.Timestamp | str | None = None,
+    *,
+    preferred_titles: list[str] | tuple[str, ...] | None = None,
+    minimum_amount: float = 0.0,
+    fallback_cost_center_name: str | None = None,
+) -> int:
+    authorization_rank = {"Executive": 0, "Manager": 1, "Supervisor": 2, "Staff": 3}
+    if preferred_titles:
+        preferred_id = employee_id_by_titles(context, *preferred_titles, event_date=event_date)
+        if preferred_id is not None:
+            rows = valid_employees(context, event_date, job_titles=preferred_titles)
+            if minimum_amount <= 0 or rows.loc[rows["EmployeeID"].astype(int).eq(int(preferred_id)), "MaxApprovalAmount"].astype(float).fillna(0).ge(float(minimum_amount)).any():
+                return int(preferred_id)
+
+    eligible = valid_employees(
+        context,
+        event_date,
+        authorization_levels=["Manager", "Executive"],
+        minimum_approval_amount=minimum_amount,
+    )
+    if not eligible.empty:
+        eligible = eligible.copy()
+        eligible["AuthorizationRank"] = eligible["AuthorizationLevel"].map(authorization_rank).fillna(99)
+        return int(eligible.sort_values(["AuthorizationRank", "EmployeeID"]).iloc[0]["EmployeeID"])
+
+    if fallback_cost_center_name is not None:
+        ids = employee_ids_for_cost_center_as_of(context, fallback_cost_center_name, event_date)
+        if ids:
+            return int(ids[0])
+
+    any_valid = valid_employees(context, event_date)
+    if not any_valid.empty:
+        return int(any_valid.sort_values("EmployeeID").iloc[0]["EmployeeID"])
+
+    return int(context.tables["Employee"].sort_values("EmployeeID").iloc[0]["EmployeeID"])
+
+
+def current_role_employee_id(context: GenerationContext, *job_titles: str) -> int | None:
+    _, fiscal_end = fiscal_start_end(context)
+    return employee_id_by_titles(context, *job_titles, event_date=fiscal_end)
+
+
+def eligible_item_mask(items: pd.DataFrame, event_date: pd.Timestamp | str | None) -> pd.Series:
+    if items.empty:
+        return pd.Series(dtype=bool)
+    if event_date is None:
+        return items["IsActive"].astype(int).eq(1)
+    timestamp = pd.Timestamp(event_date)
+    launch_date = pd.to_datetime(items["LaunchDate"], errors="coerce")
+    return items["IsActive"].astype(int).eq(1) & launch_date.notna() & launch_date.le(timestamp)
+
+
+def eligible_items(context: GenerationContext, event_date: pd.Timestamp | str | None = None) -> pd.DataFrame:
+    items = item_master(context)
+    return items[eligible_item_mask(items, event_date)].copy()
 
 
 def account_id_by_number(context: GenerationContext, account_number: str | None) -> int | None:
@@ -314,94 +785,219 @@ def load_accounts(context: GenerationContext, accounts_path: str | Path) -> None
     context.counters["Account"] = int(accounts["AccountID"].max()) + 1
 
 
+def workforce_target_terminated_count(employee_count: int) -> int:
+    minimum = max(1, int(np.ceil(employee_count * 0.08)))
+    maximum = max(minimum, int(np.floor(employee_count * 0.15)))
+    target = int(round(employee_count * 0.11))
+    return max(minimum, min(maximum, target))
+
+
+def prestart_hire_date(context: GenerationContext, rng: np.random.Generator) -> pd.Timestamp:
+    fiscal_start, _ = fiscal_start_end(context)
+    lower = fiscal_start - pd.Timedelta(days=365 * 10)
+    upper = fiscal_start - pd.Timedelta(days=180)
+    span_days = max(int((upper - lower).days), 1)
+    return lower + pd.Timedelta(days=int(rng.integers(0, span_days + 1)))
+
+
+def active_hire_date(context: GenerationContext, rng: np.random.Generator, allow_recent: bool) -> pd.Timestamp:
+    fiscal_start, fiscal_end = fiscal_start_end(context)
+    if allow_recent and fiscal_end > fiscal_start and float(rng.random()) < 0.22:
+        upper = min(fiscal_end - pd.Timedelta(days=30), fiscal_start + pd.Timedelta(days=720))
+        if upper > fiscal_start:
+            span_days = max(int((upper - fiscal_start).days), 1)
+            return fiscal_start + pd.Timedelta(days=int(rng.integers(0, span_days + 1)))
+    return prestart_hire_date(context, rng)
+
+
+def work_location_for_role(cost_center_name: str, position_index: int) -> str:
+    if cost_center_name == "Warehouse":
+        return WAREHOUSE_WORK_LOCATIONS[position_index % len(WAREHOUSE_WORK_LOCATIONS)]
+    return WORK_LOCATION_BY_COST_CENTER.get(cost_center_name, "Headquarters")
+
+
+def build_employee_role_specs(context: GenerationContext) -> list[dict[str, object]]:
+    employee_count = int(context.settings.employee_count)
+    base_specs = [
+        {"CostCenterName": cost_center_name, "JobTitle": job_title, "Protected": True}
+        for cost_center_name, job_title in (UNIQUE_ACTIVE_ROLE_SPECS + CORE_ACTIVE_ROLE_SPECS)
+    ]
+    terminated_target = workforce_target_terminated_count(employee_count)
+    max_pair_count = max((employee_count - len(base_specs)) // 2, 0)
+    terminated_target = min(terminated_target, max_pair_count)
+    extra_active_count = max(employee_count - len(base_specs) - (2 * terminated_target), 0)
+
+    specs = list(base_specs)
+    for index in range(terminated_target):
+        cost_center_name, job_title = REPEATABLE_ROLE_SEQUENCE[index % len(REPEATABLE_ROLE_SEQUENCE)]
+        specs.append({
+            "CostCenterName": cost_center_name,
+            "JobTitle": job_title,
+            "Protected": False,
+            "ReplacementPair": index,
+            "IsReplacement": False,
+        })
+        specs.append({
+            "CostCenterName": cost_center_name,
+            "JobTitle": job_title,
+            "Protected": False,
+            "ReplacementPair": index,
+            "IsReplacement": True,
+        })
+
+    for index in range(extra_active_count):
+        cost_center_name, job_title = REPEATABLE_ROLE_SEQUENCE[(terminated_target + index) % len(REPEATABLE_ROLE_SEQUENCE)]
+        specs.append({
+            "CostCenterName": cost_center_name,
+            "JobTitle": job_title,
+            "Protected": False,
+        })
+    return specs[:employee_count]
+
+
 def generate_employees(context: GenerationContext) -> None:
     fake = make_faker(context.settings.random_seed)
-
     cost_centers = context.tables["CostCenter"]
     if cost_centers.empty:
         raise ValueError("Generate cost centers before employees.")
 
-    records = []
-    cost_center_names = cost_centers.set_index("CostCenterID")["CostCenterName"].to_dict()
-    cost_center_ids = list(cost_center_names)
+    cost_center_ids = cost_centers.set_index("CostCenterName")["CostCenterID"].astype(int).to_dict()
+    fiscal_start, fiscal_end = fiscal_start_end(context)
+    role_specs = build_employee_role_specs(context)
+    if len(role_specs) != int(context.settings.employee_count):
+        raise ValueError("Employee role specification count does not match configured employee count.")
 
-    for index in range(context.settings.employee_count):
-        cost_center_id = cost_center_ids[index % len(cost_center_ids)]
-        cost_center_name = cost_center_names[cost_center_id]
+    terminated_pair_count = sum(
+        1 for spec in role_specs if "ReplacementPair" in spec and not bool(spec.get("IsReplacement"))
+    )
+    pair_dates: dict[int, dict[str, object]] = {}
+    if terminated_pair_count:
+        first_valid = fiscal_start + pd.Timedelta(days=45)
+        last_valid = max(first_valid, fiscal_end - pd.Timedelta(days=45))
+        span_days = max(int((last_valid - first_valid).days), 0)
+        eligible_pay_dates = [date for date in payroll_pay_dates(context) if first_valid <= date <= last_valid]
+        for pair_index in range(terminated_pair_count):
+            rng = np.random.default_rng(context.settings.random_seed + pair_index * 131)
+            if eligible_pay_dates:
+                base_position = int(round(((len(eligible_pay_dates) - 1) * (pair_index + 1)) / (terminated_pair_count + 1)))
+                jitter = int(rng.integers(-1, 2))
+                target_position = min(max(base_position + jitter, 0), len(eligible_pay_dates) - 1)
+                termination_date = eligible_pay_dates[target_position]
+            else:
+                base_offset = int(round((span_days * (pair_index + 1)) / (terminated_pair_count + 1))) if span_days else 0
+                termination_date = first_valid + pd.Timedelta(days=base_offset + int(rng.integers(-18, 19)))
+                termination_date = min(max(termination_date, first_valid), last_valid)
+            replacement_hire_date = termination_date + pd.Timedelta(days=int(rng.integers(7, 31)))
+            if replacement_hire_date > fiscal_end:
+                replacement_hire_date = fiscal_end
+                termination_date = min(termination_date, replacement_hire_date - pd.Timedelta(days=1))
+            pair_dates[pair_index] = {
+                "termination_date": termination_date,
+                "replacement_hire_date": replacement_hire_date,
+                "termination_reason": TERMINATION_REASON_OPTIONS[pair_index % len(TERMINATION_REASON_OPTIONS)],
+            }
+
+    records: list[dict[str, object]] = []
+    location_index_by_cost_center: dict[str, int] = {}
+    for spec in role_specs:
         employee_id = next_id(context, "Employee")
+        cost_center_name = str(spec["CostCenterName"])
+        job_title = str(spec["JobTitle"])
+        metadata = ROLE_METADATA[job_title]
+        rng = np.random.default_rng(context.settings.random_seed + employee_id * 17)
+        work_location = work_location_for_role(cost_center_name, location_index_by_cost_center.get(cost_center_name, 0))
+        location_index_by_cost_center[cost_center_name] = location_index_by_cost_center.get(cost_center_name, 0) + 1
 
-        if index < len(cost_center_ids):
-            authorization_level = "Executive" if cost_center_name == "Executive" else "Manager"
-        elif cost_center_name == "Executive" or index < 4:
-            authorization_level = "Executive"
-        elif index % 5 == 0:
-            authorization_level = "Manager"
-        elif index % 3 == 0:
-            authorization_level = "Supervisor"
+        employment_status = "Active"
+        termination_date = None
+        termination_reason = None
+        is_active = 1
+        if "ReplacementPair" in spec and not bool(spec.get("IsReplacement")):
+            pair_info = pair_dates[int(spec["ReplacementPair"])]
+            hire_date_value = prestart_hire_date(context, rng)
+            termination_date = pd.Timestamp(pair_info["termination_date"])
+            termination_reason = str(pair_info["termination_reason"])
+            employment_status = "Terminated"
+            is_active = 0
+        elif "ReplacementPair" in spec and bool(spec.get("IsReplacement")):
+            hire_date_value = pd.Timestamp(pair_dates[int(spec["ReplacementPair"])]["replacement_hire_date"])
         else:
-            authorization_level = "Staff"
+            hire_date_value = active_hire_date(context, rng, allow_recent=not bool(spec.get("Protected", False)))
 
-        job_titles = JOB_TITLES_BY_COST_CENTER[cost_center_name]
+        pay_class = "Hourly" if job_title in HOURLY_TITLE_RANGES else "Salary"
+        if pay_class == "Hourly":
+            low, high = HOURLY_TITLE_RANGES[job_title]
+            base_hourly_rate = money(rng.uniform(low, high))
+            base_annual_salary = 0.0
+            overtime_eligible = 1
+        else:
+            base_hourly_rate = 0.0
+            multiplier = COST_CENTER_SALARY_MULTIPLIERS.get(cost_center_name, 1.0)
+            base_annual_salary = money(
+                ANNUAL_SALARY_BY_LEVEL[str(metadata["AuthorizationLevel"])]
+                * multiplier
+                * rng.uniform(0.96, 1.04)
+            )
+            overtime_eligible = 0
+
         records.append({
             "EmployeeID": employee_id,
             "EmployeeName": fake.name(),
-            "CostCenterID": cost_center_id,
-            "JobTitle": job_titles[index % len(job_titles)],
+            "CostCenterID": int(cost_center_ids[cost_center_name]),
+            "JobTitle": job_title,
             "Email": f"employee{employee_id:03d}@greenfield.example",
             "Address": fake.street_address(),
             "City": fake.city(),
             "State": fake.state_abbr(),
-            "HireDate": fake.date_between(start_date="-12y", end_date="-1y").strftime("%Y-%m-%d"),
+            "HireDate": pd.Timestamp(hire_date_value).strftime("%Y-%m-%d"),
             "ManagerID": None,
-            "IsActive": 1,
-            "AuthorizationLevel": authorization_level,
-            "PayClass": None,
-            "BaseHourlyRate": 0.0,
-            "BaseAnnualSalary": 0.0,
+            "EmployeeNumber": f"EMP-{employee_id:05d}",
+            "EmploymentStatus": employment_status,
+            "TerminationDate": None if termination_date is None else pd.Timestamp(termination_date).strftime("%Y-%m-%d"),
+            "TerminationReason": termination_reason,
+            "JobFamily": str(metadata["JobFamily"]),
+            "JobLevel": str(metadata["JobLevel"]),
+            "WorkLocation": work_location,
+            "IsActive": int(is_active),
+            "AuthorizationLevel": str(metadata["AuthorizationLevel"]),
+            "PayClass": pay_class,
+            "BaseHourlyRate": base_hourly_rate,
+            "BaseAnnualSalary": base_annual_salary,
             "StandardHoursPerWeek": 40.0,
-            "OvertimeEligible": 0,
-            "MaxApprovalAmount": APPROVAL_LIMITS[authorization_level],
+            "OvertimeEligible": int(overtime_eligible),
+            "MaxApprovalAmount": APPROVAL_LIMITS[str(metadata["AuthorizationLevel"])],
         })
 
     employees = pd.DataFrame(records, columns=TABLE_COLUMNS["Employee"])
-    for row in employees.itertuples():
-        seed = context.settings.random_seed + int(row.EmployeeID) * 17
-        rng = np.random.default_rng(seed)
-        title = str(row.JobTitle)
-        cost_center_name = cost_center_names[int(row.CostCenterID)]
-        if title in HOURLY_TITLE_RANGES:
-            low, high = HOURLY_TITLE_RANGES[title]
-            employees.loc[row.Index, "PayClass"] = "Hourly"
-            employees.loc[row.Index, "BaseHourlyRate"] = money(rng.uniform(low, high))
-            employees.loc[row.Index, "BaseAnnualSalary"] = 0.0
-            employees.loc[row.Index, "StandardHoursPerWeek"] = 40.0
-            employees.loc[row.Index, "OvertimeEligible"] = 1
-        else:
-            salary_base = ANNUAL_SALARY_BY_LEVEL[str(row.AuthorizationLevel)]
-            multiplier = COST_CENTER_SALARY_MULTIPLIERS.get(cost_center_name, 1.0)
-            employees.loc[row.Index, "PayClass"] = "Salary"
-            employees.loc[row.Index, "BaseHourlyRate"] = 0.0
-            employees.loc[row.Index, "BaseAnnualSalary"] = money(salary_base * multiplier * rng.uniform(0.96, 1.04))
-            employees.loc[row.Index, "StandardHoursPerWeek"] = 40.0
-            employees.loc[row.Index, "OvertimeEligible"] = 0
+    current_employees = employees[employees["IsActive"].astype(int).eq(1)].copy()
+    ceo_matches = current_employees.loc[current_employees["JobTitle"].eq("Chief Executive Officer"), "EmployeeID"]
+    ceo_id = int(ceo_matches.iloc[0]) if not ceo_matches.empty else int(current_employees.iloc[0]["EmployeeID"])
     manager_by_cost_center = (
-        employees[employees["AuthorizationLevel"].isin(["Manager", "Executive"])]
+        current_employees[current_employees["AuthorizationLevel"].isin(["Manager", "Executive"])]
+        .sort_values(["CostCenterID", "EmployeeID"])
         .groupby("CostCenterID")["EmployeeID"]
         .first()
         .to_dict()
     )
-    employees["ManagerID"] = employees.apply(
-        lambda row: None
-        if row["EmployeeID"] == manager_by_cost_center.get(row["CostCenterID"])
-        else manager_by_cost_center.get(row["CostCenterID"]),
-        axis=1,
-    )
-    context.tables["Employee"] = employees
+
+    manager_ids: list[int | None] = []
+    for row in employees.itertuples(index=False):
+        current_manager = manager_by_cost_center.get(int(row.CostCenterID))
+        if str(row.JobTitle) == "Chief Executive Officer":
+            manager_ids.append(None)
+        elif current_manager is not None and int(row.EmployeeID) == int(current_manager):
+            manager_ids.append(None if int(row.EmployeeID) == ceo_id else ceo_id)
+        else:
+            manager_ids.append(int(current_manager) if current_manager is not None else ceo_id)
+    employees["ManagerID"] = manager_ids
+
+    context.tables["Employee"] = employees[TABLE_COLUMNS["Employee"]]
+    clear_master_data_caches(context)
 
 
 def backfill_cost_center_managers(context: GenerationContext) -> None:
     cost_centers = context.tables["CostCenter"].copy()
-    employees = context.tables["Employee"]
+    employees = current_active_employees(context)
     if cost_centers.empty or employees.empty:
         raise ValueError("Generate cost centers and employees before manager backfill.")
 
@@ -411,14 +1007,16 @@ def backfill_cost_center_managers(context: GenerationContext) -> None:
         .first()
         .to_dict()
     )
+    fallback_managers = employees.sort_values(["CostCenterID", "EmployeeID"]).groupby("CostCenterID")["EmployeeID"].first().to_dict()
     cost_centers["ManagerID"] = cost_centers["CostCenterID"].map(managers)
+    cost_centers["ManagerID"] = cost_centers["ManagerID"].fillna(cost_centers["CostCenterID"].map(fallback_managers))
     context.tables["CostCenter"] = cost_centers[TABLE_COLUMNS["CostCenter"]]
 
 
 def generate_warehouses(context: GenerationContext) -> None:
     fake = make_faker(context.settings.random_seed + 1)
 
-    employees = context.tables["Employee"]
+    employees = current_active_employees(context)
     cost_centers = context.tables["CostCenter"]
     if employees.empty:
         raise ValueError("Generate employees before warehouses.")
@@ -450,6 +1048,137 @@ def generate_warehouses(context: GenerationContext) -> None:
     context.tables["Warehouse"] = pd.DataFrame(records, columns=TABLE_COLUMNS["Warehouse"])
 
 
+def lifecycle_status_for_finished_good(rng: np.random.Generator) -> str:
+    roll = float(rng.random())
+    if roll < 0.76:
+        return "Core"
+    if roll < 0.94:
+        return "Seasonal"
+    return "Discontinued"
+
+
+def launch_date_for_lifecycle(
+    context: GenerationContext,
+    rng: np.random.Generator,
+    lifecycle_status: str,
+    *,
+    allow_in_range_launch: bool = True,
+) -> pd.Timestamp:
+    fiscal_start, fiscal_end = fiscal_start_end(context)
+    if lifecycle_status == "Seasonal" and allow_in_range_launch and float(rng.random()) < 0.55:
+        upper = max(fiscal_start, fiscal_end - pd.Timedelta(days=30))
+        span_days = max(int((upper - fiscal_start).days), 1)
+        return fiscal_start + pd.Timedelta(days=int(rng.integers(0, span_days + 1)))
+    if lifecycle_status == "Discontinued":
+        lower = fiscal_start - pd.Timedelta(days=365 * 8)
+        upper = fiscal_start - pd.Timedelta(days=180)
+    else:
+        lower = fiscal_start - pd.Timedelta(days=365 * 6)
+        upper = fiscal_start - pd.Timedelta(days=30)
+    span_days = max(int((upper - lower).days), 1)
+    return lower + pd.Timedelta(days=int(rng.integers(0, span_days + 1)))
+
+
+def finished_good_catalog_attributes(
+    context: GenerationContext,
+    item_group: str,
+    sequence_number: int,
+    item_id: int,
+) -> dict[str, object]:
+    rng = np.random.default_rng(context.settings.random_seed + item_id * 53)
+    if item_group == "Furniture":
+        collection = FURNITURE_COLLECTIONS[(sequence_number - 1) % len(FURNITURE_COLLECTIONS)]
+        style_family = FURNITURE_STYLE_FAMILIES[(sequence_number + 1) % len(FURNITURE_STYLE_FAMILIES)]
+        product_name, token = FURNITURE_PRODUCTS[(sequence_number * 3 + item_id) % len(FURNITURE_PRODUCTS)]
+        material = FURNITURE_MATERIALS[(sequence_number + item_id) % len(FURNITURE_MATERIALS)]
+        finish = FURNITURE_FINISHES[(sequence_number * 2 + item_id) % len(FURNITURE_FINISHES)]
+        size = FURNITURE_SIZES[(sequence_number + item_id * 2) % len(FURNITURE_SIZES)]
+        return {
+            "ItemCode": f"FUR-{token}-{sequence_number:04d}",
+            "ItemName": f"{collection} {product_name} {material} {finish} {size}",
+            "CollectionName": collection,
+            "StyleFamily": style_family,
+            "PrimaryMaterial": material,
+            "Finish": finish,
+            "Color": None,
+            "SizeDescriptor": size,
+        }
+    if item_group == "Lighting":
+        collection = LIGHTING_COLLECTIONS[(sequence_number - 1) % len(LIGHTING_COLLECTIONS)]
+        style_family = LIGHTING_STYLE_FAMILIES[(sequence_number + 2) % len(LIGHTING_STYLE_FAMILIES)]
+        product_name, token = LIGHTING_PRODUCTS[(sequence_number * 5 + item_id) % len(LIGHTING_PRODUCTS)]
+        material = LIGHTING_MATERIALS[(sequence_number + item_id) % len(LIGHTING_MATERIALS)]
+        finish = LIGHTING_FINISHES[(sequence_number * 2 + item_id) % len(LIGHTING_FINISHES)]
+        return {
+            "ItemCode": f"LGT-{token}-{sequence_number:04d}",
+            "ItemName": f"{collection} {product_name} {finish}",
+            "CollectionName": collection,
+            "StyleFamily": style_family,
+            "PrimaryMaterial": material,
+            "Finish": finish,
+            "Color": None,
+            "SizeDescriptor": None,
+        }
+    if item_group == "Textiles":
+        collection = TEXTILE_COLLECTIONS[(sequence_number - 1) % len(TEXTILE_COLLECTIONS)]
+        style_family = TEXTILE_STYLE_FAMILIES[(sequence_number + 1) % len(TEXTILE_STYLE_FAMILIES)]
+        product_name, token = TEXTILE_PRODUCTS[(sequence_number * 7 + item_id) % len(TEXTILE_PRODUCTS)]
+        material = TEXTILE_MATERIALS[(sequence_number + item_id) % len(TEXTILE_MATERIALS)]
+        color = TEXTILE_COLORS[(sequence_number * 2 + item_id) % len(TEXTILE_COLORS)]
+        size = TEXTILE_SIZES[(sequence_number + item_id * 3) % len(TEXTILE_SIZES)]
+        return {
+            "ItemCode": f"TXT-{token}-{sequence_number:04d}",
+            "ItemName": f"{collection} {product_name} {color} {size}",
+            "CollectionName": collection,
+            "StyleFamily": style_family,
+            "PrimaryMaterial": material,
+            "Finish": None,
+            "Color": color,
+            "SizeDescriptor": size,
+        }
+    collection = None
+    style_family = ACCESSORY_STYLE_FAMILIES[(sequence_number - 1) % len(ACCESSORY_STYLE_FAMILIES)]
+    product_name, token = ACCESSORY_PRODUCTS[(sequence_number * 11 + item_id) % len(ACCESSORY_PRODUCTS)]
+    material = ACCESSORY_MATERIALS[(sequence_number + item_id) % len(ACCESSORY_MATERIALS)]
+    finish = ACCESSORY_FINISHES[(sequence_number * 2 + item_id) % len(ACCESSORY_FINISHES)]
+    return {
+        "ItemCode": f"ACC-{token}-{sequence_number:04d}",
+        "ItemName": f"{style_family} {product_name} {material} {finish}",
+        "CollectionName": collection,
+        "StyleFamily": style_family,
+        "PrimaryMaterial": material,
+        "Finish": finish,
+        "Color": None,
+        "SizeDescriptor": None,
+    }
+
+
+def material_or_packaging_attributes(item_group: str, sequence_number: int, item_id: int) -> dict[str, object]:
+    if item_group == "Raw Materials":
+        material_name, token, form = RAW_MATERIAL_PRODUCTS[(sequence_number + item_id) % len(RAW_MATERIAL_PRODUCTS)]
+        return {
+            "ItemCode": f"RAW-{token}-{sequence_number:04d}",
+            "ItemName": f"{material_name} {form}",
+            "CollectionName": None,
+            "StyleFamily": None,
+            "PrimaryMaterial": material_name,
+            "Finish": None,
+            "Color": None,
+            "SizeDescriptor": form,
+        }
+    descriptor, token, size = PACKAGING_PRODUCTS[(sequence_number + item_id) % len(PACKAGING_PRODUCTS)]
+    return {
+        "ItemCode": f"PKG-{token}-{sequence_number:04d}",
+        "ItemName": f"{descriptor} {size}",
+        "CollectionName": None,
+        "StyleFamily": None,
+        "PrimaryMaterial": descriptor,
+        "Finish": None,
+        "Color": None,
+        "SizeDescriptor": size,
+    }
+
+
 def generate_items(context: GenerationContext) -> None:
     if context.tables["Account"].empty:
         raise ValueError("Load accounts before items.")
@@ -474,6 +1203,16 @@ def generate_items(context: GenerationContext) -> None:
         standard_variable_overhead_cost = 0.0
         standard_fixed_overhead_cost = 0.0
         standard_conversion_cost = 0.0
+        if item_group in {"Furniture", "Lighting", "Textiles", "Accessories"}:
+            catalog = finished_good_catalog_attributes(context, item_group, group_counts[item_group], planned_item_id)
+            lifecycle_status = lifecycle_status_for_finished_good(rng)
+            launch_date = launch_date_for_lifecycle(context, rng, lifecycle_status)
+            is_active = 0 if lifecycle_status == "Discontinued" else 1
+        else:
+            catalog = material_or_packaging_attributes(item_group, group_counts[item_group], planned_item_id)
+            lifecycle_status = "Core"
+            launch_date = launch_date_for_lifecycle(context, rng, lifecycle_status, allow_in_range_launch=False)
+            is_active = 1
         if markup_range is not None:
             if rng.random() <= MANUFACTURED_SUPPLY_MODE_PROBABILITY.get(item_group, 0.0):
                 supply_mode = "Manufactured"
@@ -489,8 +1228,8 @@ def generate_items(context: GenerationContext) -> None:
         item_id = next_id(context, "Item")
         records.append({
             "ItemID": item_id,
-            "ItemCode": f"{prefix}-{group_counts[item_group]:04d}",
-            "ItemName": f"{item_group} Item {group_counts[item_group]:04d}",
+            "ItemCode": str(catalog["ItemCode"]),
+            "ItemName": str(catalog["ItemName"]),
             "ItemGroup": item_group,
             "ItemType": item_type,
             "StandardCost": standard_cost,
@@ -509,7 +1248,15 @@ def generate_items(context: GenerationContext) -> None:
             "COGSAccountID": account_id_by_number(context, cogs),
             "PurchaseVarianceAccountID": account_id_by_number(context, "5060"),
             "TaxCategory": "Taxable" if item_group not in ["Packaging", "Raw Materials"] else "Exempt",
-            "IsActive": 1 if rng.random() > 0.03 else 0,
+            "CollectionName": catalog["CollectionName"],
+            "StyleFamily": catalog["StyleFamily"],
+            "PrimaryMaterial": catalog["PrimaryMaterial"],
+            "Finish": catalog["Finish"],
+            "Color": catalog["Color"],
+            "SizeDescriptor": catalog["SizeDescriptor"],
+            "LifecycleStatus": lifecycle_status,
+            "LaunchDate": pd.Timestamp(launch_date).strftime("%Y-%m-%d"),
+            "IsActive": int(is_active),
         })
 
     items = pd.DataFrame(records, columns=TABLE_COLUMNS["Item"])
@@ -552,6 +1299,7 @@ def generate_items(context: GenerationContext) -> None:
 
     service_rows = []
     for account_number, service_item in ACCRUAL_SERVICE_ITEMS.items():
+        launch_date = launch_date_for_lifecycle(context, rng, "Core", allow_in_range_launch=False)
         service_rows.append({
             "ItemID": next_id(context, "Item"),
             "ItemCode": service_item["ItemCode"],
@@ -574,6 +1322,14 @@ def generate_items(context: GenerationContext) -> None:
             "COGSAccountID": None,
             "PurchaseVarianceAccountID": account_id_by_number(context, "5060"),
             "TaxCategory": "Exempt",
+            "CollectionName": None,
+            "StyleFamily": None,
+            "PrimaryMaterial": None,
+            "Finish": None,
+            "Color": None,
+            "SizeDescriptor": None,
+            "LifecycleStatus": "Core",
+            "LaunchDate": pd.Timestamp(launch_date).strftime("%Y-%m-%d"),
             "IsActive": 1,
         })
 
@@ -581,11 +1337,12 @@ def generate_items(context: GenerationContext) -> None:
         items = pd.concat([items, pd.DataFrame(service_rows, columns=TABLE_COLUMNS["Item"])], ignore_index=True)
 
     context.tables["Item"] = items[TABLE_COLUMNS["Item"]]
+    clear_master_data_caches(context)
 
 
 def generate_customers(context: GenerationContext) -> None:
     fake = make_faker(context.settings.random_seed + 2)
-    employees = context.tables["Employee"]
+    employees = current_active_employees(context)
     cost_centers = context.tables["CostCenter"]
     if employees.empty or cost_centers.empty:
         raise ValueError("Generate employees and cost centers before customers.")

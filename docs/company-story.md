@@ -22,6 +22,7 @@ That hybrid model connects:
 - inventory movement
 - payroll and labor usage
 - accounting results
+- a realistic people-and-product master-data layer used for control and analytics work
 
 ## What Greenfield Sells
 
@@ -33,6 +34,8 @@ Greenfield sells product families that are easy to visualize and analyze:
 - accessories
 
 Some of those products are purchased ready-made. Others are produced internally from raw materials and packaging. That distinction matters for costing, variance analysis, and margin analysis.
+
+The catalog is also organized into named collections and style families rather than generic item labels. That makes product-profitability and lifecycle analysis more realistic for classroom work.
 
 ## How Greenfield Operates
 
@@ -69,6 +72,8 @@ This matters because the same dataset can now support:
 - payroll liability roll-forwards
 - direct labor by work order
 - unit-cost bridges for manufactured products
+
+The employee master is also intentionally more realistic. Greenfield has one CEO, one CFO, one Controller, one Production Manager, and one Accounting Manager. Repeatable roles such as sales reps, buyers, assemblers, machine operators, and shipping clerks can appear many times. Employees who leave the company remain in the dataset for historical traceability, which creates useful audit scenarios.
 
 ### 6. Close the books
 

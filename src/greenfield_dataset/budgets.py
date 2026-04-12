@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
+from greenfield_dataset.master_data import approver_employee_id, current_role_employee_id
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
 from greenfield_dataset.utils import money, next_id
@@ -80,15 +81,13 @@ def account_id_by_number(context: GenerationContext, account_number: str) -> int
 
 
 def opening_balance_approver_id(context: GenerationContext) -> int:
+    approver_id = current_role_employee_id(context, "Chief Financial Officer", "Controller", "Chief Executive Officer")
+    if approver_id is not None:
+        return int(approver_id)
     employees = context.tables["Employee"]
     if employees.empty:
         raise ValueError("Generate employees before opening balances.")
-
-    executives = employees.loc[
-        employees["AuthorizationLevel"].eq("Executive"),
-        "EmployeeID",
-    ]
-    return int(executives.iloc[0] if not executives.empty else employees.iloc[0]["EmployeeID"])
+    return int(employees.sort_values("EmployeeID").iloc[0]["EmployeeID"])
 
 
 def build_gl_row(
@@ -185,12 +184,12 @@ def generate_opening_balances(context: GenerationContext) -> None:
 
 
 def budget_approver_id(context: GenerationContext) -> int:
-    employees = context.tables["Employee"]
-    approvers = employees.loc[
-        employees["AuthorizationLevel"].isin(["Executive", "Manager"]),
-        "EmployeeID",
-    ]
-    return int(approvers.iloc[0] if not approvers.empty else employees.iloc[0]["EmployeeID"])
+    return approver_employee_id(
+        context,
+        context.settings.fiscal_year_start,
+        preferred_titles=["Chief Financial Officer", "Controller", "Accounting Manager"],
+        fallback_cost_center_name="Administration",
+    )
 
 
 def generate_budgets(context: GenerationContext) -> None:

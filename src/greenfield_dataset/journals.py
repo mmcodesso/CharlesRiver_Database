@@ -6,6 +6,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from greenfield_dataset.master_data import approver_employee_id, current_role_employee_id, valid_employees
 from greenfield_dataset.payroll import (
     monthly_direct_labor_reclass_amount,
     monthly_factory_overhead_amount,
@@ -163,15 +164,17 @@ def sorted_cost_centers(context: GenerationContext) -> pd.DataFrame:
 
 
 def sorted_employees(context: GenerationContext) -> pd.DataFrame:
-    return context.tables["Employee"].sort_values("EmployeeID").reset_index(drop=True)
+    employees = valid_employees(context, None)
+    if employees.empty:
+        employees = context.tables["Employee"].copy()
+    return employees.sort_values("EmployeeID").reset_index(drop=True)
 
 
 def employee_id_by_titles(context: GenerationContext, *job_titles: str) -> int | None:
-    employees = sorted_employees(context)
     for title in job_titles:
-        matches = employees.loc[employees["JobTitle"].eq(title), "EmployeeID"]
-        if not matches.empty:
-            return int(matches.iloc[0])
+        employee_id = current_role_employee_id(context, title)
+        if employee_id is not None:
+            return int(employee_id)
     return None
 
 
@@ -180,7 +183,7 @@ def first_executive_id(context: GenerationContext) -> int:
     matches = employees.loc[employees["AuthorizationLevel"].eq("Executive"), "EmployeeID"]
     if matches.empty:
         raise ValueError("At least one Executive employee is required for journal approvals.")
-    return int(matches.iloc[0])
+    return int(matches.sort_values().iloc[0])
 
 
 def cost_center_manager_id(context: GenerationContext, cost_center_id: int) -> int:
@@ -192,7 +195,12 @@ def cost_center_manager_id(context: GenerationContext, cost_center_id: int) -> i
 
 
 def payroll_accrual_approver_id(context: GenerationContext) -> int:
-    return employee_id_by_titles(context, "Controller", "Chief Financial Officer") or first_executive_id(context)
+    return approver_employee_id(
+        context,
+        context.settings.fiscal_year_end,
+        preferred_titles=["Controller", "Chief Financial Officer"],
+        fallback_cost_center_name="Administration",
+    )
 
 
 def payroll_settlement_creator_id(context: GenerationContext) -> int:
@@ -200,7 +208,12 @@ def payroll_settlement_creator_id(context: GenerationContext) -> int:
 
 
 def payroll_settlement_approver_id(context: GenerationContext) -> int:
-    return employee_id_by_titles(context, "Chief Financial Officer", "Controller") or first_executive_id(context)
+    return approver_employee_id(
+        context,
+        context.settings.fiscal_year_end,
+        preferred_titles=["Chief Financial Officer", "Controller"],
+        fallback_cost_center_name="Administration",
+    )
 
 
 def accounting_journal_creator_id(context: GenerationContext) -> int:
@@ -208,7 +221,12 @@ def accounting_journal_creator_id(context: GenerationContext) -> int:
 
 
 def accounting_journal_approver_id(context: GenerationContext) -> int:
-    return employee_id_by_titles(context, "Controller", "Chief Financial Officer") or first_executive_id(context)
+    return approver_employee_id(
+        context,
+        context.settings.fiscal_year_end,
+        preferred_titles=["Controller", "Chief Financial Officer"],
+        fallback_cost_center_name="Administration",
+    )
 
 
 def close_journal_creator_id(context: GenerationContext) -> int:
@@ -216,7 +234,12 @@ def close_journal_creator_id(context: GenerationContext) -> int:
 
 
 def close_journal_approver_id(context: GenerationContext) -> int:
-    return employee_id_by_titles(context, "Chief Financial Officer", "Controller") or first_executive_id(context)
+    return approver_employee_id(
+        context,
+        context.settings.fiscal_year_end,
+        preferred_titles=["Chief Financial Officer", "Controller"],
+        fallback_cost_center_name="Administration",
+    )
 
 
 def journal_timestamp(posting_date: str, hour: int) -> str:

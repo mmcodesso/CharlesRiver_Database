@@ -6,6 +6,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from greenfield_dataset.master_data import current_role_employee_id, employee_active_mask, valid_employees
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.state_cache import drop_context_attributes, get_or_build_cache
 from greenfield_dataset.settings import GenerationContext
@@ -141,7 +142,7 @@ def invalidate_payroll_caches(context: GenerationContext, table_name: str) -> No
             "_shift_assignment_map_cache",
         ],
         "ShiftDefinition": ["_shift_definition_by_code_cache", "_shift_definition_lookup_cache"],
-        "EmployeeShiftAssignment": ["_shift_assignment_map_cache"],
+        "EmployeeShiftAssignment": ["_shift_assignment_map_cache", "_shift_assignment_rows_by_employee_cache"],
         "TimeClockEntry": [
             "_time_clock_entries_cache",
             "_time_clock_entry_lookup_cache",
@@ -197,12 +198,11 @@ def choose_count(rng: np.random.Generator, options: tuple[tuple[int, float], ...
 
 
 def accounting_manager_id(context: GenerationContext) -> int:
-    employees = context.tables["Employee"]
     for title in ["Accounting Manager", "Controller", "Chief Financial Officer"]:
-        matches = employees.loc[employees["JobTitle"].eq(title), "EmployeeID"]
-        if not matches.empty:
-            return int(matches.iloc[0])
-    return int(employees.iloc[0]["EmployeeID"])
+        employee_id = current_role_employee_id(context, title)
+        if employee_id is not None:
+            return int(employee_id)
+    return int(context.tables["Employee"].sort_values("EmployeeID").iloc[0]["EmployeeID"])
 
 
 def payroll_period_lookup(context: GenerationContext) -> dict[int, dict[str, Any]]:
@@ -333,9 +333,6 @@ def generate_employee_shift_assignments(context: GenerationContext) -> None:
 
     shift_by_code = shift_definition_by_code(context)
     assignment_rows: list[dict[str, Any]] = []
-    start_date = context.settings.fiscal_year_start
-    end_date = context.settings.fiscal_year_end
-
     for employee in employees.sort_values("EmployeeID").itertuples(index=False):
         if str(employee.PayClass) != "Hourly":
             continue
@@ -348,12 +345,19 @@ def generate_employee_shift_assignments(context: GenerationContext) -> None:
         shift_definition = shift_by_code.get(str(shift_code))
         if shift_definition is None:
             continue
+        assignment_start = max(pd.Timestamp(context.settings.fiscal_year_start), pd.Timestamp(employee.HireDate))
+        termination_date = pd.Timestamp(employee.TerminationDate) if pd.notna(employee.TerminationDate) else None
+        assignment_end = pd.Timestamp(context.settings.fiscal_year_end)
+        if termination_date is not None and termination_date < assignment_end:
+            assignment_end = termination_date
+        if assignment_end < assignment_start:
+            continue
         assignment_rows.append({
             "EmployeeShiftAssignmentID": next_id(context, "EmployeeShiftAssignment"),
             "EmployeeID": int(employee.EmployeeID),
             "ShiftDefinitionID": int(shift_definition["ShiftDefinitionID"]),
-            "EffectiveStartDate": start_date,
-            "EffectiveEndDate": end_date,
+            "EffectiveStartDate": assignment_start.strftime("%Y-%m-%d"),
+            "EffectiveEndDate": assignment_end.strftime("%Y-%m-%d"),
             "WorkCenterID": primary_work_center_id_for_title(context, str(employee.JobTitle)),
             "IsPrimary": 1,
         })
@@ -374,6 +378,46 @@ def primary_shift_assignment_map(context: GenerationContext) -> dict[int, dict[s
         return active_assignments.set_index("EmployeeID").to_dict("index")
 
     return get_or_build_cache(context, "_shift_assignment_map_cache", builder)
+
+
+def shift_assignments_by_employee(context: GenerationContext) -> dict[int, list[dict[str, Any]]]:
+    def builder() -> dict[int, list[dict[str, Any]]]:
+        assignments = context.tables["EmployeeShiftAssignment"]
+        if assignments.empty:
+            return {}
+        ordered = assignments.sort_values(["EmployeeID", "IsPrimary", "EffectiveStartDate", "EmployeeShiftAssignmentID"], ascending=[True, False, True, True])
+        grouped: dict[int, list[dict[str, Any]]] = defaultdict(list)
+        for row in ordered.to_dict(orient="records"):
+            grouped[int(row["EmployeeID"])].append(row)
+        return dict(grouped)
+
+    return get_or_build_cache(context, "_shift_assignment_rows_by_employee_cache", builder)
+
+
+def shift_assignment_for_employee_on_date(
+    context: GenerationContext,
+    employee_id: int,
+    work_date: pd.Timestamp | str,
+) -> dict[str, Any]:
+    timestamp = pd.Timestamp(work_date)
+    assignments = shift_assignments_by_employee(context).get(int(employee_id), [])
+    for assignment in assignments:
+        start_date = pd.Timestamp(assignment["EffectiveStartDate"])
+        end_date = pd.Timestamp(assignment["EffectiveEndDate"])
+        if start_date <= timestamp <= end_date:
+            return assignment
+    return primary_shift_assignment_map(context).get(int(employee_id), {})
+
+
+def employee_available_for_work_date(employee: pd.Series | dict[str, Any], work_date: pd.Timestamp | str) -> bool:
+    if isinstance(employee, dict):
+        payload = employee
+    elif isinstance(employee, pd.Series):
+        payload = employee.to_dict()
+    else:
+        payload = employee._asdict()
+    employee_frame = pd.DataFrame([payload])
+    return bool(employee_active_mask(employee_frame, work_date).iloc[0])
 
 
 def combine_timestamp(date_value: pd.Timestamp | str, time_text: str) -> str:
@@ -441,15 +485,22 @@ def generate_payroll_periods(context: GenerationContext) -> None:
     append_rows(context, "PayrollPeriod", rows)
 
 
-def active_employees_for_period(context: GenerationContext, period_end: pd.Timestamp) -> pd.DataFrame:
+def active_employees_for_period(
+    context: GenerationContext,
+    period_end: pd.Timestamp,
+    *,
+    pay_date: pd.Timestamp | str | None = None,
+) -> pd.DataFrame:
     employees = context.tables["Employee"].copy()
     if employees.empty:
         return employees
-    employees["HireDateValue"] = pd.to_datetime(employees["HireDate"])
-    return employees[
-        employees["IsActive"].eq(1)
-        & employees["HireDateValue"].le(period_end)
-    ].copy()
+    period_end = pd.Timestamp(period_end)
+    period_start = period_end - pd.Timedelta(days=PAYROLL_PERIOD_LENGTH_DAYS - 1)
+    pay_date_value = pd.Timestamp(pay_date) if pay_date is not None else period_end
+    hire_date = pd.to_datetime(employees["HireDate"], errors="coerce")
+    termination_date = pd.to_datetime(employees["TerminationDate"], errors="coerce")
+    mask = hire_date.le(period_end) & (termination_date.isna() | termination_date.ge(pay_date_value))
+    return employees[mask].copy()
 
 
 def payroll_periods_for_pay_month(context: GenerationContext, year: int, month: int) -> pd.DataFrame:
@@ -685,7 +736,7 @@ def add_time_clock_spec(
 
     date_text = pd.Timestamp(work_date).strftime("%Y-%m-%d")
     key = (int(employee_id), date_text)
-    assignment = primary_shift_assignment_map(context).get(int(employee_id), {})
+    assignment = shift_assignment_for_employee_on_date(context, int(employee_id), work_date)
     employee = employee_lookup[int(employee_id)]
     approver_id = employee_clock_approver_id(employee) or accounting_manager_id(context)
 
@@ -774,6 +825,11 @@ def build_direct_time_clock_specs(
             operation = operation_lookup.get(int(operation_id)) if operation_id is not None else None
             work_center_id = int(operation["WorkCenterID"]) if operation is not None else None
             candidate_workers = worker_ids_by_work_center.get(work_center_id) or worker_ids_by_work_center.get(None, [])
+            candidate_workers = [
+                int(employee_id)
+                for employee_id in candidate_workers
+                if employee_available_for_work_date(employee_lookup[int(employee_id)], work_date)
+            ]
             if not candidate_workers:
                 continue
 
@@ -843,7 +899,7 @@ def build_direct_time_clock_specs(
         if remaining_hours <= 0:
             continue
 
-        assignment = primary_shift_assignment_map(context).get(int(employee.EmployeeID), {})
+        assignment = shift_assignment_for_employee_on_date(context, int(employee.EmployeeID), period_end)
         working_dates = working_dates_for_period(
             context,
             period_start,
@@ -851,9 +907,12 @@ def build_direct_time_clock_specs(
             None if pd.isna(assignment.get("WorkCenterID")) else int(assignment["WorkCenterID"]),
         )
         for work_date in working_dates:
+            if not employee_available_for_work_date(employee, work_date):
+                continue
             key = (int(employee.EmployeeID), work_date.strftime("%Y-%m-%d"))
             if key in specs:
                 continue
+            work_date_assignment = shift_assignment_for_employee_on_date(context, int(employee.EmployeeID), work_date)
             daily_regular = qty(min(float(rng.uniform(*STANDARD_SHIFT_REGULAR_HOURS_RANGE)), remaining_hours))
             daily_overtime = 0.0
             if remaining_hours > daily_regular and int(employee.OvertimeEligible) == 1:
@@ -865,7 +924,7 @@ def build_direct_time_clock_specs(
                 int(employee.EmployeeID),
                 int(payroll_period_id),
                 work_date,
-                None if pd.isna(assignment.get("WorkCenterID")) else int(assignment["WorkCenterID"]),
+                None if pd.isna(work_date_assignment.get("WorkCenterID")) else int(work_date_assignment["WorkCenterID"]),
                 "Indirect Manufacturing",
                 daily_regular,
                 daily_overtime,
@@ -912,6 +971,10 @@ def build_hourly_support_time_clock_specs(
         remaining_overtime = qty(target_overtime_hours)
 
         for work_date in working_dates:
+            if not employee_available_for_work_date(employee, work_date):
+                continue
+            work_date_assignment = shift_assignment_for_employee_on_date(context, int(employee.EmployeeID), work_date)
+            work_center_id = None if pd.isna(work_date_assignment.get("WorkCenterID")) else int(work_date_assignment["WorkCenterID"])
             if remaining_regular <= 0 and remaining_overtime <= 0:
                 break
             regular_hours = qty(min(float(rng.uniform(*STANDARD_SHIFT_REGULAR_HOURS_RANGE)), remaining_regular))
@@ -1043,6 +1106,7 @@ def build_payroll_registers_for_period(
     entries_by_employee = labor_entries_by_employee(labor_rows)
     approver = accounting_manager_id(context)
     pay_date = pd.Timestamp(period["PayDate"]).strftime("%Y-%m-%d")
+    period_start = pd.Timestamp(period["PeriodStartDate"])
     period_end = pd.Timestamp(period["PeriodEndDate"])
 
     for employee in employees.sort_values("EmployeeID").itertuples(index=False):
@@ -1085,7 +1149,18 @@ def build_payroll_registers_for_period(
                     line_number += 1
                     gross_pay += amount
         else:
-            salary_amount = money(float(employee.BaseAnnualSalary) * growth_factor_for_year(period_end.year) / 26.0)
+            employment_start = max(period_start, pd.Timestamp(employee.HireDate))
+            employment_end = period_end
+            if pd.notna(employee.TerminationDate):
+                employment_end = min(employment_end, pd.Timestamp(employee.TerminationDate))
+            active_days = max(int((employment_end - employment_start).days) + 1, 0)
+            period_days = max(int((period_end - period_start).days) + 1, 1)
+            salary_amount = money(
+                float(employee.BaseAnnualSalary)
+                * growth_factor_for_year(period_end.year)
+                / 26.0
+                * (active_days / period_days)
+            )
             payroll_register_line_rows.append({
                 "PayrollRegisterLineID": next_id(context, "PayrollRegisterLine"),
                 "PayrollRegisterID": register_id,
@@ -1230,23 +1305,25 @@ def generate_month_payroll(context: GenerationContext, year: int, month: int) ->
     for period in periods.to_dict(orient="records"):
         period_start = pd.Timestamp(period["PeriodStartDate"])
         period_end = pd.Timestamp(period["PeriodEndDate"])
-        employees = active_employees_for_period(context, period_end)
+        pay_date = pd.Timestamp(period["PayDate"])
+        timekeeping_employees = active_employees_for_period(context, period_end, pay_date=period_end)
+        payroll_employees = active_employees_for_period(context, period_end, pay_date=pay_date)
         time_clock_rows, labor_rows = build_time_clock_and_labor_rows_for_period(
             context,
             int(period["PayrollPeriodID"]),
             period_start,
             period_end,
-            employees,
+            timekeeping_employees,
         )
         append_rows(context, "TimeClockEntry", time_clock_rows)
         append_rows(context, "LaborTimeEntry", labor_rows)
 
-        register_rows, register_line_rows = build_payroll_registers_for_period(context, period, employees, labor_rows)
+        register_rows, register_line_rows = build_payroll_registers_for_period(context, period, payroll_employees, labor_rows)
         append_rows(context, "PayrollRegister", register_rows)
         append_rows(context, "PayrollRegisterLine", register_line_rows)
 
-        pay_date = pd.Timestamp(period["PayDate"]).strftime("%Y-%m-%d")
-        append_rows(context, "PayrollPayment", build_payroll_payments_for_period(context, register_rows, pay_date))
+        pay_date_text = pay_date.strftime("%Y-%m-%d")
+        append_rows(context, "PayrollPayment", build_payroll_payments_for_period(context, register_rows, pay_date_text))
         append_rows(
             context,
             "PayrollLiabilityRemittance",

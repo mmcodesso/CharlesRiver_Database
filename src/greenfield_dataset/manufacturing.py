@@ -6,7 +6,13 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from greenfield_dataset.master_data import ITEM_GROUP_CONFIG
+from greenfield_dataset.master_data import (
+    ITEM_GROUP_CONFIG,
+    approver_employee_id,
+    current_role_employee_id,
+    employee_ids_for_cost_center_as_of,
+    eligible_item_mask,
+)
 from greenfield_dataset.o2c import opening_inventory_map, sales_order_line_shipped_quantities, shadow_inventory_state
 from greenfield_dataset.payroll import (
     labor_time_direct_cost_by_work_order,
@@ -340,24 +346,26 @@ def cost_center_id(context: GenerationContext, cost_center_name: str) -> int:
     return int(matches.iloc[0])
 
 
-def employee_ids_for_cost_center(context: GenerationContext, cost_center_name: str) -> list[int]:
-    cc_id = cost_center_id(context, cost_center_name)
-    employees = context.tables["Employee"]
-    ids = employees.loc[employees["CostCenterID"].eq(cc_id), "EmployeeID"].astype(int).tolist()
-    return ids or employees["EmployeeID"].astype(int).tolist()
+def employee_ids_for_cost_center(
+    context: GenerationContext,
+    cost_center_name: str,
+    event_date: pd.Timestamp | str | None = None,
+) -> list[int]:
+    return employee_ids_for_cost_center_as_of(context, cost_center_name, event_date)
 
 
-def approver_id(context: GenerationContext, minimum_amount: float = 0.0) -> int:
-    employees = context.tables["Employee"].copy()
-    eligible = employees[
-        employees["AuthorizationLevel"].isin(["Manager", "Executive"])
-        & (employees["MaxApprovalAmount"].astype(float) >= float(minimum_amount))
-    ]
-    if eligible.empty:
-        eligible = employees[employees["AuthorizationLevel"].isin(["Manager", "Executive"])]
-    if eligible.empty:
-        eligible = employees
-    return int(eligible.iloc[0]["EmployeeID"])
+def approver_id(
+    context: GenerationContext,
+    minimum_amount: float = 0.0,
+    event_date: pd.Timestamp | str | None = None,
+) -> int:
+    return approver_employee_id(
+        context,
+        event_date,
+        preferred_titles=["Production Manager", "Chief Financial Officer", "Controller"],
+        minimum_amount=minimum_amount,
+        fallback_cost_center_name="Manufacturing",
+    )
 
 
 def warehouse_ids(context: GenerationContext) -> list[int]:
@@ -374,12 +382,12 @@ def choose_count(rng: np.random.Generator, options: tuple[tuple[int, float], ...
     return int(rng.choice(values, p=probabilities))
 
 
-def manufactured_items(context: GenerationContext) -> pd.DataFrame:
+def manufactured_items(context: GenerationContext, event_date: pd.Timestamp | str | None = None) -> pd.DataFrame:
     items = context.tables["Item"]
     rows = items[
         items["SupplyMode"].eq("Manufactured")
         & items["RevenueAccountID"].notna()
-        & items["IsActive"].eq(1)
+        & eligible_item_mask(items, event_date)
     ].copy()
     return rows.sort_values("ItemID").reset_index(drop=True)
 
@@ -478,15 +486,14 @@ def work_center_id_by_code(context: GenerationContext) -> dict[str, int]:
 
 
 def manager_for_titles(context: GenerationContext, titles: tuple[str, ...]) -> int:
-    employees = context.tables["Employee"]
     for title in titles:
-        matches = employees.loc[employees["JobTitle"].eq(title), "EmployeeID"]
-        if not matches.empty:
-            return int(matches.iloc[0])
+        employee_id = current_role_employee_id(context, title)
+        if employee_id is not None:
+            return int(employee_id)
     manufacturing_ids = employee_ids_for_cost_center(context, "Manufacturing")
     if manufacturing_ids:
         return int(manufacturing_ids[0])
-    return int(employees.iloc[0]["EmployeeID"])
+    return int(context.tables["Employee"].sort_values("EmployeeID").iloc[0]["EmployeeID"])
 
 
 def routing_pattern_for_item(context: GenerationContext, item_group: str, item_id: int) -> list[tuple[str, str]]:
@@ -1133,7 +1140,7 @@ def manufacturing_capacity_state(context: GenerationContext, year: int, month: i
 
 def finished_goods_shortage_by_item(context: GenerationContext, month_end: pd.Timestamp) -> dict[int, dict[str, float]]:
     inventory = shadow_inventory_state(context)
-    manufactured = manufactured_items(context)
+    manufactured = manufactured_items(context, month_end)
     if manufactured.empty:
         return {}
 
@@ -1444,17 +1451,16 @@ def sync_work_order_operation_activity(
 
 
 def generate_month_work_orders_and_requisitions(context: GenerationContext, year: int, month: int) -> None:
-    manufactured = manufactured_items(context)
+    month_start, month_end = month_bounds(year, month)
+    manufactured = manufactured_items(context, month_end)
     if manufactured.empty or context.tables["BillOfMaterial"].empty:
         return
 
     rng = context.rng
-    month_start, month_end = month_bounds(year, month)
     shortages = finished_goods_shortage_by_item(context, month_end)
     if not shortages:
         return
 
-    manufacturing_employee_ids = employee_ids_for_cost_center(context, "Manufacturing")
     manufacturing_cost_center = cost_center_id(context, "Manufacturing")
     bom_by_parent = bom_lookup(context)
     bom_lines_lookup = bom_lines_by_bom(context)
@@ -1474,7 +1480,12 @@ def generate_month_work_orders_and_requisitions(context: GenerationContext, year
         if shortage is None or bom is None or routing is None:
             continue
 
-        release_date = random_date_between(rng, month_start, min(month_end, month_start + pd.Timedelta(days=9)))
+        launch_date = pd.Timestamp(item.LaunchDate) if pd.notna(item.LaunchDate) else month_start
+        release_window_start = max(month_start, launch_date)
+        if release_window_start > month_end:
+            continue
+        release_window_end = min(month_end, release_window_start + pd.Timedelta(days=9))
+        release_date = random_date_between(rng, release_window_start, release_window_end)
         lead_days = max(int(item.ProductionLeadTimeDays), 1)
         due_date = release_date + pd.Timedelta(days=lead_days)
         if due_date > month_end and rng.random() <= WORK_ORDER_SAME_MONTH_COMPLETION_PROBABILITY:
@@ -1500,7 +1511,7 @@ def generate_month_work_orders_and_requisitions(context: GenerationContext, year
             "ClosedDate": None,
             "Status": "Released",
             "CostCenterID": manufacturing_cost_center,
-            "ReleasedByEmployeeID": int(rng.choice(manufacturing_employee_ids)),
+            "ReleasedByEmployeeID": int(rng.choice(employee_ids_for_cost_center(context, "Manufacturing", release_date))),
             "ClosedByEmployeeID": None,
         })
         operation_rows, operation_schedule_rows = build_work_order_operations(
@@ -1535,13 +1546,13 @@ def generate_month_work_orders_and_requisitions(context: GenerationContext, year
                 "RequisitionID": requisition_id,
                 "RequisitionNumber": format_doc_number("PR", year, requisition_id),
                 "RequestDate": release_date.strftime("%Y-%m-%d"),
-                "RequestedByEmployeeID": int(rng.choice(manufacturing_employee_ids)),
+                "RequestedByEmployeeID": int(rng.choice(employee_ids_for_cost_center(context, "Manufacturing", release_date))),
                 "CostCenterID": manufacturing_cost_center,
                 "ItemID": int(bom_line.ComponentItemID),
                 "Quantity": requisition_quantity,
                 "EstimatedUnitCost": estimated_unit_cost,
                 "Justification": f"Manufacturing replenishment for {work_order_number}",
-                "ApprovedByEmployeeID": approver_id(context, requisition_quantity * estimated_unit_cost),
+                "ApprovedByEmployeeID": approver_id(context, requisition_quantity * estimated_unit_cost, release_date),
                 "ApprovedDate": release_date.strftime("%Y-%m-%d"),
                 "Status": "Approved",
             })
@@ -1697,7 +1708,6 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
     material_inventory = material_inventory_state(context)
     items = context.tables["Item"].set_index("ItemID").to_dict("index")
     bom_lines_lookup = bom_lines_by_bom(context)
-    manufacturing_employee_ids = employee_ids_for_cost_center(context, "Manufacturing")
     completed_quantities = work_order_completed_quantity_map(context)
     issued_support_quantities = work_order_issued_support_quantity_map(context)
     existing_issue_counts = (
@@ -1769,7 +1779,7 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
                         "WorkOrderID": work_order_id,
                         "IssueDate": issue_date.strftime("%Y-%m-%d"),
                         "WarehouseID": int(work_order.WarehouseID),
-                        "IssuedByEmployeeID": int(rng.choice(manufacturing_employee_ids)),
+                        "IssuedByEmployeeID": int(rng.choice(employee_ids_for_cost_center(context, "Manufacturing", issue_date))),
                         "Status": "Issued",
                     })
                     issue_line_number_by_header[material_issue_id] = 1
@@ -1847,7 +1857,7 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
                 "WorkOrderID": work_order_id,
                 "CompletionDate": completion_date.strftime("%Y-%m-%d"),
                 "WarehouseID": int(work_order.WarehouseID),
-                "ReceivedByEmployeeID": int(rng.choice(manufacturing_employee_ids)),
+                "ReceivedByEmployeeID": int(rng.choice(employee_ids_for_cost_center(context, "Manufacturing", completion_date))),
                 "Status": "Completed",
             })
             standard_material_cost = money(completion_qty * standard_material_unit)
@@ -1929,7 +1939,6 @@ def close_eligible_work_orders(context: GenerationContext, year: int, month: int
     actual_direct_labor_map = labor_time_direct_cost_by_work_order(context)
     actual_overhead_map = work_order_overhead_cost_map(context)
     activity_dates = final_work_order_activity_dates(context)
-    manufacturing_employee_ids = employee_ids_for_cost_center(context, "Manufacturing")
     close_rows: list[dict[str, Any]] = []
 
     for work_order in work_orders.sort_values("WorkOrderID").itertuples(index=False):
@@ -1976,7 +1985,10 @@ def close_eligible_work_orders(context: GenerationContext, year: int, month: int
             "TotalVarianceAmount": money(material_variance + conversion_variance),
             "Status": "Closed",
             "ClosedByEmployeeID": int(
-                manufacturing_employee_ids[(int(work_order.WorkOrderID) + year + month) % len(manufacturing_employee_ids)]
+                employee_ids_for_cost_center(context, "Manufacturing", close_date)[
+                    (int(work_order.WorkOrderID) + year + month)
+                    % len(employee_ids_for_cost_center(context, "Manufacturing", close_date))
+                ]
             ),
         })
         update_work_order_row(

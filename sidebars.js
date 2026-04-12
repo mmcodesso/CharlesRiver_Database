@@ -35,6 +35,8 @@ const sidebars = {
         "analytics/cases/o2c-trace-case",
         "analytics/cases/p2p-accrual-settlement-case",
         "analytics/cases/manufacturing-labor-cost-case",
+        "analytics/cases/master-data-and-workforce-audit-case",
+        "analytics/cases/product-portfolio-and-lifecycle-case",
         "analytics/cases/audit-exception-lab",
       ],
     },
