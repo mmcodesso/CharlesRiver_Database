@@ -7,59 +7,38 @@ sidebar_label: Dataset Guide
 
 # Dataset Guide
 
-## What This Project Is
+Use this page when you need the mental model for the dataset: what is in it, how the table families fit together, which paths matter most, and how operational activity reaches `GLEntry`.
 
-Greenfield Accounting Dataset is a teachable business database for **Greenfield Home Furnishings, Inc.**
+If you need field-level lookup, use [Schema Reference](reference/schema.md). If you need business narrative, use [Company Story](company-story.md) and [Process Flows](process-flows.md).
+
+## What the Dataset Is
+
+Greenfield Accounting Dataset models one integrated business: **Greenfield Home Furnishings, Inc.**
 
 It connects:
 
 - business processes
 - operational source documents
+- planning and support layers
 - subledger logic
 - posted `GLEntry` records
 
-The dataset is built for:
-
-- SQL exercises
-- Excel analysis
-- financial accounting analytics
-- managerial accounting analytics
-- auditing and controls analytics
-- document tracing and business-process understanding
-- portfolio and lifecycle analysis by collection, style family, material, and supply mode
-- workforce cost and org-control analysis by work location, job family, and job level
-
-## Business Context
-
-Greenfield is a hybrid manufacturer-distributor with two warehouses and one manufacturing cost center.
-
-The current dataset models a company that:
-
-- sells finished goods to customers
-- buys finished goods, raw materials, and packaging from suppliers
-- manufactures selected finished goods internally
-- ships, invoices, collects cash, processes returns, and issues credit memos and refunds
-- assigns shifts, builds daily rosters, records raw punches and approved daily time clocks for hourly employees, and runs payroll
-- keeps a more realistic employee master with unique executive roles, repeatable frontline roles, and terminated employees retained for history
-- keeps a richer product catalog with collections, style families, materials, finishes, colors, lifecycle status, and launch dates
-- records recurring journals, manufacturing reclasses, and year-end close
-
-Read [Company Story](company-story.md) for the full narrative version of that operating model.
+The goal is not only to store tables. The goal is to let you move from business activity to source documents, then from source documents to ledger impact.
 
 ## What the Dataset Contains
 
 The current implementation contains **64 tables** across eight areas:
 
-| Area | Example tables | Count |
+| Area | What it covers | Count |
 |---|---|---:|
-| Accounting core | `Account`, `JournalEntry`, `GLEntry` | 3 |
-| Order-to-cash | `Customer`, `SalesOrder`, `Shipment`, `SalesInvoice`, `CashReceiptApplication`, `SalesReturn`, `CreditMemo`, `CustomerRefund` | 14 |
-| Procure-to-pay | `Supplier`, `PurchaseRequisition`, `PurchaseOrder`, `GoodsReceipt`, `PurchaseInvoice`, `DisbursementPayment` | 9 |
-| Manufacturing | `BillOfMaterial`, `BillOfMaterialLine`, `WorkCenter`, `WorkCenterCalendar`, `Routing`, `RoutingOperation`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `MaterialIssue`, `ProductionCompletion`, `WorkOrderClose` | 14 |
-| Payroll and time | `ShiftDefinition`, `EmployeeShiftAssignment`, `EmployeeShiftRoster`, `EmployeeAbsence`, `OvertimeApproval`, `TimeClockEntry`, `TimeClockPunch`, `AttendanceException`, `PayrollPeriod`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance` | 14 |
-| Master data | `Item`, `Warehouse`, `Employee` | 3 |
-| Organizational planning | `CostCenter`, `Budget` | 2 |
-| Demand planning and MRP | `DemandForecast`, `InventoryPolicy`, `SupplyPlanRecommendation`, `MaterialRequirementPlan`, `RoughCutCapacityPlan` | 5 |
+| Accounting core | Chart of accounts, journals, and posted ledger detail | 3 |
+| Order-to-cash | Customer orders, shipments, invoices, cash, returns, credits, and refunds | 14 |
+| Procure-to-pay | Requisitions, purchase orders, receipts, supplier invoices, and disbursements | 9 |
+| Manufacturing | BOMs, routings, work centers, work orders, issues, completions, and close | 14 |
+| Payroll and time | Shifts, rosters, absences, overtime approvals, punches, approved daily time, payroll, and remittances | 14 |
+| Master data | Item, warehouse, and employee records | 3 |
+| Organizational planning | Cost centers and budgets | 2 |
+| Demand planning and MRP | Forecasting, inventory policy, recommendations, MRP, and rough-cut capacity | 5 |
 
 Most classes use these ready-to-use files:
 
@@ -70,9 +49,18 @@ Most classes use these ready-to-use files:
 
 Download them from [Downloads](downloads.md) or use the copies already shared for your course.
 
-## How the Database Is Organized
+## How the Data Is Organized
 
-Many business documents use a header table and a line table.
+The easiest way to think about the model is in layers:
+
+| Layer | What belongs here | Why it matters |
+|---|---|---|
+| Business master data | `Customer`, `Supplier`, `Item`, `Employee`, `Warehouse`, `CostCenter` | Defines who, what, and where |
+| Planning and setup | BOMs, routings, shifts, rosters, forecasts, inventory policies | Explains what should happen before execution starts |
+| Execution documents | Orders, shipments, receipts, invoices, work orders, labor records, payroll records | Shows what actually happened |
+| Ledger and control | `JournalEntry`, `GLEntry`, budgets, remittances | Shows the accounting effect and reporting layer |
+
+Many document families also use a header-line pattern:
 
 | Header table | Line table | Meaning |
 |---|---|---|
@@ -84,48 +72,49 @@ Many business documents use a header table and a line table.
 | `PurchaseInvoice` | `PurchaseInvoiceLine` | One supplier invoice can contain many billed lines |
 | `MaterialIssue` | `MaterialIssueLine` | One material issue can contain many component lines |
 | `ProductionCompletion` | `ProductionCompletionLine` | One production completion can contain one or more completion lines |
-| `PayrollRegister` | `PayrollRegisterLine` | One employee payroll register can contain many earnings and deduction lines |
+| `PayrollRegister` | `PayrollRegisterLine` | One payroll register can contain many earnings and deduction lines |
 
-## Most Important Keys
+## The Most Important Keys
 
-| Key | Use |
+You do not need every key on day one. Start with the keys that anchor document chains:
+
+| Key | Use it to connect |
 |---|---|
-| `CustomerID` | Connect customers to orders, invoices, receipts, returns, credit memos, and refunds |
-| `SupplierID` | Connect suppliers to purchase orders, invoices, and payments |
-| `SalesOrderID` | Connect sales order header to shipments and invoices |
-| `SalesOrderLineID` | Connect order lines to shipment lines and sales invoice lines |
-| `ShipmentLineID` | Connect billed and returned lines to the exact shipped line |
-| `RequisitionID` | Connect requisitions to purchase-order headers and purchase-order lines |
-| `PurchaseOrderID` | Connect purchase order header to goods receipts and purchase invoices |
-| `POLineID` | Connect purchase order lines to goods receipt lines and purchase invoice lines |
-| `GoodsReceiptLineID` | Connect inventory purchase invoice lines to exact receipt lines |
-| `AccrualJournalEntryID` | Connect accrued-service purchase invoice lines to the source accrual journal |
-| `BOMID` | Connect manufactured items to their BOM headers |
-| `BOMLineID` | Connect component issues back to BOM detail |
-| `WorkOrderID` | Connect work-order activity across issue, completion, close, and direct labor |
-| `WorkOrderOperationID` | Connect operation-level schedules and direct labor to one work-order operation |
-| `ShiftDefinitionID` | Connect shift templates to employee assignments and time-clock rows |
-| `EmployeeShiftRosterID` | Connect planned roster rows to absences, punch events, overtime approvals, and approved daily time |
-| `TimeClockEntryID` | Connect approved time-clock support to labor allocation and attendance exceptions |
-| `PayrollPeriodID` | Connect labor time, payroll registers, and liability remittances to a pay period |
-| `PayrollRegisterID` | Connect payroll headers to line detail and payroll payments |
-| `SupplyPlanRecommendationID` | Connect weekly replenishment recommendations to requisitions, work orders, MRP rows, and rough-cut capacity rows |
-| `ItemID` | Analyze quantities, prices, standard costs, supply mode, and account mappings |
-| `EmployeeNumber` | Human-readable employee master key for workforce and audit analysis |
-| `AccountID` | Connect `GLEntry` and `Budget` to the chart of accounts |
-| `CostCenterID` | Connect operational activity, employees, payroll, and budgets to organizational reporting |
+| `CustomerID` | Customer to orders, invoices, receipts, returns, credits, and refunds |
+| `SalesOrderID` | Sales order header to fulfillment and billing |
+| `SalesOrderLineID` | Order lines to shipment lines and invoice lines |
+| `ShipmentLineID` | Shipped lines to billed lines and returned lines |
+| `SupplierID` | Supplier to purchase orders, invoices, and payments |
+| `PurchaseOrderID` | Purchase order header to receipts and invoices |
+| `POLineID` | Purchase order lines to receipt lines and invoice lines |
+| `GoodsReceiptLineID` | Inventory receipt lines to supplier invoice lines |
+| `AccrualJournalEntryID` | Accrued service invoice lines back to the original accrual journal |
+| `WorkOrderID` | Work-order activity across issue, completion, close, and direct labor |
+| `WorkOrderOperationID` | Operation-level schedules and labor to one work-order operation |
+| `EmployeeShiftRosterID` | Planned roster rows to absences, overtime approvals, punches, and approved daily time |
+| `TimeClockEntryID` | Approved daily time to labor entries and attendance exceptions |
+| `PayrollPeriodID` | Labor entries, payroll registers, and liability remittances to a pay period |
+| `PayrollRegisterID` | Payroll header to line detail and net-pay settlement |
+| `SupplyPlanRecommendationID` | Planning recommendations to requisitions, work orders, MRP rows, and rough-cut capacity rows |
+| `ItemID` | Product-level analysis across sales, purchasing, manufacturing, and planning |
+| `AccountID` | `GLEntry` and `Budget` to the chart of accounts |
+| `CostCenterID` | Operating activity, labor, budgets, and reporting by organization unit |
+
+For exact field-level lookup, go to [Schema Reference](reference/schema.md).
 
 ## Core Navigation Paths
+
+These are the fastest ways to move through the model.
 
 ### O2C path
 
 `Customer -> SalesOrder -> SalesOrderLine -> Shipment -> ShipmentLine -> SalesInvoice -> SalesInvoiceLine`
 
-Cash collection is tracked through:
+Cash settlement is tracked through:
 
 `CashReceipt -> CashReceiptApplication -> SalesInvoice`
 
-Returns, credits, and refunds branch from the billed shipment path:
+Returns branch from the billed shipment path:
 
 `SalesInvoiceLine -> SalesReturn -> SalesReturnLine -> CreditMemo -> CreditMemoLine -> CustomerRefund`
 
@@ -133,7 +122,7 @@ Returns, credits, and refunds branch from the billed shipment path:
 
 `Supplier -> PurchaseRequisition -> PurchaseOrder -> PurchaseOrderLine -> GoodsReceipt -> GoodsReceiptLine -> PurchaseInvoice -> PurchaseInvoiceLine -> DisbursementPayment`
 
-There is also a direct service-settlement branch:
+The accrued-service branch is:
 
 `JournalEntry (Accrual) -> PurchaseInvoiceLine.AccrualJournalEntryID -> PurchaseInvoice -> DisbursementPayment`
 
@@ -141,21 +130,21 @@ There is also a direct service-settlement branch:
 
 `Item -> BillOfMaterial -> BillOfMaterialLine -> WorkOrder -> WorkOrderOperation -> WorkOrderOperationSchedule -> MaterialIssue -> MaterialIssueLine -> ProductionCompletion -> ProductionCompletionLine -> WorkOrderClose`
 
-Manufacturing also touches P2P, payroll, and O2C:
+Manufacturing also depends on:
 
-- P2P replenishes raw materials and packaging
-- payroll provides direct labor and manufacturing-overhead inputs
-- O2C consumes completed finished goods
+- P2P for raw materials and packaging
+- time and payroll for labor support
+- O2C for finished-goods demand and shipment
 
 ### Demand-planning path
 
 `Item -> InventoryPolicy -> DemandForecast -> SupplyPlanRecommendation -> MaterialRequirementPlan -> PurchaseRequisition or WorkOrder`
 
-Rough-cut planning capacity is tracked through:
+Capacity tieout is tracked through:
 
 `SupplyPlanRecommendation -> RoughCutCapacityPlan -> WorkCenterCalendar`
 
-### Payroll path
+### Payroll and time path
 
 `ShiftDefinition -> EmployeeShiftAssignment -> EmployeeShiftRoster -> TimeClockPunch -> TimeClockEntry -> LaborTimeEntry -> PayrollPeriod -> PayrollRegister -> PayrollRegisterLine -> PayrollPayment`
 
@@ -175,91 +164,25 @@ Then use:
 - `VoucherType`
 - `VoucherNumber`
 
-to move back to the originating transaction.
+to move back to the originating event.
 
-## How to Move From Operations to Accounting
+## How Operational Activity Reaches the Ledger
 
-Not every operational document posts to the general ledger.
+The most important mental rule is simple: planning and setup tables usually do **not** post; execution and finance events often do.
 
-| Document family | Posts to GL? | Notes |
+| Type of activity | Usually posts to GL? | Examples |
 |---|---|---|
-| Sales orders | No | Operational demand document |
-| Purchase requisitions | No | Internal approval document |
-| Purchase orders | No | External commitment document |
-| Bills of material | No | Standard manufacturing structure |
-| Work orders | No | Production planning document |
-| Demand forecasts | No | Weekly demand-planning input |
-| Inventory policies | No | Replenishment-policy master data |
-| Supply plan recommendations | No | Weekly replenishment signal and conversion support |
-| Material requirement plans | No | Component-demand planning detail |
-| Rough-cut capacity plans | No | Weekly load-versus-capacity planning detail |
-| Shift definitions and assignments | No | Workforce planning metadata |
-| Time-clock entries | No | Approved daily attendance rows that support hourly payroll and labor analysis |
-| Attendance exceptions | No | Control and anomaly evidence |
-| Labor time entries | No | Operational labor detail that feeds payroll and costing |
-| Payroll periods | No | Calendar and control structure |
-| Shipments | Yes | Posts COGS and inventory relief |
-| Sales invoices | Yes | Posts AR, revenue, and sales tax |
-| Cash receipts | Yes | Posts cash and customer deposits or unapplied cash |
-| Cash receipt applications | Yes | Clears AR from customer deposits or unapplied cash |
-| Sales returns | Yes | Posts inventory back in and reverses COGS |
-| Credit memos | Yes | Posts contra revenue, tax reversal, and AR or customer credit reduction |
-| Customer refunds | Yes | Posts customer credit and cash |
-| Goods receipts | Yes | Posts inventory and GRNI |
-| Material issues | Yes | Posts WIP and materials inventory |
-| Production completions | Yes | Posts finished goods, WIP, and manufacturing clearing |
-| Work-order close | Yes | Posts manufacturing variance |
-| Payroll registers | Yes | Posts wages and payroll liabilities |
-| Payroll payments | Yes | Posts accrued payroll and cash |
-| Payroll liability remittances | Yes | Posts payroll liabilities and cash |
-| Purchase invoices | Yes | Posts GRNI clearing for receipt-matched lines, or clears `2040` for accrued-service lines, then posts AP |
-| Disbursements | Yes | Posts AP and cash |
-| Journal entries | Yes | Opening, recurring manual, manufacturing reclass, reversal, and year-end close journals |
+| Master data and planning | No | `Item`, `Employee`, `Budget`, BOMs, routings, forecasts, inventory policies |
+| Operational commitments | No | `SalesOrder`, `PurchaseRequisition`, `PurchaseOrder`, `WorkOrder` |
+| Operational execution with accounting effect | Yes | `Shipment`, `SalesInvoice`, `GoodsReceipt`, `MaterialIssue`, `ProductionCompletion`, `PayrollRegister` |
+| Settlements and clearances | Yes | `CashReceipt`, `CashReceiptApplication`, `DisbursementPayment`, `PayrollPayment`, `PayrollLiabilityRemittance`, `CustomerRefund` |
+| Finance-controlled entries | Yes | `JournalEntry`, `WorkOrderClose`, accruals, reclasses, year-end close |
 
-## What Students Can Do With It
+When you want the exact posting rules behind one event, use [GLEntry Posting Reference](reference/posting.md).
+
+## How to Start Navigating by Topic
 
 ### Financial accounting
-
-Students can:
-
-- analyze revenue, COGS, contra revenue, and close-cycle activity
-- reconcile AR using invoices, cash applications, credit memos, and refunds
-- reconcile AP using purchase invoices and disbursements
-- review WIP, manufacturing clearing, and manufacturing variance balances
-- review payroll liabilities, gross-to-net payroll, time-clock-to-payroll support, and payroll cash flows
-- analyze working capital by month across AR, inventory, AP, GRNI, customer deposits, accrued expenses, and payroll liabilities
-- trace source transactions into `GLEntry`
-
-### Managerial accounting
-
-Students can:
-
-- compare budget to actual by cost center and account
-- analyze sales mix by product, customer, region, and segment
-- study warehouse movement and supplier concentration
-- roll up BOM-based standard costs
-- analyze work-order throughput, completions, production variance, and direct labor cost
-- compare absorption cost and contribution margin for manufactured versus purchased items
-- review portfolio mix and margin by collection, style family, lifecycle status, and supply mode
-- analyze service-level pressure through fill rate, shipment lag, and return/refund impact by portfolio
-- compare forecast, replenishment, and rough-cut capacity pressure before execution starts
-
-### Auditing
-
-Students can:
-
-- test O2C, P2P, and manufacturing document chains
-- test payroll approvals, time-clock support, time-entry linkage, and payroll-control behavior
-- review approvals and segregation-of-duties patterns
-- examine timing and cut-off behavior
-- detect duplicate references and planted anomalies
-- review executive-role uniqueness, approval-authority design, item-master completeness, and terminated-employee activity
-- review forecast approval, inventory-policy status, recommendation support, and late conversion behavior
-- trace source documents to posted ledger activity
-
-## Start Here by Analytics Topic
-
-### Financial analytics
 
 Start with:
 
@@ -267,61 +190,47 @@ Start with:
 - `Account`
 - `SalesInvoice`
 - `CashReceiptApplication`
-- `CreditMemo`
 - `PurchaseInvoice`
 - `DisbursementPayment`
 - `PayrollRegister`
-- `PayrollLiabilityRemittance`
 - `WorkOrderClose`
 
-### Managerial analytics
+### Managerial accounting
 
 Start with:
 
+- `Item`
 - `Budget`
 - `CostCenter`
-- `Item`
 - `BillOfMaterial`
 - `WorkOrder`
 - `MaterialIssueLine`
 - `ProductionCompletionLine`
 - `LaborTimeEntry`
-- `ShipmentLine`
-- `PurchaseOrderLine`
+- `DemandForecast`
+- `SupplyPlanRecommendation`
 
-### Audit analytics
+### Auditing and controls
 
 Start with:
 
 - O2C chain tables
 - P2P chain tables
 - manufacturing chain tables
-- payroll chain tables
+- payroll and time chain tables
 - `GLEntry`
-- the anomaly and validation sheets in the companion support workbook
+- the companion support workbook
 - the transaction chains in [Process Flows](process-flows.md)
 
-## Current Practical Tips
+## Practical Starting Tips
 
 - The SQLite database is the easiest format for SQL work.
 - `CashReceiptApplication` is the authoritative invoice-settlement link in O2C.
-- For P2P traceability, prefer `PurchaseOrderLine.RequisitionID`, `PurchaseInvoiceLine.GoodsReceiptLineID`, and `PurchaseInvoiceLine.AccrualJournalEntryID`.
-- For manufacturing traceability, start from `WorkOrderID`.
-- For time-and-attendance traceability, start from `EmployeeShiftRosterID`, `TimeClockEntryID`, or `ShiftDefinitionID`.
-- For payroll traceability, start from `PayrollPeriodID`, `PayrollRegisterID`, and then move back to `LaborTimeEntry` and `TimeClockEntry` for hourly earnings support.
-- For employee-master review, combine `EmployeeNumber`, `EmploymentStatus`, `TerminationDate`, `JobFamily`, and `JobLevel`.
-- For portfolio review, combine `CollectionName`, `StyleFamily`, `PrimaryMaterial`, `LifecycleStatus`, and `LaunchDate`.
-- For raw multi-year income-statement analysis, exclude the two year-end close entry types.
-
-## What Is Not in Scope Yet
-
-The current model does **not** yet include:
-
-- detailed punch-device geography or biometric-device metadata
-- employee leave-balance accrual history
-- multi-level BOMs or subassemblies
-
-Those topics are future roadmap items, not hidden functionality.
+- For P2P traceability, start with `PurchaseOrderLine.RequisitionID`, `PurchaseInvoiceLine.GoodsReceiptLineID`, and `PurchaseInvoiceLine.AccrualJournalEntryID`.
+- For manufacturing, start from `WorkOrderID` and then move outward to issues, completions, close, and labor.
+- For time and attendance, start from `EmployeeShiftRosterID`, `TimeClockEntryID`, or `ShiftDefinitionID`.
+- For payroll, start from `PayrollPeriodID` or `PayrollRegisterID` and then move back to `LaborTimeEntry` and `TimeClockEntry`.
+- For raw multi-year income-statement analysis, exclude the year-end close entry types.
 
 ## Glossary
 
@@ -332,16 +241,14 @@ Those topics are future roadmap items, not hidden functionality.
 | BOM | Bill of material. The standard list of components required to make a manufactured item. |
 | WIP | Work in process. Inventory value that has been issued into production but not yet completed into finished goods. |
 | GL | General ledger. The accounting table used for reporting and control-account reconciliation. |
+| GRNI | Goods received not invoiced. A liability recorded when inventory is received before the supplier invoice is approved. |
 | Control account | A GL account such as AR, AP, inventory, GRNI, customer deposits, WIP, or manufacturing clearing that summarizes detailed activity. |
-| GRNI | Goods Received Not Invoiced. A liability recorded when inventory is received before the supplier invoice is approved. |
 | Manufacturing variance | The difference between actual and standard manufacturing cost that is closed from work orders. |
-| Absorption cost | Full product cost including direct material, direct labor, variable overhead, and fixed overhead. |
 | Contribution margin | Revenue less variable product cost. In this dataset, fixed overhead is excluded from contribution-margin analysis. |
-| Cost center | An organizational unit used for planning and performance analysis. |
-| Anomaly | A deliberately planted exception or unusual pattern for analytics and audit exercises. |
 
 ## Where to Go Next
 
-- Read [Company Story](company-story.md) for the business narrative.
-- Read [Process Flows](process-flows.md) for O2C, P2P, manufacturing, journals, and ledger traceability.
-- Read [Analytics Hub](analytics/index.md) for the starter analytics layer.
+- Read [Schema Reference](reference/schema.md) for table-level lookup and high-value fields.
+- Read [Process Flows](process-flows.md) for the business-cycle reading path.
+- Read [GLEntry Posting Reference](reference/posting.md) when you need event-to-ledger rules.
+- Read [Analytics Hub](analytics/index.md) when you are ready to move into the analysis layer.

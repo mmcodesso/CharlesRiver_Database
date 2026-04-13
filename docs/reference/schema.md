@@ -6,199 +6,209 @@ sidebar_label: Schema Reference
 
 # Schema Reference
 
-Use this page when you need to confirm which tables belong to each business area, which columns matter most for joins, and how process documents connect across the dataset.
+Use this page when you need a lookup tool: which tables belong to each business area, which fields matter most for joins, and which columns are the fastest way back to the source document.
 
-Students, instructors, and analysts can use this page alongside the process guides, analytics pages, and SQL work.
+If you need the big-picture map first, start with [Dataset Guide](../dataset-overview.md). The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUMNS`.
 
-The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUMNS`.
+## How to Use This Page
 
+- Use **Table Groups** when you want to see the model at a glance.
+- Use the area sections when you need the main purpose and highest-value fields for a table.
+- Use **Join and Traceability Cues** when you know the process but need the exact bridge fields.
 
 ## Table Groups
 
-| Group | Tables | Count |
+| Group | What belongs here | Count |
 |---|---|---:|
-| Accounting core | `Account`, `JournalEntry`, `GLEntry` | 3 |
-| O2C | `Customer`, `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt`, `CashReceiptApplication`, `SalesReturn`, `SalesReturnLine`, `CreditMemo`, `CreditMemoLine`, `CustomerRefund` | 14 |
-| P2P | `Supplier`, `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment` | 9 |
-| Manufacturing | `BillOfMaterial`, `BillOfMaterialLine`, `WorkCenter`, `WorkCenterCalendar`, `Routing`, `RoutingOperation`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `MaterialIssue`, `MaterialIssueLine`, `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose` | 14 |
-| Payroll and time | `ShiftDefinition`, `EmployeeShiftAssignment`, `EmployeeShiftRoster`, `EmployeeAbsence`, `OvertimeApproval`, `TimeClockEntry`, `TimeClockPunch`, `AttendanceException`, `PayrollPeriod`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance` | 14 |
-| Master data | `Item`, `Warehouse`, `Employee` | 3 |
-| Organizational planning | `CostCenter`, `Budget` | 2 |
-| Demand planning and MRP | `DemandForecast`, `InventoryPolicy`, `SupplyPlanRecommendation`, `MaterialRequirementPlan`, `RoughCutCapacityPlan` | 5 |
+| Accounting core | Accounts, journals, and posted ledger detail | 3 |
+| O2C | Customer, order, shipment, invoice, receipt, return, credit, and refund tables | 14 |
+| P2P | Supplier, requisition, PO, receipt, invoice, and payment tables | 9 |
+| Manufacturing | BOMs, routings, work centers, work orders, issues, completions, and close | 14 |
+| Payroll and time | Shift, roster, absence, overtime, time, payroll, and remittance tables | 14 |
+| Master data | Item, warehouse, and employee records | 3 |
+| Organizational planning | Cost centers and budgets | 2 |
+| Demand planning and MRP | Forecasting, policy, recommendation, MRP, and rough-cut capacity tables | 5 |
 | Total |  | 64 |
 
 ## Design Patterns
 
-- Header-line tables are used for orders, shipments, invoices, purchase orders, goods receipts, purchase invoices, material issues, production completions, and payroll registers.
+- Header-line tables are used for sales, purchasing, material issues, completions, and payroll registers.
 - `GLEntry` is the reporting bridge between operational events and accounting analysis.
-- `Item` carries account-mapping fields plus manufacturing and costing attributes such as `SupplyMode`, `ProductionLeadTimeDays`, `RoutingID`, `StandardLaborHoursPerUnit`, and `StandardConversionCost`.
-- `JournalEntry` and `GLEntry` together represent opening, recurring, manufacturing, accrual-adjustment, and close-cycle activity without a separate journal-line table.
-- Payroll is now operationally modeled through shift-assignment, time-clock, payroll-period, register, payment, and remittance tables rather than clean-build payroll accrual journals.
+- `JournalEntry` and `GLEntry` together represent recurring finance activity, accrual adjustments, reclasses, and close-cycle entries.
+- `Item` is the product anchor for pricing, costing, supply mode, and account mapping.
+- Payroll and time are modeled as operational tables, not as a simple journal simulation.
 
 ## Accounting Core
 
-| Table | Purpose | High-value columns |
+| Table | Use it for | Start with these fields |
 |---|---|---|
 | `Account` | Chart of accounts and hierarchy | `AccountNumber`, `AccountType`, `AccountSubType`, `ParentAccountID`, `NormalBalance` |
-| `JournalEntry` | Manual journal header table | `EntryNumber`, `PostingDate`, `EntryType`, `CreatedByEmployeeID`, `ApprovedByEmployeeID`, `ReversesJournalEntryID` |
+| `JournalEntry` | Manual journal header lookup | `EntryNumber`, `PostingDate`, `EntryType`, `ApprovedByEmployeeID`, `ReversesJournalEntryID` |
 | `GLEntry` | Posted ledger detail and source traceability | `PostingDate`, `AccountID`, `Debit`, `Credit`, `VoucherType`, `VoucherNumber`, `SourceDocumentType`, `SourceDocumentID`, `SourceLineID`, `FiscalYear`, `FiscalPeriod` |
 
 ## Order-to-Cash
 
-| Table | Purpose | High-value columns |
+| Table | Use it for | Start with these fields |
 |---|---|---|
-| `Customer` | Customer master data | `CreditLimit`, `PaymentTerms`, `SalesRepEmployeeID`, `CustomerSegment`, `Industry`, `Region` |
-| `SalesOrder` | Sales order header | `OrderNumber`, `OrderDate`, `CustomerID`, `RequestedDeliveryDate`, `SalesRepEmployeeID`, `CostCenterID`, `OrderTotal`, `Status` |
-| `SalesOrderLine` | Sales order detail | `SalesOrderID`, `LineNumber`, `ItemID`, `Quantity`, `UnitPrice`, `Discount`, `LineTotal` |
-| `Shipment` | Shipment header | `ShipmentNumber`, `SalesOrderID`, `ShipmentDate`, `WarehouseID`, `Status`, `DeliveryDate` |
-| `ShipmentLine` | Shipment detail used for fulfillment and COGS | `ShipmentID`, `SalesOrderLineID`, `ItemID`, `QuantityShipped`, `ExtendedStandardCost` |
-| `SalesInvoice` | Sales invoice header | `InvoiceNumber`, `InvoiceDate`, `DueDate`, `SalesOrderID`, `CustomerID`, `SubTotal`, `TaxAmount`, `GrandTotal`, `Status` |
-| `SalesInvoiceLine` | Sales invoice detail | `SalesInvoiceID`, `SalesOrderLineID`, `ShipmentLineID`, `ItemID`, `Quantity`, `UnitPrice`, `Discount`, `LineTotal` |
-| `CashReceipt` | Customer payment header | `ReceiptNumber`, `ReceiptDate`, `CustomerID`, `SalesInvoiceID`, `Amount`, `PaymentMethod`, `ReferenceNumber`, `RecordedByEmployeeID` |
-| `CashReceiptApplication` | Receipt-to-invoice application detail | `CashReceiptID`, `SalesInvoiceID`, `ApplicationDate`, `AppliedAmount`, `AppliedByEmployeeID` |
-| `SalesReturn` | Customer return header | `ReturnNumber`, `ReturnDate`, `CustomerID`, `SalesOrderID`, `WarehouseID`, `ReasonCode`, `Status` |
-| `SalesReturnLine` | Returned item detail | `SalesReturnID`, `ShipmentLineID`, `ItemID`, `QuantityReturned`, `ExtendedStandardCost` |
-| `CreditMemo` | Customer credit memo header | `CreditMemoNumber`, `CreditMemoDate`, `SalesReturnID`, `OriginalSalesInvoiceID`, `SubTotal`, `TaxAmount`, `GrandTotal`, `Status` |
-| `CreditMemoLine` | Customer credit memo detail | `CreditMemoID`, `SalesReturnLineID`, `ItemID`, `Quantity`, `UnitPrice`, `LineTotal` |
-| `CustomerRefund` | Customer refund payment record | `RefundNumber`, `RefundDate`, `CustomerID`, `CreditMemoID`, `Amount`, `PaymentMethod`, `ReferenceNumber` |
+| `Customer` | Customer master and segmentation | `CustomerName`, `CustomerSegment`, `Industry`, `Region`, `SalesRepEmployeeID` |
+| `SalesOrder` | Order header and promised demand | `OrderNumber`, `OrderDate`, `CustomerID`, `RequestedDeliveryDate`, `Status` |
+| `SalesOrderLine` | Ordered item detail | `SalesOrderID`, `LineNumber`, `ItemID`, `Quantity`, `UnitPrice`, `LineTotal` |
+| `Shipment` | Shipment header and warehouse fulfillment | `ShipmentNumber`, `SalesOrderID`, `ShipmentDate`, `WarehouseID`, `Status` |
+| `ShipmentLine` | Shipped item detail and COGS basis | `ShipmentID`, `SalesOrderLineID`, `ItemID`, `QuantityShipped`, `ExtendedStandardCost` |
+| `SalesInvoice` | Invoice header and receivable creation | `InvoiceNumber`, `InvoiceDate`, `CustomerID`, `DueDate`, `GrandTotal`, `Status` |
+| `SalesInvoiceLine` | Billed line detail tied to fulfillment | `SalesInvoiceID`, `SalesOrderLineID`, `ShipmentLineID`, `ItemID`, `Quantity`, `LineTotal` |
+| `CashReceipt` | Customer payment record | `ReceiptNumber`, `ReceiptDate`, `CustomerID`, `Amount`, `PaymentMethod`, `ReferenceNumber` |
+| `CashReceiptApplication` | Invoice settlement detail | `CashReceiptID`, `SalesInvoiceID`, `ApplicationDate`, `AppliedAmount` |
+| `SalesReturn` | Return header | `ReturnNumber`, `ReturnDate`, `CustomerID`, `ReasonCode`, `Status` |
+| `SalesReturnLine` | Returned item detail | `SalesReturnID`, `ShipmentLineID`, `ItemID`, `QuantityReturned` |
+| `CreditMemo` | Customer credit header | `CreditMemoNumber`, `CreditMemoDate`, `SalesReturnID`, `OriginalSalesInvoiceID`, `GrandTotal`, `Status` |
+| `CreditMemoLine` | Credit detail by returned line | `CreditMemoID`, `SalesReturnLineID`, `ItemID`, `Quantity`, `LineTotal` |
+| `CustomerRefund` | Cash refund against customer credit | `RefundNumber`, `RefundDate`, `CustomerID`, `CreditMemoID`, `Amount` |
+
+### Join and Traceability Cues
+
+- `SalesOrder -> SalesOrderLine`
+- `Shipment.SalesOrderID -> SalesOrder`
+- `ShipmentLine.SalesOrderLineID -> SalesOrderLine`
+- `SalesInvoiceLine.ShipmentLineID -> ShipmentLine`
+- `CashReceiptApplication.SalesInvoiceID -> SalesInvoice`
+- `SalesReturnLine.ShipmentLineID -> ShipmentLine`
+- `CreditMemo.OriginalSalesInvoiceID -> SalesInvoice`
+- `CustomerRefund.CreditMemoID -> CreditMemo`
 
 ## Procure-to-Pay
 
-| Table | Purpose | High-value columns |
+| Table | Use it for | Start with these fields |
 |---|---|---|
-| `Supplier` | Supplier master data | `PaymentTerms`, `TaxID`, `BankAccount`, `SupplierCategory`, `SupplierRiskRating`, `DefaultCurrency` |
-| `PurchaseRequisition` | Internal request document | `RequisitionNumber`, `RequestDate`, `RequestedByEmployeeID`, `CostCenterID`, `ItemID`, `Quantity`, `EstimatedUnitCost`, `ApprovedByEmployeeID`, `Status`, `SupplyPlanRecommendationID` |
-| `PurchaseOrder` | Purchase order header | `PONumber`, `OrderDate`, `SupplierID`, `RequisitionID`, `ExpectedDeliveryDate`, `CreatedByEmployeeID`, `ApprovedByEmployeeID`, `OrderTotal`, `Status` |
-| `PurchaseOrderLine` | Purchase order detail | `PurchaseOrderID`, `RequisitionID`, `LineNumber`, `ItemID`, `Quantity`, `UnitCost`, `LineTotal` |
-| `GoodsReceipt` | Receipt header | `ReceiptNumber`, `ReceiptDate`, `PurchaseOrderID`, `WarehouseID`, `ReceivedByEmployeeID`, `Status` |
-| `GoodsReceiptLine` | Receipt detail used for quantity and cost tracking | `GoodsReceiptID`, `POLineID`, `ItemID`, `QuantityReceived`, `ExtendedStandardCost` |
-| `PurchaseInvoice` | Supplier invoice header | `InvoiceNumber`, `InvoiceDate`, `ReceivedDate`, `DueDate`, `PurchaseOrderID`, `SupplierID`, `SubTotal`, `TaxAmount`, `GrandTotal`, `ApprovedByEmployeeID`, `Status` |
-| `PurchaseInvoiceLine` | Supplier invoice detail | `PurchaseInvoiceID`, `POLineID`, `GoodsReceiptLineID`, `AccrualJournalEntryID`, `LineNumber`, `ItemID`, `Quantity`, `UnitCost`, `LineTotal` |
-| `DisbursementPayment` | Supplier payment record | `PaymentNumber`, `PaymentDate`, `SupplierID`, `PurchaseInvoiceID`, `Amount`, `PaymentMethod`, `CheckNumber`, `ApprovedByEmployeeID`, `ClearedDate` |
+| `Supplier` | Supplier master and risk context | `SupplierName`, `PaymentTerms`, `SupplierCategory`, `SupplierRiskRating`, `DefaultCurrency` |
+| `PurchaseRequisition` | Internal purchase demand | `RequisitionNumber`, `RequestDate`, `RequestedByEmployeeID`, `CostCenterID`, `ItemID`, `Status`, `SupplyPlanRecommendationID` |
+| `PurchaseOrder` | PO header and supplier commitment | `PONumber`, `OrderDate`, `SupplierID`, `ExpectedDeliveryDate`, `Status` |
+| `PurchaseOrderLine` | Ordered item detail | `PurchaseOrderID`, `RequisitionID`, `ItemID`, `Quantity`, `UnitCost`, `LineTotal` |
+| `GoodsReceipt` | Receipt header | `ReceiptNumber`, `ReceiptDate`, `PurchaseOrderID`, `WarehouseID`, `Status` |
+| `GoodsReceiptLine` | Receipt detail and inventory posting basis | `GoodsReceiptID`, `POLineID`, `ItemID`, `QuantityReceived`, `ExtendedStandardCost` |
+| `PurchaseInvoice` | Supplier invoice header | `InvoiceNumber`, `InvoiceDate`, `SupplierID`, `PurchaseOrderID`, `GrandTotal`, `Status` |
+| `PurchaseInvoiceLine` | Supplier invoice detail | `PurchaseInvoiceID`, `POLineID`, `GoodsReceiptLineID`, `AccrualJournalEntryID`, `ItemID`, `Quantity`, `LineTotal` |
+| `DisbursementPayment` | Supplier payment record | `PaymentNumber`, `PaymentDate`, `SupplierID`, `PurchaseInvoiceID`, `Amount`, `PaymentMethod` |
+
+### Join and Traceability Cues
+
+- `PurchaseOrderLine.RequisitionID -> PurchaseRequisition`
+- `GoodsReceipt.PurchaseOrderID -> PurchaseOrder`
+- `GoodsReceiptLine.POLineID -> PurchaseOrderLine`
+- `PurchaseInvoiceLine.GoodsReceiptLineID -> GoodsReceiptLine`
+- `PurchaseInvoiceLine.AccrualJournalEntryID -> JournalEntry`
+- `DisbursementPayment.PurchaseInvoiceID -> PurchaseInvoice`
 
 ## Manufacturing
 
-| Table | Purpose | High-value columns |
+| Table | Use it for | Start with these fields |
 |---|---|---|
 | `BillOfMaterial` | BOM header for manufactured items | `ParentItemID`, `VersionNumber`, `Status`, `StandardBatchQuantity` |
 | `BillOfMaterialLine` | BOM component detail | `BOMID`, `ComponentItemID`, `LineNumber`, `QuantityPerUnit`, `ScrapFactorPct` |
-| `WorkCenter` | Manufacturing resource grouping | `WorkCenterCode`, `WorkCenterName`, `Department`, `WarehouseID`, `ManagerEmployeeID`, `NominalDailyCapacityHours`, `IsActive` |
-| `WorkCenterCalendar` | Daily work-center capacity calendar | `WorkCenterID`, `CalendarDate`, `IsWorkingDay`, `AvailableHours`, `ExceptionReason` |
-| `Routing` | Routing header for manufactured items | `ParentItemID`, `VersionNumber`, `EffectiveStartDate`, `EffectiveEndDate`, `Status` |
-| `RoutingOperation` | Ordered routing step | `RoutingID`, `OperationSequence`, `OperationCode`, `OperationName`, `WorkCenterID`, `StandardSetupHours`, `StandardRunHoursPerUnit`, `StandardQueueDays` |
-| `WorkOrder` | Production order header | `ItemID`, `BOMID`, `RoutingID`, `WarehouseID`, `PlannedQuantity`, `ReleasedDate`, `DueDate`, `CompletedDate`, `ClosedDate`, `Status`, `CostCenterID`, `SupplyPlanRecommendationID` |
-| `WorkOrderOperation` | Operation-level work-order execution record | `WorkOrderID`, `RoutingOperationID`, `OperationSequence`, `WorkCenterID`, `PlannedQuantity`, `PlannedLoadHours`, `PlannedStartDate`, `PlannedEndDate`, `ActualStartDate`, `ActualEndDate`, `Status` |
-| `WorkOrderOperationSchedule` | Daily scheduled hours for one work-order operation | `WorkOrderOperationID`, `WorkCenterID`, `ScheduleDate`, `ScheduledHours` |
-| `MaterialIssue` | Material issue header | `WorkOrderID`, `IssueDate`, `WarehouseID`, `IssuedByEmployeeID`, `Status` |
+| `WorkCenter` | Work-center master | `WorkCenterCode`, `WorkCenterName`, `Department`, `WarehouseID`, `NominalDailyCapacityHours` |
+| `WorkCenterCalendar` | Daily available-hours calendar | `WorkCenterID`, `CalendarDate`, `IsWorkingDay`, `AvailableHours`, `ExceptionReason` |
+| `Routing` | Routing header for one manufactured item | `ParentItemID`, `VersionNumber`, `Status`, `EffectiveStartDate`, `EffectiveEndDate` |
+| `RoutingOperation` | Ordered routing step | `RoutingID`, `OperationSequence`, `OperationCode`, `OperationName`, `WorkCenterID` |
+| `WorkOrder` | Production order header | `WorkOrderNumber`, `ItemID`, `BOMID`, `RoutingID`, `WarehouseID`, `PlannedQuantity`, `Status`, `SupplyPlanRecommendationID` |
+| `WorkOrderOperation` | Operation-level work-order activity | `WorkOrderID`, `RoutingOperationID`, `OperationSequence`, `WorkCenterID`, `PlannedLoadHours`, `Status` |
+| `WorkOrderOperationSchedule` | Daily scheduled hours for one operation | `WorkOrderOperationID`, `WorkCenterID`, `ScheduleDate`, `ScheduledHours` |
+| `MaterialIssue` | Material issue header | `WorkOrderID`, `IssueDate`, `WarehouseID`, `Status` |
 | `MaterialIssueLine` | Material issue detail | `MaterialIssueID`, `BOMLineID`, `ItemID`, `QuantityIssued`, `ExtendedStandardCost` |
-| `ProductionCompletion` | Production completion header | `WorkOrderID`, `CompletionDate`, `WarehouseID`, `ReceivedByEmployeeID`, `Status` |
-| `ProductionCompletionLine` | Production completion detail | `ProductionCompletionID`, `ItemID`, `QuantityCompleted`, `ExtendedStandardMaterialCost`, `ExtendedStandardDirectLaborCost`, `ExtendedStandardVariableOverheadCost`, `ExtendedStandardFixedOverheadCost`, `ExtendedStandardConversionCost`, `ExtendedStandardTotalCost` |
-| `WorkOrderClose` | Work-order close and variance record | `WorkOrderID`, `CloseDate`, `MaterialVarianceAmount`, `DirectLaborVarianceAmount`, `OverheadVarianceAmount`, `ConversionVarianceAmount`, `TotalVarianceAmount`, `Status` |
+| `ProductionCompletion` | Completion header | `WorkOrderID`, `CompletionDate`, `WarehouseID`, `Status` |
+| `ProductionCompletionLine` | Completion cost detail | `ProductionCompletionID`, `ItemID`, `QuantityCompleted`, `ExtendedStandardTotalCost` |
+| `WorkOrderClose` | Work-order close and variance record | `WorkOrderID`, `CloseDate`, `TotalVarianceAmount`, `Status` |
 
-## Payroll
+### Join and Traceability Cues
 
-| Table | Purpose | High-value columns |
+- `WorkOrder.BOMID -> BillOfMaterial`
+- `WorkOrder.RoutingID -> Routing`
+- `WorkOrderOperation.RoutingOperationID -> RoutingOperation`
+- `WorkOrderOperationSchedule.WorkOrderOperationID -> WorkOrderOperation`
+- `MaterialIssue.WorkOrderID -> WorkOrder`
+- `MaterialIssueLine.BOMLineID -> BillOfMaterialLine`
+- `ProductionCompletion.WorkOrderID -> WorkOrder`
+- `WorkOrderClose.WorkOrderID -> WorkOrder`
+
+## Payroll and Time
+
+| Table | Use it for | Start with these fields |
 |---|---|---|
-| `ShiftDefinition` | Standard shift template for hourly work | `ShiftCode`, `ShiftName`, `Department`, `WorkCenterID`, `StartTime`, `EndTime`, `StandardBreakMinutes`, `ShiftType`, `IsOvernight` |
+| `ShiftDefinition` | Standard shift template | `ShiftCode`, `ShiftName`, `Department`, `WorkCenterID`, `StartTime`, `EndTime` |
 | `EmployeeShiftAssignment` | Employee-to-shift assignment | `EmployeeID`, `ShiftDefinitionID`, `EffectiveStartDate`, `EffectiveEndDate`, `WorkCenterID`, `IsPrimary` |
-| `EmployeeShiftRoster` | Daily planned roster row for hourly work | `EmployeeID`, `RosterDate`, `ShiftDefinitionID`, `WorkCenterID`, `ScheduledStartTime`, `ScheduledEndTime`, `ScheduledHours`, `RosterStatus` |
-| `EmployeeAbsence` | Absence record tied to the planned roster | `EmployeeID`, `PayrollPeriodID`, `AbsenceDate`, `EmployeeShiftRosterID`, `AbsenceType`, `HoursAbsent`, `IsPaid`, `Status` |
-| `OvertimeApproval` | Overtime approval linked to rostered worked time | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `EmployeeShiftRosterID`, `WorkCenterID`, `RequestedHours`, `ApprovedHours`, `ReasonCode`, `Status` |
-| `TimeClockEntry` | Approved daily time and attendance row | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `ShiftDefinitionID`, `EmployeeShiftRosterID`, `OvertimeApprovalID`, `WorkCenterID`, `WorkOrderID`, `WorkOrderOperationID`, `ClockInTime`, `ClockOutTime`, `RegularHours`, `OvertimeHours`, `ClockStatus` |
-| `TimeClockPunch` | Raw punch-event layer beneath the approved daily summary | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `EmployeeShiftRosterID`, `TimeClockEntryID`, `WorkCenterID`, `PunchTimestamp`, `PunchType`, `PunchSource`, `SequenceNumber` |
-| `AttendanceException` | Logged time-and-attendance issue | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `ShiftDefinitionID`, `EmployeeShiftRosterID`, `TimeClockEntryID`, `ExceptionType`, `Severity`, `MinutesVariance`, `Status` |
-| `PayrollPeriod` | Biweekly payroll calendar | `PeriodNumber`, `PeriodStartDate`, `PeriodEndDate`, `PayDate`, `FiscalYear`, `FiscalPeriod`, `Status` |
-| `LaborTimeEntry` | Employee labor detail used for payroll and costing | `PayrollPeriodID`, `EmployeeID`, `TimeClockEntryID`, `WorkOrderID`, `WorkOrderOperationID`, `WorkDate`, `LaborType`, `RegularHours`, `OvertimeHours`, `HourlyRateUsed`, `ExtendedLaborCost` |
-| `PayrollRegister` | Employee payroll header | `PayrollPeriodID`, `EmployeeID`, `CostCenterID`, `GrossPay`, `EmployeeWithholdings`, `EmployerPayrollTax`, `EmployerBenefits`, `NetPay`, `Status` |
-| `PayrollRegisterLine` | Earnings and deduction detail | `PayrollRegisterID`, `LineType`, `Hours`, `Rate`, `Amount`, `WorkOrderID`, `LaborTimeEntryID` |
-| `PayrollPayment` | Net-pay settlement record | `PayrollRegisterID`, `PaymentDate`, `PaymentMethod`, `ReferenceNumber`, `ClearedDate` |
-| `PayrollLiabilityRemittance` | Liability-clearance record | `PayrollPeriodID`, `LiabilityType`, `RemittanceDate`, `Amount`, `AgencyOrVendor`, `ReferenceNumber`, `ClearedDate` |
+| `EmployeeShiftRoster` | Daily planned roster row | `EmployeeID`, `RosterDate`, `ShiftDefinitionID`, `WorkCenterID`, `ScheduledStartTime`, `ScheduledHours`, `RosterStatus` |
+| `EmployeeAbsence` | Absence tied to the roster | `EmployeeID`, `PayrollPeriodID`, `AbsenceDate`, `EmployeeShiftRosterID`, `AbsenceType`, `HoursAbsent`, `Status` |
+| `OvertimeApproval` | Approved overtime request | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `EmployeeShiftRosterID`, `ApprovedHours`, `ReasonCode`, `Status` |
+| `TimeClockEntry` | Approved daily time record | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `EmployeeShiftRosterID`, `OvertimeApprovalID`, `WorkOrderOperationID`, `RegularHours`, `OvertimeHours`, `ClockStatus` |
+| `TimeClockPunch` | Raw punch events under the approved daily summary | `EmployeeID`, `WorkDate`, `EmployeeShiftRosterID`, `TimeClockEntryID`, `PunchTimestamp`, `PunchType` |
+| `AttendanceException` | Attendance-control exception log | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `EmployeeShiftRosterID`, `TimeClockEntryID`, `ExceptionType`, `Severity`, `Status` |
+| `PayrollPeriod` | Biweekly payroll calendar | `PeriodNumber`, `PeriodStartDate`, `PeriodEndDate`, `PayDate`, `FiscalYear`, `FiscalPeriod` |
+| `LaborTimeEntry` | Labor detail used for payroll and costing | `PayrollPeriodID`, `EmployeeID`, `TimeClockEntryID`, `WorkOrderID`, `WorkOrderOperationID`, `LaborType`, `RegularHours`, `ExtendedLaborCost` |
+| `PayrollRegister` | Payroll header | `PayrollPeriodID`, `EmployeeID`, `CostCenterID`, `GrossPay`, `NetPay`, `Status` |
+| `PayrollRegisterLine` | Earnings and deduction detail | `PayrollRegisterID`, `LineType`, `Hours`, `Rate`, `Amount`, `LaborTimeEntryID` |
+| `PayrollPayment` | Net-pay settlement | `PayrollRegisterID`, `PaymentDate`, `PaymentMethod`, `ReferenceNumber`, `ClearedDate` |
+| `PayrollLiabilityRemittance` | Liability clearance | `PayrollPeriodID`, `LiabilityType`, `RemittanceDate`, `Amount`, `AgencyOrVendor` |
+
+### Join and Traceability Cues
+
+- `EmployeeShiftAssignment.ShiftDefinitionID -> ShiftDefinition`
+- `EmployeeShiftRoster.ShiftDefinitionID -> ShiftDefinition`
+- `EmployeeAbsence.EmployeeShiftRosterID -> EmployeeShiftRoster`
+- `OvertimeApproval.EmployeeShiftRosterID -> EmployeeShiftRoster`
+- `TimeClockEntry.EmployeeShiftRosterID -> EmployeeShiftRoster`
+- `TimeClockEntry.OvertimeApprovalID -> OvertimeApproval`
+- `TimeClockPunch.TimeClockEntryID -> TimeClockEntry`
+- `AttendanceException.TimeClockEntryID -> TimeClockEntry`
+- `LaborTimeEntry.TimeClockEntryID -> TimeClockEntry`
+- `PayrollRegister.PayrollPeriodID -> PayrollPeriod`
+- `PayrollRegisterLine.LaborTimeEntryID -> LaborTimeEntry`
+- `PayrollPayment.PayrollRegisterID -> PayrollRegister`
+- `PayrollLiabilityRemittance.PayrollPeriodID -> PayrollPeriod`
 
 ## Master Data
 
-| Table | Purpose | High-value columns |
+| Table | Use it for | Start with these fields |
 |---|---|---|
-| `Item` | Product master and account mapping | `ItemCode`, `ItemName`, `ItemGroup`, `CollectionName`, `StyleFamily`, `PrimaryMaterial`, `Finish`, `Color`, `SizeDescriptor`, `LifecycleStatus`, `LaunchDate`, `SupplyMode`, `ProductionLeadTimeDays`, `RoutingID`, `StandardLaborHoursPerUnit`, `StandardDirectLaborCost`, `StandardVariableOverheadCost`, `StandardFixedOverheadCost`, `StandardConversionCost`, `StandardCost`, `InventoryAccountID`, `RevenueAccountID`, `COGSAccountID`, `PurchaseVarianceAccountID` |
-| `Warehouse` | Inventory storage locations | `WarehouseName`, `ManagerID`, address fields |
-| `Employee` | Employee and approval metadata | `EmployeeNumber`, `CostCenterID`, `JobTitle`, `JobFamily`, `JobLevel`, `WorkLocation`, `HireDate`, `EmploymentStatus`, `TerminationDate`, `ManagerID`, `AuthorizationLevel`, `PayClass`, `BaseHourlyRate`, `BaseAnnualSalary`, `StandardHoursPerWeek`, `OvertimeEligible`, `IsActive` |
+| `Item` | Product master and account mapping | `ItemCode`, `ItemName`, `ItemGroup`, `CollectionName`, `StyleFamily`, `PrimaryMaterial`, `LifecycleStatus`, `SupplyMode`, `StandardCost`, `InventoryAccountID`, `RevenueAccountID`, `COGSAccountID` |
+| `Warehouse` | Warehouse master | `WarehouseName`, `ManagerID`, address fields |
+| `Employee` | Employee master and approval metadata | `EmployeeNumber`, `JobTitle`, `JobFamily`, `JobLevel`, `WorkLocation`, `EmploymentStatus`, `TerminationDate`, `AuthorizationLevel`, `PayClass`, `OvertimeEligible` |
 
 ## Organizational Planning
 
-| Table | Purpose | High-value columns |
+| Table | Use it for | Start with these fields |
 |---|---|---|
 | `CostCenter` | Organizational reporting structure | `CostCenterName`, `ParentCostCenterID`, `ManagerID`, `IsActive` |
-| `Budget` | Monthly budget by fiscal year, cost center, and account | `FiscalYear`, `Month`, `CostCenterID`, `AccountID`, `BudgetAmount`, `ApprovedByEmployeeID` |
+| `Budget` | Monthly budget by cost center and account | `FiscalYear`, `Month`, `CostCenterID`, `AccountID`, `BudgetAmount` |
 
 ## Demand Planning and MRP
 
-| Table | Purpose | High-value columns |
+| Table | Use it for | Start with these fields |
 |---|---|---|
-| `DemandForecast` | Weekly demand-planning input by item and warehouse | `ForecastWeekStartDate`, `ForecastWeekEndDate`, `ItemID`, `WarehouseID`, `BaselineForecastQuantity`, `ForecastQuantity`, `ForecastMethod`, `ForecastVersion`, `PlannerEmployeeID`, `ApprovedByEmployeeID`, `IsCurrent` |
-| `InventoryPolicy` | Active replenishment-policy master for one item and warehouse | `ItemID`, `WarehouseID`, `PlanningGroup`, `PolicyType`, `SafetyStockQuantity`, `ReorderPointQuantity`, `ReorderQuantity`, `TargetDaysSupply`, `PlanningLeadTimeDays`, `PlannerEmployeeID`, `BuyerEmployeeID`, `EffectiveStartDate`, `EffectiveEndDate`, `IsActive` |
-| `SupplyPlanRecommendation` | Weekly replenishment recommendation that converts into a requisition or work order | `RecommendationDate`, `BucketWeekStartDate`, `BucketWeekEndDate`, `ItemID`, `WarehouseID`, `RecommendationType`, `PriorityCode`, `SupplyMode`, `GrossRequirementQuantity`, `ProjectedAvailableQuantity`, `NetRequirementQuantity`, `RecommendedOrderQuantity`, `NeedByDate`, `ReleaseByDate`, `RecommendationStatus`, `DriverType`, `PlannerEmployeeID`, `ConvertedDocumentType`, `ConvertedDocumentID` |
-| `MaterialRequirementPlan` | Component-demand explosion tied to a parent manufacturing recommendation | `BucketWeekStartDate`, `BucketWeekEndDate`, `ParentItemID`, `ComponentItemID`, `WarehouseID`, `SupplyPlanRecommendationID`, `GrossRequirementQuantity`, `ScheduledSupplyQuantity`, `ProjectedAvailableQuantity`, `NetRequirementQuantity`, `RecommendedOrderQuantity` |
-| `RoughCutCapacityPlan` | Weekly load-versus-available-hours planning tieout for a manufactured item and work center | `BucketWeekStartDate`, `BucketWeekEndDate`, `WorkCenterID`, `ItemID`, `SupplyPlanRecommendationID`, `PlannedLoadHours`, `AvailableHours`, `UtilizationPct`, `CapacityStatus` |
+| `DemandForecast` | Weekly demand-planning input | `ForecastWeekStartDate`, `ItemID`, `WarehouseID`, `ForecastQuantity`, `ForecastMethod`, `PlannerEmployeeID`, `ApprovedByEmployeeID`, `IsCurrent` |
+| `InventoryPolicy` | Active replenishment-policy master | `ItemID`, `WarehouseID`, `PlanningGroup`, `PolicyType`, `SafetyStockQuantity`, `ReorderPointQuantity`, `TargetDaysSupply`, `IsActive` |
+| `SupplyPlanRecommendation` | Weekly replenishment recommendation | `RecommendationDate`, `BucketWeekStartDate`, `ItemID`, `WarehouseID`, `RecommendationType`, `SupplyMode`, `RecommendedOrderQuantity`, `RecommendationStatus`, `ConvertedDocumentType`, `ConvertedDocumentID` |
+| `MaterialRequirementPlan` | Component-demand explosion | `BucketWeekStartDate`, `ParentItemID`, `ComponentItemID`, `SupplyPlanRecommendationID`, `GrossRequirementQuantity`, `NetRequirementQuantity` |
+| `RoughCutCapacityPlan` | Weekly load-versus-capacity tieout | `BucketWeekStartDate`, `WorkCenterID`, `ItemID`, `SupplyPlanRecommendationID`, `PlannedLoadHours`, `AvailableHours`, `UtilizationPct`, `CapacityStatus` |
 
-## Traceability Fields
+### Join and Traceability Cues
 
-The most important lineage fields in the implementation are:
+- `PurchaseRequisition.SupplyPlanRecommendationID -> SupplyPlanRecommendation`
+- `WorkOrder.SupplyPlanRecommendationID -> SupplyPlanRecommendation`
+- `MaterialRequirementPlan.SupplyPlanRecommendationID -> SupplyPlanRecommendation`
+- `RoughCutCapacityPlan.SupplyPlanRecommendationID -> SupplyPlanRecommendation`
 
-- `PurchaseOrderLine.RequisitionID`
-- `PurchaseInvoiceLine.GoodsReceiptLineID`
-- `PurchaseInvoiceLine.AccrualJournalEntryID`
-- `SalesInvoiceLine.ShipmentLineID`
-- `CashReceiptApplication.CashReceiptID`
-- `CashReceiptApplication.SalesInvoiceID`
-- `SalesReturnLine.ShipmentLineID`
-- `CreditMemo.SalesReturnID`
-- `CreditMemo.OriginalSalesInvoiceID`
-- `CustomerRefund.CreditMemoID`
-- `WorkOrder.BOMID`
-- `WorkOrder.RoutingID`
-- `WorkOrderOperation.RoutingOperationID`
-- `WorkOrderOperationSchedule.WorkOrderOperationID`
-- `EmployeeShiftAssignment.ShiftDefinitionID`
-- `EmployeeShiftRoster.ShiftDefinitionID`
-- `EmployeeAbsence.EmployeeShiftRosterID`
-- `OvertimeApproval.EmployeeShiftRosterID`
-- `TimeClockEntry.ShiftDefinitionID`
-- `TimeClockEntry.EmployeeShiftRosterID`
-- `TimeClockEntry.OvertimeApprovalID`
-- `TimeClockEntry.WorkOrderOperationID`
-- `TimeClockPunch.EmployeeShiftRosterID`
-- `TimeClockPunch.TimeClockEntryID`
-- `AttendanceException.TimeClockEntryID`
-- `MaterialIssueLine.BOMLineID`
-- `ProductionCompletion.WorkOrderID`
-- `WorkOrderClose.WorkOrderID`
-- `LaborTimeEntry.WorkOrderID`
-- `LaborTimeEntry.WorkOrderOperationID`
-- `LaborTimeEntry.TimeClockEntryID`
-- `PayrollRegister.PayrollPeriodID`
-- `PayrollRegisterLine.PayrollRegisterID`
-- `PayrollRegisterLine.LaborTimeEntryID`
-- `PayrollPayment.PayrollRegisterID`
-- `PayrollLiabilityRemittance.PayrollPeriodID`
-- `PurchaseRequisition.SupplyPlanRecommendationID`
-- `WorkOrder.SupplyPlanRecommendationID`
-- `MaterialRequirementPlan.SupplyPlanRecommendationID`
-- `RoughCutCapacityPlan.SupplyPlanRecommendationID`
-- `GLEntry.SourceDocumentType`
-- `GLEntry.SourceDocumentID`
-- `GLEntry.SourceLineID`
-
-## Current Implementation Notes
+## Important Schema Notes
 
 - `CashReceipt.SalesInvoiceID` is compatibility metadata only. The authoritative settlement link is `CashReceiptApplication`.
 - `PurchaseOrder.RequisitionID` is compatibility metadata when a PO batches multiple requisitions.
-- `PurchaseInvoiceLine.GoodsReceiptLineID` is the clean-match key for receipt-based inventory invoices.
-- `PurchaseInvoiceLine.AccrualJournalEntryID` links direct service invoices back to month-end accrual journals.
+- `PurchaseInvoiceLine.GoodsReceiptLineID` is the main match key for receipt-based inventory invoicing.
+- `PurchaseInvoiceLine.AccrualJournalEntryID` links direct service invoices back to accrual journals.
 - `GoodsReceiptLine.ExtendedStandardCost` stores the receipt posting basis used for inventory and GRNI.
-- The manufacturing foundation uses single-level BOMs plus one active routing per manufactured item.
-- `WorkCenterCalendar` and `WorkOrderOperationSchedule` add daily work-center capacity and scheduled-load detail.
-- `WorkOrderOperation` is the operation-level planning and actual-flow bridge between routing design, scheduling, and payroll labor detail.
-- Approved `TimeClockEntry` rows are the clean-build hour source for hourly payroll.
-- `EmployeeShiftRoster`, `EmployeeAbsence`, `TimeClockPunch`, and `OvertimeApproval` now sit beneath the approved `TimeClockEntry` layer.
-- Phase 22 adds a weekly planning layer that links `DemandForecast` and `InventoryPolicy` to `SupplyPlanRecommendation`, then into `PurchaseRequisition` and `WorkOrder`.
-- Payroll is operationally modeled, but manufacturing still uses standard-cost valuation rather than full actual-cost inventory.
-- For exact column order and names, use `TABLE_COLUMNS` in `src/greenfield_dataset/schema.py`.
+- `EmployeeShiftRoster`, `EmployeeAbsence`, `TimeClockPunch`, and `OvertimeApproval` sit beneath the approved `TimeClockEntry` layer.
+- Manufacturing uses single-level BOMs plus one active routing per manufactured item.
+- Manufacturing remains standard-cost based even though payroll and time provide operational labor detail.
+
+## Where to Go Next
+
+- Read [Dataset Guide](../dataset-overview.md) when you need the mental model, main paths, and posting overview.
+- Read [Process Flows](../process-flows.md) when you want the business-cycle story behind the tables.
+- Read [GLEntry Posting Reference](posting.md) when you want the exact event-to-ledger rules.
