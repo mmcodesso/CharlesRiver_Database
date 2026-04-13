@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from collections import defaultdict
+import logging
+import time
 from typing import Any
 
 import numpy as np
@@ -11,6 +13,8 @@ from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
 from greenfield_dataset.utils import money, next_id, qty
 
+
+LOGGER = logging.getLogger("greenfield_dataset")
 
 OPENING_STOCK_RANGES = {
     "Furniture": (45, 95),
@@ -51,6 +55,7 @@ LEAD_TIME_DEFAULTS = {
     "Packaging": 7,
     "Raw Materials": 9,
 }
+DEMAND_FORECAST_PROGRESS_INTERVAL = 25
 
 
 def append_rows(context: GenerationContext, table_name: str, rows: list[dict[str, Any]]) -> None:
@@ -172,44 +177,95 @@ def primary_warehouse_rank(context: GenerationContext, item_id: int) -> list[int
     )
 
 
-def forecast_planner_id(context: GenerationContext, supply_mode: str, event_date: pd.Timestamp) -> int:
+def _resolve_forecast_role_ids_uncached(
+    context: GenerationContext,
+    supply_mode: str,
+    event_date: pd.Timestamp,
+) -> tuple[int, int]:
     if str(supply_mode) == "Manufactured":
         for title in ["Production Planner", "Production Manager"]:
             employee_id = current_role_employee_id(context, title)
             if employee_id is not None:
-                return int(employee_id)
-        return approver_employee_id(
+                planner_id = int(employee_id)
+                break
+        else:
+            planner_id = approver_employee_id(
+                context,
+                event_date,
+                preferred_titles=["Production Manager", "Chief Financial Officer"],
+                fallback_cost_center_name="Manufacturing",
+            )
+        approver_id = approver_employee_id(
             context,
             event_date,
             preferred_titles=["Production Manager", "Chief Financial Officer"],
             fallback_cost_center_name="Manufacturing",
         )
+        return int(planner_id), int(approver_id)
+
     for title in ["Buyer", "Purchasing Manager", "Procurement Analyst"]:
         employee_id = current_role_employee_id(context, title)
         if employee_id is not None:
-            return int(employee_id)
-    return approver_employee_id(
-        context,
-        event_date,
-        preferred_titles=["Purchasing Manager", "Chief Financial Officer"],
-        fallback_cost_center_name="Purchasing",
-    )
-
-
-def forecast_approver_id(context: GenerationContext, supply_mode: str, event_date: pd.Timestamp) -> int:
-    if str(supply_mode) == "Manufactured":
-        return approver_employee_id(
+            planner_id = int(employee_id)
+            break
+    else:
+        planner_id = approver_employee_id(
             context,
             event_date,
-            preferred_titles=["Production Manager", "Chief Financial Officer"],
-            fallback_cost_center_name="Manufacturing",
+            preferred_titles=["Purchasing Manager", "Chief Financial Officer"],
+            fallback_cost_center_name="Purchasing",
         )
-    return approver_employee_id(
+    approver_id = approver_employee_id(
         context,
         event_date,
         preferred_titles=["Purchasing Manager", "Chief Financial Officer", "Controller"],
         fallback_cost_center_name="Purchasing",
     )
+    return int(planner_id), int(approver_id)
+
+
+def _forecast_role_cache_key(supply_mode: str, event_date: pd.Timestamp) -> tuple[str, str]:
+    bucket_start = week_start(event_date)
+    return str(supply_mode), bucket_start.strftime("%Y-%m-%d")
+
+
+def forecast_role_ids(
+    context: GenerationContext,
+    supply_mode: str,
+    event_date: pd.Timestamp,
+    role_cache: dict[tuple[str, str], tuple[int, int]] | None = None,
+) -> tuple[int, int]:
+    if role_cache is None:
+        return _resolve_forecast_role_ids_uncached(context, supply_mode, event_date)
+
+    cache_key = _forecast_role_cache_key(supply_mode, event_date)
+    cached = role_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    resolved = _resolve_forecast_role_ids_uncached(context, supply_mode, event_date)
+    role_cache[cache_key] = resolved
+    return resolved
+
+
+def forecast_planner_id(
+    context: GenerationContext,
+    supply_mode: str,
+    event_date: pd.Timestamp,
+    role_cache: dict[tuple[str, str], tuple[int, int]] | None = None,
+) -> int:
+    planner_id, _ = forecast_role_ids(context, supply_mode, event_date, role_cache=role_cache)
+    return int(planner_id)
+
+
+def forecast_approver_id(
+    context: GenerationContext,
+    supply_mode: str,
+    event_date: pd.Timestamp,
+    role_cache: dict[tuple[str, str], tuple[int, int]] | None = None,
+) -> int:
+    _, approver_id = forecast_role_ids(context, supply_mode, event_date, role_cache=role_cache)
+    return int(approver_id)
 
 
 def week_starts_in_fiscal_range(context: GenerationContext) -> list[pd.Timestamp]:
@@ -462,11 +518,12 @@ def generate_inventory_policies(context: GenerationContext) -> None:
         return
 
     rows: list[dict[str, Any]] = []
+    role_cache: dict[tuple[str, str], tuple[int, int]] = {}
     for item in items.sort_values("ItemID").itertuples(index=False):
         if str(item.ItemGroup) == "Services":
             continue
-        planner_id = forecast_planner_id(context, str(item.SupplyMode), fiscal_start)
-        buyer_id = forecast_planner_id(context, "Purchased", fiscal_start)
+        planner_id = forecast_planner_id(context, str(item.SupplyMode), fiscal_start, role_cache=role_cache)
+        buyer_id = forecast_planner_id(context, "Purchased", fiscal_start, role_cache=role_cache)
         for warehouse_id in warehouses:
             target_days = 21
             safety_stock = 20.0
@@ -528,19 +585,58 @@ def generate_demand_forecasts(context: GenerationContext) -> None:
     rows: list[dict[str, Any]] = []
     weeks = week_starts_in_fiscal_range(context)
     fiscal_start, _ = fiscal_bounds(context)
+    week_metadata = [
+        (
+            int(week_index),
+            bucket_start,
+            week_end(bucket_start),
+            SEASONAL_MONTH_MULTIPLIER.get(int(bucket_start.month), 1.0),
+        )
+        for week_index, bucket_start in enumerate(weeks)
+    ]
+    prepared_items: list[dict[str, Any]] = []
     for item in items.sort_values("ItemID").itertuples(index=False):
+        item_id = int(item.ItemID)
         item_launch = pd.Timestamp(item.LaunchDate)
-        first_week = first_forecast_week_start(item_launch)
-        lifecycle_multiplier = LIFECYCLE_DEMAND_MULTIPLIER.get(str(item.LifecycleStatus), 1.0)
-        base_demand = ITEM_GROUP_WEEKLY_BASE.get(str(item.ItemGroup), 10.0)
-        warehouse_rank = primary_warehouse_rank(context, int(item.ItemID))
-        for week_index, bucket_start in enumerate(weeks):
+        prepared_items.append({
+            "item": item,
+            "item_id": item_id,
+            "supply_mode": str(item.SupplyMode),
+            "lifecycle_status": str(item.LifecycleStatus),
+            "first_week": first_forecast_week_start(item_launch),
+            "lifecycle_multiplier": LIFECYCLE_DEMAND_MULTIPLIER.get(str(item.LifecycleStatus), 1.0),
+            "base_demand": ITEM_GROUP_WEEKLY_BASE.get(str(item.ItemGroup), 10.0),
+            "warehouse_rank": primary_warehouse_rank(context, item_id),
+            "style_multiplier": 1.0 + ((item_id % 5) - 2) * 0.035,
+        })
+
+    role_cache: dict[tuple[str, str], tuple[int, int]] = {}
+    for supply_mode in sorted({prepared_item["supply_mode"] for prepared_item in prepared_items}):
+        for _, bucket_start, _, _ in week_metadata:
+            forecast_role_ids(context, supply_mode, bucket_start, role_cache=role_cache)
+
+    total_items = len(prepared_items)
+    started_at = time.perf_counter()
+    LOGGER.info(
+        "DEMAND FORECAST START | items=%s | weeks=%s | warehouses=%s",
+        total_items,
+        len(week_metadata),
+        len(warehouses),
+    )
+    for item_index, prepared_item in enumerate(prepared_items, start=1):
+        item = prepared_item["item"]
+        first_week = prepared_item["first_week"]
+        lifecycle_multiplier = float(prepared_item["lifecycle_multiplier"])
+        base_demand = float(prepared_item["base_demand"])
+        warehouse_rank = list(prepared_item["warehouse_rank"])
+        supply_mode = str(prepared_item["supply_mode"])
+        lifecycle_status = str(prepared_item["lifecycle_status"])
+        style_multiplier = float(prepared_item["style_multiplier"])
+        for week_index, bucket_start, week_end_date, month_multiplier in week_metadata:
             if bucket_start < first_week:
                 continue
-            month_multiplier = SEASONAL_MONTH_MULTIPLIER.get(int(bucket_start.month), 1.0)
-            week_seed = context.settings.random_seed + int(item.ItemID) * 100_003 + week_index * 97
+            week_seed = context.settings.random_seed + int(prepared_item["item_id"]) * 100_003 + week_index * 97
             rng = np.random.default_rng(week_seed)
-            style_multiplier = 1.0 + ((int(item.ItemID) % 5) - 2) * 0.035
             launch_ramp = 1.0
             weeks_since_launch = max(int((bucket_start - first_week).days // 7), 0)
             if weeks_since_launch < 8:
@@ -559,7 +655,7 @@ def generate_demand_forecasts(context: GenerationContext) -> None:
             if baseline_total <= 0:
                 continue
 
-            week_end_date = week_end(bucket_start)
+            planner_id, approved_by = forecast_role_ids(context, supply_mode, bucket_start, role_cache=role_cache)
             for warehouse_rank_index, warehouse_id in enumerate(warehouse_rank):
                 share = WAREHOUSE_FORECAST_SHARE_BY_RANK[min(warehouse_rank_index, len(WAREHOUSE_FORECAST_SHARE_BY_RANK) - 1)]
                 baseline = qty(baseline_total * share)
@@ -569,12 +665,10 @@ def generate_demand_forecasts(context: GenerationContext) -> None:
                     continue
                 if abs(adjustment) > max(1.0, baseline * 0.04):
                     forecast_method = "Planner Adjusted"
-                elif str(item.LifecycleStatus) == "Seasonal":
+                elif lifecycle_status == "Seasonal":
                     forecast_method = "Lifecycle Adjusted"
                 else:
                     forecast_method = "Seasonal Trend"
-                planner_id = forecast_planner_id(context, str(item.SupplyMode), bucket_start)
-                approved_by = forecast_approver_id(context, str(item.SupplyMode), bucket_start)
                 approved_date = max(fiscal_start, bucket_start - pd.Timedelta(days=10))
                 rows.append({
                     "DemandForecastID": next_id(context, "DemandForecast"),
@@ -591,6 +685,14 @@ def generate_demand_forecasts(context: GenerationContext) -> None:
                     "ApprovedDate": approved_date.strftime("%Y-%m-%d"),
                     "IsCurrent": 1,
                 })
+        if item_index % DEMAND_FORECAST_PROGRESS_INTERVAL == 0 or item_index == total_items:
+            LOGGER.info(
+                "DEMAND FORECAST PROGRESS | items_processed=%s/%s | rows_generated=%s | elapsed_seconds=%.2f",
+                item_index,
+                total_items,
+                len(rows),
+                time.perf_counter() - started_at,
+            )
 
     append_rows(context, "DemandForecast", rows)
 

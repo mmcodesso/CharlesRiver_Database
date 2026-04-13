@@ -183,6 +183,43 @@ def log_validation_results(phase_name: str, results: dict[str, Any]) -> None:
             LOGGER.info("VALIDATION | %s.%s | exception_count=%s", phase_name, key, value["exception_count"])
 
 
+def _run_generation_step(
+    context: GenerationContext,
+    name: str,
+    generator: Any,
+    *,
+    log_substeps: bool,
+) -> None:
+    if log_substeps:
+        with logged_step(name):
+            generator(context)
+        return
+    generator(context)
+
+
+def _generate_phase2_master_data_and_planning(
+    context: GenerationContext,
+    *,
+    log_substeps: bool,
+) -> None:
+    phase2_generators = [
+        ("Generate phase 2 item master", generate_items),
+        ("Generate phase 2 BOMs", generate_boms),
+        ("Generate phase 2 routings and work centers", generate_work_centers_and_routings),
+        ("Generate phase 2 work-center calendars", generate_work_center_calendars),
+        ("Generate phase 2 customers", generate_customers),
+        ("Generate phase 2 suppliers", generate_suppliers),
+        ("Generate phase 2 opening balances", generate_opening_balances),
+        ("Generate phase 2 budgets", generate_budgets),
+        ("Generate phase 2 payroll periods", generate_payroll_periods),
+        ("Generate phase 2 shift definitions and assignments", generate_shift_definitions_and_assignments),
+        ("Generate phase 2 inventory policies", generate_inventory_policies),
+        ("Generate phase 2 demand forecasts", generate_demand_forecasts),
+    ]
+    for step_name, generator in phase2_generators:
+        _run_generation_step(context, step_name, generator, log_substeps=log_substeps)
+
+
 def build_phase1(config_path: str | Path = "config/settings.yaml") -> GenerationContext:
     settings = load_settings(config_path)
     context = initialize_context(settings)
@@ -689,18 +726,7 @@ def build_full_dataset(
         log_validation_results("phase1", validate_phase1(context))
 
     with logged_step("Generate phase 2 master data and planning data"):
-        generate_items(context)
-        generate_boms(context)
-        generate_work_centers_and_routings(context)
-        generate_work_center_calendars(context)
-        generate_customers(context)
-        generate_suppliers(context)
-        generate_opening_balances(context)
-        generate_budgets(context)
-        generate_payroll_periods(context)
-        generate_shift_definitions_and_assignments(context)
-        generate_inventory_policies(context)
-        generate_demand_forecasts(context)
+        _generate_phase2_master_data_and_planning(context, log_substeps=True)
         log_table_counts(
             context,
             (
