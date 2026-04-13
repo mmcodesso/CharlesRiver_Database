@@ -21,7 +21,7 @@ It connects:
 - operational source documents
 - planning and support layers
 - subledger logic
-- posted `GLEntry` records
+- posted GLEntry records
 
 The goal is not only to store tables. The goal is to let you move from business activity to source documents, then from source documents to ledger impact.
 

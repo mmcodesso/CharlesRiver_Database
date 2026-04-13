@@ -9,16 +9,13 @@ sidebar_label: Downloads
 
 - [Download the SQLite database](https://github.com/mmcodesso/greenfield_database/releases/latest/download/greenfield.sqlite)
 - [Download the Excel workbook](https://github.com/mmcodesso/greenfield_database/releases/latest/download/greenfield.xlsx)
-- [Download the support workbook](https://github.com/mmcodesso/greenfield_database/releases/latest/download/greenfield_support.xlsx)
 - [Download the CSV zip package](https://github.com/mmcodesso/greenfield_database/releases/latest/download/greenfield_csv.zip)
 
 ## Which File Should You Use?
 
 - Use `greenfield.sqlite` for SQL work.
 - Use `greenfield.xlsx` for pivots, charts, filters, and workbook-based analysis.
-- Use `greenfield_support.xlsx` when you need anomaly and validation companion sheets.
 - Use `greenfield_csv.zip` when you want one CSV per dataset table.
-- Download both when you want to compare SQL results with Excel-based analysis.
 
 ## Recommended Next Step
 

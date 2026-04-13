@@ -17,10 +17,6 @@ The main files are:
 
 - `greenfield.sqlite` for SQL work
 - `greenfield.xlsx` for Excel pivots, charts, filters, and workbook-based analysis
-
-Optional companion files are also available when you need them:
-
-- `greenfield_support.xlsx` for anomaly and validation support
 - `greenfield_csv.zip` for one-CSV-per-table delivery
 
 ## 2. Learn the Business Before the Tables

@@ -1031,3 +1031,22 @@ def update_recommendation_conversion(
         context.tables["SupplyPlanRecommendation"].loc[mask, "ConvertedDocumentType"] = str(document_type)
         context.tables["SupplyPlanRecommendation"].loc[mask, "ConvertedDocumentID"] = int(document_id)
     invalidate_planning_caches(context, "SupplyPlanRecommendation")
+
+
+def expire_recommendations(
+    context: GenerationContext,
+    recommendation_ids: list[int] | tuple[int, ...] | set[int],
+) -> None:
+    if not recommendation_ids:
+        return
+
+    normalized_ids = sorted({int(recommendation_id) for recommendation_id in recommendation_ids})
+    recommendation_id_series = pd.to_numeric(
+        context.tables["SupplyPlanRecommendation"]["SupplyPlanRecommendationID"],
+        errors="coerce",
+    ).astype("Int64")
+    mask = recommendation_id_series.isin(normalized_ids)
+    context.tables["SupplyPlanRecommendation"].loc[mask, "RecommendationStatus"] = "Expired"
+    context.tables["SupplyPlanRecommendation"].loc[mask, "ConvertedDocumentType"] = None
+    context.tables["SupplyPlanRecommendation"].loc[mask, "ConvertedDocumentID"] = None
+    invalidate_planning_caches(context, "SupplyPlanRecommendation")

@@ -14,6 +14,7 @@ from greenfield_dataset.manufacturing import (
     manufacturing_open_state,
     open_work_order_remaining_quantity_map,
     routing_operations_by_routing,
+    scheduled_work_order_ids,
     work_order_operation_schedule_by_operation,
     work_order_operations_by_work_order,
     work_order_actual_conversion_cost_map,
@@ -1428,6 +1429,8 @@ def validate_manufacturing_controls(context: GenerationContext) -> dict[str, Any
     completion_lines = context.tables["ProductionCompletionLine"]
     closes = context.tables["WorkOrderClose"]
     gl = context.tables["GLEntry"]
+    work_order_operations = context.tables["WorkOrderOperation"]
+    work_order_operation_schedule = context.tables["WorkOrderOperationSchedule"]
 
     manufactured_items = items[
         items["SupplyMode"].eq("Manufactured")
@@ -1485,6 +1488,7 @@ def validate_manufacturing_controls(context: GenerationContext) -> dict[str, Any
 
     work_order_lookup = work_orders.set_index("WorkOrderID").to_dict("index") if not work_orders.empty else {}
     completion_qty_map = work_order_completed_quantity_map(context)
+    scheduled_work_orders = scheduled_work_order_ids(context)
     work_order_item_supply_modes = work_orders["ItemID"].astype(int).map(
         items.set_index("ItemID")["SupplyMode"].to_dict()
     ) if not work_orders.empty else pd.Series(dtype=object)
@@ -1505,6 +1509,36 @@ def validate_manufacturing_controls(context: GenerationContext) -> dict[str, Any
             exceptions.append({
                 "type": "work_order_over_completed",
                 "message": f"Work orders complete above planned quantity: {over_completed[:5]}.",
+            })
+
+        released_without_schedule = work_orders[
+            work_orders["Status"].eq("Released")
+            & ~work_orders["WorkOrderID"].astype(int).isin(scheduled_work_orders)
+        ]
+        for row in released_without_schedule.head(10).itertuples(index=False):
+            exceptions.append({
+                "type": "released_work_order_without_schedule",
+                "message": f"Released work order {int(row.WorkOrderID)} has no operation schedule rows.",
+            })
+
+    if not work_order_operations.empty:
+        scheduled_operation_ids = (
+            set(work_order_operation_schedule["WorkOrderOperationID"].astype(int).tolist())
+            if not work_order_operation_schedule.empty
+            else set()
+        )
+        fiscal_end_text = pd.Timestamp(context.settings.fiscal_year_end).strftime("%Y-%m-%d")
+        invalid_unscheduled_operations = work_order_operations[
+            ~work_order_operations["WorkOrderOperationID"].astype(int).isin(scheduled_operation_ids)
+            & (
+                work_order_operations["PlannedStartDate"].astype(str).eq(fiscal_end_text)
+                | work_order_operations["PlannedEndDate"].astype(str).eq(fiscal_end_text)
+            )
+        ]
+        for row in invalid_unscheduled_operations.head(10).itertuples(index=False):
+            exceptions.append({
+                "type": "unscheduled_operation_fiscal_end_fallback",
+                "message": f"Work-order operation {int(row.WorkOrderOperationID)} still uses a fiscal-year-end scheduling fallback.",
             })
 
     issue_header_lookup = material_issues.set_index("MaterialIssueID").to_dict("index") if not material_issues.empty else {}
@@ -1999,6 +2033,7 @@ def validate_capacity_controls(context: GenerationContext) -> dict[str, Any]:
 def validate_payroll_controls(context: GenerationContext) -> dict[str, Any]:
     periods = context.tables["PayrollPeriod"]
     labor_entries = context.tables["LaborTimeEntry"]
+    completions = context.tables["ProductionCompletion"]
     registers = context.tables["PayrollRegister"]
     register_lines = context.tables["PayrollRegisterLine"]
     payments = context.tables["PayrollPayment"]
@@ -2159,6 +2194,8 @@ def validate_time_clock_controls(context: GenerationContext) -> dict[str, Any]:
     register_lines = context.tables["PayrollRegisterLine"]
     work_orders = context.tables["WorkOrder"]
     work_order_operations = context.tables["WorkOrderOperation"]
+    completions = context.tables["ProductionCompletion"]
+    payroll_periods = context.tables["PayrollPeriod"]
     shift_definitions = context.tables["ShiftDefinition"]
     exceptions: list[dict[str, Any]] = []
 
@@ -2176,8 +2213,31 @@ def validate_time_clock_controls(context: GenerationContext) -> dict[str, Any]:
     roster_lookup = employee_shift_roster_lookup(context)
     time_clock_lookup = time_clock_entry_lookup(context)
     labor_lookup = labor_entries.set_index("LaborTimeEntryID").to_dict("index") if not labor_entries.empty else {}
+    labor_rows_by_time_clock: dict[int, list[dict[str, Any]]] = defaultdict(list)
+    if not labor_entries.empty:
+        for labor_row in labor_entries.to_dict(orient="records"):
+            time_clock_id = labor_row.get("TimeClockEntryID")
+            if pd.notna(time_clock_id):
+                labor_rows_by_time_clock[int(time_clock_id)].append(labor_row)
     work_order_lookup = work_orders.set_index("WorkOrderID").to_dict("index") if not work_orders.empty else {}
     operation_lookup = work_order_operations.set_index("WorkOrderOperationID").to_dict("index") if not work_order_operations.empty else {}
+    payroll_period_lookup = payroll_periods.set_index("PayrollPeriodID").to_dict("index") if not payroll_periods.empty else {}
+    completion_work_order_period_pairs: set[tuple[int, int]] = set()
+    if not completions.empty and payroll_period_lookup:
+        ordered_periods = [
+            (
+                int(payroll_period_id),
+                pd.Timestamp(period["PeriodStartDate"]),
+                pd.Timestamp(period["PeriodEndDate"]),
+            )
+            for payroll_period_id, period in payroll_period_lookup.items()
+        ]
+        for completion in completions.itertuples(index=False):
+            completion_date = pd.Timestamp(completion.CompletionDate)
+            for payroll_period_id, period_start, period_end in ordered_periods:
+                if period_start <= completion_date <= period_end:
+                    completion_work_order_period_pairs.add((int(completion.WorkOrderID), int(payroll_period_id)))
+                    break
 
     if not time_clocks.empty:
         duplicate_day_rows = (
@@ -2270,13 +2330,40 @@ def validate_time_clock_controls(context: GenerationContext) -> dict[str, Any]:
                 work_date = pd.Timestamp(row.WorkDate)
                 lower_bound = pd.Timestamp(operation["ActualStartDate"]) if pd.notna(operation["ActualStartDate"]) else pd.Timestamp(operation["PlannedStartDate"])
                 upper_bound = pd.Timestamp(operation["ActualEndDate"]) if pd.notna(operation["ActualEndDate"]) else pd.Timestamp(operation["PlannedEndDate"])
-                if work_date < lower_bound or work_date > upper_bound:
+                direct_labor_rows = [
+                    labor_row
+                    for labor_row in labor_rows_by_time_clock.get(int(row.TimeClockEntryID), [])
+                    if str(labor_row.get("LaborType")) == "Direct Manufacturing"
+                ]
+                post_completion_fallback = False
+                work_order = work_order_lookup.get(int(operation["WorkOrderID"]))
+                payroll_period = payroll_period_lookup.get(int(row.PayrollPeriodID)) if pd.notna(row.PayrollPeriodID) else None
+                if (
+                    payroll_period is not None
+                    and (int(operation["WorkOrderID"]), int(row.PayrollPeriodID)) in completion_work_order_period_pairs
+                    and direct_labor_rows
+                ):
+                    period_end = pd.Timestamp(payroll_period["PeriodEndDate"])
+                    post_completion_fallback = work_date <= period_end
+                elif (
+                    work_order is not None
+                    and payroll_period is not None
+                    and pd.notna(work_order.get("CompletedDate"))
+                    and direct_labor_rows
+                ):
+                    completed_date = pd.Timestamp(work_order["CompletedDate"])
+                    period_start = pd.Timestamp(payroll_period["PeriodStartDate"])
+                    period_end = pd.Timestamp(payroll_period["PeriodEndDate"])
+                    post_completion_fallback = (
+                        period_start <= completed_date <= period_end
+                        and completed_date <= work_date <= period_end
+                    )
+                if (work_date < lower_bound or work_date > upper_bound) and not post_completion_fallback:
                     exceptions.append({
                         "type": "time_clock_outside_operation_window",
                         "time_clock_entry_id": int(row.TimeClockEntryID),
                         "message": f"Time-clock entry {int(row.TimeClockEntryID)} falls outside the operation window.",
                     })
-                work_order = work_order_lookup.get(int(operation["WorkOrderID"]))
                 if work_order is not None and pd.notna(work_order.get("ClosedDate")) and work_date > pd.Timestamp(work_order["ClosedDate"]):
                     exceptions.append({
                         "type": "labor_after_work_order_close",

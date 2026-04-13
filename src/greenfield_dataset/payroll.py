@@ -123,6 +123,7 @@ STANDARD_SHIFT_REGULAR_HOURS_RANGE = (7.5, 8.25)
 STANDARD_SHIFT_OVERTIME_RANGE = (0.0, 2.25)
 DIRECT_SUPPORT_TOPUP_HOURS_RANGE = (74.0, 82.0)
 MAX_CLOCK_HOURS_PER_DAY = 11.5
+FALLBACK_DIRECT_MAX_CLOCK_HOURS_PER_DAY = 12.0
 TIMECLOCK_APPROVED_STATUS = "Approved"
 ROSTER_STATUSES = {"Scheduled", "Absent", "Reassigned", "Cancelled"}
 ABSENCE_TYPES = ("Vacation", "Sick", "Personal")
@@ -816,6 +817,28 @@ def add_time_clock_spec(
     if total_hours <= 0:
         return
 
+    def append_labor_allocation(target_spec: dict[str, Any]) -> None:
+        allocations: list[dict[str, Any]] = target_spec.setdefault("LaborAllocations", [])
+        allocation_work_order_id = None if work_order_id is None else int(work_order_id)
+        allocation_operation_id = None if work_order_operation_id is None else int(work_order_operation_id)
+        for allocation in allocations:
+            if (
+                allocation.get("WorkOrderID") == allocation_work_order_id
+                and allocation.get("WorkOrderOperationID") == allocation_operation_id
+                and str(allocation.get("LaborType")) == str(labor_type)
+            ):
+                allocation["RegularHours"] = qty(float(allocation["RegularHours"]) + float(regular_hours))
+                allocation["OvertimeHours"] = qty(float(allocation["OvertimeHours"]) + float(overtime_hours))
+                return
+        allocations.append({
+            "WorkOrderID": allocation_work_order_id,
+            "WorkOrderOperationID": allocation_operation_id,
+            "LaborType": str(labor_type),
+            "RegularHours": qty(regular_hours),
+            "OvertimeHours": qty(overtime_hours),
+            "WorkCenterID": None if work_center_id is None else int(work_center_id),
+        })
+
     date_text = pd.Timestamp(work_date).strftime("%Y-%m-%d")
     key = (int(employee_id), date_text)
     assignment = shift_assignment_for_employee_on_date(context, int(employee_id), work_date)
@@ -838,17 +861,41 @@ def add_time_clock_spec(
             "ApprovedByEmployeeID": int(approver_id),
             "ApprovedDate": date_text,
         }
+        append_labor_allocation(specs[key])
         return
 
     spec = specs[key]
     spec["RegularHours"] = qty(float(spec["RegularHours"]) + float(regular_hours))
     spec["OvertimeHours"] = qty(float(spec["OvertimeHours"]) + float(overtime_hours))
-    if spec["WorkOrderID"] is None and work_order_id is not None:
-        spec["WorkOrderID"] = int(work_order_id)
-    if spec["WorkOrderOperationID"] is None and work_order_operation_id is not None:
-        spec["WorkOrderOperationID"] = int(work_order_operation_id)
-    if spec["WorkCenterID"] is None and work_center_id is not None:
-        spec["WorkCenterID"] = int(work_center_id)
+    append_labor_allocation(spec)
+    allocations = spec.get("LaborAllocations", [])
+    unique_work_order_ids = {
+        int(allocation["WorkOrderID"])
+        for allocation in allocations
+        if allocation.get("WorkOrderID") is not None
+    }
+    unique_operation_ids = {
+        int(allocation["WorkOrderOperationID"])
+        for allocation in allocations
+        if allocation.get("WorkOrderOperationID") is not None
+    }
+    unique_work_center_ids = {
+        int(allocation["WorkCenterID"])
+        for allocation in allocations
+        if allocation.get("WorkCenterID") is not None
+    }
+    if len(unique_work_order_ids) == 1:
+        spec["WorkOrderID"] = next(iter(unique_work_order_ids))
+    elif len(unique_work_order_ids) > 1:
+        spec["WorkOrderID"] = None
+    if len(unique_operation_ids) == 1:
+        spec["WorkOrderOperationID"] = next(iter(unique_operation_ids))
+    elif len(unique_operation_ids) > 1:
+        spec["WorkOrderOperationID"] = None
+    if len(unique_work_center_ids) == 1 and spec["WorkCenterID"] is None:
+        spec["WorkCenterID"] = next(iter(unique_work_center_ids))
+    elif len(unique_work_center_ids) > 1:
+        spec["WorkCenterID"] = None
     if spec["LaborType"] != "Direct Manufacturing" and labor_type == "Direct Manufacturing":
         spec["LaborType"] = labor_type
 
@@ -889,6 +936,7 @@ def build_direct_time_clock_specs(
     employee_lookup = direct_workers.set_index("EmployeeID").to_dict("index")
     worker_ids_by_work_center = direct_worker_candidates_by_work_center(context, direct_workers)
     assigned_period_hours: dict[int, float] = defaultdict(float)
+    assigned_direct_work_orders: set[int] = set()
 
     for work_order_id in sorted(operation_targets):
         operation_target_rows = operation_targets.get(int(work_order_id), [])
@@ -896,7 +944,7 @@ def build_direct_time_clock_specs(
             continue
 
         for operation_target in operation_target_rows:
-            work_date = next_business_day(pd.Timestamp(operation_target["WorkDate"]))
+            work_date = pd.Timestamp(operation_target["WorkDate"]).normalize()
             if work_date < period_start or work_date > period_end:
                 continue
             target_cost = float(operation_target["TargetCost"])
@@ -965,9 +1013,99 @@ def build_direct_time_clock_specs(
                     work_order_id=int(work_order_id),
                     work_order_operation_id=None if operation_id is None else int(operation_id),
                 )
+                assigned_direct_work_orders.add(int(work_order_id))
                 assigned_period_hours[int(employee_id)] = qty(
                     assigned_period_hours.get(int(employee_id), 0.0) + regular_hours + overtime_hours
                 )
+
+    for work_order_id in sorted(operation_targets):
+        if int(work_order_id) in assigned_direct_work_orders:
+            continue
+
+        operation_target_rows = operation_targets.get(int(work_order_id), [])
+        if not operation_target_rows:
+            continue
+        fallback_target_cost = money(sum(float(row["TargetCost"]) for row in operation_target_rows))
+        if fallback_target_cost <= 0:
+            continue
+
+        fallback_targets = sorted(
+            operation_target_rows,
+            key=lambda row: (
+                pd.Timestamp(row["WorkDate"]),
+                -1 if row["WorkOrderOperationID"] is None else 0,
+                0 if row.get("WorkOrderOperationID") is not None else 1,
+            ),
+            reverse=True,
+        )
+        allocated_fallback = False
+        for operation_target in fallback_targets:
+            operation_id = operation_target["WorkOrderOperationID"]
+            operation = operation_lookup.get(int(operation_id)) if operation_id is not None else None
+            work_center_id = int(operation["WorkCenterID"]) if operation is not None else None
+            candidate_working_dates = [
+                work_date
+                for work_date in working_dates_for_period(context, period_start, period_end, work_center_id)
+                if period_start <= work_date <= period_end
+            ]
+            if not candidate_working_dates:
+                continue
+            for work_date in reversed(candidate_working_dates):
+                candidate_workers = worker_ids_by_work_center.get(work_center_id) or worker_ids_by_work_center.get(None, [])
+                candidate_workers = [
+                    int(employee_id)
+                    for employee_id in candidate_workers
+                    if employee_available_for_work_date(employee_lookup[int(employee_id)], work_date)
+                ]
+                if not candidate_workers:
+                    continue
+                candidate_workers = sorted(
+                    candidate_workers,
+                    key=lambda employee_id: (
+                        float(specs.get((int(employee_id), work_date.strftime("%Y-%m-%d")), {}).get("RegularHours", 0.0))
+                        + float(specs.get((int(employee_id), work_date.strftime("%Y-%m-%d")), {}).get("OvertimeHours", 0.0)),
+                        assigned_period_hours.get(int(employee_id), 0.0),
+                        int(employee_id),
+                    ),
+                )
+                for employee_id in candidate_workers:
+                    employee = employee_lookup[int(employee_id)]
+                    hourly_rate = implied_hourly_rate(employee, work_date.year)
+                    if hourly_rate <= 0:
+                        continue
+                    existing_spec = specs.get((int(employee_id), work_date.strftime("%Y-%m-%d")))
+                    existing_hours = 0.0 if existing_spec is None else (
+                        float(existing_spec["RegularHours"]) + float(existing_spec["OvertimeHours"])
+                    )
+                    available_hours = max(FALLBACK_DIRECT_MAX_CLOCK_HOURS_PER_DAY - existing_hours, 0.0)
+                    additional_hours = qty(min(float(fallback_target_cost) / hourly_rate, available_hours))
+                    if additional_hours <= 0:
+                        continue
+                    regular_hours, overtime_hours = regular_and_overtime_split(existing_hours, additional_hours)
+                    add_time_clock_spec(
+                        context,
+                        specs,
+                        employee_lookup,
+                        int(employee_id),
+                        int(payroll_period_id),
+                        work_date,
+                        work_center_id,
+                        "Direct Manufacturing",
+                        regular_hours,
+                        overtime_hours,
+                        work_order_id=int(work_order_id),
+                        work_order_operation_id=None if operation_id is None else int(operation_id),
+                    )
+                    assigned_direct_work_orders.add(int(work_order_id))
+                    assigned_period_hours[int(employee_id)] = qty(
+                        assigned_period_hours.get(int(employee_id), 0.0) + regular_hours + overtime_hours
+                    )
+                    allocated_fallback = True
+                    break
+                if allocated_fallback:
+                    break
+            if allocated_fallback:
+                break
 
     for employee in direct_workers.itertuples(index=False):
         rng = stable_rng(context, "direct-worker-topup", payroll_period_id, int(employee.EmployeeID))
@@ -1285,6 +1423,15 @@ def materialize_time_clocks_and_labor_entries(
         clock_in_timestamp = pd.Timestamp(combine_timestamp(spec["WorkDate"], clock_in_time))
         scheduled_minutes = int(round(total_hours * 60.0)) + int(break_minutes)
         clock_out_timestamp = clock_in_timestamp + pd.Timedelta(minutes=scheduled_minutes)
+        if spec.get("ScheduledEndTime") is not None:
+            scheduled_shift_start = pd.Timestamp(f"{spec['WorkDate']} {spec['ScheduledStartTime']}")
+            scheduled_shift_end = pd.Timestamp(f"{spec['WorkDate']} {spec['ScheduledEndTime']}")
+            max_clock_out = scheduled_shift_end + pd.Timedelta(hours=4)
+            min_clock_in = scheduled_shift_start - pd.Timedelta(minutes=45)
+            if clock_out_timestamp > max_clock_out:
+                overflow = clock_out_timestamp - max_clock_out
+                clock_in_timestamp = max(clock_in_timestamp - overflow, min_clock_in)
+                clock_out_timestamp = clock_in_timestamp + pd.Timedelta(minutes=scheduled_minutes)
         clock_out_time = clock_out_timestamp.strftime("%Y-%m-%d %H:%M:%S")
         hourly_rate = implied_hourly_rate(employee, pd.Timestamp(spec["WorkDate"]).year)
         time_clock_entry_id = next_id(context, "TimeClockEntry")
@@ -1332,25 +1479,33 @@ def materialize_time_clocks_and_labor_entries(
                 "PunchSource": PUNCH_SOURCE_BADGE,
                 "SequenceNumber": int(sequence_number),
             })
-        labor_rows.append({
-            "LaborTimeEntryID": next_id(context, "LaborTimeEntry"),
-            "PayrollPeriodID": int(spec["PayrollPeriodID"]),
-            "EmployeeID": int(spec["EmployeeID"]),
+        labor_allocations = spec.get("LaborAllocations") or [{
             "WorkOrderID": spec["WorkOrderID"],
             "WorkOrderOperationID": spec["WorkOrderOperationID"],
-            "TimeClockEntryID": int(time_clock_entry_id),
-            "WorkDate": str(spec["WorkDate"]),
-            "LaborType": str(spec["LaborType"]),
+            "LaborType": spec["LaborType"],
             "RegularHours": qty(spec["RegularHours"]),
             "OvertimeHours": qty(spec["OvertimeHours"]),
-            "HourlyRateUsed": hourly_rate,
-            "ExtendedLaborCost": money(
-                float(spec["RegularHours"]) * hourly_rate
-                + float(spec["OvertimeHours"]) * hourly_rate * 1.5
-            ),
-            "ApprovedByEmployeeID": int(spec["ApprovedByEmployeeID"]),
-            "ApprovedDate": str(spec["ApprovedDate"]),
-        })
+        }]
+        for allocation in labor_allocations:
+            labor_rows.append({
+                "LaborTimeEntryID": next_id(context, "LaborTimeEntry"),
+                "PayrollPeriodID": int(spec["PayrollPeriodID"]),
+                "EmployeeID": int(spec["EmployeeID"]),
+                "WorkOrderID": allocation.get("WorkOrderID"),
+                "WorkOrderOperationID": allocation.get("WorkOrderOperationID"),
+                "TimeClockEntryID": int(time_clock_entry_id),
+                "WorkDate": str(spec["WorkDate"]),
+                "LaborType": str(allocation.get("LaborType", spec["LaborType"])),
+                "RegularHours": qty(allocation.get("RegularHours", 0.0)),
+                "OvertimeHours": qty(allocation.get("OvertimeHours", 0.0)),
+                "HourlyRateUsed": hourly_rate,
+                "ExtendedLaborCost": money(
+                    float(allocation.get("RegularHours", 0.0)) * hourly_rate
+                    + float(allocation.get("OvertimeHours", 0.0)) * hourly_rate * 1.5
+                ),
+                "ApprovedByEmployeeID": int(spec["ApprovedByEmployeeID"]),
+                "ApprovedDate": str(spec["ApprovedDate"]),
+            })
 
     return roster_rows, absence_rows, overtime_rows, time_clock_rows, time_clock_punch_rows, labor_rows
 
