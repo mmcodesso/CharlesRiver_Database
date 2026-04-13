@@ -6,7 +6,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from greenfield_dataset.master_data import current_role_employee_id, employee_active_mask, valid_employees
+from greenfield_dataset.master_data import current_role_employee_id
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.state_cache import drop_context_attributes, get_or_build_cache
 from greenfield_dataset.settings import GenerationContext
@@ -488,14 +488,18 @@ def roster_schedule_for_employee_date(
 
 
 def employee_available_for_work_date(employee: pd.Series | dict[str, Any], work_date: pd.Timestamp | str) -> bool:
-    if isinstance(employee, dict):
-        payload = employee
-    elif isinstance(employee, pd.Series):
-        payload = employee.to_dict()
-    else:
-        payload = employee._asdict()
-    employee_frame = pd.DataFrame([payload])
-    return bool(employee_active_mask(employee_frame, work_date).iloc[0])
+    payload = employee if isinstance(employee, dict) else employee.to_dict() if isinstance(employee, pd.Series) else employee._asdict()
+    if work_date is None:
+        return int(payload.get("IsActive", 0)) == 1
+
+    work_timestamp = pd.Timestamp(work_date)
+    hire_value = payload.get("HireDateValue", payload.get("HireDate"))
+    termination_value = payload.get("TerminationDateValue", payload.get("TerminationDate"))
+    hire_date = pd.Timestamp(hire_value) if pd.notna(hire_value) else None
+    termination_date = None if pd.isna(termination_value) else pd.Timestamp(termination_value)
+    if hire_date is None or hire_date > work_timestamp:
+        return False
+    return termination_date is None or termination_date >= work_timestamp
 
 
 def combine_timestamp(date_value: pd.Timestamp | str, time_text: str) -> str:

@@ -35,6 +35,7 @@ from greenfield_dataset.manufacturing import (
 )
 from greenfield_dataset.master_data import (
     backfill_cost_center_managers,
+    clear_master_data_caches,
     generate_cost_centers,
     generate_customers,
     generate_employees,
@@ -218,6 +219,24 @@ def _generate_phase2_master_data_and_planning(
     ]
     for step_name, generator in phase2_generators:
         _run_generation_step(context, step_name, generator, log_substeps=log_substeps)
+
+
+def _run_month_step(
+    context: GenerationContext,
+    year: int,
+    month: int,
+    step_name: str,
+    generator: Any,
+) -> None:
+    started_at = time.perf_counter()
+    generator(context, year, month)
+    LOGGER.info(
+        "MONTH STEP | %s-%02d | %s | elapsed_seconds=%.2f",
+        year,
+        month,
+        step_name,
+        time.perf_counter() - started_at,
+    )
 
 
 def build_phase1(config_path: str | Path = "config/settings.yaml") -> GenerationContext:
@@ -789,22 +808,40 @@ def build_full_dataset(
             recommendation_count_before = len(context.tables["SupplyPlanRecommendation"])
             material_plan_count_before = len(context.tables["MaterialRequirementPlan"])
             rough_cut_count_before = len(context.tables["RoughCutCapacityPlan"])
-            generate_month_o2c(context, year, month)
-            generate_month_planning(context, year, month)
-            generate_month_requisitions(context, year, month)
-            generate_month_work_orders_and_requisitions(context, year, month)
-            generate_month_purchase_orders(context, year, month)
-            generate_month_goods_receipts(context, year, month)
-            generate_month_manufacturing_activity(context, year, month)
-            generate_month_payroll(context, year, month)
-            close_eligible_work_orders(context, year, month)
-            generate_month_shipments(context, year, month)
-            generate_month_sales_invoices(context, year, month)
-            generate_month_cash_receipts(context, year, month)
-            generate_month_sales_returns(context, year, month)
-            generate_month_customer_refunds(context, year, month)
-            generate_month_purchase_invoices(context, year, month)
-            generate_month_disbursements(context, year, month)
+            _run_month_step(context, year, month, "generate_month_o2c", generate_month_o2c)
+            _run_month_step(context, year, month, "generate_month_planning", generate_month_planning)
+            _run_month_step(context, year, month, "generate_month_requisitions", generate_month_requisitions)
+            _run_month_step(
+                context,
+                year,
+                month,
+                "generate_month_work_orders_and_requisitions",
+                generate_month_work_orders_and_requisitions,
+            )
+            _run_month_step(context, year, month, "generate_month_purchase_orders", generate_month_purchase_orders)
+            _run_month_step(context, year, month, "generate_month_goods_receipts", generate_month_goods_receipts)
+            _run_month_step(
+                context,
+                year,
+                month,
+                "generate_month_manufacturing_activity",
+                generate_month_manufacturing_activity,
+            )
+            _run_month_step(context, year, month, "generate_month_payroll", generate_month_payroll)
+            _run_month_step(context, year, month, "close_eligible_work_orders", close_eligible_work_orders)
+            _run_month_step(context, year, month, "generate_month_shipments", generate_month_shipments)
+            _run_month_step(context, year, month, "generate_month_sales_invoices", generate_month_sales_invoices)
+            _run_month_step(context, year, month, "generate_month_cash_receipts", generate_month_cash_receipts)
+            _run_month_step(context, year, month, "generate_month_sales_returns", generate_month_sales_returns)
+            _run_month_step(
+                context,
+                year,
+                month,
+                "generate_month_customer_refunds",
+                generate_month_customer_refunds,
+            )
+            _run_month_step(context, year, month, "generate_month_purchase_invoices", generate_month_purchase_invoices)
+            _run_month_step(context, year, month, "generate_month_disbursements", generate_month_disbursements)
             requisitions_converted_after = int(context.tables["PurchaseRequisition"]["Status"].eq("Converted to PO").sum())
             new_shipment_lines = context.tables["ShipmentLine"].iloc[shipment_line_count_before:]
             new_receipt_lines = context.tables["GoodsReceiptLine"].iloc[receipt_line_count_before:]
@@ -1012,6 +1049,7 @@ def build_full_dataset(
 
     with logged_step("Inject configured anomalies"):
         inject_anomalies(context)
+        clear_master_data_caches(context)
         journal_anomaly_count = sum(
             1
             for anomaly in context.anomaly_log

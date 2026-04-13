@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from bisect import bisect_left
 from collections import defaultdict
 from typing import Any
 
@@ -189,7 +190,12 @@ def invalidate_manufacturing_caches(context: GenerationContext, table_name: str)
     cache_map = {
         "BillOfMaterialLine": ["_bom_lines_by_bom_cache"],
         "RoutingOperation": ["_routing_operations_by_routing_cache"],
-        "WorkCenterCalendar": ["_work_center_calendar_lookup", "_work_center_schedule_usage"],
+        "WorkCenterCalendar": [
+            "_work_center_calendar_lookup",
+            "_work_center_schedule_usage",
+            "_work_center_working_dates_cache",
+            "_work_center_working_date_index_cache",
+        ],
         "WorkOrderOperation": [
             "_work_order_operation_index_map",
             "_work_order_schedule_bounds",
@@ -305,16 +311,53 @@ def schedule_usage_map(context: GenerationContext) -> dict[tuple[int, str], floa
     return usage
 
 
+def work_center_working_dates(context: GenerationContext) -> dict[int, tuple[pd.Timestamp, ...]]:
+    cached = getattr(context, "_work_center_working_dates_cache", None)
+    if cached is not None:
+        return cached
+
+    calendar = context.tables["WorkCenterCalendar"]
+    if calendar.empty:
+        cached = {}
+    else:
+        working = calendar[calendar["AvailableHours"].astype(float).gt(0)].copy()
+        working["CalendarDateTS"] = pd.to_datetime(working["CalendarDate"], errors="coerce").dt.normalize()
+        grouped = working.groupby("WorkCenterID")["CalendarDateTS"].apply(
+            lambda values: tuple(sorted(timestamp for timestamp in values.tolist() if pd.notna(timestamp)))
+        )
+        cached = {
+            int(work_center_id): working_dates
+            for work_center_id, working_dates in grouped.items()
+        }
+
+    setattr(context, "_work_center_working_dates_cache", cached)
+    return cached
+
+
+def work_center_working_date_index(context: GenerationContext) -> dict[int, dict[str, int]]:
+    cached = getattr(context, "_work_center_working_date_index_cache", None)
+    if cached is not None:
+        return cached
+
+    cached = {
+        int(work_center_id): {
+            pd.Timestamp(work_date).strftime("%Y-%m-%d"): int(index)
+            for index, work_date in enumerate(working_dates)
+        }
+        for work_center_id, working_dates in work_center_working_dates(context).items()
+    }
+    setattr(context, "_work_center_working_date_index_cache", cached)
+    return cached
+
+
 def next_schedulable_day(context: GenerationContext, work_center_id: int, candidate_date: pd.Timestamp) -> pd.Timestamp:
-    lookup = work_center_calendar_lookup(context)
-    current = pd.Timestamp(candidate_date)
+    working_dates = work_center_working_dates(context).get(int(work_center_id), ())
+    current = pd.Timestamp(candidate_date).normalize()
     end_date = pd.Timestamp(context.settings.fiscal_year_end)
-    while current <= end_date:
-        date_key = current.strftime("%Y-%m-%d")
-        calendar_row = lookup.get((int(work_center_id), date_key))
-        if calendar_row is not None and float(calendar_row["AvailableHours"]) > 0:
-            return current
-        current = current + pd.Timedelta(days=1)
+    if working_dates:
+        working_index = bisect_left(working_dates, current)
+        if working_index < len(working_dates):
+            return pd.Timestamp(working_dates[working_index])
     return end_date
 
 
@@ -1212,6 +1255,8 @@ def schedule_operation_rows(
 ) -> list[dict[str, Any]]:
     lookup = work_center_calendar_lookup(context)
     usage = schedule_usage_map(context)
+    working_dates = work_center_working_dates(context).get(int(work_center_id), ())
+    working_date_index = work_center_working_date_index(context).get(int(work_center_id), {})
     end_date = pd.Timestamp(context.settings.fiscal_year_end)
     current_date = next_schedulable_day(context, int(work_center_id), pd.Timestamp(earliest_start))
     remaining_hours = money(planned_load_hours)
@@ -1234,7 +1279,10 @@ def schedule_operation_rows(
             })
             usage[(int(work_center_id), date_key)] = money(used_hours + scheduled_hours)
             remaining_hours = money(remaining_hours - scheduled_hours)
-        current_date = current_date + pd.Timedelta(days=1)
+        current_index = working_date_index.get(date_key)
+        if current_index is None or current_index + 1 >= len(working_dates):
+            break
+        current_date = pd.Timestamp(working_dates[current_index + 1])
 
     return schedule_rows
 
@@ -1458,6 +1506,17 @@ def generate_month_work_orders_and_requisitions(context: GenerationContext, year
         return
 
     rng = context.rng
+    manufacturing_employee_ids_by_date: dict[str, list[int]] = {}
+
+    def manufacturing_employee_ids(release_date: pd.Timestamp) -> list[int]:
+        date_key = pd.Timestamp(release_date).strftime("%Y-%m-%d")
+        cached = manufacturing_employee_ids_by_date.get(date_key)
+        if cached is not None:
+            return cached
+        employee_ids = employee_ids_for_cost_center(context, "Manufacturing", release_date)
+        manufacturing_employee_ids_by_date[date_key] = employee_ids
+        return employee_ids
+
     planned_recommendations = manufacture_recommendations_for_month(context, year, month)
     if not planned_recommendations.empty:
         manufacturing_cost_center = cost_center_id(context, "Manufacturing")
@@ -1500,7 +1559,7 @@ def generate_month_work_orders_and_requisitions(context: GenerationContext, year
                 "ClosedDate": None,
                 "Status": "Released",
                 "CostCenterID": manufacturing_cost_center,
-                "ReleasedByEmployeeID": int(rng.choice(employee_ids_for_cost_center(context, "Manufacturing", release_date))),
+                "ReleasedByEmployeeID": int(rng.choice(manufacturing_employee_ids(release_date))),
                 "ClosedByEmployeeID": None,
                 "SupplyPlanRecommendationID": int(recommendation.SupplyPlanRecommendationID),
             })
@@ -1576,7 +1635,7 @@ def generate_month_work_orders_and_requisitions(context: GenerationContext, year
             "ClosedDate": None,
             "Status": "Released",
             "CostCenterID": manufacturing_cost_center,
-            "ReleasedByEmployeeID": int(rng.choice(employee_ids_for_cost_center(context, "Manufacturing", release_date))),
+            "ReleasedByEmployeeID": int(rng.choice(manufacturing_employee_ids(release_date))),
             "ClosedByEmployeeID": None,
             "SupplyPlanRecommendationID": None,
         })
@@ -1612,7 +1671,7 @@ def generate_month_work_orders_and_requisitions(context: GenerationContext, year
                 "RequisitionID": requisition_id,
                 "RequisitionNumber": format_doc_number("PR", year, requisition_id),
                 "RequestDate": release_date.strftime("%Y-%m-%d"),
-                "RequestedByEmployeeID": int(rng.choice(employee_ids_for_cost_center(context, "Manufacturing", release_date))),
+                "RequestedByEmployeeID": int(rng.choice(manufacturing_employee_ids(release_date))),
                 "CostCenterID": manufacturing_cost_center,
                 "ItemID": int(bom_line.ComponentItemID),
                 "Quantity": requisition_quantity,

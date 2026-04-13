@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
@@ -537,6 +538,12 @@ def clear_master_data_caches(context: GenerationContext) -> None:
             "_employee_master_cache",
             "_item_master_cache",
             "_current_employee_lookup_cache",
+            "_employee_lookup_cache",
+            "_employee_valid_ids_by_date_cache",
+            "_employee_valid_id_set_by_date_cache",
+            "_employee_cost_center_ids_by_date_cache",
+            "_employee_title_ids_by_date_cache",
+            "_employee_approver_ladder_by_date_cache",
         ],
     )
 
@@ -548,6 +555,10 @@ def employee_master(context: GenerationContext) -> pd.DataFrame:
             return employees
         employees["HireDateValue"] = pd.to_datetime(employees["HireDate"])
         employees["TerminationDateValue"] = pd.to_datetime(employees["TerminationDate"], errors="coerce")
+        employees["EmployeeIDValue"] = employees["EmployeeID"].astype(int)
+        employees["CostCenterIDValue"] = employees["CostCenterID"].astype(int)
+        employees["MaxApprovalAmountValue"] = employees["MaxApprovalAmount"].astype(float)
+        employees["IsActiveValue"] = employees["IsActive"].astype(int)
         return employees
 
     return get_or_build_cache(context, "_employee_master_cache", builder)
@@ -570,9 +581,193 @@ def employee_active_mask(employees: pd.DataFrame, event_date: pd.Timestamp | str
     if event_date is None:
         return employees["IsActive"].astype(int).eq(1)
     timestamp = pd.Timestamp(event_date)
-    hire_date = pd.to_datetime(employees["HireDate"], errors="coerce")
-    termination_date = pd.to_datetime(employees["TerminationDate"], errors="coerce")
+    hire_date = employees["HireDateValue"] if "HireDateValue" in employees.columns else pd.to_datetime(employees["HireDate"], errors="coerce")
+    termination_date = (
+        employees["TerminationDateValue"]
+        if "TerminationDateValue" in employees.columns
+        else pd.to_datetime(employees["TerminationDate"], errors="coerce")
+    )
     return hire_date.le(timestamp) & (termination_date.isna() | termination_date.ge(timestamp))
+
+
+def _normalized_employee_event_date_key(event_date: pd.Timestamp | str | None) -> str:
+    if event_date is None:
+        return "__CURRENT__"
+    return pd.Timestamp(event_date).normalize().strftime("%Y-%m-%d")
+
+
+def employee_lookup(context: GenerationContext) -> dict[str, object]:
+    def builder() -> dict[str, object]:
+        employees = employee_master(context)
+        if employees.empty:
+            return {
+                "all_employee_ids": tuple(),
+                "row_index_by_id": {},
+                "employee_by_id": {},
+                "employee_ids_by_title": {},
+                "employee_ids_by_cost_center": {},
+                "manager_executive_ids": tuple(),
+                "cost_center_name_to_id": {},
+            }
+
+        authorization_rank = {"Executive": 0, "Manager": 1, "Supervisor": 2, "Staff": 3}
+        sorted_employees = employees.sort_values("EmployeeIDValue").reset_index()
+        row_index_by_id: dict[int, int] = {}
+        employee_by_id: dict[int, dict[str, object]] = {}
+        employee_ids_by_title: dict[str, list[int]] = defaultdict(list)
+        employee_ids_by_cost_center: dict[int, list[int]] = defaultdict(list)
+        manager_executive_ids: list[int] = []
+
+        for row in sorted_employees.itertuples(index=False):
+            employee_id = int(row.EmployeeIDValue)
+            cost_center_id = int(row.CostCenterIDValue)
+            job_title = str(row.JobTitle)
+            authorization_level = str(row.AuthorizationLevel)
+            row_index_by_id[employee_id] = int(row.index)
+            employee_by_id[employee_id] = {
+                "EmployeeID": employee_id,
+                "CostCenterID": cost_center_id,
+                "JobTitle": job_title,
+                "AuthorizationLevel": authorization_level,
+                "AuthorizationRank": int(authorization_rank.get(authorization_level, 99)),
+                "MaxApprovalAmount": float(row.MaxApprovalAmountValue),
+                "IsActive": int(row.IsActiveValue),
+                "HireDateValue": pd.Timestamp(row.HireDateValue),
+                "TerminationDateValue": None if pd.isna(row.TerminationDateValue) else pd.Timestamp(row.TerminationDateValue),
+            }
+            employee_ids_by_title[job_title].append(employee_id)
+            employee_ids_by_cost_center[cost_center_id].append(employee_id)
+            if authorization_level in {"Manager", "Executive"}:
+                manager_executive_ids.append(employee_id)
+
+        cost_centers = context.tables["CostCenter"]
+        cost_center_name_to_id = {
+            str(row.CostCenterName): int(row.CostCenterID)
+            for row in cost_centers.itertuples(index=False)
+        }
+        return {
+            "all_employee_ids": tuple(employee_by_id.keys()),
+            "row_index_by_id": row_index_by_id,
+            "employee_by_id": employee_by_id,
+            "employee_ids_by_title": {
+                title: tuple(employee_ids)
+                for title, employee_ids in employee_ids_by_title.items()
+            },
+            "employee_ids_by_cost_center": {
+                int(cost_center_id): tuple(employee_ids)
+                for cost_center_id, employee_ids in employee_ids_by_cost_center.items()
+            },
+            "manager_executive_ids": tuple(sorted(
+                manager_executive_ids,
+                key=lambda employee_id: (
+                    int(employee_by_id[employee_id]["AuthorizationRank"]),
+                    int(employee_id),
+                ),
+            )),
+            "cost_center_name_to_id": cost_center_name_to_id,
+        }
+
+    return get_or_build_cache(context, "_employee_lookup_cache", builder)
+
+
+def _valid_employee_ids_for_date_key(context: GenerationContext, date_key: str) -> tuple[int, ...]:
+    cache = get_or_build_cache(context, "_employee_valid_ids_by_date_cache", dict)
+    cached = cache.get(date_key)
+    if cached is not None:
+        return cached
+
+    lookup = employee_lookup(context)
+    employee_by_id = lookup["employee_by_id"]
+    if date_key == "__CURRENT__":
+        valid_ids = tuple(
+            employee_id
+            for employee_id in lookup["all_employee_ids"]
+            if int(employee_by_id[employee_id]["IsActive"]) == 1
+        )
+    else:
+        timestamp = pd.Timestamp(date_key)
+        valid_ids = tuple(
+            employee_id
+            for employee_id in lookup["all_employee_ids"]
+            if pd.Timestamp(employee_by_id[employee_id]["HireDateValue"]) <= timestamp
+            and (
+                employee_by_id[employee_id]["TerminationDateValue"] is None
+                or pd.Timestamp(employee_by_id[employee_id]["TerminationDateValue"]) >= timestamp
+            )
+        )
+    cache[date_key] = valid_ids
+    return valid_ids
+
+
+def _valid_employee_id_set_for_date_key(context: GenerationContext, date_key: str) -> set[int]:
+    cache = get_or_build_cache(context, "_employee_valid_id_set_by_date_cache", dict)
+    cached = cache.get(date_key)
+    if cached is not None:
+        return cached
+    valid_ids = set(_valid_employee_ids_for_date_key(context, date_key))
+    cache[date_key] = valid_ids
+    return valid_ids
+
+
+def _employee_ids_for_cost_center_date_key(
+    context: GenerationContext,
+    date_key: str,
+    cost_center_id: int,
+) -> tuple[int, ...]:
+    cache = get_or_build_cache(context, "_employee_cost_center_ids_by_date_cache", dict)
+    cache_key = (date_key, int(cost_center_id))
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    lookup = employee_lookup(context)
+    valid_ids = _valid_employee_id_set_for_date_key(context, date_key)
+    employee_ids = tuple(
+        employee_id
+        for employee_id in lookup["employee_ids_by_cost_center"].get(int(cost_center_id), ())
+        if employee_id in valid_ids
+    )
+    cache[cache_key] = employee_ids
+    return employee_ids
+
+
+def _employee_ids_for_title_date_key(
+    context: GenerationContext,
+    date_key: str,
+    job_title: str,
+) -> tuple[int, ...]:
+    cache = get_or_build_cache(context, "_employee_title_ids_by_date_cache", dict)
+    cache_key = (date_key, str(job_title))
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    lookup = employee_lookup(context)
+    valid_ids = _valid_employee_id_set_for_date_key(context, date_key)
+    employee_ids = tuple(
+        employee_id
+        for employee_id in lookup["employee_ids_by_title"].get(str(job_title), ())
+        if employee_id in valid_ids
+    )
+    cache[cache_key] = employee_ids
+    return employee_ids
+
+
+def _approver_candidate_ids_for_date_key(context: GenerationContext, date_key: str) -> tuple[int, ...]:
+    cache = get_or_build_cache(context, "_employee_approver_ladder_by_date_cache", dict)
+    cached = cache.get(date_key)
+    if cached is not None:
+        return cached
+
+    valid_ids = _valid_employee_id_set_for_date_key(context, date_key)
+    lookup = employee_lookup(context)
+    approver_ids = tuple(
+        employee_id
+        for employee_id in lookup["manager_executive_ids"]
+        if employee_id in valid_ids
+    )
+    cache[date_key] = approver_ids
+    return approver_ids
 
 
 def current_active_employees(context: GenerationContext) -> pd.DataFrame:
@@ -595,22 +790,38 @@ def valid_employees(
     if employees.empty:
         return employees.copy()
 
-    rows = employees[employee_active_mask(employees, event_date)].copy()
+    date_key = _normalized_employee_event_date_key(event_date)
+    lookup = employee_lookup(context)
+    selected_ids = list(_valid_employee_ids_for_date_key(context, date_key))
     if cost_center_name is not None:
-        cost_centers = context.tables["CostCenter"]
-        matches = cost_centers.loc[cost_centers["CostCenterName"].eq(cost_center_name), "CostCenterID"]
-        if matches.empty:
-            return rows.head(0)
-        cost_center_id = int(matches.iloc[0])
+        cost_center_id = lookup["cost_center_name_to_id"].get(str(cost_center_name))
+        if cost_center_id is None:
+            return employees.head(0).copy()
     if cost_center_id is not None:
-        rows = rows[rows["CostCenterID"].astype(int).eq(int(cost_center_id))]
+        selected_ids = list(_employee_ids_for_cost_center_date_key(context, date_key, int(cost_center_id)))
     if job_titles:
-        rows = rows[rows["JobTitle"].isin(list(job_titles))]
+        job_title_ids: set[int] = set()
+        for title in job_titles:
+            job_title_ids.update(_employee_ids_for_title_date_key(context, date_key, str(title)))
+        selected_ids = [employee_id for employee_id in selected_ids if employee_id in job_title_ids]
     if authorization_levels:
-        rows = rows[rows["AuthorizationLevel"].isin(list(authorization_levels))]
-    if minimum_approval_amount is not None and "MaxApprovalAmount" in rows.columns:
-        rows = rows[rows["MaxApprovalAmount"].astype(float) >= float(minimum_approval_amount)]
-    return rows.copy()
+        authorization_level_set = {str(level) for level in authorization_levels}
+        selected_ids = [
+            employee_id
+            for employee_id in selected_ids
+            if str(lookup["employee_by_id"][employee_id]["AuthorizationLevel"]) in authorization_level_set
+        ]
+    if minimum_approval_amount is not None:
+        minimum_amount = float(minimum_approval_amount)
+        selected_ids = [
+            employee_id
+            for employee_id in selected_ids
+            if float(lookup["employee_by_id"][employee_id]["MaxApprovalAmount"]) >= minimum_amount
+        ]
+    if not selected_ids:
+        return employees.head(0).copy()
+    row_indexes = [int(lookup["row_index_by_id"][employee_id]) for employee_id in selected_ids]
+    return employees.loc[row_indexes].copy()
 
 
 def employee_ids_for_cost_center_as_of(
@@ -618,16 +829,21 @@ def employee_ids_for_cost_center_as_of(
     cost_center_name_or_id: str | int,
     event_date: pd.Timestamp | str | None = None,
 ) -> list[int]:
-    rows = (
-        valid_employees(context, event_date, cost_center_name=str(cost_center_name_or_id))
-        if isinstance(cost_center_name_or_id, str)
-        else valid_employees(context, event_date, cost_center_id=int(cost_center_name_or_id))
-    )
-    if rows.empty:
-        rows = valid_employees(context, event_date)
-    if rows.empty:
-        rows = context.tables["Employee"].copy()
-    return rows.sort_values("EmployeeID")["EmployeeID"].astype(int).tolist()
+    date_key = _normalized_employee_event_date_key(event_date)
+    lookup = employee_lookup(context)
+    employee_ids: tuple[int, ...] = tuple()
+    if isinstance(cost_center_name_or_id, str):
+        cost_center_id = lookup["cost_center_name_to_id"].get(str(cost_center_name_or_id))
+        if cost_center_id is not None:
+            employee_ids = _employee_ids_for_cost_center_date_key(context, date_key, int(cost_center_id))
+    else:
+        employee_ids = _employee_ids_for_cost_center_date_key(context, date_key, int(cost_center_name_or_id))
+    if employee_ids:
+        return list(employee_ids)
+    any_valid = _valid_employee_ids_for_date_key(context, date_key)
+    if any_valid:
+        return list(any_valid)
+    return list(lookup["all_employee_ids"])
 
 
 def employee_id_by_titles(
@@ -635,14 +851,12 @@ def employee_id_by_titles(
     *job_titles: str,
     event_date: pd.Timestamp | str | None = None,
 ) -> int | None:
-    rows = valid_employees(context, event_date, job_titles=job_titles)
-    if rows.empty:
-        return None
+    date_key = _normalized_employee_event_date_key(event_date)
     for title in job_titles:
-        matches = rows.loc[rows["JobTitle"].eq(title), "EmployeeID"]
-        if not matches.empty:
-            return int(matches.sort_values().iloc[0])
-    return int(rows.sort_values("EmployeeID").iloc[0]["EmployeeID"])
+        employee_ids = _employee_ids_for_title_date_key(context, date_key, str(title))
+        if employee_ids:
+            return int(employee_ids[0])
+    return None
 
 
 def approver_employee_id(
@@ -653,35 +867,33 @@ def approver_employee_id(
     minimum_amount: float = 0.0,
     fallback_cost_center_name: str | None = None,
 ) -> int:
-    authorization_rank = {"Executive": 0, "Manager": 1, "Supervisor": 2, "Staff": 3}
+    date_key = _normalized_employee_event_date_key(event_date)
+    lookup = employee_lookup(context)
+    employee_by_id = lookup["employee_by_id"]
+    minimum_amount_value = float(minimum_amount)
     if preferred_titles:
-        preferred_id = employee_id_by_titles(context, *preferred_titles, event_date=event_date)
-        if preferred_id is not None:
-            rows = valid_employees(context, event_date, job_titles=preferred_titles)
-            if minimum_amount <= 0 or rows.loc[rows["EmployeeID"].astype(int).eq(int(preferred_id)), "MaxApprovalAmount"].astype(float).fillna(0).ge(float(minimum_amount)).any():
-                return int(preferred_id)
+        for title in preferred_titles:
+            preferred_ids = _employee_ids_for_title_date_key(context, date_key, str(title))
+            if not preferred_ids:
+                continue
+            preferred_id = int(preferred_ids[0])
+            if minimum_amount_value <= 0 or float(employee_by_id[preferred_id]["MaxApprovalAmount"]) >= minimum_amount_value:
+                return preferred_id
 
-    eligible = valid_employees(
-        context,
-        event_date,
-        authorization_levels=["Manager", "Executive"],
-        minimum_approval_amount=minimum_amount,
-    )
-    if not eligible.empty:
-        eligible = eligible.copy()
-        eligible["AuthorizationRank"] = eligible["AuthorizationLevel"].map(authorization_rank).fillna(99)
-        return int(eligible.sort_values(["AuthorizationRank", "EmployeeID"]).iloc[0]["EmployeeID"])
+    for employee_id in _approver_candidate_ids_for_date_key(context, date_key):
+        if float(employee_by_id[employee_id]["MaxApprovalAmount"]) >= minimum_amount_value:
+            return int(employee_id)
 
     if fallback_cost_center_name is not None:
         ids = employee_ids_for_cost_center_as_of(context, fallback_cost_center_name, event_date)
         if ids:
             return int(ids[0])
 
-    any_valid = valid_employees(context, event_date)
-    if not any_valid.empty:
-        return int(any_valid.sort_values("EmployeeID").iloc[0]["EmployeeID"])
+    any_valid = _valid_employee_ids_for_date_key(context, date_key)
+    if any_valid:
+        return int(any_valid[0])
 
-    return int(context.tables["Employee"].sort_values("EmployeeID").iloc[0]["EmployeeID"])
+    return int(lookup["all_employee_ids"][0])
 
 
 def current_role_employee_id(context: GenerationContext, *job_titles: str) -> int | None:
