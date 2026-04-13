@@ -54,3 +54,9 @@ profiles:
     work_order_without_plan_per_year: 1
     late_recommendation_conversion_per_year: 1
     forecast_override_outlier_per_year: 1
+    missing_price_override_approval_per_year: 1
+    expired_price_list_used_per_year: 1
+    overlapping_active_price_list_per_year: 1
+    promotion_outside_effective_dates_per_year: 1
+    sale_below_price_floor_without_approval_per_year: 1
+    customer_specific_price_bypass_per_year: 1

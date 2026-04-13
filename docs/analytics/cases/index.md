@@ -21,12 +21,14 @@ sidebar_label: Analytics Cases
 | [Workforce Cost and Org-Control Case](workforce-cost-and-org-control-case.md) | Default anomaly-enabled | managerial + audit + financial |
 | [Workforce Coverage and Attendance Case](workforce-coverage-and-attendance-case.md) | Default anomaly-enabled or clean | managerial + audit |
 | [Demand Planning and Replenishment Case](demand-planning-and-replenishment-case.md) | Default anomaly-enabled or clean | managerial + financial + cost accounting |
+| [Pricing and Margin Governance Case](pricing-and-margin-governance-case.md) | Default anomaly-enabled or clean | financial + managerial |
 | [Audit Review Pack Case](audit-review-pack-case.md) | Default anomaly-enabled | audit + support workbook |
 | [Attendance Control Audit Case](attendance-control-audit-case.md) | Default anomaly-enabled | audit + support workbook |
 | [Replenishment Support Audit Case](replenishment-support-audit-case.md) | Default anomaly-enabled | audit + support workbook |
+| [Pricing Governance Audit Case](pricing-governance-audit-case.md) | Default anomaly-enabled | audit + support workbook |
 | [Audit Exception Lab](audit-exception-lab.md) | Default anomaly-enabled | audit |
 
-## Suggested Phase 19 to Phase 22 Sequence
+## Suggested Phase 19 to Phase 23 Sequence
 
 1. start with the topic page in [Financial Analytics](../financial.md), [Managerial Analytics](../managerial.md), or [Audit Analytics](../audit.md)
 2. run the paired SQL files in order
@@ -39,6 +41,12 @@ Phase 22 adds a planning layer on top of that sequence:
 6. trace weekly forecasts into supply recommendations and replenishment documents
 7. use the demand-planning case for managerial and cost-accounting discussion
 8. use the replenishment-support audit case for planning-governance controls
+
+Phase 23 adds a pricing-governance layer on top of that sequence:
+
+9. trace list price into resolved price-list pricing, promotions, and net realized revenue
+10. use the pricing and margin case for financial and managerial pricing analysis
+11. use the pricing-governance audit case for expired pricing, promotion misuse, and override-completeness review
 
 ## Where to Go Next
 

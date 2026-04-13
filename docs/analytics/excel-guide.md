@@ -25,7 +25,7 @@ Recommended first steps:
 3. identify the sheets that match the query or case you are running
 4. create a working sheet for pivots, formulas, and charts
 
-## Phase 19 to Phase 22 Workflow Pattern
+## Phase 19 to Phase 23 Workflow Pattern
 
 For most classes, use this sequence:
 
@@ -98,6 +98,12 @@ Suggested outputs:
 - revenue and gross margin by collection, style, lifecycle, and supply mode
 - payroll and people-cost mix by cost center, job family, and job level
 - customer deposits and unapplied cash aging
+- price realization versus list price by segment and customer
+- gross-margin comparison for promotion versus non-promotion sales
+
+Best paired case:
+
+- [Pricing and Margin Governance Case](cases/pricing-and-margin-governance-case.md)
 
 ## Managerial and Cost-Accounting Workflows
 
@@ -174,6 +180,8 @@ Suggested outputs:
 - weekly forecast versus actual demand by item family
 - recommendation mix by priority and planner
 - rough-cut capacity pressure by work center and planning week
+- collection revenue and margin before and after promotions
+- customer-specific pricing concentration and override pressure
 
 Best paired case:
 
@@ -211,6 +219,11 @@ Suggested outputs:
 - requisitions and work orders without planning support
 - recommendation converted after need-by date review
 - discontinued or pre-launch planning activity review
+- sales below floor without approval
+- expired or overlapping price-list review
+- promotion scope and date mismatch review
+- customer-specific price-list bypass review
+- override approval completeness review
 
 ### Support-workbook-assisted review
 
@@ -233,6 +246,7 @@ Best paired cases:
 - [Audit Review Pack Case](cases/audit-review-pack-case.md)
 - [Attendance Control Audit Case](cases/attendance-control-audit-case.md)
 - [Replenishment Support Audit Case](cases/replenishment-support-audit-case.md)
+- [Pricing Governance Audit Case](cases/pricing-governance-audit-case.md)
 - [Audit Exception Lab](cases/audit-exception-lab.md)
 
 ## Clean vs Default Build in Excel

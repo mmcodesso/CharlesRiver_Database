@@ -67,6 +67,7 @@ Read the diagram as a correction path, not as a new sale. The return starts from
 - Returns only occur against previously shipped and previously invoiced lines.
 - `SalesReturnLine.ShipmentLineID` is the core operational trace field.
 - `CreditMemo.OriginalSalesInvoiceID` ties the credit back to the earlier invoice.
+- `CreditMemoLine` now preserves the original pricing lineage through `BaseListPrice`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, `PricingMethod`, and `Discount`.
 - Refunds are generated only for paid-return scenarios that leave customer credit to be cleared in cash.
 
 ## Subprocess Spotlight: Returned Invoice to Credit to Refund

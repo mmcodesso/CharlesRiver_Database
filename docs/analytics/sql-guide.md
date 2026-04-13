@@ -10,9 +10,9 @@ sidebar_label: SQL Guide
 
 | Folder | Coverage |
 |---|---|
-| [queries/financial](https://github.com/mmcodesso/greenfield_database/tree/main/queries/financial) | revenue, margin, working capital, AR, AP, accrued expenses, payroll liabilities, close-cycle, and control-account review |
-| [queries/managerial](https://github.com/mmcodesso/greenfield_database/tree/main/queries/managerial) | budget, product portfolio, lifecycle mix, labor, service levels, BOMs, work orders, capacity, forecast, replenishment, and contribution margin |
-| [queries/audit](https://github.com/mmcodesso/greenfield_database/tree/main/queries/audit) | document-chain completeness, approvals, cut-off, payroll and time controls, master-data controls, planning support, and anomaly-oriented review |
+| [queries/financial](https://github.com/mmcodesso/greenfield_database/tree/main/queries/financial) | revenue, margin, working capital, AR, AP, accrued expenses, payroll liabilities, close-cycle, planning, and price-realization review |
+| [queries/managerial](https://github.com/mmcodesso/greenfield_database/tree/main/queries/managerial) | budget, product portfolio, lifecycle mix, labor, service levels, BOMs, work orders, capacity, forecast, replenishment, pricing governance, and contribution margin |
+| [queries/audit](https://github.com/mmcodesso/greenfield_database/tree/main/queries/audit) | document-chain completeness, approvals, cut-off, payroll and time controls, master-data controls, planning support, pricing governance, and anomaly-oriented review |
 
 Each file is a single SQLite-friendly `SELECT` statement with short comment headers that explain:
 
@@ -79,7 +79,7 @@ sqlite3 greenfield.sqlite < queries/financial/19_working_capital_bridge_by_month
 - The main SQLite export contains dataset tables only.
 - Anomaly and validation companion content lives in the support workbook, not in SQLite.
 
-## Suggested Phase 19 to Phase 22 Sequence
+## Suggested Phase 19 to Phase 23 Sequence
 
 ### Financial
 
@@ -92,9 +92,12 @@ sqlite3 greenfield.sqlite < queries/financial/19_working_capital_bridge_by_month
 7. accrued expense roll-forward
 8. retained earnings and close-entry impact
 9. payroll and people-cost mix
-10. paired cases:
+10. price realization versus list price
+11. gross-margin impact of promotions versus non-promotion sales
+12. paired cases:
    - [Working Capital and Cash Conversion Case](cases/working-capital-and-cash-conversion-case.md)
    - [Financial Statement Bridge Case](cases/financial-statement-bridge-case.md)
+   - [Pricing and Margin Governance Case](cases/pricing-and-margin-governance-case.md)
 
 ### Managerial
 
@@ -116,10 +119,15 @@ sqlite3 greenfield.sqlite < queries/financial/19_working_capital_bridge_by_month
 16. forecast error and bias by collection and style family
 17. supply-plan driver mix by collection and supply mode
 18. portfolio return and refund impact by collection and lifecycle
-19. paired cases:
+19. sales-rep override rate and discount dispersion
+20. collection revenue and margin before and after promotions
+21. customer-specific pricing concentration and dependency
+22. monthly price-floor pressure and override concentration
+23. paired cases:
    - [Product Portfolio Profitability Case](cases/product-portfolio-profitability-case.md)
    - [Workforce Coverage and Attendance Case](cases/workforce-coverage-and-attendance-case.md)
    - [Demand Planning and Replenishment Case](cases/demand-planning-and-replenishment-case.md)
+   - [Pricing and Margin Governance Case](cases/pricing-and-margin-governance-case.md)
 
 ### Audit
 
@@ -141,11 +149,17 @@ sqlite3 greenfield.sqlite < queries/financial/19_working_capital_bridge_by_month
 16. requisitions and work orders without planning support
 17. recommendation converted after need-by date review
 18. discontinued or pre-launch planning activity review
-19. paired cases:
+19. sales below floor without approval
+20. expired or overlapping price-list review
+21. promotion scope and date mismatch review
+22. customer-specific price-list bypass review
+23. override approval completeness review
+24. paired cases:
    - [Workforce Cost and Org-Control Case](cases/workforce-cost-and-org-control-case.md)
    - [Audit Review Pack Case](cases/audit-review-pack-case.md)
    - [Attendance Control Audit Case](cases/attendance-control-audit-case.md)
    - [Replenishment Support Audit Case](cases/replenishment-support-audit-case.md)
+   - [Pricing Governance Audit Case](cases/pricing-governance-audit-case.md)
 
 ## Where to Go Next
 

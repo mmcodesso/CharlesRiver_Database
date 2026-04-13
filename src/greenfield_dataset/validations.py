@@ -863,6 +863,33 @@ def validate_o2c_phase11_controls(context: GenerationContext) -> dict[str, Any]:
                 "message": f"Sales invoice lines do not match linked shipment or order lines: {mismatched_invoice_lines[:5]}.",
             })
 
+        invoice_pricing_mismatches = []
+        for line in linked_invoice_lines.itertuples(index=False):
+            sales_line = sales_line_lookup.get(int(line.SalesOrderLineID))
+            if sales_line is None:
+                continue
+            comparable_fields = ["BaseListPrice", "UnitPrice", "Discount", "PriceListLineID", "PromotionID", "PriceOverrideApprovalID", "PricingMethod"]
+            mismatch_found = False
+            for field_name in comparable_fields:
+                sales_value = sales_line.get(field_name)
+                invoice_value = getattr(line, field_name)
+                if pd.isna(sales_value) and pd.isna(invoice_value):
+                    continue
+                if field_name in {"BaseListPrice", "UnitPrice", "Discount"}:
+                    if round(float(invoice_value), 4) != round(float(sales_value), 4):
+                        mismatch_found = True
+                        break
+                elif str(invoice_value) != str(sales_value):
+                    mismatch_found = True
+                    break
+            if mismatch_found:
+                invoice_pricing_mismatches.append(int(line.SalesInvoiceLineID))
+        if invoice_pricing_mismatches:
+            exceptions.append({
+                "type": "invoice_line_pricing_lineage_mismatch",
+                "message": f"Sales invoice lines do not match source order-line pricing lineage: {invoice_pricing_mismatches[:5]}.",
+            })
+
         billed_quantities = shipment_line_billed_quantities(context)
         over_billed_shipment_lines = [
             int(shipment_line_id)
@@ -984,7 +1011,28 @@ def validate_o2c_phase11_controls(context: GenerationContext) -> dict[str, Any]:
             expected_line_total = money(
                 float(credit_memo_line.Quantity) * float(original_line["UnitPrice"]) * (1 - float(original_line["Discount"]))
             )
-            if round(float(credit_memo_line.UnitPrice), 2) != round(float(original_line["UnitPrice"]), 2) or money(float(credit_memo_line.LineTotal)) != expected_line_total:
+            list_line_mismatch = (
+                (pd.notna(credit_memo_line.PriceListLineID) or pd.notna(original_line["PriceListLineID"]))
+                and str(credit_memo_line.PriceListLineID) != str(original_line["PriceListLineID"])
+            )
+            promotion_mismatch = (
+                (pd.notna(credit_memo_line.PromotionID) or pd.notna(original_line["PromotionID"]))
+                and str(credit_memo_line.PromotionID) != str(original_line["PromotionID"])
+            )
+            override_mismatch = (
+                (pd.notna(credit_memo_line.PriceOverrideApprovalID) or pd.notna(original_line["PriceOverrideApprovalID"]))
+                and str(credit_memo_line.PriceOverrideApprovalID) != str(original_line["PriceOverrideApprovalID"])
+            )
+            if (
+                round(float(credit_memo_line.BaseListPrice), 2) != round(float(original_line["BaseListPrice"]), 2)
+                or round(float(credit_memo_line.UnitPrice), 2) != round(float(original_line["UnitPrice"]), 2)
+                or round(float(credit_memo_line.Discount), 4) != round(float(original_line["Discount"]), 4)
+                or money(float(credit_memo_line.LineTotal)) != expected_line_total
+                or list_line_mismatch
+                or promotion_mismatch
+                or override_mismatch
+                or str(credit_memo_line.PricingMethod) != str(original_line["PricingMethod"])
+            ):
                 pricing_mismatches.append(int(credit_memo_line.CreditMemoLineID))
         if line_mismatches:
             exceptions.append({
@@ -2752,6 +2800,217 @@ def validate_planning_controls(context: GenerationContext) -> dict[str, Any]:
     }
 
 
+def validate_pricing_controls(context: GenerationContext) -> dict[str, Any]:
+    price_lists = context.tables["PriceList"]
+    price_list_lines = context.tables["PriceListLine"]
+    promotions = context.tables["PromotionProgram"]
+    override_approvals = context.tables["PriceOverrideApproval"]
+    items = context.tables["Item"]
+    customers = context.tables["Customer"]
+    sales_orders = context.tables["SalesOrder"]
+    sales_order_lines = context.tables["SalesOrderLine"]
+    sales_invoice_lines = context.tables["SalesInvoiceLine"]
+    credit_memo_lines = context.tables["CreditMemoLine"]
+    exceptions: list[dict[str, Any]] = []
+
+    def values_match(left: Any, right: Any, *, numeric: bool = False) -> bool:
+        if pd.isna(left) and pd.isna(right):
+            return True
+        if numeric:
+            return round(float(left), 4) == round(float(right), 4)
+        return str(left) == str(right)
+
+    if price_lists.empty or price_list_lines.empty:
+        return {
+            "exception_count": 1,
+            "exceptions": [{
+                "type": "missing_pricing_master_data",
+                "message": "Price-list master data was not generated.",
+            }],
+        }
+
+    active_sellable_items = items[
+        items["IsActive"].astype(int).eq(1)
+        & items["ListPrice"].notna()
+        & items["RevenueAccountID"].notna()
+        & items["ItemGroup"].ne("Services")
+    ].copy()
+    active_segment_lists = price_lists[
+        price_lists["ScopeType"].eq("Segment")
+        & price_lists["Status"].eq("Active")
+        & price_lists["CustomerSegment"].isin(["Strategic", "Wholesale", "Design Trade", "Small Business"])
+    ].copy()
+    segment_lookup = active_segment_lists.groupby("CustomerSegment")["PriceListID"].apply(list).to_dict()
+    active_line_keys = set(
+        zip(
+            price_list_lines["PriceListID"].astype(int),
+            price_list_lines["ItemID"].astype(int),
+        )
+    )
+    for item in active_sellable_items.head(len(active_sellable_items)).itertuples(index=False):
+        for segment in ["Strategic", "Wholesale", "Design Trade", "Small Business"]:
+            matching_lists = [int(price_list_id) for price_list_id in segment_lookup.get(segment, [])]
+            if not matching_lists:
+                exceptions.append({
+                    "type": "missing_segment_price_list",
+                    "customer_segment": segment,
+                    "message": f"Missing active segment price list for {segment}.",
+                })
+                continue
+            if not any((int(price_list_id), int(item.ItemID)) in active_line_keys for price_list_id in matching_lists):
+                exceptions.append({
+                    "type": "missing_price_list_item_coverage",
+                    "item_id": int(item.ItemID),
+                    "customer_segment": segment,
+                    "message": f"Item {int(item.ItemID)} is missing active price-list coverage for segment {segment}.",
+                })
+        if len(exceptions) >= 50:
+            break
+
+    active_lists = price_lists[price_lists["Status"].eq("Active")].copy()
+    if not active_lists.empty:
+        active_lists["EffectiveStartTS"] = pd.to_datetime(active_lists["EffectiveStartDate"], errors="coerce")
+        active_lists["EffectiveEndTS"] = pd.to_datetime(active_lists["EffectiveEndDate"], errors="coerce")
+        grouped_lists = active_lists.groupby(["ScopeType", "CustomerID", "CustomerSegment"], dropna=False)
+        for _, group in grouped_lists:
+            sorted_group = group.sort_values(["EffectiveStartTS", "PriceListID"])
+            prior_end = None
+            prior_id = None
+            for row in sorted_group.itertuples(index=False):
+                if prior_end is not None and pd.notna(row.EffectiveStartTS) and pd.notna(prior_end) and pd.Timestamp(row.EffectiveStartTS) <= pd.Timestamp(prior_end):
+                    exceptions.append({
+                        "type": "overlapping_active_price_list",
+                        "price_list_id": int(row.PriceListID),
+                        "message": f"Active price list {int(row.PriceListID)} overlaps active price list {int(prior_id)} for the same pricing scope.",
+                    })
+                prior_end = row.EffectiveEndTS
+                prior_id = int(row.PriceListID)
+
+    line_break_duplicates = (
+        price_list_lines.groupby(["PriceListID", "ItemID", "MinimumQuantity"]).size().reset_index(name="RowCount")
+    )
+    duplicate_breaks = line_break_duplicates[line_break_duplicates["RowCount"].gt(1)]
+    for row in duplicate_breaks.head(10).itertuples(index=False):
+        exceptions.append({
+            "type": "overlapping_price_break",
+            "price_list_id": int(row.PriceListID),
+            "item_id": int(row.ItemID),
+            "message": f"Price list {int(row.PriceListID)} item {int(row.ItemID)} has overlapping minimum-quantity breaks.",
+        })
+
+    promotion_lookup = promotions.set_index("PromotionID").to_dict("index") if not promotions.empty else {}
+    order_lookup = sales_orders.set_index("SalesOrderID").to_dict("index") if not sales_orders.empty else {}
+    customer_lookup = customers.set_index("CustomerID").to_dict("index") if not customers.empty else {}
+    item_lookup = items.set_index("ItemID").to_dict("index") if not items.empty else {}
+    for line in sales_order_lines[sales_order_lines["PromotionID"].notna()].itertuples(index=False):
+        promotion = promotion_lookup.get(int(line.PromotionID))
+        order = order_lookup.get(int(line.SalesOrderID))
+        item = item_lookup.get(int(line.ItemID))
+        customer = customer_lookup.get(int(order["CustomerID"])) if order is not None else None
+        if promotion is None or order is None or item is None or customer is None:
+            continue
+        order_date = pd.Timestamp(order["OrderDate"])
+        scope_type = str(promotion["ScopeType"])
+        scope_valid = (
+            (scope_type == "Segment" and str(customer["CustomerSegment"]) == str(promotion.get("CustomerSegment")))
+            or (scope_type == "ItemGroup" and str(item["ItemGroup"]) == str(promotion.get("ItemGroup")))
+            or (scope_type == "Collection" and str(item.get("CollectionName") or "") == str(promotion.get("CollectionName") or ""))
+        )
+        if (
+            order_date < pd.Timestamp(promotion["EffectiveStartDate"])
+            or order_date > pd.Timestamp(promotion["EffectiveEndDate"])
+            or not scope_valid
+        ):
+            exceptions.append({
+                "type": "promotion_scope_or_date_mismatch",
+                "sales_order_line_id": int(line.SalesOrderLineID),
+                "message": f"Sales order line {int(line.SalesOrderLineID)} uses promotion {int(line.PromotionID)} outside its valid scope or effective dates.",
+            })
+
+    price_floor_lookup = price_list_lines.set_index("PriceListLineID")["MinimumUnitPrice"].astype(float).to_dict() if not price_list_lines.empty else {}
+    for line in sales_order_lines[sales_order_lines["PriceListLineID"].notna()].itertuples(index=False):
+        minimum_unit_price = float(price_floor_lookup.get(int(line.PriceListLineID), float(line.UnitPrice)))
+        if round(float(line.UnitPrice), 2) < round(minimum_unit_price, 2) and pd.isna(line.PriceOverrideApprovalID):
+            exceptions.append({
+                "type": "line_below_price_floor_without_approval",
+                "sales_order_line_id": int(line.SalesOrderLineID),
+                "message": f"Sales order line {int(line.SalesOrderLineID)} is below the price floor without an override approval.",
+            })
+
+    sales_line_lookup = sales_order_lines.set_index("SalesOrderLineID").to_dict("index") if not sales_order_lines.empty else {}
+    for line in sales_invoice_lines.itertuples(index=False):
+        sales_line = sales_line_lookup.get(int(line.SalesOrderLineID))
+        if sales_line is None:
+            continue
+        comparable_fields = ["BaseListPrice", "UnitPrice", "Discount", "PriceListLineID", "PromotionID", "PriceOverrideApprovalID", "PricingMethod"]
+        if any(
+            not values_match(
+                getattr(line, field_name),
+                sales_line.get(field_name),
+                numeric=field_name in {"BaseListPrice", "UnitPrice", "Discount"},
+            )
+            for field_name in comparable_fields
+        ):
+            exceptions.append({
+                "type": "invoice_pricing_lineage_mismatch",
+                "sales_invoice_line_id": int(line.SalesInvoiceLineID),
+                "message": f"Sales invoice line {int(line.SalesInvoiceLineID)} does not reconcile to its source order-line pricing lineage.",
+            })
+            if len(exceptions) >= 250:
+                break
+
+    if not credit_memo_lines.empty and not context.tables["SalesReturnLine"].empty:
+        return_line_lookup = context.tables["SalesReturnLine"].set_index("SalesReturnLineID").to_dict("index")
+        for credit_memo_line in credit_memo_lines.itertuples(index=False):
+            return_line = return_line_lookup.get(int(credit_memo_line.SalesReturnLineID))
+            if return_line is None:
+                continue
+            matches = sales_invoice_lines[sales_invoice_lines["ShipmentLineID"].astype(int).eq(int(return_line["ShipmentLineID"]))]
+            if matches.empty:
+                continue
+            original_line = matches.iloc[0]
+            comparable_fields = ["BaseListPrice", "UnitPrice", "Discount", "PriceListLineID", "PromotionID", "PriceOverrideApprovalID", "PricingMethod"]
+            if any(
+                not values_match(
+                    getattr(credit_memo_line, field_name),
+                    original_line[field_name],
+                    numeric=field_name in {"BaseListPrice", "UnitPrice", "Discount"},
+                )
+                for field_name in comparable_fields
+            ):
+                exceptions.append({
+                    "type": "credit_memo_pricing_lineage_mismatch",
+                    "credit_memo_line_id": int(credit_memo_line.CreditMemoLineID),
+                    "message": f"Credit memo line {int(credit_memo_line.CreditMemoLineID)} does not reconcile to the original billed pricing lineage.",
+                })
+                if len(exceptions) >= 250:
+                    break
+
+    service_order_lines = sales_order_lines.merge(
+        items[["ItemID", "ItemGroup"]],
+        on="ItemID",
+        how="left",
+    )
+    invalid_service_pricing = service_order_lines[
+        service_order_lines["ItemGroup"].eq("Services")
+        & (
+            service_order_lines["PromotionID"].notna()
+            | ~service_order_lines["PricingMethod"].eq("Base List")
+        )
+    ]
+    for row in invalid_service_pricing.head(10).itertuples(index=False):
+        exceptions.append({
+            "type": "service_pricing_method_conflict",
+            "sales_order_line_id": int(row.SalesOrderLineID),
+            "message": f"Service line {int(row.SalesOrderLineID)} should remain base-list priced without promotions.",
+        })
+
+    return {
+        "exception_count": len(exceptions),
+        "exceptions": exceptions,
+    }
+
+
 def validate_master_data_controls(context: GenerationContext) -> dict[str, Any]:
     employees = context.tables["Employee"].copy()
     items = context.tables["Item"].copy()
@@ -3447,6 +3706,62 @@ def validate_phase22(
     return phase22_results
 
 
+def validate_phase23(
+    context: GenerationContext,
+    scope: str = "full",
+    store: bool = True,
+) -> dict[str, Any]:
+    results = validate_phase22(context, scope=scope, store=False)
+    exceptions = list(results["exceptions"])
+
+    normalized_scope = str(scope).strip().lower()
+    pricing_controls: dict[str, Any] = {"exception_count": 0, "exceptions": []}
+    if normalized_scope in {"operational", "full"}:
+        pricing_controls = validate_pricing_controls(context)
+        if pricing_controls["exception_count"]:
+            exceptions.append(
+                f"Pricing control exceptions: {pricing_controls['exception_count']}."
+            )
+
+    phase23_results: dict[str, Any] = {
+        "row_counts": {table: int(len(df)) for table, df in context.tables.items()},
+        "exceptions": exceptions,
+        "validation_scope": normalized_scope,
+        "gl_balance": results["gl_balance"],
+        "trial_balance_difference": results["trial_balance_difference"],
+        "account_rollforward": results["account_rollforward"],
+        "o2c_controls": results["o2c_controls"],
+        "p2p_controls": results["p2p_controls"],
+        "journal_controls": results["journal_controls"],
+        "manufacturing_controls": results["manufacturing_controls"],
+        "payroll_controls": results["payroll_controls"],
+        "routing_controls": results["routing_controls"],
+        "capacity_controls": results["capacity_controls"],
+        "time_clock_controls": results["time_clock_controls"],
+        "master_data_controls": results["master_data_controls"],
+        "workforce_planning_controls": results["workforce_planning_controls"],
+        "planning_controls": results["planning_controls"],
+        "pricing_controls": pricing_controls,
+    }
+    if store:
+        context.validation_results["phase23"] = phase23_results
+        context.validation_results["phase22"] = phase23_results
+        context.validation_results["phase21"] = phase23_results
+        context.validation_results["phase20"] = phase23_results
+        context.validation_results["phase19"] = phase23_results
+        context.validation_results["phase18"] = phase23_results
+        context.validation_results["phase17"] = phase23_results
+        context.validation_results["phase16"] = phase23_results
+        context.validation_results["phase15_2"] = phase23_results
+        context.validation_results["phase15"] = phase23_results
+        context.validation_results["phase14"] = phase23_results
+        context.validation_results["phase13"] = phase23_results
+        context.validation_results["phase12"] = phase23_results
+        context.validation_results["phase11"] = phase23_results
+        context.validation_results["phase9"] = phase23_results
+    return phase23_results
+
+
 def validate_phase12(context: GenerationContext, store: bool = True) -> dict[str, Any]:
     results = validate_phase15(context, store=False)
     if store:
@@ -3469,7 +3784,7 @@ def validate_phase9(context: GenerationContext, store: bool = True) -> dict[str,
 
 
 def validate_phase8(context: GenerationContext, scope: str = "full") -> dict[str, Any]:
-    results = validate_phase22(context, scope=scope, store=False)
+    results = validate_phase23(context, scope=scope, store=False)
     exceptions = list(results["exceptions"])
 
     if context.settings.anomaly_mode != "none" and not context.anomaly_log:
@@ -3493,6 +3808,7 @@ def validate_phase8(context: GenerationContext, scope: str = "full") -> dict[str
         "master_data_controls": results.get("master_data_controls", {"exception_count": 0, "exceptions": []}),
         "workforce_planning_controls": results.get("workforce_planning_controls", {"exception_count": 0, "exceptions": []}),
         "planning_controls": results.get("planning_controls", {"exception_count": 0, "exceptions": []}),
+        "pricing_controls": results.get("pricing_controls", {"exception_count": 0, "exceptions": []}),
     }
     context.validation_results["phase8"] = phase8_results
     return phase8_results

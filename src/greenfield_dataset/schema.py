@@ -27,13 +27,34 @@ TABLE_COLUMNS = {
         "CustomerSince", "SalesRepEmployeeID", "CustomerSegment", "Industry", "Region",
         "IsActive",
     ],
+    "PriceList": [
+        "PriceListID", "PriceListName", "ScopeType", "CustomerID", "CustomerSegment",
+        "EffectiveStartDate", "EffectiveEndDate", "CurrencyCode", "Status",
+        "ApprovedByEmployeeID", "ApprovedDate",
+    ],
+    "PriceListLine": [
+        "PriceListLineID", "PriceListID", "ItemID", "MinimumQuantity", "UnitPrice",
+        "MinimumUnitPrice", "Status",
+    ],
+    "PromotionProgram": [
+        "PromotionID", "PromotionCode", "PromotionName", "ScopeType", "CustomerSegment",
+        "ItemGroup", "CollectionName", "DiscountPct", "EffectiveStartDate",
+        "EffectiveEndDate", "Status", "ApprovedByEmployeeID", "ApprovedDate",
+    ],
+    "PriceOverrideApproval": [
+        "PriceOverrideApprovalID", "SalesOrderLineID", "CustomerID", "ItemID",
+        "RequestedByEmployeeID", "ApprovedByEmployeeID", "RequestDate", "ApprovedDate",
+        "ReferenceUnitPrice", "RequestedUnitPrice", "ApprovedUnitPrice", "ReasonCode",
+        "Status",
+    ],
     "SalesOrder": [
         "SalesOrderID", "OrderNumber", "OrderDate", "CustomerID", "RequestedDeliveryDate",
         "Status", "SalesRepEmployeeID", "CostCenterID", "OrderTotal", "Notes",
     ],
     "SalesOrderLine": [
         "SalesOrderLineID", "SalesOrderID", "LineNumber", "ItemID", "Quantity",
-        "UnitPrice", "Discount", "LineTotal",
+        "BaseListPrice", "UnitPrice", "Discount", "LineTotal", "PriceListLineID",
+        "PromotionID", "PriceOverrideApprovalID", "PricingMethod",
     ],
     "Shipment": [
         "ShipmentID", "ShipmentNumber", "SalesOrderID", "ShipmentDate", "WarehouseID",
@@ -49,7 +70,9 @@ TABLE_COLUMNS = {
     ],
     "SalesInvoiceLine": [
         "SalesInvoiceLineID", "SalesInvoiceID", "SalesOrderLineID", "ShipmentLineID",
-        "LineNumber", "ItemID", "Quantity", "UnitPrice", "Discount", "LineTotal",
+        "LineNumber", "ItemID", "Quantity", "BaseListPrice", "UnitPrice", "Discount",
+        "LineTotal", "PriceListLineID", "PromotionID", "PriceOverrideApprovalID",
+        "PricingMethod",
     ],
     "CashReceipt": [
         "CashReceiptID", "ReceiptNumber", "ReceiptDate", "CustomerID", "SalesInvoiceID",
@@ -74,7 +97,8 @@ TABLE_COLUMNS = {
     ],
     "CreditMemoLine": [
         "CreditMemoLineID", "CreditMemoID", "SalesReturnLineID", "LineNumber", "ItemID",
-        "Quantity", "UnitPrice", "LineTotal",
+        "Quantity", "BaseListPrice", "UnitPrice", "Discount", "LineTotal",
+        "PriceListLineID", "PromotionID", "PriceOverrideApprovalID", "PricingMethod",
     ],
     "CustomerRefund": [
         "CustomerRefundID", "RefundNumber", "RefundDate", "CustomerID", "CreditMemoID",

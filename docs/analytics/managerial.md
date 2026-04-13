@@ -11,7 +11,7 @@ sidebar_label: Managerial Analytics
 | Topic | Main tables |
 |---|---|
 | Budget vs actual | `Budget`, `CostCenter`, `Account`, `GLEntry`, `JournalEntry` |
-| Product portfolio and sales mix | `Item`, `SalesInvoiceLine`, `CreditMemoLine`, `ShipmentLine`, `SalesOrderLine`, `Customer` |
+| Product portfolio and sales mix | `Item`, `SalesInvoiceLine`, `CreditMemoLine`, `ShipmentLine`, `SalesOrderLine`, `Customer`, `PriceList`, `PriceListLine`, `PromotionProgram`, `PriceOverrideApproval` |
 | Inventory and purchasing | `GoodsReceiptLine`, `ShipmentLine`, `SalesReturnLine`, `ProductionCompletionLine`, `PurchaseOrderLine`, `Supplier`, `Warehouse`, `Item` |
 | BOM, routing, and work-center planning | `BillOfMaterial`, `BillOfMaterialLine`, `Routing`, `RoutingOperation`, `WorkCenter`, `WorkCenterCalendar`, `Item` |
 | Work-order throughput and variance | `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `MaterialIssueLine`, `ProductionCompletionLine`, `WorkOrderClose` |
@@ -67,13 +67,18 @@ sidebar_label: Managerial Analytics
 | Expedite pressure by item family and month | [44_expedite_pressure_by_item_family_and_month.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/44_expedite_pressure_by_item_family_and_month.sql) |
 | Forecast error and bias by collection and style family | [45_forecast_error_and_bias_by_collection_style_family.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/45_forecast_error_and_bias_by_collection_style_family.sql) |
 | Supply-plan driver mix by collection and supply mode | [46_supply_plan_driver_mix_by_collection_and_supply_mode.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/46_supply_plan_driver_mix_by_collection_and_supply_mode.sql) |
+| Sales-rep override rate and discount dispersion | [47_sales_rep_override_rate_and_discount_dispersion.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/47_sales_rep_override_rate_and_discount_dispersion.sql) |
+| Collection revenue and margin before and after promotions | [48_collection_revenue_margin_before_after_promotions.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/48_collection_revenue_margin_before_after_promotions.sql) |
+| Customer-specific pricing concentration and dependency | [49_customer_specific_pricing_concentration_and_dependency.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/49_customer_specific_pricing_concentration_and_dependency.sql) |
+| Monthly price-floor pressure and override concentration | [50_monthly_price_floor_pressure_and_override_concentration.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/managerial/50_monthly_price_floor_pressure_and_override_concentration.sql) |
 
-## Phase 19 to Phase 22 Pairings
+## Phase 19 to Phase 23 Pairings
 
 - Use [Product Portfolio Profitability Case](cases/product-portfolio-profitability-case.md) when you want a portfolio, lifecycle, and contribution-margin sequence.
 - Use [Workforce Cost and Org-Control Case](cases/workforce-cost-and-org-control-case.md) when you want workforce structure, labor mix, and approval concentration in one lab.
 - Use [Workforce Coverage and Attendance Case](cases/workforce-coverage-and-attendance-case.md) when you want planned staffing, approved time, absences, and overtime in one operational lab.
 - Use [Demand Planning and Replenishment Case](cases/demand-planning-and-replenishment-case.md) when you want forecast, replenishment, component-demand, and rough-cut capacity analysis in one sequence.
+- Use [Pricing and Margin Governance Case](cases/pricing-and-margin-governance-case.md) when you want commercial policy, promotion effect, override concentration, and collection-level margin analysis in one case.
 - Use [Product Portfolio Case](cases/product-portfolio-and-lifecycle-case.md) when you want a lighter Phase 18-style entry point before moving into the fuller Phase 19 pack.
 
 ## Interpretation Notes
@@ -85,5 +90,6 @@ sidebar_label: Managerial Analytics
 - Work location and cost center answer different questions. Use both when students compare workforce structure to payroll or labor usage.
 - Workforce-planning analysis is stronger now that rostered hours, approved worked hours, absences, raw punches, and overtime approvals can be compared directly.
 - Phase 22 adds a weekly planning layer. Students can now compare forecast, policy, recommendation, and rough-cut capacity pressure before execution starts.
+- Phase 23 adds a commercial-pricing layer. Students can now compare list price, resolved price-list pricing, promotions, overrides, and net realized margin without introducing a separate quote system.
 - The current manufacturing model is still a foundation. It supports operations, labor, and contribution-margin analysis without switching inventory valuation to actual cost.
 - Demand-planning analysis is most useful when students connect `DemandForecast`, `InventoryPolicy`, `SupplyPlanRecommendation`, `MaterialRequirementPlan`, and `RoughCutCapacityPlan` instead of reading each table in isolation.

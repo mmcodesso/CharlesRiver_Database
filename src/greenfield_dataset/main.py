@@ -9,7 +9,7 @@ from typing import Any, Iterable, Iterator
 
 import pandas as pd
 
-from greenfield_dataset.anomalies import inject_anomalies
+from greenfield_dataset.anomalies import inject_anomalies, invalidate_all_caches
 from greenfield_dataset.budgets import generate_budgets, generate_opening_balances
 from greenfield_dataset.exporters import (
     export_csv_zip,
@@ -35,7 +35,6 @@ from greenfield_dataset.manufacturing import (
 )
 from greenfield_dataset.master_data import (
     backfill_cost_center_managers,
-    clear_master_data_caches,
     generate_cost_centers,
     generate_customers,
     generate_employees,
@@ -45,6 +44,8 @@ from greenfield_dataset.master_data import (
     load_accounts,
 )
 from greenfield_dataset.o2c import (
+    generate_price_lists,
+    generate_promotions,
     generate_month_cash_receipts,
     generate_month_customer_refunds,
     generate_month_o2c,
@@ -100,6 +101,7 @@ from greenfield_dataset.validations import (
     validate_phase20,
     validate_phase21,
     validate_phase22,
+    validate_phase23,
 )
 
 
@@ -209,6 +211,8 @@ def _generate_phase2_master_data_and_planning(
         ("Generate phase 2 routings and work centers", generate_work_centers_and_routings),
         ("Generate phase 2 work-center calendars", generate_work_center_calendars),
         ("Generate phase 2 customers", generate_customers),
+        ("Generate phase 2 price lists", generate_price_lists),
+        ("Generate phase 2 promotions", generate_promotions),
         ("Generate phase 2 suppliers", generate_suppliers),
         ("Generate phase 2 opening balances", generate_opening_balances),
         ("Generate phase 2 budgets", generate_budgets),
@@ -332,7 +336,7 @@ def build_phase7(config_path: str | Path = "config/settings.yaml") -> Generation
 
 
 def build_phase8(config_path: str | Path = "config/settings.yaml") -> GenerationContext:
-    context = build_phase22(config_path)
+    context = build_phase23(config_path)
     inject_anomalies(context)
     validate_phase8(context)
     if context.settings.export_sqlite:
@@ -683,6 +687,28 @@ def build_phase22(
     post_all_transactions(context)
     generate_year_end_close_journals(context)
     validate_phase22(context, scope=validation_scope)
+    export_validation_report(context)
+    return context
+
+
+def build_phase23(
+    config_path: str | Path = "config/settings.yaml",
+    validation_scope: str = "full",
+) -> GenerationContext:
+    context = build_phase2(config_path)
+    generate_price_lists(context)
+    generate_promotions(context)
+    generate_payroll_periods(context)
+    generate_shift_definitions_and_assignments(context)
+    generate_inventory_policies(context)
+    generate_demand_forecasts(context)
+    generate_all_months(context)
+    generate_recurring_manual_journals(context)
+    generate_accrued_service_settlements(context)
+    generate_accrual_adjustment_journals(context)
+    post_all_transactions(context)
+    generate_year_end_close_journals(context)
+    validate_phase23(context, scope=validation_scope)
     export_validation_report(context)
     return context
 
@@ -1045,11 +1071,11 @@ def build_full_dataset(
         log_table_counts(context, ("JournalEntry", "GLEntry"), "year-end close")
 
     with logged_step("Validate clean final dataset"):
-        log_validation_results("phase22", validate_phase22(context, scope=validation_scope))
+        log_validation_results("phase23", validate_phase23(context, scope=validation_scope))
 
     with logged_step("Inject configured anomalies"):
         inject_anomalies(context)
-        clear_master_data_caches(context)
+        invalidate_all_caches(context)
         journal_anomaly_count = sum(
             1
             for anomaly in context.anomaly_log
@@ -1096,7 +1122,7 @@ def build_full_dataset(
 
 
 def print_summary(context: GenerationContext) -> None:
-    row_counts = context.validation_results["phase22"]["row_counts"]
+    row_counts = context.validation_results["phase23"]["row_counts"]
     print("Full dataset generated.")
     print(f"Fiscal range: {context.settings.fiscal_year_start} to {context.settings.fiscal_year_end}")
     print(f"Accounts: {row_counts['Account']}")
@@ -1119,6 +1145,10 @@ def print_summary(context: GenerationContext) -> None:
     print(f"Material requirement plan rows: {row_counts['MaterialRequirementPlan']}")
     print(f"Rough-cut capacity rows: {row_counts['RoughCutCapacityPlan']}")
     print(f"Customers: {row_counts['Customer']}")
+    print(f"Price lists: {row_counts['PriceList']}")
+    print(f"Price list lines: {row_counts['PriceListLine']}")
+    print(f"Promotion programs: {row_counts['PromotionProgram']}")
+    print(f"Price override approvals: {row_counts['PriceOverrideApproval']}")
     print(f"Suppliers: {row_counts['Supplier']}")
     print(f"Journal entries: {row_counts['JournalEntry']}")
     print(f"Budget rows: {row_counts['Budget']}")
@@ -1155,7 +1185,7 @@ def print_summary(context: GenerationContext) -> None:
     print(f"Payroll payments: {row_counts['PayrollPayment']}")
     print(f"Payroll liability remittances: {row_counts['PayrollLiabilityRemittance']}")
     print(f"GL entries: {row_counts['GLEntry']}")
-    print(f"GL balance exceptions: {context.validation_results['phase22']['gl_balance']['exception_count']}")
+    print(f"GL balance exceptions: {context.validation_results['phase23']['gl_balance']['exception_count']}")
     print(f"Anomalies logged: {len(context.anomaly_log)}")
     print(f"SQLite export: {context.settings.sqlite_path}")
     print(f"Excel export: {context.settings.excel_path}")

@@ -35,18 +35,20 @@ Read the diagram as promise, fulfillment, billing, cash, and settlement. Orders 
 
 ## Step-by-Step Walkthrough
 
-1. Sales records the customer order. In the data, that promise appears in `SalesOrder` and `SalesOrderLine`.
-2. Warehouse staff fulfill what is available. If inventory is short, some quantity stays open or backordered until stock is available.
-3. When goods leave the warehouse, the shipment is recorded in `Shipment` and `ShipmentLine`. This is the first point where the physical movement of inventory is visible.
-4. Accounting bills from what shipped, not only from what was ordered. The billing records appear in `SalesInvoice` and `SalesInvoiceLine`, and each billed line points back to the exact `ShipmentLineID`.
-5. Treasury records the incoming customer payment in `CashReceipt`.
-6. Accounting applies that payment against one or more open invoices through `CashReceiptApplication`.
-7. Students can then move into `GLEntry` to analyze revenue recognition, receivables, deposits or unapplied cash, and collection timing.
+1. Before the order is priced, Greenfield resolves the commercial rules for that customer and item. Segment or customer price lists provide the base commercial price, one promotion may apply, and rare below-floor exceptions require an explicit override approval.
+2. Sales records the customer order. In the data, that promise appears in `SalesOrder` and `SalesOrderLine`.
+3. Warehouse staff fulfill what is available. If inventory is short, some quantity stays open or backordered until stock is available.
+4. When goods leave the warehouse, the shipment is recorded in `Shipment` and `ShipmentLine`. This is the first point where the physical movement of inventory is visible.
+5. Accounting bills from what shipped, not only from what was ordered. The billing records appear in `SalesInvoice` and `SalesInvoiceLine`, and each billed line points back to the exact `ShipmentLineID`.
+6. Treasury records the incoming customer payment in `CashReceipt`.
+7. Accounting applies that payment against one or more open invoices through `CashReceiptApplication`.
+8. Students can then move into `GLEntry` to analyze revenue recognition, receivables, deposits or unapplied cash, and collection timing.
 
 ## Main Tables in This Process
 
 | Business step | Main tables | Why they matter |
 |---|---|---|
+| Commercial pricing | `PriceList`, `PriceListLine`, `PromotionProgram`, `PriceOverrideApproval` | Show how line-level selling price, promotion discount, and override approvals were determined |
 | Order capture | `SalesOrder`, `SalesOrderLine` | Show customer demand and requested items |
 | Fulfillment | `Shipment`, `ShipmentLine` | Show what actually shipped and when |
 | Billing | `SalesInvoice`, `SalesInvoiceLine` | Show what was billed from the shipped lines |
@@ -73,6 +75,7 @@ Read the diagram as promise, fulfillment, billing, cash, and settlement. Orders 
 ## What to Notice in the Data
 
 - `SalesInvoiceLine.ShipmentLineID` is the core shipment-to-invoice traceability field.
+- `SalesOrderLine` now carries explicit pricing lineage through `BaseListPrice`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, and `PricingMethod`.
 - `CashReceiptApplication` is the authoritative settlement table in O2C.
 - `CashReceipt.SalesInvoiceID` is compatibility metadata only and should not be treated as the main settlement link.
 - Some receipts remain temporarily unapplied, which supports customer-deposit and cash-application analysis.

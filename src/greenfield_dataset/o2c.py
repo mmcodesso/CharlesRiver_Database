@@ -6,7 +6,12 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from greenfield_dataset.master_data import employee_active_mask, employee_ids_for_cost_center_as_of, eligible_item_mask
+from greenfield_dataset.master_data import (
+    approver_employee_id,
+    employee_active_mask,
+    employee_ids_for_cost_center_as_of,
+    eligible_item_mask,
+)
 from greenfield_dataset.planning import monthly_forecast_targets
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
@@ -56,6 +61,26 @@ FULL_RETURN_REASON_PROBABILITY = 0.20
 
 CARRIERS = ["Greenfield Fleet", "FedEx Freight", "UPS Freight", "DHL Supply Chain"]
 PAYMENT_METHODS = ["ACH", "Wire Transfer", "Check", "Credit Card"]
+SEGMENT_PRICE_DISCOUNTS = {
+    "Strategic": 0.12,
+    "Wholesale": 0.10,
+    "Design Trade": 0.06,
+    "Small Business": 0.03,
+}
+SEGMENT_MIN_PRICE_FLOORS = {
+    "Strategic": 0.82,
+    "Wholesale": 0.84,
+    "Design Trade": 0.88,
+    "Small Business": 0.92,
+}
+CUSTOMER_PRICE_LIST_SHARE = 0.35
+PRICE_BREAK_ITEM_GROUPS = {"Furniture", "Lighting", "Textiles", "Accessories"}
+PROMOTION_MONTH_WINDOWS = [
+    ((3, 4), 0.08),
+    ((9, 10), 0.10),
+    ((11, 11), 0.12),
+]
+OVERRIDE_REASON_CODES = ["Strategic Renewal", "Competitive Match", "Project Package", "Service Recovery"]
 
 
 def append_rows(context: GenerationContext, table_name: str, rows: list[dict]) -> None:
@@ -97,6 +122,18 @@ def invalidate_o2c_caches(context: GenerationContext, table_name: str) -> None:
             "_returned_invoice_ids_cache",
             "_credit_memo_allocation_map_cache",
             "_invoice_settled_amounts_cache",
+        ],
+        "PriceList": [
+            "_price_list_lookup_cache",
+            "_resolved_price_list_line_cache",
+        ],
+        "PriceListLine": [
+            "_price_list_lookup_cache",
+            "_resolved_price_list_line_cache",
+        ],
+        "PromotionProgram": [
+            "_promotion_lookup_cache",
+            "_resolved_promotion_cache",
         ],
     }
     drop_context_attributes(context, cache_map.get(table_name, []))
@@ -223,6 +260,444 @@ def active_sellable_items(context: GenerationContext, event_date: pd.Timestamp |
     if sellable.empty:
         raise ValueError("Generate active sellable items before O2C transactions.")
     return sellable
+
+
+def pricing_sellable_items(context: GenerationContext) -> pd.DataFrame:
+    items = context.tables["Item"]
+    sellable = items[
+        items["IsActive"].astype(int).eq(1)
+        & items["ListPrice"].notna()
+        & items["RevenueAccountID"].notna()
+        & items["ItemGroup"].ne("Services")
+    ].copy()
+    if sellable.empty:
+        raise ValueError("Generate active sellable items before pricing masters.")
+    return sellable.sort_values("ItemID").reset_index(drop=True)
+
+
+def sales_pricing_approver_id(context: GenerationContext, event_date: pd.Timestamp | str) -> int:
+    return approver_employee_id(
+        context,
+        event_date,
+        preferred_titles=["Sales Manager", "Chief Financial Officer"],
+        fallback_cost_center_name="Sales",
+    )
+
+
+def customer_specific_price_list_customer_ids(context: GenerationContext) -> set[int]:
+    cached = getattr(context, "_customer_specific_price_list_customer_ids_cache", None)
+    if cached is not None:
+        return cached
+
+    customers = context.tables["Customer"]
+    strategic = customers[
+        customers["IsActive"].astype(int).eq(1)
+        & customers["CustomerSegment"].eq("Strategic")
+    ].sort_values("CustomerID")
+    if strategic.empty:
+        cached = set()
+    else:
+        target_count = max(1, int(round(len(strategic) * CUSTOMER_PRICE_LIST_SHARE)))
+        cached = set(strategic.head(target_count)["CustomerID"].astype(int).tolist())
+    setattr(context, "_customer_specific_price_list_customer_ids_cache", cached)
+    return cached
+
+
+def generate_price_lists(context: GenerationContext) -> None:
+    if not context.tables["PriceList"].empty or not context.tables["PriceListLine"].empty:
+        return
+
+    start_date = pd.Timestamp(context.settings.fiscal_year_start)
+    end_date = pd.Timestamp(context.settings.fiscal_year_end)
+    approved_by_employee_id = sales_pricing_approver_id(context, start_date)
+    items = pricing_sellable_items(context)
+    customers = context.tables["Customer"].sort_values("CustomerID").copy()
+
+    header_rows: list[dict[str, Any]] = []
+    line_rows: list[dict[str, Any]] = []
+
+    for segment in ["Strategic", "Wholesale", "Design Trade", "Small Business"]:
+        price_list_id = next_id(context, "PriceList")
+        header_rows.append({
+            "PriceListID": price_list_id,
+            "PriceListName": f"{segment} Segment Price List",
+            "ScopeType": "Segment",
+            "CustomerID": None,
+            "CustomerSegment": segment,
+            "EffectiveStartDate": start_date.strftime("%Y-%m-%d"),
+            "EffectiveEndDate": end_date.strftime("%Y-%m-%d"),
+            "CurrencyCode": "USD",
+            "Status": "Active",
+            "ApprovedByEmployeeID": approved_by_employee_id,
+            "ApprovedDate": start_date.strftime("%Y-%m-%d"),
+        })
+
+    customer_specific_ids = customer_specific_price_list_customer_ids(context)
+    for customer in customers.itertuples(index=False):
+        customer_id = int(customer.CustomerID)
+        if customer_id not in customer_specific_ids:
+            continue
+        price_list_id = next_id(context, "PriceList")
+        header_rows.append({
+            "PriceListID": price_list_id,
+            "PriceListName": f"Customer {customer_id:04d} Strategic Price List",
+            "ScopeType": "Customer",
+            "CustomerID": customer_id,
+            "CustomerSegment": str(customer.CustomerSegment),
+            "EffectiveStartDate": start_date.strftime("%Y-%m-%d"),
+            "EffectiveEndDate": end_date.strftime("%Y-%m-%d"),
+            "CurrencyCode": "USD",
+            "Status": "Active",
+            "ApprovedByEmployeeID": approved_by_employee_id,
+            "ApprovedDate": start_date.strftime("%Y-%m-%d"),
+        })
+
+    append_rows(context, "PriceList", header_rows)
+
+    for price_list in context.tables["PriceList"].itertuples(index=False):
+        customer_discount_extra = 0.0
+        base_segment = str(price_list.CustomerSegment) if pd.notna(price_list.CustomerSegment) else "Small Business"
+        if str(price_list.ScopeType) == "Customer" and pd.notna(price_list.CustomerID):
+            customer_discount_extra = 0.02 + ((int(price_list.CustomerID) % 3) * 0.01)
+        base_discount = float(SEGMENT_PRICE_DISCOUNTS.get(base_segment, 0.03)) + customer_discount_extra
+        floor_ratio = float(SEGMENT_MIN_PRICE_FLOORS.get(base_segment, 0.92))
+
+        for item in items.itertuples(index=False):
+            list_price = float(item.ListPrice)
+            unit_price = money(max(list_price * floor_ratio, list_price * (1 - base_discount)))
+            minimum_unit_price = money(list_price * floor_ratio)
+            line_rows.append({
+                "PriceListLineID": next_id(context, "PriceListLine"),
+                "PriceListID": int(price_list.PriceListID),
+                "ItemID": int(item.ItemID),
+                "MinimumQuantity": 1,
+                "UnitPrice": unit_price,
+                "MinimumUnitPrice": minimum_unit_price,
+                "Status": "Active",
+            })
+
+            if (
+                str(price_list.ScopeType) == "Segment"
+                and base_segment in {"Strategic", "Wholesale"}
+                and str(item.ItemGroup) in PRICE_BREAK_ITEM_GROUPS
+                and int(item.ItemID) % (5 if base_segment == "Strategic" else 7) == 0
+            ):
+                break_quantity = 5 if base_segment == "Strategic" else 10
+                break_unit_price = money(max(minimum_unit_price, unit_price * 0.97))
+                line_rows.append({
+                    "PriceListLineID": next_id(context, "PriceListLine"),
+                    "PriceListID": int(price_list.PriceListID),
+                    "ItemID": int(item.ItemID),
+                    "MinimumQuantity": break_quantity,
+                    "UnitPrice": break_unit_price,
+                    "MinimumUnitPrice": minimum_unit_price,
+                    "Status": "Active",
+                })
+
+    append_rows(context, "PriceListLine", line_rows)
+
+
+def generate_promotions(context: GenerationContext) -> None:
+    if not context.tables["PromotionProgram"].empty:
+        return
+
+    items = pricing_sellable_items(context)
+    finished_goods = items[items["ItemGroup"].isin(["Furniture", "Lighting", "Textiles", "Accessories"])].copy()
+    if finished_goods.empty:
+        return
+
+    seasonal = finished_goods[finished_goods["LifecycleStatus"].eq("Seasonal")].copy()
+    approved_by_employee_id = sales_pricing_approver_id(context, context.settings.fiscal_year_start)
+    rows: list[dict[str, Any]] = []
+    collections = sorted(collection for collection in seasonal["CollectionName"].dropna().astype(str).unique().tolist() if collection)
+    item_groups = ["Textiles", "Accessories", "Lighting", "Furniture"]
+    segments = ["Design Trade", "Wholesale", "Strategic", "Small Business"]
+
+    fiscal_start_year = pd.Timestamp(context.settings.fiscal_year_start).year
+    fiscal_end_year = pd.Timestamp(context.settings.fiscal_year_end).year
+    promotion_sequence = 1
+    for year in range(int(fiscal_start_year), int(fiscal_end_year) + 1):
+        for window_index, ((start_month, end_month), discount_pct) in enumerate(PROMOTION_MONTH_WINDOWS):
+            scope_type = ["Collection", "ItemGroup", "Segment"][window_index % 3]
+            start_date = pd.Timestamp(year=year, month=start_month, day=1)
+            end_date = pd.Timestamp(year=year, month=end_month, day=1) + pd.offsets.MonthEnd(1)
+            row = {
+                "PromotionID": next_id(context, "PromotionProgram"),
+                "PromotionCode": f"PROMO-{year}-{promotion_sequence:03d}",
+                "PromotionName": "",
+                "ScopeType": scope_type,
+                "CustomerSegment": None,
+                "ItemGroup": None,
+                "CollectionName": None,
+                "DiscountPct": qty(discount_pct, "0.0001"),
+                "EffectiveStartDate": start_date.strftime("%Y-%m-%d"),
+                "EffectiveEndDate": end_date.strftime("%Y-%m-%d"),
+                "Status": "Expired" if end_date < pd.Timestamp(context.settings.fiscal_year_end) else "Active",
+                "ApprovedByEmployeeID": approved_by_employee_id,
+                "ApprovedDate": start_date.strftime("%Y-%m-%d"),
+            }
+            if scope_type == "Collection" and collections:
+                collection_name = collections[(promotion_sequence - 1) % len(collections)]
+                row["CollectionName"] = collection_name
+                row["PromotionName"] = f"{collection_name} Collection Promotion"
+            elif scope_type == "ItemGroup":
+                item_group = item_groups[(promotion_sequence - 1) % len(item_groups)]
+                row["ItemGroup"] = item_group
+                row["PromotionName"] = f"{item_group} Seasonal Promotion"
+            else:
+                customer_segment = segments[(promotion_sequence - 1) % len(segments)]
+                row["CustomerSegment"] = customer_segment
+                row["PromotionName"] = f"{customer_segment} Customer Promotion"
+            rows.append(row)
+            promotion_sequence += 1
+
+    append_rows(context, "PromotionProgram", rows)
+
+
+def price_list_lookup(context: GenerationContext) -> dict[str, Any]:
+    cached = getattr(context, "_price_list_lookup_cache", None)
+    if cached is not None:
+        return cached
+
+    headers = context.tables["PriceList"]
+    lines = context.tables["PriceListLine"]
+    header_by_id: dict[int, dict[str, Any]] = {}
+    customer_price_lists: dict[int, list[int]] = defaultdict(list)
+    segment_price_lists: dict[str, list[int]] = defaultdict(list)
+
+    for row in headers.itertuples(index=False):
+        price_list_id = int(row.PriceListID)
+        header_by_id[price_list_id] = {
+            "PriceListID": price_list_id,
+            "ScopeType": str(row.ScopeType),
+            "CustomerID": None if pd.isna(row.CustomerID) else int(row.CustomerID),
+            "CustomerSegment": None if pd.isna(row.CustomerSegment) else str(row.CustomerSegment),
+            "EffectiveStartDate": pd.Timestamp(row.EffectiveStartDate),
+            "EffectiveEndDate": pd.Timestamp(row.EffectiveEndDate),
+            "Status": str(row.Status),
+        }
+        if str(row.ScopeType) == "Customer" and pd.notna(row.CustomerID):
+            customer_price_lists[int(row.CustomerID)].append(price_list_id)
+        elif str(row.ScopeType) == "Segment" and pd.notna(row.CustomerSegment):
+            segment_price_lists[str(row.CustomerSegment)].append(price_list_id)
+
+    lines_by_price_list_item: dict[tuple[int, int], tuple[dict[str, Any], ...]] = {}
+    if not lines.empty:
+        grouped = lines.groupby(["PriceListID", "ItemID"], dropna=False)
+        for (price_list_id, item_id), rows in grouped:
+            sorted_rows = rows.sort_values(["MinimumQuantity", "PriceListLineID"], ascending=[False, True])
+            lines_by_price_list_item[(int(price_list_id), int(item_id))] = tuple(
+                {
+                    "PriceListLineID": int(line.PriceListLineID),
+                    "PriceListID": int(line.PriceListID),
+                    "ItemID": int(line.ItemID),
+                    "MinimumQuantity": float(line.MinimumQuantity),
+                    "UnitPrice": float(line.UnitPrice),
+                    "MinimumUnitPrice": float(line.MinimumUnitPrice),
+                    "Status": str(line.Status),
+                }
+                for line in sorted_rows.itertuples(index=False)
+            )
+
+    cached = {
+        "header_by_id": header_by_id,
+        "customer_price_lists": {key: tuple(value) for key, value in customer_price_lists.items()},
+        "segment_price_lists": {key: tuple(value) for key, value in segment_price_lists.items()},
+        "lines_by_price_list_item": lines_by_price_list_item,
+    }
+    setattr(context, "_price_list_lookup_cache", cached)
+    return cached
+
+
+def resolve_price_list_line(
+    context: GenerationContext,
+    customer_id: int,
+    customer_segment: str,
+    item_id: int,
+    quantity: float,
+    event_date: pd.Timestamp | str,
+) -> dict[str, Any] | None:
+    date_key = pd.Timestamp(event_date).normalize().strftime("%Y-%m-%d")
+    cache = getattr(context, "_resolved_price_list_line_cache", None)
+    if cache is None:
+        cache = {}
+        setattr(context, "_resolved_price_list_line_cache", cache)
+    cache_key = (date_key, int(customer_id), str(customer_segment), int(item_id), round(float(quantity), 2))
+    if cache_key in cache:
+        return cache[cache_key]
+
+    lookup = price_list_lookup(context)
+    event_timestamp = pd.Timestamp(event_date)
+    candidate_ids = list(lookup["customer_price_lists"].get(int(customer_id), ()))
+    if not candidate_ids:
+        candidate_ids = list(lookup["segment_price_lists"].get(str(customer_segment), ()))
+
+    resolved: dict[str, Any] | None = None
+    for price_list_id in candidate_ids:
+        header = lookup["header_by_id"].get(int(price_list_id))
+        if header is None:
+            continue
+        if event_timestamp < header["EffectiveStartDate"] or event_timestamp > header["EffectiveEndDate"]:
+            continue
+        lines = lookup["lines_by_price_list_item"].get((int(price_list_id), int(item_id)), ())
+        for line in lines:
+            if float(quantity) >= float(line["MinimumQuantity"]):
+                resolved = {
+                    **line,
+                    "ScopeType": header["ScopeType"],
+                    "CustomerID": header["CustomerID"],
+                    "CustomerSegment": header["CustomerSegment"],
+                    "PricingMethod": "Customer Price List" if header["ScopeType"] == "Customer" else "Segment Price List",
+                }
+                break
+        if resolved is not None:
+            break
+
+    cache[cache_key] = resolved
+    return resolved
+
+
+def promotion_lookup(context: GenerationContext) -> tuple[dict[str, Any], ...]:
+    cached = getattr(context, "_promotion_lookup_cache", None)
+    if cached is not None:
+        return cached
+
+    promotions = context.tables["PromotionProgram"].sort_values(["EffectiveStartDate", "PromotionID"])
+    cached = tuple(
+        {
+            "PromotionID": int(row.PromotionID),
+            "ScopeType": str(row.ScopeType),
+            "CustomerSegment": None if pd.isna(row.CustomerSegment) else str(row.CustomerSegment),
+            "ItemGroup": None if pd.isna(row.ItemGroup) else str(row.ItemGroup),
+            "CollectionName": None if pd.isna(row.CollectionName) else str(row.CollectionName),
+            "DiscountPct": float(row.DiscountPct),
+            "EffectiveStartDate": pd.Timestamp(row.EffectiveStartDate),
+            "EffectiveEndDate": pd.Timestamp(row.EffectiveEndDate),
+            "Status": str(row.Status),
+        }
+        for row in promotions.itertuples(index=False)
+    )
+    setattr(context, "_promotion_lookup_cache", cached)
+    return cached
+
+
+def resolve_promotion(
+    context: GenerationContext,
+    customer_segment: str,
+    item_group: str,
+    collection_name: str | None,
+    event_date: pd.Timestamp | str,
+) -> dict[str, Any] | None:
+    date_key = pd.Timestamp(event_date).normalize().strftime("%Y-%m-%d")
+    cache = getattr(context, "_resolved_promotion_cache", None)
+    if cache is None:
+        cache = {}
+        setattr(context, "_resolved_promotion_cache", cache)
+    cache_key = (date_key, str(customer_segment), str(item_group), str(collection_name or ""))
+    if cache_key in cache:
+        return cache[cache_key]
+
+    event_timestamp = pd.Timestamp(event_date)
+    resolved = None
+    for promotion in promotion_lookup(context):
+        if event_timestamp < promotion["EffectiveStartDate"] or event_timestamp > promotion["EffectiveEndDate"]:
+            continue
+        scope_type = str(promotion["ScopeType"])
+        if scope_type == "Segment" and promotion["CustomerSegment"] == str(customer_segment):
+            resolved = promotion
+            break
+        if scope_type == "ItemGroup" and promotion["ItemGroup"] == str(item_group):
+            resolved = promotion
+            break
+        if scope_type == "Collection" and promotion["CollectionName"] == str(collection_name or ""):
+            resolved = promotion
+            break
+
+    cache[cache_key] = resolved
+    return resolved
+
+
+def resolve_sales_line_pricing(
+    context: GenerationContext,
+    customer: pd.Series,
+    item: pd.Series,
+    quantity: float,
+    order_date: pd.Timestamp,
+    sales_order_line_id: int,
+    sales_rep_id: int,
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    price_list_line = resolve_price_list_line(
+        context,
+        int(customer["CustomerID"]),
+        str(customer["CustomerSegment"]),
+        int(item["ItemID"]),
+        float(quantity),
+        order_date,
+    )
+    base_list_price = money(float(item["ListPrice"]))
+    unit_price = base_list_price
+    minimum_unit_price = base_list_price
+    price_list_line_id = None
+    pricing_method = "Base List"
+    if price_list_line is not None:
+        unit_price = money(float(price_list_line["UnitPrice"]))
+        minimum_unit_price = money(float(price_list_line["MinimumUnitPrice"]))
+        price_list_line_id = int(price_list_line["PriceListLineID"])
+        pricing_method = str(price_list_line["PricingMethod"])
+
+    promotion = resolve_promotion(
+        context,
+        str(customer["CustomerSegment"]),
+        str(item["ItemGroup"]),
+        None if pd.isna(item["CollectionName"]) else str(item["CollectionName"]),
+        order_date,
+    )
+    discount = qty(float(promotion["DiscountPct"]), "0.0001") if promotion is not None else 0.0
+    promotion_id = int(promotion["PromotionID"]) if promotion is not None else None
+
+    override_row = None
+    override_id = None
+    if (
+        str(customer["CustomerSegment"]) in {"Strategic", "Wholesale"}
+        and price_list_line_id is not None
+        and (
+            (str(customer["CustomerSegment"]) == "Strategic" and (int(sales_order_line_id) + int(item["ItemID"])) % 29 == 0)
+            or (str(customer["CustomerSegment"]) == "Wholesale" and (int(sales_order_line_id) + int(customer["CustomerID"])) % 53 == 0)
+        )
+    ):
+        requested_unit_price = money(minimum_unit_price * 0.95)
+        approved_unit_price = money(minimum_unit_price * (0.96 if str(customer["CustomerSegment"]) == "Strategic" else 0.98))
+        override_id = next_id(context, "PriceOverrideApproval")
+        override_row = {
+            "PriceOverrideApprovalID": override_id,
+            "SalesOrderLineID": int(sales_order_line_id),
+            "CustomerID": int(customer["CustomerID"]),
+            "ItemID": int(item["ItemID"]),
+            "RequestedByEmployeeID": int(sales_rep_id),
+            "ApprovedByEmployeeID": sales_pricing_approver_id(context, order_date),
+            "RequestDate": order_date.strftime("%Y-%m-%d"),
+            "ApprovedDate": order_date.strftime("%Y-%m-%d"),
+            "ReferenceUnitPrice": unit_price,
+            "RequestedUnitPrice": requested_unit_price,
+            "ApprovedUnitPrice": approved_unit_price,
+            "ReasonCode": OVERRIDE_REASON_CODES[(int(sales_order_line_id) + int(item["ItemID"])) % len(OVERRIDE_REASON_CODES)],
+            "Status": "Approved",
+        }
+        unit_price = approved_unit_price
+        pricing_method = "Approved Override"
+
+    pricing = {
+        "BaseListPrice": base_list_price,
+        "UnitPrice": unit_price,
+        "Discount": discount,
+        "PriceListLineID": price_list_line_id,
+        "PromotionID": promotion_id,
+        "PriceOverrideApprovalID": override_id,
+        "PricingMethod": pricing_method,
+        "LineTotal": money(float(quantity) * unit_price * (1 - float(discount))),
+        "MinimumUnitPrice": minimum_unit_price,
+    }
+    return pricing, override_row
 
 
 def sales_rep_employee_id(context: GenerationContext, customer: pd.Series, event_date: pd.Timestamp | str) -> int:
@@ -714,6 +1189,7 @@ def generate_month_sales_orders(context: GenerationContext, year: int, month: in
 
     order_rows: list[dict] = []
     line_rows: list[dict] = []
+    override_rows: list[dict] = []
     for _ in range(order_count):
         customer = select_customer(context)
         order_id = next_id(context, "SalesOrder")
@@ -721,6 +1197,7 @@ def generate_month_sales_orders(context: GenerationContext, year: int, month: in
         sellable_items = active_sellable_items(context, order_date)
         requested_delivery_date = order_date + pd.Timedelta(days=int(rng.integers(3, 15)))
         segment = str(customer["CustomerSegment"])
+        sales_rep_id = sales_rep_employee_id(context, customer, order_date)
         line_min, line_max = SEGMENT_LINE_RANGES[segment]
         line_count = int(rng.integers(line_min, line_max + 1))
 
@@ -767,11 +1244,17 @@ def generate_month_sales_orders(context: GenerationContext, year: int, month: in
                 upper_bound = min(max(float(qty_max), lower_bound), max(float(qty_min), planned_remaining * 0.45))
                 if upper_bound >= lower_bound:
                     quantity = qty(rng.uniform(lower_bound, upper_bound))
-            unit_price = money(float(item["ListPrice"]) * rng.uniform(0.97, 1.04))
-            discount = qty(rng.uniform(0.00, 0.12), "0.0001")
-            if segment in ["Strategic", "Wholesale"]:
-                discount = qty(rng.uniform(0.04, 0.18), "0.0001")
-            line_total = money(quantity * unit_price * (1 - discount))
+            sales_order_line_id = next_id(context, "SalesOrderLine")
+            pricing, override_row = resolve_sales_line_pricing(
+                context,
+                customer,
+                item,
+                quantity,
+                order_date,
+                sales_order_line_id,
+                sales_rep_id,
+            )
+            line_total = money(float(pricing["LineTotal"]))
             order_total = money(order_total + line_total)
             if int(item["ItemID"]) in planned_actual_targets:
                 planned_actual_targets[int(item["ItemID"])] = max(
@@ -780,15 +1263,22 @@ def generate_month_sales_orders(context: GenerationContext, year: int, month: in
                 )
 
             line_rows.append({
-                "SalesOrderLineID": next_id(context, "SalesOrderLine"),
+                "SalesOrderLineID": sales_order_line_id,
                 "SalesOrderID": order_id,
                 "LineNumber": line_number,
                 "ItemID": int(item["ItemID"]),
                 "Quantity": quantity,
-                "UnitPrice": unit_price,
-                "Discount": discount,
+                "BaseListPrice": float(pricing["BaseListPrice"]),
+                "UnitPrice": float(pricing["UnitPrice"]),
+                "Discount": float(pricing["Discount"]),
                 "LineTotal": line_total,
+                "PriceListLineID": pricing["PriceListLineID"],
+                "PromotionID": pricing["PromotionID"],
+                "PriceOverrideApprovalID": pricing["PriceOverrideApprovalID"],
+                "PricingMethod": pricing["PricingMethod"],
             })
+            if override_row is not None:
+                override_rows.append(override_row)
 
         order_rows.append({
             "SalesOrderID": order_id,
@@ -797,7 +1287,7 @@ def generate_month_sales_orders(context: GenerationContext, year: int, month: in
             "CustomerID": int(customer["CustomerID"]),
             "RequestedDeliveryDate": requested_delivery_date.strftime("%Y-%m-%d"),
             "Status": "Open",
-            "SalesRepEmployeeID": sales_rep_employee_id(context, customer, order_date),
+            "SalesRepEmployeeID": sales_rep_id,
             "CostCenterID": sales_center_id,
             "OrderTotal": order_total,
             "Notes": None,
@@ -805,6 +1295,7 @@ def generate_month_sales_orders(context: GenerationContext, year: int, month: in
 
     append_rows(context, "SalesOrder", order_rows)
     append_rows(context, "SalesOrderLine", line_rows)
+    append_rows(context, "PriceOverrideApproval", override_rows)
 
 
 def generate_month_shipments(context: GenerationContext, year: int, month: int) -> None:
@@ -1020,9 +1511,14 @@ def generate_month_sales_invoices(context: GenerationContext, year: int, month: 
                 "LineNumber": line_number,
                 "ItemID": int(shipment_line.ItemID),
                 "Quantity": quantity,
+                "BaseListPrice": float(sales_line["BaseListPrice"]),
                 "UnitPrice": float(sales_line["UnitPrice"]),
                 "Discount": float(sales_line["Discount"]),
                 "LineTotal": line_total,
+                "PriceListLineID": None if pd.isna(sales_line["PriceListLineID"]) else int(sales_line["PriceListLineID"]),
+                "PromotionID": None if pd.isna(sales_line["PromotionID"]) else int(sales_line["PromotionID"]),
+                "PriceOverrideApprovalID": None if pd.isna(sales_line["PriceOverrideApprovalID"]) else int(sales_line["PriceOverrideApprovalID"]),
+                "PricingMethod": str(sales_line["PricingMethod"]),
             })
             line_number += 1
 
@@ -1319,8 +1815,14 @@ def generate_month_sales_returns(context: GenerationContext, year: int, month: i
                 "LineNumber": line_number,
                 "ItemID": int(line.ItemID),
                 "Quantity": returned_quantity,
+                "BaseListPrice": float(line.BaseListPrice),
                 "UnitPrice": float(line.UnitPrice),
+                "Discount": float(line.Discount),
                 "LineTotal": line_total,
+                "PriceListLineID": None if pd.isna(line.PriceListLineID) else int(line.PriceListLineID),
+                "PromotionID": None if pd.isna(line.PromotionID) else int(line.PromotionID),
+                "PriceOverrideApprovalID": None if pd.isna(line.PriceOverrideApprovalID) else int(line.PriceOverrideApprovalID),
+                "PricingMethod": str(line.PricingMethod),
             })
             returned_quantities[shipment_line_id] = round(float(returned_quantities.get(shipment_line_id, 0.0)) + returned_quantity, 2)
             line_number += 1

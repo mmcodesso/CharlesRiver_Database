@@ -113,7 +113,7 @@ This sequence compresses cleanly into fewer modules or expands into a full semes
 - For beginner SQL classes, start from the provided queries before moving to blank-screen assignments.
 - For Excel-heavy classes, use the workbook and process docs together so students can interpret patterns instead of only producing pivots.
 
-## Recommended Phase 19 to Phase 22 Classroom Sequence
+## Recommended Phase 19 to Phase 23 Classroom Sequence
 
 1. Use the default anomaly-enabled package as the standard student file set.
 2. Start financial classes with the working-capital and statement-bridge cases.
@@ -124,7 +124,9 @@ This sequence compresses cleanly into fewer modules or expands into a full semes
 7. Add the attendance control audit case when students need a deeper roster, punch, and overtime-control lab.
 8. Add the Phase 22 demand-planning case when students are ready to connect forecast, replenishment, MRP, and rough-cut capacity.
 9. Add the replenishment-support audit case when students need to test forecast approval, policy status, and recommendation conversion support.
-10. Use the clean build only when you want a baseline comparison after students understand the default dataset.
+10. Add the Phase 23 pricing and margin case when students are ready to connect list price, promotions, overrides, and realized margin.
+11. Add the pricing-governance audit case when students need a commercial-controls lab around expired pricing, price-floor breaches, and override completeness.
+12. Use the clean build only when you want a baseline comparison after students understand the default dataset.
 
 ## Where to Go Next
 

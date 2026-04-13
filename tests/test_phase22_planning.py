@@ -186,4 +186,4 @@ def test_phase22_docs_and_sidebar_entries_exist() -> None:
     assert "46_discontinued_or_prelaunch_planning_activity_review.sql" in audit_guide
     assert "Demand Planning and Replenishment Case" in managerial_guide
     assert "inventory coverage and projected stockout risk" in sql_guide.lower()
-    assert "Recommended Phase 19 to Phase 22 Classroom Sequence" in instructor_guide
+    assert "Recommended Phase 19 to Phase 23 Classroom Sequence" in instructor_guide

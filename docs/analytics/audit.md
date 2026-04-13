@@ -14,7 +14,7 @@ sidebar_label: Audit Analytics
 | Approvals and segregation of duties | `PurchaseRequisition`, `PurchaseOrder`, `PurchaseInvoice`, `JournalEntry`, `CreditMemo`, `CustomerRefund`, `PayrollRegister`, `Employee` |
 | Manufacturing controls | `Item`, `BillOfMaterial`, `Routing`, `WorkCenter`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `MaterialIssueLine`, `ProductionCompletionLine`, `WorkOrderClose` |
 | Payroll and time controls | `ShiftDefinition`, `EmployeeShiftAssignment`, `EmployeeShiftRoster`, `EmployeeAbsence`, `OvertimeApproval`, `TimeClockPunch`, `TimeClockEntry`, `AttendanceException`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance`, `Employee` |
-| Master-data controls | `Employee`, `Item`, plus operational tables that reuse those masters |
+| Master-data controls | `Employee`, `Item`, `PriceList`, `PriceListLine`, `PromotionProgram`, `PriceOverrideApproval`, plus operational tables that reuse those masters |
 | Support-workbook-assisted review | `greenfield_support.xlsx` sheets `AnomalyLog`, `ValidationStages`, `ValidationChecks`, and `ValidationExceptions` |
 
 ## Starter SQL Map
@@ -66,6 +66,11 @@ sidebar_label: Audit Analytics
 | Requisitions and work orders without planning support | [44_requisitions_and_work_orders_without_planning_support.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/44_requisitions_and_work_orders_without_planning_support.sql) |
 | Recommendation converted after need-by date review | [45_recommendation_converted_after_need_by_date_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/45_recommendation_converted_after_need_by_date_review.sql) |
 | Discontinued or pre-launch planning activity review | [46_discontinued_or_prelaunch_planning_activity_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/46_discontinued_or_prelaunch_planning_activity_review.sql) |
+| Sales below floor without approval | [47_sales_below_floor_without_approval.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/47_sales_below_floor_without_approval.sql) |
+| Expired or overlapping price-list review | [48_expired_or_overlapping_price_list_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/48_expired_or_overlapping_price_list_review.sql) |
+| Promotion scope and date mismatch review | [49_promotion_scope_and_date_mismatch_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/49_promotion_scope_and_date_mismatch_review.sql) |
+| Customer-specific price-list bypass review | [50_customer_specific_price_list_bypass_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/50_customer_specific_price_list_bypass_review.sql) |
+| Override approval completeness review | [51_override_approval_completeness_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/51_override_approval_completeness_review.sql) |
 
 ## Baseline Control Queries
 
@@ -96,6 +101,11 @@ Use these when you want the default anomaly-enabled build to surface teachable e
 - requisitions and work orders without planning support
 - recommendation converted after need-by date review
 - discontinued or pre-launch planning activity review
+- sales below floor without approval
+- expired or overlapping price-list review
+- promotion scope and date mismatch review
+- customer-specific price-list bypass review
+- override approval completeness review
 
 ## Support-Workbook-Assisted Review
 
@@ -114,6 +124,7 @@ Pair those sheets with [Audit Review Pack Case](cases/audit-review-pack-case.md)
 - The default `standard` build is better for controls teaching because anomalies are present while the GL remains balanced.
 - Employee-master review should distinguish current-state `IsActive` from historical validity driven by `HireDate` and `TerminationDate`.
 - Item-master review should distinguish current-state lifecycle and launch-date logic from operational usage timing.
+- Pricing-control review should distinguish price-list master-data failures from transaction-level override and promotion-use failures.
 - Support-workbook review should accelerate tracing, not replace source-document review.
 
 ## Anomaly Coverage Matrix
@@ -153,3 +164,8 @@ Pair those sheets with [Audit Review Pack Case](cases/audit-review-pack-case.md)
 | [44_requisitions_and_work_orders_without_planning_support.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/44_requisitions_and_work_orders_without_planning_support.sql) | `standard` | `purchase_requisition_without_plan`, `work_order_without_plan` | `PurchaseRequisition`, `WorkOrder`, `SupplyPlanRecommendation`, `Item` |
 | [45_recommendation_converted_after_need_by_date_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/45_recommendation_converted_after_need_by_date_review.sql) | `standard` | `late_recommendation_conversion` | `SupplyPlanRecommendation`, `PurchaseRequisition`, `WorkOrder`, `Item` |
 | [46_discontinued_or_prelaunch_planning_activity_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/46_discontinued_or_prelaunch_planning_activity_review.sql) | `standard` | `inactive_policy_for_active_item`, `missing_forecast_approval`, `forecast_override_outlier`, `late_recommendation_conversion` | `DemandForecast`, `InventoryPolicy`, `SupplyPlanRecommendation`, `PurchaseRequisition`, `WorkOrder`, `Item` |
+| [47_sales_below_floor_without_approval.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/47_sales_below_floor_without_approval.sql) | `standard` | `sale_below_price_floor_without_approval`, `missing_price_override_approval` | `SalesOrderLine`, `SalesOrder`, `PriceListLine`, `PriceOverrideApproval`, `Customer`, `Item` |
+| [48_expired_or_overlapping_price_list_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/48_expired_or_overlapping_price_list_review.sql) | `standard` | `expired_price_list_used`, `overlapping_active_price_list` | `PriceList`, `PriceListLine`, `SalesOrderLine`, `Customer`, `Item` |
+| [49_promotion_scope_and_date_mismatch_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/49_promotion_scope_and_date_mismatch_review.sql) | `standard` | `promotion_outside_effective_dates` | `PromotionProgram`, `SalesOrderLine`, `SalesOrder`, `Customer`, `Item` |
+| [50_customer_specific_price_list_bypass_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/50_customer_specific_price_list_bypass_review.sql) | `standard` | `customer_specific_price_bypass` | `SalesOrderLine`, `PriceList`, `PriceListLine`, `Customer`, `Item` |
+| [51_override_approval_completeness_review.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/audit/51_override_approval_completeness_review.sql) | `standard` | `missing_price_override_approval`, `sale_below_price_floor_without_approval` | `PriceOverrideApproval`, `SalesOrderLine`, `PriceListLine`, `Customer`, `Employee` |

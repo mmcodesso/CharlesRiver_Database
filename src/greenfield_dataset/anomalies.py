@@ -2358,6 +2358,318 @@ def inject_forecast_override_outlier(context: GenerationContext, count_per_year:
                 break
 
 
+def pricing_method_from_price_list_line(context: GenerationContext, price_list_line_id: int | None) -> str:
+    if price_list_line_id is None or pd.isna(price_list_line_id):
+        return "Base List"
+    line_rows = context.tables["PriceListLine"][
+        context.tables["PriceListLine"]["PriceListLineID"].astype(int).eq(int(price_list_line_id))
+    ]
+    if line_rows.empty:
+        return "Base List"
+    price_list_id = int(line_rows.iloc[0]["PriceListID"])
+    header_rows = context.tables["PriceList"][
+        context.tables["PriceList"]["PriceListID"].astype(int).eq(price_list_id)
+    ]
+    if header_rows.empty:
+        return "Base List"
+    return "Customer Price List" if str(header_rows.iloc[0]["ScopeType"]) == "Customer" else "Segment Price List"
+
+
+def update_sales_pricing_lineage(
+    context: GenerationContext,
+    sales_order_line_id: int,
+    updates: dict[str, Any],
+) -> None:
+    order_mask = context.tables["SalesOrderLine"]["SalesOrderLineID"].astype(int).eq(int(sales_order_line_id))
+    if order_mask.any():
+        for column_name, value in updates.items():
+            context.tables["SalesOrderLine"].loc[order_mask, column_name] = value
+
+    invoice_mask = context.tables["SalesInvoiceLine"]["SalesOrderLineID"].astype(int).eq(int(sales_order_line_id))
+    if invoice_mask.any():
+        for column_name, value in updates.items():
+            if column_name in context.tables["SalesInvoiceLine"].columns:
+                context.tables["SalesInvoiceLine"].loc[invoice_mask, column_name] = value
+
+
+def inject_missing_price_override_approval(context: GenerationContext, count_per_year: int) -> None:
+    approvals = context.tables["PriceOverrideApproval"]
+    if approvals.empty or count_per_year <= 0:
+        return
+
+    order_lines = context.tables["SalesOrderLine"]
+    for year in fiscal_years(context):
+        year_lines = rows_for_year(
+            order_lines.merge(context.tables["SalesOrder"][["SalesOrderID", "OrderDate"]], on="SalesOrderID", how="left"),
+            "OrderDate",
+            year,
+        )
+        candidates = year_lines[year_lines["PriceOverrideApprovalID"].notna()].copy()
+        used_ids = used_primary_keys(context, "PriceOverrideApproval", "missing_price_override_approval")
+        injected = 0
+        for row in candidates.sort_values(["OrderDate", "SalesOrderLineID"]).itertuples(index=False):
+            approval_id = int(row.PriceOverrideApprovalID)
+            if approval_id in used_ids:
+                continue
+            mask = context.tables["PriceOverrideApproval"]["PriceOverrideApprovalID"].astype(int).eq(approval_id)
+            if not mask.any():
+                continue
+            context.tables["PriceOverrideApproval"].loc[mask, "ApprovedByEmployeeID"] = None
+            context.tables["PriceOverrideApproval"].loc[mask, "ApprovedDate"] = None
+            context.tables["PriceOverrideApproval"].loc[mask, "Status"] = "Pending"
+            log_anomaly(
+                context,
+                "missing_price_override_approval",
+                "PriceOverrideApproval",
+                approval_id,
+                year,
+                "A sales-price override approval record was left incomplete even though the sales line still references the override.",
+                "Override approval completeness review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_expired_price_list_used(context: GenerationContext, count_per_year: int) -> None:
+    order_lines = context.tables["SalesOrderLine"]
+    sales_orders = context.tables["SalesOrder"]
+    if order_lines.empty or sales_orders.empty or count_per_year <= 0:
+        return
+
+    used_lines = order_lines[order_lines["PriceListLineID"].notna()].merge(
+        sales_orders[["SalesOrderID", "OrderDate"]],
+        on="SalesOrderID",
+        how="left",
+    )
+    price_list_lines = context.tables["PriceListLine"][["PriceListLineID", "PriceListID"]]
+    used_lines = used_lines.merge(price_list_lines, on="PriceListLineID", how="left")
+    for year in fiscal_years(context):
+        year_rows = rows_for_year(used_lines, "OrderDate", year)
+        used_ids = used_primary_keys(context, "PriceList", "expired_price_list_used")
+        injected = 0
+        for row in year_rows.sort_values(["OrderDate", "SalesOrderLineID"]).itertuples(index=False):
+            price_list_id = int(row.PriceListID)
+            if price_list_id in used_ids:
+                continue
+            mask = context.tables["PriceList"]["PriceListID"].astype(int).eq(price_list_id)
+            if not mask.any():
+                continue
+            expired_end = (pd.Timestamp(row.OrderDate) - pd.Timedelta(days=3)).strftime("%Y-%m-%d")
+            context.tables["PriceList"].loc[mask, "EffectiveEndDate"] = expired_end
+            context.tables["PriceList"].loc[mask, "Status"] = "Expired"
+            log_anomaly(
+                context,
+                "expired_price_list_used",
+                "PriceList",
+                price_list_id,
+                year,
+                "A price list used on a sales line was back-dated to expire before the order date.",
+                "Expired or overlapping price-list review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_overlapping_active_price_list(context: GenerationContext, count_per_year: int) -> None:
+    price_lists = context.tables["PriceList"]
+    if price_lists.empty or count_per_year <= 0:
+        return
+
+    segment_lists = price_lists[
+        price_lists["ScopeType"].eq("Segment")
+        & price_lists["Status"].eq("Active")
+    ].sort_values(["CustomerSegment", "PriceListID"])
+    if segment_lists.empty:
+        return
+
+    for year in fiscal_years(context):
+        used_ids = used_primary_keys(context, "PriceList", "overlapping_active_price_list")
+        injected = 0
+        for row in segment_lists.itertuples(index=False):
+            if int(row.PriceListID) in used_ids:
+                continue
+            duplicate_id = next_id(context, "PriceList")
+            duplicate_row = {
+                "PriceListID": duplicate_id,
+                "PriceListName": f"{row.PriceListName} Overlap",
+                "ScopeType": str(row.ScopeType),
+                "CustomerID": None if pd.isna(row.CustomerID) else int(row.CustomerID),
+                "CustomerSegment": str(row.CustomerSegment),
+                "EffectiveStartDate": row.EffectiveStartDate,
+                "EffectiveEndDate": row.EffectiveEndDate,
+                "CurrencyCode": str(row.CurrencyCode),
+                "Status": "Active",
+                "ApprovedByEmployeeID": None if pd.isna(row.ApprovedByEmployeeID) else int(row.ApprovedByEmployeeID),
+                "ApprovedDate": row.ApprovedDate,
+            }
+            context.tables["PriceList"] = pd.concat(
+                [context.tables["PriceList"], pd.DataFrame([duplicate_row], columns=TABLE_COLUMNS["PriceList"])],
+                ignore_index=True,
+            )
+            log_anomaly(
+                context,
+                "overlapping_active_price_list",
+                "PriceList",
+                duplicate_id,
+                year,
+                "A second active price list was created for the same segment scope and overlapping date range.",
+                "Expired or overlapping price-list review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_promotion_outside_effective_dates(context: GenerationContext, count_per_year: int) -> None:
+    order_lines = context.tables["SalesOrderLine"]
+    sales_orders = context.tables["SalesOrder"]
+    if order_lines.empty or sales_orders.empty or count_per_year <= 0:
+        return
+
+    used_lines = order_lines[order_lines["PromotionID"].notna()].merge(
+        sales_orders[["SalesOrderID", "OrderDate"]],
+        on="SalesOrderID",
+        how="left",
+    )
+    for year in fiscal_years(context):
+        year_rows = rows_for_year(used_lines, "OrderDate", year)
+        used_ids = used_primary_keys(context, "PromotionProgram", "promotion_outside_effective_dates")
+        injected = 0
+        for row in year_rows.sort_values(["OrderDate", "SalesOrderLineID"]).itertuples(index=False):
+            promotion_id = int(row.PromotionID)
+            if promotion_id in used_ids:
+                continue
+            mask = context.tables["PromotionProgram"]["PromotionID"].astype(int).eq(promotion_id)
+            if not mask.any():
+                continue
+            context.tables["PromotionProgram"].loc[mask, "EffectiveEndDate"] = (
+                pd.Timestamp(row.OrderDate) - pd.Timedelta(days=2)
+            ).strftime("%Y-%m-%d")
+            log_anomaly(
+                context,
+                "promotion_outside_effective_dates",
+                "PromotionProgram",
+                promotion_id,
+                year,
+                "A promotion referenced on a sales line was changed to end before the order date.",
+                "Promotion scope/date mismatch review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_sale_below_price_floor_without_approval(context: GenerationContext, count_per_year: int) -> None:
+    order_lines = context.tables["SalesOrderLine"]
+    sales_orders = context.tables["SalesOrder"]
+    if order_lines.empty or sales_orders.empty or count_per_year <= 0:
+        return
+
+    candidates = order_lines[order_lines["PriceOverrideApprovalID"].notna()].merge(
+        sales_orders[["SalesOrderID", "OrderDate"]],
+        on="SalesOrderID",
+        how="left",
+    )
+    for year in fiscal_years(context):
+        year_rows = rows_for_year(candidates, "OrderDate", year)
+        used_ids = used_primary_keys(context, "SalesOrderLine", "sale_below_price_floor_without_approval")
+        injected = 0
+        for row in year_rows.sort_values(["OrderDate", "SalesOrderLineID"]).itertuples(index=False):
+            sales_order_line_id = int(row.SalesOrderLineID)
+            if sales_order_line_id in used_ids:
+                continue
+            pricing_method = pricing_method_from_price_list_line(
+                context,
+                None if pd.isna(row.PriceListLineID) else int(row.PriceListLineID),
+            )
+            update_sales_pricing_lineage(
+                context,
+                sales_order_line_id,
+                {
+                    "PriceOverrideApprovalID": None,
+                    "PricingMethod": pricing_method,
+                },
+            )
+            log_anomaly(
+                context,
+                "sale_below_price_floor_without_approval",
+                "SalesOrderLine",
+                sales_order_line_id,
+                year,
+                "A below-floor sales price remained on the line after the override-approval link was removed.",
+                "Sales below floor without approval review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
+def inject_customer_specific_price_bypass(context: GenerationContext, count_per_year: int) -> None:
+    customers = context.tables["Customer"][["CustomerID", "CustomerSegment"]]
+    order_lines = context.tables["SalesOrderLine"]
+    sales_orders = context.tables["SalesOrder"][["SalesOrderID", "CustomerID", "OrderDate"]]
+    price_list_lines = context.tables["PriceListLine"][["PriceListLineID", "PriceListID", "ItemID", "MinimumQuantity"]]
+    price_lists = context.tables["PriceList"][["PriceListID", "ScopeType", "CustomerID", "CustomerSegment"]]
+    if order_lines.empty or sales_orders.empty or count_per_year <= 0:
+        return
+
+    merged = order_lines.merge(sales_orders, on="SalesOrderID", how="left").merge(customers, on="CustomerID", how="left")
+    line_scope = price_list_lines.merge(price_lists, on="PriceListID", how="left")
+    customer_specific_lines = line_scope[line_scope["ScopeType"].eq("Customer")].copy()
+    segment_lines = line_scope[line_scope["ScopeType"].eq("Segment")].copy()
+    if customer_specific_lines.empty or segment_lines.empty:
+        return
+
+    customer_specific_keys = set(
+        zip(
+            customer_specific_lines["CustomerID"].astype(int),
+            customer_specific_lines["ItemID"].astype(int),
+        )
+    )
+    segment_line_lookup: dict[tuple[str, int], int] = {}
+    for row in segment_lines.sort_values(["CustomerSegment", "ItemID", "MinimumQuantity", "PriceListLineID"]).itertuples(index=False):
+        cache_key = (str(row.CustomerSegment), int(row.ItemID))
+        segment_line_lookup.setdefault(cache_key, int(row.PriceListLineID))
+
+    candidates = merged[
+        merged["PricingMethod"].eq("Customer Price List")
+        & merged.apply(lambda row: (int(row.CustomerID), int(row.ItemID)) in customer_specific_keys, axis=1)
+    ].copy()
+    for year in fiscal_years(context):
+        year_rows = rows_for_year(candidates, "OrderDate", year)
+        used_ids = used_primary_keys(context, "SalesOrderLine", "customer_specific_price_bypass")
+        injected = 0
+        for row in year_rows.sort_values(["OrderDate", "SalesOrderLineID"]).itertuples(index=False):
+            sales_order_line_id = int(row.SalesOrderLineID)
+            if sales_order_line_id in used_ids:
+                continue
+            segment_line_id = segment_line_lookup.get((str(row.CustomerSegment), int(row.ItemID)))
+            if segment_line_id is None:
+                continue
+            update_sales_pricing_lineage(
+                context,
+                sales_order_line_id,
+                {
+                    "PriceListLineID": segment_line_id,
+                    "PricingMethod": "Segment Price List",
+                },
+            )
+            log_anomaly(
+                context,
+                "customer_specific_price_bypass",
+                "SalesOrderLine",
+                sales_order_line_id,
+                year,
+                "A customer eligible for customer-specific pricing was switched to a non-customer-specific pricing path.",
+                "Customer-specific price-list bypass review.",
+            )
+            injected += 1
+            if injected >= count_per_year:
+                break
+
+
 def inject_anomalies(context: GenerationContext) -> None:
     profile = load_anomaly_profile(context)
     if not profile.get("enabled", False):
@@ -2411,4 +2723,10 @@ def inject_anomalies(context: GenerationContext) -> None:
     inject_work_order_without_plan(context, int(profile.get("work_order_without_plan_per_year", 0)))
     inject_late_recommendation_conversion(context, int(profile.get("late_recommendation_conversion_per_year", 0)))
     inject_forecast_override_outlier(context, int(profile.get("forecast_override_outlier_per_year", 0)))
+    inject_missing_price_override_approval(context, int(profile.get("missing_price_override_approval_per_year", 0)))
+    inject_expired_price_list_used(context, int(profile.get("expired_price_list_used_per_year", 0)))
+    inject_overlapping_active_price_list(context, int(profile.get("overlapping_active_price_list_per_year", 0)))
+    inject_promotion_outside_effective_dates(context, int(profile.get("promotion_outside_effective_dates_per_year", 0)))
+    inject_sale_below_price_floor_without_approval(context, int(profile.get("sale_below_price_floor_without_approval_per_year", 0)))
+    inject_customer_specific_price_bypass(context, int(profile.get("customer_specific_price_bypass_per_year", 0)))
     invalidate_all_caches(context)

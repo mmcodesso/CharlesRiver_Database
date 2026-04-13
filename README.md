@@ -26,19 +26,6 @@ Student download files:
 - `greenfield_support.xlsx`
 - `greenfield_csv.zip`
 
-## View the Docs Locally
-
-```bash
-npm install
-npm run start
-```
-
-To build the production site:
-
-```bash
-npm run build
-```
-
 ## Teaching Package Setup
 
 If you need to generate or refresh the classroom dataset locally, use the teaching guide:

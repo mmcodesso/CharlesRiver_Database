@@ -27,12 +27,12 @@ The goal is not only to store tables. The goal is to let you move from business 
 
 ## What the Dataset Contains
 
-The current implementation contains **64 tables** across eight areas:
+The current implementation contains **68 tables** across eight areas:
 
 | Area | What it covers | Count |
 |---|---|---:|
 | Accounting core | Chart of accounts, journals, and posted ledger detail | 3 |
-| Order-to-cash | Customer orders, shipments, invoices, cash, returns, credits, and refunds | 14 |
+| Order-to-cash | Customers, commercial pricing, orders, shipments, invoices, cash, returns, credits, and refunds | 18 |
 | Procure-to-pay | Requisitions, purchase orders, receipts, supplier invoices, and disbursements | 9 |
 | Manufacturing | BOMs, routings, work centers, work orders, issues, completions, and close | 14 |
 | Payroll and time | Shifts, rosters, absences, overtime approvals, punches, approved daily time, payroll, and remittances | 14 |
@@ -44,7 +44,6 @@ Most classes use these ready-to-use files:
 
 - `greenfield.sqlite`
 - `greenfield.xlsx`
-- `greenfield_support.xlsx`
 - `greenfield_csv.zip`
 
 Download them from [Downloads](downloads.md) or use the copies already shared for your course.
@@ -117,6 +116,10 @@ Cash settlement is tracked through:
 Returns branch from the billed shipment path:
 
 `SalesInvoiceLine -> SalesReturn -> SalesReturnLine -> CreditMemo -> CreditMemoLine -> CustomerRefund`
+
+Commercial pricing is resolved before shipment and billing through:
+
+`Customer -> PriceList -> PriceListLine -> SalesOrderLine <- PromotionProgram and PriceOverrideApproval`
 
 ### P2P path
 
@@ -200,6 +203,10 @@ Start with:
 Start with:
 
 - `Item`
+- `PriceList`
+- `PriceListLine`
+- `PromotionProgram`
+- `PriceOverrideApproval`
 - `Budget`
 - `CostCenter`
 - `BillOfMaterial`
@@ -218,13 +225,12 @@ Start with:
 - P2P chain tables
 - manufacturing chain tables
 - payroll and time chain tables
-- `GLEntry`
+- GLEntry
 - the companion support workbook
 - the transaction chains in [Process Flows](process-flows.md)
 
 ## Practical Starting Tips
 
-- The SQLite database is the easiest format for SQL work.
 - `CashReceiptApplication` is the authoritative invoice-settlement link in O2C.
 - For P2P traceability, start with `PurchaseOrderLine.RequisitionID`, `PurchaseInvoiceLine.GoodsReceiptLineID`, and `PurchaseInvoiceLine.AccrualJournalEntryID`.
 - For manufacturing, start from `WorkOrderID` and then move outward to issues, completions, close, and labor.

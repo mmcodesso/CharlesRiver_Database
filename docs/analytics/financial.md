@@ -10,7 +10,7 @@ sidebar_label: Financial Analytics
 
 | Topic | Main tables |
 |---|---|
-| Revenue and gross margin | `SalesInvoice`, `SalesInvoiceLine`, `ShipmentLine`, `CreditMemoLine`, `Item`, `GLEntry`, `Account` |
+| Revenue and gross margin | `SalesInvoice`, `SalesInvoiceLine`, `ShipmentLine`, `CreditMemoLine`, `Item`, `PriceList`, `PriceListLine`, `PromotionProgram`, `GLEntry`, `Account` |
 | AR and customer cash | `SalesInvoice`, `CashReceipt`, `CashReceiptApplication`, `CreditMemo`, `CustomerRefund`, `Customer` |
 | AP and supplier cash | `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment`, `Supplier`, `GoodsReceipt` |
 | Working capital | `GLEntry`, `Account`, `SalesInvoice`, `CashReceiptApplication`, `PurchaseInvoice`, `DisbursementPayment`, `PayrollRegister`, `PayrollLiabilityRemittance` |
@@ -47,13 +47,16 @@ sidebar_label: Financial Analytics
 | Payroll and people-cost mix by cost center, job family, and job level | [22_payroll_and_people_cost_mix_by_cost_center_job_family_level.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/financial/22_payroll_and_people_cost_mix_by_cost_center_job_family_level.sql) |
 | Forecast versus actual demand by week, item group, collection, and lifecycle | [23_forecast_vs_actual_demand_by_week_item_group_collection_lifecycle.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/financial/23_forecast_vs_actual_demand_by_week_item_group_collection_lifecycle.sql) |
 | Recommendation conversion by type, priority, and planner | [24_recommendation_conversion_by_type_priority_planner.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/financial/24_recommendation_conversion_by_type_priority_planner.sql) |
+| Price realization versus list price by customer and collection | [25_price_realization_vs_list_by_segment_customer_region_collection_style.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/financial/25_price_realization_vs_list_by_segment_customer_region_collection_style.sql) |
+| Gross-margin impact of promotions versus non-promotion sales | [26_gross_margin_impact_of_promotions_vs_nonpromotion_sales.sql](https://github.com/mmcodesso/greenfield_database/blob/main/queries/financial/26_gross_margin_impact_of_promotions_vs_nonpromotion_sales.sql) |
 
-## Phase 19 to Phase 22 Pairings
+## Phase 19 to Phase 23 Pairings
 
 - Use [Working Capital and Cash Conversion Case](cases/working-capital-and-cash-conversion-case.md) when you want a balance-sheet and settlement-timing exercise.
 - Use [Financial Statement Bridge Case](cases/financial-statement-bridge-case.md) when you want to move from operations into `GLEntry`, control accounts, and close entries.
 - Use [Product Portfolio Profitability Case](cases/product-portfolio-profitability-case.md) when you want a financial view of collection, lifecycle, and supply-mode performance.
 - Use [Demand Planning and Replenishment Case](cases/demand-planning-and-replenishment-case.md) when you want forecast, replenishment, and planning-pressure analysis to sit beside working-capital and inventory timing.
+- Use [Pricing and Margin Governance Case](cases/pricing-and-margin-governance-case.md) when you want list-price realization, promotions, override pressure, and net-margin dilution in one commercial analysis path.
 
 ## Interpretation Notes
 
@@ -62,6 +65,7 @@ sidebar_label: Financial Analytics
 - Payroll register activity records liabilities first; cash leaves through payroll payments and remittances later.
 - Working-capital analysis gets stronger when students separate balances from timing.
 - Phase 22 adds forecast, policy, and replenishment tables that support planning-informed working-capital and inventory-timing analysis.
+- Phase 23 adds explicit price-list, promotion, and override lineage so revenue and margin can be analyzed against commercial rules instead of random line-price variation.
 - The richer item master now supports collection, style family, lifecycle, and supply-mode financial analysis without changing the underlying posting model.
 - The richer employee master now supports job-family, job-level, and people-cost review without requiring a separate HR-history subledger.
 - Customer deposits and unapplied cash analysis should start from `CashReceipt` and `CashReceiptApplication`, not only from AR.

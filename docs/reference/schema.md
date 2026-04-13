@@ -1,6 +1,6 @@
 ---
 title: Schema Reference
-description: Student-friendly reference for the 64 implemented Greenfield tables, key columns, and join patterns.
+description: Student-friendly reference for the 68 implemented Greenfield tables, key columns, and join patterns.
 sidebar_label: Schema Reference
 ---
 
@@ -21,14 +21,14 @@ If you need the big-picture map first, start with [Dataset Guide](../dataset-ove
 | Group | What belongs here | Count |
 |---|---|---:|
 | Accounting core | Accounts, journals, and posted ledger detail | 3 |
-| O2C | Customer, order, shipment, invoice, receipt, return, credit, and refund tables | 14 |
+| O2C | Customer, pricing, order, shipment, invoice, receipt, return, credit, and refund tables | 18 |
 | P2P | Supplier, requisition, PO, receipt, invoice, and payment tables | 9 |
 | Manufacturing | BOMs, routings, work centers, work orders, issues, completions, and close | 14 |
 | Payroll and time | Shift, roster, absence, overtime, time, payroll, and remittance tables | 14 |
 | Master data | Item, warehouse, and employee records | 3 |
 | Organizational planning | Cost centers and budgets | 2 |
 | Demand planning and MRP | Forecasting, policy, recommendation, MRP, and rough-cut capacity tables | 5 |
-| Total |  | 64 |
+| Total |  | 68 |
 
 ## Design Patterns
 
@@ -36,6 +36,7 @@ If you need the big-picture map first, start with [Dataset Guide](../dataset-ove
 - `GLEntry` is the reporting bridge between operational events and accounting analysis.
 - `JournalEntry` and `GLEntry` together represent recurring finance activity, accrual adjustments, reclasses, and close-cycle entries.
 - `Item` is the product anchor for pricing, costing, supply mode, and account mapping.
+- `PriceList`, `PriceListLine`, `PromotionProgram`, and `PriceOverrideApproval` provide explicit commercial-pricing lineage inside the O2C flow.
 - Payroll and time are modeled as operational tables, not as a simple journal simulation.
 
 ## Accounting Core
@@ -51,23 +52,31 @@ If you need the big-picture map first, start with [Dataset Guide](../dataset-ove
 | Table | Use it for | Start with these fields |
 |---|---|---|
 | `Customer` | Customer master and segmentation | `CustomerName`, `CustomerSegment`, `Industry`, `Region`, `SalesRepEmployeeID` |
+| `PriceList` | Pricing scope header by segment or customer | `PriceListName`, `ScopeType`, `CustomerID`, `CustomerSegment`, `EffectiveStartDate`, `EffectiveEndDate`, `Status` |
+| `PriceListLine` | Item-level price and floor by quantity break | `PriceListID`, `ItemID`, `MinimumQuantity`, `UnitPrice`, `MinimumUnitPrice`, `Status` |
+| `PromotionProgram` | Seasonal or scoped promotion master | `PromotionCode`, `ScopeType`, `CustomerSegment`, `ItemGroup`, `CollectionName`, `DiscountPct`, `EffectiveStartDate`, `EffectiveEndDate` |
+| `PriceOverrideApproval` | Manual below-floor approval record | `SalesOrderLineID`, `RequestedByEmployeeID`, `ApprovedByEmployeeID`, `ReferenceUnitPrice`, `ApprovedUnitPrice`, `ReasonCode`, `Status` |
 | `SalesOrder` | Order header and promised demand | `OrderNumber`, `OrderDate`, `CustomerID`, `RequestedDeliveryDate`, `Status` |
-| `SalesOrderLine` | Ordered item detail | `SalesOrderID`, `LineNumber`, `ItemID`, `Quantity`, `UnitPrice`, `LineTotal` |
+| `SalesOrderLine` | Ordered item detail with pricing lineage | `SalesOrderID`, `LineNumber`, `ItemID`, `Quantity`, `BaseListPrice`, `UnitPrice`, `Discount`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, `PricingMethod`, `LineTotal` |
 | `Shipment` | Shipment header and warehouse fulfillment | `ShipmentNumber`, `SalesOrderID`, `ShipmentDate`, `WarehouseID`, `Status` |
 | `ShipmentLine` | Shipped item detail and COGS basis | `ShipmentID`, `SalesOrderLineID`, `ItemID`, `QuantityShipped`, `ExtendedStandardCost` |
 | `SalesInvoice` | Invoice header and receivable creation | `InvoiceNumber`, `InvoiceDate`, `CustomerID`, `DueDate`, `GrandTotal`, `Status` |
-| `SalesInvoiceLine` | Billed line detail tied to fulfillment | `SalesInvoiceID`, `SalesOrderLineID`, `ShipmentLineID`, `ItemID`, `Quantity`, `LineTotal` |
+| `SalesInvoiceLine` | Billed line detail tied to fulfillment and inherited pricing lineage | `SalesInvoiceID`, `SalesOrderLineID`, `ShipmentLineID`, `ItemID`, `Quantity`, `BaseListPrice`, `UnitPrice`, `Discount`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, `PricingMethod`, `LineTotal` |
 | `CashReceipt` | Customer payment record | `ReceiptNumber`, `ReceiptDate`, `CustomerID`, `Amount`, `PaymentMethod`, `ReferenceNumber` |
 | `CashReceiptApplication` | Invoice settlement detail | `CashReceiptID`, `SalesInvoiceID`, `ApplicationDate`, `AppliedAmount` |
 | `SalesReturn` | Return header | `ReturnNumber`, `ReturnDate`, `CustomerID`, `ReasonCode`, `Status` |
 | `SalesReturnLine` | Returned item detail | `SalesReturnID`, `ShipmentLineID`, `ItemID`, `QuantityReturned` |
 | `CreditMemo` | Customer credit header | `CreditMemoNumber`, `CreditMemoDate`, `SalesReturnID`, `OriginalSalesInvoiceID`, `GrandTotal`, `Status` |
-| `CreditMemoLine` | Credit detail by returned line | `CreditMemoID`, `SalesReturnLineID`, `ItemID`, `Quantity`, `LineTotal` |
+| `CreditMemoLine` | Credit detail by returned line with inherited pricing lineage | `CreditMemoID`, `SalesReturnLineID`, `ItemID`, `Quantity`, `BaseListPrice`, `UnitPrice`, `Discount`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, `PricingMethod`, `LineTotal` |
 | `CustomerRefund` | Cash refund against customer credit | `RefundNumber`, `RefundDate`, `CustomerID`, `CreditMemoID`, `Amount` |
 
 ### Join and Traceability Cues
 
 - `SalesOrder -> SalesOrderLine`
+- `PriceListLine.PriceListID -> PriceList`
+- `SalesOrderLine.PriceListLineID -> PriceListLine`
+- `SalesOrderLine.PromotionID -> PromotionProgram`
+- `SalesOrderLine.PriceOverrideApprovalID -> PriceOverrideApproval`
 - `Shipment.SalesOrderID -> SalesOrder`
 - `ShipmentLine.SalesOrderLineID -> SalesOrderLine`
 - `SalesInvoiceLine.ShipmentLineID -> ShipmentLine`
@@ -199,6 +208,7 @@ If you need the big-picture map first, start with [Dataset Guide](../dataset-ove
 ## Important Schema Notes
 
 - `CashReceipt.SalesInvoiceID` is compatibility metadata only. The authoritative settlement link is `CashReceiptApplication`.
+- Price-list and promotion lineage live directly on `SalesOrderLine`, `SalesInvoiceLine`, and `CreditMemoLine`; postings still remain net revenue rather than separate contra-revenue discount postings.
 - `PurchaseOrder.RequisitionID` is compatibility metadata when a PO batches multiple requisitions.
 - `PurchaseInvoiceLine.GoodsReceiptLineID` is the main match key for receipt-based inventory invoicing.
 - `PurchaseInvoiceLine.AccrualJournalEntryID` links direct service invoices back to accrual journals.

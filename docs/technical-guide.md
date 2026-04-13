@@ -10,7 +10,7 @@ Use this page when you need the codebase-level view of how Greenfield is generat
 
 For table structure and join fields, use [Schema Reference](reference/schema.md). For event-to-ledger behavior, use [GLEntry Posting Reference](reference/posting.md). For planned future changes, use [Roadmap](roadmap.md).
 
-Phase 22 adds a weekly planning layer above the current execution model. The current system now includes demand forecasts, inventory policies, supply recommendations, component-demand planning, and rough-cut capacity tieout while still keeping the Phase 21 workforce-planning layer beneath the approved daily time-clock model.
+Phase 23 adds a commercial-pricing layer on top of the current Phase 22 planning baseline. The current system now includes demand forecasts, inventory policies, supply recommendations, component-demand planning, rough-cut capacity tieout, and explicit O2C pricing lineage through price lists, promotions, and override approvals while still keeping the Phase 21 workforce-planning layer beneath the approved daily time-clock model.
 
 ## Current System at a Glance
 
@@ -78,7 +78,7 @@ In plain language, the build:
 | `planning.py` | Generate inventory policies, weekly demand forecasts, supply recommendations, component-demand plans, rough-cut capacity rows, and recommendation conversion helpers |
 | `payroll.py` | Generate shifts, assignments, daily rosters, absences, raw punches, approved time clocks, overtime approvals, payroll periods, labor time, payroll registers, payments, remittances, and manufacturing labor helpers |
 | `budgets.py` | Generate opening balances and budgets |
-| `o2c.py` | Generate orders, shipments, invoices, receipts, applications, returns, credits, and refunds |
+| `o2c.py` | Generate price lists, promotions, pricing resolution, orders, shipments, invoices, receipts, applications, returns, credits, and refunds |
 | `p2p.py` | Generate requisitions, purchase orders, receipts, supplier invoices, and disbursements |
 | `journals.py` | Generate recurring journals, accrued-expense activity, reclasses, and year-end close journals |
 | `posting_engine.py` | Convert operational and payroll events into balanced GL entries |
@@ -89,7 +89,7 @@ In plain language, the build:
 | `utils.py` | Support numbering, rounding, and shared helper logic |
 | `main.py` | Orchestrate the full run and write the generation log |
 
-## Phase 19 to Phase 22 Teaching Layer
+## Phase 19 to Phase 23 Teaching Layer
 
 The current analytics layer now includes:
 
@@ -98,7 +98,8 @@ The current analytics layer now includes:
 - default-build-first documentation that treats the anomaly-enabled package as the main classroom artifact
 - workforce-planning detail for rosters, absences, punches, and overtime approvals that supports new attendance and staffing analytics
 - weekly planning support for forecast, policy, recommendation, MRP, and rough-cut capacity analysis
-Phase 22 extends the generator itself. Planning outputs now support normal replenishment activity rather than existing only as analytics-only side data.
+- commercial-pricing support for segment and customer price lists, promotions, override approvals, and price-realization analysis
+Phase 22 extends the generator itself through planning outputs that support normal replenishment activity rather than existing only as analytics-only side data. Phase 23 extends the O2C layer itself through formal commercial-pricing resolution rather than ad hoc random line-price variation.
 
 ## Posting, Validation, and Outputs
 
@@ -110,6 +111,7 @@ The validation layer checks:
 - header-to-line totals and status consistency
 - O2C, P2P, manufacturing, payroll, and time-clock controls
 - planning controls for forecast coverage, policy validity, recommendation conversion, MRP reconciliation, and rough-cut capacity availability
+- pricing controls for price-list coverage, promotion validity, price-floor compliance, and invoice or credit pricing-lineage consistency
 - master-data controls for employee roles, employment validity, item catalog completeness, and launch-date usage
 - voucher balance, trial balance, and control-account roll-forwards
 - journal-header-to-GL agreement and close-cycle completeness
