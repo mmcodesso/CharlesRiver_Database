@@ -4,16 +4,22 @@ import Layout from "@theme/Layout";
 
 import styles from "./index.module.css";
 
-const audienceCards = [
+const startCards = [
   {
-    title: "Students",
-    text: "Start with the company story, process guides, schema reference, and GLEntry posting reference before moving into starter SQL or Excel paths.",
-    href: "/docs/quick-start",
-    cta: "Open the quick start",
+    title: "Start here",
+    text: "Begin with the main docs page for downloads, business context, references, and the recommended reading order.",
+    href: "/docs/",
+    cta: "Open Start Here",
   },
   {
-    title: "Instructors",
-    text: "Adopt the database with a course-ready sequence for AIS, analytics, auditing, SQL, and Excel assignments.",
+    title: "Analyze the data",
+    text: "Move into SQL, Excel, financial, managerial, and audit analytics once you know the business flow.",
+    href: "/docs/analytics",
+    cta: "Open analytics",
+  },
+  {
+    title: "Adopt in a course",
+    text: "Use the instructor adoption guide when you need teaching sequence, setup notes, and assignment planning.",
     href: "/docs/teach-with-greenfield/instructor-adoption",
     cta: "Read the adoption guide",
   },
@@ -49,8 +55,8 @@ export default function Home() {
               Excel, and audit-style analysis in one place.
             </p>
             <div className={styles.actions}>
-              <Link className="button button--primary button--lg" to="/docs/quick-start">
-                Open quick start
+              <Link className="button button--primary button--lg" to="/docs/">
+                Open Start Here
               </Link>
               <Link className="button button--secondary button--lg" to="/docs/downloads">
                 Download the data
@@ -69,11 +75,11 @@ export default function Home() {
 
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
-            <p className={styles.sectionLabel}>Who this is for</p>
-            <h2>Different entry points, one connected dataset.</h2>
+            <p className={styles.sectionLabel}>How to use the site</p>
+            <h2>Start with the docs, then move into analysis or teaching setup.</h2>
           </div>
           <div className={styles.cardGrid}>
-            {audienceCards.map((card) => (
+            {startCards.map((card) => (
               <article key={card.title} className={styles.card}>
                 <h3>{card.title}</h3>
                 <p>{card.text}</p>
@@ -124,7 +130,7 @@ export default function Home() {
             </Link>
             <Link className={styles.pathCard} to="/docs/reference/schema">
               <strong>Reference the model</strong>
-              <span>Schema groups, join paths, and posting behavior for student and instructor work.</span>
+              <span>Schema groups, join paths, and posting behavior for analysis and coursework.</span>
             </Link>
           </div>
         </section>

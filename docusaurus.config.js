@@ -41,6 +41,19 @@ const config = {
       },
     ],
   ],
+  plugins: [
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        redirects: [
+          {
+            to: "/docs/",
+            from: ["/docs/quick-start"],
+          },
+        ],
+      },
+    ],
+  ],
   themeConfig: {
     image: "img/greenfield-social-card.svg",
     colorMode: {
@@ -69,7 +82,6 @@ const config = {
       title: "Greenfield",
       items: [
         { to: "/docs/", label: "Start Here", position: "left" },
-        { to: "/docs/quick-start", label: "Quick Start", position: "left" },
         { to: "/docs/analytics", label: "Analytics", position: "left" },
         {
           to: "/docs/teach-with-greenfield/instructor-adoption",
@@ -94,9 +106,9 @@ const config = {
         {
           title: "Start Here",
           items: [
-            { label: "Documentation Home", to: "/docs/" },
-            { label: "Quick Start", to: "/docs/quick-start" },
-            { label: "Dataset Overview", to: "/docs/dataset-overview" },
+            { label: "Start Here", to: "/docs/" },
+            { label: "Downloads", to: "/docs/downloads" },
+            { label: "Dataset Guide", to: "/docs/dataset-overview" },
           ],
         },
         {

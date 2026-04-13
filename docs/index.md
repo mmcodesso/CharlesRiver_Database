@@ -1,85 +1,83 @@
 ---
-title: Documentation Home
-description: Student-first orientation for the Greenfield Accounting Dataset documentation site.
+title: Start Here
+description: The main entry page for learning the Greenfield Accounting Dataset from files to analysis.
 slug: /
-sidebar_label: Docs Home
+sidebar_label: Start Here
 ---
 
-# Documentation Home
+# Start Here
 
-Greenfield Accounting Dataset is a synthetic business database for accounting analytics courses. This site is organized to help students understand the business first, then use the schema and GLEntry posting references alongside SQL, Excel, controls, and teaching materials.
+Greenfield Accounting Dataset is a synthetic business database for accounting analytics courses. Use this page to move from the classroom file package to the business story, process logic, reference pages, and analytics work without getting lost in the repository.
 
-## Start by Audience
+## 1. Start With the Files
 
-| If you are a... | Start here | Then continue with |
-|---|---|---|
-| Student | [Downloads](downloads.md) | [Quick Start](student-quickstart.md), [Company Story](company-story.md), [Process Flows](process-flows.md), [Schema Reference](reference/schema.md), [GLEntry Posting Reference](reference/posting.md), [Analytics Hub](analytics/index.md) |
-| Instructor | [Instructor Adoption Guide](instructor-guide.md) | [Downloads](downloads.md), [Quick Start](student-quickstart.md), [Schema Reference](reference/schema.md), [GLEntry Posting Reference](reference/posting.md), [Analytics Hub](analytics/index.md) |
-| Analyst | [Dataset Guide](dataset-overview.md) | [Analytics Hub](analytics/index.md), [Schema Reference](reference/schema.md), [GLEntry Posting Reference](reference/posting.md) |
-| Contributor | [Technical Guide](technical-guide.md) | [Schema Reference](reference/schema.md), [GLEntry Posting Reference](reference/posting.md), [Roadmap](roadmap.md) |
+Begin with the ready-to-use classroom package from [Downloads](downloads.md).
 
-## Recommended Student Reading Order
+The main files are:
 
-If you are new to the dataset, use this sequence:
+- `greenfield.sqlite` for SQL work
+- `greenfield.xlsx` for Excel pivots, charts, filters, and workbook-based analysis
 
-1. [Downloads](downloads.md)
-2. [Quick Start](student-quickstart.md)
-3. [Company Story](company-story.md)
-4. [Process Flows](process-flows.md)
-5. [Dataset Guide](dataset-overview.md)
-6. [Schema Reference](reference/schema.md)
-7. [GLEntry Posting Reference](reference/posting.md)
-8. [Analytics Hub](analytics/index.md)
+Optional companion files are also available when you need them:
 
-That path gives students the business context first, then the table and GLEntry posting references they need to trace documents into the ledger.
+- `greenfield_support.xlsx` for anomaly and validation support
+- `greenfield_csv.zip` for one-CSV-per-table delivery
 
-## Site Map
+## 2. Learn the Business Before the Tables
 
-### Start Here
+Read these pages in order:
 
-- [Downloads](downloads.md)
-- [Quick Start](student-quickstart.md)
-- [Dataset Guide](dataset-overview.md)
+1. [Company Story](company-story.md)
+2. [Process Flows](process-flows.md)
+3. [Dataset Guide](dataset-overview.md)
 
-### Learn the Business
+That sequence gives you the operating story before you start writing joins, tracing documents, or building pivots.
 
-- [Company Story](company-story.md)
-- [Process Flows](process-flows.md)
-- [O2C](processes/o2c.md)
-- [Returns, Credits, and Refunds](processes/o2c-returns-credits-refunds.md)
-- [P2P](processes/p2p.md)
-- [Manufacturing](processes/manufacturing.md)
-- [Time Clocks](processes/time-clocks.md)
-- [Payroll](processes/payroll.md)
-- [Manual Journals and Close](processes/manual-journals-and-close.md)
+## 3. Know What the Dataset Covers
 
-### Analyze the Data
+The current dataset includes **55 tables** across:
 
-- [Analytics Hub](analytics/index.md)
-- [Financial Analytics](analytics/financial.md)
-- [Managerial Analytics](analytics/managerial.md)
-- [Audit Analytics](analytics/audit.md)
-- [SQL Guide](analytics/sql-guide.md)
-- [Excel Guide](analytics/excel-guide.md)
-- [Analytics Cases](analytics/cases/index.md)
+- accounting core
+- order-to-cash
+- procure-to-pay
+- manufacturing
+- payroll and time
+- master data
+- organizational planning
 
-### Reference
+It is designed for accounting analytics classes where you need to connect process documents, operational data, and posted `GLEntry` activity.
+
+## 4. Use These References While You Work
+
+These pages are the fastest way to check how the model works while you analyze the data:
 
 - [Schema Reference](reference/schema.md)
 - [GLEntry Posting Reference](reference/posting.md)
 
-### Teach With Greenfield
+Use them when you need to trace a process, confirm a join path, or verify what posts to the ledger.
 
-- [Instructor Adoption Guide](instructor-guide.md)
+## 5. Choose Your Analysis Path
 
-### Technical
+Move into the analysis layer from the path that matches your assignment:
 
-- [Technical Guide](technical-guide.md)
-- [Dataset Delivery and Build Setup](teach-with-greenfield/dataset-delivery.md)
-- [Roadmap](roadmap.md)
+- [Analytics Hub](analytics/index.md) for the overall starter map
+- [SQL Guide](analytics/sql-guide.md) for query-based work
+- [Excel Guide](analytics/excel-guide.md) for workbook-based work
+- [Financial Analytics](analytics/financial.md), [Managerial Analytics](analytics/managerial.md), and [Audit Analytics](analytics/audit.md) for topic-specific starting points
 
-## Repository Resources
+## 6. Use Guided Cases When You Need Structure
 
-- [GitHub repository](https://github.com/mmcodesso/greenfield_database)
-- [Contributing guide](https://github.com/mmcodesso/greenfield_database/blob/main/CONTRIBUTING.md)
-- [License](https://github.com/mmcodesso/greenfield_database/blob/main/LICENSE)
+If you do not want to start from a blank page, use [Analytics Cases](analytics/cases/index.md). The case set pairs process context with starter SQL, interpretation prompts, and structured walkthroughs.
+
+## Where to Go Next
+
+If you are new to the dataset, use this reading order:
+
+1. [Downloads](downloads.md)
+2. [Company Story](company-story.md)
+3. [Process Flows](process-flows.md)
+4. [Dataset Guide](dataset-overview.md)
+5. [Schema Reference](reference/schema.md)
+6. [GLEntry Posting Reference](reference/posting.md)
+7. [Analytics Hub](analytics/index.md)
+8. [Analytics Cases](analytics/cases/index.md)

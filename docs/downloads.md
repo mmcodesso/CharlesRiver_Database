@@ -24,6 +24,6 @@ sidebar_label: Downloads
 
 After downloading the files:
 
-1. Read [Quick Start](student-quickstart.md).
+1. Read [Start Here](index.md).
 2. Read [Company Story](company-story.md).
 3. Read [Process Flows](process-flows.md).

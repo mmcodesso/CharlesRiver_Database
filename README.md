@@ -5,7 +5,7 @@ Greenfield Accounting Dataset is a synthetic business database for undergraduate
 The documentation website is the primary starting point:
 
 - [Greenfield documentation site](https://greenfield.accountinganalyticshub.com/)
-- [Quick Start](https://greenfield.accountinganalyticshub.com/docs/quick-start)
+- [Start Here](https://greenfield.accountinganalyticshub.com/docs/)
 - [Downloads](https://greenfield.accountinganalyticshub.com/docs/downloads)
 - [Instructor adoption guide](https://greenfield.accountinganalyticshub.com/docs/teach-with-greenfield/instructor-adoption)
 
