@@ -1181,13 +1181,18 @@ def purchase_recommendations_for_month(context: GenerationContext, year: int, mo
     recommendations = context.tables["SupplyPlanRecommendation"]
     if recommendations.empty:
         return recommendations.head(0).copy()
+    _, month_end = month_bounds(year, month)
     release_dates = pd.to_datetime(recommendations["ReleaseByDate"], errors="coerce")
+    recommended_order_quantities = pd.to_numeric(
+        recommendations["RecommendedOrderQuantity"],
+        errors="coerce",
+    ).fillna(0.0)
     rows = recommendations[
         recommendations["RecommendationType"].eq("Purchase")
         & recommendations["RecommendationStatus"].eq("Planned")
-        & release_dates.dt.year.eq(year)
-        & release_dates.dt.month.eq(month)
-        & recommendations["RecommendedOrderQuantity"].astype(float).gt(0)
+        & release_dates.notna()
+        & release_dates.le(month_end)
+        & recommended_order_quantities.gt(0)
     ].copy()
     return rows.sort_values(["ReleaseByDate", "PriorityCode", "SupplyPlanRecommendationID"]).reset_index(drop=True)
 
@@ -1196,13 +1201,18 @@ def manufacture_recommendations_for_month(context: GenerationContext, year: int,
     recommendations = context.tables["SupplyPlanRecommendation"]
     if recommendations.empty:
         return recommendations.head(0).copy()
+    _, month_end = month_bounds(year, month)
     release_dates = pd.to_datetime(recommendations["ReleaseByDate"], errors="coerce")
+    recommended_order_quantities = pd.to_numeric(
+        recommendations["RecommendedOrderQuantity"],
+        errors="coerce",
+    ).fillna(0.0)
     rows = recommendations[
         recommendations["RecommendationType"].eq("Manufacture")
         & recommendations["RecommendationStatus"].eq("Planned")
-        & release_dates.dt.year.eq(year)
-        & release_dates.dt.month.eq(month)
-        & recommendations["RecommendedOrderQuantity"].astype(float).gt(0)
+        & release_dates.notna()
+        & release_dates.le(month_end)
+        & recommended_order_quantities.gt(0)
     ].copy()
     return rows.sort_values(["ReleaseByDate", "PriorityCode", "SupplyPlanRecommendationID"]).reset_index(drop=True)
 

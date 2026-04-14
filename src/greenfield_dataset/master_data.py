@@ -230,8 +230,10 @@ CAPACITY_ALIGNMENT_ACTIVE_ROLE_SPECS = [
     ("Manufacturing", "Assembler"),
     ("Manufacturing", "Assembler"),
     ("Manufacturing", "Assembler"),
+    ("Manufacturing", "Assembler"),
     ("Manufacturing", "Machine Operator"),
     ("Manufacturing", "Machine Operator"),
+    ("Manufacturing", "Quality Technician"),
     ("Manufacturing", "Quality Technician"),
 ]
 MIN_NON_CAPACITY_ACTIVE_ROLE_COUNT = 1

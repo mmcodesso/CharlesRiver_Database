@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+import logging
 from typing import Any
 
 import numpy as np
@@ -12,6 +13,9 @@ from greenfield_dataset.planning import purchase_recommendations_for_month, upda
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
 from greenfield_dataset.utils import format_doc_number, money, next_id, qty, random_date_in_month
+
+
+LOGGER = logging.getLogger("greenfield_dataset")
 
 
 ITEM_GROUP_REQUISITION_WEIGHTS = {
@@ -685,6 +689,7 @@ def update_purchase_invoice_statuses(context: GenerationContext) -> None:
 
 def generate_month_requisitions(context: GenerationContext, year: int, month: int) -> None:
     rng = context.rng
+    month_start, month_end = month_bounds(year, month)
     warehouse_id = cost_center_id(context, "Warehouse")
     purchasing_id = cost_center_id(context, "Purchasing")
     administration_id = cost_center_id(context, "Administration")
@@ -699,16 +704,16 @@ def generate_month_requisitions(context: GenerationContext, year: int, month: in
             item = item_lookup.get(int(recommendation.ItemID))
             if item is None:
                 continue
-            request_date = pd.Timestamp(recommendation.ReleaseByDate)
-            if request_date.year != year or request_date.month != month:
-                request_date = random_date_in_month(rng, year, month)
+            request_date = max(month_start, pd.Timestamp(recommendation.ReleaseByDate))
+            if request_date > month_end:
+                request_date = month_end
             cost_center = (
                 cost_center_id(context, "Manufacturing")
                 if str(recommendation.DriverType) == "Component Demand"
                 else purchasing_id
             )
             requestors = employee_ids_for_cost_center(context, int(cost_center), request_date)
-            approved_date = min(request_date + pd.Timedelta(days=1), pd.Timestamp(year=year, month=month, day=1) + pd.offsets.MonthEnd(0))
+            approved_date = min(request_date + pd.Timedelta(days=1), month_end)
             requisition_id = next_id(context, "PurchaseRequisition")
             rows.append({
                 "RequisitionID": requisition_id,
@@ -733,6 +738,16 @@ def generate_month_requisitions(context: GenerationContext, year: int, month: in
 
         append_rows(context, "PurchaseRequisition", rows)
         update_recommendation_conversion(context, conversion_mapping)
+        remaining_overdue_planned = len(purchase_recommendations_for_month(context, year, month))
+        LOGGER.info(
+            "PURCHASE CONVERSION | %s-%02d | eligible_planned=%s | converted=%s | expired=%s | remaining_overdue_planned=%s",
+            year,
+            month,
+            len(planned_recommendations),
+            len(conversion_mapping),
+            0,
+            remaining_overdue_planned,
+        )
         return
 
     requisition_count = int(rng.integers(*REQUISITION_COUNT_RANGE))

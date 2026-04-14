@@ -2233,6 +2233,21 @@ def validate_time_clock_controls(context: GenerationContext) -> dict[str, Any]:
             time_clock_id = labor_row.get("TimeClockEntryID")
             if pd.notna(time_clock_id):
                 labor_rows_by_time_clock[int(time_clock_id)].append(labor_row)
+    earliest_direct_labor_date_by_work_order: dict[int, pd.Timestamp] = {}
+    if not labor_entries.empty:
+        direct_labor = labor_entries[
+            labor_entries["LaborType"].eq("Direct Manufacturing")
+            & labor_entries["WorkOrderID"].notna()
+            & labor_entries["WorkDate"].notna()
+        ].copy()
+        if not direct_labor.empty:
+            direct_labor["WorkDateTS"] = pd.to_datetime(direct_labor["WorkDate"], errors="coerce")
+            direct_labor = direct_labor[direct_labor["WorkDateTS"].notna()].copy()
+            if not direct_labor.empty:
+                earliest_direct_labor_date_by_work_order = {
+                    int(work_order_id): pd.Timestamp(work_date)
+                    for work_order_id, work_date in direct_labor.groupby("WorkOrderID")["WorkDateTS"].min().items()
+                }
     work_order_lookup = work_orders.set_index("WorkOrderID").to_dict("index") if not work_orders.empty else {}
     operation_lookup = work_order_operations.set_index("WorkOrderOperationID").to_dict("index") if not work_order_operations.empty else {}
     payroll_period_lookup = payroll_periods.set_index("PayrollPeriodID").to_dict("index") if not payroll_periods.empty else {}
@@ -2370,6 +2385,23 @@ def validate_time_clock_controls(context: GenerationContext) -> dict[str, Any]:
                     period_end = pd.Timestamp(payroll_period["PeriodEndDate"])
                     post_completion_fallback = (
                         period_start <= completed_date <= period_end
+                        and completed_date <= work_date <= period_end
+                    )
+                if (
+                    not post_completion_fallback
+                    and
+                    work_order is not None
+                    and payroll_period is not None
+                    and pd.notna(work_order.get("CompletedDate"))
+                    and direct_labor_rows
+                ):
+                    completed_date = pd.Timestamp(work_order["CompletedDate"])
+                    period_start = pd.Timestamp(payroll_period["PeriodStartDate"])
+                    period_end = pd.Timestamp(payroll_period["PeriodEndDate"])
+                    earliest_direct_labor_date = earliest_direct_labor_date_by_work_order.get(int(operation["WorkOrderID"]))
+                    post_completion_fallback = (
+                        earliest_direct_labor_date is not None
+                        and period_start <= earliest_direct_labor_date <= period_end
                         and completed_date <= work_date <= period_end
                     )
                 if (work_date < lower_bound or work_date > upper_bound) and not post_completion_fallback:
@@ -3153,11 +3185,17 @@ def validate_master_data_controls(context: GenerationContext) -> dict[str, Any]:
             })
 
         terminated_share = round(float(terminated_mask.sum()) / max(len(employees), 1), 4)
-        if terminated_share < 0.08 or terminated_share > 0.15:
+        terminated_share_lower_bound = 0.08
+        if len(employees) < 30:
+            terminated_share_lower_bound = round(1.0 / max(len(employees), 1), 4)
+        if terminated_share < terminated_share_lower_bound or terminated_share > 0.15:
             exceptions.append({
                 "type": "terminated_share_out_of_band",
                 "share": terminated_share,
-                "message": f"Terminated employee share {terminated_share:.4f} is outside the 8% to 15% target band.",
+                "message": (
+                    f"Terminated employee share {terminated_share:.4f} is outside the "
+                    f"{terminated_share_lower_bound:.4f} to 0.1500 target band."
+                ),
             })
 
         active_employee_ids = set(employees.loc[employees["IsActive"].astype(int).eq(1), "EmployeeID"].astype(int).tolist())

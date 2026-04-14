@@ -620,23 +620,76 @@ def production_completion_lines_for_period(
     return completion_lines.merge(period_headers, on="ProductionCompletionID", how="inner")
 
 
+def carried_forward_completion_lines_before_period(
+    context: GenerationContext,
+    period_start: pd.Timestamp,
+) -> pd.DataFrame:
+    completions = context.tables["ProductionCompletion"]
+    completion_lines = context.tables["ProductionCompletionLine"]
+    work_orders = context.tables["WorkOrder"]
+    if completions.empty or completion_lines.empty or work_orders.empty:
+        return completion_lines.head(0)
+
+    direct_labor = labor_time_entries(context)
+    direct_work_order_ids = set(
+        direct_labor.loc[
+            direct_labor["LaborType"].eq("Direct Manufacturing") & direct_labor["WorkOrderID"].notna(),
+            "WorkOrderID",
+        ].astype(int).tolist()
+    )
+    completed_work_orders = work_orders[
+        work_orders["Status"].eq("Completed")
+        & work_orders["CompletedDate"].notna()
+        & pd.to_datetime(work_orders["CompletedDate"], errors="coerce").lt(period_start)
+        & ~work_orders["WorkOrderID"].astype(int).isin(direct_work_order_ids)
+    ]
+    if completed_work_orders.empty:
+        return completion_lines.head(0)
+
+    header_mask = (
+        completions["WorkOrderID"].astype(int).isin(completed_work_orders["WorkOrderID"].astype(int))
+        & pd.to_datetime(completions["CompletionDate"], errors="coerce").lt(period_start)
+    )
+    carried_headers = completions.loc[header_mask, ["ProductionCompletionID", "WorkOrderID", "CompletionDate"]]
+    if carried_headers.empty:
+        return completion_lines.head(0)
+
+    return completion_lines.merge(carried_headers, on="ProductionCompletionID", how="inner")
+
+
 def direct_labor_targets_for_period(
     context: GenerationContext,
     period_start: pd.Timestamp,
     period_end: pd.Timestamp,
 ) -> dict[int, dict[str, float]]:
     period_completion_lines = production_completion_lines_for_period(context, period_start, period_end)
-    if period_completion_lines.empty:
+    carried_forward_completion_lines = carried_forward_completion_lines_before_period(context, period_start)
+    completion_lines = pd.concat(
+        [period_completion_lines, carried_forward_completion_lines],
+        ignore_index=True,
+    )
+    if completion_lines.empty:
         return {}
 
     grouped = (
-        period_completion_lines.groupby("WorkOrderID")[["ExtendedStandardDirectLaborCost", "QuantityCompleted"]]
-        .sum()
+        completion_lines.assign(
+            CompletionDateMax=pd.to_datetime(completion_lines["CompletionDate"], errors="coerce"),
+        ).groupby("WorkOrderID")[["ExtendedStandardDirectLaborCost", "QuantityCompleted", "CompletionDateMax"]]
+        .agg({
+            "ExtendedStandardDirectLaborCost": "sum",
+            "QuantityCompleted": "sum",
+            "CompletionDateMax": "max",
+        })
         .reset_index()
     )
     targets: dict[int, dict[str, float]] = {}
     for row in grouped.itertuples(index=False):
-        rng = stable_rng(context, "direct-labor-target", int(row.WorkOrderID), period_start.strftime("%Y-%m-%d"))
+        completion_date_key = (
+            pd.Timestamp(row.CompletionDateMax).strftime("%Y-%m-%d")
+            if pd.notna(row.CompletionDateMax)
+            else period_start.strftime("%Y-%m-%d")
+        )
+        rng = stable_rng(context, "direct-labor-target", int(row.WorkOrderID), completion_date_key)
         targets[int(row.WorkOrderID)] = {
             "actual_direct_labor_cost": money(float(row.ExtendedStandardDirectLaborCost) * rng.uniform(*DIRECT_LABOR_FACTOR_RANGE)),
             "quantity_completed": qty(float(row.QuantityCompleted)),

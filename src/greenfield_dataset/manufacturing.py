@@ -1769,13 +1769,15 @@ def generate_month_work_orders_and_requisitions(context: GenerationContext, year
         append_rows(context, "WorkOrderOperationSchedule", work_order_operation_schedule_rows)
         update_recommendation_conversion(context, conversion_mapping)
         expire_recommendations(context, expired_recommendation_ids)
+        remaining_overdue_planned = len(manufacture_recommendations_for_month(context, year, month))
         LOGGER.info(
-            "MANUFACTURING CONVERSION | %s-%02d | planned=%s | converted=%s | expired=%s | conversion_rate=%.4f",
+            "MANUFACTURING CONVERSION | %s-%02d | eligible_planned=%s | converted=%s | expired=%s | remaining_overdue_planned=%s | conversion_rate=%.4f",
             year,
             month,
             len(planned_recommendations),
             len(conversion_mapping),
             len(expired_recommendation_ids),
+            remaining_overdue_planned,
             (len(conversion_mapping) / len(planned_recommendations)) if len(planned_recommendations) > 0 else 0.0,
         )
         return
@@ -2175,79 +2177,89 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
             update_work_order_row(context, work_order_id, "Released")
             continue
 
-        if int(existing_issue_counts.get(work_order_id, 0)) == 0:
-            issuable_quantity = remaining_quantity
-            for bom_line in bom_lines.itertuples(index=False):
-                required_per_unit = float(bom_line.QuantityPerUnit) * (1 + float(bom_line.ScrapFactorPct))
-                available_quantity = float(material_inventory.get((int(bom_line.ComponentItemID), int(work_order.WarehouseID)), 0.0))
-                supported_quantity = available_quantity / required_per_unit if required_per_unit > 0 else remaining_quantity
-                issuable_quantity = min(issuable_quantity, supported_quantity)
-            issuable_quantity = qty(issuable_quantity)
+        issuable_quantity = remaining_quantity
+        for bom_line in bom_lines.itertuples(index=False):
+            required_per_unit = float(bom_line.QuantityPerUnit) * (1 + float(bom_line.ScrapFactorPct))
+            available_quantity = float(material_inventory.get((int(bom_line.ComponentItemID), int(work_order.WarehouseID)), 0.0))
+            supported_quantity = available_quantity / required_per_unit if required_per_unit > 0 else remaining_quantity
+            issuable_quantity = min(issuable_quantity, supported_quantity)
+        issuable_quantity = qty(issuable_quantity)
 
-            if issuable_quantity > 0:
-                issue_event_count = choose_count(rng, ISSUE_EVENT_COUNT_PROBABILITIES)
-                issue_window_start = max(month_start, first_planned_start)
-                issue_window_end = min(month_end, pd.Timestamp(work_order.FinalScheduledDate))
-                if issue_window_end < issue_window_start:
-                    issue_window_end = issue_window_start
-                issue_dates = sorted(
-                    random_date_between(rng, issue_window_start, issue_window_end)
-                    for _ in range(issue_event_count)
+        already_supported_quantity = qty(
+            max(
+                float(issued_support_quantities.get(work_order_id, 0.0))
+                - float(completed_quantities.get(work_order_id, 0.0)),
+                0.0,
+            )
+        )
+        additional_issuable_quantity = qty(max(float(issuable_quantity) - float(already_supported_quantity), 0.0))
+
+        if additional_issuable_quantity > 0:
+            issue_event_count = choose_count(rng, ISSUE_EVENT_COUNT_PROBABILITIES)
+            issue_window_start = max(month_start, first_planned_start)
+            issue_window_end = min(month_end, pd.Timestamp(work_order.FinalScheduledDate))
+            if issue_window_end < issue_window_start:
+                issue_window_end = issue_window_start
+            issue_dates = sorted(
+                random_date_between(rng, issue_window_start, issue_window_end)
+                for _ in range(issue_event_count)
+            )
+            issue_quantities_by_line = {
+                int(bom_line.BOMLineID): split_quantities(
+                    qty(
+                        additional_issuable_quantity
+                        * float(bom_line.QuantityPerUnit)
+                        * (1 + float(bom_line.ScrapFactorPct))
+                        * rng.uniform(*ISSUE_FACTOR_RANGE)
+                    ),
+                    issue_event_count,
+                    rng,
                 )
-                issue_quantities_by_line = {
-                    int(bom_line.BOMLineID): split_quantities(
-                        qty(
-                            issuable_quantity
-                            * float(bom_line.QuantityPerUnit)
-                            * (1 + float(bom_line.ScrapFactorPct))
-                            * rng.uniform(*ISSUE_FACTOR_RANGE)
-                        ),
-                        issue_event_count,
-                        rng,
-                    )
-                    for bom_line in bom_lines.itertuples(index=False)
-                }
+                for bom_line in bom_lines.itertuples(index=False)
+            }
 
-                issue_line_number_by_header: dict[int, int] = {}
-                for event_index, issue_date in enumerate(issue_dates):
-                    material_issue_id = next_id(context, "MaterialIssue")
-                    issue_headers.append({
+            issue_line_number_by_header: dict[int, int] = {}
+            for event_index, issue_date in enumerate(issue_dates):
+                material_issue_id = next_id(context, "MaterialIssue")
+                issue_headers.append({
+                    "MaterialIssueID": material_issue_id,
+                    "IssueNumber": format_doc_number("MI", year, material_issue_id),
+                    "WorkOrderID": work_order_id,
+                    "IssueDate": issue_date.strftime("%Y-%m-%d"),
+                    "WarehouseID": int(work_order.WarehouseID),
+                    "IssuedByEmployeeID": int(rng.choice(employee_ids_for_cost_center(context, "Manufacturing", issue_date))),
+                    "Status": "Issued",
+                })
+                issue_line_number_by_header[material_issue_id] = 1
+
+                for bom_line in bom_lines.itertuples(index=False):
+                    issue_quantity = qty(issue_quantities_by_line[int(bom_line.BOMLineID)][event_index])
+                    if issue_quantity <= 0:
+                        continue
+                    key = (int(bom_line.ComponentItemID), int(work_order.WarehouseID))
+                    available_quantity = qty(material_inventory.get(key, 0.0))
+                    issue_quantity = min(issue_quantity, available_quantity)
+                    if issue_quantity <= 0:
+                        continue
+                    material_inventory[key] = qty(available_quantity - issue_quantity)
+                    component = items[int(bom_line.ComponentItemID)]
+                    issue_lines.append({
+                        "MaterialIssueLineID": next_id(context, "MaterialIssueLine"),
                         "MaterialIssueID": material_issue_id,
-                        "IssueNumber": format_doc_number("MI", year, material_issue_id),
-                        "WorkOrderID": work_order_id,
-                        "IssueDate": issue_date.strftime("%Y-%m-%d"),
-                        "WarehouseID": int(work_order.WarehouseID),
-                        "IssuedByEmployeeID": int(rng.choice(employee_ids_for_cost_center(context, "Manufacturing", issue_date))),
-                        "Status": "Issued",
+                        "BOMLineID": int(bom_line.BOMLineID),
+                        "LineNumber": issue_line_number_by_header[material_issue_id],
+                        "ItemID": int(bom_line.ComponentItemID),
+                        "QuantityIssued": issue_quantity,
+                        "ExtendedStandardCost": money(issue_quantity * float(component["StandardCost"])),
                     })
-                    issue_line_number_by_header[material_issue_id] = 1
+                    issue_line_number_by_header[material_issue_id] += 1
 
-                    for bom_line in bom_lines.itertuples(index=False):
-                        issue_quantity = qty(issue_quantities_by_line[int(bom_line.BOMLineID)][event_index])
-                        if issue_quantity <= 0:
-                            continue
-                        key = (int(bom_line.ComponentItemID), int(work_order.WarehouseID))
-                        available_quantity = qty(material_inventory.get(key, 0.0))
-                        issue_quantity = min(issue_quantity, available_quantity)
-                        if issue_quantity <= 0:
-                            continue
-                        material_inventory[key] = qty(available_quantity - issue_quantity)
-                        component = items[int(bom_line.ComponentItemID)]
-                        issue_lines.append({
-                            "MaterialIssueLineID": next_id(context, "MaterialIssueLine"),
-                            "MaterialIssueID": material_issue_id,
-                            "BOMLineID": int(bom_line.BOMLineID),
-                            "LineNumber": issue_line_number_by_header[material_issue_id],
-                            "ItemID": int(bom_line.ComponentItemID),
-                            "QuantityIssued": issue_quantity,
-                            "ExtendedStandardCost": money(issue_quantity * float(component["StandardCost"])),
-                        })
-                        issue_line_number_by_header[material_issue_id] += 1
+            existing_issue_counts[work_order_id] = int(existing_issue_counts.get(work_order_id, 0)) + issue_event_count
+            issued_support_quantities[work_order_id] = qty(
+                float(issued_support_quantities.get(work_order_id, 0.0)) + float(additional_issuable_quantity)
+            )
 
-                existing_issue_counts[work_order_id] = issue_event_count
-                issued_support_quantities[work_order_id] = issuable_quantity
-
-        if int(existing_issue_counts.get(work_order_id, 0)) == 0:
+        if qty(max(float(issued_support_quantities.get(work_order_id, 0.0)) - float(completed_quantities.get(work_order_id, 0.0)), 0.0)) <= 0:
             update_work_order_row(context, work_order_id, "Released")
             continue
 
