@@ -7,10 +7,7 @@ sidebar_label: Customize
 
 # Customize
 
-
-## When to Use This Page
-
-Use this page when you want to create a local Greenfield dataset or adjust the generation settings for a specific teaching need.
+ When you want to create a local Greenfield dataset or adjust the generation settings for a specific teaching need.
 
 Most instructors can teach directly from the published package and the documentation site. Use customization only when you need a different date range, different dataset size, different outputs, or a different validation or anomaly setting.
 
@@ -22,8 +19,10 @@ For most courses, start with the published teaching package:
 
 - `greenfield.sqlite`
 - `greenfield.xlsx`
-- `greenfield_support.xlsx`
 - `greenfield_csv.zip`
+
+
+- `greenfield_support.xlsx` 
 
 Then point students to:
 

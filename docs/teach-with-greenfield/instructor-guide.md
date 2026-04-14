@@ -7,124 +7,87 @@ sidebar_label: Instructor Adoption
 
 # Instructor Adoption Guide
 
-## Adopt Greenfield in 4 Steps
+## Why instructors adopt Greenfield
 
-### 1. Choose the student entry point
+Greenfield is ready for classroom use from the published teaching files and the documentation site. Instructors do not need to assemble a separate business case, build process notes, or create a starter query path before the first assignment. The site already connects business context, process logic, dataset navigation, references, analytics guides, and case-based activities in one teaching environment.
 
-For most classes, students should start with the published teaching files and the documentation site.
+That structure makes adoption practical across several accounting courses. The same dataset can support AIS, business-process instruction, SQL and accounting analytics, Excel-based analysis, auditing and controls, and managerial or cost-accounting work. Instructors can begin with a clear default path and expand into cases, references, and optional customization only when the course needs it.
 
-Give students:
+## What students need first
 
-- the SQLite database for SQL work
-- the Excel workbook for spreadsheet-based analysis
-- the documentation site for orientation and guided reading
+For most courses, start students with the published teaching files and the teaching-facing documentation.
 
-Use [Customize](../technical/dataset-delivery.md) only when you want to create a local variant or adjust generation parameters.
+- Use `greenfield.sqlite` when the course emphasizes SQL, joins, and query-based analysis.
+- Use `greenfield.xlsx` when the course emphasizes pivots, filters, formulas, charts, and workbook-based interpretation.
+- Use `greenfield_support.xlsx` only when the course includes anomaly review, audit exercises, or validation context.
+- Use [Start Here](../start-here/index.md), [Company Story](../learn-the-business/company-story.md), [Process Flows](../learn-the-business/process-flows.md), and [Dataset Guide](../start-here/dataset-overview.md) before the first technical assignment.
 
-### 2. Pick the course emphasis
+In most classes, the SQLite database or the Excel workbook will be the primary teaching file. The support workbook is an additional tool for selected audit and control assignments.
 
-| If your course emphasizes... | Start with | Then assign |
+## Where Greenfield fits in the curriculum
+
+| Course emphasis | Begin with | Then use |
 |---|---|---|
-| AIS or business processes | [Company Story](../learn-the-business/company-story.md), [Process Flows](../learn-the-business/process-flows.md) | document tracing, process mapping, source-to-ledger explanations |
-| SQL and accounting analytics | [Start Here](../start-here/index.md), [SQL Guide](../analytics/sql-guide.md) | starter SQL packs and guided cases |
-| Excel-based analytics | [Start Here](../start-here/index.md), [Excel Guide](../analytics/excel-guide.md) | workbook-based pivots, charts, and interpretation work |
-| Auditing and controls | [Audit Analytics](../analytics/audit.md) | anomaly-focused labs and control-review exercises |
-| Managerial or cost accounting | [Managerial Analytics](../analytics/managerial.md) | BOM, labor, variance, cost-center, and capacity analysis |
+| AIS and business processes | [Company Story](../learn-the-business/company-story.md), [Process Flows](../learn-the-business/process-flows.md) | source-document tracing, process mapping, and source-to-ledger explanation |
+| SQL and accounting analytics | [Start Here](../start-here/index.md), [Dataset Guide](../start-here/dataset-overview.md), [SQL Guide](../analytics/sql-guide.md) | starter SQL packs, guided cases, and topic-based analysis |
+| Excel analytics | [Start Here](../start-here/index.md), [Company Story](../learn-the-business/company-story.md), [Excel Guide](../analytics/excel-guide.md) | workbook-based pivots, charts, and interpretation exercises |
+| Auditing and controls | [Process Flows](../learn-the-business/process-flows.md), [Audit Analytics](../analytics/audit.md) | support-workbook review, control testing, and exception-focused cases |
+| Managerial and cost accounting | [Dataset Guide](../start-here/dataset-overview.md), [Managerial Analytics](../analytics/managerial.md) | portfolio, labor, variance, planning, and capacity analysis |
 
-### 3. Sequence the material from business to analysis
+## Recommended teaching sequence
 
-The recommended rule is simple: process understanding first, analytics second.
+This sequence works well for most first-time adoptions:
 
-Suggested student sequence:
+1. Share the published teaching files.
+2. Assign [Start Here](../start-here/index.md).
+3. Assign [Company Story](../learn-the-business/company-story.md).
+4. Review [Process Flows](../learn-the-business/process-flows.md).
+5. Assign [Dataset Guide](../start-here/dataset-overview.md).
+6. Choose the first analytics track in [Analytics Hub](../analytics/index.md).
+7. Use [Analytics Cases](../analytics/cases/index.md) once students understand the basic document and table flow.
 
-1. [Start Here](../start-here/index.md)
-2. [Company Story](../learn-the-business/company-story.md)
-3. [Process Flows](../learn-the-business/process-flows.md)
-4. [Dataset Guide](../start-here/dataset-overview.md)
-5. [Analytics Hub](../analytics/index.md)
-6. topic-specific analytics pages and cases
+This order helps students understand the business and the process logic before they move into SQL, Excel, or open-ended analysis.
 
-### 4. Decide how you will deliver the published dataset
+## When to use the support workbook
 
-- Use the published SQLite database and Excel workbook as the core student file set.
-- Share `greenfield_support.xlsx` when the course includes exception review, audit exercises, or validation context.
+Include `greenfield_support.xlsx` when you want students to:
 
-## What to Share With Students vs Keep for Teaching Setup
+- review anomaly families alongside source-table evidence
+- compare validation exceptions to operational or accounting records
+- work through audit and control cases with guided exception context
+- triage issues before moving into deeper source-document review
 
-### Student-ready material
+For most financial, managerial, and introductory SQL assignments, the SQLite database or Excel workbook will be sufficient without the support workbook.
 
-Share these directly with students:
+## How to stage assignments
 
-- [Start Here](../start-here/index.md)
-- [Company Story](../learn-the-business/company-story.md)
-- [Dataset Guide](../start-here/dataset-overview.md)
-- [Process Flows](../learn-the-business/process-flows.md)
-- [Schema Reference](../reference/schema.md)
-- [GLEntry Posting Reference](../reference/posting.md)
-- [Analytics Hub](../analytics/index.md)
-- [Financial Analytics](../analytics/financial.md)
-- [Managerial Analytics](../analytics/managerial.md)
-- [Audit Analytics](../analytics/audit.md)
-- [SQL Guide](../analytics/sql-guide.md)
-- [Excel Guide](../analytics/excel-guide.md)
-- [Analytics Cases](../analytics/cases/index.md)
+Start with guided work and then widen the analytical scope.
 
-### Instructor-only or setup-focused material
+- Use topic guides and starter queries to establish the first analytical pattern.
+- Move next into [Analytics Cases](../analytics/cases/index.md) when students need structured interpretation prompts and business context.
+- Use open-ended analysis only after students can explain the source documents, process flow, and ledger effect behind the result.
+- Use [Schema Reference](../reference/schema.md) and [GLEntry Posting Reference](../reference/posting.md) as supporting references during assignments, not as the first reading.
 
-Use these when you need optional customization, generator context, or release-planning detail:
+This progression usually produces stronger explanations and better query design than starting with a blank-screen assignment.
 
-- [Technical Guide](../technical/technical-guide.md)
-- [Roadmap](../technical/roadmap.md)
+## Optional customization
 
-## Recommended Course Delivery Pattern
+Most instructors can adopt Greenfield successfully with the published teaching package. Use [Customize](../technical/dataset-delivery.md) only when you want a local variant, a different fiscal range, different scale settings, or a different output set for instructor preparation.
 
-| Week or module | Teaching goal | Main docs | Main starter assets |
-|---|---|---|---|
-| 1. Orientation | Explain the company, dataset purpose, and student workflow | [Start Here](../start-here/index.md), [Company Story](../learn-the-business/company-story.md), [Dataset Guide](../start-here/dataset-overview.md) | SQLite or Excel teaching package |
-| 2. Process mapping | Show O2C, P2P, manufacturing, payroll, and close-cycle flow | [Process Flows](../learn-the-business/process-flows.md) and process guides | None yet |
-| 3. Table navigation | Teach keys, joins, and traceability | [Dataset Guide](../start-here/dataset-overview.md) | Introductory ad hoc joins |
-| 4. Financial analytics | Connect operational activity to accounting review | [Financial Analytics](../analytics/financial.md) | `queries/financial/` |
-| 5. Working-capital and statement bridge | Connect subledgers to control accounts and close | [Financial Analytics](../analytics/financial.md), [Analytics Cases](../analytics/cases/index.md) | financial starter SQL plus the working-capital and statement-bridge cases |
-| 6. Managerial analytics | Analyze portfolio mix, costs, labor, inventory, and operations | [Managerial Analytics](../analytics/managerial.md) | `queries/managerial/` plus the portfolio-profitability case |
-| 7. Audit analytics | Review completeness, controls, master data, and anomalies | [Audit Analytics](../analytics/audit.md) | `queries/audit/` plus the workforce and audit-review-pack cases |
-| 8. Guided assignments | Use structured walkthroughs before open-ended work | [Analytics Cases](../analytics/cases/index.md) | case docs plus starter SQL |
+## Adoption checklist
 
-This sequence compresses cleanly into fewer modules or expands into a full semester.
+- Decide whether the course will begin in SQL, Excel, or both.
+- Download and review the published teaching files before the course begins.
+- Assign the business and process pages before the first technical task.
+- Choose one analytics track as the first structured module.
+- Add the support workbook only when the assignment needs anomaly or validation context.
+- Use guided cases before open-ended projects when students are new to integrated accounting datasets.
+- Keep schema and posting references available during assignments.
 
-## Adoption Checklist
-
-- Decide whether students will work primarily in SQL, Excel, or both.
-- Share the packaged output files before the first analysis assignment.
-- Assign the company and process reading before the first query exercise.
-- Pick one analytics track first: financial, managerial, or audit.
-- Use guided cases before open-ended student prompts if the class is new to integrated business datasets.
-- Reserve schema, posting, and architecture references for advanced work or instructor prep.
-
-## Teaching Notes
-
-- Start with why each document exists before discussing table structure.
-- Use `GLEntry` only after students understand which source events post and which do not.
-- For auditing classes, explain how the published dataset and support workbook work together.
-- For beginner SQL classes, start from the provided queries before moving to blank-screen assignments.
-- For Excel-heavy classes, use the workbook and process docs together so students can interpret patterns while they build pivots.
-
-## Recommended Classroom Sequence
-
-1. Use the published dataset package as the core student file set.
-2. Start financial classes with the working-capital and statement-bridge cases.
-3. Start managerial classes with the product-portfolio profitability case.
-4. Start audit classes with the workforce cost and org-control case, then move to the audit review pack.
-5. Use the expanded audit queries to separate role-family issues, approval-limit issues, current-state assignment issues, and item-status issues within the published dataset.
-6. Add the workforce coverage case when students are ready to compare rostered hours, worked hours, absences, and overtime.
-7. Add the attendance control audit case when students need a deeper roster, punch, and overtime-control lab.
-8. Add the demand-planning case when students are ready to connect forecast, replenishment, MRP, and rough-cut capacity.
-9. Add the replenishment-support audit case when students need to test forecast approval, policy status, and recommendation conversion support.
-10. Add the pricing and margin case when students are ready to connect list price, promotions, overrides, and realized margin.
-11. Add the pricing-governance audit case when students need a commercial-controls lab around expired pricing, price-floor breaches, and override completeness.
-12. Use guided comparisons across years, processes, or topic packs after students understand the core dataset.
-
-## Where to Go Next
+## Where to go next
 
 - Use [Start Here](../start-here/index.md) as the primary student launch page.
 - Use [Analytics Hub](../analytics/index.md) to choose the first topic pack.
-- Use [Schema Reference](../reference/schema.md) and [GLEntry Posting Reference](../reference/posting.md) as shared student and instructor references during assignments.
+- Use [Analytics Cases](../analytics/cases/index.md) for guided assignments.
+- Use [Schema Reference](../reference/schema.md) and [GLEntry Posting Reference](../reference/posting.md) as assignment support references.
+- Use [Customize](../technical/dataset-delivery.md) only when you need a locally generated variant.
