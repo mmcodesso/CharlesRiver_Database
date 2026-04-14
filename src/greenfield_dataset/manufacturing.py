@@ -17,6 +17,8 @@ from greenfield_dataset.master_data import (
 )
 from greenfield_dataset.o2c import opening_inventory_map, sales_order_line_shipped_quantities, shadow_inventory_state
 from greenfield_dataset.planning import (
+    MANUFACTURED_POLICY_MIN_LEAD_DAYS,
+    cancel_recommendations,
     expire_recommendations,
     manufacture_recommendations_for_month,
     primary_warehouse_rank,
@@ -81,7 +83,6 @@ ISSUE_EVENT_COUNT_PROBABILITIES = ((1, 0.68), (2, 0.32))
 COMPLETION_EVENT_COUNT_PROBABILITIES = ((1, 0.72), (2, 0.28))
 ISSUE_FACTOR_RANGE = (0.98, 1.04)
 MATERIAL_REQUISITION_BUFFER_FACTOR = (1.03, 1.08)
-
 WORK_CENTER_DEFINITIONS = (
     {
         "WorkCenterCode": "CUT",
@@ -1325,6 +1326,85 @@ def manufacturing_work_center_utilization_by_code(
     return state
 
 
+def manufacturing_work_center_available_hours_by_code(
+    context: GenerationContext,
+    year: int,
+    month: int,
+    work_center_codes: tuple[str, ...] = ("ASSEMBLY", "CUT", "FINISH"),
+) -> dict[str, float]:
+    month_start, month_end = month_bounds(year, month)
+    work_centers = context.tables["WorkCenter"]
+    calendars = context.tables["WorkCenterCalendar"]
+    if work_centers.empty or calendars.empty:
+        return {code: 0.0 for code in work_center_codes}
+
+    work_center_id_by_code = {
+        str(row.WorkCenterCode): int(row.WorkCenterID)
+        for row in work_centers.itertuples(index=False)
+    }
+    month_calendars = calendars[
+        pd.to_datetime(calendars["CalendarDate"]).between(month_start, month_end)
+    ].copy()
+    state: dict[str, float] = {}
+    for work_center_code in work_center_codes:
+        work_center_id = work_center_id_by_code.get(str(work_center_code))
+        if work_center_id is None:
+            state[str(work_center_code)] = 0.0
+            continue
+        state[str(work_center_code)] = round(
+            float(
+                month_calendars.loc[
+                    month_calendars["WorkCenterID"].astype(int).eq(int(work_center_id)),
+                    "AvailableHours",
+                ].astype(float).sum()
+            ),
+            2,
+        )
+    return state
+
+
+def manufacture_recommendation_load_by_work_center(
+    context: GenerationContext,
+    recommendations: pd.DataFrame,
+    work_center_codes: tuple[str, ...] = ("ASSEMBLY", "CUT", "FINISH"),
+) -> dict[str, float]:
+    if recommendations.empty:
+        return {code: 0.0 for code in work_center_codes}
+
+    routing_by_parent = active_routing_by_item(context)
+    routing_operations = routing_operations_by_routing(context)
+    work_centers = context.tables["WorkCenter"]
+    work_center_code_by_id = (
+        work_centers.set_index("WorkCenterID")["WorkCenterCode"].astype(str).to_dict()
+        if not work_centers.empty
+        else {}
+    )
+    included_codes = {str(code) for code in work_center_codes}
+    totals: dict[str, float] = defaultdict(float)
+
+    for recommendation in recommendations.itertuples(index=False):
+        routing = routing_by_parent.get(int(recommendation.ItemID))
+        if routing is None:
+            continue
+        operation_rows = routing_operations.get(int(routing["RoutingID"]))
+        if operation_rows is None or operation_rows.empty:
+            continue
+        planned_quantity = float(recommendation.RecommendedOrderQuantity)
+        for operation in operation_rows.itertuples(index=False):
+            work_center_code = str(work_center_code_by_id.get(int(operation.WorkCenterID), ""))
+            if work_center_code not in included_codes:
+                continue
+            totals[work_center_code] += (
+                float(operation.StandardSetupHours)
+                + (float(operation.StandardRunHoursPerUnit) * planned_quantity)
+            )
+
+    return {
+        str(work_center_code): round(float(totals.get(str(work_center_code), 0.0)), 2)
+        for work_center_code in work_center_codes
+    }
+
+
 def finished_goods_shortage_by_item(context: GenerationContext, month_end: pd.Timestamp) -> dict[int, dict[str, float]]:
     inventory = shadow_inventory_state(context)
     manufactured = manufactured_items(context, month_end)
@@ -1448,8 +1528,8 @@ def build_work_order_operations(
 
     operation_rows: list[dict[str, Any]] = []
     schedule_rows: list[dict[str, Any]] = []
-    current_start = pd.Timestamp(release_date)
     due_date = pd.Timestamp(due_date).normalize()
+    current_start = pd.Timestamp(release_date)
 
     for row in routing_rows.itertuples(index=False):
         work_center_id = int(row.WorkCenterID)
@@ -1508,17 +1588,22 @@ def _convert_manufacture_recommendations_to_work_orders(
     *,
     release_floor: pd.Timestamp,
     release_ceiling: pd.Timestamp | None = None,
-) -> dict[str, int]:
+) -> dict[str, Any]:
     if planned_recommendations.empty:
         return {
             "eligible_planned": 0,
             "converted": 0,
             "expired": 0,
+            "converted_recommendation_ids": [],
+            "expired_recommendation_ids": [],
+            "converted_load_by_work_center": {"ASSEMBLY": 0.0, "CUT": 0.0, "FINISH": 0.0},
+            "expired_load_by_work_center": {"ASSEMBLY": 0.0, "CUT": 0.0, "FINISH": 0.0},
         }
 
     rng = context.rng
     month_end = pd.Timestamp(release_ceiling).normalize() if release_ceiling is not None else None
-    manufactured_lookup = manufactured_items(context, release_floor).set_index("ItemID").to_dict("index")
+    manufactured_lookup_date = month_end if month_end is not None else pd.Timestamp(release_floor).normalize()
+    manufactured_lookup = manufactured_items(context, manufactured_lookup_date).set_index("ItemID").to_dict("index")
     manufacturing_cost_center = cost_center_id(context, "Manufacturing")
     bom_by_parent = bom_lookup(context)
     routing_by_parent = active_routing_by_item(context)
@@ -1539,7 +1624,22 @@ def _convert_manufacture_recommendations_to_work_orders(
     conversion_mapping: dict[int, tuple[str, int]] = {}
     expired_recommendation_ids: list[int] = []
 
-    for recommendation in planned_recommendations.itertuples(index=False):
+    ordered_recommendations = planned_recommendations.copy()
+    priority_rank = {"Expedite": 0, "Normal": 1}
+    ordered_recommendations["__NeedByDateTS"] = pd.to_datetime(
+        ordered_recommendations["NeedByDate"],
+        errors="coerce",
+    )
+    ordered_recommendations["__ReleaseByDateTS"] = pd.to_datetime(
+        ordered_recommendations["ReleaseByDate"],
+        errors="coerce",
+    )
+    ordered_recommendations["__PriorityRank"] = ordered_recommendations["PriorityCode"].map(priority_rank).fillna(9).astype(int)
+    ordered_recommendations = ordered_recommendations.sort_values(
+        ["__NeedByDateTS", "__PriorityRank", "__ReleaseByDateTS", "SupplyPlanRecommendationID"]
+    ).reset_index(drop=True)
+
+    for recommendation in ordered_recommendations.itertuples(index=False):
         item_row = manufactured_lookup.get(int(recommendation.ItemID))
         bom = bom_by_parent.get(int(recommendation.ItemID))
         routing = routing_by_parent.get(int(recommendation.ItemID))
@@ -1596,10 +1696,27 @@ def _convert_manufacture_recommendations_to_work_orders(
     update_recommendation_conversion(context, conversion_mapping)
     expire_recommendations(context, expired_recommendation_ids)
 
+    recommendation_ids = pd.to_numeric(
+        ordered_recommendations["SupplyPlanRecommendationID"],
+        errors="coerce",
+    ).astype("Int64")
+    converted_recommendation_ids = sorted(int(recommendation_id) for recommendation_id in conversion_mapping)
+    expired_recommendation_ids = sorted({int(recommendation_id) for recommendation_id in expired_recommendation_ids})
+    converted_rows = ordered_recommendations.loc[
+        recommendation_ids.isin(converted_recommendation_ids)
+    ].copy()
+    expired_rows = ordered_recommendations.loc[
+        recommendation_ids.isin(expired_recommendation_ids)
+    ].copy()
+
     return {
         "eligible_planned": len(planned_recommendations),
         "converted": len(conversion_mapping),
         "expired": len(expired_recommendation_ids),
+        "converted_recommendation_ids": converted_recommendation_ids,
+        "expired_recommendation_ids": expired_recommendation_ids,
+        "converted_load_by_work_center": manufacture_recommendation_load_by_work_center(context, converted_rows),
+        "expired_load_by_work_center": manufacture_recommendation_load_by_work_center(context, expired_rows),
     }
 
 
@@ -1609,7 +1726,7 @@ def seed_opening_manufacturing_pipeline(context: GenerationContext) -> dict[str,
         return dict(cached)
 
     fiscal_start = pd.Timestamp(context.settings.fiscal_year_start).normalize()
-    opening_window_end = fiscal_start + pd.Timedelta(days=42)
+    opening_window_end = fiscal_start + pd.Timedelta(days=MANUFACTURED_POLICY_MIN_LEAD_DAYS)
     recommendations = context.tables["SupplyPlanRecommendation"]
     if recommendations.empty:
         return {
@@ -1642,6 +1759,25 @@ def seed_opening_manufacturing_pipeline(context: GenerationContext) -> dict[str,
     )
 
     opening_fg_gap_units = 0.0
+    opening_inventory_adjustments: dict[tuple[int, int], float] = dict(getattr(context, "_opening_inventory_adjustments", None) or {})
+    opening_fg_recommendation_ids: set[int] = set()
+    if conversion_state["expired_recommendation_ids"]:
+        expired_candidate_ids = {
+            int(recommendation_id)
+            for recommendation_id in conversion_state["expired_recommendation_ids"]
+        }
+        expired_candidates = opening_candidates[
+            opening_candidates["SupplyPlanRecommendationID"].astype(int).isin(expired_candidate_ids)
+        ].copy()
+        for row in expired_candidates.itertuples(index=False):
+            key = (int(row.ItemID), int(row.WarehouseID))
+            opening_inventory_adjustments[key] = round(
+                float(opening_inventory_adjustments.get(key, 0.0)) + float(row.RecommendedOrderQuantity),
+                2,
+            )
+            opening_fg_gap_units += float(row.RecommendedOrderQuantity)
+            opening_fg_recommendation_ids.add(int(row.SupplyPlanRecommendationID))
+
     manufactured_sellable = context.tables["Item"][
         context.tables["Item"]["SupplyMode"].eq("Manufactured")
         & context.tables["Item"]["RevenueAccountID"].notna()
@@ -1675,7 +1811,6 @@ def seed_opening_manufacturing_pipeline(context: GenerationContext) -> dict[str,
                     if pd.Timestamp(schedule_end).normalize() <= first_two_week_cutoff:
                         seeded_supply_by_item_warehouse[(int(row.ItemID), int(row.WarehouseID))] += float(row.PlannedQuantity)
 
-        opening_inventory_adjustments: dict[tuple[int, int], float] = {}
         first_week = week_start(fiscal_start)
         second_week = week_start(fiscal_start + pd.Timedelta(days=7))
         for item in manufactured_sellable.sort_values("ItemID").itertuples(index=False):
@@ -1695,18 +1830,23 @@ def seed_opening_manufacturing_pipeline(context: GenerationContext) -> dict[str,
             gap_units = qty(max(first_two_week_forecast - current_opening - seeded_supply, 0.0))
             if gap_units <= 0:
                 continue
-            opening_inventory_adjustments[(int(item.ItemID), primary_warehouse_id)] = gap_units
+            opening_inventory_adjustments[(int(item.ItemID), primary_warehouse_id)] = round(
+                float(opening_inventory_adjustments.get((int(item.ItemID), primary_warehouse_id), 0.0)) + float(gap_units),
+                2,
+            )
             opening_fg_gap_units += float(gap_units)
 
-        if opening_inventory_adjustments:
-            context._opening_inventory_adjustments = opening_inventory_adjustments
-            for attribute_name in [
-                "_planning_opening_inventory_cache",
-                "_planning_inventory_position_cache",
-                "_o2c_shadow_inventory",
-            ]:
-                if hasattr(context, attribute_name):
-                    delattr(context, attribute_name)
+    if opening_inventory_adjustments:
+        context._opening_inventory_adjustments = opening_inventory_adjustments
+        for attribute_name in [
+            "_planning_opening_inventory_cache",
+            "_planning_inventory_position_cache",
+            "_o2c_shadow_inventory",
+        ]:
+            if hasattr(context, attribute_name):
+                delattr(context, attribute_name)
+    if opening_fg_recommendation_ids:
+        cancel_recommendations(context, opening_fg_recommendation_ids)
 
     state = {
         "opening_candidates": int(conversion_state["eligible_planned"]),
@@ -1944,13 +2084,17 @@ def generate_month_work_orders_and_requisitions(context: GenerationContext, year
 
     planned_recommendations = manufacture_recommendations_for_month(context, year, month)
     if not planned_recommendations.empty:
+        fiscal_start = pd.Timestamp(context.settings.fiscal_year_start).normalize()
         conversion_state = _convert_manufacture_recommendations_to_work_orders(
             context,
             planned_recommendations,
-            release_floor=month_start,
+            release_floor=fiscal_start,
             release_ceiling=month_end,
         )
         remaining_overdue_planned = len(manufacture_recommendations_for_month(context, year, month))
+        available_hours_by_work_center = manufacturing_work_center_available_hours_by_code(context, year, month)
+        utilization_by_work_center = manufacturing_work_center_utilization_by_code(context, year, month)
+        older_completed_not_closed = completed_not_closed_older_than_one_payroll_period_count(context, month_end)
         LOGGER.info(
             "MANUFACTURING CONVERSION | %s-%02d | eligible_planned=%s | converted=%s | expired=%s | remaining_overdue_planned=%s | conversion_rate=%.4f",
             year,
@@ -1964,6 +2108,24 @@ def generate_month_work_orders_and_requisitions(context: GenerationContext, year
                 if conversion_state["eligible_planned"] > 0
                 else 0.0
             ),
+        )
+        LOGGER.info(
+            "MANUFACTURING LOAD | %s-%02d | converted_load_assembly=%s | converted_load_cut=%s | converted_load_finish=%s | expired_load_assembly=%s | expired_load_cut=%s | expired_load_finish=%s | available_hours_assembly=%s | available_hours_cut=%s | available_hours_finish=%s | assembly_utilization=%s | cut_utilization=%s | finish_utilization=%s | completed_not_closed_older_than_period=%s",
+            year,
+            month,
+            conversion_state["converted_load_by_work_center"]["ASSEMBLY"],
+            conversion_state["converted_load_by_work_center"]["CUT"],
+            conversion_state["converted_load_by_work_center"]["FINISH"],
+            conversion_state["expired_load_by_work_center"]["ASSEMBLY"],
+            conversion_state["expired_load_by_work_center"]["CUT"],
+            conversion_state["expired_load_by_work_center"]["FINISH"],
+            available_hours_by_work_center["ASSEMBLY"],
+            available_hours_by_work_center["CUT"],
+            available_hours_by_work_center["FINISH"],
+            utilization_by_work_center["ASSEMBLY"],
+            utilization_by_work_center["CUT"],
+            utilization_by_work_center["FINISH"],
+            older_completed_not_closed,
         )
         return
 

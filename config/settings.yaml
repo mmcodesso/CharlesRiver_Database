@@ -3,7 +3,7 @@ fiscal_year_start: "2026-01-01"
 fiscal_year_end: "2026-12-31"
 company_name: "Greenfield Home Furnishings, Inc."
 tax_rate: 0.065
-employee_count: 64
+employee_count: 120
 customer_count: 220
 supplier_count: 110
 item_count: 240

@@ -107,7 +107,7 @@ JOB_TITLE_SHIFT_CODE = {
 JOB_TITLE_WORK_CENTER_CODES = {
     "Assembler": ("ASSEMBLY", "FINISH", "PACK"),
     "Machine Operator": ("CUT", "ASSEMBLY"),
-    "Quality Technician": ("QA", "FINISH", "ASSEMBLY"),
+    "Quality Technician": ("FINISH", "QA", "ASSEMBLY"),
 }
 DIRECT_WORK_CENTER_TITLE_PREFERENCE = {
     "ASSEMBLY": ("Assembler", "Machine Operator", "Quality Technician"),

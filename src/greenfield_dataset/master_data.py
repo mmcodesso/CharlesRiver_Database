@@ -237,6 +237,20 @@ CAPACITY_ALIGNMENT_ACTIVE_ROLE_SPECS = [
     ("Manufacturing", "Quality Technician"),
 ]
 MIN_NON_CAPACITY_ACTIVE_ROLE_COUNT = 1
+DIRECT_MANUFACTURING_TITLES = ("Assembler", "Machine Operator", "Quality Technician")
+MANUFACTURING_STAFFING_PROFILES = {
+    120: {
+        "Assembler": 24,
+        "Machine Operator": 22,
+        "Quality Technician": 18,
+    },
+    48: {
+        "Assembler": 10,
+        "Machine Operator": 8,
+        "Quality Technician": 7,
+    },
+}
+MANUFACTURED_LABOR_HOURS_CALIBRATION_FACTOR = 0.95
 
 ROLE_METADATA = {
     "Chief Executive Officer": {
@@ -946,7 +960,9 @@ def choose(rng, values: list, probabilities: list[float] | None = None):
 
 def manufacturing_cost_profile(seed: int, item_group: str) -> dict[str, float]:
     rng = np.random.default_rng(seed)
-    labor_hours = money(rng.uniform(*STANDARD_LABOR_HOURS_RANGE[item_group]))
+    labor_hours = money(
+        rng.uniform(*STANDARD_LABOR_HOURS_RANGE[item_group]) * MANUFACTURED_LABOR_HOURS_CALIBRATION_FACTOR
+    )
     labor_rate = money(rng.uniform(*STANDARD_LABOR_RATE_RANGE[item_group]))
     direct_labor_cost = money(labor_hours * labor_rate)
     variable_overhead_cost = money(direct_labor_cost * rng.uniform(*VARIABLE_OVERHEAD_RATE_RANGE[item_group]))
@@ -1039,8 +1055,70 @@ def work_location_for_role(cost_center_name: str, position_index: int) -> str:
     return WORK_LOCATION_BY_COST_CENTER.get(cost_center_name, "Headquarters")
 
 
+def manufacturing_staffing_targets(employee_count: int) -> dict[str, int] | None:
+    profile = MANUFACTURING_STAFFING_PROFILES.get(int(employee_count))
+    if profile is None:
+        return None
+    return {str(job_title): int(target_count) for job_title, target_count in profile.items()}
+
+
 def build_employee_role_specs(context: GenerationContext) -> list[dict[str, object]]:
     employee_count = int(context.settings.employee_count)
+    manufacturing_targets = manufacturing_staffing_targets(employee_count)
+    fiscal_start, _ = fiscal_start_end(context)
+
+    if manufacturing_targets is not None:
+        base_specs = [
+            {"CostCenterName": cost_center_name, "JobTitle": job_title, "Protected": True}
+            for cost_center_name, job_title in (UNIQUE_ACTIVE_ROLE_SPECS + CORE_ACTIVE_ROLE_SPECS)
+        ]
+        for job_title in DIRECT_MANUFACTURING_TITLES:
+            for _ in range(int(manufacturing_targets.get(str(job_title), 0))):
+                base_specs.append({
+                    "CostCenterName": "Manufacturing",
+                    "JobTitle": str(job_title),
+                    "Protected": True,
+                    "FixedHireDate": fiscal_start.strftime("%Y-%m-%d"),
+                })
+
+        non_direct_repeatable_specs = [
+            (cost_center_name, job_title)
+            for cost_center_name, job_title in REPEATABLE_ROLE_SEQUENCE
+            if str(job_title) not in DIRECT_MANUFACTURING_TITLES
+        ]
+        desired_terminated_count = workforce_target_terminated_count(employee_count)
+        max_pair_count = max((employee_count - len(base_specs) - MIN_NON_CAPACITY_ACTIVE_ROLE_COUNT) // 2, 0)
+        terminated_target = min(desired_terminated_count, max_pair_count)
+        extra_active_count = max(employee_count - len(base_specs) - (2 * terminated_target), 0)
+
+        specs = list(base_specs)
+        for index in range(terminated_target):
+            cost_center_name, job_title = non_direct_repeatable_specs[index % len(non_direct_repeatable_specs)]
+            specs.append({
+                "CostCenterName": cost_center_name,
+                "JobTitle": job_title,
+                "Protected": False,
+                "ReplacementPair": index,
+                "IsReplacement": False,
+            })
+            specs.append({
+                "CostCenterName": cost_center_name,
+                "JobTitle": job_title,
+                "Protected": False,
+                "ReplacementPair": index,
+                "IsReplacement": True,
+            })
+
+        for index in range(extra_active_count):
+            cost_center_name, job_title = non_direct_repeatable_specs[(terminated_target + index) % len(non_direct_repeatable_specs)]
+            specs.append({
+                "CostCenterName": cost_center_name,
+                "JobTitle": job_title,
+                "Protected": False,
+            })
+
+        return specs[:employee_count]
+
     base_specs = [
         {"CostCenterName": cost_center_name, "JobTitle": job_title, "Protected": True}
         for cost_center_name, job_title in (UNIQUE_ACTIVE_ROLE_SPECS + CORE_ACTIVE_ROLE_SPECS)
@@ -1073,7 +1151,6 @@ def build_employee_role_specs(context: GenerationContext) -> list[dict[str, obje
             "IsReplacement": True,
         })
 
-    fiscal_start, _ = fiscal_start_end(context)
     for index in range(capacity_alignment_count):
         cost_center_name, job_title = CAPACITY_ALIGNMENT_ACTIVE_ROLE_SPECS[index]
         specs.append({

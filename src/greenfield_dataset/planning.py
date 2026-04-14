@@ -56,8 +56,8 @@ LEAD_TIME_DEFAULTS = {
     "Raw Materials": 9,
 }
 MANUFACTURED_TARGET_UTILIZATION = 0.85
-MANUFACTURED_POLICY_BUFFER_DAYS = 7
-MANUFACTURED_POLICY_MIN_LEAD_DAYS = 56
+MANUFACTURED_POLICY_BUFFER_DAYS = 14
+MANUFACTURED_POLICY_MIN_LEAD_DAYS = 140
 WORKING_DAY_TO_CALENDAR_DAY_FACTOR = 7.0 / 5.0
 DEMAND_FORECAST_PROGRESS_INTERVAL = 25
 
@@ -1032,10 +1032,7 @@ def generate_month_planning(context: GenerationContext, year: int, month: int) -
 
                 recommendation_type = "Manufacture" if str(item.SupplyMode) == "Manufactured" else "Purchase"
                 need_by_date = bucket_end
-                release_by_date = max(
-                    need_by_date - pd.Timedelta(days=planning_lead_time_days),
-                    launch_date.normalize(),
-                )
+                release_by_date = need_by_date - pd.Timedelta(days=planning_lead_time_days)
                 priority = "Expedite" if (release_by_date <= month_end or projected_after_demand < 0) else "Normal"
                 if backlog_qty > forecast_qty and backlog_qty > 0:
                     driver_type = "Sales Backlog"
@@ -1277,6 +1274,25 @@ def expire_recommendations(
     ).astype("Int64")
     mask = recommendation_id_series.isin(normalized_ids)
     context.tables["SupplyPlanRecommendation"].loc[mask, "RecommendationStatus"] = "Expired"
+    context.tables["SupplyPlanRecommendation"].loc[mask, "ConvertedDocumentType"] = None
+    context.tables["SupplyPlanRecommendation"].loc[mask, "ConvertedDocumentID"] = None
+    invalidate_planning_caches(context, "SupplyPlanRecommendation")
+
+
+def cancel_recommendations(
+    context: GenerationContext,
+    recommendation_ids: list[int] | tuple[int, ...] | set[int],
+) -> None:
+    if not recommendation_ids:
+        return
+
+    normalized_ids = sorted({int(recommendation_id) for recommendation_id in recommendation_ids})
+    recommendation_id_series = pd.to_numeric(
+        context.tables["SupplyPlanRecommendation"]["SupplyPlanRecommendationID"],
+        errors="coerce",
+    ).astype("Int64")
+    mask = recommendation_id_series.isin(normalized_ids)
+    context.tables["SupplyPlanRecommendation"].loc[mask, "RecommendationStatus"] = "Cancelled"
     context.tables["SupplyPlanRecommendation"].loc[mask, "ConvertedDocumentType"] = None
     context.tables["SupplyPlanRecommendation"].loc[mask, "ConvertedDocumentID"] = None
     invalidate_planning_caches(context, "SupplyPlanRecommendation")
