@@ -13,6 +13,63 @@ function getQueryEntry(queryKey) {
   return entry;
 }
 
+function humanizeQueryFilename(filename) {
+  const lowerCaseWords = new Set([
+    "and",
+    "by",
+    "for",
+    "in",
+    "of",
+    "on",
+    "or",
+    "to",
+    "vs",
+    "with",
+    "without",
+  ]);
+  const acronyms = new Map([
+    ["ap", "AP"],
+    ["ar", "AR"],
+    ["bom", "BOM"],
+    ["fg", "FG"],
+    ["gl", "GL"],
+    ["mrp", "MRP"],
+    ["o2c", "O2C"],
+    ["p2p", "P2P"],
+    ["sod", "SOD"],
+    ["wip", "WIP"],
+  ]);
+
+  return filename
+    .replace(/^\d+_/, "")
+    .replace(/\.sql$/, "")
+    .split("_")
+    .map((word, index) => {
+      const lowerWord = word.toLowerCase();
+      if (acronyms.has(lowerWord)) {
+        return acronyms.get(lowerWord);
+      }
+      if (index > 0 && lowerCaseWords.has(lowerWord)) {
+        return lowerWord;
+      }
+      return lowerWord.charAt(0).toUpperCase() + lowerWord.slice(1);
+    })
+    .join(" ");
+}
+
+function normalizeSequenceHelper(lead) {
+  if (!lead) {
+    return undefined;
+  }
+
+  const trimmed = lead.trim();
+  if (!trimmed || /^run$/i.test(trimmed)) {
+    return undefined;
+  }
+
+  return trimmed;
+}
+
 export function QueryReference({
   queryKey,
   label,
@@ -21,6 +78,7 @@ export function QueryReference({
 }) {
   const entry = getQueryEntry(queryKey);
   const queryUrl = useBaseUrl(entry.publicPath);
+  const displayLabel = label ?? humanizeQueryFilename(entry.filename);
   const [expanded, setExpanded] = useState(false);
   const [sql, setSql] = useState("");
   const [status, setStatus] = useState("idle");
@@ -48,24 +106,23 @@ export function QueryReference({
     }
   }
 
-  async function handleToggle() {
-    const nextExpanded = !expanded;
-    setExpanded(nextExpanded);
-    if (nextExpanded) {
-      await loadSql();
+  function handleToggle() {
+    if (expanded) {
+      setExpanded(false);
+      return;
     }
+
+    setExpanded(true);
+    void loadSql();
   }
 
   return (
     <div className={clsx(styles.reference, styles[variant])}>
-      {(label || helperText) && (
-        <div className={styles.referenceHeader}>
-          {label ? <div className={styles.referenceLabel}>{label}</div> : null}
+      <div className={styles.referenceHeader}>
+        <div className={styles.referenceText}>
+          <div className={styles.referenceLabel}>{displayLabel}</div>
           {helperText ? <p className={styles.referenceHelper}>{helperText}</p> : null}
         </div>
-      )}
-      <div className={styles.referenceBar}>
-        <code className={styles.filename}>{entry.filename}</code>
         <button
           className={styles.toggle}
           type="button"
@@ -129,8 +186,11 @@ export function QuerySequence({ items, helperText }) {
       <ol className={styles.sequenceList}>
         {items.map((item) => (
           <li key={`${item.queryKey}-${item.lead}`} className={styles.sequenceItem}>
-            <p className={styles.sequenceLead}>{item.lead}</p>
-            <QueryReference queryKey={item.queryKey} variant="sequence" />
+            <QueryReference
+              queryKey={item.queryKey}
+              helperText={normalizeSequenceHelper(item.lead)}
+              variant="sequence"
+            />
           </li>
         ))}
       </ol>
