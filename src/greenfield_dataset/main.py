@@ -33,6 +33,7 @@ from greenfield_dataset.manufacturing import (
     manufacturing_capacity_state,
     manufacturing_work_center_utilization_by_code,
     manufacturing_open_state,
+    seed_opening_manufacturing_pipeline,
 )
 from greenfield_dataset.master_data import (
     backfill_cost_center_managers,
@@ -726,9 +727,12 @@ def fiscal_months(context: GenerationContext) -> Iterable[tuple[int, int]]:
 
 
 def generate_all_months(context: GenerationContext) -> None:
+    fiscal_start = pd.Timestamp(context.settings.fiscal_year_start)
     for year, month in fiscal_months(context):
         generate_month_o2c(context, year, month)
         generate_month_planning(context, year, month)
+        if year == int(fiscal_start.year) and month == int(fiscal_start.month):
+            seed_opening_manufacturing_pipeline(context)
         generate_month_requisitions(context, year, month)
         generate_month_work_orders_and_requisitions(context, year, month)
         generate_month_purchase_orders(context, year, month)
@@ -802,6 +806,7 @@ def build_full_dataset(
 
     with logged_step("Generate all configured monthly subledger transactions"):
         generated_months = list(fiscal_months(context))
+        fiscal_start = pd.Timestamp(context.settings.fiscal_year_start)
         LOGGER.info(
             "MONTH RANGE | count=%s | first=%s-%02d | last=%s-%02d",
             len(generated_months),
@@ -837,6 +842,14 @@ def build_full_dataset(
             rough_cut_count_before = len(context.tables["RoughCutCapacityPlan"])
             _run_month_step(context, year, month, "generate_month_o2c", generate_month_o2c)
             _run_month_step(context, year, month, "generate_month_planning", generate_month_planning)
+            if year == int(fiscal_start.year) and month == int(fiscal_start.month):
+                _run_month_step(
+                    context,
+                    year,
+                    month,
+                    "seed_opening_manufacturing_pipeline",
+                    lambda generation_context, _year, _month: seed_opening_manufacturing_pipeline(generation_context),
+                )
             _run_month_step(context, year, month, "generate_month_requisitions", generate_month_requisitions)
             _run_month_step(
                 context,

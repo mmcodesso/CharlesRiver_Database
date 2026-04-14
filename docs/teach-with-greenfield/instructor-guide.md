@@ -19,10 +19,8 @@ For most courses, start students with the published teaching files and the teach
 
 - Use `greenfield.sqlite` when the course emphasizes SQL, joins, and query-based analysis.
 - Use `greenfield.xlsx` when the course emphasizes pivots, filters, formulas, charts, and workbook-based interpretation.
-- Use `greenfield_support.xlsx` only when the course includes anomaly review, audit exercises, or validation context.
 - Use [Start Here](../start-here/index.md), [Company Story](../learn-the-business/company-story.md), [Process Flows](../learn-the-business/process-flows.md), and [Dataset Guide](../start-here/dataset-overview.md) before the first technical assignment.
 
-In most classes, the SQLite database or the Excel workbook will be the primary teaching file. The support workbook is an additional tool for selected audit and control assignments.
 
 ## Where Greenfield fits in the curriculum
 
@@ -57,7 +55,6 @@ Include `greenfield_support.xlsx` when you want students to:
 - work through audit and control cases with guided exception context
 - triage issues before moving into deeper source-document review
 
-For most financial, managerial, and introductory SQL assignments, the SQLite database or Excel workbook will be sufficient without the support workbook.
 
 ## How to stage assignments
 

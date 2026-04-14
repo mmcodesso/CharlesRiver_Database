@@ -757,6 +757,9 @@ def opening_inventory_map(context: GenerationContext) -> dict[tuple[int, int], f
         inventory[(int(item.ItemID), primary_warehouse)] = float(primary_qty)
         for warehouse_id in secondary:
             inventory[(int(item.ItemID), warehouse_id)] = float((total_qty - primary_qty) / len(secondary))
+    adjustments = getattr(context, "_opening_inventory_adjustments", None) or {}
+    for key, quantity in adjustments.items():
+        inventory[(int(key[0]), int(key[1]))] = round(float(inventory.get((int(key[0]), int(key[1])), 0.0)) + float(quantity), 2)
     return inventory
 
 

@@ -10,6 +10,8 @@ import yaml
 
 from greenfield_dataset.calendar import build_calendar
 
+OPERATIONAL_HORIZON_BUFFER_DAYS = 84
+
 
 @dataclass(frozen=True)
 class Settings:
@@ -79,5 +81,8 @@ def load_settings(config_path: str | Path) -> Settings:
 
 def initialize_context(settings: Settings) -> GenerationContext:
     rng = np.random.default_rng(settings.random_seed)
-    calendar = build_calendar(settings.fiscal_year_start, settings.fiscal_year_end)
+    operational_calendar_end = (
+        pd.Timestamp(settings.fiscal_year_end).normalize() + pd.Timedelta(days=OPERATIONAL_HORIZON_BUFFER_DAYS)
+    )
+    calendar = build_calendar(settings.fiscal_year_start, operational_calendar_end.strftime("%Y-%m-%d"))
     return GenerationContext(settings=settings, rng=rng, calendar=calendar)

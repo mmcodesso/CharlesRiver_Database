@@ -8,8 +8,7 @@ sidebar_label: Schema Reference
 
 Use this page when you need a lookup tool: which tables belong to each business area, which fields matter most for joins, and which columns are the fastest way back to the source document.
 
-If you need the big-picture map first, start with [Dataset Guide](../start-here/dataset-overview.md). The canonical schema lives in `src/greenfield_dataset/schema.py` as `TABLE_COLUMNS`.
-
+If you need the big-picture map first, start with [Dataset Guide](../start-here/dataset-overview.md).
 ## How to Use This Page
 
 - Use **Table Groups** when you want to see the model at a glance.

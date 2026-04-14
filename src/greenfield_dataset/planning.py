@@ -145,6 +145,10 @@ def opening_inventory_map(context: GenerationContext) -> dict[tuple[int, int], f
         for warehouse_id in secondary:
             inventory[(int(item.ItemID), warehouse_id)] = float((total_qty - primary_qty) / max(len(secondary), 1))
 
+    adjustments = getattr(context, "_opening_inventory_adjustments", None) or {}
+    for key, quantity in adjustments.items():
+        inventory[(int(key[0]), int(key[1]))] = round(float(inventory.get((int(key[0]), int(key[1])), 0.0)) + float(quantity), 2)
+
     setattr(context, "_planning_opening_inventory_cache", dict(inventory))
     return inventory
 
@@ -476,6 +480,8 @@ def open_purchase_supply_by_item_warehouse_week(context: GenerationContext) -> d
 
 def open_work_order_supply_by_item_warehouse_week(context: GenerationContext) -> dict[tuple[str, int, int], float]:
     work_orders = context.tables["WorkOrder"]
+    operations = context.tables["WorkOrderOperation"]
+    schedules = context.tables["WorkOrderOperationSchedule"]
     completion_headers = context.tables["ProductionCompletion"]
     completions = context.tables["ProductionCompletionLine"]
     if work_orders.empty:
@@ -491,12 +497,34 @@ def open_work_order_supply_by_item_warehouse_week(context: GenerationContext) ->
         merged = merged[merged["WorkOrderID"].notna()].copy()
         if not merged.empty:
             completed_by_work_order = merged.groupby("WorkOrderID")["QuantityCompleted"].sum().to_dict()
+
+    scheduled_finish_by_work_order: dict[int, pd.Timestamp] = {}
+    if not operations.empty and not schedules.empty:
+        schedule_bounds = schedules.merge(
+            operations[["WorkOrderOperationID", "WorkOrderID"]],
+            on="WorkOrderOperationID",
+            how="inner",
+        ).copy()
+        if not schedule_bounds.empty:
+            schedule_bounds["ScheduleDateTS"] = pd.to_datetime(schedule_bounds["ScheduleDate"], errors="coerce")
+            scheduled_finish = (
+                schedule_bounds.groupby("WorkOrderID")["ScheduleDateTS"]
+                .max()
+                .dropna()
+            )
+            scheduled_finish_by_work_order = {
+                int(work_order_id): pd.Timestamp(schedule_date)
+                for work_order_id, schedule_date in scheduled_finish.items()
+            }
     supply: dict[tuple[str, int, int], float] = defaultdict(float)
     for row in work_orders.itertuples(index=False):
         remaining = round(float(row.PlannedQuantity) - float(completed_by_work_order.get(int(row.WorkOrderID), 0.0)), 2)
         if remaining <= 0:
             continue
-        bucket = week_start(row.DueDate).strftime("%Y-%m-%d")
+        availability_date = scheduled_finish_by_work_order.get(int(row.WorkOrderID))
+        if availability_date is None:
+            availability_date = pd.Timestamp(row.DueDate)
+        bucket = week_start(availability_date).strftime("%Y-%m-%d")
         supply[(bucket, int(row.ItemID), int(row.WarehouseID))] += remaining
     return {key: round(value, 2) for key, value in supply.items()}
 
