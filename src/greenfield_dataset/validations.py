@@ -1420,6 +1420,7 @@ def validate_journal_controls(context: GenerationContext) -> dict[str, Any]:
 
 def validate_manufacturing_controls(context: GenerationContext) -> dict[str, Any]:
     exceptions: list[dict[str, Any]] = []
+    fiscal_end = pd.Timestamp(context.settings.fiscal_year_end).normalize()
     items = context.tables["Item"]
     boms = context.tables["BillOfMaterial"]
     bom_lines = context.tables["BillOfMaterialLine"]
@@ -1523,6 +1524,22 @@ def validate_manufacturing_controls(context: GenerationContext) -> dict[str, Any
             })
 
         schedule_bounds = work_order_schedule_bounds(context)
+        actual_start_by_work_order: dict[int, pd.Timestamp] = {}
+        if not work_order_operations.empty:
+            started_operations = work_order_operations[
+                work_order_operations["ActualStartDate"].notna()
+            ].copy()
+            if not started_operations.empty:
+                started_operations["ActualStartDateTS"] = pd.to_datetime(
+                    started_operations["ActualStartDate"],
+                    errors="coerce",
+                )
+                actual_start_by_work_order = (
+                    started_operations.dropna(subset=["ActualStartDateTS"])
+                    .groupby("WorkOrderID")["ActualStartDateTS"]
+                    .min()
+                    .to_dict()
+                )
         for row in work_orders.itertuples(index=False):
             bounds = schedule_bounds.get(int(row.WorkOrderID))
             if bounds is None or pd.isna(row.DueDate):
@@ -1531,6 +1548,34 @@ def validate_manufacturing_controls(context: GenerationContext) -> dict[str, Any
                 exceptions.append({
                     "type": "work_order_scheduled_after_due_date",
                     "message": f"Work order {int(row.WorkOrderID)} schedules beyond its due date.",
+                })
+                if len(exceptions) >= 250:
+                    break
+
+            if str(row.Status) != "Released":
+                continue
+
+            first_scheduled = pd.Timestamp(bounds[0])
+            released_date = pd.Timestamp(row.ReleasedDate) if pd.notna(row.ReleasedDate) else None
+            if released_date is not None and first_scheduled > released_date + pd.Timedelta(days=45):
+                exceptions.append({
+                    "type": "released_work_order_far_ahead_of_schedule",
+                    "message": f"Released work order {int(row.WorkOrderID)} is more than 45 days ahead of first scheduled activity.",
+                })
+                if len(exceptions) >= 250:
+                    break
+
+            due_date = pd.Timestamp(row.DueDate).normalize()
+            actual_start = actual_start_by_work_order.get(int(row.WorkOrderID))
+            if (
+                actual_start is None
+                and released_date is not None
+                and due_date <= fiscal_end
+                and released_date <= fiscal_end - pd.Timedelta(days=30)
+            ):
+                exceptions.append({
+                    "type": "released_work_order_due_without_actual_start",
+                    "message": f"Released work order {int(row.WorkOrderID)} is due within the fiscal year but still has no actual start.",
                 })
                 if len(exceptions) >= 250:
                     break
@@ -2834,6 +2879,24 @@ def validate_planning_controls(context: GenerationContext) -> dict[str, Any]:
                 "type": "negative_recommendation_quantity",
                 "recommendation_id": int(row.SupplyPlanRecommendationID),
                 "message": f"Recommendation {int(row.SupplyPlanRecommendationID)} has a negative planning quantity.",
+            })
+
+        release_dates = pd.to_datetime(recommendations["ReleaseByDate"], errors="coerce")
+        recommended_quantities = pd.to_numeric(
+            recommendations["RecommendedOrderQuantity"],
+            errors="coerce",
+        ).fillna(0.0)
+        overdue_planned = recommendations[
+            recommendations["RecommendationStatus"].eq("Planned")
+            & release_dates.notna()
+            & release_dates.le(fiscal_end)
+            & recommended_quantities.gt(0)
+        ].copy()
+        for row in overdue_planned.head(10).itertuples(index=False):
+            exceptions.append({
+                "type": "overdue_planned_recommendation",
+                "recommendation_id": int(row.SupplyPlanRecommendationID),
+                "message": f"{str(row.RecommendationType)} recommendation {int(row.SupplyPlanRecommendationID)} remains planned after its release date.",
             })
 
         converted = recommendations[recommendations["RecommendationStatus"].eq("Converted")].copy()

@@ -233,9 +233,9 @@ def _run_month_step(
     month: int,
     step_name: str,
     generator: Any,
-) -> None:
+) -> Any:
     started_at = time.perf_counter()
-    generator(context, year, month)
+    result = generator(context, year, month)
     LOGGER.info(
         "MONTH STEP | %s-%02d | %s | elapsed_seconds=%.2f",
         year,
@@ -243,6 +243,7 @@ def _run_month_step(
         step_name,
         time.perf_counter() - started_at,
     )
+    return result
 
 
 def build_phase1(config_path: str | Path = "config/settings.yaml") -> GenerationContext:
@@ -739,7 +740,11 @@ def generate_all_months(context: GenerationContext) -> None:
         generate_month_work_orders_and_requisitions(context, year, month)
         generate_month_purchase_orders(context, year, month)
         generate_month_goods_receipts(context, year, month)
-        generate_month_manufacturing_activity(context, year, month)
+        replenishment_requisitions_created = generate_month_manufacturing_activity(context, year, month)
+        if replenishment_requisitions_created:
+            generate_month_purchase_orders(context, year, month)
+            generate_month_goods_receipts(context, year, month)
+            generate_month_manufacturing_activity(context, year, month)
         generate_month_payroll(context, year, month)
         close_eligible_work_orders(context, year, month)
         generate_month_shipments(context, year, month)
@@ -876,13 +881,35 @@ def build_full_dataset(
             )
             _run_month_step(context, year, month, "generate_month_purchase_orders", generate_month_purchase_orders)
             _run_month_step(context, year, month, "generate_month_goods_receipts", generate_month_goods_receipts)
-            _run_month_step(
+            replenishment_requisitions_created = _run_month_step(
                 context,
                 year,
                 month,
                 "generate_month_manufacturing_activity",
                 generate_month_manufacturing_activity,
             )
+            if replenishment_requisitions_created:
+                _run_month_step(
+                    context,
+                    year,
+                    month,
+                    "generate_month_purchase_orders_followup",
+                    generate_month_purchase_orders,
+                )
+                _run_month_step(
+                    context,
+                    year,
+                    month,
+                    "generate_month_goods_receipts_followup",
+                    generate_month_goods_receipts,
+                )
+                _run_month_step(
+                    context,
+                    year,
+                    month,
+                    "generate_month_manufacturing_activity_followup",
+                    generate_month_manufacturing_activity,
+                )
             _run_month_step(context, year, month, "generate_month_payroll", generate_month_payroll)
             _run_month_step(context, year, month, "close_eligible_work_orders", close_eligible_work_orders)
             _run_month_step(context, year, month, "generate_month_shipments", generate_month_shipments)

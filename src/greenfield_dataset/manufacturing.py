@@ -185,6 +185,7 @@ OPERATION_QUEUE_DAY_OPTIONS = {
 }
 
 LABOR_BEARING_OPERATION_CODES = {"ASSEMBLY", "FINISH", "QA", "CUT"}
+WORK_ORDER_COMPONENT_SHORTFALL_PREFIX = "WO-COMPONENT-SHORTFALL"
 
 
 def append_rows(context: GenerationContext, table_name: str, rows: list[dict[str, Any]]) -> None:
@@ -2424,6 +2425,83 @@ def work_order_issued_support_quantity_map(context: GenerationContext) -> dict[i
     return {int(work_order_id): qty(float(amount)) for work_order_id, amount in state["support_quantities"].items()}
 
 
+def parse_work_order_component_shortfall_justification(
+    justification: str | None,
+) -> tuple[int, int] | None:
+    text = str(justification or "")
+    if not text.startswith(WORK_ORDER_COMPONENT_SHORTFALL_PREFIX):
+        return None
+
+    work_order_id: int | None = None
+    component_item_id: int | None = None
+    for segment in [part.strip() for part in text.split("|")]:
+        if segment.startswith("WO="):
+            try:
+                work_order_id = int(segment.split("=", 1)[1])
+            except ValueError:
+                return None
+        elif segment.startswith("ITEM="):
+            try:
+                component_item_id = int(segment.split("=", 1)[1])
+            except ValueError:
+                return None
+
+    if work_order_id is None or component_item_id is None:
+        return None
+    return work_order_id, component_item_id
+
+
+def work_order_component_replenishment_outstanding_quantity_map(
+    context: GenerationContext,
+) -> dict[tuple[int, int], float]:
+    requisitions = context.tables["PurchaseRequisition"]
+    if requisitions.empty:
+        return {}
+
+    purchase_order_lines = context.tables["PurchaseOrderLine"]
+    goods_receipt_lines = context.tables["GoodsReceiptLine"]
+    received_by_po_line: dict[int, float] = {}
+    if not goods_receipt_lines.empty:
+        received_by_po_line = (
+            goods_receipt_lines.groupby("POLineID")["QuantityReceived"]
+            .sum()
+            .round(2)
+            .to_dict()
+        )
+
+    received_by_requisition: defaultdict[int, float] = defaultdict(float)
+    if not purchase_order_lines.empty:
+        for line in purchase_order_lines.itertuples(index=False):
+            if pd.isna(line.RequisitionID):
+                continue
+            received_by_requisition[int(line.RequisitionID)] += float(
+                received_by_po_line.get(int(line.POLineID), 0.0)
+            )
+
+    outstanding: defaultdict[tuple[int, int], float] = defaultdict(float)
+    for requisition in requisitions.itertuples(index=False):
+        shortfall_key = parse_work_order_component_shortfall_justification(
+            getattr(requisition, "Justification", None)
+        )
+        if shortfall_key is None:
+            continue
+        remaining_quantity = qty(
+            max(
+                float(requisition.Quantity)
+                - float(received_by_requisition.get(int(requisition.RequisitionID), 0.0)),
+                0.0,
+            )
+        )
+        if remaining_quantity <= 0:
+            continue
+        outstanding[(int(shortfall_key[0]), int(shortfall_key[1]))] += remaining_quantity
+
+    return {
+        (int(work_order_id), int(component_item_id)): qty(float(quantity))
+        for (work_order_id, component_item_id), quantity in outstanding.items()
+    }
+
+
 def payroll_period_for_work_date(context: GenerationContext, work_date: pd.Timestamp | str) -> dict[str, Any] | None:
     timestamp = pd.Timestamp(work_date)
     for period in payroll_period_lookup(context).values():
@@ -2493,7 +2571,87 @@ def completed_not_closed_older_than_one_payroll_period_count(
     return int((pd.to_datetime(completed_not_closed["CompletedDate"]) < prior_period_end).sum())
 
 
-def generate_month_manufacturing_activity(context: GenerationContext, year: int, month: int) -> None:
+def released_work_order_backlog_metrics(
+    context: GenerationContext,
+    month_end: pd.Timestamp,
+) -> dict[str, Any]:
+    work_orders = context.tables["WorkOrder"]
+    work_order_operations = context.tables["WorkOrderOperation"]
+    if work_orders.empty:
+        return {
+            "open_released_work_orders": 0,
+            "open_released_no_actual_start": 0,
+            "avg_days_release_to_first_sched_open": 0.0,
+            "oldest_open_due_date": None,
+            "open_due_before_month_end": 0,
+            "open_due_before_year_end": 0,
+        }
+
+    released = work_orders[work_orders["Status"].eq("Released")].copy()
+    if released.empty:
+        return {
+            "open_released_work_orders": 0,
+            "open_released_no_actual_start": 0,
+            "avg_days_release_to_first_sched_open": 0.0,
+            "oldest_open_due_date": None,
+            "open_due_before_month_end": 0,
+            "open_due_before_year_end": 0,
+        }
+
+    schedule_bounds = work_order_schedule_bounds(context)
+    if schedule_bounds:
+        released["FirstScheduledDate"] = released["WorkOrderID"].astype(int).map(
+            lambda work_order_id: schedule_bounds.get(int(work_order_id), (pd.NaT, pd.NaT))[0]
+        )
+    else:
+        released["FirstScheduledDate"] = pd.NaT
+
+    actual_start_by_work_order: dict[int, pd.Timestamp] = {}
+    if not work_order_operations.empty:
+        operation_rows = work_order_operations[
+            work_order_operations["ActualStartDate"].notna()
+        ].copy()
+        if not operation_rows.empty:
+            operation_rows["ActualStartDateTS"] = pd.to_datetime(operation_rows["ActualStartDate"], errors="coerce")
+            actual_start_by_work_order = (
+                operation_rows.dropna(subset=["ActualStartDateTS"])
+                .groupby("WorkOrderID")["ActualStartDateTS"]
+                .min()
+                .to_dict()
+            )
+    released["FirstActualStartDate"] = released["WorkOrderID"].astype(int).map(actual_start_by_work_order)
+
+    released["ReleasedDateTS"] = pd.to_datetime(released["ReleasedDate"], errors="coerce")
+    released["DueDateTS"] = pd.to_datetime(released["DueDate"], errors="coerce")
+    released["FirstScheduledDateTS"] = pd.to_datetime(released["FirstScheduledDate"], errors="coerce")
+    released["FirstActualStartDateTS"] = pd.to_datetime(released["FirstActualStartDate"], errors="coerce")
+
+    scheduled_open = released.dropna(subset=["ReleasedDateTS", "FirstScheduledDateTS"]).copy()
+    avg_days_release_to_first_sched = 0.0
+    if not scheduled_open.empty:
+        avg_days_release_to_first_sched = round(float(
+            (
+                scheduled_open["FirstScheduledDateTS"] - scheduled_open["ReleasedDateTS"]
+            ).dt.days.mean()
+        ), 2)
+
+    oldest_open_due_date = None
+    due_dates = released["DueDateTS"].dropna()
+    if not due_dates.empty:
+        oldest_open_due_date = due_dates.min().strftime("%Y-%m-%d")
+
+    fiscal_year_end = pd.Timestamp(context.settings.fiscal_year_end).normalize()
+    return {
+        "open_released_work_orders": int(len(released)),
+        "open_released_no_actual_start": int(released["FirstActualStartDateTS"].isna().sum()),
+        "avg_days_release_to_first_sched_open": avg_days_release_to_first_sched,
+        "oldest_open_due_date": oldest_open_due_date,
+        "open_due_before_month_end": int(released["DueDateTS"].le(month_end).sum()),
+        "open_due_before_year_end": int(released["DueDateTS"].le(fiscal_year_end).sum()),
+    }
+
+
+def generate_month_manufacturing_activity(context: GenerationContext, year: int, month: int) -> int:
     candidates = work_orders_due_for_month(context, year, month)
     _, month_end = month_bounds(year, month)
     if candidates.empty:
@@ -2503,6 +2661,7 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
         released_with_schedule = 0
         open_work_orders = 0
         older_completed_not_closed = completed_not_closed_older_than_one_payroll_period_count(context, month_end)
+        backlog_metrics = released_work_order_backlog_metrics(context, month_end)
         if not work_orders.empty:
             open_work_orders = int(work_orders["Status"].isin(["Released", "In Progress", "Completed"]).sum())
             released_with_schedule = int(
@@ -2518,7 +2677,7 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
                 ).sum()
             )
         LOGGER.info(
-            "MANUFACTURING ACTIVITY | %s-%02d | candidates=0 | scheduled_candidates=0 | open_work_orders=%s | released_with_schedule=%s | released_without_schedule=%s | completed_not_closed_older_than_period=%s | issues_created=0 | completions_created=0",
+            "MANUFACTURING ACTIVITY | %s-%02d | candidates=0 | scheduled_candidates=0 | open_work_orders=%s | released_with_schedule=%s | released_without_schedule=%s | completed_not_closed_older_than_period=%s | replenishment_requisitions_created=0 | issues_created=0 | completions_created=0",
             year,
             month,
             open_work_orders,
@@ -2526,7 +2685,18 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
             released_without_schedule,
             older_completed_not_closed,
         )
-        return
+        LOGGER.info(
+            "MANUFACTURING BACKLOG | %s-%02d | open_released_work_orders=%s | open_released_no_actual_start=%s | avg_days_release_to_first_sched_open=%s | oldest_open_due_date=%s | open_due_before_month_end=%s | open_due_before_year_end=%s",
+            year,
+            month,
+            backlog_metrics["open_released_work_orders"],
+            backlog_metrics["open_released_no_actual_start"],
+            backlog_metrics["avg_days_release_to_first_sched_open"],
+            backlog_metrics["oldest_open_due_date"] or "None",
+            backlog_metrics["open_due_before_month_end"],
+            backlog_metrics["open_due_before_year_end"],
+        )
+        return 0
 
     rng = context.rng
     month_start, month_end = month_bounds(year, month)
@@ -2536,15 +2706,27 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
     bom_lines_lookup = bom_lines_by_bom(context)
     completed_quantities = work_order_completed_quantity_map(context)
     issued_support_quantities = work_order_issued_support_quantity_map(context)
+    replenishment_outstanding = work_order_component_replenishment_outstanding_quantity_map(context)
+    manufacturing_cost_center = cost_center_id(context, "Manufacturing")
     existing_issue_counts = (
         context.tables["MaterialIssue"].groupby("WorkOrderID").size().to_dict()
         if not context.tables["MaterialIssue"].empty
         else {}
     )
+    issued_quantity_by_work_order_bom_line: defaultdict[tuple[int, int], float] = defaultdict(float)
+    if not context.tables["MaterialIssueLine"].empty and not context.tables["MaterialIssue"].empty:
+        issued_component_frame = context.tables["MaterialIssueLine"].merge(
+            context.tables["MaterialIssue"][["MaterialIssueID", "WorkOrderID"]],
+            on="MaterialIssueID",
+            how="left",
+        )
+        for row in issued_component_frame.itertuples(index=False):
+            issued_quantity_by_work_order_bom_line[(int(row.WorkOrderID), int(row.BOMLineID))] += float(row.QuantityIssued)
     issue_headers: list[dict[str, Any]] = []
     issue_lines: list[dict[str, Any]] = []
     completion_headers: list[dict[str, Any]] = []
     completion_lines: list[dict[str, Any]] = []
+    replenishment_requisition_rows: list[dict[str, Any]] = []
 
     for work_order in candidates.itertuples(index=False):
         work_order_id = int(work_order.WorkOrderID)
@@ -2566,7 +2748,9 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
         issuable_quantity = remaining_quantity
         for bom_line in bom_lines.itertuples(index=False):
             required_per_unit = float(bom_line.QuantityPerUnit) * (1 + float(bom_line.ScrapFactorPct))
-            available_quantity = float(material_inventory.get((int(bom_line.ComponentItemID), int(work_order.WarehouseID)), 0.0))
+            available_quantity = float(
+                material_inventory.get((int(bom_line.ComponentItemID), int(work_order.WarehouseID)), 0.0)
+            )
             supported_quantity = available_quantity / required_per_unit if required_per_unit > 0 else remaining_quantity
             issuable_quantity = min(issuable_quantity, supported_quantity)
         issuable_quantity = qty(issuable_quantity)
@@ -2579,6 +2763,56 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
             )
         )
         additional_issuable_quantity = qty(max(float(issuable_quantity) - float(already_supported_quantity), 0.0))
+        unsupported_parent_quantity = qty(max(float(remaining_quantity) - float(already_supported_quantity), 0.0))
+
+        if unsupported_parent_quantity > 0:
+            request_date = max(month_start, first_planned_start)
+            requestors = employee_ids_for_cost_center(context, "Manufacturing", request_date)
+            for bom_line in bom_lines.itertuples(index=False):
+                required_per_unit = float(bom_line.QuantityPerUnit) * (1 + float(bom_line.ScrapFactorPct))
+                if required_per_unit <= 0:
+                    continue
+                key = (int(bom_line.ComponentItemID), int(work_order.WarehouseID))
+                available_quantity = qty(float(material_inventory.get(key, 0.0)))
+                outstanding_quantity = qty(
+                    float(
+                        replenishment_outstanding.get(
+                            (work_order_id, int(bom_line.ComponentItemID)),
+                            0.0,
+                        )
+                    )
+                )
+                required_quantity = qty(float(unsupported_parent_quantity) * required_per_unit)
+                shortage_quantity = qty(
+                    max(
+                        float(required_quantity) - float(available_quantity) - float(outstanding_quantity),
+                        0.0,
+                    )
+                )
+                if shortage_quantity <= 0:
+                    continue
+                component = items[int(bom_line.ComponentItemID)]
+                requisition_quantity = qty(shortage_quantity * rng.uniform(*MATERIAL_REQUISITION_BUFFER_FACTOR))
+                estimated_unit_cost = money(float(component["StandardCost"]) * rng.uniform(0.98, 1.05))
+                requisition_id = next_id(context, "PurchaseRequisition")
+                replenishment_requisition_rows.append({
+                    "RequisitionID": requisition_id,
+                    "RequisitionNumber": format_doc_number("PR", year, requisition_id),
+                    "RequestDate": request_date.strftime("%Y-%m-%d"),
+                    "RequestedByEmployeeID": int(rng.choice(requestors)),
+                    "CostCenterID": manufacturing_cost_center,
+                    "ItemID": int(bom_line.ComponentItemID),
+                    "Quantity": requisition_quantity,
+                    "EstimatedUnitCost": estimated_unit_cost,
+                    "Justification": f"{WORK_ORDER_COMPONENT_SHORTFALL_PREFIX} | WO={work_order_id} | ITEM={int(bom_line.ComponentItemID)}",
+                    "ApprovedByEmployeeID": approver_id(context, requisition_quantity * estimated_unit_cost, request_date),
+                    "ApprovedDate": request_date.strftime("%Y-%m-%d"),
+                    "Status": "Approved",
+                    "SupplyPlanRecommendationID": None,
+                })
+                replenishment_outstanding[(work_order_id, int(bom_line.ComponentItemID))] = qty(
+                    float(outstanding_quantity) + float(requisition_quantity)
+                )
 
         if additional_issuable_quantity > 0:
             issue_event_count = choose_count(rng, ISSUE_EVENT_COUNT_PROBABILITIES)
@@ -2623,11 +2857,31 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
                     if issue_quantity <= 0:
                         continue
                     key = (int(bom_line.ComponentItemID), int(work_order.WarehouseID))
-                    available_quantity = qty(material_inventory.get(key, 0.0))
+                    available_quantity = qty(float(material_inventory.get(key, 0.0)))
+                    line_allowed_quantity = qty(
+                        float(work_order.PlannedQuantity)
+                        * float(bom_line.QuantityPerUnit)
+                        * (1 + float(bom_line.ScrapFactorPct))
+                        * 1.10
+                    )
+                    remaining_line_allowance = qty(
+                        max(
+                            float(line_allowed_quantity)
+                            - float(issued_quantity_by_work_order_bom_line.get((work_order_id, int(bom_line.BOMLineID)), 0.0)),
+                            0.0,
+                        )
+                    )
+                    issue_quantity = min(issue_quantity, remaining_line_allowance)
                     issue_quantity = min(issue_quantity, available_quantity)
                     if issue_quantity <= 0:
                         continue
-                    material_inventory[key] = qty(available_quantity - issue_quantity)
+                    material_inventory[key] = qty(
+                        max(float(material_inventory.get(key, 0.0)) - float(issue_quantity), 0.0)
+                    )
+                    issued_quantity_by_work_order_bom_line[(work_order_id, int(bom_line.BOMLineID))] = qty(
+                        float(issued_quantity_by_work_order_bom_line.get((work_order_id, int(bom_line.BOMLineID)), 0.0))
+                        + float(issue_quantity)
+                    )
                     component = items[int(bom_line.ComponentItemID)]
                     issue_lines.append({
                         "MaterialIssueLineID": next_id(context, "MaterialIssueLine"),
@@ -2731,6 +2985,7 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
         else:
             update_work_order_row(context, work_order_id, "In Progress")
 
+    append_rows(context, "PurchaseRequisition", replenishment_requisition_rows)
     append_rows(context, "MaterialIssue", issue_headers)
     append_rows(context, "MaterialIssueLine", issue_lines)
     append_rows(context, "ProductionCompletion", completion_headers)
@@ -2751,8 +3006,9 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
     ) if not work_orders.empty else 0
     open_work_orders = int(work_orders["Status"].isin(["Released", "In Progress", "Completed"]).sum()) if not work_orders.empty else 0
     older_completed_not_closed = completed_not_closed_older_than_one_payroll_period_count(context, month_end)
+    backlog_metrics = released_work_order_backlog_metrics(context, month_end)
     LOGGER.info(
-        "MANUFACTURING ACTIVITY | %s-%02d | candidates=%s | scheduled_candidates=%s | open_work_orders=%s | released_with_schedule=%s | released_without_schedule=%s | completed_not_closed_older_than_period=%s | issues_created=%s | completions_created=%s",
+        "MANUFACTURING ACTIVITY | %s-%02d | candidates=%s | scheduled_candidates=%s | open_work_orders=%s | released_with_schedule=%s | released_without_schedule=%s | completed_not_closed_older_than_period=%s | replenishment_requisitions_created=%s | issues_created=%s | completions_created=%s",
         year,
         month,
         len(candidates),
@@ -2761,9 +3017,22 @@ def generate_month_manufacturing_activity(context: GenerationContext, year: int,
         released_with_schedule,
         released_without_schedule,
         older_completed_not_closed,
+        len(replenishment_requisition_rows),
         len(issue_headers),
         len(completion_headers),
     )
+    LOGGER.info(
+        "MANUFACTURING BACKLOG | %s-%02d | open_released_work_orders=%s | open_released_no_actual_start=%s | avg_days_release_to_first_sched_open=%s | oldest_open_due_date=%s | open_due_before_month_end=%s | open_due_before_year_end=%s",
+        year,
+        month,
+        backlog_metrics["open_released_work_orders"],
+        backlog_metrics["open_released_no_actual_start"],
+        backlog_metrics["avg_days_release_to_first_sched_open"],
+        backlog_metrics["oldest_open_due_date"] or "None",
+        backlog_metrics["open_due_before_month_end"],
+        backlog_metrics["open_due_before_year_end"],
+    )
+    return len(replenishment_requisition_rows)
 
 
 def final_work_order_activity_dates(context: GenerationContext) -> dict[int, pd.Timestamp]:

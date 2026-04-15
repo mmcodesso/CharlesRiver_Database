@@ -82,8 +82,17 @@ def _run_full_month_sequence(context: GenerationContext) -> dict[tuple[int, int]
         month_started_at = time.perf_counter()
         for step_name, step_fn in MONTH_STEP_SEQUENCE:
             step_started_at = time.perf_counter()
-            step_fn(context, year, month)
+            result = step_fn(context, year, month)
             month_timings[step_name] = time.perf_counter() - step_started_at
+            if step_name == "generate_month_manufacturing_activity" and result:
+                for followup_name, followup_fn in [
+                    ("generate_month_purchase_orders_followup", generate_month_purchase_orders),
+                    ("generate_month_goods_receipts_followup", generate_month_goods_receipts),
+                    ("generate_month_manufacturing_activity_followup", generate_month_manufacturing_activity),
+                ]:
+                    followup_started_at = time.perf_counter()
+                    followup_fn(context, year, month)
+                    month_timings[followup_name] = time.perf_counter() - followup_started_at
         month_timings["month_total"] = time.perf_counter() - month_started_at
         timings[(year, month)] = month_timings
     return timings

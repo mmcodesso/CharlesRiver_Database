@@ -55,11 +55,21 @@ LEAD_TIME_DEFAULTS = {
     "Packaging": 7,
     "Raw Materials": 9,
 }
+PURCHASED_POLICY_LEAD_DAYS = {
+    "Furniture": 20,
+    "Lighting": 17,
+    "Textiles": 15,
+    "Accessories": 13,
+    "Packaging": 24,
+    "Raw Materials": 28,
+}
 MANUFACTURED_TARGET_UTILIZATION = 0.85
-MANUFACTURED_POLICY_BUFFER_DAYS = 14
-MANUFACTURED_POLICY_MIN_LEAD_DAYS = 140
+MANUFACTURED_POLICY_BUFFER_DAYS = 7
+MANUFACTURED_POLICY_MIN_LEAD_DAYS = 21
+MANUFACTURED_POLICY_MAX_LEAD_DAYS = 42
 WORKING_DAY_TO_CALENDAR_DAY_FACTOR = 7.0 / 5.0
 DEMAND_FORECAST_PROGRESS_INTERVAL = 25
+MANUFACTURED_COMPONENT_NEED_OFFSET_DAYS = 14
 
 
 def append_rows(context: GenerationContext, table_name: str, rows: list[dict[str, Any]]) -> None:
@@ -456,6 +466,8 @@ def open_purchase_supply_by_item_warehouse_week(context: GenerationContext) -> d
     purchase_orders = context.tables["PurchaseOrder"]
     po_lines = context.tables["PurchaseOrderLine"]
     receipts = context.tables["GoodsReceiptLine"]
+    requisitions = context.tables["PurchaseRequisition"]
+    recommendations = context.tables["SupplyPlanRecommendation"]
     if purchase_orders.empty or po_lines.empty:
         return {}
 
@@ -463,7 +475,23 @@ def open_purchase_supply_by_item_warehouse_week(context: GenerationContext) -> d
     if not receipts.empty:
         received_by_line = receipts.groupby("POLineID")["QuantityReceived"].sum().to_dict()
     order_headers = purchase_orders.set_index("PurchaseOrderID")[["ExpectedDeliveryDate"]].to_dict("index")
-    warehouses = warehouse_ids(context)
+    recommendation_warehouses = (
+        recommendations.set_index("SupplyPlanRecommendationID")["WarehouseID"].astype(int).to_dict()
+        if not recommendations.empty
+        else {}
+    )
+    requisition_target_warehouse: dict[int, int] = {}
+    if not requisitions.empty:
+        for requisition in requisitions.itertuples(index=False):
+            target_warehouse = None
+            if pd.notna(requisition.SupplyPlanRecommendationID):
+                target_warehouse = recommendation_warehouses.get(int(requisition.SupplyPlanRecommendationID))
+            if target_warehouse is None:
+                ranked = primary_warehouse_rank(context, int(requisition.ItemID))
+                if ranked:
+                    target_warehouse = int(ranked[0])
+            if target_warehouse is not None:
+                requisition_target_warehouse[int(requisition.RequisitionID)] = int(target_warehouse)
     supply: dict[tuple[str, int, int], float] = defaultdict(float)
     for row in po_lines.itertuples(index=False):
         header = order_headers.get(int(row.PurchaseOrderID))
@@ -472,7 +500,10 @@ def open_purchase_supply_by_item_warehouse_week(context: GenerationContext) -> d
         remaining = round(float(row.Quantity) - float(received_by_line.get(int(row.POLineID), 0.0)), 2)
         if remaining <= 0:
             continue
-        warehouse_id = warehouses[(int(row.ItemID) + int(row.PurchaseOrderID)) % len(warehouses)] if warehouses else 1
+        warehouse_id = requisition_target_warehouse.get(int(row.RequisitionID))
+        if warehouse_id is None:
+            ranked = primary_warehouse_rank(context, int(row.ItemID))
+            warehouse_id = int(ranked[0]) if ranked else 1
         bucket = week_start(header["ExpectedDeliveryDate"]).strftime("%Y-%m-%d")
         supply[(bucket, int(row.ItemID), int(warehouse_id))] += remaining
     return {key: round(value, 2) for key, value in supply.items()}
@@ -577,6 +608,7 @@ def generate_inventory_policies(context: GenerationContext) -> None:
     active_routing_by_parent = _active_routing_lookup(context)
     routing_ops_by_routing = _routing_operations_lookup(context)
     average_daily_available = _average_daily_available_hours_by_work_center(context)
+    component_parent_usage_counts = _component_parent_usage_counts(context)
     for item in items.sort_values("ItemID").itertuples(index=False):
         if str(item.ItemGroup) == "Services":
             continue
@@ -588,9 +620,16 @@ def generate_inventory_policies(context: GenerationContext) -> None:
             reorder_quantity = 40.0
             lifecycle_status = str(getattr(item, "LifecycleStatus", "Core"))
             if str(item.ItemGroup) in {"Raw Materials", "Packaging"}:
-                target_days = 18
-                safety_stock = 45.0 if str(item.ItemGroup) == "Raw Materials" else 65.0
-                reorder_quantity = 85.0 if str(item.ItemGroup) == "Raw Materials" else 120.0
+                parent_usage_count = int(component_parent_usage_counts.get(int(item.ItemID), 0))
+                usage_factor = min(3.0, 1.0 + parent_usage_count * 0.22)
+                if str(item.ItemGroup) == "Raw Materials":
+                    target_days = 28
+                    safety_stock = 120.0 * usage_factor
+                    reorder_quantity = 220.0 * max(1.0, usage_factor * 0.95)
+                else:
+                    target_days = 24
+                    safety_stock = 140.0 * usage_factor
+                    reorder_quantity = 240.0 * max(1.0, usage_factor * 0.95)
             elif lifecycle_status == "Seasonal":
                 target_days = 28
                 safety_stock = 24.0
@@ -618,7 +657,10 @@ def generate_inventory_policies(context: GenerationContext) -> None:
                 )
             else:
                 policy_type = "Min-Max"
-                planning_lead_time_days = LEAD_TIME_DEFAULTS.get(str(item.ItemGroup), 9)
+                planning_lead_time_days = PURCHASED_POLICY_LEAD_DAYS.get(
+                    str(item.ItemGroup),
+                    LEAD_TIME_DEFAULTS.get(str(item.ItemGroup), 9),
+                )
 
             if str(item.LifecycleStatus) == "Discontinued" and int(item.IsActive) != 1:
                 continue
@@ -795,6 +837,34 @@ def _active_bom_lookup(context: GenerationContext) -> tuple[dict[int, dict[str, 
     return active_bom_by_parent, bom_lines_by_bom
 
 
+def _component_parent_usage_counts(context: GenerationContext) -> dict[int, int]:
+    boms = context.tables["BillOfMaterial"]
+    bom_lines = context.tables["BillOfMaterialLine"]
+    if boms.empty or bom_lines.empty:
+        return {}
+
+    active_bom_ids = set(
+        boms.loc[
+            boms["Status"].eq("Active"),
+            "BOMID",
+        ].astype(int).tolist()
+    )
+    if not active_bom_ids:
+        return {}
+
+    active_lines = bom_lines[bom_lines["BOMID"].astype(int).isin(active_bom_ids)].copy()
+    if active_lines.empty:
+        return {}
+
+    usage_counts = (
+        active_lines.groupby("ComponentItemID")["BOMID"]
+        .nunique()
+        .astype(int)
+        .to_dict()
+    )
+    return {int(item_id): int(parent_count) for item_id, parent_count in usage_counts.items()}
+
+
 def _active_routing_lookup(context: GenerationContext) -> dict[int, dict[str, Any]]:
     routings = context.tables["Routing"]
     active: dict[int, dict[str, Any]] = {}
@@ -874,10 +944,13 @@ def _manufactured_planning_lead_time_days(
         routing_ops_by_routing,
         average_daily_available,
     )
-    return max(
+    return min(
+        MANUFACTURED_POLICY_MAX_LEAD_DAYS,
+        max(
         int(production_lead_time_days),
         int(routing_elapsed_days + MANUFACTURED_POLICY_BUFFER_DAYS),
         MANUFACTURED_POLICY_MIN_LEAD_DAYS,
+        ),
     )
 
 
@@ -1076,7 +1149,13 @@ def generate_month_planning(context: GenerationContext, year: int, month: int) -
     planned_component_supply = planned_recommendation_supply_by_item_warehouse_week(context, recommendation_type="Purchase")
     for recommendation in sorted(
         manufacture_recommendations,
-        key=lambda row: (row["BucketWeekStartDate"], row["ItemID"], row["WarehouseID"], row["SupplyPlanRecommendationID"]),
+        key=lambda row: (
+            row["ReleaseByDate"],
+            row["BucketWeekStartDate"],
+            row["ItemID"],
+            row["WarehouseID"],
+            row["SupplyPlanRecommendationID"],
+        ),
     ):
         item_id = int(recommendation["ItemID"])
         warehouse_id = int(recommendation["WarehouseID"])
@@ -1117,7 +1196,18 @@ def generate_month_planning(context: GenerationContext, year: int, month: int) -
         bom_lines = bom_lines_by_bom.get(int(bom["BOMID"]), pd.DataFrame())
         if bom_lines.empty:
             continue
-        week_key = str(recommendation["BucketWeekStartDate"])
+        parent_release_by_date = pd.Timestamp(recommendation["ReleaseByDate"]).normalize()
+        parent_need_by_date = pd.Timestamp(recommendation["NeedByDate"]).normalize()
+        component_need_by_date = max(
+            month_start.normalize(),
+            min(
+                parent_need_by_date,
+                parent_release_by_date + pd.Timedelta(days=MANUFACTURED_COMPONENT_NEED_OFFSET_DAYS),
+            ),
+        )
+        component_bucket_start = week_start(component_need_by_date)
+        component_bucket_end = week_end(component_need_by_date)
+        component_week_key = component_bucket_start.strftime("%Y-%m-%d")
         for bom_line in bom_lines.itertuples(index=False):
             component_item = items.get(int(bom_line.ComponentItemID))
             if component_item is None:
@@ -1128,8 +1218,12 @@ def generate_month_planning(context: GenerationContext, year: int, month: int) -
                 * (1 + float(bom_line.ScrapFactorPct))
             )
             policy = policies.get((int(bom_line.ComponentItemID), warehouse_id))
-            scheduled_supply = float(component_scheduled_supply.get((week_key, int(bom_line.ComponentItemID), warehouse_id), 0.0))
-            scheduled_supply += float(planned_component_supply.get((week_key, int(bom_line.ComponentItemID), warehouse_id), 0.0))
+            scheduled_supply = float(
+                component_scheduled_supply.get((component_week_key, int(bom_line.ComponentItemID), warehouse_id), 0.0)
+            )
+            scheduled_supply += float(
+                planned_component_supply.get((component_week_key, int(bom_line.ComponentItemID), warehouse_id), 0.0)
+            )
             current_projected = float(component_projected.get((int(bom_line.ComponentItemID), warehouse_id), 0.0))
             safety_stock = float(policy["SafetyStockQuantity"]) if policy is not None else 0.0
             reorder_qty = float(policy["ReorderQuantity"]) if policy is not None else gross_requirement
@@ -1143,8 +1237,8 @@ def generate_month_planning(context: GenerationContext, year: int, month: int) -
             )
             material_plan_rows.append({
                 "MaterialRequirementPlanID": next_id(context, "MaterialRequirementPlan"),
-                "BucketWeekStartDate": recommendation["BucketWeekStartDate"],
-                "BucketWeekEndDate": recommendation["BucketWeekEndDate"],
+                "BucketWeekStartDate": component_bucket_start.strftime("%Y-%m-%d"),
+                "BucketWeekEndDate": component_bucket_end.strftime("%Y-%m-%d"),
                 "ParentItemID": item_id,
                 "ComponentItemID": int(bom_line.ComponentItemID),
                 "WarehouseID": warehouse_id,
@@ -1159,7 +1253,7 @@ def generate_month_planning(context: GenerationContext, year: int, month: int) -
                 continue
             if str(component_item.get("SupplyMode", "Purchased")) != "Purchased":
                 continue
-            release_by_date = pd.Timestamp(recommendation["BucketWeekEndDate"]) - pd.Timedelta(
+            release_by_date = component_need_by_date - pd.Timedelta(
                 days=int(policy["PlanningLeadTimeDays"]) if policy is not None else LEAD_TIME_DEFAULTS.get(str(component_item.get("ItemGroup", "")), 7)
             )
             priority = "Expedite" if release_by_date <= month_end else "Normal"
@@ -1167,8 +1261,8 @@ def generate_month_planning(context: GenerationContext, year: int, month: int) -
             recommendation_rows.append({
                 "SupplyPlanRecommendationID": next_id(context, "SupplyPlanRecommendation"),
                 "RecommendationDate": month_start.strftime("%Y-%m-%d"),
-                "BucketWeekStartDate": recommendation["BucketWeekStartDate"],
-                "BucketWeekEndDate": recommendation["BucketWeekEndDate"],
+                "BucketWeekStartDate": component_bucket_start.strftime("%Y-%m-%d"),
+                "BucketWeekEndDate": component_bucket_end.strftime("%Y-%m-%d"),
                 "ItemID": int(bom_line.ComponentItemID),
                 "WarehouseID": warehouse_id,
                 "RecommendationType": "Purchase",
@@ -1178,7 +1272,7 @@ def generate_month_planning(context: GenerationContext, year: int, month: int) -
                 "ProjectedAvailableQuantity": qty(max(projected_after_demand, 0.0)),
                 "NetRequirementQuantity": qty(net_requirement),
                 "RecommendedOrderQuantity": qty(recommended_order_quantity),
-                "NeedByDate": recommendation["NeedByDate"],
+                "NeedByDate": component_need_by_date.strftime("%Y-%m-%d"),
                 "ReleaseByDate": release_by_date.strftime("%Y-%m-%d"),
                 "RecommendationStatus": "Planned",
                 "DriverType": "Component Demand",

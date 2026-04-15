@@ -9,7 +9,7 @@ import pandas as pd
 
 from greenfield_dataset.journals import ACCRUAL_ACCOUNT_METADATA, accrual_journal_details
 from greenfield_dataset.master_data import approver_employee_id, employee_ids_for_cost_center_as_of, eligible_item_mask
-from greenfield_dataset.planning import purchase_recommendations_for_month, update_recommendation_conversion
+from greenfield_dataset.planning import primary_warehouse_rank, purchase_recommendations_for_month, update_recommendation_conversion
 from greenfield_dataset.schema import TABLE_COLUMNS
 from greenfield_dataset.settings import GenerationContext
 from greenfield_dataset.utils import format_doc_number, money, next_id, qty, random_date_in_month
@@ -112,6 +112,8 @@ def invalidate_p2p_caches(context: GenerationContext, table_name: str) -> None:
             "_purchase_invoice_line_matched_basis_map_cache",
         ],
         "PurchaseRequisition": [
+            "_manufacturing_priority_requisition_ids_cache",
+            "_purchase_requisition_target_warehouse_map_cache",
             "_purchase_order_line_cost_center_map_cache",
             "_goods_receipt_line_cost_center_map_cache",
             "_purchase_invoice_line_cost_center_map_cache",
@@ -195,6 +197,72 @@ def approver_id(
         minimum_amount=minimum_amount,
         fallback_cost_center_name="Purchasing",
     )
+
+
+def requisition_target_warehouse_map(context: GenerationContext) -> dict[int, int]:
+    cached = getattr(context, "_purchase_requisition_target_warehouse_map_cache", None)
+    if cached is not None:
+        return dict(cached)
+
+    requisitions = context.tables["PurchaseRequisition"]
+    recommendations = context.tables["SupplyPlanRecommendation"]
+    warehouses = context.tables["Warehouse"]
+    if requisitions.empty or warehouses.empty:
+        return {}
+
+    recommendation_warehouses = (
+        recommendations.set_index("SupplyPlanRecommendationID")["WarehouseID"].astype(int).to_dict()
+        if not recommendations.empty
+        else {}
+    )
+    fallback_warehouses = sorted(warehouses["WarehouseID"].astype(int).tolist())
+    target_map: dict[int, int] = {}
+    for requisition in requisitions.itertuples(index=False):
+        warehouse_id = None
+        if pd.notna(requisition.SupplyPlanRecommendationID):
+            warehouse_id = recommendation_warehouses.get(int(requisition.SupplyPlanRecommendationID))
+        if warehouse_id is None:
+            ranked = primary_warehouse_rank(context, int(requisition.ItemID))
+            if ranked:
+                warehouse_id = int(ranked[0])
+            elif fallback_warehouses:
+                warehouse_id = int(fallback_warehouses[0])
+        if warehouse_id is not None:
+            target_map[int(requisition.RequisitionID)] = int(warehouse_id)
+
+    setattr(context, "_purchase_requisition_target_warehouse_map_cache", dict(target_map))
+    return target_map
+
+
+def manufacturing_priority_requisition_ids(context: GenerationContext) -> set[int]:
+    cached = getattr(context, "_manufacturing_priority_requisition_ids_cache", None)
+    if cached is not None:
+        return set(cached)
+
+    requisitions = context.tables["PurchaseRequisition"]
+    if requisitions.empty:
+        return set()
+
+    manufacturing_cost_center = cost_center_id(context, "Manufacturing")
+    recommendations = context.tables["SupplyPlanRecommendation"]
+    recommendation_driver_type = (
+        recommendations.set_index("SupplyPlanRecommendationID")["DriverType"].astype(str).to_dict()
+        if not recommendations.empty
+        else {}
+    )
+
+    priority_ids: set[int] = set()
+    for requisition in requisitions.itertuples(index=False):
+        is_priority = int(requisition.CostCenterID) == manufacturing_cost_center
+        if pd.notna(requisition.SupplyPlanRecommendationID):
+            driver_type = recommendation_driver_type.get(int(requisition.SupplyPlanRecommendationID), "")
+            if str(driver_type) == "Component Demand":
+                is_priority = True
+        if is_priority:
+            priority_ids.add(int(requisition.RequisitionID))
+
+    setattr(context, "_manufacturing_priority_requisition_ids_cache", set(priority_ids))
+    return priority_ids
 
 
 def payment_term_days(payment_terms: str) -> int:
@@ -537,14 +605,27 @@ def p2p_open_state(context: GenerationContext) -> dict[str, float]:
     }
 
 
-def convert_probability_for_requisition(request_date: pd.Timestamp, current_month_start: pd.Timestamp) -> float:
+def convert_probability_for_requisition(
+    request_date: pd.Timestamp,
+    current_month_start: pd.Timestamp,
+    manufacturing_priority: bool = False,
+) -> float:
+    if manufacturing_priority:
+        return 1.0
     return PO_CONVERSION_RATE_CURRENT_MONTH if month_delta(request_date, current_month_start) == 0 else PO_CONVERSION_RATE_AGED
 
 
-def receipt_probability(expected_delivery_date: pd.Timestamp, current_month_start: pd.Timestamp, current_month_end: pd.Timestamp) -> float:
+def receipt_probability(
+    expected_delivery_date: pd.Timestamp,
+    current_month_start: pd.Timestamp,
+    current_month_end: pd.Timestamp,
+    manufacturing_priority: bool = False,
+) -> float:
     if expected_delivery_date > current_month_end:
         return 0.0
     delay_months = month_delta(expected_delivery_date, current_month_start)
+    if manufacturing_priority:
+        return 1.0
     if delay_months <= 0:
         return RECEIPT_PROBABILITY_CURRENT_MONTH
     if delay_months == 1:
@@ -620,12 +701,23 @@ def choose_payment_amount(rng, outstanding_amount: float, prior_event_count: int
     return partial_amount
 
 
-def estimated_delivery_date_for_batch(rng, supplier: pd.Series, item_groups: list[str], order_date: pd.Timestamp) -> pd.Timestamp:
+def estimated_delivery_date_for_batch(
+    rng,
+    supplier: pd.Series,
+    item_groups: list[str],
+    order_date: pd.Timestamp,
+    manufacturing_priority: bool = False,
+) -> pd.Timestamp:
     base_days = [BASE_LEAD_DAYS_BY_ITEM_GROUP.get(item_group, (6, 14)) for item_group in item_groups]
     base_low = max(days[0] for days in base_days)
     base_high = max(days[1] for days in base_days)
     risk_low, risk_high = SUPPLIER_RISK_LEAD_DAYS.get(str(supplier["SupplierRiskRating"]), (1, 3))
-    lead_days = int(rng.integers(base_low + risk_low, base_high + risk_high + 1))
+    if manufacturing_priority:
+        priority_low = max(2, min(base_low, 3))
+        priority_high = max(priority_low, min(base_low + 1, 5))
+        lead_days = int(rng.integers(priority_low, priority_high + 1))
+    else:
+        lead_days = int(rng.integers(base_low + risk_low, base_high + risk_high + 1))
     return order_date + pd.Timedelta(days=lead_days)
 
 
@@ -805,14 +897,27 @@ def generate_month_purchase_orders(context: GenerationContext, year: int, month:
         return
 
     item_map = context.tables["Item"].set_index("ItemID").to_dict("index")
+    target_warehouse_by_requisition = requisition_target_warehouse_map(context)
+    priority_requisition_ids = manufacturing_priority_requisition_ids(context)
     prepared_requisitions: list[dict] = []
     for requisition in candidates.sort_values(["RequestDate", "RequisitionID"]).itertuples(index=False):
         request_date = pd.Timestamp(requisition.RequestDate)
-        if rng.random() > convert_probability_for_requisition(request_date, month_start):
+        manufacturing_priority = int(requisition.RequisitionID) in priority_requisition_ids
+        if rng.random() > convert_probability_for_requisition(
+            request_date,
+            month_start,
+            manufacturing_priority=manufacturing_priority,
+        ):
             continue
 
         item = item_map[int(requisition.ItemID)]
         supplier = select_supplier(context, str(item["ItemGroup"]))
+        target_warehouse_id = int(
+            target_warehouse_by_requisition.get(
+                int(requisition.RequisitionID),
+                primary_warehouse_rank(context, int(requisition.ItemID))[0],
+            )
+        )
         window_start = pd.Timestamp(
             year=request_date.year,
             month=request_date.month,
@@ -822,7 +927,15 @@ def generate_month_purchase_orders(context: GenerationContext, year: int, month:
             "requisition": requisition,
             "item": item,
             "supplier": supplier,
-            "batch_key": (int(supplier["SupplierID"]), int(requisition.CostCenterID), window_start.strftime("%Y-%m-%d")),
+            "target_warehouse_id": target_warehouse_id,
+            "manufacturing_priority": manufacturing_priority,
+            "batch_key": (
+                int(supplier["SupplierID"]),
+                int(requisition.CostCenterID),
+                target_warehouse_id,
+                int(1 if manufacturing_priority else 0),
+                window_start.strftime("%Y-%m-%d"),
+            ),
         })
 
     if not prepared_requisitions:
@@ -844,16 +957,21 @@ def generate_month_purchase_orders(context: GenerationContext, year: int, month:
             if not batch:
                 break
 
+            manufacturing_priority = any(bool(entry["manufacturing_priority"]) for entry in batch)
             supplier = batch[0]["supplier"]
             request_dates = [pd.Timestamp(entry["requisition"].RequestDate) for entry in batch]
             lower_bound = max(month_start, max(request_dates))
-            upper_bound = min(month_end, lower_bound + pd.Timedelta(days=4))
-            order_date = random_date_between(rng, lower_bound, upper_bound)
+            if manufacturing_priority:
+                order_date = lower_bound
+            else:
+                upper_bound = min(month_end, lower_bound + pd.Timedelta(days=4))
+                order_date = random_date_between(rng, lower_bound, upper_bound)
             expected_delivery_date = estimated_delivery_date_for_batch(
                 rng,
                 supplier,
                 [str(entry["item"]["ItemGroup"]) for entry in batch],
                 order_date,
+                manufacturing_priority=manufacturing_priority,
             )
             purchasing_agents = employee_ids_for_cost_center(context, cost_center_id(context, "Purchasing"), order_date)
 
@@ -915,9 +1033,10 @@ def generate_month_goods_receipts(context: GenerationContext, year: int, month: 
     if warehouses.empty:
         raise ValueError("Generate warehouses before goods receipts.")
 
-    warehouse_ids = warehouses["WarehouseID"].astype(int).tolist()
     received_quantities = po_line_received_quantities(context)
     receipt_event_counts = po_line_receipt_event_counts(context)
+    target_warehouse_by_requisition = requisition_target_warehouse_map(context)
+    priority_requisition_ids = manufacturing_priority_requisition_ids(context)
 
     merged_lines = purchase_order_lines.merge(
         purchase_orders[["PurchaseOrderID", "OrderDate", "ExpectedDeliveryDate"]],
@@ -940,18 +1059,39 @@ def generate_month_goods_receipts(context: GenerationContext, year: int, month: 
             continue
 
         expected_delivery_date = pd.Timestamp(line.ExpectedDeliveryDate)
-        probability = receipt_probability(expected_delivery_date, month_start, month_end)
+        manufacturing_priority = int(line.RequisitionID) in priority_requisition_ids
+        probability = receipt_probability(
+            expected_delivery_date,
+            month_start,
+            month_end,
+            manufacturing_priority=manufacturing_priority,
+        )
         if probability <= 0 or rng.random() > probability:
             continue
 
         prior_event_count = int(receipt_event_counts.get(int(line.POLineID), 0))
-        quantity_received = choose_partial_quantity(rng, remaining_quantity, prior_event_count)
+        quantity_received = (
+            qty(remaining_quantity)
+            if manufacturing_priority
+            else choose_partial_quantity(rng, remaining_quantity, prior_event_count)
+        )
         if quantity_received <= 0:
             continue
 
-        receipt_date = random_date_between(rng, max(month_start, expected_delivery_date), month_end)
+        earliest_receipt_date = max(month_start, expected_delivery_date)
+        if manufacturing_priority:
+            latest_receipt_date = min(month_end, earliest_receipt_date + pd.Timedelta(days=2))
+            receipt_date = random_date_between(rng, earliest_receipt_date, latest_receipt_date)
+        else:
+            receipt_date = random_date_between(rng, earliest_receipt_date, month_end)
         receivers = employee_ids_for_cost_center(context, cost_center_id(context, "Warehouse"), receipt_date)
-        header_key = (int(line.PurchaseOrderID), receipt_date.strftime("%Y-%m-%d"))
+        target_warehouse_id = int(
+            target_warehouse_by_requisition.get(
+                int(line.RequisitionID),
+                primary_warehouse_rank(context, int(line.ItemID))[0],
+            )
+        )
+        header_key = (int(line.PurchaseOrderID), target_warehouse_id, receipt_date.strftime("%Y-%m-%d"))
         if header_key not in receipt_headers:
             goods_receipt_id = next_id(context, "GoodsReceipt")
             receipt_headers[header_key] = {
@@ -959,7 +1099,7 @@ def generate_month_goods_receipts(context: GenerationContext, year: int, month: 
                 "ReceiptNumber": format_doc_number("GR", year, goods_receipt_id),
                 "ReceiptDate": receipt_date.strftime("%Y-%m-%d"),
                 "PurchaseOrderID": int(line.PurchaseOrderID),
-                "WarehouseID": int(rng.choice(warehouse_ids)),
+                "WarehouseID": target_warehouse_id,
                 "ReceivedByEmployeeID": int(rng.choice(receivers)),
                 "Status": "Received",
                 "_next_line_number": 1,
