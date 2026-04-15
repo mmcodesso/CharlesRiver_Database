@@ -42,6 +42,37 @@ function getViewportCenter(viewport) {
   };
 }
 
+function getViewportInnerSize(viewport) {
+  const computedStyle = window.getComputedStyle(viewport);
+  const paddingX =
+    parseFloat(computedStyle.paddingLeft || "0") + parseFloat(computedStyle.paddingRight || "0");
+  const paddingY =
+    parseFloat(computedStyle.paddingTop || "0") + parseFloat(computedStyle.paddingBottom || "0");
+
+  return {
+    width: Math.max(viewport.clientWidth - paddingX, 1),
+    height: Math.max(viewport.clientHeight - paddingY, 1),
+  };
+}
+
+function fitDiagramInViewport({ panzoom, svg, viewport }) {
+  if (!panzoom || !svg || !viewport) {
+    return;
+  }
+
+  const { width: svgWidth, height: svgHeight } = getSvgDimensions(svg);
+  const { width: viewportWidth, height: viewportHeight } = getViewportInnerSize(viewport);
+  const framePadding = 8;
+  const availableWidth = Math.max(viewportWidth - framePadding * 2, 1);
+  const availableHeight = Math.max(viewportHeight - framePadding * 2, 1);
+  const scale = Math.min(availableWidth / svgWidth, availableHeight / svgHeight, 1);
+  const x = (viewportWidth - svgWidth * scale) / 2;
+  const y = (viewportHeight - svgHeight * scale) / 2;
+
+  panzoom.zoomAbs(0, 0, scale);
+  panzoom.moveTo(x, y);
+}
+
 function MermaidMarkup({ renderResult, containerRef, className }) {
   useEffect(() => {
     bindDiagramInteractions(renderResult, containerRef);
@@ -94,22 +125,15 @@ function MermaidRenderer({ value }) {
 
     let cancelled = false;
     let localPanzoom;
+    let resizeObserver;
+    let fitTimeoutId;
 
     const fitDiagramToViewport = () => {
-      if (!localPanzoom || !svgRef.current || !viewportRef.current) {
-        return;
-      }
-
-      const viewport = viewportRef.current;
-      const { width: svgWidth, height: svgHeight } = getSvgDimensions(svgRef.current);
-      const availableWidth = Math.max(viewport.clientWidth - 48, 1);
-      const availableHeight = Math.max(viewport.clientHeight - 48, 1);
-      const scale = Math.min(availableWidth / svgWidth, availableHeight / svgHeight, 1);
-      const x = (viewport.clientWidth - svgWidth * scale) / 2;
-      const y = (viewport.clientHeight - svgHeight * scale) / 2;
-
-      localPanzoom.zoomAbs(0, 0, scale);
-      localPanzoom.moveTo(x, y);
+      fitDiagramInViewport({
+        panzoom: localPanzoom,
+        svg: svgRef.current,
+        viewport: viewportRef.current,
+      });
     };
 
     const initializePanzoom = async () => {
@@ -131,13 +155,29 @@ function MermaidRenderer({ value }) {
         maxZoom: 6,
         minZoom: 0.35,
         bounds: true,
-        boundsPadding: 0.2,
+        boundsPadding: 0.02,
         smoothScroll: false,
       });
       panzoomRef.current = localPanzoom;
 
-      requestAnimationFrame(fitDiagramToViewport);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(fitDiagramToViewport);
+      });
+      fitTimeoutId = window.setTimeout(fitDiagramToViewport, 80);
+      if (document.fonts?.ready) {
+        document.fonts.ready.then(() => {
+          if (!cancelled) {
+            fitDiagramToViewport();
+          }
+        });
+      }
       window.addEventListener("resize", fitDiagramToViewport);
+      if (window.ResizeObserver && viewportRef.current) {
+        resizeObserver = new window.ResizeObserver(() => {
+          fitDiagramToViewport();
+        });
+        resizeObserver.observe(viewportRef.current);
+      }
     };
 
     initializePanzoom();
@@ -145,6 +185,8 @@ function MermaidRenderer({ value }) {
     return () => {
       cancelled = true;
       window.removeEventListener("resize", fitDiagramToViewport);
+      window.clearTimeout(fitTimeoutId);
+      resizeObserver?.disconnect();
       panzoomRef.current?.dispose();
       panzoomRef.current = null;
       svgRef.current = null;
@@ -173,20 +215,11 @@ function MermaidRenderer({ value }) {
     panzoomRef.current.smoothZoom(center.x, center.y, 1 / 1.2);
   };
   const resetZoom = () => {
-    if (!panzoomRef.current || !svgRef.current || !viewportRef.current) {
-      return;
-    }
-
-    const viewport = viewportRef.current;
-    const { width: svgWidth, height: svgHeight } = getSvgDimensions(svgRef.current);
-    const availableWidth = Math.max(viewport.clientWidth - 48, 1);
-    const availableHeight = Math.max(viewport.clientHeight - 48, 1);
-    const scale = Math.min(availableWidth / svgWidth, availableHeight / svgHeight, 1);
-    const x = (viewport.clientWidth - svgWidth * scale) / 2;
-    const y = (viewport.clientHeight - svgHeight * scale) / 2;
-
-    panzoomRef.current.zoomAbs(0, 0, scale);
-    panzoomRef.current.moveTo(x, y);
+    fitDiagramInViewport({
+      panzoom: panzoomRef.current,
+      svg: svgRef.current,
+      viewport: viewportRef.current,
+    });
   };
 
   return (
