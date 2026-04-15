@@ -244,4 +244,9 @@ def test_phase17_docs_include_cases_matrix_and_subprocess_diagrams() -> None:
     assert "WorkOrderClose" in manufacturing_text
 
     manual_close_text = Path("docs/processes/manual-journals-and-close.md").read_text(encoding="utf-8")
-    assert "Subprocess Spotlight" in manual_close_text
+    assert "## Analytical Subsections" in manual_close_text
+    assert "### Accrual Estimate to AP Settlement" in manual_close_text
+    assert "## Opening Balance and Year-End Close" in manual_close_text
+    assert "PurchaseInvoiceLine.AccrualJournalEntryID" in manual_close_text
+    assert "Accrual Adjustment" in manual_close_text
+    assert "Year-End Close" in manual_close_text
