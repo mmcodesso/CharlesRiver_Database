@@ -81,6 +81,31 @@ PROMOTION_MONTH_WINDOWS = [
     ((11, 11), 0.12),
 ]
 OVERRIDE_REASON_CODES = ["Strategic Renewal", "Competitive Match", "Project Package", "Service Recovery"]
+AR_AGING_BUCKET_ORDER = ["Not Due", "0-30", "31-60", "61-90", "90+"]
+SEGMENT_COLLECTION_FACTORS = {
+    "Strategic": 0.94,
+    "Wholesale": 0.92,
+    "Design Trade": 1.02,
+    "Small Business": 1.05,
+}
+TERM_COLLECTION_FACTORS = {
+    30: 1.00,
+    45: 0.96,
+    60: 0.92,
+    90: 0.86,
+}
+DEPOSIT_PROBABILITIES = {
+    "Strategic": 0.05,
+    "Wholesale": 0.04,
+    "Design Trade": 0.025,
+    "Small Business": 0.02,
+}
+DEPOSIT_FRACTION_RANGES = {
+    "Strategic": (0.10, 0.20),
+    "Wholesale": (0.09, 0.18),
+    "Design Trade": (0.07, 0.15),
+    "Small Business": (0.06, 0.12),
+}
 
 
 def append_rows(context: GenerationContext, table_name: str, rows: list[dict]) -> None:
@@ -104,17 +129,33 @@ def drop_context_attributes(context: GenerationContext, attribute_names: list[st
 def invalidate_o2c_caches(context: GenerationContext, table_name: str) -> None:
     cache_map = {
         "ShipmentLine": ["_sales_order_line_shipped_quantities_cache"],
+        "SalesInvoice": [
+            "_o2c_receivables_metrics_cache",
+            "_credit_memo_allocation_map_as_of_cache",
+            "_invoice_settled_amounts_as_of_cache",
+        ],
         "SalesInvoiceLine": [
             "_shipment_line_billed_quantities_cache",
             "_invoice_cash_application_amounts_cache",
             "_credit_memo_allocation_map_cache",
             "_invoice_settled_amounts_cache",
+            "_o2c_receivables_metrics_cache",
+            "_credit_memo_allocation_map_as_of_cache",
+            "_invoice_settled_amounts_as_of_cache",
         ],
         "CashReceiptApplication": [
             "_receipt_applied_amounts_cache",
             "_invoice_cash_application_amounts_cache",
             "_credit_memo_allocation_map_cache",
             "_invoice_settled_amounts_cache",
+            "_o2c_receivables_metrics_cache",
+            "_credit_memo_allocation_map_as_of_cache",
+            "_invoice_settled_amounts_as_of_cache",
+        ],
+        "CashReceipt": [
+            "_o2c_receivables_metrics_cache",
+            "_credit_memo_allocation_map_as_of_cache",
+            "_invoice_settled_amounts_as_of_cache",
         ],
         "CustomerRefund": ["_credit_memo_refunded_amounts_cache"],
         "SalesReturnLine": ["_shipment_line_returned_quantities_cache"],
@@ -122,6 +163,9 @@ def invalidate_o2c_caches(context: GenerationContext, table_name: str) -> None:
             "_returned_invoice_ids_cache",
             "_credit_memo_allocation_map_cache",
             "_invoice_settled_amounts_cache",
+            "_o2c_receivables_metrics_cache",
+            "_credit_memo_allocation_map_as_of_cache",
+            "_invoice_settled_amounts_as_of_cache",
         ],
         "PriceList": [
             "_price_list_lookup_cache",
@@ -182,6 +226,277 @@ def payment_term_days(payment_terms: str) -> int:
         return int(str(payment_terms).split()[-1])
     except (ValueError, IndexError):
         return 30
+
+
+def current_o2c_as_of_date(context: GenerationContext) -> pd.Timestamp:
+    date_candidates: list[pd.Timestamp] = []
+    date_columns = [
+        ("SalesOrder", "OrderDate"),
+        ("Shipment", "ShipmentDate"),
+        ("SalesInvoice", "InvoiceDate"),
+        ("CashReceipt", "ReceiptDate"),
+        ("SalesReturn", "ReturnDate"),
+        ("CustomerRefund", "RefundDate"),
+    ]
+    for table_name, column_name in date_columns:
+        table = context.tables[table_name]
+        if table.empty or column_name not in table.columns:
+            continue
+        dates = pd.to_datetime(table[column_name], errors="coerce").dropna()
+        if not dates.empty:
+            date_candidates.append(pd.Timestamp(dates.max()).normalize())
+    if date_candidates:
+        return max(date_candidates)
+    return pd.Timestamp(context.settings.fiscal_year_end).normalize()
+
+
+def aging_bucket_label(days_past_due: int) -> str:
+    if days_past_due < 0:
+        return "Not Due"
+    if days_past_due <= 30:
+        return "0-30"
+    if days_past_due <= 60:
+        return "31-60"
+    if days_past_due <= 90:
+        return "61-90"
+    return "90+"
+
+
+def receivables_open_invoices(
+    context: GenerationContext,
+    *,
+    as_of_date: pd.Timestamp | str | None = None,
+    customer_id: int | None = None,
+    settled_amounts: dict[int, float] | None = None,
+) -> pd.DataFrame:
+    sales_invoices = context.tables["SalesInvoice"]
+    if sales_invoices.empty:
+        return pd.DataFrame(
+            columns=[
+                "SalesInvoiceID",
+                "CustomerID",
+                "InvoiceDate",
+                "DueDate",
+                "GrandTotal",
+                "SettledAmount",
+                "OpenAmount",
+                "InvoiceDateTS",
+                "DueDateTS",
+                "DaysPastDue",
+                "DaysOpen",
+                "AgingBucket",
+            ]
+        )
+
+    effective_as_of = pd.Timestamp(as_of_date).normalize() if as_of_date is not None else current_o2c_as_of_date(context)
+    if settled_amounts is None:
+        settled_amounts = (
+            invoice_settled_amounts_as_of(context, effective_as_of)
+            if as_of_date is not None
+            else invoice_settled_amounts(context)
+        )
+
+    open_invoices = sales_invoices.copy()
+    open_invoices["InvoiceDateTS"] = pd.to_datetime(open_invoices["InvoiceDate"], errors="coerce")
+    open_invoices["DueDateTS"] = pd.to_datetime(open_invoices["DueDate"], errors="coerce")
+    open_invoices = open_invoices[open_invoices["InvoiceDateTS"].notna() & open_invoices["DueDateTS"].notna()].copy()
+    open_invoices = open_invoices[open_invoices["InvoiceDateTS"].le(effective_as_of)].copy()
+    if customer_id is not None:
+        open_invoices = open_invoices[open_invoices["CustomerID"].astype(int).eq(int(customer_id))].copy()
+    if open_invoices.empty:
+        return open_invoices
+
+    open_invoices["SettledAmount"] = open_invoices["SalesInvoiceID"].astype(int).map(settled_amounts).fillna(0.0)
+    open_invoices["OpenAmount"] = (
+        open_invoices["GrandTotal"].astype(float) - open_invoices["SettledAmount"].astype(float)
+    ).round(2)
+    open_invoices = open_invoices[open_invoices["OpenAmount"].gt(0)].copy()
+    if open_invoices.empty:
+        return open_invoices
+
+    open_invoices["DaysPastDue"] = (
+        effective_as_of - open_invoices["DueDateTS"]
+    ).dt.days.astype(int)
+    open_invoices["DaysOpen"] = (
+        effective_as_of - open_invoices["InvoiceDateTS"]
+    ).dt.days.astype(int)
+    open_invoices["AgingBucket"] = open_invoices["DaysPastDue"].map(aging_bucket_label)
+    return open_invoices.sort_values(["DueDateTS", "InvoiceDateTS", "SalesInvoiceID"]).reset_index(drop=True)
+
+
+def o2c_receivables_metrics(
+    context: GenerationContext,
+    *,
+    as_of_date: pd.Timestamp | str | None = None,
+) -> dict[str, float | int | str]:
+    effective_as_of = pd.Timestamp(as_of_date).normalize() if as_of_date is not None else current_o2c_as_of_date(context)
+    metrics_cache = getattr(context, "_o2c_receivables_metrics_cache", None)
+    if metrics_cache is None:
+        metrics_cache = {}
+        setattr(context, "_o2c_receivables_metrics_cache", metrics_cache)
+    cache_key = effective_as_of.strftime("%Y-%m-%d")
+    if cache_key in metrics_cache:
+        return metrics_cache[cache_key]
+
+    open_invoices = receivables_open_invoices(context, as_of_date=effective_as_of)
+
+    open_ar_amount = round(float(open_invoices["OpenAmount"].sum()), 2) if not open_invoices.empty else 0.0
+    trailing_start = effective_as_of - pd.Timedelta(days=364)
+    trailing_invoices = context.tables["SalesInvoice"]
+    trailing_twelve_month_sales = 0.0
+    if not trailing_invoices.empty:
+        invoice_dates = pd.to_datetime(trailing_invoices["InvoiceDate"], errors="coerce")
+        trailing_mask = invoice_dates.between(trailing_start, effective_as_of)
+        trailing_twelve_month_sales = round(float(trailing_invoices.loc[trailing_mask, "GrandTotal"].astype(float).sum()), 2)
+
+    implied_dso = round((open_ar_amount / trailing_twelve_month_sales) * 365.0, 2) if trailing_twelve_month_sales > 0 else 0.0
+
+    metrics: dict[str, float | int | str] = {
+        "as_of_date": effective_as_of.strftime("%Y-%m-%d"),
+        "open_ar_amount": open_ar_amount,
+        "trailing_twelve_month_sales": trailing_twelve_month_sales,
+        "implied_dso": implied_dso,
+        "open_invoice_count": int(len(open_invoices)),
+        "open_invoices_gt_365_count": int(open_invoices["DaysOpen"].gt(365).sum()) if not open_invoices.empty else 0,
+        "open_invoices_gt_365_amount": round(float(open_invoices.loc[open_invoices["DaysOpen"].gt(365), "OpenAmount"].sum()), 2) if not open_invoices.empty else 0.0,
+    }
+
+    aging_amounts: dict[str, float] = {}
+    aging_counts: dict[str, int] = {}
+    for bucket in AR_AGING_BUCKET_ORDER:
+        bucket_rows = open_invoices[open_invoices["AgingBucket"].eq(bucket)] if not open_invoices.empty else open_invoices
+        bucket_key = bucket.lower().replace("+", "plus").replace("-", "_").replace(" ", "_")
+        aging_amount = round(float(bucket_rows["OpenAmount"].sum()), 2) if not bucket_rows.empty else 0.0
+        aging_count = int(len(bucket_rows))
+        metrics[f"aging_{bucket_key}_amount"] = aging_amount
+        metrics[f"aging_{bucket_key}_share"] = round(float(aging_amount / open_ar_amount), 4) if open_ar_amount else 0.0
+        metrics[f"aging_{bucket_key}_count"] = aging_count
+        aging_amounts[bucket] = aging_amount
+        aging_counts[bucket] = aging_count
+
+    current_to_sixty_amount = aging_amounts["Not Due"] + aging_amounts["0-30"] + aging_amounts["31-60"]
+    metrics["aging_current_to_60_amount"] = round(current_to_sixty_amount, 2)
+    metrics["aging_current_to_60_share"] = round(float(current_to_sixty_amount / open_ar_amount), 4) if open_ar_amount else 0.0
+    metrics["aging_90_plus_amount"] = aging_amounts["90+"]
+    metrics["aging_90_plus_share"] = round(float(aging_amounts["90+"] / open_ar_amount), 4) if open_ar_amount else 0.0
+    metrics["aging_90_plus_count"] = aging_counts["90+"]
+    metrics_cache[cache_key] = metrics
+    return metrics
+
+
+def customer_collection_factor(customer_segment: str, payment_terms: str) -> float:
+    segment_factor = float(SEGMENT_COLLECTION_FACTORS.get(str(customer_segment), 1.0))
+    term_factor = float(TERM_COLLECTION_FACTORS.get(payment_term_days(str(payment_terms)), 0.90))
+    return segment_factor * term_factor
+
+
+def invoice_collection_target_ratio(
+    days_past_due: int,
+    *,
+    customer_segment: str,
+    payment_terms: str,
+    rng: np.random.Generator,
+) -> float:
+    if days_past_due < 0:
+        days_to_due = abs(int(days_past_due))
+        if days_to_due <= 7:
+            base_ratio = 0.26
+        elif days_to_due <= 15:
+            base_ratio = 0.16
+        elif days_to_due <= 30:
+            base_ratio = 0.08
+        else:
+            base_ratio = 0.02
+    elif days_past_due <= 30:
+        base_ratio = 0.72
+    elif days_past_due <= 60:
+        base_ratio = 0.86
+    elif days_past_due <= 90:
+        base_ratio = 0.94
+    else:
+        base_ratio = 0.98
+
+    ratio = base_ratio * customer_collection_factor(customer_segment, payment_terms) * float(rng.uniform(0.94, 1.06))
+    return float(np.clip(ratio, 0.0, 0.995))
+
+
+def collection_receipt_dates(
+    month_end: pd.Timestamp,
+    *,
+    receipt_count: int,
+    max_days_past_due: int,
+    rng: np.random.Generator,
+) -> list[pd.Timestamp]:
+    if receipt_count <= 0:
+        return []
+
+    if max_days_past_due > 90:
+        anchor_days = [5, 14, 24]
+    elif max_days_past_due > 60:
+        anchor_days = [8, 18, 26]
+    elif max_days_past_due > 30:
+        anchor_days = [12, 21, 27]
+    elif max_days_past_due >= 0:
+        anchor_days = [18, 24, 28]
+    else:
+        anchor_days = [22, 26, month_end.day]
+
+    month_start = month_end.replace(day=1)
+    selected_anchors = anchor_days[:receipt_count]
+    dates: list[pd.Timestamp] = []
+    for anchor_day in selected_anchors:
+        anchor = month_start + pd.Timedelta(days=max(0, min(anchor_day, month_end.day) - 1))
+        offset = int(rng.integers(-2, 3))
+        dates.append(min(month_end, max(month_start, anchor + pd.Timedelta(days=offset))))
+    return sorted(dates)
+
+
+def apply_receipt_oldest_first(
+    context: GenerationContext,
+    *,
+    receipt_id: int,
+    receipt_date: pd.Timestamp,
+    customer_invoices: pd.DataFrame,
+    receipt_amount: float,
+    current_applied_amounts: dict[int, float],
+    settled_amounts: dict[int, float],
+    application_rows: list[dict[str, Any]],
+    year: int,
+    month: int,
+) -> None:
+    remaining_receipt_amount = money(receipt_amount)
+    if remaining_receipt_amount <= 0 or customer_invoices.empty:
+        return
+
+    for invoice in customer_invoices.itertuples(index=False):
+        if remaining_receipt_amount <= 0:
+            break
+        applied_amount = min(remaining_receipt_amount, float(invoice.OpenAmount))
+        if applied_amount <= 0:
+            continue
+        application_date = clamp_date_to_month(
+            max(receipt_date, pd.Timestamp(invoice.InvoiceDateTS)) + pd.Timedelta(days=int(context.rng.integers(0, 3))),
+            year,
+            month,
+        )
+        application_recorders = employee_ids_for_cost_center(context, "Customer Service", application_date)
+        application_rows.append({
+            "CashReceiptApplicationID": next_id(context, "CashReceiptApplication"),
+            "CashReceiptID": int(receipt_id),
+            "SalesInvoiceID": int(invoice.SalesInvoiceID),
+            "ApplicationDate": application_date.strftime("%Y-%m-%d"),
+            "AppliedAmount": money(applied_amount),
+            "AppliedByEmployeeID": int(context.rng.choice(application_recorders)),
+        })
+        current_applied_amounts[int(receipt_id)] = round(
+            float(current_applied_amounts.get(int(receipt_id), 0.0)) + float(applied_amount),
+            2,
+        )
+        settled_amounts[int(invoice.SalesInvoiceID)] = round(
+            float(settled_amounts.get(int(invoice.SalesInvoiceID), 0.0)) + float(applied_amount),
+            2,
+        )
+        remaining_receipt_amount = money(remaining_receipt_amount - applied_amount)
 
 
 def return_rng(context: GenerationContext, sales_invoice_id: int) -> np.random.Generator:
@@ -923,6 +1238,125 @@ def invoice_settled_amounts(context: GenerationContext) -> dict[int, float]:
     return cached
 
 
+def credit_memo_allocation_map_as_of(
+    context: GenerationContext,
+    as_of_date: pd.Timestamp | str,
+) -> dict[int, dict[str, float]]:
+    as_of_key = pd.Timestamp(as_of_date).normalize().strftime("%Y-%m-%d")
+    cached = getattr(context, "_credit_memo_allocation_map_as_of_cache", None)
+    if cached is None:
+        cached = {}
+        setattr(context, "_credit_memo_allocation_map_as_of_cache", cached)
+    if as_of_key in cached:
+        return cached[as_of_key]
+
+    credit_memos = context.tables["CreditMemo"]
+    if credit_memos.empty:
+        cached[as_of_key] = {}
+        return cached[as_of_key]
+
+    effective_as_of = pd.Timestamp(as_of_date).normalize()
+    filtered_credit_memos = credit_memos.copy()
+    filtered_credit_memos["CreditMemoDateTS"] = pd.to_datetime(filtered_credit_memos["CreditMemoDate"], errors="coerce")
+    filtered_credit_memos = filtered_credit_memos[
+        filtered_credit_memos["CreditMemoDateTS"].notna()
+        & filtered_credit_memos["CreditMemoDateTS"].le(effective_as_of)
+    ].copy()
+    if filtered_credit_memos.empty:
+        cached[as_of_key] = {}
+        return cached[as_of_key]
+
+    applications = context.tables["CashReceiptApplication"]
+    application_lookup: dict[int, pd.DataFrame] = {}
+    if not applications.empty:
+        filtered_applications = applications.copy()
+        filtered_applications["ApplicationDateTS"] = pd.to_datetime(filtered_applications["ApplicationDate"], errors="coerce")
+        filtered_applications = filtered_applications[
+            filtered_applications["ApplicationDateTS"].notna()
+            & filtered_applications["ApplicationDateTS"].le(effective_as_of)
+        ].copy()
+        for invoice_id, rows in filtered_applications.groupby("SalesInvoiceID"):
+            application_lookup[int(invoice_id)] = rows.sort_values(["ApplicationDateTS", "CashReceiptApplicationID"]).copy()
+
+    invoice_totals = context.tables["SalesInvoice"].set_index("SalesInvoiceID")["GrandTotal"].astype(float).to_dict()
+    prior_credit_totals: dict[int, float] = defaultdict(float)
+    allocations: dict[int, dict[str, float]] = {}
+
+    for memo in filtered_credit_memos.sort_values(["CreditMemoDateTS", "CreditMemoID"]).itertuples(index=False):
+        invoice_id = int(memo.OriginalSalesInvoiceID)
+        invoice_applications = application_lookup.get(invoice_id)
+        applications_before = 0.0
+        if invoice_applications is not None and not invoice_applications.empty:
+            applications_before = round(
+                float(
+                    invoice_applications.loc[
+                        invoice_applications["ApplicationDateTS"].le(pd.Timestamp(memo.CreditMemoDateTS)),
+                        "AppliedAmount",
+                    ].sum()
+                ),
+                2,
+            )
+        invoice_total = float(invoice_totals.get(invoice_id, 0.0))
+        open_balance = max(0.0, round(invoice_total - applications_before - prior_credit_totals[invoice_id], 2))
+        ar_amount = min(float(memo.GrandTotal), open_balance)
+        allocations[int(memo.CreditMemoID)] = {
+            "ar_amount": round(ar_amount, 2),
+            "customer_credit_amount": round(float(memo.GrandTotal) - ar_amount, 2),
+        }
+        prior_credit_totals[invoice_id] = round(prior_credit_totals[invoice_id] + float(memo.GrandTotal), 2)
+
+    cached[as_of_key] = allocations
+    return allocations
+
+
+def invoice_settled_amounts_as_of(
+    context: GenerationContext,
+    as_of_date: pd.Timestamp | str,
+) -> dict[int, float]:
+    as_of_key = pd.Timestamp(as_of_date).normalize().strftime("%Y-%m-%d")
+    cached = getattr(context, "_invoice_settled_amounts_as_of_cache", None)
+    if cached is None:
+        cached = {}
+        setattr(context, "_invoice_settled_amounts_as_of_cache", cached)
+    if as_of_key in cached:
+        return cached[as_of_key]
+
+    effective_as_of = pd.Timestamp(as_of_date).normalize()
+    applications = context.tables["CashReceiptApplication"]
+    cash_applied: dict[int, float] = {}
+    if not applications.empty:
+        filtered_applications = applications.copy()
+        filtered_applications["ApplicationDateTS"] = pd.to_datetime(filtered_applications["ApplicationDate"], errors="coerce")
+        filtered_applications = filtered_applications[
+            filtered_applications["ApplicationDateTS"].notna()
+            & filtered_applications["ApplicationDateTS"].le(effective_as_of)
+        ].copy()
+        cash_applied = {
+            int(invoice_id): round(float(amount), 2)
+            for invoice_id, amount in filtered_applications.groupby("SalesInvoiceID")["AppliedAmount"].sum().items()
+        }
+
+    credit_memo_allocations = credit_memo_allocation_map_as_of(context, effective_as_of)
+    credit_memo_amounts: dict[int, float] = defaultdict(float)
+    for credit_memo in context.tables["CreditMemo"].itertuples(index=False):
+        credit_memo_date = pd.Timestamp(credit_memo.CreditMemoDate)
+        if credit_memo_date > effective_as_of:
+            continue
+        allocation = credit_memo_allocations.get(int(credit_memo.CreditMemoID), {})
+        credit_memo_amounts[int(credit_memo.OriginalSalesInvoiceID)] += float(allocation.get("ar_amount", 0.0))
+
+    invoice_ids = set(cash_applied) | set(credit_memo_amounts)
+    settled = {
+        int(invoice_id): round(
+            float(cash_applied.get(invoice_id, 0.0)) + float(credit_memo_amounts.get(invoice_id, 0.0)),
+            2,
+        )
+        for invoice_id in invoice_ids
+    }
+    cached[as_of_key] = settled
+    return settled
+
+
 def inventory_position_before_month(context: GenerationContext, year: int, month: int) -> dict[tuple[int, int], float]:
     start, _ = month_bounds(year, month)
     inventory = opening_inventory_map(context)
@@ -1122,7 +1556,11 @@ def refresh_o2c_statuses(context: GenerationContext) -> None:
         context.tables["CreditMemo"]["Status"] = credit_memo_ids.map(credit_memo_status_map).fillna(context.tables["CreditMemo"]["Status"])
 
 
-def o2c_open_state(context: GenerationContext) -> dict[str, float]:
+def o2c_open_state(
+    context: GenerationContext,
+    *,
+    as_of_date: pd.Timestamp | str | None = None,
+) -> dict[str, float | int | str]:
     shipped_by_sales_line = sales_order_line_shipped_quantities(context)
     open_order_quantity = 0.0
     backordered_quantity = 0.0
@@ -1138,10 +1576,8 @@ def o2c_open_state(context: GenerationContext) -> dict[str, float]:
     for line in context.tables["ShipmentLine"].itertuples(index=False):
         unbilled_shipment_quantity += max(0.0, round(float(line.QuantityShipped) - float(billed_by_shipment.get(int(line.ShipmentLineID), 0.0)), 2))
 
-    settled_by_invoice = invoice_settled_amounts(context)
-    open_ar_amount = 0.0
-    for invoice in context.tables["SalesInvoice"].itertuples(index=False):
-        open_ar_amount += max(0.0, round(float(invoice.GrandTotal) - float(settled_by_invoice.get(int(invoice.SalesInvoiceID), 0.0)), 2))
+    receivables_metrics = o2c_receivables_metrics(context, as_of_date=as_of_date)
+    open_ar_amount = float(receivables_metrics["open_ar_amount"])
 
     applied_by_receipt = receipt_applied_amounts(context)
     unapplied_cash_amount = 0.0
@@ -1172,6 +1608,17 @@ def o2c_open_state(context: GenerationContext) -> dict[str, float]:
         "invoice_return_incidence_ratio": round(float(distinct_returned_invoices / invoice_count), 4) if invoice_count else 0.0,
         "return_quantity_ratio": round(float(returned_quantity / shipped_quantity), 4) if shipped_quantity else 0.0,
         "credit_memo_subtotal_ratio": round(float(credit_subtotal / sales_subtotal), 4) if sales_subtotal else 0.0,
+        "trailing_twelve_month_sales": float(receivables_metrics["trailing_twelve_month_sales"]),
+        "implied_dso": float(receivables_metrics["implied_dso"]),
+        "aging_not_due_amount": float(receivables_metrics["aging_not_due_amount"]),
+        "aging_0_30_amount": float(receivables_metrics["aging_0_30_amount"]),
+        "aging_31_60_amount": float(receivables_metrics["aging_31_60_amount"]),
+        "aging_61_90_amount": float(receivables_metrics["aging_61_90_amount"]),
+        "aging_90_plus_amount": float(receivables_metrics["aging_90_plus_amount"]),
+        "aging_90_plus_share": float(receivables_metrics["aging_90_plus_share"]),
+        "aging_current_to_60_share": float(receivables_metrics["aging_current_to_60_share"]),
+        "open_invoices_gt_365_count": int(receivables_metrics["open_invoices_gt_365_count"]),
+        "open_invoices_gt_365_amount": float(receivables_metrics["open_invoices_gt_365_amount"]),
     }
 
 
@@ -1557,16 +2004,21 @@ def generate_month_cash_receipts(context: GenerationContext, year: int, month: i
     open_orders = sales_orders[
         pd.to_datetime(sales_orders["OrderDate"]).dt.year.eq(year)
         & pd.to_datetime(sales_orders["OrderDate"]).dt.month.eq(month)
-        & sales_orders["OrderTotal"].astype(float).gt(2500.0)
+        & sales_orders["OrderTotal"].astype(float).gt(7500.0)
     ].copy()
     for order in open_orders.itertuples(index=False):
         customer = customers[int(order.CustomerID)]
-        probability = 0.06 if str(customer["CustomerSegment"]) == "Strategic" else 0.03
+        customer_segment = str(customer["CustomerSegment"])
+        payment_terms = str(customer["PaymentTerms"])
+        probability = float(DEPOSIT_PROBABILITIES.get(customer_segment, 0.02))
+        if payment_term_days(payment_terms) >= 60:
+            probability += 0.01
         if rng.random() > probability:
             continue
         receipt_id = next_id(context, "CashReceipt")
         receipt_date = clamp_date_to_month(pd.Timestamp(order.OrderDate) + pd.Timedelta(days=int(rng.integers(0, 6))), year, month)
-        amount = money(float(order.OrderTotal) * rng.uniform(0.12, 0.35))
+        deposit_low, deposit_high = DEPOSIT_FRACTION_RANGES.get(customer_segment, (0.06, 0.12))
+        amount = money(float(order.OrderTotal) * rng.uniform(deposit_low, deposit_high))
         receipt_recorders = employee_ids_for_cost_center(context, "Customer Service", receipt_date)
         receipt_rows.append({
             "CashReceiptID": receipt_id,
@@ -1587,6 +2039,15 @@ def generate_month_cash_receipts(context: GenerationContext, year: int, month: i
     )
     current_applied_amounts = receipt_applied_amounts(context)
     settled_amounts = invoice_settled_amounts(context)
+    sales_invoices_view = sales_invoices.copy()
+    if not sales_invoices_view.empty:
+        sales_invoices_view["InvoiceDateTS"] = pd.to_datetime(sales_invoices_view["InvoiceDate"], errors="coerce")
+        sales_invoices_view["DueDateTS"] = pd.to_datetime(sales_invoices_view["DueDate"], errors="coerce")
+        sales_invoices_view = sales_invoices_view[
+            sales_invoices_view["InvoiceDateTS"].notna()
+            & sales_invoices_view["DueDateTS"].notna()
+            & sales_invoices_view["InvoiceDateTS"].le(month_end)
+        ].copy()
 
     for receipt in receipts_view.sort_values(["ReceiptDate", "CashReceiptID"]).itertuples(index=False):
         receipt_date = pd.Timestamp(receipt.ReceiptDate)
@@ -1597,110 +2058,120 @@ def generate_month_cash_receipts(context: GenerationContext, year: int, month: i
         if remaining_receipt_amount <= 0:
             continue
 
-        customer_invoices = sales_invoices[
-            sales_invoices["CustomerID"].astype(int).eq(int(receipt.CustomerID))
-            & pd.to_datetime(sales_invoices["InvoiceDate"]).le(month_end)
+        customer_invoices = sales_invoices_view[
+            sales_invoices_view["CustomerID"].astype(int).eq(int(receipt.CustomerID))
         ].copy()
         if customer_invoices.empty:
             continue
-        customer_invoices["SettledAmount"] = customer_invoices["SalesInvoiceID"].map(settled_amounts).fillna(0.0)
+        customer_invoices["SettledAmount"] = customer_invoices["SalesInvoiceID"].astype(int).map(settled_amounts).fillna(0.0)
         customer_invoices["OpenAmount"] = (customer_invoices["GrandTotal"].astype(float) - customer_invoices["SettledAmount"].astype(float)).round(2)
-        customer_invoices = customer_invoices[customer_invoices["OpenAmount"].gt(0)].sort_values(["DueDate", "InvoiceDate", "SalesInvoiceID"])
+        customer_invoices = customer_invoices[customer_invoices["OpenAmount"].gt(0)].sort_values(["DueDateTS", "InvoiceDateTS", "SalesInvoiceID"])
+        apply_receipt_oldest_first(
+            context,
+            receipt_id=int(receipt.CashReceiptID),
+            receipt_date=receipt_date,
+            customer_invoices=customer_invoices,
+            receipt_amount=remaining_receipt_amount,
+            current_applied_amounts=current_applied_amounts,
+            settled_amounts=settled_amounts,
+            application_rows=application_rows,
+            year=year,
+            month=month,
+        )
 
-        for invoice in customer_invoices.itertuples(index=False):
-            if remaining_receipt_amount <= 0:
-                break
-            earliest_application_date = max(month_start, receipt_date, pd.Timestamp(invoice.InvoiceDate))
-            if earliest_application_date > month_end:
-                continue
-            apply_probability = 0.92 if receipt_date.year == year and receipt_date.month == month else 0.98
-            if rng.random() > apply_probability:
-                continue
-            applied_amount = min(remaining_receipt_amount, float(invoice.OpenAmount))
-            if applied_amount <= 0:
-                continue
-            application_date = clamp_date_to_month(earliest_application_date + pd.Timedelta(days=int(rng.integers(0, 3))), year, month)
-            application_recorders = employee_ids_for_cost_center(context, "Customer Service", application_date)
-            application_rows.append({
-                "CashReceiptApplicationID": next_id(context, "CashReceiptApplication"),
-                "CashReceiptID": int(receipt.CashReceiptID),
-                "SalesInvoiceID": int(invoice.SalesInvoiceID),
-                "ApplicationDate": application_date.strftime("%Y-%m-%d"),
-                "AppliedAmount": money(applied_amount),
-                "AppliedByEmployeeID": int(rng.choice(application_recorders)),
-            })
-            current_applied_amounts[int(receipt.CashReceiptID)] = round(float(current_applied_amounts.get(int(receipt.CashReceiptID), 0.0)) + applied_amount, 2)
-            settled_amounts[int(invoice.SalesInvoiceID)] = round(float(settled_amounts.get(int(invoice.SalesInvoiceID), 0.0)) + applied_amount, 2)
-            remaining_receipt_amount = round(remaining_receipt_amount - applied_amount, 2)
-
-    open_invoices = sales_invoices.copy()
-    if not open_invoices.empty:
-        open_invoices["SettledAmount"] = open_invoices["SalesInvoiceID"].map(settled_amounts).fillna(0.0)
-        open_invoices["OpenAmount"] = (open_invoices["GrandTotal"].astype(float) - open_invoices["SettledAmount"].astype(float)).round(2)
-        open_invoices = open_invoices[
-            pd.to_datetime(open_invoices["InvoiceDate"]).le(month_end)
-            & open_invoices["OpenAmount"].gt(0)
-        ].copy()
+    open_invoices = receivables_open_invoices(context, as_of_date=month_end, settled_amounts=settled_amounts)
 
     for customer_id, customer_invoices in open_invoices.groupby("CustomerID"):
         customer = customers[int(customer_id)]
-        oldest_due = pd.Timestamp(customer_invoices.sort_values("DueDate").iloc[0]["DueDate"])
-        collection_probability = 0.62 if oldest_due >= month_start else 0.86
-        if rng.random() > collection_probability:
+        payment_terms = str(customer["PaymentTerms"])
+        customer_segment = str(customer["CustomerSegment"])
+        open_balance = round(float(customer_invoices["OpenAmount"].sum()), 2)
+        if open_balance <= 0:
             continue
 
-        invoice_sample = customer_invoices.sort_values(["DueDate", "InvoiceDate", "SalesInvoiceID"]).head(
-            int(rng.integers(1, min(3, len(customer_invoices)) + 1))
-        )
-        target_amount = float(invoice_sample["OpenAmount"].sum())
-        if target_amount <= 0:
+        target_amount = 0.0
+        max_days_past_due = int(customer_invoices["DaysPastDue"].max())
+        for invoice in customer_invoices.itertuples(index=False):
+            target_amount += float(invoice.OpenAmount) * invoice_collection_target_ratio(
+                int(invoice.DaysPastDue),
+                customer_segment=customer_segment,
+                payment_terms=payment_terms,
+                rng=rng,
+            )
+
+        target_amount = money(min(open_balance * 1.01, target_amount))
+        if target_amount < min(150.0, open_balance * 0.08):
             continue
-        random_mode = rng.random()
-        if random_mode <= 0.18:
-            receipt_amount = money(target_amount * rng.uniform(0.45, 0.85))
-        elif random_mode <= 0.26:
-            receipt_amount = money(target_amount * rng.uniform(1.01, 1.18))
+
+        receipt_count = 1
+        if target_amount >= 60000 and len(customer_invoices) >= 8:
+            receipt_count = 2
+        if target_amount >= 180000 and len(customer_invoices) >= 15:
+            receipt_count = 3
+
+        if receipt_count == 1:
+            receipt_amounts = [target_amount]
         else:
-            receipt_amount = money(target_amount)
+            raw_weights = rng.dirichlet(np.ones(receipt_count))
+            receipt_amounts = [money(target_amount * float(weight)) for weight in raw_weights]
+            remainder = money(target_amount - sum(receipt_amounts))
+            receipt_amounts[-1] = money(receipt_amounts[-1] + remainder)
 
-        receipt_date = clamp_date_to_month(
-            oldest_due + pd.Timedelta(days=int(rng.choice([-5, -2, 0, 3, 7, 14], p=[0.08, 0.12, 0.42, 0.18, 0.14, 0.06]))),
-            year,
-            month,
+        receipt_dates = collection_receipt_dates(
+            month_end,
+            receipt_count=receipt_count,
+            max_days_past_due=max_days_past_due,
+            rng=rng,
         )
-        receipt_id = next_id(context, "CashReceipt")
-        receipt_recorders = employee_ids_for_cost_center(context, "Customer Service", receipt_date)
-        receipt_rows.append({
-            "CashReceiptID": receipt_id,
-            "ReceiptNumber": format_doc_number("CR", year, receipt_id),
-            "ReceiptDate": receipt_date.strftime("%Y-%m-%d"),
-            "CustomerID": int(customer_id),
-            "SalesInvoiceID": None,
-            "Amount": receipt_amount,
-            "PaymentMethod": str(rng.choice(PAYMENT_METHODS)),
-            "ReferenceNumber": f"AR{receipt_id:08d}",
-            "DepositDate": clamp_date_to_month(receipt_date + pd.Timedelta(days=int(rng.integers(0, 3))), year, month).strftime("%Y-%m-%d"),
-            "RecordedByEmployeeID": int(rng.choice(receipt_recorders)),
-        })
 
-        remaining_receipt_amount = receipt_amount
-        for invoice in invoice_sample.itertuples(index=False):
-            if remaining_receipt_amount <= 0:
-                break
-            applied_amount = min(remaining_receipt_amount, float(invoice.OpenAmount))
-            if applied_amount <= 0:
+        for receipt_amount, receipt_date in zip(receipt_amounts, receipt_dates):
+            if receipt_amount <= 0:
                 continue
-            application_date = clamp_date_to_month(max(receipt_date, pd.Timestamp(invoice.InvoiceDate)) + pd.Timedelta(days=int(rng.integers(0, 3))), year, month)
-            application_recorders = employee_ids_for_cost_center(context, "Customer Service", application_date)
-            application_rows.append({
-                "CashReceiptApplicationID": next_id(context, "CashReceiptApplication"),
+            customer_invoices = receivables_open_invoices(
+                context,
+                as_of_date=month_end,
+                customer_id=int(customer_id),
+                settled_amounts=settled_amounts,
+            )
+            if customer_invoices.empty:
+                break
+            open_balance_remaining = round(float(customer_invoices["OpenAmount"].sum()), 2)
+            if open_balance_remaining <= 0:
+                break
+            planned_receipt_amount = money(min(open_balance_remaining * 1.01, receipt_amount))
+            if planned_receipt_amount <= 0:
+                continue
+
+            receipt_id = next_id(context, "CashReceipt")
+            receipt_recorders = employee_ids_for_cost_center(context, "Customer Service", receipt_date)
+            receipt_rows.append({
                 "CashReceiptID": receipt_id,
-                "SalesInvoiceID": int(invoice.SalesInvoiceID),
-                "ApplicationDate": application_date.strftime("%Y-%m-%d"),
-                "AppliedAmount": money(applied_amount),
-                "AppliedByEmployeeID": int(rng.choice(application_recorders)),
+                "ReceiptNumber": format_doc_number("CR", year, receipt_id),
+                "ReceiptDate": receipt_date.strftime("%Y-%m-%d"),
+                "CustomerID": int(customer_id),
+                "SalesInvoiceID": None,
+                "Amount": planned_receipt_amount,
+                "PaymentMethod": str(rng.choice(PAYMENT_METHODS)),
+                "ReferenceNumber": f"AR{receipt_id:08d}",
+                "DepositDate": clamp_date_to_month(
+                    receipt_date + pd.Timedelta(days=int(rng.integers(0, 3))),
+                    year,
+                    month,
+                ).strftime("%Y-%m-%d"),
+                "RecordedByEmployeeID": int(rng.choice(receipt_recorders)),
             })
-            remaining_receipt_amount = round(remaining_receipt_amount - applied_amount, 2)
+            apply_receipt_oldest_first(
+                context,
+                receipt_id=receipt_id,
+                receipt_date=receipt_date,
+                customer_invoices=customer_invoices,
+                receipt_amount=planned_receipt_amount,
+                current_applied_amounts=current_applied_amounts,
+                settled_amounts=settled_amounts,
+                application_rows=application_rows,
+                year=year,
+                month=month,
+            )
 
     append_rows(context, "CashReceipt", receipt_rows)
     append_rows(context, "CashReceiptApplication", application_rows)

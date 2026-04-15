@@ -97,3 +97,28 @@ def test_phase11_full_dataset_clean_validation(full_dataset_artifacts: dict[str,
     credit_subtotal_ratio = float(credit_memos["SubTotal"].sum()) / max(float(sales_invoices["SubTotal"].sum()), 1.0)
     assert returned_quantity_ratio < 0.05
     assert credit_subtotal_ratio < 0.05
+
+
+def test_phase11_full_dataset_receivables_realism(full_dataset_artifacts: dict[str, object]) -> None:
+    context = full_dataset_artifacts["context"]
+    phase23 = context.validation_results["phase23"]
+    receivables_metrics = phase23["o2c_controls"]["receivables_metrics"]
+    year_end_dso_series = phase23["o2c_controls"]["year_end_dso_series"]
+
+    assert receivables_metrics["implied_dso"] <= 90.0
+    assert receivables_metrics["aging_90_plus_share"] <= 0.15
+    assert receivables_metrics["aging_current_to_60_share"] >= 0.75
+    assert receivables_metrics["open_invoices_gt_365_count"] <= max(
+        5,
+        int(receivables_metrics["open_invoice_count"] * 0.01),
+    )
+    if len(year_end_dso_series) >= 3:
+        dso_values = [float(row["implied_dso"]) for row in year_end_dso_series]
+        assert not (
+            all(later > earlier + 7.0 for earlier, later in zip(dso_values, dso_values[1:]))
+            and dso_values[-1] > dso_values[0] + 35.0
+        )
+
+    generation_log_text = full_dataset_artifacts["generation_log_path"].read_text(encoding="utf-8")
+    assert "implied_dso=" in generation_log_text
+    assert "aging_90_plus_share=" in generation_log_text

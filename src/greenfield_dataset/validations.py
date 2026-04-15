@@ -32,6 +32,7 @@ from greenfield_dataset.o2c import (
     invoice_cash_application_amounts,
     invoice_credit_memo_amounts,
     invoice_settled_amounts,
+    o2c_receivables_metrics,
     opening_inventory_map,
     o2c_open_state,
     receipt_applied_amounts,
@@ -1100,10 +1101,62 @@ def validate_o2c_phase11_controls(context: GenerationContext) -> dict[str, Any]:
             })
         inventory[key] = round(available - float(quantity), 2)
 
+    receivables_metrics = o2c_receivables_metrics(context)
+    if float(receivables_metrics["trailing_twelve_month_sales"]) > 0 and float(receivables_metrics["implied_dso"]) > 90.0:
+        exceptions.append({
+            "type": "ar_dso_unrealistic",
+            "message": "Open AR implies a DSO above the clean-build realism threshold.",
+            "implied_dso": float(receivables_metrics["implied_dso"]),
+        })
+    if float(receivables_metrics["aging_90_plus_share"]) > 0.15:
+        exceptions.append({
+            "type": "ar_90_plus_share_excessive",
+            "message": "90+ AR exceeds the clean-build realism threshold.",
+            "aging_90_plus_share": float(receivables_metrics["aging_90_plus_share"]),
+        })
+    if float(receivables_metrics["aging_current_to_60_share"]) < 0.75:
+        exceptions.append({
+            "type": "ar_current_to_60_share_too_low",
+            "message": "Current through 60-day AR does not dominate the clean-build aging profile.",
+            "aging_current_to_60_share": float(receivables_metrics["aging_current_to_60_share"]),
+        })
+    stale_open_invoice_count = int(receivables_metrics["open_invoices_gt_365_count"])
+    open_invoice_count = max(int(receivables_metrics["open_invoice_count"]), 1)
+    if stale_open_invoice_count > max(5, int(open_invoice_count * 0.01)):
+        exceptions.append({
+            "type": "ar_old_invoices_excessive",
+            "message": "Invoices older than one year remain open above the clean-build threshold.",
+            "open_invoices_gt_365_count": stale_open_invoice_count,
+        })
+
+    fiscal_start = pd.Timestamp(context.settings.fiscal_year_start).normalize()
+    fiscal_end = pd.Timestamp(context.settings.fiscal_year_end).normalize()
+    year_end_dso_series: list[dict[str, float | int]] = []
+    for year in range(fiscal_start.year, fiscal_end.year + 1):
+        year_end = pd.Timestamp(year=year, month=12, day=31)
+        if year_end < fiscal_start or year_end > fiscal_end:
+            continue
+        year_metrics = o2c_receivables_metrics(context, as_of_date=year_end)
+        year_end_dso_series.append({
+            "year": int(year),
+            "implied_dso": float(year_metrics["implied_dso"]),
+            "open_ar_amount": float(year_metrics["open_ar_amount"]),
+        })
+    if len(year_end_dso_series) >= 3:
+        dso_values = [float(row["implied_dso"]) for row in year_end_dso_series]
+        if all(later > earlier + 7.0 for earlier, later in zip(dso_values, dso_values[1:])) and dso_values[-1] > dso_values[0] + 35.0:
+            exceptions.append({
+                "type": "ar_dso_compounding",
+                "message": "Year-end DSO compounds upward across the clean-build horizon.",
+                "year_end_dso_series": year_end_dso_series,
+            })
+
     return {
         "exception_count": len(exceptions),
         "exceptions": exceptions,
         "open_state": o2c_open_state(context),
+        "receivables_metrics": receivables_metrics,
+        "year_end_dso_series": year_end_dso_series,
     }
 
 

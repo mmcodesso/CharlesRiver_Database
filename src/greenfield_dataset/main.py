@@ -941,7 +941,10 @@ def build_full_dataset(
             new_rough_cut = context.tables["RoughCutCapacityPlan"].iloc[rough_cut_count_before:]
             payroll_state = monthly_payroll_state(context, year, month)
             open_state = p2p_open_state(context)
-            revenue_state = o2c_open_state(context)
+            revenue_state = o2c_open_state(
+                context,
+                as_of_date=pd.Timestamp(year=year, month=month, day=1) + pd.offsets.MonthEnd(1),
+            )
             manufacturing_state = manufacturing_open_state(context)
             capacity_state = manufacturing_capacity_state(context, year, month)
             bottleneck_state = manufacturing_work_center_utilization_by_code(context, year, month)
@@ -962,7 +965,7 @@ def build_full_dataset(
                 & pd.to_datetime(context.tables["CustomerRefund"]["RefundDate"]).dt.month.eq(month)
             ]
             LOGGER.info(
-                "O2C CHECKPOINT | %s-%02d | shipment_lines_created=%s | shipped_quantity=%s | cash_receipts_created=%s | cash_received=%s | returns_created=%s | credit_memos_created=%s | refunds_created=%s | distinct_returned_invoices=%s | invoice_return_incidence_ratio=%s | return_quantity_ratio=%s | credit_memo_subtotal_ratio=%s | open_order_quantity=%s | backordered_quantity=%s | unbilled_shipment_quantity=%s | open_ar_amount=%s | unapplied_cash_amount=%s | customer_credit_amount=%s",
+                "O2C CHECKPOINT | %s-%02d | shipment_lines_created=%s | shipped_quantity=%s | cash_receipts_created=%s | cash_received=%s | returns_created=%s | credit_memos_created=%s | refunds_created=%s | distinct_returned_invoices=%s | invoice_return_incidence_ratio=%s | return_quantity_ratio=%s | credit_memo_subtotal_ratio=%s | open_order_quantity=%s | backordered_quantity=%s | unbilled_shipment_quantity=%s | open_ar_amount=%s | trailing_twelve_month_sales=%s | implied_dso=%s | aging_not_due_amount=%s | aging_0_30_amount=%s | aging_31_60_amount=%s | aging_61_90_amount=%s | aging_90_plus_amount=%s | aging_90_plus_share=%s | aging_current_to_60_share=%s | open_invoices_gt_365_count=%s | unapplied_cash_amount=%s | customer_credit_amount=%s",
                 year,
                 month,
                 len(new_shipment_lines),
@@ -980,6 +983,16 @@ def build_full_dataset(
                 revenue_state["backordered_quantity"],
                 revenue_state["unbilled_shipment_quantity"],
                 revenue_state["open_ar_amount"],
+                revenue_state["trailing_twelve_month_sales"],
+                revenue_state["implied_dso"],
+                revenue_state["aging_not_due_amount"],
+                revenue_state["aging_0_30_amount"],
+                revenue_state["aging_31_60_amount"],
+                revenue_state["aging_61_90_amount"],
+                revenue_state["aging_90_plus_amount"],
+                revenue_state["aging_90_plus_share"],
+                revenue_state["aging_current_to_60_share"],
+                revenue_state["open_invoices_gt_365_count"],
                 revenue_state["unapplied_cash_amount"],
                 revenue_state["customer_credit_amount"],
             )
