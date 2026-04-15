@@ -507,6 +507,14 @@ export const starterQueryMaps = {
     {
       "label": "Override approval completeness review",
       "queryKey": "audit/51_override_approval_completeness_review.sql"
+    },
+    {
+      "label": "Released work orders due without actual start review",
+      "queryKey": "audit/52_released_work_orders_due_without_actual_start_review.sql"
+    },
+    {
+      "label": "Released work orders due without actual start summary",
+      "queryKey": "audit/53_released_work_orders_due_without_actual_start_summary.sql"
     }
   ]
 };
@@ -550,6 +558,14 @@ export const caseQuerySequences = {
     {
       "lead": "Run",
       "queryKey": "audit/15_operation_sequence_and_final_completion_review.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "audit/52_released_work_orders_due_without_actual_start_review.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "audit/53_released_work_orders_due_without_actual_start_summary.sql"
     },
     {
       "lead": "Run",

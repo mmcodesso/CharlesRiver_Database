@@ -249,6 +249,16 @@ const queryManifest = {
     "filename": "51_override_approval_completeness_review.sql",
     "publicPath": "/audit/51_override_approval_completeness_review.sql"
   },
+  "audit/52_released_work_orders_due_without_actual_start_review.sql": {
+    "category": "audit",
+    "filename": "52_released_work_orders_due_without_actual_start_review.sql",
+    "publicPath": "/audit/52_released_work_orders_due_without_actual_start_review.sql"
+  },
+  "audit/53_released_work_orders_due_without_actual_start_summary.sql": {
+    "category": "audit",
+    "filename": "53_released_work_orders_due_without_actual_start_summary.sql",
+    "publicPath": "/audit/53_released_work_orders_due_without_actual_start_summary.sql"
+  },
   "financial/01_monthly_revenue_and_gross_margin.sql": {
     "category": "financial",
     "filename": "01_monthly_revenue_and_gross_margin.sql",

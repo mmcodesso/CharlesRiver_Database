@@ -63,6 +63,9 @@ from generator_dataset.schema import TABLE_COLUMNS
 from generator_dataset.settings import GenerationContext
 from generator_dataset.utils import money, qty
 
+MANUFACTURING_AUDIT_SEED_TYPE = "released_work_order_due_without_actual_start"
+MANUFACTURING_AUDIT_SEED_LIMIT = 5
+
 
 def planning_week_start(value: pd.Timestamp | str) -> pd.Timestamp:
     timestamp = pd.Timestamp(value).normalize()
@@ -1629,6 +1632,10 @@ def validate_manufacturing_controls(context: GenerationContext) -> dict[str, Any
                 exceptions.append({
                     "type": "released_work_order_due_without_actual_start",
                     "message": f"Released work order {int(row.WorkOrderID)} is due within the fiscal year but still has no actual start.",
+                    "work_order_id": int(row.WorkOrderID),
+                    "released_date": released_date.strftime("%Y-%m-%d"),
+                    "due_date": due_date.strftime("%Y-%m-%d"),
+                    "first_scheduled_date": first_scheduled.strftime("%Y-%m-%d"),
                 })
                 if len(exceptions) >= 250:
                     break
@@ -1935,6 +1942,68 @@ def validate_routing_controls(context: GenerationContext) -> dict[str, Any]:
         "exception_count": len(exceptions),
         "exceptions": exceptions,
     }
+
+
+def split_manufacturing_audit_seed_controls(
+    context: GenerationContext,
+    manufacturing_controls: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    empty_seed_controls: dict[str, Any] = {
+        "exception_count": 0,
+        "exceptions": [],
+        "seed_type": MANUFACTURING_AUDIT_SEED_TYPE,
+        "target_seed_count": MANUFACTURING_AUDIT_SEED_LIMIT,
+        "seed_selection_rule": "",
+    }
+    if context.settings.anomaly_mode == "none":
+        return empty_seed_controls, manufacturing_controls
+
+    exceptions = list(manufacturing_controls.get("exceptions", []))
+    candidates = [
+        exception
+        for exception in exceptions
+        if isinstance(exception, dict) and exception.get("type") == MANUFACTURING_AUDIT_SEED_TYPE
+    ]
+    if not candidates:
+        return empty_seed_controls, manufacturing_controls
+
+    candidates.sort(
+        key=lambda exception: (
+            int(exception.get("work_order_id", 0) or 0),
+            str(exception.get("due_date", "")),
+            str(exception.get("released_date", "")),
+        )
+    )
+    selected = candidates[:MANUFACTURING_AUDIT_SEED_LIMIT]
+    selected_work_order_ids = {
+        int(exception.get("work_order_id", 0) or 0)
+        for exception in selected
+    }
+
+    remaining_exceptions = [
+        exception
+        for exception in exceptions
+        if not (
+            isinstance(exception, dict)
+            and exception.get("type") == MANUFACTURING_AUDIT_SEED_TYPE
+            and int(exception.get("work_order_id", 0) or 0) in selected_work_order_ids
+        )
+    ]
+
+    seed_controls: dict[str, Any] = {
+        "exception_count": len(selected),
+        "exceptions": selected,
+        "seed_type": MANUFACTURING_AUDIT_SEED_TYPE,
+        "target_seed_count": MANUFACTURING_AUDIT_SEED_LIMIT,
+        "seed_selection_rule": (
+            "First five released work orders due within the fiscal horizon with no actual start, "
+            "ordered by WorkOrderID."
+        ),
+    }
+    filtered_manufacturing_controls = dict(manufacturing_controls)
+    filtered_manufacturing_controls["exception_count"] = len(remaining_exceptions)
+    filtered_manufacturing_controls["exceptions"] = remaining_exceptions
+    return seed_controls, filtered_manufacturing_controls
 
 
 def validate_capacity_controls(context: GenerationContext) -> dict[str, Any]:
@@ -3977,6 +4046,18 @@ def validate_phase23(
 ) -> dict[str, Any]:
     results = validate_phase22(context, scope=scope, store=False)
     exceptions = list(results["exceptions"])
+    manufacturing_audit_seeds, manufacturing_controls = split_manufacturing_audit_seed_controls(
+        context,
+        results["manufacturing_controls"],
+    )
+    prior_manufacturing_count = int(results["manufacturing_controls"].get("exception_count", 0) or 0)
+    if prior_manufacturing_count:
+        prior_manufacturing_message = f"Manufacturing control exceptions: {prior_manufacturing_count}."
+        exceptions = [exception for exception in exceptions if exception != prior_manufacturing_message]
+        if manufacturing_controls["exception_count"]:
+            exceptions.append(
+                f"Manufacturing control exceptions: {manufacturing_controls['exception_count']}."
+            )
 
     normalized_scope = str(scope).strip().lower()
     pricing_controls: dict[str, Any] = {"exception_count": 0, "exceptions": []}
@@ -3997,7 +4078,8 @@ def validate_phase23(
         "o2c_controls": results["o2c_controls"],
         "p2p_controls": results["p2p_controls"],
         "journal_controls": results["journal_controls"],
-        "manufacturing_controls": results["manufacturing_controls"],
+        "manufacturing_controls": manufacturing_controls,
+        "manufacturing_audit_seeds": manufacturing_audit_seeds,
         "payroll_controls": results["payroll_controls"],
         "routing_controls": results["routing_controls"],
         "capacity_controls": results["capacity_controls"],
@@ -4065,6 +4147,7 @@ def validate_phase8(context: GenerationContext, scope: str = "full") -> dict[str
         "p2p_controls": results["p2p_controls"],
         "journal_controls": results["journal_controls"],
         "manufacturing_controls": results["manufacturing_controls"],
+        "manufacturing_audit_seeds": results.get("manufacturing_audit_seeds", {"exception_count": 0, "exceptions": []}),
         "payroll_controls": results["payroll_controls"],
         "routing_controls": results["routing_controls"],
         "capacity_controls": results["capacity_controls"],

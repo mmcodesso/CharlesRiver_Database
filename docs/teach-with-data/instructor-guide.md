@@ -55,6 +55,8 @@ Include <FileName type="support" /> when you want students to:
 - work through audit and control cases with guided exception context
 - triage issues before moving into deeper source-document review
 
+The published default build also carries a small intentional manufacturing audit-seed set in the validation companion material. Use that set when you want a short manufacturing-control lab that is visible in source tables and in the support workbook without broadening the anomaly pack.
+
 
 ## How to stage assignments
 

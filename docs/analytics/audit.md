@@ -43,6 +43,8 @@ Use these when you want students to review the exception patterns present in the
 - duplicate payment or AP reference review
 - payroll control review
 - routing and operation-link review
+- released work orders due without actual start review
+- released work orders due without actual start summary
 - time-clock and labor exception review
 - roster, punch, absence, and overtime-approval review
 - terminated-employee activity review
@@ -71,6 +73,8 @@ Use the support workbook when you want a quicker triage path:
 - `ValidationChecks` for section-level control counts
 - `ValidationExceptions` for flattened exception detail
 
+The published default build also includes a small intentional `manufacturing_audit_seeds` set in the validation companion data. Use that set when you want a short manufacturing-control lab that is visible in source tables and in the support workbook without expanding the broader anomaly pack.
+
 Pair those sheets with [Audit Review Pack Case](cases/audit-review-pack-case.md) or [Audit Exception Lab](cases/audit-exception-lab.md).
 
 ## Interpretation Notes
@@ -80,6 +84,7 @@ Pair those sheets with [Audit Review Pack Case](cases/audit-review-pack-case.md)
 - Employee-master review should distinguish current-state `IsActive` from historical validity driven by `HireDate` and `TerminationDate`.
 - Item-master review should distinguish current-state lifecycle and launch-date logic from operational usage timing.
 - Pricing-control review should distinguish price-list master-data failures from transaction-level override and promotion-use failures.
+- Manufacturing audit-seed review should distinguish intentional teaching seeds in `ValidationChecks` and `ValidationExceptions` from anomaly-log-driven exception families.
 - Support-workbook review should accelerate tracing, not replace source-document review.
 
 ## Anomaly Coverage Queries
