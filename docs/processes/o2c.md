@@ -2,10 +2,10 @@
 
 ## What Students Should Learn
 
-- Distinguish the order, shipment, invoice, cash receipt, and settlement stages in one customer sale.
+- Distinguish the order, shipment, invoice, cash receipt, settlement, and return-correction stages in one customer sale.
 - Trace an O2C transaction from operational documents into `GLEntry`.
-- Identify the core tables used for revenue, receivables, fulfillment, and cash analysis.
-- Recognize timing differences that matter for cut-off, completeness, open-AR, and working-capital analysis.
+- Identify the core tables used for revenue, receivables, fulfillment, cash, and customer-side exceptions.
+- Recognize timing differences that matter for cut-off, completeness, open-AR, working-capital, and return analysis.
 
 ## Business Storyline
 
@@ -13,7 +13,7 @@ In this dataset, the order-to-cash cycle starts when the sales team records cust
 
 That distinction matters. A customer order is not revenue. A shipment is not the same thing as an invoice. A cash receipt is not the same thing as settlement. Students can see those stages separately in the data and use that separation to answer both accounting and audit questions.
 
-Most sales follow the normal path of order, shipment, invoice, cash, and settlement. Returns and refunds are handled on a separate page because the dataset models them as an exception path rather than the normal outcome of most invoices.
+Most sales follow the normal path of order, shipment, invoice, cash, and settlement. Some sales later move into the customer-side exception path of return, credit, and sometimes refund. That exception path is part of O2C, not a separate business cycle.
 
 ## Normal Process Overview
 
@@ -42,7 +42,7 @@ Read the main diagram as promise, fulfillment, billing, cash, and settlement. Or
 
 ## How to Read This Process in the Data
 
-This page is organized around business flow first and data navigation second. The main diagram shows the normal process. The smaller diagrams below show local lineage for one analytical task at a time. The fuller relationship map belongs on [Schema Reference](../reference/schema.md), not on this process page.
+This page is organized around business flow first and data navigation second. The main diagram shows the normal O2C path. The smaller diagrams below show local lineage for one analytical task at a time. The fuller relationship map belongs on [Schema Reference](../reference/schema.md), not on this process page.
 
 :::tip
 Use this page to understand the business flow first. Then move into the subsection diagrams and tables when you need the exact trace for one analytical question.
@@ -219,6 +219,62 @@ flowchart LR
 -- Suggested analysis: Compare order date, shipment date, and invoice date by customer, item group, or month.
 ```
 
+## Returns, Credits, and Refunds
+
+Some sales do not end with the original invoice. In this dataset, returns are the main customer-side exception path inside O2C, not a separate business cycle. The exception starts from something that was already shipped and billed, then moves through physical return, financial correction, and sometimes cash refund if the customer had already paid.
+
+```mermaid
+flowchart LR
+    SHL[ShipmentLine]
+    SIL[SalesInvoiceLine]
+    SR[SalesReturn]
+    SRL[SalesReturnLine]
+    CM[CreditMemo]
+    CML[CreditMemoLine]
+    RF[CustomerRefund]
+    GL[GLEntry]
+
+    SHL --> SIL --> SR --> SRL --> CM --> CML --> RF
+    SR -. Restores Inventory and Reverses COGS .-> GL
+    CM -. Posts Contra Revenue Tax Reversal and AR or Customer Credit .-> GL
+    RF -. Clears Customer Credit and Cash .-> GL
+```
+
+| Exception stage | Main tables | Why students use them |
+|---|---|---|
+| Original billed shipment | `ShipmentLine`, `SalesInvoiceLine` | Identify the shipment and invoice that the correction started from |
+| Physical return | `SalesReturn`, `SalesReturnLine` | Show returned quantity and the operational return event |
+| Financial correction | `CreditMemo`, `CreditMemoLine` | Show the customer-facing credit and whether it reduced AR or created customer credit |
+| Cash resolution | `CustomerRefund` | Show when customer credit was returned in cash |
+
+| Event | Business meaning | Accounting effect |
+|---|---|---|
+| Sales return | Goods come back after a shipment and invoice already existed | Debit inventory and credit COGS |
+| Credit memo | Accounting reverses part of the original sale | Debit sales returns and allowances plus tax reversal, and credit AR or customer credit |
+| Customer refund | Treasury clears customer credit in cash | Debit customer credit and credit cash |
+
+**Traceability notes**
+
+- `SalesReturnLine.ShipmentLineID` is the core operational return trace field.
+- `CreditMemo.OriginalSalesInvoiceID` ties the financial correction back to the earlier invoice.
+- `CreditMemoLine` preserves the original pricing lineage through `BaseListPrice`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, `PricingMethod`, and `Discount`.
+- `CustomerRefund` is used only when the return scenario leaves customer credit that is later cleared in cash.
+
+```mermaid
+flowchart LR
+    INV[Original SalesInvoice]
+    RET[SalesReturn]
+    CM[CreditMemo]
+    CC[Customer Credit]
+    RF[CustomerRefund]
+
+    INV --> RET --> CM
+    CM -->|Invoice still open| INV
+    CM -->|Invoice already paid| CC --> RF
+```
+
+This local lineage view separates two outcomes that students often mix together. A credit memo can reduce open AR when the original invoice is still unsettled, or it can create customer credit that treasury later clears through `CustomerRefund`.
+
 ## Common Student Questions
 
 - Which orders shipped immediately and which became backorders?
@@ -226,11 +282,13 @@ flowchart LR
 - Which invoices remain open after cash applications?
 - Which customers pay one invoice at a time versus several at once?
 - Which pricing methods appear most often by customer segment or item family?
-- How do revenue, receivables, unapplied cash, and collections timing differ by period?
+- Which shipment lines were later returned?
+- Which returns reduced open AR versus created customer credit?
+- How do revenue, receivables, unapplied cash, collections timing, and return corrections differ by period?
 
 ## Where to Go Next
 
-- Read [Returns, Credits, and Refunds](o2c-returns-credits-refunds.md) for the return and refund path.
+- Jump to [Returns, Credits, and Refunds](#returns-credits-and-refunds) when you want the main O2C exception path.
 - Read [Dataset Guide](../start-here/dataset-overview.md) for the main joins used in analysis.
 - Read [GLEntry Posting Reference](../reference/posting.md) when you want the detailed posting rules.
 - Read [Schema Reference for full table relationships](../reference/schema.md) when you need the broader process-level table map.

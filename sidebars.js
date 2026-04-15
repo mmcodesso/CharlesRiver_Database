@@ -22,7 +22,6 @@ const sidebars = {
         "learn-the-business/company-story",
         "learn-the-business/process-flows",
         "processes/o2c",
-        "processes/o2c-returns-credits-refunds",
         "processes/p2p",
         "processes/manufacturing",
         "processes/time-clocks",

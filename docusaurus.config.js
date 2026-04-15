@@ -53,6 +53,10 @@ const config = {
             to: "/docs/",
             from: ["/docs/quick-start"],
           },
+          {
+            to: "/docs/processes/o2c#returns-credits-and-refunds",
+            from: ["/docs/processes/o2c-returns-credits-refunds"],
+          },
         ],
       },
     ],

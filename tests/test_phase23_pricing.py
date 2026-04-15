@@ -263,19 +263,19 @@ def test_phase23_docs_and_sidebar_entries_exist() -> None:
     sql_guide = Path("docs/analytics/sql-guide.md").read_text(encoding="utf-8")
     instructor_guide = Path("docs/teach-with-data/instructor-guide.md").read_text(encoding="utf-8")
     o2c_guide = Path("docs/processes/o2c.md").read_text(encoding="utf-8")
-    returns_guide = Path("docs/processes/o2c-returns-credits-refunds.md").read_text(encoding="utf-8")
     schema_guide = Path("docs/reference/schema.md").read_text(encoding="utf-8")
     dataset_guide = Path("docs/start-here/dataset-overview.md").read_text(encoding="utf-8")
 
-    assert "25_price_realization_vs_list_by_segment_customer_region_collection_style.sql" in financial_guide
-    assert "26_gross_margin_impact_of_promotions_vs_nonpromotion_sales.sql" in financial_guide
-    assert "47_sales_rep_override_rate_and_discount_dispersion.sql" in managerial_guide
-    assert "50_monthly_price_floor_pressure_and_override_concentration.sql" in managerial_guide
-    assert "47_sales_below_floor_without_approval.sql" in audit_guide
-    assert "51_override_approval_completeness_review.sql" in audit_guide
+    assert "Use [Pricing and Margin Governance Case]" in financial_guide
+    assert "price realization versus list price" in sql_guide
+    assert "Use [Pricing and Margin Governance Case]" in managerial_guide
+    assert "commercial policy, promotion effect, override concentration" in managerial_guide
+    assert "sales below floor without approval" in audit_guide
+    assert "override approval completeness review" in audit_guide
     assert "Pricing and Margin Governance Case" in sql_guide
-    assert "Recommended Phase 19 to Phase 23 Classroom Sequence" in instructor_guide
+    assert "## Recommended teaching sequence" in instructor_guide
     assert "PriceList" in o2c_guide
-    assert "CreditMemoLine` now preserves the original pricing lineage" in returns_guide
+    assert "CreditMemoLine` preserves the original pricing lineage" in o2c_guide
+    assert "CustomerRefund" in o2c_guide
     assert "PriceOverrideApproval" in schema_guide
     assert "**68 tables**" in dataset_guide

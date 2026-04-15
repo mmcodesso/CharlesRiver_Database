@@ -15,8 +15,7 @@ Start with the process that matches your class question:
 
 | Process area | Detailed guide | Why students use it |
 |---|---|---|
-| Core O2C | [O2C](../processes/o2c.md) | To follow a sale from customer order through shipment, invoice, cash receipt, and application |
-| Returns and credits | [Returns, Credits, and Refunds](../processes/o2c-returns-credits-refunds.md) | To study the exception path when a billed sale is corrected |
+| O2C | [O2C](../processes/o2c.md) | To follow a sale through order, shipment, invoice, cash receipt, application, and the main return/refund exception path |
 | P2P | [P2P](../processes/p2p.md) | To trace internal demand through supplier ordering, receiving, invoicing, and payment |
 | Manufacturing | [Manufacturing](../processes/manufacturing.md) | To see how the company turns materials, labor, and schedules into finished goods |
 | Time clocks and shifts | [Time Clocks](../processes/time-clocks.md) | To understand attendance, shift expectations, labor support, and exception analysis |
@@ -29,7 +28,7 @@ Start with the process that matches your class question:
 flowchart LR
     STORY[Company Operations]
     O2C[Order-to-Cash]
-    RET[Returns Credits Refunds]
+    O2CEX[O2C Exception Path<br/>Returns Credits Refunds]
     P2P[Procure-to-Pay]
     MFG[Manufacturing]
     PAY[Payroll]
@@ -43,12 +42,12 @@ flowchart LR
     STORY --> MFG
     STORY --> PAY
     STORY --> TC
-    O2C --> RET
+    O2C --> O2CEX
     P2P --> MFG
     TC --> PAY
     TC --> MFG
     O2C --> GL
-    RET --> GL
+    O2CEX --> GL
     P2P --> GL
     MFG --> GL
     PAY --> GL
@@ -116,7 +115,7 @@ The most important traceability fields are:
 
 1. Read [Company Story](company-story.md) to understand the business model.
 2. Read [O2C](../processes/o2c.md) and [P2P](../processes/p2p.md) to learn the customer and supplier cycles.
-3. Read [Returns, Credits, and Refunds](../processes/o2c-returns-credits-refunds.md) for the main customer-side exception path.
+3. Use the return, credit, and refund section inside [O2C](../processes/o2c.md) for the main customer-side exception path.
 4. Read [Manufacturing](../processes/manufacturing.md) to see how the company produces selected goods internally.
 5. Read [Time Clocks](../processes/time-clocks.md) to understand workforce scheduling, approved attendance, and labor support.
 6. Read [Payroll](../processes/payroll.md) to follow the pay cycle and related accounting.

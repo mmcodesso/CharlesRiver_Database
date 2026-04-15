@@ -210,11 +210,14 @@ def test_phase17_docs_include_cases_matrix_and_subprocess_diagrams() -> None:
         assert path.exists(), f"Missing Phase 17 case doc: {path}"
 
     audit_doc = Path("docs/analytics/audit.md").read_text(encoding="utf-8")
-    assert "## Anomaly Coverage Matrix" in audit_doc
+    assert "## Anomaly Coverage Queries" in audit_doc
+
+    o2c_text = Path("docs/processes/o2c.md").read_text(encoding="utf-8")
+    assert "## Analytical Subsections" in o2c_text
+    assert "## Returns, Credits, and Refunds" in o2c_text
+    assert not Path("docs/processes/o2c-returns-credits-refunds.md").exists()
 
     for path in [
-        Path("docs/processes/o2c.md"),
-        Path("docs/processes/o2c-returns-credits-refunds.md"),
         Path("docs/processes/p2p.md"),
         Path("docs/processes/manufacturing.md"),
         Path("docs/processes/payroll.md"),
