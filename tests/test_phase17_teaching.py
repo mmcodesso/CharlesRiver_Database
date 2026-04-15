@@ -212,6 +212,13 @@ def test_phase17_docs_include_cases_matrix_and_subprocess_diagrams() -> None:
     audit_doc = Path("docs/analytics/audit.md").read_text(encoding="utf-8")
     assert "## Anomaly Coverage Queries" in audit_doc
 
+    company_story_text = Path("docs/learn-the-business/company-story.md").read_text(encoding="utf-8")
+    assert "Charles River" in company_story_text
+    assert "greater Boston area" in company_story_text
+    assert "buys some finished goods" in company_story_text
+    assert "manufactures a selected subset" in company_story_text
+    assert "## What Is Still Simplified" not in company_story_text
+
     o2c_text = Path("docs/processes/o2c.md").read_text(encoding="utf-8")
     assert "## Analytical Subsections" in o2c_text
     assert "## Returns, Credits, and Refunds" in o2c_text

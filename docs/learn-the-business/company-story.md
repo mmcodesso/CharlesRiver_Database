@@ -7,108 +7,61 @@ sidebar_label: Company Story
 
 # The Company
 
+<CompanyName /> is the fictional business behind this dataset. In the story, the company is situated around the Charles River in the greater Boston area and operates as a design-oriented regional home-furnishings brand rather than as a national mass-market chain.
 
-<CompanyName /> is a fictional mid-sized U.S. company that sells home furnishings to commercial buyers, interior-design firms, and repeat regional customers.
+That setting matters because it gives the company a believable operating identity. The business serves commercial buyers, interior-design firms, and repeat regional customers who expect curated product lines, reliable fulfillment, and enough operational discipline to support both design work and repeat purchasing. Students should read the company as a realistic mid-sized business with regional depth, not as a startup and not as a giant retailer.
 
-The company operates in two ways at the same time:
+The company also runs a hybrid model. It buys some finished goods ready-made and manufactures a selected subset in-house from raw materials and packaging. That structure is one of the strongest teaching features in the dataset because it connects demand, purchasing, production, labor, inventory, and finance inside one company story.
 
-- it **buys** some finished goods from suppliers and resells them
-- it **manufactures** a selected subset of finished goods in-house from raw materials and packaging
+## What the Company Does
 
-That hybrid model connects:
+The business sells home furnishings and related interior products to customers who need both design variety and dependable delivery. Some products are sourced from suppliers for resale. Others are built internally when the company wants more control over style, lead time, margin, or product mix.
 
-- customer demand
-- supplier purchasing
-- production activity
-- inventory movement
-- payroll and labor usage
-- accounting results
-- a realistic people-and-product master-data layer used for control and analytics work
+That means the dataset is not built around a single narrow business model. Students can compare purchased products with manufactured products inside the same company and then see how those choices change planning, inventory, payroll, costing, and ledger results.
+
+## Who the Company Serves
+
+The customer base is intentionally broad enough to support several teaching questions without becoming unrealistic.
+
+- commercial buyers who place larger recurring orders
+- interior-design firms that care about collections, style consistency, and client-specific needs
+- repeat regional customers who create a stable local order base
+
+This mix makes the revenue story more useful for analysis. Students can ask how pricing, fulfillment, returns, and collections differ by customer type rather than treating every sale as the same kind of transaction.
 
 ## What the Company Sells
 
-The company sells product families that are easy to visualize and analyze:
+The catalog centers on product families that are easy to visualize and easy to compare analytically:
 
 - furniture
 - lighting
 - textiles
 - accessories
 
-Some of those products are purchased ready-made. Others are produced internally from raw materials and packaging. That distinction matters for costing, variance analysis, and margin analysis.
+The company also organizes products into named collections and style families. That makes the dataset stronger for product-profitability, lifecycle, pricing, and assortment analysis because students are not limited to raw item codes.
 
-The catalog uses named collections and style families. That structure makes product-profitability and lifecycle analysis more realistic for classroom work.
+## How the Business Actually Works
 
-## How the Company Operates
+This company works as one connected operating system, not as a set of disconnected departments.
 
-The business story has six main threads.
+Customer demand starts in order-to-cash. Sales orders, shipments, invoices, receipts, returns, credits, and refunds show how the business sells and settles customer activity. That demand then affects what inventory is available and what needs to be replenished.
 
-### 1. Sell and ship to customers
+Replenishment flows into procure-to-pay and manufacturing. Purchasing supports both resale inventory and the raw materials or packaging needed for in-house production. Manufacturing turns selected products into finished goods through planning, work orders, material issue, labor support, production completion, and close.
 
-The sales team enters customer orders. Warehouse operations ship goods when inventory is available. Accounting invoices from shipment lines, not directly from order lines. Treasury records customer receipts and applies them to invoices.
+Payroll and time support the labor side of the same story. Approved time records, payroll registers, payments, remittances, and labor-time entries help students see how workforce activity connects to expense, liabilities, and product cost.
 
-### 2. Correct customer-side exceptions
+Finance then closes the books after those operational cycles move. Manual journals, accruals, reclasses, and year-end close sit beside the document-driven processes and complete the accounting environment. The result is a company story where sales demand drives replenishment, replenishment supports fulfillment, labor supports manufacturing, and finance ties the whole model back to `GLEntry`.
 
-Some shipments come back because of damage, order changes, or service problems. Warehouse staff receive the return, accounting issues a credit memo, and treasury refunds the customer if the original invoice had already been settled.
+## Why This Company Works for Students
 
-### 3. Buy raw materials, packaging, and finished goods
+The company is realistic enough to feel connected, but structured enough to be teachable.
 
-Employees create purchase requisitions. Purchasing converts them into purchase orders. Warehouses receive goods, suppliers invoice the company, and treasury pays approved invoices.
+Students can move from business story to process flow to tables to ledger without losing the thread of what the business is actually doing. Purchased versus manufactured products create useful comparison. Payroll and labor create cost-accounting depth. Finance-controlled journals complete the accounting picture instead of leaving the environment at the subledger level.
 
-That means the same dataset supports both:
-
-- resale purchasing for finished goods
-- manufacturing replenishment for materials and packaging
-
-### 4. Manufacture selected products
-
-The manufacturing team plans work orders for selected finished goods. Raw materials and packaging are issued to production, finished goods are completed into inventory, and work orders are closed with material, direct-labor, and overhead variance when actual and standard amounts differ.
-
-### 5. Run payroll and connect labor to cost
-
-The company processes payroll operationally. Hourly employees are assigned to shifts and receive approved daily time-clock records, employees are paid on a biweekly cycle, payroll liabilities are remitted later, and manufacturing labor is traced into product cost through labor-time entries and reclass journals.
-
-This matters because the same dataset can now support:
-
-- gross-to-net payroll analysis
-- payroll liability roll-forwards
-- direct labor by work order
-- unit-cost bridges for manufactured products
-
-The employee master is also intentionally more realistic. The company has one CEO, one CFO, one Controller, one Production Manager, and one Accounting Manager. Repeatable roles such as sales reps, buyers, assemblers, machine operators, and shipping clerks can appear many times. Employees who leave the company remain in the dataset for historical traceability, which creates useful audit scenarios.
-
-### 6. Close the books
-
-Finance records opening balances, recurring journals, accrued-expense estimates, rare accrual adjustments, factory-overhead journals, manufacturing labor and overhead reclasses, and year-end close entries.
-
-That gives students a full accounting environment with operational and finance activity in the same model.
-
-## Why This Story Works for Business Students
-
-The company is intentionally realistic but still teachable.
-
-Students can ask:
-
-- What happened operationally?
-- When did accounting recognize it?
-- Which ledger accounts changed?
-- Which documents and controls were involved?
-- How do purchased and manufactured products behave differently?
-- How does payroll connect to product cost and margin analysis?
-
-## What Is Still Simplified
-
-The current dataset is a teaching model, not a full ERP simulation.
-
-The current implementation does **not** include:
-
-- raw punch-event tables beneath the current approved daily time-clock rows
-- rotating shift rosters or shift-level capacity calendars
-- subassemblies or multi-level BOMs
-
-Those topics are outside the current release scope. Use [Roadmap](../technical/roadmap.md) for planned improvements.
+That combination makes the dataset useful across AIS, accounting analytics, auditing, financial accounting, managerial accounting, and business-process work. Students can ask what happened operationally, when accounting recognized it, which documents mattered, and which ledger accounts moved, all inside one coherent company context.
 
 ## Recommended Next Reading
 
-1. Read [Dataset Guide](../start-here/dataset-overview.md) for scope, glossary, and navigation.
-2. Read [Process Flows](process-flows.md) for the process map.
-3. Read [Analytics Hub](../analytics/index.md) when you are ready to start the analysis layer.
+1. Read [Process Flows](process-flows.md) to see how the company story breaks into the main business cycles.
+2. Read [Dataset Guide](../start-here/dataset-overview.md) for scope, glossary, and navigation.
+3. Read [Analytics Hub](../analytics/index.md) when you are ready to move into the analysis layer.
