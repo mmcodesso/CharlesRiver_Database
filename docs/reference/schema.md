@@ -1,214 +1,378 @@
 ---
 title: Schema Reference
-description: Student-friendly reference for the 68 implemented tables, key columns, and join patterns.
+description: Student-friendly reference for the 68 implemented tables, key columns, and ER relationships.
 sidebar_label: Schema Reference
 ---
 
 # Schema Reference
 
-Use this page when you need a lookup tool: which tables belong to each business area, which fields matter most for joins, and which columns are the fastest way back to the source document.
+Use this page when you need the table map: which tables belong together, how the main relationships work, which keys matter most, and where the bridges between groups live.
 
-If you need the big-picture map first, start with [Dataset Guide](../start-here/dataset-overview.md).
+If you need the big-picture business story first, start with [Dataset Guide](../start-here/dataset-overview.md) and [Process Flows](../learn-the-business/process-flows.md).
+
 ## How to Use This Page
 
-- Use **Table Groups** when you want to see the model at a glance.
-- Use the area sections when you need the main purpose and highest-value fields for a table.
-- Use **Join and Traceability Cues** when you know the process but need the exact bridge fields.
+- Start with **Table Groups** to see how the model is divided.
+- Use **How to Read the ER Diagrams** before you treat any one group diagram as a complete process story.
+- Use **Cross-Group Bridge Keys** when you need to move from one table family to another.
+- Use each group section when you need the main tables, the highest-value fields, and the local join paths.
 
 ## Table Groups
 
 | Group | What belongs here | Count |
 |---|---|---:|
 | Accounting core | Accounts, journals, and posted ledger detail | 3 |
-| O2C | Customer, pricing, order, shipment, invoice, receipt, return, credit, and refund tables | 18 |
-| P2P | Supplier, requisition, PO, receipt, invoice, and payment tables | 9 |
+| Order-to-cash | Customers, commercial pricing, orders, shipments, invoices, cash, returns, credits, and refunds | 18 |
+| Procure-to-pay | Requisitions, purchase orders, receipts, supplier invoices, and disbursements | 9 |
 | Manufacturing | BOMs, routings, work centers, work orders, issues, completions, and close | 14 |
-| Payroll and time | Shift, roster, absence, overtime, time, payroll, and remittance tables | 14 |
+| Payroll and time | Shifts, rosters, absences, overtime approvals, punches, approved daily time, payroll, and remittances | 14 |
 | Master data | Item, warehouse, and employee records | 3 |
 | Organizational planning | Cost centers and budgets | 2 |
-| Demand planning and MRP | Forecasting, policy, recommendation, MRP, and rough-cut capacity tables | 5 |
+| Demand planning and MRP | Forecasting, inventory policy, recommendations, MRP, and rough-cut capacity | 5 |
 | Total |  | 68 |
 
-## Design Patterns
+## How to Read the ER Diagrams
 
-- Header-line tables are used for sales, purchasing, material issues, completions, and payroll registers.
-- `GLEntry` is the reporting bridge between operational events and accounting analysis.
-- `JournalEntry` and `GLEntry` together represent recurring finance activity, accrual adjustments, reclasses, and close-cycle entries.
-- `Item` is the product anchor for pricing, costing, supply mode, and account mapping.
-- `PriceList`, `PriceListLine`, `PromotionProgram`, and `PriceOverrideApproval` provide explicit commercial-pricing lineage inside the O2C flow.
-- Payroll and time are modeled as operational tables, not as a simple journal simulation.
+- Each diagram shows the **main local relationships** inside one table group, not every possible key in the database.
+- The diagrams are intentionally simplified. The compact tables below each diagram carry the highest-value fields students usually need first.
+- Cross-group bridges such as `ItemID`, `SupplyPlanRecommendationID`, and `AccrualJournalEntryID` are summarized separately so the group diagrams stay readable.
+- Use the process pages when you need business flow. Use this page when you need table structure and join logic.
+
+## Cross-Group Bridge Keys
+
+These are the main keys students use to move across groups.
+
+| Bridge key | Main bridge | Why it matters |
+|---|---|---|
+| `ItemID` | Master data into O2C, P2P, manufacturing, and planning | Product-level analysis across the whole dataset |
+| `SupplyPlanRecommendationID` | Demand planning into requisitions, work orders, MRP, and rough-cut capacity | Connects planning pressure to later purchasing or manufacturing execution |
+| `WorkOrderID` | Manufacturing into issues, completions, close, and labor support | Main manufacturing execution anchor |
+| `WorkOrderOperationID` | Manufacturing into operation schedules and labor traceability | Connects scheduling and labor detail to one operation |
+| `TimeClockEntryID` | Payroll and time into labor, attendance exceptions, and payroll support | Approved time bridge |
+| `PayrollRegisterID` | Payroll header into line detail and payment | Main payroll posting anchor |
+| `AccrualJournalEntryID` | Accounting core into accrued-service AP settlement | Bridges finance estimates to later AP activity |
+| `AccountID` | Accounting core into budgets and reporting | Chart-of-accounts bridge |
+| `SourceDocumentType`, `SourceDocumentID`, `SourceLineID` | Operational groups into `GLEntry` | Main path back from posted accounting to source activity |
 
 ## Accounting Core
 
-| Table | Use it for | Start with these fields |
+Use this group when you need the posting anchor for any process. `JournalEntry` is the finance-controlled header, `GLEntry` is the posted detail, and `Account` gives the reporting and control-account meaning.
+
+```mermaid
+erDiagram
+    Account ||--o{ GLEntry : classifies
+    JournalEntry ||--o{ GLEntry : posts
+```
+
+| Table | Use it for | Highest-value keys or fields |
 |---|---|---|
-| `Account` | Chart of accounts and hierarchy | `AccountNumber`, `AccountType`, `AccountSubType`, `ParentAccountID`, `NormalBalance` |
-| `JournalEntry` | Manual journal header lookup | `EntryNumber`, `PostingDate`, `EntryType`, `ApprovedByEmployeeID`, `ReversesJournalEntryID` |
-| `GLEntry` | Posted ledger detail and source traceability | `PostingDate`, `AccountID`, `Debit`, `Credit`, `VoucherType`, `VoucherNumber`, `SourceDocumentType`, `SourceDocumentID`, `SourceLineID`, `FiscalYear`, `FiscalPeriod` |
+| `Account` | Chart of accounts and hierarchy | `AccountID`, `AccountNumber`, `AccountType`, `AccountSubType`, `ParentAccountID` |
+| `JournalEntry` | Finance-controlled journal header lookup | `JournalEntryID`, `EntryNumber`, `PostingDate`, `EntryType`, `ApprovedByEmployeeID`, `ReversesJournalEntryID` |
+| `GLEntry` | Posted ledger detail and traceability | `GLEntryID`, `PostingDate`, `AccountID`, `VoucherType`, `VoucherNumber`, `SourceDocumentType`, `SourceDocumentID`, `SourceLineID`, `FiscalYear`, `FiscalPeriod` |
+
+### Join and Traceability Cues
+
+- `GLEntry.AccountID -> Account.AccountID`
+- `GLEntry.JournalEntryID -> JournalEntry.JournalEntryID`
+- `GLEntry.SourceDocumentType`, `SourceDocumentID`, and `SourceLineID` are the main operational trace fields
 
 ## Order-to-Cash
 
-| Table | Use it for | Start with these fields |
+Use this group when you need the full customer-side relationship map: pricing setup, order capture, fulfillment, billing, cash settlement, and the return-credit-refund branch.
+
+```mermaid
+erDiagram
+    Customer ||--o{ PriceList : scoped_to
+    Customer ||--o{ SalesOrder : places
+    Customer ||--o{ SalesInvoice : billed_to
+    Customer ||--o{ CashReceipt : pays
+    Customer ||--o{ SalesReturn : requests
+    PriceList ||--|{ PriceListLine : contains
+    SalesOrder ||--|{ SalesOrderLine : contains
+    PriceListLine o|--o{ SalesOrderLine : prices
+    PromotionProgram o|--o{ SalesOrderLine : discounts
+    PriceOverrideApproval o|--o{ SalesOrderLine : approves
+    SalesOrder ||--o{ Shipment : fulfills
+    SalesOrderLine ||--o{ ShipmentLine : ships
+    Shipment ||--|{ ShipmentLine : contains
+    SalesInvoice ||--|{ SalesInvoiceLine : contains
+    ShipmentLine ||--o{ SalesInvoiceLine : billed_on
+    CashReceipt ||--o{ CashReceiptApplication : applies
+    SalesInvoice ||--o{ CashReceiptApplication : settled_by
+    SalesReturn ||--|{ SalesReturnLine : contains
+    ShipmentLine ||--o{ SalesReturnLine : returned_on
+    SalesInvoice ||--o{ CreditMemo : corrected_by
+    CreditMemo ||--|{ CreditMemoLine : contains
+    SalesReturnLine ||--o{ CreditMemoLine : credits
+    CreditMemo ||--o{ CustomerRefund : refunded_by
+```
+
+| Table | Use it for | Highest-value keys or fields |
 |---|---|---|
-| `Customer` | Customer master and segmentation | `CustomerName`, `CustomerSegment`, `Industry`, `Region`, `SalesRepEmployeeID` |
-| `PriceList` | Pricing scope header by segment or customer | `PriceListName`, `ScopeType`, `CustomerID`, `CustomerSegment`, `EffectiveStartDate`, `EffectiveEndDate`, `Status` |
-| `PriceListLine` | Item-level price and floor by quantity break | `PriceListID`, `ItemID`, `MinimumQuantity`, `UnitPrice`, `MinimumUnitPrice`, `Status` |
-| `PromotionProgram` | Seasonal or scoped promotion master | `PromotionCode`, `ScopeType`, `CustomerSegment`, `ItemGroup`, `CollectionName`, `DiscountPct`, `EffectiveStartDate`, `EffectiveEndDate` |
-| `PriceOverrideApproval` | Manual below-floor approval record | `SalesOrderLineID`, `RequestedByEmployeeID`, `ApprovedByEmployeeID`, `ReferenceUnitPrice`, `ApprovedUnitPrice`, `ReasonCode`, `Status` |
-| `SalesOrder` | Order header and promised demand | `OrderNumber`, `OrderDate`, `CustomerID`, `RequestedDeliveryDate`, `Status` |
-| `SalesOrderLine` | Ordered item detail with pricing lineage | `SalesOrderID`, `LineNumber`, `ItemID`, `Quantity`, `BaseListPrice`, `UnitPrice`, `Discount`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, `PricingMethod`, `LineTotal` |
-| `Shipment` | Shipment header and warehouse fulfillment | `ShipmentNumber`, `SalesOrderID`, `ShipmentDate`, `WarehouseID`, `Status` |
-| `ShipmentLine` | Shipped item detail and COGS basis | `ShipmentID`, `SalesOrderLineID`, `ItemID`, `QuantityShipped`, `ExtendedStandardCost` |
-| `SalesInvoice` | Invoice header and receivable creation | `InvoiceNumber`, `InvoiceDate`, `CustomerID`, `DueDate`, `GrandTotal`, `Status` |
-| `SalesInvoiceLine` | Billed line detail tied to fulfillment and inherited pricing lineage | `SalesInvoiceID`, `SalesOrderLineID`, `ShipmentLineID`, `ItemID`, `Quantity`, `BaseListPrice`, `UnitPrice`, `Discount`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, `PricingMethod`, `LineTotal` |
-| `CashReceipt` | Customer payment record | `ReceiptNumber`, `ReceiptDate`, `CustomerID`, `Amount`, `PaymentMethod`, `ReferenceNumber` |
-| `CashReceiptApplication` | Invoice settlement detail | `CashReceiptID`, `SalesInvoiceID`, `ApplicationDate`, `AppliedAmount` |
-| `SalesReturn` | Return header | `ReturnNumber`, `ReturnDate`, `CustomerID`, `ReasonCode`, `Status` |
-| `SalesReturnLine` | Returned item detail | `SalesReturnID`, `ShipmentLineID`, `ItemID`, `QuantityReturned` |
-| `CreditMemo` | Customer credit header | `CreditMemoNumber`, `CreditMemoDate`, `SalesReturnID`, `OriginalSalesInvoiceID`, `GrandTotal`, `Status` |
-| `CreditMemoLine` | Credit detail by returned line with inherited pricing lineage | `CreditMemoID`, `SalesReturnLineID`, `ItemID`, `Quantity`, `BaseListPrice`, `UnitPrice`, `Discount`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, `PricingMethod`, `LineTotal` |
-| `CustomerRefund` | Cash refund against customer credit | `RefundNumber`, `RefundDate`, `CustomerID`, `CreditMemoID`, `Amount` |
+| `Customer` | Customer master and segmentation | `CustomerID`, `CustomerName`, `CustomerSegment`, `Region`, `SalesRepEmployeeID` |
+| `PriceList` | Pricing scope header | `PriceListID`, `ScopeType`, `CustomerID`, `CustomerSegment`, `EffectiveStartDate`, `EffectiveEndDate` |
+| `PriceListLine` | Item-level pricing rule | `PriceListLineID`, `PriceListID`, `ItemID`, `UnitPrice`, `MinimumUnitPrice` |
+| `PromotionProgram` | Promotion definition | `PromotionID`, `PromotionCode`, `ScopeType`, `DiscountPct`, `EffectiveStartDate`, `EffectiveEndDate` |
+| `PriceOverrideApproval` | Manual below-floor approval | `PriceOverrideApprovalID`, `SalesOrderLineID`, `RequestedByEmployeeID`, `ApprovedByEmployeeID`, `ApprovedUnitPrice`, `Status` |
+| `SalesOrder` | Order header | `SalesOrderID`, `OrderNumber`, `CustomerID`, `OrderDate`, `RequestedDeliveryDate`, `Status` |
+| `SalesOrderLine` | Ordered line with pricing lineage | `SalesOrderLineID`, `SalesOrderID`, `ItemID`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, `PricingMethod` |
+| `Shipment` | Shipment header | `ShipmentID`, `SalesOrderID`, `ShipmentDate`, `WarehouseID`, `Status` |
+| `ShipmentLine` | Shipped line | `ShipmentLineID`, `ShipmentID`, `SalesOrderLineID`, `ItemID`, `QuantityShipped` |
+| `SalesInvoice` | Invoice header | `SalesInvoiceID`, `InvoiceNumber`, `CustomerID`, `InvoiceDate`, `DueDate`, `Status` |
+| `SalesInvoiceLine` | Billed line | `SalesInvoiceLineID`, `SalesInvoiceID`, `SalesOrderLineID`, `ShipmentLineID`, `ItemID`, `PricingMethod` |
+| `CashReceipt` | Customer cash event | `CashReceiptID`, `ReceiptNumber`, `CustomerID`, `ReceiptDate`, `Amount` |
+| `CashReceiptApplication` | Invoice settlement detail | `CashReceiptApplicationID`, `CashReceiptID`, `SalesInvoiceID`, `ApplicationDate`, `AppliedAmount` |
+| `SalesReturn` | Return header | `SalesReturnID`, `ReturnNumber`, `CustomerID`, `ReturnDate`, `Status` |
+| `SalesReturnLine` | Returned line | `SalesReturnLineID`, `SalesReturnID`, `ShipmentLineID`, `ItemID`, `QuantityReturned` |
+| `CreditMemo` | Credit header | `CreditMemoID`, `CreditMemoNumber`, `SalesReturnID`, `OriginalSalesInvoiceID`, `CreditMemoDate`, `Status` |
+| `CreditMemoLine` | Credit detail with inherited pricing lineage | `CreditMemoLineID`, `CreditMemoID`, `SalesReturnLineID`, `ItemID`, `PricingMethod`, `PriceListLineID` |
+| `CustomerRefund` | Refund against customer credit | `CustomerRefundID`, `CreditMemoID`, `CustomerID`, `RefundDate`, `Amount` |
 
 ### Join and Traceability Cues
 
-- `SalesOrder -> SalesOrderLine`
-- `PriceListLine.PriceListID -> PriceList`
-- `SalesOrderLine.PriceListLineID -> PriceListLine`
-- `SalesOrderLine.PromotionID -> PromotionProgram`
-- `SalesOrderLine.PriceOverrideApprovalID -> PriceOverrideApproval`
-- `Shipment.SalesOrderID -> SalesOrder`
-- `ShipmentLine.SalesOrderLineID -> SalesOrderLine`
-- `SalesInvoiceLine.ShipmentLineID -> ShipmentLine`
-- `CashReceiptApplication.SalesInvoiceID -> SalesInvoice`
-- `SalesReturnLine.ShipmentLineID -> ShipmentLine`
-- `CreditMemo.OriginalSalesInvoiceID -> SalesInvoice`
-- `CustomerRefund.CreditMemoID -> CreditMemo`
+- `PriceListLine.PriceListID -> PriceList.PriceListID`
+- `SalesOrderLine.PriceListLineID -> PriceListLine.PriceListLineID`
+- `SalesOrderLine.PromotionID -> PromotionProgram.PromotionID`
+- `SalesOrderLine.PriceOverrideApprovalID -> PriceOverrideApproval.PriceOverrideApprovalID`
+- `ShipmentLine.SalesOrderLineID -> SalesOrderLine.SalesOrderLineID`
+- `SalesInvoiceLine.ShipmentLineID -> ShipmentLine.ShipmentLineID`
+- `CashReceiptApplication.SalesInvoiceID -> SalesInvoice.SalesInvoiceID`
+- `SalesReturnLine.ShipmentLineID -> ShipmentLine.ShipmentLineID`
+- `CreditMemo.OriginalSalesInvoiceID -> SalesInvoice.SalesInvoiceID`
+- `CustomerRefund.CreditMemoID -> CreditMemo.CreditMemoID`
 
 ## Procure-to-Pay
 
-| Table | Use it for | Start with these fields |
+Use this group when you need the supplier-side relationship map: requisition, PO, receipt, invoice, and payment. The main cross-group bridge here is the accrued-service path through `AccrualJournalEntryID`.
+
+```mermaid
+erDiagram
+    Supplier ||--o{ PurchaseOrder : receives
+    Supplier ||--o{ PurchaseInvoice : bills
+    Supplier ||--o{ DisbursementPayment : paid_by
+    PurchaseRequisition ||--o{ PurchaseOrderLine : requested_on
+    PurchaseOrder ||--|{ PurchaseOrderLine : contains
+    PurchaseOrder ||--o{ GoodsReceipt : received_as
+    PurchaseOrderLine ||--o{ GoodsReceiptLine : received_on
+    GoodsReceipt ||--|{ GoodsReceiptLine : contains
+    PurchaseInvoice ||--|{ PurchaseInvoiceLine : contains
+    PurchaseOrderLine ||--o{ PurchaseInvoiceLine : billed_for
+    GoodsReceiptLine o|--o{ PurchaseInvoiceLine : matched_by
+    PurchaseInvoice ||--o{ DisbursementPayment : settled_by
+```
+
+| Table | Use it for | Highest-value keys or fields |
 |---|---|---|
-| `Supplier` | Supplier master and risk context | `SupplierName`, `PaymentTerms`, `SupplierCategory`, `SupplierRiskRating`, `DefaultCurrency` |
-| `PurchaseRequisition` | Internal purchase demand | `RequisitionNumber`, `RequestDate`, `RequestedByEmployeeID`, `CostCenterID`, `ItemID`, `Status`, `SupplyPlanRecommendationID` |
-| `PurchaseOrder` | PO header and supplier commitment | `PONumber`, `OrderDate`, `SupplierID`, `ExpectedDeliveryDate`, `Status` |
-| `PurchaseOrderLine` | Ordered item detail | `PurchaseOrderID`, `RequisitionID`, `ItemID`, `Quantity`, `UnitCost`, `LineTotal` |
-| `GoodsReceipt` | Receipt header | `ReceiptNumber`, `ReceiptDate`, `PurchaseOrderID`, `WarehouseID`, `Status` |
-| `GoodsReceiptLine` | Receipt detail and inventory posting basis | `GoodsReceiptID`, `POLineID`, `ItemID`, `QuantityReceived`, `ExtendedStandardCost` |
-| `PurchaseInvoice` | Supplier invoice header | `InvoiceNumber`, `InvoiceDate`, `SupplierID`, `PurchaseOrderID`, `GrandTotal`, `Status` |
-| `PurchaseInvoiceLine` | Supplier invoice detail | `PurchaseInvoiceID`, `POLineID`, `GoodsReceiptLineID`, `AccrualJournalEntryID`, `ItemID`, `Quantity`, `LineTotal` |
-| `DisbursementPayment` | Supplier payment record | `PaymentNumber`, `PaymentDate`, `SupplierID`, `PurchaseInvoiceID`, `Amount`, `PaymentMethod` |
+| `Supplier` | Supplier master and payment context | `SupplierID`, `SupplierName`, `PaymentTerms`, `SupplierCategory`, `SupplierRiskRating` |
+| `PurchaseRequisition` | Internal purchase demand | `PurchaseRequisitionID`, `RequisitionNumber`, `RequestDate`, `ItemID`, `CostCenterID`, `SupplyPlanRecommendationID`, `Status` |
+| `PurchaseOrder` | PO header | `PurchaseOrderID`, `PONumber`, `SupplierID`, `OrderDate`, `ExpectedDeliveryDate`, `Status` |
+| `PurchaseOrderLine` | Ordered line | `POLineID`, `PurchaseOrderID`, `RequisitionID`, `ItemID`, `Quantity`, `UnitCost` |
+| `GoodsReceipt` | Receipt header | `GoodsReceiptID`, `ReceiptNumber`, `PurchaseOrderID`, `ReceiptDate`, `WarehouseID` |
+| `GoodsReceiptLine` | Received line | `GoodsReceiptLineID`, `GoodsReceiptID`, `POLineID`, `ItemID`, `QuantityReceived`, `ExtendedStandardCost` |
+| `PurchaseInvoice` | Supplier invoice header | `PurchaseInvoiceID`, `InvoiceNumber`, `SupplierID`, `PurchaseOrderID`, `InvoiceDate`, `Status` |
+| `PurchaseInvoiceLine` | Supplier invoice line | `PurchaseInvoiceLineID`, `PurchaseInvoiceID`, `POLineID`, `GoodsReceiptLineID`, `AccrualJournalEntryID`, `ItemID` |
+| `DisbursementPayment` | Supplier payment | `DisbursementPaymentID`, `PurchaseInvoiceID`, `SupplierID`, `PaymentDate`, `Amount` |
 
 ### Join and Traceability Cues
 
-- `PurchaseOrderLine.RequisitionID -> PurchaseRequisition`
-- `GoodsReceipt.PurchaseOrderID -> PurchaseOrder`
-- `GoodsReceiptLine.POLineID -> PurchaseOrderLine`
-- `PurchaseInvoiceLine.GoodsReceiptLineID -> GoodsReceiptLine`
-- `PurchaseInvoiceLine.AccrualJournalEntryID -> JournalEntry`
-- `DisbursementPayment.PurchaseInvoiceID -> PurchaseInvoice`
+- `PurchaseOrderLine.RequisitionID -> PurchaseRequisition.PurchaseRequisitionID`
+- `GoodsReceipt.PurchaseOrderID -> PurchaseOrder.PurchaseOrderID`
+- `GoodsReceiptLine.POLineID -> PurchaseOrderLine.POLineID`
+- `PurchaseInvoiceLine.GoodsReceiptLineID -> GoodsReceiptLine.GoodsReceiptLineID`
+- `PurchaseInvoiceLine.AccrualJournalEntryID -> JournalEntry.JournalEntryID`
+- `DisbursementPayment.PurchaseInvoiceID -> PurchaseInvoice.PurchaseInvoiceID`
 
 ## Manufacturing
 
-| Table | Use it for | Start with these fields |
+Use this group when you need the local manufacturing structure: recipe, routing, work center, work order, issue, completion, and close. Planning and payroll bridges are summarized separately above.
+
+```mermaid
+erDiagram
+    BillOfMaterial ||--|{ BillOfMaterialLine : contains
+    Routing ||--|{ RoutingOperation : contains
+    WorkCenter ||--o{ WorkCenterCalendar : schedules
+    WorkCenter ||--o{ RoutingOperation : hosts
+    BillOfMaterial ||--o{ WorkOrder : supports
+    Routing ||--o{ WorkOrder : supports
+    WorkOrder ||--|{ WorkOrderOperation : contains
+    RoutingOperation ||--o{ WorkOrderOperation : realized_as
+    WorkOrderOperation ||--o{ WorkOrderOperationSchedule : scheduled_as
+    WorkCenter ||--o{ WorkOrderOperationSchedule : loads
+    WorkOrder ||--o{ MaterialIssue : consumes
+    BillOfMaterialLine ||--o{ MaterialIssueLine : issued_from
+    MaterialIssue ||--|{ MaterialIssueLine : contains
+    WorkOrder ||--o{ ProductionCompletion : completes
+    ProductionCompletion ||--|{ ProductionCompletionLine : contains
+    WorkOrder ||--o{ WorkOrderClose : closes
+```
+
+| Table | Use it for | Highest-value keys or fields |
 |---|---|---|
-| `BillOfMaterial` | BOM header for manufactured items | `ParentItemID`, `VersionNumber`, `Status`, `StandardBatchQuantity` |
-| `BillOfMaterialLine` | BOM component detail | `BOMID`, `ComponentItemID`, `LineNumber`, `QuantityPerUnit`, `ScrapFactorPct` |
-| `WorkCenter` | Work-center master | `WorkCenterCode`, `WorkCenterName`, `Department`, `WarehouseID`, `NominalDailyCapacityHours` |
-| `WorkCenterCalendar` | Daily available-hours calendar | `WorkCenterID`, `CalendarDate`, `IsWorkingDay`, `AvailableHours`, `ExceptionReason` |
-| `Routing` | Routing header for one manufactured item | `ParentItemID`, `VersionNumber`, `Status`, `EffectiveStartDate`, `EffectiveEndDate` |
-| `RoutingOperation` | Ordered routing step | `RoutingID`, `OperationSequence`, `OperationCode`, `OperationName`, `WorkCenterID` |
-| `WorkOrder` | Production order header | `WorkOrderNumber`, `ItemID`, `BOMID`, `RoutingID`, `WarehouseID`, `PlannedQuantity`, `Status`, `SupplyPlanRecommendationID` |
-| `WorkOrderOperation` | Operation-level work-order activity | `WorkOrderID`, `RoutingOperationID`, `OperationSequence`, `WorkCenterID`, `PlannedLoadHours`, `Status` |
-| `WorkOrderOperationSchedule` | Daily scheduled hours for one operation | `WorkOrderOperationID`, `WorkCenterID`, `ScheduleDate`, `ScheduledHours` |
-| `MaterialIssue` | Material issue header | `WorkOrderID`, `IssueDate`, `WarehouseID`, `Status` |
-| `MaterialIssueLine` | Material issue detail | `MaterialIssueID`, `BOMLineID`, `ItemID`, `QuantityIssued`, `ExtendedStandardCost` |
-| `ProductionCompletion` | Completion header | `WorkOrderID`, `CompletionDate`, `WarehouseID`, `Status` |
-| `ProductionCompletionLine` | Completion cost detail | `ProductionCompletionID`, `ItemID`, `QuantityCompleted`, `ExtendedStandardTotalCost` |
-| `WorkOrderClose` | Work-order close and variance record | `WorkOrderID`, `CloseDate`, `TotalVarianceAmount`, `Status` |
+| `BillOfMaterial` | BOM header | `BOMID`, `ParentItemID`, `VersionNumber`, `Status`, `StandardBatchQuantity` |
+| `BillOfMaterialLine` | BOM component detail | `BOMLineID`, `BOMID`, `ComponentItemID`, `QuantityPerUnit`, `ScrapFactorPct` |
+| `WorkCenter` | Work-center master | `WorkCenterID`, `WorkCenterCode`, `Department`, `WarehouseID`, `NominalDailyCapacityHours` |
+| `WorkCenterCalendar` | Daily available-hours calendar | `WorkCenterCalendarID`, `WorkCenterID`, `CalendarDate`, `IsWorkingDay`, `AvailableHours` |
+| `Routing` | Routing header | `RoutingID`, `ParentItemID`, `VersionNumber`, `Status` |
+| `RoutingOperation` | Ordered routing step | `RoutingOperationID`, `RoutingID`, `OperationSequence`, `OperationCode`, `WorkCenterID` |
+| `WorkOrder` | Work-order header | `WorkOrderID`, `WorkOrderNumber`, `ItemID`, `BOMID`, `RoutingID`, `SupplyPlanRecommendationID`, `Status` |
+| `WorkOrderOperation` | Operation-level work-order activity | `WorkOrderOperationID`, `WorkOrderID`, `RoutingOperationID`, `OperationSequence`, `WorkCenterID`, `Status` |
+| `WorkOrderOperationSchedule` | Daily scheduled hours | `WorkOrderOperationScheduleID`, `WorkOrderOperationID`, `WorkCenterID`, `ScheduleDate`, `ScheduledHours` |
+| `MaterialIssue` | Material issue header | `MaterialIssueID`, `WorkOrderID`, `IssueDate`, `WarehouseID` |
+| `MaterialIssueLine` | Material issue line | `MaterialIssueLineID`, `MaterialIssueID`, `BOMLineID`, `ItemID`, `QuantityIssued` |
+| `ProductionCompletion` | Completion header | `ProductionCompletionID`, `WorkOrderID`, `CompletionDate`, `WarehouseID` |
+| `ProductionCompletionLine` | Completion cost detail | `ProductionCompletionLineID`, `ProductionCompletionID`, `ItemID`, `QuantityCompleted`, `ExtendedStandardTotalCost` |
+| `WorkOrderClose` | Work-order close and variance record | `WorkOrderCloseID`, `WorkOrderID`, `CloseDate`, `TotalVarianceAmount`, `Status` |
 
 ### Join and Traceability Cues
 
-- `WorkOrder.BOMID -> BillOfMaterial`
-- `WorkOrder.RoutingID -> Routing`
-- `WorkOrderOperation.RoutingOperationID -> RoutingOperation`
-- `WorkOrderOperationSchedule.WorkOrderOperationID -> WorkOrderOperation`
-- `MaterialIssue.WorkOrderID -> WorkOrder`
-- `MaterialIssueLine.BOMLineID -> BillOfMaterialLine`
-- `ProductionCompletion.WorkOrderID -> WorkOrder`
-- `WorkOrderClose.WorkOrderID -> WorkOrder`
+- `WorkOrder.BOMID -> BillOfMaterial.BOMID`
+- `WorkOrder.RoutingID -> Routing.RoutingID`
+- `WorkOrderOperation.RoutingOperationID -> RoutingOperation.RoutingOperationID`
+- `WorkOrderOperationSchedule.WorkOrderOperationID -> WorkOrderOperation.WorkOrderOperationID`
+- `MaterialIssue.WorkOrderID -> WorkOrder.WorkOrderID`
+- `MaterialIssueLine.BOMLineID -> BillOfMaterialLine.BOMLineID`
+- `ProductionCompletion.WorkOrderID -> WorkOrder.WorkOrderID`
+- `WorkOrderClose.WorkOrderID -> WorkOrder.WorkOrderID`
 
 ## Payroll and Time
 
-| Table | Use it for | Start with these fields |
+Use this group when you need the workforce-side relationship map: shifts, rosters, raw punches, approved time, labor detail, payroll registers, payments, and remittances.
+
+```mermaid
+erDiagram
+    ShiftDefinition ||--o{ EmployeeShiftAssignment : assigns
+    ShiftDefinition ||--o{ EmployeeShiftRoster : schedules
+    EmployeeShiftRoster ||--o{ EmployeeAbsence : records
+    EmployeeShiftRoster ||--o{ OvertimeApproval : approves
+    EmployeeShiftRoster ||--o{ TimeClockEntry : supports
+    TimeClockEntry ||--o{ TimeClockPunch : evidenced_by
+    TimeClockEntry ||--o{ AttendanceException : reviewed_by
+    TimeClockEntry ||--o{ LaborTimeEntry : allocates
+    PayrollPeriod ||--o{ TimeClockEntry : groups
+    PayrollPeriod ||--o{ LaborTimeEntry : groups
+    PayrollPeriod ||--o{ PayrollRegister : drives
+    PayrollRegister ||--|{ PayrollRegisterLine : contains
+    LaborTimeEntry o|--o{ PayrollRegisterLine : supports
+    PayrollRegister ||--o{ PayrollPayment : settled_by
+    PayrollPeriod ||--o{ PayrollLiabilityRemittance : remits
+```
+
+| Table | Use it for | Highest-value keys or fields |
 |---|---|---|
-| `ShiftDefinition` | Standard shift template | `ShiftCode`, `ShiftName`, `Department`, `WorkCenterID`, `StartTime`, `EndTime` |
-| `EmployeeShiftAssignment` | Employee-to-shift assignment | `EmployeeID`, `ShiftDefinitionID`, `EffectiveStartDate`, `EffectiveEndDate`, `WorkCenterID`, `IsPrimary` |
-| `EmployeeShiftRoster` | Daily planned roster row | `EmployeeID`, `RosterDate`, `ShiftDefinitionID`, `WorkCenterID`, `ScheduledStartTime`, `ScheduledHours`, `RosterStatus` |
-| `EmployeeAbsence` | Absence tied to the roster | `EmployeeID`, `PayrollPeriodID`, `AbsenceDate`, `EmployeeShiftRosterID`, `AbsenceType`, `HoursAbsent`, `Status` |
-| `OvertimeApproval` | Approved overtime request | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `EmployeeShiftRosterID`, `ApprovedHours`, `ReasonCode`, `Status` |
-| `TimeClockEntry` | Approved daily time record | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `EmployeeShiftRosterID`, `OvertimeApprovalID`, `WorkOrderOperationID`, `RegularHours`, `OvertimeHours`, `ClockStatus` |
-| `TimeClockPunch` | Raw punch events under the approved daily summary | `EmployeeID`, `WorkDate`, `EmployeeShiftRosterID`, `TimeClockEntryID`, `PunchTimestamp`, `PunchType` |
-| `AttendanceException` | Attendance-control exception log | `EmployeeID`, `PayrollPeriodID`, `WorkDate`, `EmployeeShiftRosterID`, `TimeClockEntryID`, `ExceptionType`, `Severity`, `Status` |
-| `PayrollPeriod` | Biweekly payroll calendar | `PeriodNumber`, `PeriodStartDate`, `PeriodEndDate`, `PayDate`, `FiscalYear`, `FiscalPeriod` |
-| `LaborTimeEntry` | Labor detail used for payroll and costing | `PayrollPeriodID`, `EmployeeID`, `TimeClockEntryID`, `WorkOrderID`, `WorkOrderOperationID`, `LaborType`, `RegularHours`, `ExtendedLaborCost` |
-| `PayrollRegister` | Payroll header | `PayrollPeriodID`, `EmployeeID`, `CostCenterID`, `GrossPay`, `NetPay`, `Status` |
-| `PayrollRegisterLine` | Earnings and deduction detail | `PayrollRegisterID`, `LineType`, `Hours`, `Rate`, `Amount`, `LaborTimeEntryID` |
-| `PayrollPayment` | Net-pay settlement | `PayrollRegisterID`, `PaymentDate`, `PaymentMethod`, `ReferenceNumber`, `ClearedDate` |
-| `PayrollLiabilityRemittance` | Liability clearance | `PayrollPeriodID`, `LiabilityType`, `RemittanceDate`, `Amount`, `AgencyOrVendor` |
+| `ShiftDefinition` | Shift template | `ShiftDefinitionID`, `ShiftCode`, `Department`, `WorkCenterID`, `StartTime`, `EndTime` |
+| `EmployeeShiftAssignment` | Employee-to-shift assignment | `EmployeeShiftAssignmentID`, `EmployeeID`, `ShiftDefinitionID`, `WorkCenterID`, `IsPrimary` |
+| `EmployeeShiftRoster` | Daily planned roster row | `EmployeeShiftRosterID`, `EmployeeID`, `RosterDate`, `ShiftDefinitionID`, `WorkCenterID`, `ScheduledHours` |
+| `EmployeeAbsence` | Absence support | `EmployeeAbsenceID`, `EmployeeShiftRosterID`, `AbsenceDate`, `AbsenceType`, `HoursAbsent` |
+| `OvertimeApproval` | Approved overtime support | `OvertimeApprovalID`, `EmployeeShiftRosterID`, `WorkDate`, `ApprovedHours`, `ReasonCode` |
+| `TimeClockEntry` | Approved daily time | `TimeClockEntryID`, `EmployeeID`, `PayrollPeriodID`, `EmployeeShiftRosterID`, `RegularHours`, `OvertimeHours`, `ClockStatus` |
+| `TimeClockPunch` | Raw punch events | `TimeClockPunchID`, `EmployeeShiftRosterID`, `TimeClockEntryID`, `PunchTimestamp`, `PunchType` |
+| `AttendanceException` | Attendance-control exception | `AttendanceExceptionID`, `EmployeeShiftRosterID`, `TimeClockEntryID`, `ExceptionType`, `Severity`, `Status` |
+| `PayrollPeriod` | Payroll calendar | `PayrollPeriodID`, `PeriodNumber`, `PeriodStartDate`, `PeriodEndDate`, `PayDate`, `FiscalPeriod` |
+| `LaborTimeEntry` | Labor detail used for costing and payroll support | `LaborTimeEntryID`, `PayrollPeriodID`, `TimeClockEntryID`, `WorkOrderID`, `WorkOrderOperationID`, `LaborType` |
+| `PayrollRegister` | Payroll header | `PayrollRegisterID`, `PayrollPeriodID`, `EmployeeID`, `CostCenterID`, `GrossPay`, `NetPay`, `Status` |
+| `PayrollRegisterLine` | Payroll line detail | `PayrollRegisterLineID`, `PayrollRegisterID`, `LineType`, `Hours`, `Rate`, `LaborTimeEntryID` |
+| `PayrollPayment` | Net-pay settlement | `PayrollPaymentID`, `PayrollRegisterID`, `PaymentDate`, `PaymentMethod`, `ReferenceNumber` |
+| `PayrollLiabilityRemittance` | Liability clearance | `PayrollLiabilityRemittanceID`, `PayrollPeriodID`, `LiabilityType`, `RemittanceDate`, `Amount` |
 
 ### Join and Traceability Cues
 
-- `EmployeeShiftAssignment.ShiftDefinitionID -> ShiftDefinition`
-- `EmployeeShiftRoster.ShiftDefinitionID -> ShiftDefinition`
-- `EmployeeAbsence.EmployeeShiftRosterID -> EmployeeShiftRoster`
-- `OvertimeApproval.EmployeeShiftRosterID -> EmployeeShiftRoster`
-- `TimeClockEntry.EmployeeShiftRosterID -> EmployeeShiftRoster`
-- `TimeClockEntry.OvertimeApprovalID -> OvertimeApproval`
-- `TimeClockPunch.TimeClockEntryID -> TimeClockEntry`
-- `AttendanceException.TimeClockEntryID -> TimeClockEntry`
-- `LaborTimeEntry.TimeClockEntryID -> TimeClockEntry`
-- `PayrollRegister.PayrollPeriodID -> PayrollPeriod`
-- `PayrollRegisterLine.LaborTimeEntryID -> LaborTimeEntry`
-- `PayrollPayment.PayrollRegisterID -> PayrollRegister`
-- `PayrollLiabilityRemittance.PayrollPeriodID -> PayrollPeriod`
+- `EmployeeShiftAssignment.ShiftDefinitionID -> ShiftDefinition.ShiftDefinitionID`
+- `EmployeeShiftRoster.ShiftDefinitionID -> ShiftDefinition.ShiftDefinitionID`
+- `EmployeeAbsence.EmployeeShiftRosterID -> EmployeeShiftRoster.EmployeeShiftRosterID`
+- `OvertimeApproval.EmployeeShiftRosterID -> EmployeeShiftRoster.EmployeeShiftRosterID`
+- `TimeClockEntry.EmployeeShiftRosterID -> EmployeeShiftRoster.EmployeeShiftRosterID`
+- `TimeClockEntry.OvertimeApprovalID -> OvertimeApproval.OvertimeApprovalID`
+- `TimeClockPunch.TimeClockEntryID -> TimeClockEntry.TimeClockEntryID`
+- `AttendanceException.TimeClockEntryID -> TimeClockEntry.TimeClockEntryID`
+- `LaborTimeEntry.TimeClockEntryID -> TimeClockEntry.TimeClockEntryID`
+- `PayrollRegister.PayrollPeriodID -> PayrollPeriod.PayrollPeriodID`
+- `PayrollRegisterLine.LaborTimeEntryID -> LaborTimeEntry.LaborTimeEntryID`
+- `PayrollPayment.PayrollRegisterID -> PayrollRegister.PayrollRegisterID`
+- `PayrollLiabilityRemittance.PayrollPeriodID -> PayrollPeriod.PayrollPeriodID`
 
 ## Master Data
 
-| Table | Use it for | Start with these fields |
+This group holds the anchor entities reused across the rest of the model. These tables are intentionally simple, but they matter because most other groups attach to them.
+
+```mermaid
+erDiagram
+    Item {
+        int ItemID PK
+        string SupplyMode
+    }
+    Warehouse {
+        int WarehouseID PK
+        string WarehouseName
+    }
+    Employee {
+        int EmployeeID PK
+        string JobTitle
+    }
+```
+
+| Table | Use it for | Highest-value keys or fields |
 |---|---|---|
-| `Item` | Product master and account mapping | `ItemCode`, `ItemName`, `ItemGroup`, `CollectionName`, `StyleFamily`, `PrimaryMaterial`, `LifecycleStatus`, `SupplyMode`, `StandardCost`, `InventoryAccountID`, `RevenueAccountID`, `COGSAccountID` |
-| `Warehouse` | Warehouse master | `WarehouseName`, `ManagerID`, address fields |
-| `Employee` | Employee master and approval metadata | `EmployeeNumber`, `JobTitle`, `JobFamily`, `JobLevel`, `WorkLocation`, `EmploymentStatus`, `TerminationDate`, `AuthorizationLevel`, `PayClass`, `OvertimeEligible` |
-
-## Organizational Planning
-
-| Table | Use it for | Start with these fields |
-|---|---|---|
-| `CostCenter` | Organizational reporting structure | `CostCenterName`, `ParentCostCenterID`, `ManagerID`, `IsActive` |
-| `Budget` | Monthly budget by cost center and account | `FiscalYear`, `Month`, `CostCenterID`, `AccountID`, `BudgetAmount` |
-
-## Demand Planning and MRP
-
-| Table | Use it for | Start with these fields |
-|---|---|---|
-| `DemandForecast` | Weekly demand-planning input | `ForecastWeekStartDate`, `ItemID`, `WarehouseID`, `ForecastQuantity`, `ForecastMethod`, `PlannerEmployeeID`, `ApprovedByEmployeeID`, `IsCurrent` |
-| `InventoryPolicy` | Active replenishment-policy master | `ItemID`, `WarehouseID`, `PlanningGroup`, `PolicyType`, `SafetyStockQuantity`, `ReorderPointQuantity`, `TargetDaysSupply`, `IsActive` |
-| `SupplyPlanRecommendation` | Weekly replenishment recommendation | `RecommendationDate`, `BucketWeekStartDate`, `ItemID`, `WarehouseID`, `RecommendationType`, `SupplyMode`, `RecommendedOrderQuantity`, `RecommendationStatus`, `ConvertedDocumentType`, `ConvertedDocumentID` |
-| `MaterialRequirementPlan` | Component-demand explosion | `BucketWeekStartDate`, `ParentItemID`, `ComponentItemID`, `SupplyPlanRecommendationID`, `GrossRequirementQuantity`, `NetRequirementQuantity` |
-| `RoughCutCapacityPlan` | Weekly load-versus-capacity tieout | `BucketWeekStartDate`, `WorkCenterID`, `ItemID`, `SupplyPlanRecommendationID`, `PlannedLoadHours`, `AvailableHours`, `UtilizationPct`, `CapacityStatus` |
+| `Item` | Product master and account mapping | `ItemID`, `ItemCode`, `ItemGroup`, `CollectionName`, `LifecycleStatus`, `SupplyMode`, `InventoryAccountID`, `RevenueAccountID`, `COGSAccountID` |
+| `Warehouse` | Warehouse master | `WarehouseID`, `WarehouseName`, `ManagerID` |
+| `Employee` | Employee master and approvals | `EmployeeID`, `EmployeeNumber`, `JobTitle`, `JobFamily`, `AuthorizationLevel`, `PayClass`, `OvertimeEligible` |
 
 ### Join and Traceability Cues
 
-- `PurchaseRequisition.SupplyPlanRecommendationID -> SupplyPlanRecommendation`
-- `WorkOrder.SupplyPlanRecommendationID -> SupplyPlanRecommendation`
-- `MaterialRequirementPlan.SupplyPlanRecommendationID -> SupplyPlanRecommendation`
-- `RoughCutCapacityPlan.SupplyPlanRecommendationID -> SupplyPlanRecommendation`
+- `ItemID` is the main product bridge across O2C, P2P, manufacturing, and planning
+- `WarehouseID` connects fulfillment, receipt, manufacturing, and planning location context
+- `EmployeeID` appears across approvals, rosters, payroll, journals, and organizational reporting
+
+## Organizational Planning
+
+This group is small, but it gives the model its reporting structure. `CostCenter` organizes responsibility, and `Budget` gives a planning benchmark by month and account.
+
+```mermaid
+erDiagram
+    CostCenter ||--o{ Budget : budgets
+```
+
+| Table | Use it for | Highest-value keys or fields |
+|---|---|---|
+| `CostCenter` | Organizational reporting structure | `CostCenterID`, `CostCenterName`, `ParentCostCenterID`, `ManagerID`, `IsActive` |
+| `Budget` | Monthly budget by cost center and account | `BudgetID`, `FiscalYear`, `Month`, `CostCenterID`, `AccountID`, `BudgetAmount` |
+
+### Join and Traceability Cues
+
+- `Budget.CostCenterID -> CostCenter.CostCenterID`
+- `Budget.AccountID -> Account.AccountID`
+
+## Demand Planning and MRP
+
+Use this group when you need the planning layer that sits ahead of later purchasing and manufacturing execution. This group explains why replenishment pressure existed before a requisition or work order appeared.
+
+```mermaid
+erDiagram
+    DemandForecast ||--o{ SupplyPlanRecommendation : informs
+    InventoryPolicy ||--o{ SupplyPlanRecommendation : drives
+    SupplyPlanRecommendation ||--o{ MaterialRequirementPlan : explodes_to
+    SupplyPlanRecommendation ||--o{ RoughCutCapacityPlan : loads
+```
+
+| Table | Use it for | Highest-value keys or fields |
+|---|---|---|
+| `DemandForecast` | Weekly demand-planning input | `DemandForecastID`, `ForecastWeekStartDate`, `ItemID`, `WarehouseID`, `ForecastQuantity`, `ForecastMethod`, `IsCurrent` |
+| `InventoryPolicy` | Active replenishment policy | `InventoryPolicyID`, `ItemID`, `WarehouseID`, `PolicyType`, `SafetyStockQuantity`, `ReorderPointQuantity`, `TargetDaysSupply`, `IsActive` |
+| `SupplyPlanRecommendation` | Weekly replenishment recommendation | `SupplyPlanRecommendationID`, `RecommendationDate`, `BucketWeekStartDate`, `ItemID`, `WarehouseID`, `RecommendationType`, `SupplyMode`, `RecommendationStatus`, `ConvertedDocumentType`, `ConvertedDocumentID` |
+| `MaterialRequirementPlan` | Component-demand explosion | `MaterialRequirementPlanID`, `BucketWeekStartDate`, `ParentItemID`, `ComponentItemID`, `SupplyPlanRecommendationID`, `NetRequirementQuantity` |
+| `RoughCutCapacityPlan` | Weekly load-versus-capacity tieout | `RoughCutCapacityPlanID`, `BucketWeekStartDate`, `WorkCenterID`, `SupplyPlanRecommendationID`, `PlannedLoadHours`, `AvailableHours`, `UtilizationPct`, `CapacityStatus` |
+
+### Join and Traceability Cues
+
+- `PurchaseRequisition.SupplyPlanRecommendationID -> SupplyPlanRecommendation.SupplyPlanRecommendationID`
+- `WorkOrder.SupplyPlanRecommendationID -> SupplyPlanRecommendation.SupplyPlanRecommendationID`
+- `MaterialRequirementPlan.SupplyPlanRecommendationID -> SupplyPlanRecommendation.SupplyPlanRecommendationID`
+- `RoughCutCapacityPlan.SupplyPlanRecommendationID -> SupplyPlanRecommendation.SupplyPlanRecommendationID`
 
 ## Important Schema Notes
 
-- `CashReceipt.SalesInvoiceID` is compatibility metadata only. The authoritative settlement link is `CashReceiptApplication`.
-- Price-list and promotion lineage live directly on `SalesOrderLine`, `SalesInvoiceLine`, and `CreditMemoLine`. Postings remain net revenue, and the model does not use separate contra-revenue discount postings.
-- `PurchaseOrder.RequisitionID` is compatibility metadata when a PO batches multiple requisitions.
+- `CashReceipt.SalesInvoiceID` is compatibility metadata only. The authoritative O2C settlement link is `CashReceiptApplication`.
+- Price-list and promotion lineage live directly on `SalesOrderLine`, `SalesInvoiceLine`, and `CreditMemoLine`. Postings remain net revenue.
+- `PurchaseOrder.RequisitionID` is compatibility metadata when one PO batches multiple requisitions. Use `PurchaseOrderLine.RequisitionID` as the authoritative trace.
 - `PurchaseInvoiceLine.GoodsReceiptLineID` is the main match key for receipt-based inventory invoicing.
 - `PurchaseInvoiceLine.AccrualJournalEntryID` links direct service invoices back to accrual journals.
 - `GoodsReceiptLine.ExtendedStandardCost` stores the receipt posting basis used for inventory and GRNI.
@@ -218,6 +382,6 @@ If you need the big-picture map first, start with [Dataset Guide](../start-here/
 
 ## Where to Go Next
 
-- Read [Dataset Guide](../start-here/dataset-overview.md) when you need the mental model, main paths, and posting overview.
+- Read [Dataset Guide](../start-here/dataset-overview.md) when you need the mental model, navigation paths, and posting overview.
 - Read [Process Flows](../learn-the-business/process-flows.md) when you want the business-cycle story behind the tables.
 - Read [GLEntry Posting Reference](posting.md) when you want the exact event-to-ledger rules.

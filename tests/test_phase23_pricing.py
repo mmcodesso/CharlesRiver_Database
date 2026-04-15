@@ -277,5 +277,12 @@ def test_phase23_docs_and_sidebar_entries_exist() -> None:
     assert "PriceList" in o2c_guide
     assert "CreditMemoLine` preserves the original pricing lineage" in o2c_guide
     assert "CustomerRefund" in o2c_guide
+    assert "erDiagram" in schema_guide
+    assert "## Cross-Group Bridge Keys" in schema_guide
     assert "PriceOverrideApproval" in schema_guide
+    assert "PurchaseInvoiceLine.AccrualJournalEntryID" in schema_guide
+    assert "SupplyPlanRecommendation" in schema_guide
+    assert "RoughCutCapacityPlan" in schema_guide
+    assert "TimeClockEntry" in schema_guide
+    assert "WorkOrderClose" in schema_guide
     assert "**68 tables**" in dataset_guide
