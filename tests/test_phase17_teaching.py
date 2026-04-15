@@ -234,9 +234,14 @@ def test_phase17_docs_include_cases_matrix_and_subprocess_diagrams() -> None:
     assert "PayrollLiabilityRemittance" in payroll_text
     assert not Path("docs/processes/time-clocks.md").exists()
 
-    for path in [
-        Path("docs/processes/manufacturing.md"),
-        Path("docs/processes/manual-journals-and-close.md"),
-    ]:
-        text = path.read_text(encoding="utf-8")
-        assert "Subprocess Spotlight" in text
+    manufacturing_text = Path("docs/processes/manufacturing.md").read_text(encoding="utf-8")
+    assert "## Analytical Subsections" in manufacturing_text
+    assert "### Planning, MRP, and Rough-Cut Capacity" in manufacturing_text
+    assert "MaterialRequirementPlan" in manufacturing_text
+    assert "RoughCutCapacityPlan" in manufacturing_text
+    assert "WorkOrderOperationSchedule" in manufacturing_text
+    assert "LaborTimeEntry" in manufacturing_text
+    assert "WorkOrderClose" in manufacturing_text
+
+    manual_close_text = Path("docs/processes/manual-journals-and-close.md").read_text(encoding="utf-8")
+    assert "Subprocess Spotlight" in manual_close_text

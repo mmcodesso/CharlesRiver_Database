@@ -1,282 +1,330 @@
 # Manufacturing Process
 
+## What Students Should Learn
+
+- Distinguish planning, execution, and costing or close as separate layers inside the manufacturing story.
+- Trace a manufactured item from weekly replenishment planning into work-order execution and then into `GLEntry`.
+- Identify the core tables used for MRP, rough-cut capacity, work-order scheduling, material issue, labor support, completion, and close.
+- Recognize timing differences that matter for capacity analysis, open work-order review, product costing, and manufacturing audit work.
+
 ## Business Storyline
 
-The company does not manufacture every product it sells. It buys some finished goods ready-made, but it also produces a selected subset of furniture, lighting, and textile items in-house. That hybrid model is one of the most useful teaching features in the dataset because students can compare purchased inventory with manufactured inventory inside the same company.
+This company both buys finished goods and manufactures selected products in-house. That hybrid model is one of the most useful teaching features in the dataset because students can compare purchased inventory with manufactured inventory inside the same business.
 
-The manufacturing story begins when weekly planning sees that demand and inventory levels are moving out of balance. Demand forecasts, inventory policies, and open backlog create replenishment signals. Manufactured signals convert into work orders, purchasing helps replenish any missing materials, warehouse staff issue components into production, supervisors and workers move the order through scheduled operations, payroll-supported labor is traced into the job, and accounting closes the order when standard and actual amounts are resolved.
+In this dataset, the manufacturing story starts with planning, not with a work order. Weekly forecasts, inventory policies, open finished-goods demand, and current supply pressure create replenishment signals. Manufactured signals move into work orders, components may need help from the purchasing cycle, warehouse staff issue material into production, approved labor support flows into cost traceability, finished goods are completed back into inventory, and accounting closes the order when standard and actual amounts are resolved.
 
-## Process Diagram
+That distinction matters. A planning recommendation is not a work order. A rough-cut capacity row is not the same thing as an operation schedule. A completion is not the same thing as a close. Students can see those stages separately in the data and use that separation for managerial, financial, and audit questions.
+
+## Normal Process Overview
 
 ```mermaid
 flowchart LR
-    DF[Demand forecast and policy]
-    SO[Sales backlog and FG demand]
-    SPR[Supply-plan recommendation]
-    PR[Material purchase requisitions]
-    PO[Purchase orders]
-    GR[Goods receipts]
-    BOM[Bill of material]
-    RT[Routing and work centers]
-    CAL[Work-center calendar and operation schedule]
-    WO[Work order]
-    WOO[Work-order operations]
-    ESR[Employee shift roster]
-    TCP[Raw punches]
-    MI[Material issue]
-    LT[Labor time and payroll]
-    PC[Production completion]
-    WC[Work-order close]
-    SH[Shipment]
-    GL[GLEntry]
+    DF[DemandForecast]
+    IP[InventoryPolicy]
+    SB[Sales backlog and FG position]
+    SPR[SupplyPlanRecommendation]
+    MRP[MaterialRequirementPlan]
+    RCCP[RoughCutCapacityPlan]
+    BOM[BOM and routing setup]
+    WO[WorkOrder]
+    WOS[WorkOrderOperationSchedule]
+    P2P[P2P component support]
+    LAB[Payroll and labor support]
+    MI[MaterialIssue]
+    PC[ProductionCompletion]
+    WC[WorkOrderClose]
+    O2C[Finished goods available to O2C]
 
-    DF --> SPR --> WO
-    SO --> SPR
+    DF --> SPR
+    IP --> SPR
+    SB --> SPR
+    SPR --> MRP
+    SPR --> RCCP
     BOM --> WO
-    RT --> WO
-    RT --> CAL
-    WO --> PR
-    WO --> WOO
-    CAL --> WOO
-    CAL --> ESR
-    PR --> PO --> GR --> MI
-    WOO --> MI
-    WOO --> ESR
-    ESR --> TCP --> LT
-    WOO --> LT
-    MI --> PC
-    LT --> PC
-    PC --> WC
-    PC --> SH
-    MI --> GL
-    PC --> GL
-    WC --> GL
+    SPR --> WO --> WOS
+    MRP --> P2P --> MI
+    WOS --> MI
+    WOS --> LAB --> MI
+    MI --> PC --> WC --> O2C
 ```
 
-Read the diagram as demand, planning, scheduling, material support, labor support, completion, and close. Students should notice that manufacturing is not isolated: it depends on sales demand, purchasing, warehouse activity, time clocks, payroll, and the general ledger.
+Read the main diagram as planning, execution, and costing or close. Planning starts the story. BOMs and routings explain how the item can be built. Work-order execution shows what actually happened on the floor. Close and reclass activity explain the accounting effect after production activity is finished.
 
-## Step-by-Step Walkthrough
+## How to Read This Process in the Data
 
-### 1. Define the standard recipe
+This page is organized around business flow first and data navigation second. The main diagram shows the normal manufacturing path. The smaller diagrams below show one analytical task at a time, such as planning pressure, routing design, work-order scheduling, component support, labor traceability, or work-order close. The fuller relationship map belongs on [Schema Reference](../reference/schema.md), not on this process page.
 
-Before production begins, the company needs a standard recipe for each manufactured item. That recipe is stored as one active bill of material for the finished good, with the required raw materials, packaging components, quantities, and scrap assumptions.
+:::tip
+Use this page in three passes: first `planning`, then `execution`, then `costing and close`. That sequence keeps students from mixing weekly planning signals with daily execution rows or accounting-close events.
+:::
 
-Main tables:
+## Core Tables and What They Represent
 
-- `BillOfMaterial`
-- `BillOfMaterialLine`
-- `Item`
-
-### 2. Define the routing and work centers
-
-The dataset also defines how the work should happen. Each manufactured item has one active routing that breaks production into `2` to `4` ordered operations and assigns those operations to work centers such as cutting, assembly, finishing, packing, or selected quality checks.
-
-Main tables:
-
-- `WorkCenter`
-- `Routing`
-- `RoutingOperation`
-
-### 3. Plan and release a work order
-
-The planning team first creates a weekly manufacturing recommendation when projected demand is going to exceed available finished-goods supply. In the current model, that decision considers:
-
-- weekly forecast
-- open sales backlog
-- available finished-goods inventory
-- scheduled open completions
-- a target finished-goods buffer
-
-That recommendation is recorded in:
-
-- `SupplyPlanRecommendation`
-
-If the recommendation is eligible for release inside the current month, it converts into a `WorkOrder` with `SupplyPlanRecommendationID` populated.
-
-The work order itself is recorded in:
-
-- `WorkOrder`
-
-At release time, the system also lays out the operation sequence and daily schedule that the order is expected to follow. That schedule uses the assigned work center's calendar and available hours.
-
-Main linked tables:
-
-- `WorkOrderOperation`
-- `WorkOrderOperationSchedule`
-- `WorkCenterCalendar`
-- `RoughCutCapacityPlan`
-
-### 4. Replenish components through P2P
-
-If the work order needs more materials than current stock can support, manufacturing demand flows into the normal purchasing process. That replenishment appears through `PurchaseRequisition`, then continues through purchase orders and goods receipts.
-
-Main linked tables:
-
-- `PurchaseRequisition`
-- `PurchaseOrder`
-- `GoodsReceipt`
-
-### 5. Issue components to production
-
-When production begins, warehouse staff issue raw materials and packaging from inventory into work in process. In the dataset, issue dates are aligned with the start of the scheduled operation window.
-
-Main tables:
-
-- `MaterialIssue`
-- `MaterialIssueLine`
-
-Accounting event:
-
-- debit `1046` Inventory - Work in Process
-- credit `1045` Inventory - Materials and Packaging
-
-### 6. Capture time clocks, labor, and overhead inputs
-
-Manufacturing does not stop at materials. Direct workers are assigned to shifts, their approved daily attendance flows into labor support, and direct labor can be tied to the specific work-order operation where it was consumed. Payroll later turns that support into direct-labor and manufacturing-overhead reclass journals.
-
-Main linked tables:
-
-- `EmployeeShiftRoster`
-- `TimeClockPunch`
-- `TimeClockEntry`
-- `ShiftDefinition`
-- `EmployeeShiftAssignment`
-- `LaborTimeEntry`
-- `PayrollRegister`
-- `WorkOrderOperation`
-- `JournalEntry`
-
-### 7. Complete finished goods
-
-When the production team completes the order, finished goods move into inventory at standard material, standard direct labor, and standard variable and fixed overhead. Completion dates are kept on or after the final operation's actual end date.
-
-Main tables:
-
-- `ProductionCompletion`
-- `ProductionCompletionLine`
-
-Accounting event:
-
-- debit `1040` Inventory - Finished Goods
-- credit `1046` Inventory - Work in Process
-- credit `1090` Manufacturing Cost Clearing
-
-### 8. Close the work order
-
-Once the order is complete, accounting closes it. Residual material, direct-labor, and overhead differences are pushed into manufacturing variance so the order no longer carries unresolved balances.
-
-Main table:
-
-- `WorkOrderClose`
-
-Accounting event:
-
-- residual WIP and clearing balances move to `5080` Manufacturing Variance
-
-### 9. Ship the completed goods
-
-Once finished goods are back in inventory, the normal O2C shipment process can consume them to satisfy customer demand.
-
-## Main Tables in This Process
-
-| Table | Role |
-|---|---|
-| `Item` | Identifies which sellable items are purchased versus manufactured and stores standard cost components |
-| `BillOfMaterial` | BOM header for manufactured items |
-| `BillOfMaterialLine` | BOM component detail |
-| `DemandForecast` | Weekly demand-planning input that anchors replenishment volume |
-| `InventoryPolicy` | Weekly replenishment policy used for safety stock, reorder point, and lead-time logic |
-| `SupplyPlanRecommendation` | Weekly replenishment signal that becomes a work order or requisition |
-| `MaterialRequirementPlan` | Component-demand explosion tied to manufactured recommendations |
-| `RoughCutCapacityPlan` | Weekly capacity tieout between planned load and available hours |
-| `WorkCenter` | Manufacturing resource group where an operation is performed |
-| `WorkCenterCalendar` | Daily work-center availability, including weekends, holidays, maintenance, and reduced-capacity days |
-| `Routing` | Active operation plan for a manufactured item |
-| `RoutingOperation` | Ordered routing step with standard setup, run, and queue assumptions |
-| `WorkOrder` | Production order for a manufactured item |
-| `WorkOrderOperation` | Operation-level execution plan and actual start/end progression for a work order |
-| `WorkOrderOperationSchedule` | Daily scheduled hours for each work-order operation |
-| `ShiftDefinition` | Standard shift template used by hourly manufacturing labor |
-| `EmployeeShiftAssignment` | Primary shift assignment for hourly employees |
-| `EmployeeShiftRoster` | Daily planned manufacturing or support shift row |
-| `TimeClockPunch` | Raw attendance event tied to the planned roster |
-| `TimeClockEntry` | Approved daily time and attendance row for hourly labor |
-| `MaterialIssue` | Header for component issue to production |
-| `MaterialIssueLine` | Component issue detail |
-| `ProductionCompletion` | Header for finished-goods completion |
-| `ProductionCompletionLine` | Finished-goods completion detail with cost components |
-| `WorkOrderClose` | Variance close and work-order closure record |
-| `LaborTimeEntry` | Direct and indirect labor detail that feeds manufacturing actuals |
+| Process stage | Main tables | Grain or event represented | Why students use them |
+|---|---|---|---|
+| Planning and replenishment pressure | `DemandForecast`, `InventoryPolicy`, `SupplyPlanRecommendation`, `MaterialRequirementPlan`, `RoughCutCapacityPlan` | Weekly forecast, policy, replenishment signal, exploded component demand, and weekly load-versus-capacity tieout | Explain why manufacturing demand existed before any work order was released |
+| Standard manufacturing design | `Item`, `BillOfMaterial`, `BillOfMaterialLine`, `Routing`, `RoutingOperation`, `WorkCenter`, `WorkCenterCalendar` | Product recipe, operation sequence, and available work-center capacity | Understand how an item is supposed to be built |
+| Work-order release and schedule | `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule` | One production order, its operation sequence, and its daily scheduled hours | Review finite scheduling, execution timing, and open production activity |
+| Component support and issue | `PurchaseRequisition`, `PurchaseOrder`, `GoodsReceipt`, `MaterialIssue`, `MaterialIssueLine` | Purchased support for missing components and the physical issue of material into WIP | Trace whether materials were available and when they were consumed |
+| Labor support and cost traceability | `EmployeeShiftRoster`, `TimeClockEntry`, `LaborTimeEntry`, `PayrollRegister`, `JournalEntry` | Approved attendance, labor allocation, payroll support, and later reclass activity | Connect factory labor support to work-order cost analysis |
+| Completion and close | `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose` | Finished-goods completion event and final variance close | Separate physical completion from accounting close and variance analysis |
 
 ## When Accounting Happens
 
-Manufacturing creates both operational and journal-driven accounting:
+| Event | Business meaning | Accounting effect |
+|---|---|---|
+| Material issue | Components are moved from stock into work in process | Debit `1046` Inventory - Work in Process and credit `1045` Inventory - Materials and Packaging |
+| Production completion | Finished goods are completed from WIP at standard manufacturing cost | Debit `1040` Inventory - Finished Goods, credit `1046` Inventory - Work in Process, and credit `1090` Manufacturing Cost Clearing |
+| Work-order close | Accounting clears residual WIP and clearing balances and recognizes manufacturing variance | Debit or credit `5080` Manufacturing Variance with the offset to unresolved WIP or clearing balances |
+| Direct labor and overhead reclass support | Payroll-supported manufacturing labor and burden are moved into manufacturing costing flows | Journal-driven reclass from payroll expense pools into direct labor or manufacturing overhead paths |
 
-- `MaterialIssue` posts WIP and materials inventory
-- `ProductionCompletion` posts finished goods, WIP, and manufacturing clearing
-- `WorkOrderClose` posts manufacturing variance
-- recurring journals also include:
-  - `Factory Overhead`
-  - `Direct Labor Reclass`
-  - `Manufacturing Overhead Reclass`
+## Key Traceability and Data Notes
+
+- `SupplyPlanRecommendation` is the planning bridge into both `WorkOrder` and purchased replenishment support.
+- `MaterialRequirementPlan` is the component-demand explosion tied back to one manufacturing recommendation.
+- `RoughCutCapacityPlan` is a weekly planning tieout and should not be used as the daily execution schedule.
+- `WorkOrderOperationSchedule` is the daily schedule students should use for operation-timing and capacity-use questions.
+- `LaborTimeEntry` is the bridge from approved time into manufacturing cost traceability, especially when linked to `WorkOrderOperationID`.
+- `WorkOrderClose` is the accounting close event, not the physical production event.
+- Manufacturing stays standard-cost based even though payroll and time provide operational labor support beneath that costing layer.
+
+## Analytical Subsections
+
+### Planning, MRP, and Rough-Cut Capacity
+
+This is the upstream manufacturing layer in the dataset. Weekly planning determines whether manufactured demand should be created at all, whether components will be needed, and whether work-center load looks tight before detailed execution begins. Students should start here when the question is "why did this work order exist?"
+
+```mermaid
+flowchart LR
+    DF[DemandForecast]
+    IP[InventoryPolicy]
+    SPR[SupplyPlanRecommendation]
+    MRP[MaterialRequirementPlan]
+    RCCP[RoughCutCapacityPlan]
+
+    DF --> SPR
+    IP --> SPR
+    SPR --> MRP
+    SPR --> RCCP
+```
+
+**Tables involved**
+
+| Table | Why it matters here |
+|---|---|
+| `DemandForecast` | Shows the weekly demand signal behind planned replenishment |
+| `InventoryPolicy` | Shows safety stock, reorder logic, and lead-time assumptions |
+| `SupplyPlanRecommendation` | Shows the planned manufacture signal by week, item, and warehouse |
+| `MaterialRequirementPlan` | Shows exploded component demand created from the planned manufacture signal |
+| `RoughCutCapacityPlan` | Shows weekly planned load versus available work-center hours |
+
+:::warning
+`RoughCutCapacityPlan` is a weekly planning tieout, not the same thing as `WorkOrderOperationSchedule`. Use rough-cut rows for planning pressure and `WorkOrderOperationSchedule` for daily execution timing.
+:::
+
+**Starter analytical question:** Which manufactured recommendations created both component pressure and rough-cut capacity pressure before execution began?
+
+```sql
+-- Teaching objective: Link manufactured recommendations to component demand and weekly capacity pressure.
+-- Main join path: SupplyPlanRecommendation -> MaterialRequirementPlan and RoughCutCapacityPlan.
+-- Suggested analysis: Group by item, work center, warehouse, or bucket week.
+```
+
+### Standard Recipe, Routing, and Work Centers
+
+Before a work order can be released, the item needs a standard recipe and a standard path through the factory. Students should read this subsection as the design layer that explains what components are required, which operations should occur, and where those operations are expected to happen.
+
+```mermaid
+flowchart LR
+    ITEM[Item]
+    BOM[BillOfMaterial]
+    BOML[BillOfMaterialLine]
+    RT[Routing]
+    RTO[RoutingOperation]
+    WC[WorkCenter]
+    WCC[WorkCenterCalendar]
+
+    ITEM --> BOM --> BOML
+    ITEM --> RT --> RTO --> WC --> WCC
+```
+
+**Tables involved**
+
+| Table | Why it matters here |
+|---|---|
+| `Item` | Identifies which products are manufactured and stores standard cost components |
+| `BillOfMaterial`, `BillOfMaterialLine` | Define the component recipe for the finished good |
+| `Routing`, `RoutingOperation` | Define the ordered operation path through the factory |
+| `WorkCenter`, `WorkCenterCalendar` | Define where the work happens and how much daily time is available |
+
+**Starter analytical question:** Which manufactured item groups use the most complex routing or the heaviest component structure?
+
+```sql
+-- Teaching objective: Compare recipe complexity and routing complexity across manufactured items.
+-- Main join path: Item -> BillOfMaterial -> BillOfMaterialLine and Item -> Routing -> RoutingOperation.
+-- Suggested analysis: Group by item group, collection, or work center.
+```
+
+### Work Order Release and Operation Scheduling
+
+This is the start of detailed execution. Once a recommendation is released, the dataset creates the work order, lays out the operation sequence, and schedules daily hours against finite work-center capacity. Students should use this section for open work-order review, schedule timing, and operation-sequence analysis.
+
+```mermaid
+flowchart LR
+    SPR[SupplyPlanRecommendation]
+    WO[WorkOrder]
+    WOO[WorkOrderOperation]
+    WOS[WorkOrderOperationSchedule]
+    WCC[WorkCenterCalendar]
+
+    SPR --> WO --> WOO --> WOS
+    WCC --> WOS
+```
+
+**Tables involved**
+
+| Table | Why it matters here |
+|---|---|
+| `SupplyPlanRecommendation` | Shows the planning row that supported the work-order release |
+| `WorkOrder` | Shows the released production order |
+| `WorkOrderOperation` | Shows the operation-level execution plan and actual progression |
+| `WorkOrderOperationSchedule` | Shows the daily scheduled hours for each operation |
+| `WorkCenterCalendar` | Shows the daily capacity that the schedule was placed against |
+
+**Key joins**
+
+- `WorkOrder.SupplyPlanRecommendationID -> SupplyPlanRecommendation.SupplyPlanRecommendationID`
+- `WorkOrderOperation.WorkOrderID -> WorkOrder.WorkOrderID`
+- `WorkOrderOperationSchedule.WorkOrderOperationID -> WorkOrderOperation.WorkOrderOperationID`
+- `WorkOrderOperationSchedule.WorkCenterID -> WorkCenterCalendar.WorkCenterID`
+
+```sql
+-- Teaching objective: Trace one released work order from planning support into operation-level daily schedule rows.
+-- Main join path: SupplyPlanRecommendation -> WorkOrder -> WorkOrderOperation -> WorkOrderOperationSchedule.
+-- Suggested analysis: Compare release date, due date, schedule date, and actual operation timing.
+```
+
+### Purchased Component Support and Material Issue
+
+Manufacturing is not isolated from purchasing. When planned or released work orders need more raw materials or packaging than current stock can support, the demand flows into the normal P2P process and then returns to manufacturing through material issue. Students should use this subsection to separate purchased support from the actual issue of components into WIP.
+
+```mermaid
+flowchart LR
+    SPR[SupplyPlanRecommendation]
+    PR[PurchaseRequisition]
+    PO[PurchaseOrder]
+    GR[GoodsReceipt]
+    WO[WorkOrder]
+    MI[MaterialIssue]
+    MIL[MaterialIssueLine]
+
+    SPR --> PR --> PO --> GR
+    WO --> MI --> MIL
+    GR --> MI
+```
+
+**Tables involved**
+
+| Table | Why it matters here |
+|---|---|
+| `PurchaseRequisition`, `PurchaseOrder`, `GoodsReceipt` | Show how P2P supports missing materials and packaging |
+| `WorkOrder` | Anchors the production order that consumes the components |
+| `MaterialIssue`, `MaterialIssueLine` | Show when material actually moved into WIP |
+
+**Starter analytical question:** Which work orders depended on purchased component support before material could be issued into production?
+
+```sql
+-- Teaching objective: Compare upstream purchased support to the later physical issue of components into WIP.
+-- Main join path: SupplyPlanRecommendation -> PurchaseRequisition and WorkOrder -> MaterialIssue -> MaterialIssueLine.
+-- Suggested analysis: Compare receipt timing, issue timing, and work-order release timing.
+```
+
+### Labor Capture, Payroll Bridge, and Manufacturing Cost
+
+Material is only part of the manufacturing story. Approved time supports hourly labor, `LaborTimeEntry` allocates that support into costing, and payroll later provides the accounting support for direct-labor and overhead reclass activity. Students should treat payroll as the pay-cycle source and `LaborTimeEntry` as the manufacturing cost bridge.
+
+```mermaid
+flowchart LR
+    ESR[EmployeeShiftRoster]
+    TCE[TimeClockEntry]
+    LTE[LaborTimeEntry]
+    PR[PayrollRegister]
+    JE[JournalEntry Reclass]
+    WOO[WorkOrderOperation]
+
+    ESR --> TCE --> LTE --> WOO
+    LTE --> PR --> JE
+```
+
+**Tables involved**
+
+| Table | Why it matters here |
+|---|---|
+| `EmployeeShiftRoster`, `TimeClockEntry` | Show planned and approved labor support beneath payroll |
+| `LaborTimeEntry` | Shows the costing bridge from approved time into production analysis |
+| `WorkOrderOperation` | Shows which operation consumed the direct labor support |
+| `PayrollRegister` | Shows the payroll-side source behind later reclass activity |
+| `JournalEntry` | Shows direct-labor and manufacturing-overhead reclass support |
+
+**Starter analytical question:** Which work centers or work orders show the highest approved labor support relative to planned operation timing?
+
+```sql
+-- Teaching objective: Connect approved factory time to work-order operations and payroll-supported reclass activity.
+-- Main join path: TimeClockEntry -> LaborTimeEntry -> WorkOrderOperation, plus PayrollRegister and JournalEntry.
+-- Suggested analysis: Group by work center, work order, payroll period, or labor type.
+```
+
+### Production Completion, Close, and Finished-Goods Availability
+
+This is the costing and inventory handoff layer. `ProductionCompletion` moves finished goods back into inventory at standard cost. `WorkOrderClose` then resolves the remaining manufacturing variance and clears residual balances. Students should keep those two events separate: completed production is not the same as a closed work order.
+
+```mermaid
+flowchart LR
+    MI[MaterialIssue]
+    LTE[LaborTimeEntry]
+    PC[ProductionCompletion]
+    PCL[ProductionCompletionLine]
+    WOC[WorkOrderClose]
+    FG[Finished goods available to O2C]
+
+    MI --> PC --> PCL --> WOC --> FG
+    LTE --> PCL
+```
+
+**Tables involved**
+
+| Table | Why it matters here |
+|---|---|
+| `MaterialIssue` | Shows material already consumed into WIP before completion |
+| `LaborTimeEntry` | Shows labor support that contributes to cost traceability |
+| `ProductionCompletion`, `ProductionCompletionLine` | Show the physical completion event and standard finished-goods cost detail |
+| `WorkOrderClose` | Shows the final close and manufacturing variance event |
+
+**Starter analytical question:** Which work orders were physically completed in one period but not closed until a later period?
+
+```sql
+-- Teaching objective: Separate physical completion from accounting close and finished-goods availability.
+-- Main join path: WorkOrder -> ProductionCompletion -> ProductionCompletionLine -> WorkOrderClose.
+-- Suggested analysis: Compare completion date, close date, quantity completed, and variance amount by month.
+```
 
 ## Common Student Questions
 
 - Which products are manufactured and which are purchased?
-- What materials go into a manufactured item?
-- Which operations and work centers are used for each manufactured item?
+- Which manufactured recommendations created the most component demand or rough-cut capacity pressure?
+- Which items use the most complex BOM or routing structure?
+- Which work centers look busiest by week or month?
+- Which work orders remained open at period end?
+- Which work orders had schedule pressure before actual execution began?
+- Which work orders depended on purchased component support before material issue?
 - How much direct labor is tied to each work order and operation?
-- Which work centers look busiest by month?
-- Which work centers generate the most overtime?
-- Which operation schedules and direct time clocks do not line up cleanly?
-- Which work centers are capacity constrained or fully booked?
-- Which work orders spilled into later months because schedule capacity was tight?
-- Which work orders stayed open at period end?
-- How much material was issued compared with standard requirement?
-- How much manufacturing variance was posted by month or item group?
-- How do production activity and payroll affect finished-goods availability and margin analysis?
-
-## What to Notice in the Data
-
-- Manufactured demand is tied to sales backlog and finished-goods availability.
-- That link is explicit through `DemandForecast`, `InventoryPolicy`, and `SupplyPlanRecommendation`.
-- Raw-material replenishment uses the existing P2P flow.
-- The current manufacturing model uses single-level BOMs.
-- Direct labor is assigned at the operation level, and operations are scheduled against finite daily work-center capacity.
-- Manufacturing remains standard-cost based even though payroll now provides actual labor detail.
-
-## Subprocess Spotlight: Operation Schedule to Time Clock to Payroll to Cost
-
-```mermaid
-flowchart LR
-    WOS[WorkOrderOperationSchedule]
-    TCE[TimeClockEntry]
-    LTE[LaborTimeEntry]
-    PR[PayrollRegister]
-    DR[Direct Labor Reclass]
-    PC[ProductionCompletionLine]
-    WOC[WorkOrderClose]
-
-    WOS --> TCE --> LTE --> PR --> DR
-    LTE --> PC
-    DR --> WOC
-    PC --> WOC
-```
-
-This mini-flow is the bridge students need for product-cost teaching:
-
-- scheduling explains when work should happen
-- the roster shows who was planned against that schedule
-- raw punches show what attendance actually occurred
-- time clocks show the approved worked summary
-- labor entries allocate that approved time to production
-- payroll turns labor into pay and later manufacturing reclass activity
-- completion and work-order close tie those pieces back into product cost and variance
-
-That is how the dataset supports direct-labor and overhead analysis without switching inventory to full actual costing.
+- Which work orders were completed but not yet closed?
+- How much manufacturing variance was posted by month, work center, or item group?
 
 ## Where to Go Next
 
-- Read [P2P](p2p.md) to see how materials and packaging are replenished.
+- Read [P2P](p2p.md) to see how raw materials and packaging are replenished when manufacturing needs purchased support.
 - Read [Payroll](payroll.md#time-attendance-and-approved-hours) for approved attendance support and [Payroll](payroll.md#direct-labor-and-manufacturing-reclass) for the labor and reclass side of the same production story.
-- Read [GLEntry Posting Reference](../reference/posting.md) for the detailed posting rules behind issues, completions, and close.
+- Read [Dataset Guide](../start-here/dataset-overview.md) for the broader planning, manufacturing, and ledger navigation paths.
+- Read [GLEntry Posting Reference](../reference/posting.md) for the detailed posting rules behind issues, completions, close, and reclass support.
+- Read [Schema Reference for full table relationships](../reference/schema.md) when you need the broader process-level table map.
