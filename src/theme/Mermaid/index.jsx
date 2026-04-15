@@ -20,16 +20,18 @@ function bindDiagramInteractions(renderResult, containerRef) {
 function getSvgDimensions(svg) {
   const viewBox = svg.viewBox?.baseVal;
   if (viewBox?.width && viewBox?.height) {
-    return { width: viewBox.width, height: viewBox.height };
+    return { x: viewBox.x, y: viewBox.y, width: viewBox.width, height: viewBox.height };
   }
 
   const bbox = svg.getBBox?.();
   if (bbox?.width && bbox?.height) {
-    return { width: bbox.width, height: bbox.height };
+    return { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height };
   }
 
   const rect = svg.getBoundingClientRect();
   return {
+    x: 0,
+    y: 0,
     width: rect.width || 1,
     height: rect.height || 1,
   };
@@ -55,22 +57,47 @@ function getViewportInnerSize(viewport) {
   };
 }
 
-function fitDiagramInViewport({ panzoom, svg, viewport }) {
-  if (!panzoom || !svg || !viewport) {
+function hasUsableSize({ width, height }) {
+  return Number.isFinite(width) && Number.isFinite(height) && width > 1 && height > 1;
+}
+
+function resetPanzoomTransform(panzoom) {
+  if (!panzoom) {
     return;
   }
 
-  const { width: svgWidth, height: svgHeight } = getSvgDimensions(svg);
+  panzoom.moveTo(0, 0);
+  panzoom.zoomAbs(0, 0, 1);
+  panzoom.moveTo(0, 0);
+}
+
+function fitDiagramInViewport({ panzoom, svg, viewport }) {
+  if (!panzoom || !svg || !viewport) {
+    return false;
+  }
+
+  const { x: svgX, y: svgY, width: svgWidth, height: svgHeight } = getSvgDimensions(svg);
   const { width: viewportWidth, height: viewportHeight } = getViewportInnerSize(viewport);
-  const framePadding = 8;
+  if (!hasUsableSize({ width: svgWidth, height: svgHeight }) || !hasUsableSize({ width: viewportWidth, height: viewportHeight })) {
+    return false;
+  }
+
+  resetPanzoomTransform(panzoom);
+
+  const framePadding = 12;
   const availableWidth = Math.max(viewportWidth - framePadding * 2, 1);
   const availableHeight = Math.max(viewportHeight - framePadding * 2, 1);
-  const scale = Math.min(availableWidth / svgWidth, availableHeight / svgHeight, 1);
-  const x = (viewportWidth - svgWidth * scale) / 2;
-  const y = (viewportHeight - svgHeight * scale) / 2;
+  const targetScale = Math.min(availableWidth / svgWidth, availableHeight / svgHeight);
+  if (!Number.isFinite(targetScale) || targetScale <= 0) {
+    return false;
+  }
 
-  panzoom.zoomAbs(0, 0, scale);
+  panzoom.zoomAbs(0, 0, targetScale);
+  const appliedScale = panzoom.getTransform?.().scale ?? targetScale;
+  const x = (viewportWidth - svgWidth * appliedScale) / 2 - svgX * appliedScale;
+  const y = (viewportHeight - svgHeight * appliedScale) / 2 - svgY * appliedScale;
   panzoom.moveTo(x, y);
+  return true;
 }
 
 function MermaidMarkup({ renderResult, containerRef, className }) {
@@ -124,16 +151,49 @@ function MermaidRenderer({ value }) {
     }
 
     let cancelled = false;
+    let hasInitialFitCompleted = false;
     let localPanzoom;
     let resizeObserver;
-    let fitTimeoutId;
+    const fitTimeoutIds = new Set();
 
-    const fitDiagramToViewport = () => {
+    const fitDiagramToViewport = () =>
       fitDiagramInViewport({
         panzoom: localPanzoom,
         svg: svgRef.current,
         viewport: viewportRef.current,
       });
+
+    const clearInitialFitRetries = () => {
+      fitTimeoutIds.forEach((timeoutId) => {
+        window.clearTimeout(timeoutId);
+      });
+      fitTimeoutIds.clear();
+    };
+
+    const detachInitialFitListeners = () => {
+      window.removeEventListener("resize", attemptInitialFit);
+      resizeObserver?.disconnect();
+      resizeObserver = undefined;
+      clearInitialFitRetries();
+    };
+
+    const attemptInitialFit = () => {
+      if (cancelled || hasInitialFitCompleted) {
+        return;
+      }
+
+      if (fitDiagramToViewport()) {
+        hasInitialFitCompleted = true;
+        detachInitialFitListeners();
+      }
+    };
+
+    const scheduleInitialFit = (delay = 0) => {
+      const timeoutId = window.setTimeout(() => {
+        fitTimeoutIds.delete(timeoutId);
+        attemptInitialFit();
+      }, delay);
+      fitTimeoutIds.add(timeoutId);
     };
 
     const initializePanzoom = async () => {
@@ -161,20 +221,24 @@ function MermaidRenderer({ value }) {
       panzoomRef.current = localPanzoom;
 
       requestAnimationFrame(() => {
-        requestAnimationFrame(fitDiagramToViewport);
+        requestAnimationFrame(() => {
+          attemptInitialFit();
+        });
       });
-      fitTimeoutId = window.setTimeout(fitDiagramToViewport, 80);
+      scheduleInitialFit(40);
+      scheduleInitialFit(120);
+      scheduleInitialFit(240);
       if (document.fonts?.ready) {
         document.fonts.ready.then(() => {
           if (!cancelled) {
-            fitDiagramToViewport();
+            attemptInitialFit();
           }
         });
       }
-      window.addEventListener("resize", fitDiagramToViewport);
+      window.addEventListener("resize", attemptInitialFit);
       if (window.ResizeObserver && viewportRef.current) {
         resizeObserver = new window.ResizeObserver(() => {
-          fitDiagramToViewport();
+          attemptInitialFit();
         });
         resizeObserver.observe(viewportRef.current);
       }
@@ -184,9 +248,7 @@ function MermaidRenderer({ value }) {
 
     return () => {
       cancelled = true;
-      window.removeEventListener("resize", fitDiagramToViewport);
-      window.clearTimeout(fitTimeoutId);
-      resizeObserver?.disconnect();
+      detachInitialFitListeners();
       panzoomRef.current?.dispose();
       panzoomRef.current = null;
       svgRef.current = null;
