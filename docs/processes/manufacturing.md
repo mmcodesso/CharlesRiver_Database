@@ -278,5 +278,5 @@ That is how the dataset supports direct-labor and overhead analysis without swit
 ## Where to Go Next
 
 - Read [P2P](p2p.md) to see how materials and packaging are replenished.
-- Read [Time Clocks](time-clocks.md) and [Payroll](payroll.md) for the labor side of the same production story.
+- Read [Payroll](payroll.md#time-attendance-and-approved-hours) for approved attendance support and [Payroll](payroll.md#direct-labor-and-manufacturing-reclass) for the labor and reclass side of the same production story.
 - Read [GLEntry Posting Reference](../reference/posting.md) for the detailed posting rules behind issues, completions, and close.

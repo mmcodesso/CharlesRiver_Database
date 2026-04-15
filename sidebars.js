@@ -24,7 +24,6 @@ const sidebars = {
         "processes/o2c",
         "processes/p2p",
         "processes/manufacturing",
-        "processes/time-clocks",
         "processes/payroll",
         "processes/manual-journals-and-close",
       ],

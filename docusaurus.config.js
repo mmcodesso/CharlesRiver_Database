@@ -57,6 +57,10 @@ const config = {
             to: "/docs/processes/o2c#returns-credits-and-refunds",
             from: ["/docs/processes/o2c-returns-credits-refunds"],
           },
+          {
+            to: "/docs/processes/payroll#time-attendance-and-approved-hours",
+            from: ["/docs/processes/time-clocks"],
+          },
         ],
       },
     ],

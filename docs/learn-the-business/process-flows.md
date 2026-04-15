@@ -18,8 +18,7 @@ Start with the process that matches your class question:
 | O2C | [O2C](../processes/o2c.md) | To follow a sale through order, shipment, invoice, cash receipt, application, and the main return/refund exception path |
 | P2P | [P2P](../processes/p2p.md) | To trace internal demand through supplier ordering, receiving, invoicing, and payment |
 | Manufacturing | [Manufacturing](../processes/manufacturing.md) | To see how the company turns materials, labor, and schedules into finished goods |
-| Time clocks and shifts | [Time Clocks](../processes/time-clocks.md) | To understand attendance, shift expectations, labor support, and exception analysis |
-| Payroll | [Payroll](../processes/payroll.md) | To follow gross-to-net payroll, liabilities, payments, remittances, and labor reclass |
+| Payroll | [Payroll](../processes/payroll.md) | To follow time and attendance support, gross-to-net payroll, liabilities, payments, remittances, and labor reclass |
 | Journals and close | [Manual Journals and Close](../processes/manual-journals-and-close.md) | To study finance-controlled entries that sit outside the day-to-day document cycles |
 
 ## Process Map
@@ -31,8 +30,8 @@ flowchart LR
     O2CEX[O2C Exception Path<br/>Returns Credits Refunds]
     P2P[Procure-to-Pay]
     MFG[Manufacturing]
+    TIME[Time and Attendance Support]
     PAY[Payroll]
-    TC[Time Clocks and Shifts]
     JE[Manual Journals and Close]
     GL[GLEntry]
     AN[Analytics and Coursework]
@@ -40,12 +39,11 @@ flowchart LR
     STORY --> O2C
     STORY --> P2P
     STORY --> MFG
-    STORY --> PAY
-    STORY --> TC
+    STORY --> TIME
     O2C --> O2CEX
     P2P --> MFG
-    TC --> PAY
-    TC --> MFG
+    TIME --> PAY
+    TIME --> MFG
     O2C --> GL
     O2CEX --> GL
     P2P --> GL
@@ -55,7 +53,7 @@ flowchart LR
     GL --> AN
 ```
 
-Read the map from left to right. Customer and supplier activity create the external business cycles. Manufacturing turns demand and materials into finished goods. Time clocks document when hourly labor was worked and approved. Payroll converts that support into expense, liabilities, and employee pay. Finance journals complete the accounting picture. All of those threads eventually reach `GLEntry`.
+Read the map from left to right. Customer and supplier activity create the external business cycles. Manufacturing turns demand and materials into finished goods. Time and attendance support document when hourly labor was scheduled, approved, and reviewed. Payroll converts that support into expense, liabilities, employee pay, and later remittance. Finance journals complete the accounting picture. All of those threads eventually reach `GLEntry`.
 
 ## Subledger-to-Ledger Traceability
 
@@ -117,10 +115,9 @@ The most important traceability fields are:
 2. Read [O2C](../processes/o2c.md) and [P2P](../processes/p2p.md) to learn the customer and supplier cycles.
 3. Use the return, credit, and refund section inside [O2C](../processes/o2c.md) for the main customer-side exception path.
 4. Read [Manufacturing](../processes/manufacturing.md) to see how the company produces selected goods internally.
-5. Read [Time Clocks](../processes/time-clocks.md) to understand workforce scheduling, approved attendance, and labor support.
-6. Read [Payroll](../processes/payroll.md) to follow the pay cycle and related accounting.
-7. Read [Manual Journals and Close](../processes/manual-journals-and-close.md) for the finance-led activity outside the operational subledgers.
-8. Read [Dataset Guide](../start-here/dataset-overview.md) when you are ready to work directly with tables and joins.
+5. Read [Payroll](../processes/payroll.md) for time and attendance support, the pay cycle, and related accounting.
+6. Read [Manual Journals and Close](../processes/manual-journals-and-close.md) for the finance-led activity outside the operational subledgers.
+7. Read [Dataset Guide](../start-here/dataset-overview.md) when you are ready to work directly with tables and joins.
 
 ## Where to Go Next
 
