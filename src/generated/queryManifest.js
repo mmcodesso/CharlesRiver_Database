@@ -269,6 +269,16 @@ const queryManifest = {
     "filename": "02_o2c_source_to_gl_trace.sql",
     "publicPath": "/cases/02_o2c_source_to_gl_trace.sql"
   },
+  "cases/03_p2p_invoice_line_trace_receipt_vs_accrual.sql": {
+    "category": "cases",
+    "filename": "03_p2p_invoice_line_trace_receipt_vs_accrual.sql",
+    "publicPath": "/cases/03_p2p_invoice_line_trace_receipt_vs_accrual.sql"
+  },
+  "cases/04_p2p_accrual_journal_invoice_payment_gl_trace.sql": {
+    "category": "cases",
+    "filename": "04_p2p_accrual_journal_invoice_payment_gl_trace.sql",
+    "publicPath": "/cases/04_p2p_accrual_journal_invoice_payment_gl_trace.sql"
+  },
   "financial/01_monthly_revenue_and_gross_margin.sql": {
     "category": "financial",
     "filename": "01_monthly_revenue_and_gross_margin.sql",

@@ -235,6 +235,19 @@ def test_phase17_docs_include_cases_matrix_and_subprocess_diagrams() -> None:
     assert "cases/02_o2c_source_to_gl_trace.sql" in o2c_case_text
     assert "## Recommended Query Sequence" not in o2c_case_text
 
+    p2p_case_text = Path("docs/analytics/cases/p2p-accrual-settlement-case.md").read_text(encoding="utf-8")
+    assert "## The Problem to Solve" in p2p_case_text
+    assert "## What You Need to Develop" in p2p_case_text
+    assert "## Step-by-Step Walkthrough" in p2p_case_text
+    assert "## Optional Excel Follow-Through" in p2p_case_text
+    assert "## Wrap-Up Questions" in p2p_case_text
+    assert "cases/03_p2p_invoice_line_trace_receipt_vs_accrual.sql" in p2p_case_text
+    assert "cases/04_p2p_accrual_journal_invoice_payment_gl_trace.sql" in p2p_case_text
+    assert "financial/12_accrued_expense_rollforward.sql" in p2p_case_text
+    assert "financial/13_accrued_vs_invoiced_vs_paid_timing.sql" in p2p_case_text
+    assert "audit/23_accrued_service_settlement_exception_review.sql" in p2p_case_text
+    assert "## Recommended Query Sequence" not in p2p_case_text
+
     o2c_text = Path("docs/processes/o2c.md").read_text(encoding="utf-8")
     assert "## Analytical Subsections" in o2c_text
     assert "## Returns, Credits, and Refunds" in o2c_text
