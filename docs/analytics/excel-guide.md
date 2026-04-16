@@ -18,21 +18,52 @@ The companion support workbook contains:
 - `ValidationChecks`
 - `ValidationExceptions`
 
-Recommended first steps:
+## Recommended Excel Setup
 
-1. open <FileName type="excel" />
-2. open <FileName type="support" /> if the exercise is anomaly-focused
-3. identify the sheets that match the query or case you are running
-4. create a working sheet for pivots, formulas, and charts
+The recommended workflow is to treat the published workbook as a source file, not as the place where you build every exercise.
+
+For each new exercise:
+
+1. create a new blank worksheet in your working Excel file
+2. use `Data -> Get Data -> From File -> From Workbook`
+3. select <FileName type="excel" />
+4. import only the tables required for that exercise through Power Query
+5. load those tables into the current workbook
+6. build pivots, formulas, charts, or summary tabs from the imported tables
+
+If the exercise is anomaly-focused, repeat the same process with <FileName type="support" /> and import only the support sheets you need.
+
+This approach keeps each exercise cleaner, reduces workbook clutter, and makes it easier to control row counts, joins, and refresh steps.
 
 ## Recommended Workflow Pattern
 
 For most classes, use this sequence:
 
-1. run the starter SQL file first
-2. recreate the same idea in Excel
-3. compare the workbook output to the SQL result
-4. use the case doc for interpretation questions
+1. run the starter SQL file first when a matching SQL path exists
+2. identify the few tables needed for the Excel version of the exercise
+3. import only those tables with `Get Data` and Power Query
+4. recreate the same idea in Excel
+5. compare the workbook output to the SQL result
+6. use the case doc for interpretation questions
+
+## Power Query Import Pattern
+
+Use Power Query as the default import path for Excel analysis.
+
+It works well because it lets you:
+
+- bring in only the tables required for one exercise
+- keep the original published workbook unchanged
+- filter or reshape data before loading it into the workbook
+- refresh the imported tables if the source file changes
+
+For most student work, import a small set of related tables instead of loading the full dataset workbook into the exercise file.
+
+Typical examples:
+
+- financial exercise: `GLEntry`, `Account`, `SalesInvoice`, `CashReceiptApplication`
+- managerial exercise: `Item`, `SalesInvoiceLine`, `Employee`, `CostCenter`
+- audit exercise: `Employee`, `PurchaseOrder`, `JournalEntry`, plus selected support sheets when needed
 
 ## Financial Workflows
 
@@ -251,9 +282,10 @@ Best paired cases:
 
 ## Using the Workbook and Support Workbook
 
-- <FileName type="excel" /> is the main workbook for dataset tables and Excel analysis.
+- <FileName type="excel" /> is the main source workbook for dataset tables.
 - <FileName type="support" /> provides anomaly and validation context for exception-oriented review.
-- Workbook exercises can start from either the published dataset tables or the support workbook, depending on the assignment.
+- For most new exercises, create a fresh working sheet and import only the required tables with Power Query.
+- Open the published workbooks when you need to inspect source sheets directly, but do the exercise work in your imported tables and analysis sheets.
 
 ## Where to Go Next
 
