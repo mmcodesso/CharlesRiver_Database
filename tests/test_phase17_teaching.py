@@ -225,6 +225,16 @@ def test_phase17_docs_include_cases_matrix_and_subprocess_diagrams() -> None:
     assert "## Subledger-to-Ledger Traceability" in process_flows_text
     assert "GLEntry" in process_flows_text
 
+    o2c_case_text = Path("docs/analytics/cases/o2c-trace-case.md").read_text(encoding="utf-8")
+    assert "## The Problem to Solve" in o2c_case_text
+    assert "## What You Need to Develop" in o2c_case_text
+    assert "## Step-by-Step Walkthrough" in o2c_case_text
+    assert "## Optional Excel Follow-Through" in o2c_case_text
+    assert "## Wrap-Up Questions" in o2c_case_text
+    assert "cases/01_o2c_line_trace_order_shipment_invoice.sql" in o2c_case_text
+    assert "cases/02_o2c_source_to_gl_trace.sql" in o2c_case_text
+    assert "## Recommended Query Sequence" not in o2c_case_text
+
     o2c_text = Path("docs/processes/o2c.md").read_text(encoding="utf-8")
     assert "## Analytical Subsections" in o2c_text
     assert "## Returns, Credits, and Refunds" in o2c_text
@@ -232,7 +242,7 @@ def test_phase17_docs_include_cases_matrix_and_subprocess_diagrams() -> None:
 
     p2p_text = Path("docs/processes/p2p.md").read_text(encoding="utf-8")
     assert "## Analytical Subsections" in p2p_text
-    assert "## Accruals and Direct Service Settlement" in p2p_text
+    assert "direct accrued-service settlement" in p2p_text
     assert "PurchaseInvoiceLine.GoodsReceiptLineID" in p2p_text
     assert "PurchaseInvoiceLine.AccrualJournalEntryID" in p2p_text
     assert "DisbursementPayment" in p2p_text

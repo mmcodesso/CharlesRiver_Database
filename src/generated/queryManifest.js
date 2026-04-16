@@ -259,6 +259,16 @@ const queryManifest = {
     "filename": "53_released_work_orders_due_without_actual_start_summary.sql",
     "publicPath": "/audit/53_released_work_orders_due_without_actual_start_summary.sql"
   },
+  "cases/01_o2c_line_trace_order_shipment_invoice.sql": {
+    "category": "cases",
+    "filename": "01_o2c_line_trace_order_shipment_invoice.sql",
+    "publicPath": "/cases/01_o2c_line_trace_order_shipment_invoice.sql"
+  },
+  "cases/02_o2c_source_to_gl_trace.sql": {
+    "category": "cases",
+    "filename": "02_o2c_source_to_gl_trace.sql",
+    "publicPath": "/cases/02_o2c_source_to_gl_trace.sql"
+  },
   "financial/01_monthly_revenue_and_gross_margin.sql": {
     "category": "financial",
     "filename": "01_monthly_revenue_and_gross_margin.sql",
