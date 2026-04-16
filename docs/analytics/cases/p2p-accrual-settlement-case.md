@@ -18,7 +18,7 @@ Your job is to explain both paths as one connected P2P story, then show why the 
 
 ## The Problem to Solve
 
-You need to prove whether supplier activity can be traced cleanly through the normal P2P path and the accrued-service settlement path without confusing one for the other. The real question is not just whether invoices and payments exist, but whether the supporting path and the accounting effect match the kind of purchase being settled.
+You need to prove that supplier activity can be traced cleanly through the normal P2P path and the accrued-service settlement path. Confirm the support path. Confirm that the accounting effect matches the kind of purchase being settled.
 
 ## What You Need to Develop
 
@@ -73,7 +73,7 @@ The query builds separate aggregates for PO lines, receipts, invoices, and payme
 
 ### Step 2. Separate receipt-matched invoice lines from accrual-linked service lines
 
-Once the normal chain is visible, move to the line-level distinction that makes this case worth doing. Not every supplier invoice line follows the same support path.
+Once the normal chain is visible, move to the line-level distinction that makes this case worth doing. Supplier invoice lines follow two different support paths.
 
 **What we are trying to achieve**
 
@@ -81,7 +81,7 @@ Show how `PurchaseInvoiceLine.GoodsReceiptLineID` and `PurchaseInvoiceLine.Accru
 
 **Why this matters**
 
-Students often assume a supplier invoice without a receipt is automatically a problem. In this dataset, some service invoices are intentionally clearing finance-booked accruals, so the missing receipt is not the error.
+Students often assume that every supplier invoice must point to a receipt. In this dataset, some service invoices intentionally clear finance-booked accruals. That pattern can be valid.
 
 **Suggested query**
 
@@ -103,7 +103,7 @@ The query starts at `PurchaseInvoiceLine`, then left joins into `PurchaseOrderLi
 - lines labeled `Receipt matched`
 - lines labeled `Accrual settled`
 - invoice lines with neither receipt linkage nor accrual linkage
-- how requisition and PO context disappears on the service-accrual path but remains on the materials path
+- how requisition and PO context stays visible on the materials path and drops away on the service-accrual path
 
 ### Step 3. Explain the accounting bridge from accrual estimate to supplier invoice
 
@@ -146,7 +146,7 @@ The roll-forward query groups `JournalEntry` and `GLEntry` activity at the month
 
 ### Step 4. Measure invoice and payment timing, then identify what remains open
 
-Once the accounting bridge is clear, shift to timing. Accrual date, invoice date, and payment date are related, but they are not the same event and they do not need to occur in the same period.
+Once the accounting bridge is clear, shift to timing. Accrual date, invoice date, and payment date answer different questions and often fall in different periods.
 
 **What we are trying to achieve**
 
@@ -193,7 +193,7 @@ Explain what makes an accrued-service settlement look valid, suspicious, or inco
 
 **Why this matters**
 
-A student who stops at “this invoice clears an accrual” has not finished the case. Audit interpretation depends on whether the timing, amount, and settlement behavior still make sense after the invoice appears.
+You have not finished the case until you explain whether the timing, amount, and settlement behavior still make sense after the invoice appears.
 
 **Suggested query**
 
@@ -228,7 +228,7 @@ The query starts with accrual headers, joins to `PurchaseInvoiceLine` where `Acc
 ## Wrap-Up Questions
 
 - Which fields distinguish receipt-matched supplier invoicing from accrual-linked service settlement?
-- Why is a missing goods receipt not automatically an error in this case?
+- When does a missing goods receipt support a valid accrual settlement?
 - Which event creates AP, and which event only estimates a liability before AP exists?
 - Why do `2020` GRNI and `2040` accrued expenses need to stay conceptually separate?
 - What kind of timing or amount pattern would make an accrued-service settlement worth audit follow-up?

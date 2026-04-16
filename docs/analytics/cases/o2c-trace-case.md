@@ -12,13 +12,13 @@ import { QueryReference } from "@site/src/components/QueryReference";
 
 Charles River Home Furnishings receives an order from a regional interior-design firm furnishing a small hospitality renovation in the Boston area. The customer wants finished goods on a tight schedule, but inventory is not evenly available across every line. Sales can confirm the order immediately, yet warehouse fulfillment, billing, and cash settlement may unfold over different dates.
 
-That makes this case more useful than a simple "order paid in full" story. Shipment drives inventory relief and COGS. Invoice drives revenue and receivables. Cash receipt records money arriving, but `CashReceiptApplication` determines when open AR is actually settled. If part of the order is later returned, the trace branches again into returns and credits.
+This case goes beyond a simple "order paid in full" story. Shipment drives inventory relief and COGS. Invoice drives revenue and receivables. Cash receipt records money arriving. `CashReceiptApplication` determines when open AR is actually settled. If part of the order is later returned, the trace branches again into returns and credits.
 
 Your job is to explain that chain as one connected business story and one connected data trail.
 
 ## The Problem to Solve
 
-You need to prove whether one O2C transaction can be traced cleanly from customer order to shipment, invoice, cash settlement, and possible exception follow-up. The real question is not only whether documents exist, but whether they appear in the right order and whether the accounting effect matches the operational event.
+You need to prove that one O2C transaction can be traced cleanly from customer order to shipment, invoice, cash settlement, and possible exception follow-up. Confirm the document sequence. Confirm that each accounting entry follows the correct operational event.
 
 ## What You Need to Develop
 
@@ -145,7 +145,7 @@ The line-trace query starts at `SalesOrderLine`, then left joins `ShipmentLine` 
 
 ### Step 4. Separate cash receipt from invoice settlement
 
-After billing, shift to the receivables question. Cash can arrive on one date, but AR is not fully settled until applications are recorded against invoices.
+After billing, shift to the receivables question. Cash can arrive on one date. AR settles only when applications are recorded against invoices.
 
 **What we are trying to achieve**
 
@@ -180,11 +180,11 @@ The unapplied-cash query aggregates `CashReceiptApplication` by receipt and comp
 - receipts where cash has arrived but no invoice has been settled yet
 - invoices that remain open even though the customer has sent money
 - timing gaps between receipt date and first application date
-- why `CashReceipt.SalesInvoiceID` is not enough for serious settlement analysis
+- why serious settlement analysis must use `CashReceiptApplication` instead of `CashReceipt.SalesInvoiceID`
 
 ### Step 5. Extend the trace into exception follow-up
 
-Finish by looking at what changes when the normal path breaks. Returns, credits, and backorders do not erase the original sale; they complicate the interpretation of it.
+Finish by looking at what changes when the normal path breaks. Returns, credits, and backorders change the meaning of the original sale.
 
 **What we are trying to achieve**
 
@@ -214,7 +214,7 @@ The query aggregates shipments and billings by order line, then overlays return 
 - orders where requested quantity was never fully shipped
 - orders that shipped and billed normally but later moved into return activity
 - credited amounts that change the final economic result of the original sale
-- why customer-service interpretation and financial interpretation are related but not identical
+- how customer-service interpretation and financial interpretation can diverge
 
 ## Optional Excel Follow-Through
 
