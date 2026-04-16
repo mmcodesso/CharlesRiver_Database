@@ -4,6 +4,9 @@ description: Guided audit case focused on expired pricing, promotion misuse, cus
 sidebar_label: Pricing Governance Audit
 ---
 
+import { QuerySequence } from "@site/src/components/QueryReference";
+import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
+
 # Pricing Governance Audit Case
 
 ## Audience and Purpose
@@ -17,13 +20,7 @@ The dataset maintains formal price lists, seasonal promotions, and explicit over
 
 ## Query Sequence
 
-Use the starter SQL blocks from [Audit Analytics](../audit.md) in this order:
-
-1. sales below floor without approval
-2. expired or overlapping price-list review
-3. promotion scope and date mismatch review
-4. customer-specific price-list bypass review
-5. override approval completeness review
+<QuerySequence items={caseQuerySequences["pricing-governance-audit-case"]} />
 
 ## Suggested Excel Sequence
 

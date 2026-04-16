@@ -4,6 +4,9 @@ description: Guided planning case using forecast, policy, recommendation, and ro
 sidebar_label: Demand Planning Case
 ---
 
+import { QuerySequence } from "@site/src/components/QueryReference";
+import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
+
 # Demand Planning and Replenishment Case
 
 ## Audience and Purpose
@@ -17,14 +20,7 @@ The dataset plans replenishment weekly. Students need to explain how forecasted 
 
 ## Query Sequence
 
-Use the starter SQL blocks from [Financial Analytics](../financial.md) and [Managerial Analytics](../managerial.md) in this order:
-
-1. forecast versus actual demand by week, item group, collection, and lifecycle
-2. inventory coverage and projected stockout risk
-3. recommendation conversion by type, priority, and planner
-4. rough-cut capacity load versus available hours
-5. expedite pressure by item family and month
-6. supply-plan driver mix by collection and supply mode
+<QuerySequence items={caseQuerySequences["demand-planning-and-replenishment-case"]} />
 
 ## Suggested Excel Sequence
 

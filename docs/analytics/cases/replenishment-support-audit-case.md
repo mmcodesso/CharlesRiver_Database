@@ -4,6 +4,9 @@ description: Guided audit case for planning approval, policy, and replenishment-
 sidebar_label: Replenishment Audit Case
 ---
 
+import { QuerySequence } from "@site/src/components/QueryReference";
+import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
+
 # Replenishment Support Audit Case
 
 ## Audience and Purpose
@@ -17,13 +20,7 @@ The dataset expects weekly planning support behind normal replenishment activity
 
 ## Query Sequence
 
-Use the starter SQL blocks from [Audit Analytics](../audit.md) in this order:
-
-1. forecast approval and override review
-2. inactive or stale inventory policy review
-3. requisitions and work orders without planning support
-4. recommendation converted after need-by date review
-5. discontinued or prelaunch planning activity review
+<QuerySequence items={caseQuerySequences["replenishment-support-audit-case"]} />
 
 ## Suggested Excel Sequence
 

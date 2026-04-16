@@ -4,6 +4,9 @@ description: Guided commercial-pricing case using price lists, promotions, overr
 sidebar_label: Pricing and Margin Case
 ---
 
+import { QuerySequence } from "@site/src/components/QueryReference";
+import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
+
 # Pricing and Margin Governance Case
 
 ## Audience and Purpose
@@ -17,14 +20,7 @@ The dataset prices from formal segment and customer price lists with explicit pr
 
 ## Query Sequence
 
-Use the starter SQL blocks from [Financial Analytics](../financial.md) and [Managerial Analytics](../managerial.md) in this order:
-
-1. price realization versus list price by customer and collection
-2. gross-margin impact of promotions versus non-promotion sales
-3. sales-rep override rate and discount dispersion
-4. collection revenue and margin before and after promotions
-5. customer-specific pricing concentration and dependency
-6. monthly price-floor pressure and override concentration
+<QuerySequence items={caseQuerySequences["pricing-and-margin-governance-case"]} />
 
 ## Suggested Excel Sequence
 

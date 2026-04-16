@@ -646,6 +646,32 @@ export const caseQuerySequences = {
       "queryKey": "audit/46_discontinued_or_prelaunch_planning_activity_review.sql"
     }
   ],
+  "demand-planning-and-replenishment-case": [
+    {
+      "lead": "Run",
+      "queryKey": "financial/23_forecast_vs_actual_demand_by_week_item_group_collection_lifecycle.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "managerial/42_inventory_coverage_and_projected_stockout_risk.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "financial/24_recommendation_conversion_by_type_priority_planner.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "managerial/43_rough_cut_capacity_load_vs_available_hours.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "managerial/44_expedite_pressure_by_item_family_and_month.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "managerial/46_supply_plan_driver_mix_by_collection_and_supply_mode.sql"
+    }
+  ],
   "financial-statement-bridge-case": [
     {
       "lead": "Run",
@@ -764,6 +790,54 @@ export const caseQuerySequences = {
       "queryKey": "audit/23_accrued_service_settlement_exception_review.sql"
     }
   ],
+  "pricing-and-margin-governance-case": [
+    {
+      "lead": "Run",
+      "queryKey": "financial/25_price_realization_vs_list_by_segment_customer_region_collection_style.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "financial/26_gross_margin_impact_of_promotions_vs_nonpromotion_sales.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "managerial/47_sales_rep_override_rate_and_discount_dispersion.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "managerial/48_collection_revenue_margin_before_after_promotions.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "managerial/49_customer_specific_pricing_concentration_and_dependency.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "managerial/50_monthly_price_floor_pressure_and_override_concentration.sql"
+    }
+  ],
+  "pricing-governance-audit-case": [
+    {
+      "lead": "Run",
+      "queryKey": "audit/47_sales_below_floor_without_approval.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "audit/48_expired_or_overlapping_price_list_review.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "audit/49_promotion_scope_and_date_mismatch_review.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "audit/50_customer_specific_price_list_bypass_review.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "audit/51_override_approval_completeness_review.sql"
+    }
+  ],
   "product-portfolio-and-lifecycle-case": [
     {
       "lead": "Run",
@@ -802,6 +876,28 @@ export const caseQuerySequences = {
     {
       "lead": "Run",
       "queryKey": "managerial/35_portfolio_return_refund_impact_by_collection_lifecycle.sql"
+    }
+  ],
+  "replenishment-support-audit-case": [
+    {
+      "lead": "Run",
+      "queryKey": "audit/42_forecast_approval_and_override_review.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "audit/43_inactive_or_stale_inventory_policy_review.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "audit/44_requisitions_and_work_orders_without_planning_support.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "audit/45_recommendation_converted_after_need_by_date_review.sql"
+    },
+    {
+      "lead": "Run",
+      "queryKey": "audit/46_discontinued_or_prelaunch_planning_activity_review.sql"
     }
   ],
   "workforce-cost-and-org-control-case": [
