@@ -17,12 +17,14 @@ The dataset plans replenishment weekly. Students need to explain how forecasted 
 
 ## Query Sequence
 
-1. [23_forecast_vs_actual_demand_by_week_item_group_collection_lifecycle.sql](../../../queries/financial/23_forecast_vs_actual_demand_by_week_item_group_collection_lifecycle.sql)
-2. [42_inventory_coverage_and_projected_stockout_risk.sql](../../../queries/managerial/42_inventory_coverage_and_projected_stockout_risk.sql)
-3. [24_recommendation_conversion_by_type_priority_planner.sql](../../../queries/financial/24_recommendation_conversion_by_type_priority_planner.sql)
-4. [43_rough_cut_capacity_load_vs_available_hours.sql](../../../queries/managerial/43_rough_cut_capacity_load_vs_available_hours.sql)
-5. [44_expedite_pressure_by_item_family_and_month.sql](../../../queries/managerial/44_expedite_pressure_by_item_family_and_month.sql)
-6. [46_supply_plan_driver_mix_by_collection_and_supply_mode.sql](../../../queries/managerial/46_supply_plan_driver_mix_by_collection_and_supply_mode.sql)
+Use the starter SQL blocks from [Financial Analytics](../financial.md) and [Managerial Analytics](../managerial.md) in this order:
+
+1. forecast versus actual demand by week, item group, collection, and lifecycle
+2. inventory coverage and projected stockout risk
+3. recommendation conversion by type, priority, and planner
+4. rough-cut capacity load versus available hours
+5. expedite pressure by item family and month
+6. supply-plan driver mix by collection and supply mode
 
 ## Suggested Excel Sequence
 

@@ -17,11 +17,13 @@ The dataset maintains formal price lists, seasonal promotions, and explicit over
 
 ## Query Sequence
 
-1. [47_sales_below_floor_without_approval.sql](../../../queries/audit/47_sales_below_floor_without_approval.sql)
-2. [48_expired_or_overlapping_price_list_review.sql](../../../queries/audit/48_expired_or_overlapping_price_list_review.sql)
-3. [49_promotion_scope_and_date_mismatch_review.sql](../../../queries/audit/49_promotion_scope_and_date_mismatch_review.sql)
-4. [50_customer_specific_price_list_bypass_review.sql](../../../queries/audit/50_customer_specific_price_list_bypass_review.sql)
-5. [51_override_approval_completeness_review.sql](../../../queries/audit/51_override_approval_completeness_review.sql)
+Use the starter SQL blocks from [Audit Analytics](../audit.md) in this order:
+
+1. sales below floor without approval
+2. expired or overlapping price-list review
+3. promotion scope and date mismatch review
+4. customer-specific price-list bypass review
+5. override approval completeness review
 
 ## Suggested Excel Sequence
 

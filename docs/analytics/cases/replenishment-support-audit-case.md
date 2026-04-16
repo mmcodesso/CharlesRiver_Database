@@ -17,11 +17,13 @@ The dataset expects weekly planning support behind normal replenishment activity
 
 ## Query Sequence
 
-1. [42_forecast_approval_and_override_review.sql](../../../queries/audit/42_forecast_approval_and_override_review.sql)
-2. [43_inactive_or_stale_inventory_policy_review.sql](../../../queries/audit/43_inactive_or_stale_inventory_policy_review.sql)
-3. [44_requisitions_and_work_orders_without_planning_support.sql](../../../queries/audit/44_requisitions_and_work_orders_without_planning_support.sql)
-4. [45_recommendation_converted_after_need_by_date_review.sql](../../../queries/audit/45_recommendation_converted_after_need_by_date_review.sql)
-5. [46_discontinued_or_prelaunch_planning_activity_review.sql](../../../queries/audit/46_discontinued_or_prelaunch_planning_activity_review.sql)
+Use the starter SQL blocks from [Audit Analytics](../audit.md) in this order:
+
+1. forecast approval and override review
+2. inactive or stale inventory policy review
+3. requisitions and work orders without planning support
+4. recommendation converted after need-by date review
+5. discontinued or prelaunch planning activity review
 
 ## Suggested Excel Sequence
 

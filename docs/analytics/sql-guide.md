@@ -71,13 +71,13 @@ Then move to the next layer:
 
 The starter SQL is organized into three compact topic groups:
 
-| Folder | What it covers |
+| Topic page | What it covers |
 |---|---|
-| `queries/financial` | revenue, margin, working capital, accruals, payroll, close-cycle, and pricing review |
-| `queries/managerial` | budget, portfolio mix, labor, service levels, planning, replenishment, and pricing governance |
-| `queries/audit` | document-chain review, approvals, workforce controls, planning support, pricing governance, and anomaly review |
+| [Financial Analytics](financial.md) | revenue, margin, working capital, accruals, payroll, close-cycle, and pricing review |
+| [Managerial Analytics](managerial.md) | budget, portfolio mix, labor, service levels, planning, replenishment, and pricing governance |
+| [Audit Analytics](audit.md) | document-chain review, approvals, workforce controls, planning support, pricing governance, and anomaly review |
 
-The topic pages surface these queries directly in the docs, so most students can work from the website without opening the repository folders.
+The topic pages surface these queries directly in the docs, so most students can work from the website without opening any repository folders.
 
 ## Other Tools You Can Use
 
@@ -91,16 +91,21 @@ Open <FileName type="sqlite" />, copy a starter query from the docs, run it, and
 
 ### Secondary Workflows
 
-If you prefer code-first work, you can also run the same starter SQL through Python or the `sqlite3` command-line tool.
+If you prefer code-first work, you can also run copied starter SQL through Python or the `sqlite3` command-line tool.
 
 #### Python
 
 ```python
-from pathlib import Path
 import sqlite3
 import pandas as pd
 
-sql = Path("queries/financial/19_working_capital_bridge_by_month.sql").read_text(encoding="utf-8")
+sql = """
+-- paste a starter query copied from the docs here
+SELECT *
+FROM GLEntry
+LIMIT 25;
+"""
+
 with sqlite3.connect("downloaded_dataset.sqlite") as connection:
     df = pd.read_sql_query(sql, connection)
 
@@ -110,8 +115,10 @@ print(df.head())
 #### `sqlite3` CLI
 
 ```bash
-sqlite3 downloaded_dataset.sqlite < queries/financial/19_working_capital_bridge_by_month.sql
+sqlite3 downloaded_dataset.sqlite
 ```
+
+Then paste a starter query copied from the docs into the prompt and run it directly.
 
 ## Where to Go Next
 

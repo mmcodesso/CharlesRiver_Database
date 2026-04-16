@@ -17,12 +17,14 @@ The dataset prices from formal segment and customer price lists with explicit pr
 
 ## Query Sequence
 
-1. [25_price_realization_vs_list_by_segment_customer_region_collection_style.sql](../../../queries/financial/25_price_realization_vs_list_by_segment_customer_region_collection_style.sql)
-2. [26_gross_margin_impact_of_promotions_vs_nonpromotion_sales.sql](../../../queries/financial/26_gross_margin_impact_of_promotions_vs_nonpromotion_sales.sql)
-3. [47_sales_rep_override_rate_and_discount_dispersion.sql](../../../queries/managerial/47_sales_rep_override_rate_and_discount_dispersion.sql)
-4. [48_collection_revenue_margin_before_after_promotions.sql](../../../queries/managerial/48_collection_revenue_margin_before_after_promotions.sql)
-5. [49_customer_specific_pricing_concentration_and_dependency.sql](../../../queries/managerial/49_customer_specific_pricing_concentration_and_dependency.sql)
-6. [50_monthly_price_floor_pressure_and_override_concentration.sql](../../../queries/managerial/50_monthly_price_floor_pressure_and_override_concentration.sql)
+Use the starter SQL blocks from [Financial Analytics](../financial.md) and [Managerial Analytics](../managerial.md) in this order:
+
+1. price realization versus list price by customer and collection
+2. gross-margin impact of promotions versus non-promotion sales
+3. sales-rep override rate and discount dispersion
+4. collection revenue and margin before and after promotions
+5. customer-specific pricing concentration and dependency
+6. monthly price-floor pressure and override concentration
 
 ## Suggested Excel Sequence
 
