@@ -32,6 +32,8 @@ const sidebars = {
       type: "category",
       label: "Analyze the Data",
       items: [
+        "analytics/sql-guide",
+        "analytics/excel-guide",
         {
           type: "category",
           label: "Analytics Hub",
@@ -43,8 +45,6 @@ const sidebars = {
             "analytics/audit",
           ],
         },
-        "analytics/sql-guide",
-        "analytics/excel-guide",
         {
           type: "category",
           label: "Analytics Cases",
