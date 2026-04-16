@@ -231,7 +231,7 @@ flowchart LR
 
 ## Where to Go Next
 
-- Read [P2P](p2p.md#accruals-and-direct-service-settlement) for the supplier-invoice and disbursement flow that clears many accrued expenses.
+- Read [P2P](p2p.md) for the supplier-invoice and disbursement flow that clears many accrued expenses.
 - Read [Payroll](payroll.md) for the operational payroll cycle that sits outside this finance-controlled journal family.
 - Read [GLEntry Posting Reference](../reference/posting.md) for the detailed posting logic behind recurring journals, accruals, and close.
 - Read [Financial Analytics](../analytics/financial.md) for journal, accrual, and close-cycle analysis examples.

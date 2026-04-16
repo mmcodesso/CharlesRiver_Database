@@ -209,7 +209,7 @@ flowchart LR
 
 ## Where to Go Next
 
-- Jump to [Accruals and Direct Service Settlement](#accruals-and-direct-service-settlement) when you want the secondary AP control path.
+- Jump to [Accrual Estimate to AP Settlement](../processes/manual-journals-and-close.md#accrual-estimate-to-ap-settlement) when you want the finance-to-AP bridge for accrued services.
 - Read [Manufacturing](manufacturing.md) to see how purchasing supports work orders and material availability.
 - Read [Dataset Guide](../start-here/dataset-overview.md) for navigation patterns and join paths.
 - Read [GLEntry Posting Reference](../reference/posting.md) for the detailed posting rules behind receipts, supplier invoices, and payments.

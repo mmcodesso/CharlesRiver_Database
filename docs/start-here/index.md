@@ -57,7 +57,7 @@ Use them when you need to trace a process, confirm a join path, or verify what p
 Move into the analysis layer from the path that matches your assignment:
 
 - [Analytics Hub](../analytics/index.md) for the overall starter map
-- [SQL Guide](../analytics/sql-guide.md) for query-based work
+- [SQL Guide](../analytics/sql-guide.md) to open the SQLite file and run starter queries
 - [Excel Guide](../analytics/excel-guide.md) for workbook-based work
 - [Financial Analytics](../analytics/financial.md), [Managerial Analytics](../analytics/managerial.md), and [Audit Analytics](../analytics/audit.md) for topic-specific starting points
 

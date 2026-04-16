@@ -1,55 +1,99 @@
 ---
 title: SQL Guide
-description: How to use the starter SQL packs against the published SQLite export.
+description: How to open the SQLite dataset, run starter queries, and move into topic analysis.
 sidebar_label: SQL Guide
 ---
 
-# SQL Starter Guide
+# SQL Guide
 
-## Starter SQL Package Layout
+## What This Page Helps You Do
 
-| Folder | Coverage |
+Use this page when you are opening the SQLite dataset for the first time. It shows you which file to open, which tool to use first, how to run a starter query, and how to move from a result set into the topic pages and cases.
+
+## What File to Open
+
+For SQL work, start with <FileName type="sqlite" />.
+
+This file contains the dataset tables you need for joins, filters, summaries, and document tracing. Most students do not need to open the support workbook before they begin SQL work. If your instructor is preparing a custom local version, use [Customize](../technical/dataset-delivery.md).
+
+## Recommended Tool: DB Browser for SQLite
+
+The recommended starting tool is [DB Browser for SQLite](https://sqlitebrowser.org/dl/).
+
+It works well for first-time SQLite work because it gives you:
+
+- a simple install path
+- a direct file-open workflow
+- a visible table browser
+- a built-in SQL editor
+- a result grid that is easy to review and export
+
+If you are new to SQLite, start here before moving to a more advanced tool.
+
+## How to Open the Dataset in DB Browser
+
+1. Download and install [DB Browser for SQLite](https://sqlitebrowser.org/dl/).
+2. Open DB Browser and choose `Open Database`.
+3. Select <FileName type="sqlite" /> from the files shared for your course.
+4. Open the `Browse Data` tab and inspect a few tables such as `Customer`, `SalesInvoice`, or `GLEntry`.
+5. Open the `Execute SQL` tab so you are ready to paste a starter query.
+
+At this point, you are ready to copy SQL from the analytics pages in the docs and run it against the dataset.
+
+## How to Run Your First Query
+
+Use this first-pass workflow:
+
+1. Open [Financial Analytics](financial.md).
+2. In the starter SQL list, expand `Working-capital bridge by month`.
+3. Copy the SQL from the code block.
+4. Paste it into the `Execute SQL` tab in DB Browser.
+5. Run the query.
+6. Review the result grid and column names before you move on.
+
+This gives you a complete first-use path: open the file, copy a real starter query, run it, and review a business result that already connects to a guided case.
+
+## How to Read the Result and Keep Going
+
+After your first query runs, check four things before you write another one:
+
+- the row grain: what one row represents
+- the main dimensions: month, customer, item, cost center, or document
+- the main measures: amount, quantity, hours, or count
+- the business question: what the result explains
+
+Then move to the next layer:
+
+1. stay on the topic page and run a second query in the same area
+2. open the paired case in [Analytics Cases](cases/index.md)
+3. use [Schema Reference](../reference/schema.md) when you need table and key help
+4. use [GLEntry Posting Reference](../reference/posting.md) when the question reaches the ledger
+
+The starter SQL is organized into three compact topic groups:
+
+| Folder | What it covers |
 |---|---|
-| `queries/financial` | revenue, margin, working capital, AR, AP, accrued expenses, payroll liabilities, close-cycle, planning, and price-realization review |
-| `queries/managerial` | budget, product portfolio, lifecycle mix, labor, service levels, BOMs, work orders, capacity, forecast, replenishment, pricing governance, and contribution margin |
-| `queries/audit` | document-chain completeness, approvals, cut-off, payroll and time controls, master-data controls, planning support, pricing governance, and anomaly-oriented review |
+| `queries/financial` | revenue, margin, working capital, accruals, payroll, close-cycle, and pricing review |
+| `queries/managerial` | budget, portfolio mix, labor, service levels, planning, replenishment, and pricing governance |
+| `queries/audit` | document-chain review, approvals, workforce controls, planning support, pricing governance, and anomaly review |
 
-Each file is a single SQLite-friendly `SELECT` statement with short comment headers that explain:
+The topic pages surface these queries directly in the docs, so most students can work from the website without opening the repository folders.
 
-- teaching objective
-- main tables
-- output shape
-- recommended use
-- interpretation notes
+## Other Tools You Can Use
 
-## Recommended Workflow
+If you already use another SQL tool, the same workflow still works:
 
-1. Open the SQLite file shared for your course or section.
-2. If you are preparing the dataset yourself, use [Customize](../technical/dataset-delivery.md).
-3. Start with one topic page:
-   - [Financial Analytics](financial.md)
-   - [Managerial Analytics](managerial.md)
-   - [Audit Analytics](audit.md)
-4. Expand the SQL blocks on that page, copy a query, and run it in your SQL tool.
-5. Then open the paired case in [Analytics Cases](cases/index.md).
-6. Recreate one result in Excel when you want students to move from SQL to workbook interpretation.
+- `DBeaver`
+- `SQLiteStudio`
+- `VS Code` with a SQLite extension
 
-## Ways to Run the Queries
+Open <FileName type="sqlite" />, copy a starter query from the docs, run it, and review the result. DB Browser remains the recommended first tool because it is the simplest path for most students.
 
-### SQLite GUI tools
+### Secondary Workflows
 
-The easiest workflow for most users is:
+If you prefer code-first work, you can also run the same starter SQL through Python or the `sqlite3` command-line tool.
 
-- DB Browser for SQLite
-- DBeaver
-- SQLiteStudio
-- VS Code with a SQLite extension
-
-Open the database, open the `.sql` file, and run it as a normal query tab.
-
-### Python workflow
-
-If you prefer Python, the starter SQL files can be read directly:
+#### Python
 
 ```python
 from pathlib import Path
@@ -63,104 +107,15 @@ with sqlite3.connect("downloaded_dataset.sqlite") as connection:
 print(df.head())
 ```
 
-### `sqlite3` CLI
-
-If the `sqlite3` command-line tool is installed on your system, you can also run:
+#### `sqlite3` CLI
 
 ```bash
 sqlite3 downloaded_dataset.sqlite < queries/financial/19_working_capital_bridge_by_month.sql
 ```
 
-## Using the Published Dataset
-
-- The main SQLite export contains dataset tables only.
-- Financial and managerial queries support regular analytical work across the published dataset.
-- Some audit queries are designed to surface exceptions that are documented in the support workbook.
-- Anomaly and validation companion content lives in the support workbook, not in SQLite.
-
-## Suggested Sequence by Topic
-
-### Financial
-
-1. monthly revenue and gross margin
-2. AR aging
-3. AP aging
-4. working-capital bridge by month
-5. cash-conversion timing review
-6. payroll liability roll-forward
-7. accrued expense roll-forward
-8. retained earnings and close-entry impact
-9. payroll and people-cost mix
-10. price realization versus list price
-11. gross-margin impact of promotions versus non-promotion sales
-12. paired cases:
-   - [Working Capital and Cash Conversion Case](cases/working-capital-and-cash-conversion-case.md)
-   - [Financial Statement Bridge Case](cases/financial-statement-bridge-case.md)
-   - [Pricing and Margin Governance Case](cases/pricing-and-margin-governance-case.md)
-
-### Managerial
-
-1. budget vs actual
-2. product portfolio mix by collection, style, lifecycle, and supply mode
-3. sales and gross margin by collection and lifecycle
-4. contribution margin by collection, material, lifecycle, and supply mode
-5. customer-service impact by collection and style
-6. labor and headcount by work location, job family, and cost center
-7. staffing coverage vs work-center planned load
-8. rostered hours vs approved worked hours by work center and shift
-9. absence rate by work location, job family, and month
-10. overtime approval coverage and concentration
-11. punch-to-pay bridge for hourly workers
-12. late arrival and early departure by shift and department
-13. inventory coverage and projected stockout risk
-14. rough-cut capacity load versus available hours
-15. expedite pressure by item family and month
-16. forecast error and bias by collection and style family
-17. supply-plan driver mix by collection and supply mode
-18. portfolio return and refund impact by collection and lifecycle
-19. sales-rep override rate and discount dispersion
-20. collection revenue and margin before and after promotions
-21. customer-specific pricing concentration and dependency
-22. monthly price-floor pressure and override concentration
-23. paired cases:
-   - [Product Portfolio Profitability Case](cases/product-portfolio-profitability-case.md)
-   - [Workforce Coverage and Attendance Case](cases/workforce-coverage-and-attendance-case.md)
-   - [Demand Planning and Replenishment Case](cases/demand-planning-and-replenishment-case.md)
-   - [Pricing and Margin Governance Case](cases/pricing-and-margin-governance-case.md)
-
-### Audit
-
-1. document-chain completeness
-2. approval and SOD review
-3. payroll and time-control review
-4. executive-role uniqueness and control-assignment review
-5. item-master completeness review
-6. discontinued or pre-launch item activity review
-7. approval-authority review by expected role family
-8. terminated-employee activity detail and rollup review
-9. scheduled-without-punch and punch-without-schedule review
-10. overtime without approval review
-11. absence-with-worked-time review
-12. overlapping or incomplete punch review
-13. roster-after-termination review
-14. forecast approval and override review
-15. inactive or stale inventory policy review
-16. requisitions and work orders without planning support
-17. recommendation converted after need-by date review
-18. discontinued or pre-launch planning activity review
-19. sales below floor without approval
-20. expired or overlapping price-list review
-21. promotion scope and date mismatch review
-22. customer-specific price-list bypass review
-23. override approval completeness review
-24. paired cases:
-   - [Workforce Cost and Org-Control Case](cases/workforce-cost-and-org-control-case.md)
-   - [Audit Review Pack Case](cases/audit-review-pack-case.md)
-   - [Attendance Control Audit Case](cases/attendance-control-audit-case.md)
-   - [Replenishment Support Audit Case](cases/replenishment-support-audit-case.md)
-   - [Pricing Governance Audit Case](cases/pricing-governance-audit-case.md)
-
 ## Where to Go Next
 
-- Read [Excel Guide](excel-guide.md) to recreate similar analyses in the workbook.
-- Read [Instructor Adoption Guide](../teach-with-data/instructor-guide.md) for topic sequencing in class.
+- Use [Financial Analytics](financial.md), [Managerial Analytics](managerial.md), or [Audit Analytics](audit.md) to choose your next topic.
+- Use [Analytics Cases](cases/index.md) when you want a guided business question after the first query.
+- Use [Excel Guide](excel-guide.md) when you want to recreate a SQL result in the workbook.
+- Use [Customize](../technical/dataset-delivery.md) only if you are preparing a local instructor version.

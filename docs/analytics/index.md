@@ -33,7 +33,7 @@ Use this sequence for most student work:
 | Financial accounting | [Financial Analytics](financial.md) | working capital, cash conversion, close-cycle, payroll, accruals, revenue, margin, and price realization | [Working Capital and Cash Conversion Case](cases/working-capital-and-cash-conversion-case.md), [Financial Statement Bridge Case](cases/financial-statement-bridge-case.md), [Pricing and Margin Governance Case](cases/pricing-and-margin-governance-case.md) | control-account roll-forwards, monthly bridges, settlement timing, and price-realization pivots |
 | Managerial and cost accounting | [Managerial Analytics](managerial.md) | portfolio mix, contribution margin, service levels, labor mix, workforce coverage, planning, replenishment, lifecycle analysis, and pricing governance | [Product Portfolio Profitability Case](cases/product-portfolio-profitability-case.md), [Workforce Coverage and Attendance Case](cases/workforce-coverage-and-attendance-case.md), [Demand Planning and Replenishment Case](cases/demand-planning-and-replenishment-case.md), [Pricing and Margin Governance Case](cases/pricing-and-margin-governance-case.md) | pivots by collection, lifecycle, supply mode, work location, shift, work center, planning week, and pricing method |
 | Audit analytics | [Audit Analytics](audit.md) | document-chain controls, approval design, master-data completeness, workforce controls, roster review, planning support, pricing governance, and anomaly review | [Workforce Cost and Org-Control Case](cases/workforce-cost-and-org-control-case.md), [Audit Review Pack Case](cases/audit-review-pack-case.md), [Attendance Control Audit Case](cases/attendance-control-audit-case.md), [Replenishment Support Audit Case](cases/replenishment-support-audit-case.md), [Pricing Governance Audit Case](cases/pricing-governance-audit-case.md) | support-workbook review plus source-sheet tracing |
-| Cross-topic navigation | [SQL Guide](sql-guide.md), [Excel Guide](excel-guide.md) | how to run the query pack and recreate the same ideas in the workbook | [Analytics Cases](cases/index.md) | workbook-side reconstruction of SQL outputs |
+| Cross-topic navigation | [SQL Guide](sql-guide.md), [Excel Guide](excel-guide.md) | how to open the SQLite dataset, run starter SQL, and recreate the same ideas in the workbook | [Analytics Cases](cases/index.md) | workbook-side reconstruction of SQL outputs |
 
 ## Current Analytical Coverage
 
@@ -50,6 +50,6 @@ The current analytics layer is organized around these strengths:
 
 ## Where to Go Next
 
-- Start with [Financial Analytics](financial.md), [Managerial Analytics](managerial.md), or [Audit Analytics](audit.md).
+- Start with [SQL Guide](sql-guide.md) when you need the SQLite first-use path, then move to [Financial Analytics](financial.md), [Managerial Analytics](managerial.md), or [Audit Analytics](audit.md).
 - Then open [Analytics Cases](cases/index.md) for guided walkthroughs.
 - Use [Excel Guide](excel-guide.md) when you want to reconstruct the same ideas in the workbook.
