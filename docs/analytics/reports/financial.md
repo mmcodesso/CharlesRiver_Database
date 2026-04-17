@@ -9,7 +9,7 @@ import { reportAreaCollections } from "@site/src/generated/reportDocCollections"
 
 # Financial Reports
 
-Use these reports when you want a student-first output for monthly close, statements, revenue review, and receivables/payables aging analysis.
+Use these reports when you want a student-first output for monthly close, statements, revenue review, payroll cost and liability analysis, and receivables/payables aging.
 
 <ReportCatalog
   groups={reportAreaCollections.financial}

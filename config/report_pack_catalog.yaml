@@ -435,3 +435,188 @@ packs:
         related_link:
           label: Audit Review Pack Case
           href: /docs/analytics/cases/audit-review-pack-case
+  - slug: payroll-perspective
+    title: Payroll Perspective
+    summary: Use this perspective to connect people cost, payroll calculation, cash movement, time support, and payroll-control risk into one guided storyline.
+    opening_paragraphs:
+      - Payroll Perspective treats payroll as more than a routine back-office process. It is one of the clearest places where workforce structure, operating time, accounting, cash movement, and control discipline all meet in the same monthly cycle.
+      - This perspective matters because payroll can look stable on the surface while still hiding meaningful issues underneath. Students need to see where people cost sits, how gross pay turns into net pay, how liabilities clear through payments and remittances, and whether approved time actually supports what was paid.
+      - The goal is to help readers move from payroll as an expense line to payroll as a business process. By the end of this sequence, the reader should understand whether payroll looks operationally supported, financially well explained, and controlled strongly enough to trust.
+    approach_guidance:
+      - Start with payroll cost concentration before moving into register-level calculation detail.
+      - Read gross-to-net, cash outflow, and liability reports together so payroll is interpreted as a full accounting cycle rather than a single payment event.
+      - Compare time support and pay support separately, because approved hours, labor allocation, and payroll earnings do not answer the same question.
+      - Use the control reports at the end of the sequence to test whether the cost and process story is reliable enough to trust.
+    core_questions:
+      - Where does payroll cost concentrate by cost center, job family, and pay class?
+      - How does gross pay become net pay, and which burdens remain company cost rather than employee reduction?
+      - Do payroll cash payments and liability remittances align with the liability and timing story?
+      - Does approved time support what hourly employees were paid?
+      - Which payroll and timekeeping patterns deserve control-oriented follow-up?
+    where_to_go_next:
+      - label: Financial Reports Library
+        href: /docs/analytics/reports/financial
+      - label: Managerial Reports Library
+        href: /docs/analytics/reports/managerial
+      - label: Audit Reports Library
+        href: /docs/analytics/reports/audit
+      - label: Workforce Cost and Org-Control Case
+        href: /docs/analytics/cases/workforce-cost-and-org-control-case
+      - label: Workforce Coverage and Attendance Case
+        href: /docs/analytics/cases/workforce-coverage-and-attendance-case
+      - label: Attendance Control Audit Case
+        href: /docs/analytics/cases/attendance-control-audit-case
+      - label: Working Capital and Cash Conversion Case
+        href: /docs/analytics/cases/working-capital-and-cash-conversion-case
+    reports:
+      - report_slug: payroll-expense-mix-by-cost-center-and-pay-class
+        teaching_role: anchor
+        why_it_matters: Start with payroll expense mix to identify where people cost sits before moving into payroll mechanics and control interpretation.
+        discussion_questions:
+          - Which cost centers and pay classes carry the largest payroll totals?
+          - Does payroll mix appear concentrated in a small part of the organization?
+          - What would management want to explain about the current payroll profile?
+        suggested_analysis:
+          - Compare gross pay, net pay, and employer burden across cost centers and pay classes.
+          - Highlight areas where employee count and payroll cost do not move together cleanly.
+          - Use the result to decide which workforce group deserves deeper follow-up.
+      - report_slug: gross-to-net-payroll-review
+        teaching_role: anchor
+        why_it_matters: Use the register-level gross-to-net bridge to explain payroll calculation clearly before turning to cash movement or exception review.
+        discussion_questions:
+          - Which employees or cost centers show the largest gross-to-net spread?
+          - How much of the payroll picture sits in employee withholdings versus employer burden?
+          - Which status or approval patterns would merit additional review?
+        suggested_analysis:
+          - Compare gross pay, employee withholdings, employer burden, and net pay by period.
+          - Distinguish employee deductions from company-side payroll cost.
+          - Use the result to frame the later cash and liability discussion.
+        related_link:
+          label: Workforce Cost and Org-Control Case
+          href: /docs/analytics/cases/workforce-cost-and-org-control-case
+      - report_slug: punch-to-pay-bridge-for-hourly-workers
+        teaching_role: anchor
+        why_it_matters: Use the punch-to-pay bridge to connect raw workforce activity to approved hours, labor allocation, and hourly payroll outcome.
+        discussion_questions:
+          - How closely do punch counts, approved hours, labor hours, and pay align?
+          - Which hourly employees or periods appear hardest to explain?
+          - Where would you expect follow-up between attendance review and payroll review?
+        suggested_analysis:
+          - Compare punch count, approved clock hours, labor hours, and pay by employee and payroll period.
+          - Flag cases where labor support or pay appears disproportionate to approved time.
+          - Use the bridge to identify whether a payroll issue looks operational, accounting, or control-related.
+        related_link:
+          label: Workforce Coverage and Attendance Case
+          href: /docs/analytics/cases/workforce-coverage-and-attendance-case
+      - report_slug: payroll-and-people-cost-mix-by-cost-center-job-family-level
+        teaching_role: drill-down
+        why_it_matters: Use the people-cost mix report to compare payroll concentration to the shape of the workforce rather than reading payroll totals in isolation.
+        discussion_questions:
+          - Which job families or levels drive the most people cost within each cost center?
+          - Where do headcount concentration and payroll concentration diverge?
+          - Which workforce group would management scrutinize next?
+        suggested_analysis:
+          - Compare end-state headcount to employees with payroll by workforce grouping.
+          - Highlight groups with high total people cost but relatively small headcount.
+          - Use the output to frame organizational and pay-mix questions.
+        related_link:
+          label: Workforce Cost and Org-Control Case
+          href: /docs/analytics/cases/workforce-cost-and-org-control-case
+      - report_slug: payroll-cash-payments-and-remittances
+        teaching_role: drill-down
+        why_it_matters: Use payroll cash outflow detail to separate employee payments from liability remittances and explain how payroll reaches the cash ledger.
+        discussion_questions:
+          - Do employee payments and remittances move in the same periods or with visible lag?
+          - Which month shows the highest total payroll cash outflow?
+          - How should management interpret remittance timing versus payroll register timing?
+        suggested_analysis:
+          - Compare net-pay cash to tax and benefits remittances by fiscal period.
+          - Identify periods where remittance mix changes meaningfully.
+          - Relate cash outflow timing back to liability movement.
+        related_link:
+          label: Working Capital and Cash Conversion Case
+          href: /docs/analytics/cases/working-capital-and-cash-conversion-case
+      - report_slug: payroll-liability-rollforward
+        teaching_role: drill-down
+        why_it_matters: Use the liability rollforward to show whether payroll obligations accumulate and clear in a pattern that makes accounting and cash sense.
+        discussion_questions:
+          - Which payroll-liability accounts carry the largest ending balances?
+          - Do liabilities appear to clear regularly or build up over time?
+          - Which liability type would management or audit monitor most closely?
+        suggested_analysis:
+          - Compare debit, credit, net increase, and ending balance by account and period.
+          - Highlight accounts with recurring positive buildup.
+          - Read the rollforward together with payroll cash remittances.
+        related_link:
+          label: Working Capital and Cash Conversion Case
+          href: /docs/analytics/cases/working-capital-and-cash-conversion-case
+      - report_slug: labor-and-headcount-by-work-location-job-family-cost-center
+        teaching_role: drill-down
+        why_it_matters: Use this report to connect payroll totals back to workforce structure, approved time, and direct labor usage across the organization.
+        discussion_questions:
+          - Which locations or job families combine high people cost with high approved or direct labor hours?
+          - Where does workforce structure appear operationally heavy or light?
+          - Which organizational slice looks most important for deeper payroll analysis?
+        suggested_analysis:
+          - Compare headcount, gross pay, approved hours, and direct labor hours by grouping.
+          - Look for groupings where total people cost is high but direct labor support is low.
+          - Use the result to connect payroll interpretation to operating structure.
+        related_link:
+          label: Workforce Cost and Org-Control Case
+          href: /docs/analytics/cases/workforce-cost-and-org-control-case
+      - report_slug: overtime-approval-coverage-and-concentration
+        teaching_role: drill-down
+        why_it_matters: Use overtime approval coverage to show where payroll pressure may be operationally justified versus weakly governed.
+        discussion_questions:
+          - Which work centers carry the most overtime?
+          - Where do overtime hours and missing approvals appear together?
+          - Does overtime look concentrated in a few operational hotspots?
+        suggested_analysis:
+          - Compare overtime totals, approval coverage, and missing approval counts by month and work center.
+          - Identify recurring work centers with meaningful overtime and weak approval coverage.
+          - Use the result to connect staffing pressure to control follow-up.
+        related_link:
+          label: Workforce Coverage and Attendance Case
+          href: /docs/analytics/cases/workforce-coverage-and-attendance-case
+      - report_slug: absence-rate-by-work-location-job-family-month
+        teaching_role: drill-down
+        why_it_matters: Use absence rate to add workforce-availability context before treating overtime or payroll-support issues as purely administrative problems.
+        discussion_questions:
+          - Which work locations or job families show the highest absence pressure?
+          - Does paid versus unpaid absence change the interpretation?
+          - How might absence patterns explain overtime or payroll irregularities elsewhere?
+        suggested_analysis:
+          - Compare absence rate, hours absent, and paid versus unpaid absence by month.
+          - Focus on workforce groups with persistent absence pressure.
+          - Relate absence trends to overtime or hourly pay support questions.
+        related_link:
+          label: Workforce Coverage and Attendance Case
+          href: /docs/analytics/cases/workforce-coverage-and-attendance-case
+      - report_slug: payroll-control-review
+        teaching_role: drill-down
+        why_it_matters: Use the payroll control review to test whether the payroll cycle has basic approval, payment-timing, and register-quality discipline.
+        discussion_questions:
+          - Which payroll-control issue types appear most frequently?
+          - Which exception would create the greatest trust problem in payroll reporting?
+          - What would you inspect next for a flagged employee or pay period?
+        suggested_analysis:
+          - Group findings by issue type and payroll period.
+          - Compare exception timing to the gross-to-net and cash reports.
+          - Use the result to prioritize control follow-up.
+        related_link:
+          label: Attendance Control Audit Case
+          href: /docs/analytics/cases/attendance-control-audit-case
+      - report_slug: paid-without-clock-and-clock-without-pay-review
+        teaching_role: drill-down
+        why_it_matters: "Use this exception review to test the most important support bridge in hourly payroll: approved work should flow to pay, and pay should have approved work behind it."
+        discussion_questions:
+          - Which exception direction appears more operationally serious in this dataset?
+          - Are the exceptions isolated to a few employees or spread across periods?
+          - What source-table evidence would you trace next?
+        suggested_analysis:
+          - Separate paid-without-clock findings from clock-without-pay findings.
+          - Compare affected periods to the punch-to-pay bridge and overtime coverage.
+          - Use the result to define a focused attendance or payroll audit follow-up.
+        related_link:
+          label: Attendance Control Audit Case
+          href: /docs/analytics/cases/attendance-control-audit-case

@@ -6,7 +6,7 @@ sidebar_label: Reports Hub
 
 # Reports Hub
 
-The reports section is the most direct way to turn the dataset into a business conversation. It brings the transactional model forward as recurring management-style artifacts so students can start with performance, liquidity, working capital, operations, and control signals before they need to read SQL.
+The reports section is the most direct way to turn the dataset into a business conversation. It brings the transactional model forward as recurring management-style artifacts so students can start with performance, liquidity, working capital, payroll, operations, and control signals before they need to read SQL.
 
 That matters from a learning perspective because strong analysis usually begins with a storyline, not with isolated tables. A reader should be able to look at a statement pack, an aging summary, or an operational review and understand what seems healthy, where pressure is building, and which question deserves the next drill-down.
 
@@ -25,15 +25,16 @@ This section supports that progression in two complementary ways. `Business Pers
 |---|---|---|
 | Executive Overview | Performance, position, cash, and working capital in one management storyline | [Business Perspectives Hub](lens-packs.md) |
 | Commercial and Working Capital | Revenue quality, pricing, receivables, payables, and settlement timing | [Commercial and Working Capital](commercial-and-working-capital.md) |
+| Payroll Perspective | People cost, gross-to-net pay, payroll cash, time support, and payroll-control interpretation | [Payroll Perspective](payroll-perspective.md) |
 | Operations and Risk | Capacity, supply reliability, planning pressure, workforce context, and controls | [Operations and Risk](operations-and-risk.md) |
 
 ## Report Library
 
 | Area | Best use | Go to |
 |---|---|---|
-| Financial | Monthly close, statements, revenue, receivables, payables, and cash-conversion analysis | [Financial Reports](financial.md) |
-| Managerial | Budget, margin, capacity, workforce, and supply-risk review | [Managerial Reports](managerial.md) |
-| Audit | Approval, segregation-of-duties, and anomaly review | [Audit Reports](audit.md) |
+| Financial | Monthly close, statements, revenue, payroll cost and liabilities, receivables, payables, and cash-conversion analysis | [Financial Reports](financial.md) |
+| Managerial | Budget, margin, capacity, workforce, payroll operations, and supply-risk review | [Managerial Reports](managerial.md) |
+| Audit | Approval, segregation-of-duties, payroll and time controls, and anomaly review | [Audit Reports](audit.md) |
 
 ## Suggested Learning Flow
 

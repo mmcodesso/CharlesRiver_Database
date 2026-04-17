@@ -48,6 +48,7 @@ const sidebars = {
               items: [
                 "analytics/reports/executive-overview",
                 "analytics/reports/commercial-and-working-capital",
+                "analytics/reports/payroll-perspective",
                 "analytics/reports/operations-and-risk",
               ],
             },

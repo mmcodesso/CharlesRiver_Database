@@ -6,7 +6,7 @@ sidebar_label: Business Perspectives Hub
 
 # Business Perspectives Hub
 
-Business Perspectives organizes the report collection around the questions managers and analysts actually ask. Instead of starting with a long report inventory, the reader starts with a business angle such as overall performance, commercial quality and working capital, or operations and risk.
+Business Perspectives organizes the report collection around the questions managers and analysts actually ask. Instead of starting with a long report inventory, the reader starts with a business angle such as overall performance, commercial quality and working capital, payroll, or operations and risk.
 
 Each perspective is meant to teach a way of reading the company. The sequence of reports, the discussion prompts, and the suggested follow-up analysis help students move from observation to interpretation, then from interpretation to a more focused investigation.
 
@@ -23,6 +23,7 @@ Each perspective is meant to teach a way of reading the company. The sequence of
 |---|---|---|
 | Executive Overview | Broad company-level review of performance, position, cash, and working capital | [Executive Overview](executive-overview.md) |
 | Commercial and Working Capital | Revenue quality, customer behavior, pricing, receivables, payables, and settlement timing | [Commercial and Working Capital](commercial-and-working-capital.md) |
+| Payroll Perspective | People cost, gross-to-net payroll, payroll cash, time support, and payroll-control risk | [Payroll Perspective](payroll-perspective.md) |
 | Operations and Risk | Capacity, supply reliability, planning pressure, workforce context, and controls | [Operations and Risk](operations-and-risk.md) |
 
 ## How This Connects to the Rest of the Reports Section

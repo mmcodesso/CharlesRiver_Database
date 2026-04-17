@@ -11,12 +11,14 @@ EXPECTED_PACK_SLUGS = [
     "executive-overview",
     "commercial-and-working-capital",
     "operations-and-risk",
+    "payroll-perspective",
 ]
 
 EXPECTED_PACK_PAGES = [
     Path("docs/analytics/reports/lens-packs.md"),
     Path("docs/analytics/reports/executive-overview.md"),
     Path("docs/analytics/reports/commercial-and-working-capital.md"),
+    Path("docs/analytics/reports/payroll-perspective.md"),
     Path("docs/analytics/reports/operations-and-risk.md"),
 ]
 
@@ -96,6 +98,7 @@ def test_report_learning_pages_and_sidebar_are_wired() -> None:
     assert '"analytics/reports/lens-packs"' in sidebar_text
     assert '"analytics/reports/executive-overview"' in sidebar_text
     assert '"analytics/reports/commercial-and-working-capital"' in sidebar_text
+    assert '"analytics/reports/payroll-perspective"' in sidebar_text
     assert '"analytics/reports/operations-and-risk"' in sidebar_text
     assert "Business Perspectives" in reports_hub
     assert "Report Library" in reports_hub

@@ -74,6 +74,36 @@ export const reportAreaCollections = {
           "reportKey": "price-realization-vs-list-by-customer-and-portfolio"
         }
       ]
+    },
+    {
+      "processGroup": "payroll-cost-and-mix",
+      "processGroupLabel": "Payroll Cost and Mix",
+      "items": [
+        {
+          "reportKey": "payroll-expense-mix-by-cost-center-and-pay-class"
+        },
+        {
+          "reportKey": "payroll-and-people-cost-mix-by-cost-center-job-family-level"
+        },
+        {
+          "reportKey": "gross-to-net-payroll-review"
+        },
+        {
+          "reportKey": "hourly-payroll-hours-to-paid-earnings-bridge"
+        }
+      ]
+    },
+    {
+      "processGroup": "payroll-cash-and-liabilities",
+      "processGroupLabel": "Payroll Cash and Liabilities",
+      "items": [
+        {
+          "reportKey": "payroll-cash-payments-and-remittances"
+        },
+        {
+          "reportKey": "payroll-liability-rollforward"
+        }
+      ]
     }
   ],
   "managerial": [
@@ -124,6 +154,24 @@ export const reportAreaCollections = {
           "reportKey": "forecast-error-and-bias-by-collection-and-style-family"
         }
       ]
+    },
+    {
+      "processGroup": "workforce-and-payroll-operations",
+      "processGroupLabel": "Workforce and Payroll Operations",
+      "items": [
+        {
+          "reportKey": "labor-and-headcount-by-work-location-job-family-cost-center"
+        },
+        {
+          "reportKey": "absence-rate-by-work-location-job-family-month"
+        },
+        {
+          "reportKey": "overtime-approval-coverage-and-concentration"
+        },
+        {
+          "reportKey": "punch-to-pay-bridge-for-hourly-workers"
+        }
+      ]
     }
   ],
   "audit": [
@@ -136,6 +184,18 @@ export const reportAreaCollections = {
         },
         {
           "reportKey": "potential-anomaly-review"
+        }
+      ]
+    },
+    {
+      "processGroup": "payroll-and-time-controls",
+      "processGroupLabel": "Payroll and Time Controls",
+      "items": [
+        {
+          "reportKey": "payroll-control-review"
+        },
+        {
+          "reportKey": "paid-without-clock-and-clock-without-pay-review"
         }
       ]
     }

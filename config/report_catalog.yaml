@@ -149,6 +149,66 @@ reports:
     preview_row_limit: 25
     excel_enabled: true
     csv_enabled: true
+  - slug: payroll-expense-mix-by-cost-center-and-pay-class
+    title: Payroll Expense Mix by Cost Center and Pay Class
+    area: financial
+    process_group: payroll-cost-and-mix
+    cadence: Monthly
+    description: Review payroll register totals by pay month, cost center, and pay class before moving into ledger-only expense analysis.
+    query_path: queries/financial/18_payroll_expense_mix_by_cost_center_and_pay_class.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: payroll-and-people-cost-mix-by-cost-center-job-family-level
+    title: Payroll and People Cost Mix by Cost Center Job Family and Level
+    area: financial
+    process_group: payroll-cost-and-mix
+    cadence: Current cumulative view
+    description: Compare payroll concentration to current workforce structure by cost center, job family, job level, and pay class.
+    query_path: queries/financial/22_payroll_and_people_cost_mix_by_cost_center_job_family_level.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: gross-to-net-payroll-review
+    title: Gross to Net Payroll Review
+    area: financial
+    process_group: payroll-cost-and-mix
+    cadence: Payroll period
+    description: Trace payroll registers from gross pay to withholdings, employer burden, and net pay by employee and pay period.
+    query_path: queries/financial/10_gross_to_net_payroll_review.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: hourly-payroll-hours-to-paid-earnings-bridge
+    title: Hourly Payroll Hours to Paid Earnings Bridge
+    area: financial
+    process_group: payroll-cost-and-mix
+    cadence: Payroll period
+    description: Bridge approved hourly time, labor support, paid earnings hours, and payment timing by employee and pay period.
+    query_path: queries/financial/14_hourly_payroll_hours_to_paid_earnings_bridge.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: payroll-cash-payments-and-remittances
+    title: Payroll Cash Payments and Remittances
+    area: financial
+    process_group: payroll-cash-and-liabilities
+    cadence: Monthly
+    description: Compare employee net-pay cash outflows to payroll-liability remittances by month.
+    query_path: queries/financial/11_payroll_cash_payments_and_remittances.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: payroll-liability-rollforward
+    title: Payroll Liability Rollforward
+    area: financial
+    process_group: payroll-cash-and-liabilities
+    cadence: Monthly
+    description: Track payroll-liability account movement and ending balances by fiscal period.
+    query_path: queries/financial/09_payroll_liability_rollforward.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
   - slug: budget-vs-actual-by-cost-center
     title: Budget vs Actual by Cost Center
     area: managerial
@@ -249,6 +309,46 @@ reports:
     preview_row_limit: 25
     excel_enabled: true
     csv_enabled: true
+  - slug: labor-and-headcount-by-work-location-job-family-cost-center
+    title: Labor and Headcount by Work Location Job Family and Cost Center
+    area: managerial
+    process_group: workforce-and-payroll-operations
+    cadence: Current cumulative view
+    description: Compare workforce structure, people cost, approved hours, and direct labor by work location, cost center, and job family.
+    query_path: queries/managerial/34_labor_and_headcount_by_work_location_job_family_cost_center.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: absence-rate-by-work-location-job-family-month
+    title: Absence Rate by Work Location and Job Family
+    area: managerial
+    process_group: workforce-and-payroll-operations
+    cadence: Monthly
+    description: Compare monthly absence pressure by work location and job family, with paid and unpaid absence separated.
+    query_path: queries/managerial/38_absence_rate_by_work_location_job_family_month.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: overtime-approval-coverage-and-concentration
+    title: Overtime Approval Coverage and Concentration
+    area: managerial
+    process_group: workforce-and-payroll-operations
+    cadence: Monthly
+    description: Review where overtime hours concentrate by work center and how consistently those hours carry approvals.
+    query_path: queries/managerial/39_overtime_approval_coverage_and_concentration.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: punch-to-pay-bridge-for-hourly-workers
+    title: Punch to Pay Bridge for Hourly Workers
+    area: managerial
+    process_group: workforce-and-payroll-operations
+    cadence: Payroll period
+    description: Trace hourly payroll from raw punches through approved time, labor allocation, and pay by employee and payroll period.
+    query_path: queries/managerial/40_punch_to_pay_bridge_for_hourly_workers.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
   - slug: approval-and-sod-review
     title: Approval and SOD Review
     area: audit
@@ -266,6 +366,26 @@ reports:
     cadence: Exception review
     description: Run a broad control-screening report that surfaces anomalies across journals, purchasing, sales, and payments.
     query_path: queries/audit/06_potential_anomaly_review.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: payroll-control-review
+    title: Payroll Control Review
+    area: audit
+    process_group: payroll-and-time-controls
+    cadence: Exception review
+    description: Review payroll approval, payment-timing, and register-integrity exceptions across payroll periods.
+    query_path: queries/audit/11_payroll_control_review.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: paid-without-clock-and-clock-without-pay-review
+    title: Paid Without Clock and Clock Without Pay Review
+    area: audit
+    process_group: payroll-and-time-controls
+    cadence: Exception review
+    description: Review hourly payroll lines without approved clock support and approved clock entries that do not flow into pay.
+    query_path: queries/audit/21_paid_without_clock_and_clock_without_pay_review.sql
     preview_row_limit: 25
     excel_enabled: true
     csv_enabled: true
