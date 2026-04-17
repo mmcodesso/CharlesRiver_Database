@@ -45,8 +45,6 @@ Start with the cost baseline before you look at any actual labor support. Studen
 
 Establish the standard material and conversion structure for the manufactured item.
 
-**Why this matters**
-
 Standard cost drives completion value and sets the benchmark for later variance analysis. Without that baseline, actual labor support and close amounts have no clear point of reference.
 
 **Suggested query**
@@ -83,8 +81,6 @@ After you define the cost baseline, move into execution. The work order is the o
 **What we are trying to achieve**
 
 Trace one released work order through operation sequence, schedule dates, work centers, and planned load.
-
-**Why this matters**
 
 Labor cost sits inside a real execution path. Students need to see where the work was scheduled and which operation consumed the labor support.
 
@@ -123,8 +119,6 @@ Now move from execution shape into labor support. This step shows how approved t
 
 Connect approved time-clock support to direct labor allocation and labor cost on the work order.
 
-**Why this matters**
-
 Approved clocks, labor allocation, and direct labor cost answer different questions. Students need to separate attendance support from productive allocation and from cost.
 
 **Suggested query**
@@ -162,8 +156,6 @@ Labor support becomes financially meaningful only when you connect it to complet
 
 Connect material issue, completion, close variance, and the posted manufacturing accounts for one work order.
 
-**Why this matters**
-
 Completion moves finished goods into inventory. Close resolves the remaining WIP, clearing, and variance balances. Students need to explain both events clearly.
 
 **Suggested query**
@@ -200,8 +192,6 @@ Finish with control interpretation. Once the core labor-cost story is clear, tes
 **What we are trying to achieve**
 
 Identify labor-support or close-timing patterns that deserve follow-up.
-
-**Why this matters**
 
 This case ends with judgment. Students should know when labor support aligns with the operation path and when the pattern becomes unusual enough for audit review.
 
@@ -248,7 +238,7 @@ The labor-window review compares `LaborTimeEntry.WorkDate` to the scheduled or a
 - Which event moves finished goods into inventory, and which event resolves residual variance?
 - What timing pattern would make labor support or work-order close worth audit follow-up?
 
-## Where to Go Next
+## Next Steps
 
 - Use [Manufacturing Process](../../processes/manufacturing.md) for the full planning, execution, and close walkthrough behind this case.
 - Use [Payroll Process](../../processes/payroll.md) when you need the approved-hours and payroll-side support behind factory labor.

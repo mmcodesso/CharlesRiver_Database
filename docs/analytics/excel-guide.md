@@ -251,7 +251,7 @@ Suggested outputs:
 - For most new exercises, create a fresh working sheet and import only the required tables with Power Query.
 - Open the published workbook when you need to inspect source sheets directly, but do the exercise work in your imported tables and analysis sheets.
 
-## Where to Go Next
+## Next Steps
 
 - Read [SQL Guide](sql-guide.md) for the matching query workflow.
 - Read [Analytics Cases](cases/index.md) for guided walkthroughs.

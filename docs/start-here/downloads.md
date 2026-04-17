@@ -32,7 +32,7 @@ The files become much easier to read after the business logic is clear:
 3. the files then become the detailed record of those business cycles
 4. the analytics pages help students interpret what those cycles mean
 
-## Best Next Steps
+## Next Steps
 
 1. Read [Start Here](index.md).
 2. Read [Company Story](../learn-the-business/company-story.md).

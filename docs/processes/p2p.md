@@ -207,7 +207,7 @@ flowchart LR
 - Which AP lines cleared a prior accrual instead of matching a receipt?
 - How do receiving, invoicing, and payment timing differ by supplier, item group, or cost center?
 
-## Best Next Steps
+## Next Steps
 
 - Read [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md) when you want the wider view of supplier settlement, AP timing, and working-capital pressure.
 - Read [Financial Reports](../analytics/reports/financial.md) when you want the reporting layer behind AP, accrual settlement, and cash conversion.

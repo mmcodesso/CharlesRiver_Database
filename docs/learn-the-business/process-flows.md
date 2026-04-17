@@ -87,7 +87,7 @@ The most important teaching bridge in the site is this one: business process fir
 | [Payroll](../processes/payroll.md) | [Payroll and Workforce](../analytics/reports/payroll-perspective.md), [Audit Reports](../analytics/reports/audit.md) | [Workforce Cost and Org-Control Case](../analytics/cases/workforce-cost-and-org-control-case.md), [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md) |
 | [Manual Journals and Close](../processes/manual-journals-and-close.md) | [Executive Overview](../analytics/reports/executive-overview.md), [Financial Reports](../analytics/reports/financial.md) | [Financial Statement Bridge Case](../analytics/cases/financial-statement-bridge-case.md) |
 
-## Best Next Steps
+## Next Steps
 
 1. Read the process page that matches the business cycle you want to follow first.
 2. Then move into [Analytics Hub](../analytics/index.md) to see how that process becomes reports, SQL, and cases.

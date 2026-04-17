@@ -83,7 +83,7 @@ Most instructors can adopt <DisplayName /> successfully with the published teach
 - Use guided cases before open-ended projects when students are new to integrated accounting datasets.
 - Keep schema and posting references available during assignments.
 
-## Where to go next
+## Next Steps
 
 - Use [Start Here](../start-here/index.md) as the primary student launch page.
 - Use [Analytics Hub](../analytics/index.md) to choose the first topic pack.

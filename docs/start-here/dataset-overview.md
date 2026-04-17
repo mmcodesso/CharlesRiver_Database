@@ -251,7 +251,7 @@ Start with:
 | Manufacturing variance | The difference between actual and standard manufacturing cost that is closed from work orders. |
 | Contribution margin | Revenue less variable product cost. In this dataset, fixed overhead is excluded from contribution-margin analysis. |
 
-## Where to Go Next
+## Next Steps
 
 - Read [Schema Reference](../reference/schema.md) for table-level lookup and high-value fields.
 - Read [Process Flows](../learn-the-business/process-flows.md) for the business-cycle reading path.

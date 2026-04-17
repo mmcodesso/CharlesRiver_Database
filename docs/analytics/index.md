@@ -52,7 +52,7 @@ The current analytics layer is organized around these strengths:
 - weekly demand-planning and MRP review through forecasts, policies, recommendations, component plans, and rough-cut capacity
 - formal commercial-pricing review through price lists, promotions, override approvals, and line-level pricing lineage
 
-## Best Next Steps
+## Next Steps
 
 1. Start with the topic page that matches the business cycle you are following.
 2. Move into [Reports Hub](reports/index.md) when you want a perspective-led or report-led reading of the same process.

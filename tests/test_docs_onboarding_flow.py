@@ -7,64 +7,64 @@ FLAGSHIP_DOCS: dict[Path, tuple[str, ...]] = {
     Path("docs/start-here/index.md"): (
         "business cycles",
         "How the Business Reaches Analysis",
-        "## Best Next Steps",
+        "## Next Steps",
     ),
     Path("docs/start-here/downloads.md"): (
         "same business",
         "How the Files Fit the Business Story",
-        "## Best Next Steps",
+        "## Next Steps",
     ),
     Path("docs/learn-the-business/company-story.md"): (
         "connected operating system",
         "How the Business Actually Works",
-        "## Best Next Steps",
+        "## Next Steps",
     ),
     Path("docs/learn-the-business/process-flows.md"): (
         "Process to Analysis Bridges",
         "business process first, accounting second, analysis third",
-        "## Best Next Steps",
+        "## Next Steps",
     ),
     Path("docs/analytics/index.md"): (
         "From Process to Analysis",
         "The goal is not to leave the process behind.",
-        "## Best Next Steps",
+        "## Next Steps",
     ),
     Path("docs/analytics/reports/index.md"): (
         "How Process Becomes Report",
         "Business Perspectives",
-        "## Best Next Steps",
+        "## Next Steps",
     ),
     Path("docs/analytics/reports/lens-packs.md"): (
         "How the Perspectives Grow Out of the Business",
         "Available Business Perspectives",
-        "## Best Next Steps",
+        "## Next Steps",
     ),
     Path("docs/analytics/cases/index.md"): (
         "How Cases Fit the Learning Path",
         "structured follow-through from the company story and the process pages",
-        "## Best Next Steps",
+        "## Next Steps",
     ),
 }
 
 
 PROCESS_NEXT_STEP_LINKS: dict[Path, tuple[str, ...]] = {
     Path("docs/processes/o2c.md"): (
-        "## Best Next Steps",
+        "## Next Steps",
         "../analytics/reports/commercial-and-working-capital.md",
         "../analytics/cases/o2c-trace-case.md",
     ),
     Path("docs/processes/p2p.md"): (
-        "## Best Next Steps",
+        "## Next Steps",
         "../analytics/reports/commercial-and-working-capital.md",
         "../analytics/cases/p2p-accrual-settlement-case.md",
     ),
     Path("docs/processes/manufacturing.md"): (
-        "## Best Next Steps",
+        "## Next Steps",
         "../analytics/reports/operations-and-risk.md",
         "../analytics/cases/manufacturing-labor-cost-case.md",
     ),
     Path("docs/processes/payroll.md"): (
-        "## Best Next Steps",
+        "## Next Steps",
         "../analytics/reports/payroll-perspective.md",
         "../analytics/cases/workforce-cost-and-org-control-case.md",
     ),

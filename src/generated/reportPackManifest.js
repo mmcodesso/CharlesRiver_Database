@@ -5,7 +5,7 @@ const reportPackManifest = {
     "summary": "Start here when you want a broad company-level view that ties performance, financial position, cash, and working capital into one storyline.",
     "openingParagraphs": [
       "Executive Overview is the management-level entry point into the dataset. It frames the company as a system where profit, liquidity, operating discipline, and working-capital decisions all interact rather than appearing as isolated report lines.",
-      "This perspective matters because a strong income statement does not automatically mean the company is financially healthy. Students need to see how revenue, margins, receivables, payables, inventory, and cost control combine to shape the real operating position month by month.",
+      "A strong income statement does not automatically mean the company is financially healthy. Students need to see how revenue, margins, receivables, payables, inventory, and cost control combine to shape the real operating position month by month.",
       "The goal is to build a first-pass narrative before diving into detail. By the end of this perspective, the reader should understand where the business looks stable, where pressure is building, and which area deserves the next focused investigation."
     ],
     "approachGuidance": [
@@ -192,7 +192,7 @@ const reportPackManifest = {
     "summary": "Use this pack to connect revenue quality, customer behavior, pricing, and settlement timing to working-capital outcomes.",
     "openingParagraphs": [
       "Commercial and Working Capital focuses on the quality of revenue rather than revenue volume alone. It asks whether customer mix, pricing discipline, credits, collections, and supplier obligations are helping the business convert sales activity into healthy cash outcomes.",
-      "This perspective matters because commercial decisions shape more than the top line. Discounting, refunds, delayed collections, unapplied cash, and uneven supplier-payment timing can all weaken the company even when reported sales look strong.",
+      "Commercial decisions shape more than the top line. Discounting, refunds, delayed collections, unapplied cash, and uneven supplier-payment timing can all weaken the company even when reported sales look strong.",
       "The reader should approach this perspective as a bridge between sales behavior and liquidity. The sequence is designed to show how customer-level and supplier-level patterns move through pricing, settlement, receivables, payables, and ultimately cash conversion."
     ],
     "approachGuidance": [
@@ -428,7 +428,7 @@ const reportPackManifest = {
     "summary": "Use this pack to connect planning, supply reliability, capacity, workforce structure, and control signals into one operational-risk storyline.",
     "openingParagraphs": [
       "Operations and Risk frames the company as an execution system. It asks whether demand, supply, capacity, workforce structure, and controls are aligned well enough for the business to deliver reliably without creating hidden operational or financial stress.",
-      "This perspective matters because operational problems often surface before they appear clearly in financial statements. Supplier delays, weak inventory coverage, overcommitted work centers, unstable forecasts, and control exceptions can all signal future pressure on service, margin, and risk.",
+      "Operational problems often surface before they appear clearly in financial statements. Supplier delays, weak inventory coverage, overcommitted work centers, unstable forecasts, and control exceptions can all signal future pressure on service, margin, and risk.",
       "The purpose of this perspective is to help readers connect operational indicators with governance signals. Rather than treating planning, staffing, and controls as separate topics, the report sequence shows how they reinforce one another inside the same operating environment."
     ],
     "approachGuidance": [
@@ -619,7 +619,7 @@ const reportPackManifest = {
     "summary": "Use this perspective to connect people cost, payroll calculation, cash movement, time support, and payroll-control risk into one guided storyline.",
     "openingParagraphs": [
       "Payroll and Workforce treats payroll as more than a routine back-office process. It is one of the clearest places where workforce structure, operating time, accounting, cash movement, and control discipline all meet in the same monthly cycle.",
-      "This perspective matters because payroll can look stable on the surface while still hiding meaningful issues underneath. Students need to see where people cost sits, how gross pay turns into net pay, how liabilities clear through payments and remittances, and whether approved time actually supports what was paid.",
+      "Payroll can look stable on the surface while still hiding meaningful issues underneath. Students need to see where people cost sits, how gross pay turns into net pay, how liabilities clear through payments and remittances, and whether approved time actually supports what was paid.",
       "The goal is to help readers move from payroll as an expense line to payroll as a business process. By the end of this sequence, the reader should understand whether payroll looks operationally supported, financially well explained, and controlled strongly enough to trust."
     ],
     "approachGuidance": [

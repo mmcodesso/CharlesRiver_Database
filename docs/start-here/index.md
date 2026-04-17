@@ -42,7 +42,7 @@ The downloaded files are different views of the same business system:
 
 Students should read the files as evidence packages produced by the same company story, not as separate learning paths.
 
-## Best Next Steps
+## Next Steps
 
 1. Read [Company Story](../learn-the-business/company-story.md).
 2. Read [Process Flows](../learn-the-business/process-flows.md).

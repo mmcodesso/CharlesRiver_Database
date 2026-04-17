@@ -45,8 +45,6 @@ Start with the portfolio itself. Before you interpret sales or returns, you need
 
 Establish the main catalog dimensions that segment the portfolio across collections, style families, lifecycle status, and supply mode.
 
-**Why this matters**
-
 Every later conclusion depends on these dimensions. If the portfolio structure is weak or unclear, later managerial analysis will also be weak.
 
 **Suggested query**
@@ -78,8 +76,6 @@ Once the catalog structure is visible, test whether the supporting attributes ar
 **What we are trying to achieve**
 
 Find sellable items that are missing key catalog attributes such as collection, style family, primary material, finish, or lifecycle status.
-
-**Why this matters**
 
 Missing item attributes weaken reporting, teaching, and management review. A portfolio analysis fails quickly if core item-master fields are blank.
 
@@ -114,8 +110,6 @@ After completeness, move to consistency. A complete item master can still carry 
 
 Identify current-state conflicts between `LifecycleStatus` and `IsActive`.
 
-**Why this matters**
-
 Lifecycle analysis only works when current-state item status makes sense. If active flags and lifecycle labels disagree, portfolio reporting becomes hard to defend.
 
 **Suggested query**
@@ -147,8 +141,6 @@ Now connect the item master to business activity. The goal here is to confirm th
 **What we are trying to achieve**
 
 Show how portfolio dimensions appear in billed sales and contribution interpretation across collections, materials, lifecycle groups, and supply modes.
-
-**Why this matters**
 
 Catalog structure earns its value when it explains business results. This step shows whether the item-master dimensions are useful enough to support later profitability work.
 
@@ -186,8 +178,6 @@ Finish with the control question. If lifecycle status matters, it should change 
 **What we are trying to achieve**
 
 Find lifecycle-driven exception activity and connect it to customer-facing outcomes such as returns or refunds.
-
-**Why this matters**
 
 This step turns lifecycle status into an operational control concept. It shows whether the company continued using products after launch windows or after discontinuation.
 
@@ -233,7 +223,7 @@ The audit query overlays item lifecycle fields with transaction dates from sales
 - Which item-master quality issue would most weaken management reporting?
 - Which portfolio dimension should management carry into the profitability case next?
 
-## Where to Go Next
+## Next Steps
 
 - Use [Product Portfolio Profitability Case](product-portfolio-profitability-case.md) when you want deeper margin and contribution interpretation.
 - Use [Schema Reference](../../reference/schema.md) when you need table-level support for item and transaction joins.

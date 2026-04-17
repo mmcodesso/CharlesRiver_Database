@@ -44,8 +44,6 @@ Start by identifying the order population and asking a basic control question: d
 
 Establish the order-level trace and see where the chain stays complete, remains partial, or branches into return activity.
 
-**Why this matters**
-
 If you do not define the document population first, later timing and accounting observations will be hard to interpret. This step gives you the control view of the normal O2C chain.
 
 **Suggested query**
@@ -78,8 +76,6 @@ Once you know which orders remain partial, move to the operational question: how
 
 Measure where shipment timing breaks from the original order promise and where backorder quantity remains open.
 
-**Why this matters**
-
 Students often jump directly from order to invoice. That misses the operational reality that customer service timing and accounting timing separate at shipment.
 
 **Suggested query**
@@ -111,8 +107,6 @@ Now move from document completeness to posting logic. At this point, the goal is
 **What we are trying to achieve**
 
 Trace one order line through shipment and invoice detail, then tie those source rows back to posted `GLEntry` activity.
-
-**Why this matters**
 
 This is where cutoff, occurrence, and revenue-recognition discussions become concrete. You can only answer those questions reliably if the source documents and ledger rows are connected.
 
@@ -151,8 +145,6 @@ After billing, shift to the receivables question. Cash can arrive on one date. A
 
 Separate the cash event from the settlement event and identify invoices or receipts that remain open after money has already arrived.
 
-**Why this matters**
-
 This is one of the most common student misunderstandings in O2C. `CashReceipt` records cash arrival. `CashReceiptApplication` records which invoice balance was actually cleared.
 
 **Suggested query**
@@ -189,8 +181,6 @@ Finish by looking at what changes when the normal path breaks. Returns, credits,
 **What we are trying to achieve**
 
 Explain how exception activity changes the meaning of a trace that originally looked complete.
-
-**Why this matters**
 
 A student who can only explain the normal path has not finished the case. Audit, AR, and customer-service interpretation all depend on understanding what happened after the initial shipment and invoice.
 
@@ -232,7 +222,7 @@ The query aggregates shipments and billings by order line, then overlays return 
 - Which part of the trace is most important for cutoff testing?
 - How does a later return or credit change the interpretation of the original sale?
 
-## Where to Go Next
+## Next Steps
 
 - Use [Order-to-Cash Process](../../processes/o2c.md) for the full business and data walkthrough of the normal and exception path.
 - Use [Schema Reference](../../reference/schema.md) when you need table-level join support while working through the case.

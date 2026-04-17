@@ -151,7 +151,7 @@ The main SQLite database and main Excel workbook are the core student-facing dat
 - Ask students to start from the documentation site and the published teaching files, not from the local generation workflow.
 - If you want a smaller assignment, filter to one fiscal year in SQL or Excel without creating many custom classroom variants.
 
-## Where to Go Next
+## Next Steps
 
 - Read [Instructor Adoption Guide](../teach-with-data/instructor-guide.md) for course sequencing.
 - Read [SQL Guide](../analytics/sql-guide.md) if students will work primarily in SQLite.

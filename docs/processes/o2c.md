@@ -278,7 +278,7 @@ This local lineage view separates two outcomes that students often mix together.
 - Which returns reduced open AR versus created customer credit?
 - How do revenue, receivables, unapplied cash, collections timing, and return corrections differ by period?
 
-## Best Next Steps
+## Next Steps
 
 - Read [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md) when you want the business perspective built around pricing, collections, receivables, payables, and settlement timing.
 - Read [Financial Reports](../analytics/reports/financial.md) when you want the broader reporting layer behind revenue, AR, working capital, and cash conversion.

@@ -318,7 +318,7 @@ flowchart LR
 - Which work orders were completed but not yet closed?
 - How much manufacturing variance was posted by month, work center, or item group?
 
-## Best Next Steps
+## Next Steps
 
 - Read [Operations and Risk](../analytics/reports/operations-and-risk.md) when you want the business perspective built around planning pressure, supply reliability, capacity, workforce context, and controls.
 - Read [Managerial Reports](../analytics/reports/managerial.md) when you want the broader report layer behind utilization, planning, workforce context, and supply risk.

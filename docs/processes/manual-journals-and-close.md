@@ -229,7 +229,7 @@ flowchart LR
 - How much finance-controlled journal activity exists beside operational postings?
 - How should year-end close entries be treated in multi-year income-statement analysis?
 
-## Where to Go Next
+## Next Steps
 
 - Read [P2P](p2p.md) for the supplier-invoice and disbursement flow that clears many accrued expenses.
 - Read [Payroll](payroll.md) for the operational payroll cycle that sits outside this finance-controlled journal family.

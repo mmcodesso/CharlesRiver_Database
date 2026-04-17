@@ -289,7 +289,7 @@ flowchart LR
 - Which attendance exceptions still appear alongside approved or paid payroll activity?
 - How does payroll support manufacturing labor analysis without changing the dataset to full actual-cost inventory?
 
-## Best Next Steps
+## Next Steps
 
 - Read [Payroll and Workforce](../analytics/reports/payroll-perspective.md) when you want the guided business perspective that ties people cost, approved time, payroll cash, liabilities, and payroll-control review together.
 - Read [Financial Reports](../analytics/reports/financial.md), [Managerial Reports](../analytics/reports/managerial.md), and [Audit Reports](../analytics/reports/audit.md) when you want the broader payroll and workforce report inventory by area.

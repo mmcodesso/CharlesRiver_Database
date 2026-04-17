@@ -140,7 +140,6 @@ function ReportLearningCard({ item, index }) {
             </div>
           </div>
           <div className={styles.reasonBlock}>
-            <h4 className={styles.subheading}>Why This Report Belongs in the Perspective</h4>
             <p className={styles.reasonText}>{item.whyItMatters}</p>
           </div>
           <div className={styles.learningGrid}>
@@ -229,7 +228,7 @@ export function ReportLearningPack({ pack }) {
         </div>
       </section>
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Where to Go Next</h2>
+        <h2 className={styles.sectionTitle}>Next Steps</h2>
         <ul className={styles.list}>
           {resolvedPack.whereToGoNext.map((item) => (
             <li key={`${item.href}-${item.label}`}>

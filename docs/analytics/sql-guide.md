@@ -120,7 +120,7 @@ sqlite3 downloaded_dataset.sqlite
 
 Then paste a starter query copied from the docs into the prompt and run it directly.
 
-## Where to Go Next
+## Next Steps
 
 - Use [Financial Analytics](financial.md), [Managerial Analytics](managerial.md), or [Audit Analytics](audit.md) to choose your next topic.
 - Use [Analytics Cases](cases/index.md) when you want a guided business question after the first query.

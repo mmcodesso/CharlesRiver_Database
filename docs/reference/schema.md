@@ -381,7 +381,7 @@ erDiagram
 - Manufacturing uses single-level BOMs plus one active routing per manufactured item.
 - Manufacturing remains standard-cost based even though payroll and time provide operational labor detail.
 
-## Where to Go Next
+## Next Steps
 
 - Read [Dataset Guide](../start-here/dataset-overview.md) when you need the mental model, navigation paths, and posting overview.
 - Read [Process Flows](../learn-the-business/process-flows.md) when you want the business-cycle story behind the tables.

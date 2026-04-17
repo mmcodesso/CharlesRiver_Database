@@ -76,7 +76,7 @@ When the class is ready for pricing and margin governance, extend the sequence w
 10. use the pricing and margin case for financial and managerial pricing analysis
 11. use the pricing-governance audit case for expired pricing, promotion misuse, and override-completeness review
 
-## Best Next Steps
+## Next Steps
 
 1. Start from [Analytics Hub](../index.md) or [Reports Hub](../reports/index.md) when you need the broader business context first.
 2. Pick the case that matches the process you want to investigate.

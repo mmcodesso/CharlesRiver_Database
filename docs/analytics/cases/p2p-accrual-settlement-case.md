@@ -45,8 +45,6 @@ Start with the normal path. Before you analyze accrual-linked exceptions, you ne
 
 Establish the requisition-level document chain and see where the normal P2P path stays complete, remains partial, or stalls before payment.
 
-**Why this matters**
-
 If you skip the normal path, it becomes too easy to label every missing receipt as a control failure. This step gives you the control baseline for normal purchased materials and inventory activity.
 
 **Suggested query**
@@ -79,8 +77,6 @@ Once the normal chain is visible, move to the line-level distinction that makes 
 
 Show how `PurchaseInvoiceLine.GoodsReceiptLineID` and `PurchaseInvoiceLine.AccrualJournalEntryID` create two different invoice-settlement paths inside the same AP system.
 
-**Why this matters**
-
 Students often assume that every supplier invoice must point to a receipt. In this dataset, some service invoices intentionally clear finance-booked accruals. That pattern can be valid.
 
 **Suggested query**
@@ -112,8 +108,6 @@ Now move from document traceability into posting logic. At this point, the goal 
 **What we are trying to achieve**
 
 Connect the original accrual estimate to the later supplier invoice and the related `GLEntry` activity.
-
-**Why this matters**
 
 This is the core accounting distinction in the case. Receipt-based invoicing clears `2020` GRNI. Accrual-linked service invoicing clears `2040` accrued expenses up to the estimate, books any excess to expense, and leaves any shortfall to be reversed through a linked accrual adjustment.
 
@@ -153,8 +147,6 @@ Once the accounting bridge is clear, shift to timing. Accrual date, invoice date
 
 Measure lag from accrual date to invoice date to payment date and identify which supplier invoices still remain open.
 
-**Why this matters**
-
 This is where AP aging and expense-cutoff questions become concrete. A liability can be estimated at month-end, invoiced later, and paid later still.
 
 **Suggested query**
@@ -191,8 +183,6 @@ Finish by asking which accrual-linked service settlements are merely different a
 **What we are trying to achieve**
 
 Explain what makes an accrued-service settlement look valid, suspicious, or incomplete.
-
-**Why this matters**
 
 You have not finished the case until you explain whether the timing, amount, and settlement behavior still make sense after the invoice appears.
 
@@ -234,7 +224,7 @@ The query starts with accrual headers, joins to `PurchaseInvoiceLine` where `Acc
 - Why do `2020` GRNI and `2040` accrued expenses need to stay conceptually separate?
 - What kind of timing or amount pattern would make an accrued-service settlement worth audit follow-up?
 
-## Where to Go Next
+## Next Steps
 
 - Use [Procure-to-Pay Process](../../processes/p2p.md) for the full business and data walkthrough of the normal receipt-matched path and the accrued-service distinction.
 - Use [Manual Journals and Close Cycle](../../processes/manual-journals-and-close.md) when you want the finance-controlled side of accruals, adjustments, and boundary entries.

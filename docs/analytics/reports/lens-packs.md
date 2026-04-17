@@ -28,7 +28,7 @@ Each perspective still grows out of the process layer underneath. Commercial and
 | Payroll and Workforce | People cost, gross-to-net payroll, payroll cash, time support, and payroll-control risk | [Payroll and Workforce](payroll-perspective.md) |
 | Operations and Risk | Capacity, supply reliability, planning pressure, workforce context, and controls | [Operations and Risk](operations-and-risk.md) |
 
-## Best Next Steps
+## Next Steps
 
 1. Open the perspective that matches the business cycle or business question you just studied.
 2. Move to the matching area in the `Report Library` when you want a broader inventory beyond the guided sequence.

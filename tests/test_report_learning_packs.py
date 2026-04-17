@@ -116,10 +116,10 @@ def test_report_pack_manifest_and_component_render_expected_sections() -> None:
     assert "Core Questions" in component_text
     assert "Recommended Report Sequence" in component_text
     assert "Report Blocks" in component_text
-    assert "Where to Go Next" in component_text
+    assert "Next Steps" in component_text
     assert "Audience and Purpose" not in component_text
     assert "Business Lens" not in component_text
-    assert "Why This Report Belongs in the Perspective" in component_text
+    assert "Why This Report Belongs in the Perspective" not in component_text
     assert "Why This Report Belongs in the Lens" not in component_text
 
     for path in EXPECTED_PACK_PAGES[1:]:

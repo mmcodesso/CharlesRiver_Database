@@ -39,7 +39,7 @@ This section keeps two reading levels together. `Business Perspectives` shows a 
 | Managerial | Budget, margin, capacity, workforce, payroll operations, and supply-risk review | [Managerial Reports](managerial.md) |
 | Audit | Approval, segregation-of-duties, payroll and time controls, and anomaly review | [Audit Reports](audit.md) |
 
-## Best Next Steps
+## Next Steps
 
 1. Start with the perspective or report area that matches the business cycle you just studied.
 2. Use the in-site preview to read the report as a business summary before downloading the full artifact.
