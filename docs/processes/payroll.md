@@ -47,7 +47,7 @@ Read the main diagram as payroll support, approved hours, gross-to-net calculati
 This page is organized around business flow first and data navigation second. The main diagram shows the normal payroll path. The smaller diagrams below show one analytical task at a time, such as approved attendance, gross-to-net payroll, liability settlement, or manufacturing labor traceability. The fuller relationship map belongs on [Schema Reference](../reference/schema.md), not on this process page.
 
 :::tip
-Use this page to separate the support layer from the accounting layer. Start with approved time and labor support, then move into payroll posting, cash payment, remittance, and manufacturing reclass.
+Start with approved time and labor support, then move into payroll posting, cash payment, remittance, and manufacturing reclass so the support layer and the accounting layer stay distinct.
 :::
 
 ## Core Tables and What They Represent
@@ -106,7 +106,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `ShiftDefinition`, `EmployeeShiftAssignment` | Define the expected shift pattern for hourly workers |
 | `EmployeeShiftRoster` | Shows who was scheduled to work, where, and for how many hours |
@@ -145,7 +145,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `TimeClockEntry` | Supplies approved regular and overtime hours for hourly payroll |
 | `LaborTimeEntry` | Carries the costing and payroll-support bridge at the labor-entry level |
@@ -187,7 +187,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `PayrollRegister`, `PayrollRegisterLine` | Create the gross-to-net and liability detail for each employee |
 | `PayrollPayment` | Clears employee net pay |
@@ -223,7 +223,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `TimeClockEntry`, `LaborTimeEntry` | Carry approved time and labor allocation into costing analysis |
 | `WorkOrderOperation` | Shows which routing operation consumed the direct labor |
@@ -262,7 +262,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `EmployeeShiftRoster` | Defines the planned shift baseline |
 | `TimeClockPunch` | Shows raw evidence when attendance is questioned |

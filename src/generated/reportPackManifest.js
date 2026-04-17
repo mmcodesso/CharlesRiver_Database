@@ -38,7 +38,7 @@ const reportPackManifest = {
       {
         "reportSlug": "monthly-income-statement",
         "teachingRole": "anchor",
-        "whyItMatters": "Use the income statement to establish the operating-performance story before looking at balance-sheet and cash implications.",
+        "whyItMatters": "The income statement establishes the operating-performance story before the reader moves to balance-sheet and cash implications.",
         "discussionQuestions": [
           "Which expense or margin lines appear to move most with revenue over time?",
           "When net income changes sharply, which lines are most responsible?",
@@ -57,7 +57,7 @@ const reportPackManifest = {
       {
         "reportSlug": "monthly-balance-sheet",
         "teachingRole": "anchor",
-        "whyItMatters": "Use the balance sheet to connect performance to ending balances in receivables, inventory, payables, equity, and current-year earnings.",
+        "whyItMatters": "The balance sheet connects performance to ending balances in receivables, inventory, payables, equity, and current-year earnings.",
         "discussionQuestions": [
           "Which balance-sheet sections seem to shift most across the modeled range?",
           "Do asset changes appear to be financed by operations, liabilities, or equity?",
@@ -76,7 +76,7 @@ const reportPackManifest = {
       {
         "reportSlug": "monthly-indirect-cash-flow",
         "teachingRole": "anchor",
-        "whyItMatters": "Use the cash flow statement to reconcile accounting performance to cash movement and surface the operational timing drivers beneath liquidity.",
+        "whyItMatters": "The cash flow statement reconciles accounting performance to cash movement and surfaces the operational timing drivers beneath liquidity.",
         "discussionQuestions": [
           "Which adjustments explain the largest differences between net income and operating cash flow?",
           "Does operating cash flow move consistently with reported profitability?",
@@ -95,7 +95,7 @@ const reportPackManifest = {
       {
         "reportSlug": "monthly-revenue-and-gross-margin",
         "teachingRole": "anchor",
-        "whyItMatters": "Use the monthly revenue bridge to isolate the commercial engine before layering on working-capital and statement interpretation.",
+        "whyItMatters": "The monthly revenue bridge isolates the commercial engine before the reader layers on working-capital and statement interpretation.",
         "discussionQuestions": [
           "Which periods show the strongest combination of revenue and margin?",
           "Do returns and discounts appear to move with revenue or against it?",
@@ -114,7 +114,7 @@ const reportPackManifest = {
       {
         "reportSlug": "monthly-ar-aging-summary",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use the AR summary to see whether strong revenue is being converted into collectible receivables or trapped in aging balances.",
+        "whyItMatters": "The AR summary shows whether strong revenue is being converted into collectible receivables or trapped in aging balances.",
         "discussionQuestions": [
           "Which customer segments appear to hold the largest past-due balances?",
           "Does the aging profile look stable or increasingly stressed over time?",
@@ -133,7 +133,7 @@ const reportPackManifest = {
       {
         "reportSlug": "monthly-ap-aging-summary",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use the AP summary to understand whether supplier obligations are manageable or becoming a source of cash pressure.",
+        "whyItMatters": "The AP summary shows whether supplier obligations remain manageable or are becoming a source of cash pressure.",
         "discussionQuestions": [
           "Which supplier groups carry the largest open balances?",
           "Does the aging profile suggest normal payment timing or growing strain?",
@@ -168,7 +168,7 @@ const reportPackManifest = {
       {
         "reportSlug": "working-capital-bridge-by-month",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use the working-capital bridge to identify which balance-sheet buckets are driving liquidity changes instead of treating working capital as one unexplained total.",
+        "whyItMatters": "The working-capital bridge identifies which balance-sheet buckets are driving liquidity changes instead of treating working capital as one unexplained total.",
         "discussionQuestions": [
           "Which working-capital bucket contributes the most to month-to-month movement?",
           "Do AR, inventory, AP, and deposits appear to move together or independently?",
@@ -189,7 +189,7 @@ const reportPackManifest = {
   "commercial-and-working-capital": {
     "slug": "commercial-and-working-capital",
     "title": "Commercial and Working Capital",
-    "summary": "Use this pack to connect revenue quality, customer behavior, pricing, and settlement timing to working-capital outcomes.",
+    "summary": "This perspective connects revenue quality, customer behavior, pricing, and settlement timing to working-capital outcomes.",
     "openingParagraphs": [
       "Commercial and Working Capital focuses on the quality of revenue rather than revenue volume alone. It asks whether customer mix, pricing discipline, credits, collections, and supplier obligations are helping the business convert sales activity into healthy cash outcomes.",
       "Commercial decisions shape more than the top line. Discounting, refunds, delayed collections, unapplied cash, and uneven supplier-payment timing can all weaken the company even when reported sales look strong.",
@@ -248,7 +248,7 @@ const reportPackManifest = {
       {
         "reportSlug": "customer-sales-mix-by-region-and-item-group",
         "teachingRole": "anchor",
-        "whyItMatters": "Use the customer sales mix report to see where revenue is concentrated by geography, customer type, and product family.",
+        "whyItMatters": "The customer sales mix report shows where revenue is concentrated by geography, customer type, and product family.",
         "discussionQuestions": [
           "Which regions and customer segments drive the largest share of billed sales?",
           "Does the product mix differ materially by customer segment?",
@@ -318,7 +318,7 @@ const reportPackManifest = {
       {
         "reportSlug": "monthly-ar-aging-summary",
         "teachingRole": "anchor",
-        "whyItMatters": "Use the AR summary to see whether billed revenue is translating into timely collections at the customer level.",
+        "whyItMatters": "The AR summary shows whether billed revenue is translating into timely collections at the customer level.",
         "discussionQuestions": [
           "Which customer groups hold the most open and past-due receivables?",
           "Does the aging mix suggest stable collections or growing stress?",
@@ -337,7 +337,7 @@ const reportPackManifest = {
       {
         "reportSlug": "monthly-ar-aging-detail",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use the invoice-level AR detail to inspect the exact documents driving the summary aging pattern.",
+        "whyItMatters": "The invoice-level AR detail shows the exact documents driving the summary aging pattern.",
         "discussionQuestions": [
           "Which invoices remain open across multiple month-ends?",
           "Where do due-date timing and settlement behavior diverge most sharply?",
@@ -353,7 +353,7 @@ const reportPackManifest = {
       {
         "reportSlug": "monthly-ap-aging-summary",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use the AP summary to compare commercial growth and collections against the company's cash obligations to suppliers.",
+        "whyItMatters": "The AP summary compares commercial growth and collections against the company's cash obligations to suppliers.",
         "discussionQuestions": [
           "Which supplier groups carry the largest open balances?",
           "Does AP aging suggest deliberate working-capital management or payment strain?",
@@ -372,7 +372,7 @@ const reportPackManifest = {
       {
         "reportSlug": "monthly-ap-aging-detail",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use the invoice-level AP detail to see which supplier documents are driving the month-end obligation profile.",
+        "whyItMatters": "The invoice-level AP detail shows which supplier documents are driving the month-end obligation profile.",
         "discussionQuestions": [
           "Which supplier invoices remain open across multiple month-ends?",
           "Where do payment timing and due-date timing diverge most clearly?",
@@ -404,7 +404,7 @@ const reportPackManifest = {
       {
         "reportSlug": "cash-conversion-timing-review",
         "teachingRole": "anchor",
-        "whyItMatters": "Use the timing review to link commercial activity and procurement activity to the actual pace of settlement.",
+        "whyItMatters": "The timing review links commercial activity and procurement activity to the actual pace of settlement.",
         "discussionQuestions": [
           "Which document family takes the longest to reach first settlement?",
           "Are settlement delays concentrated in AR, AP, or goods-receipt timing?",
@@ -425,7 +425,7 @@ const reportPackManifest = {
   "operations-and-risk": {
     "slug": "operations-and-risk",
     "title": "Operations and Risk",
-    "summary": "Use this pack to connect planning, supply reliability, capacity, workforce structure, and control signals into one operational-risk storyline.",
+    "summary": "This perspective connects planning, supply reliability, capacity, workforce structure, and control signals into one operational-risk storyline.",
     "openingParagraphs": [
       "Operations and Risk frames the company as an execution system. It asks whether demand, supply, capacity, workforce structure, and controls are aligned well enough for the business to deliver reliably without creating hidden operational or financial stress.",
       "Operational problems often surface before they appear clearly in financial statements. Supplier delays, weak inventory coverage, overcommitted work centers, unstable forecasts, and control exceptions can all signal future pressure on service, margin, and risk.",
@@ -484,7 +484,7 @@ const reportPackManifest = {
       {
         "reportSlug": "rough-cut-capacity-load-vs-available-hours",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use the rough-cut plan to inspect the week-level load behind utilization pressure and identify where capacity is overtly overcommitted.",
+        "whyItMatters": "The rough-cut plan shows the week-level load behind utilization pressure and highlights where capacity is overtly overcommitted.",
         "discussionQuestions": [
           "Which weeks or work centers are over capacity versus merely tight?",
           "Is planned load concentrated in a small number of work centers?",
@@ -576,7 +576,7 @@ const reportPackManifest = {
       {
         "reportSlug": "approval-and-sod-review",
         "teachingRole": "anchor",
-        "whyItMatters": "Use the SOD review to show that operational performance should be evaluated together with control design, not separately from it.",
+        "whyItMatters": "The SOD review shows that operational performance should be evaluated together with control design, not separately from it.",
         "discussionQuestions": [
           "Which approval or same-user conflicts appear most concerning?",
           "Are control issues concentrated in particular processes?",
@@ -595,7 +595,7 @@ const reportPackManifest = {
       {
         "reportSlug": "potential-anomaly-review",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use the anomaly review as a broad risk screen that can point students toward the specific operating or control areas most worth investigating.",
+        "whyItMatters": "The anomaly review acts as a broad risk screen that can point students toward the specific operating or control areas most worth investigating.",
         "discussionQuestions": [
           "Which anomaly families appear most meaningful operationally?",
           "Are the exceptions isolated or repeated across processes?",
@@ -616,7 +616,7 @@ const reportPackManifest = {
   "payroll-perspective": {
     "slug": "payroll-perspective",
     "title": "Payroll and Workforce",
-    "summary": "Use this perspective to connect people cost, payroll calculation, cash movement, time support, and payroll-control risk into one guided storyline.",
+    "summary": "This perspective connects people cost, payroll calculation, cash movement, time support, and payroll-control risk into one guided storyline.",
     "openingParagraphs": [
       "Payroll and Workforce treats payroll as more than a routine back-office process. It is one of the clearest places where workforce structure, operating time, accounting, cash movement, and control discipline all meet in the same monthly cycle.",
       "Payroll can look stable on the surface while still hiding meaningful issues underneath. Students need to see where people cost sits, how gross pay turns into net pay, how liabilities clear through payments and remittances, and whether approved time actually supports what was paid.",
@@ -685,7 +685,7 @@ const reportPackManifest = {
       {
         "reportSlug": "gross-to-net-payroll-review",
         "teachingRole": "anchor",
-        "whyItMatters": "Use the register-level gross-to-net bridge to explain payroll calculation clearly before turning to cash movement or exception review.",
+        "whyItMatters": "The register-level gross-to-net bridge explains payroll calculation clearly before the reader turns to cash movement or exception review.",
         "discussionQuestions": [
           "Which employees or cost centers show the largest gross-to-net spread?",
           "How much of the payroll picture sits in employee withholdings versus employer burden?",
@@ -704,7 +704,7 @@ const reportPackManifest = {
       {
         "reportSlug": "punch-to-pay-bridge-for-hourly-workers",
         "teachingRole": "anchor",
-        "whyItMatters": "Use the punch-to-pay bridge to connect raw workforce activity to approved hours, labor allocation, and hourly payroll outcome.",
+        "whyItMatters": "The punch-to-pay bridge connects raw workforce activity to approved hours, labor allocation, and hourly payroll outcome.",
         "discussionQuestions": [
           "How closely do punch counts, approved hours, labor hours, and pay align?",
           "Which hourly employees or periods appear hardest to explain?",
@@ -723,7 +723,7 @@ const reportPackManifest = {
       {
         "reportSlug": "payroll-and-people-cost-mix-by-cost-center-job-family-level",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use the people-cost mix report to compare payroll concentration to the shape of the workforce rather than reading payroll totals in isolation.",
+        "whyItMatters": "The people-cost mix report compares payroll concentration to the shape of the workforce rather than treating payroll totals in isolation.",
         "discussionQuestions": [
           "Which job families or levels drive the most people cost within each cost center?",
           "Where do headcount concentration and payroll concentration diverge?",
@@ -761,7 +761,7 @@ const reportPackManifest = {
       {
         "reportSlug": "payroll-liability-rollforward",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use the liability rollforward to show whether payroll obligations accumulate and clear in a pattern that makes accounting and cash sense.",
+        "whyItMatters": "The liability rollforward shows whether payroll obligations accumulate and clear in a pattern that makes accounting and cash sense.",
         "discussionQuestions": [
           "Which payroll-liability accounts carry the largest ending balances?",
           "Do liabilities appear to clear regularly or build up over time?",
@@ -780,7 +780,7 @@ const reportPackManifest = {
       {
         "reportSlug": "labor-and-headcount-by-work-location-job-family-cost-center",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use this report to connect payroll totals back to workforce structure, approved time, and direct labor usage across the organization.",
+        "whyItMatters": "This report connects payroll totals back to workforce structure, approved time, and direct labor usage across the organization.",
         "discussionQuestions": [
           "Which locations or job families combine high people cost with high approved or direct labor hours?",
           "Where does workforce structure appear operationally heavy or light?",
@@ -837,7 +837,7 @@ const reportPackManifest = {
       {
         "reportSlug": "payroll-control-review",
         "teachingRole": "drill-down",
-        "whyItMatters": "Use the payroll control review to test whether the payroll cycle has basic approval, payment-timing, and register-quality discipline.",
+        "whyItMatters": "The payroll control review tests whether the payroll cycle has basic approval, payment-timing, and register-quality discipline.",
         "discussionQuestions": [
           "Which payroll-control issue types appear most frequently?",
           "Which exception would create the greatest trust problem in payroll reporting?",

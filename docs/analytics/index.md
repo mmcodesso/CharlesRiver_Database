@@ -9,7 +9,7 @@ sidebar_label: Analytics Hub
 
 Once the company story and the business cycles are clear, the analytics layer becomes the place where students interpret what those cycles mean. The goal is not to leave the process behind. The goal is to follow the process forward into reporting, statements, working capital, payroll, planning, controls, and business judgment.
 
-This page works best as a bridge from process understanding into analytical interpretation. Read it as the point where operational evidence becomes management questions, control questions, and accounting explanations.
+The analytics layer is the bridge from process understanding into analytical interpretation. It is the point where operational evidence becomes management questions, control questions, and accounting explanations.
 
 ## From Process to Analysis
 

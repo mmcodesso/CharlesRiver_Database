@@ -9,15 +9,17 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Working Capital and Cash Conversion Case
 
-## Audience and Purpose
-
-Use this case when students need to connect operating documents to month-end working-capital balances and cash-conversion timing.
+This case turns working capital into a business narrative instead of a static balance-sheet comparison. It helps students explain how invoices, receipts, applications, supplier settlement, deposits, payroll liabilities, and accruals interact to shape cash conversion over time.
 
 ## Business Scenario
 
 The finance team wants to explain why working capital moves from month to month. The core question is how invoices, receipts, applications, supplier payments, payroll liabilities, customer deposits, and accrued expenses combine into a working-capital story.
 
-## Main Tables and Worksheets
+## The Problem to Solve
+
+The finance team needs to show which working-capital buckets move the most, which timing patterns sit behind those balances, and why cash conversion can tighten even when top-line activity looks healthy.
+
+## Key Data Sources
 
 - `GLEntry`
 - `Account`
@@ -51,3 +53,9 @@ The finance team wants to explain why working capital moves from month to month.
 - Which working-capital bucket moves the most across the modeled range?
 - Which timing metric would you expect management to monitor most closely?
 - Why can working capital tighten even when revenue is rising?
+
+## Next Steps
+
+- Read [Executive Overview](../reports/executive-overview.md) when you want the company-level interpretation after the bridge is clear.
+- Read [Commercial and Working Capital](../reports/commercial-and-working-capital.md) when you want the deeper receivables, payables, and settlement perspective.
+- Read [Financial Analytics](../financial.md) for the wider working-capital and cash-conversion query set.

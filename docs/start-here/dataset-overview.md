@@ -7,7 +7,7 @@ sidebar_label: Dataset Guide
 
 # Dataset Guide
 
-Use this page when you need the mental model for the dataset: what is in it, how the table families fit together, which paths matter most, and how operational activity reaches `GLEntry`.
+This page provides the mental model for the dataset: what is in it, how the table families fit together, which paths matter most, and how operational activity reaches `GLEntry`.
 
 If you need field-level lookup, use [Schema Reference](../reference/schema.md). If you need business narrative, use [Company Story](../learn-the-business/company-story.md) and [Process Flows](../learn-the-business/process-flows.md).
 
@@ -52,7 +52,7 @@ Download them from [Downloads](downloads.md) or use the copies already shared fo
 
 The easiest way to think about the model is in layers:
 
-| Layer | What belongs here | Why it matters |
+| Layer | What belongs here | What it adds |
 |---|---|---|
 | Business master data | `Customer`, `Supplier`, `Item`, `Employee`, `Warehouse`, `CostCenter` | Defines who, what, and where |
 | Planning and setup | BOMs, routings, shifts, rosters, forecasts, inventory policies | Explains what should happen before execution starts |

@@ -7,7 +7,7 @@ sidebar_label: Technical Guide
 
 # Technical Guide
 
-Use this page when you need the codebase-level view of how the dataset is generated.
+This page gives the codebase-level view of how the dataset is generated.
 
 For table structure and join fields, use [Schema Reference](../reference/schema.md). For event-to-ledger behavior, use [GLEntry Posting Reference](../reference/posting.md). For current scope and planned improvements, use [Roadmap](roadmap.md).
 

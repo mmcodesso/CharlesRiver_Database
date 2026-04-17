@@ -9,15 +9,17 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Audit Review Pack Case
 
-## Audience and Purpose
-
-Use this case when students need a structured audit lab that combines source-table SQL review with follow-up tracing.
+This case works as a broad audit triage exercise rather than a single-process walkthrough. It gives students a way to move from flagged query results into source evidence, compare different anomaly families, and explain what kind of control problem they are actually seeing.
 
 ## Business Scenario
 
-The internal-audit team receives the normal five-year package and needs to triage control issues quickly. The job is not to prove every issue from scratch. The job is to use the audit starter queries and the source tables together so the team can explain what happened, where it happened, and why it matters.
+The internal-audit team receives the normal five-year package and needs to triage control issues quickly. The job is not to prove every issue from scratch. The job is to use the audit starter queries and the source tables together so the team can explain what happened, where it happened, and what it means.
 
-## Main Tables
+## The Problem to Solve
+
+The review team needs to separate master-data issues, approval issues, workforce-control failures, and operational exceptions without treating every flagged row as the same kind of risk.
+
+## Key Data Sources
 
 - `Employee`
 - `Item`
@@ -51,3 +53,9 @@ Work through the SQL sequence below, then trace the flagged rows back into the s
 - Which anomaly family would you escalate first and why?
 - Which query gives the best starting point, and which query gives the best detail?
 - How would you separate a master-data control issue from an operational processing issue?
+
+## Next Steps
+
+- Read [Audit Analytics](../audit.md) when you want the broader audit query library around these anomaly families.
+- Read [Schema Reference](../../reference/schema.md) when you need the table bridges behind a flagged exception.
+- Read [Audit Exception Lab](audit-exception-lab.md) when you want a narrower anomaly-tracing exercise.

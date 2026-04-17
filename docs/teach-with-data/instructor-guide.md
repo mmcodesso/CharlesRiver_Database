@@ -46,7 +46,7 @@ This sequence works well for most first-time adoptions:
 
 This order helps students understand the business and the process logic before they move into SQL, Excel, or open-ended analysis.
 
-## When to use the support workbook
+## Including the Support Workbook
 
 Include <FileName type="support" /> when you want students to:
 

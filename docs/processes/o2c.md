@@ -42,7 +42,7 @@ Read the main diagram as promise, fulfillment, billing, cash, and settlement. Or
 This page is organized around business flow first and data navigation second. The main diagram shows the normal O2C path. The smaller diagrams below show local lineage for one analytical task at a time. The fuller relationship map belongs on [Schema Reference](../reference/schema.md), not on this process page.
 
 :::tip
-Use this page to understand the business flow first. Then move into the subsection diagrams and tables when you need the exact trace for one analytical question.
+Start with the business flow, then move into the subsection diagrams and tables when you need the exact trace for one analytical question.
 :::
 
 ## Core Tables and What They Represent
@@ -94,7 +94,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `PriceList`, `PriceListLine` | Provide the base commercial price by customer or segment scope |
 | `PromotionProgram` | Adds the promotion-based discount when one valid promotion applies |
@@ -126,7 +126,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `SalesOrder`, `SalesOrderLine` | Show the original customer promise and ordered quantity |
 | `Shipment`, `ShipmentLine` | Show what actually shipped and when it shipped |
@@ -162,7 +162,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `CashReceipt` | Records when customer cash arrived |
 | `CashReceiptApplication` | Records which invoices were actually settled |
@@ -198,7 +198,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `SalesOrderLine` | Shows the original promised quantity |
 | `ShipmentLine` | Shows what quantity left inventory and when |

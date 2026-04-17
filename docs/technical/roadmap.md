@@ -7,7 +7,7 @@ sidebar_label: Roadmap
 
 # Roadmap
 
-Use this page for current-versus-future scope. The rest of the documentation describes the current dataset release and teaching workflow.
+This page separates current release scope from planned future expansion. The rest of the documentation describes the current dataset release and teaching workflow.
 
 ## Implemented in the Current Release
 

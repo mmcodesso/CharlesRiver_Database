@@ -9,16 +9,27 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Demand Planning and Replenishment Case
 
-## Audience and Purpose
-
-- audience: managerial analytics, operations, cost accounting, and supply-chain planning students
-- purpose: connect weekly demand forecasts to replenishment recommendations, purchase support, manufacturing release, and rough-cut capacity pressure
+This case follows the planning layer before execution begins. It asks students to explain how weekly forecasts, inventory policy, and supply recommendations shape purchasing and manufacturing pressure before those decisions appear in receipts, work orders, or financial results.
 
 ## Business Scenario
 
 The dataset plans replenishment weekly. Students need to explain how forecasted demand becomes supply recommendations, why some recommendations are expedited, and where rough-cut capacity tightens before execution starts.
 
-## Query Sequence
+## The Problem to Solve
+
+The planning team needs a clear explanation of which item families drive the heaviest recommendation pressure, where that pressure turns into expedite signals, and how rough-cut capacity starts tightening before operations execute the plan.
+
+## Key Data Sources
+
+- `DemandForecast`
+- `InventoryPolicy`
+- `SupplyPlanRecommendation`
+- `MaterialRequirementPlan`
+- `RoughCutCapacityPlan`
+- `PurchaseRequisition`
+- `WorkOrder`
+
+## Recommended Query Sequence
 
 <QuerySequence items={caseQuerySequences["demand-planning-and-replenishment-case"]} />
 
@@ -42,3 +53,9 @@ The dataset plans replenishment weekly. Students need to explain how forecasted 
 2. Where does forecast bias appear systematic?
 3. Which work centers become tight first when manufactured demand rises?
 4. How would a planner explain the mix of forecast-driven versus backlog-driven recommendations?
+
+## Next Steps
+
+- Read [Process Flows](../../learn-the-business/process-flows.md) and [Manufacturing](../../processes/manufacturing.md) when you want the operational bridge from planning into execution.
+- Read [Operations and Risk](../reports/operations-and-risk.md) when you want the management-level reading of the same planning signals.
+- Read [Managerial Analytics](../managerial.md) for the broader planning, capacity, and supply-risk query set.

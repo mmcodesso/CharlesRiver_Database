@@ -7,7 +7,7 @@ sidebar_label: Customize
 
 # Customize
 
-Use this page when you want to create a local dataset or adjust the generation settings for a specific teaching need.
+This page covers local dataset generation and the settings that shape a customized teaching build.
 
 Most instructors can teach directly from the published package and the documentation site. Use customization only when you need a different date range, different dataset size, different outputs, or a different validation or anomaly setting.
 

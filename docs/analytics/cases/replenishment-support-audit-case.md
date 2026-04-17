@@ -9,16 +9,25 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Replenishment Support Audit Case
 
-## Audience and Purpose
-
-- audience: auditing, AIS, and accounting analytics students
-- purpose: test whether purchase requisitions and work orders remain traceable to approved planning support
+This case treats planning support as an audit trail rather than only a forecasting exercise. It helps students test whether replenishment documents still point back to approved planning logic and whether policy, approval, and conversion controls remain intact before execution begins.
 
 ## Business Scenario
 
 The dataset expects weekly planning support behind normal replenishment activity. The audit task is to identify missing forecast approval, inactive policy coverage, unsupported requisitions or work orders, late recommendation conversion, and prelaunch or discontinued planning activity.
 
-## Query Sequence
+## The Problem to Solve
+
+The audit team needs to separate planning-governance failures from later execution failures and decide which unsupported replenishment documents create the strongest control concern.
+
+## Key Data Sources
+
+- `DemandForecast`
+- `InventoryPolicy`
+- `SupplyPlanRecommendation`
+- `PurchaseRequisition`
+- `WorkOrder`
+
+## Recommended Query Sequence
 
 <QuerySequence items={caseQuerySequences["replenishment-support-audit-case"]} />
 
@@ -39,3 +48,9 @@ The dataset expects weekly planning support behind normal replenishment activity
 1. Which anomalies indicate poor planning governance versus poor execution timing?
 2. How would you separate planning-master exceptions from replenishment-document exceptions in an audit memo?
 3. Which planning control failures could cascade into inventory, capacity, or cash-cycle issues?
+
+## Next Steps
+
+- Read [Demand Planning and Replenishment Case](demand-planning-and-replenishment-case.md) when you want the managerial reading of the same planning layer.
+- Read [Audit Analytics](../audit.md) for the broader planning-support and control-review query set.
+- Read [Operations and Risk](../reports/operations-and-risk.md) when you want the higher-level operational interpretation.

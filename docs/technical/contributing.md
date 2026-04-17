@@ -7,7 +7,7 @@ slug: /technical/contributing
 
 # Contributing
 
-Use this page when you are contributing code, documentation, or tests to the dataset project.
+This page covers the development workflow for contributors working on code, documentation, or tests in the dataset project.
 
 ## Development Setup
 

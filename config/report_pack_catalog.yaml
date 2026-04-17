@@ -26,7 +26,7 @@ packs:
     reports:
       - report_slug: monthly-income-statement
         teaching_role: anchor
-        why_it_matters: Use the income statement to establish the operating-performance story before looking at balance-sheet and cash implications.
+        why_it_matters: The income statement establishes the operating-performance story before the reader moves to balance-sheet and cash implications.
         discussion_questions:
           - Which expense or margin lines appear to move most with revenue over time?
           - When net income changes sharply, which lines are most responsible?
@@ -40,7 +40,7 @@ packs:
           href: /docs/analytics/cases/financial-statement-bridge-case
       - report_slug: monthly-balance-sheet
         teaching_role: anchor
-        why_it_matters: Use the balance sheet to connect performance to ending balances in receivables, inventory, payables, equity, and current-year earnings.
+        why_it_matters: The balance sheet connects performance to ending balances in receivables, inventory, payables, equity, and current-year earnings.
         discussion_questions:
           - Which balance-sheet sections seem to shift most across the modeled range?
           - Do asset changes appear to be financed by operations, liabilities, or equity?
@@ -54,7 +54,7 @@ packs:
           href: /docs/analytics/cases/financial-statement-bridge-case
       - report_slug: monthly-indirect-cash-flow
         teaching_role: anchor
-        why_it_matters: Use the cash flow statement to reconcile accounting performance to cash movement and surface the operational timing drivers beneath liquidity.
+        why_it_matters: The cash flow statement reconciles accounting performance to cash movement and surfaces the operational timing drivers beneath liquidity.
         discussion_questions:
           - Which adjustments explain the largest differences between net income and operating cash flow?
           - Does operating cash flow move consistently with reported profitability?
@@ -68,7 +68,7 @@ packs:
           href: /docs/analytics/cases/working-capital-and-cash-conversion-case
       - report_slug: monthly-revenue-and-gross-margin
         teaching_role: anchor
-        why_it_matters: Use the monthly revenue bridge to isolate the commercial engine before layering on working-capital and statement interpretation.
+        why_it_matters: The monthly revenue bridge isolates the commercial engine before the reader layers on working-capital and statement interpretation.
         discussion_questions:
           - Which periods show the strongest combination of revenue and margin?
           - Do returns and discounts appear to move with revenue or against it?
@@ -82,7 +82,7 @@ packs:
           href: /docs/analytics/cases/pricing-and-margin-governance-case
       - report_slug: monthly-ar-aging-summary
         teaching_role: drill-down
-        why_it_matters: Use the AR summary to see whether strong revenue is being converted into collectible receivables or trapped in aging balances.
+        why_it_matters: The AR summary shows whether strong revenue is being converted into collectible receivables or trapped in aging balances.
         discussion_questions:
           - Which customer segments appear to hold the largest past-due balances?
           - Does the aging profile look stable or increasingly stressed over time?
@@ -96,7 +96,7 @@ packs:
           href: /docs/analytics/cases/working-capital-and-cash-conversion-case
       - report_slug: monthly-ap-aging-summary
         teaching_role: drill-down
-        why_it_matters: Use the AP summary to understand whether supplier obligations are manageable or becoming a source of cash pressure.
+        why_it_matters: The AP summary shows whether supplier obligations remain manageable or are becoming a source of cash pressure.
         discussion_questions:
           - Which supplier groups carry the largest open balances?
           - Does the aging profile suggest normal payment timing or growing strain?
@@ -121,7 +121,7 @@ packs:
           - Link cost-center variance to the profitability story from the income statement.
       - report_slug: working-capital-bridge-by-month
         teaching_role: drill-down
-        why_it_matters: Use the working-capital bridge to identify which balance-sheet buckets are driving liquidity changes instead of treating working capital as one unexplained total.
+        why_it_matters: The working-capital bridge identifies which balance-sheet buckets are driving liquidity changes instead of treating working capital as one unexplained total.
         discussion_questions:
           - Which working-capital bucket contributes the most to month-to-month movement?
           - Do AR, inventory, AP, and deposits appear to move together or independently?
@@ -135,7 +135,7 @@ packs:
           href: /docs/analytics/cases/working-capital-and-cash-conversion-case
   - slug: commercial-and-working-capital
     title: Commercial and Working Capital
-    summary: Use this pack to connect revenue quality, customer behavior, pricing, and settlement timing to working-capital outcomes.
+    summary: This perspective connects revenue quality, customer behavior, pricing, and settlement timing to working-capital outcomes.
     opening_paragraphs:
       - Commercial and Working Capital focuses on the quality of revenue rather than revenue volume alone. It asks whether customer mix, pricing discipline, credits, collections, and supplier obligations are helping the business convert sales activity into healthy cash outcomes.
       - Commercial decisions shape more than the top line. Discounting, refunds, delayed collections, unapplied cash, and uneven supplier-payment timing can all weaken the company even when reported sales look strong.
@@ -176,7 +176,7 @@ packs:
           href: /docs/analytics/cases/pricing-and-margin-governance-case
       - report_slug: customer-sales-mix-by-region-and-item-group
         teaching_role: anchor
-        why_it_matters: Use the customer sales mix report to see where revenue is concentrated by geography, customer type, and product family.
+        why_it_matters: The customer sales mix report shows where revenue is concentrated by geography, customer type, and product family.
         discussion_questions:
           - Which regions and customer segments drive the largest share of billed sales?
           - Does the product mix differ materially by customer segment?
@@ -226,7 +226,7 @@ packs:
           href: /docs/analytics/cases/working-capital-and-cash-conversion-case
       - report_slug: monthly-ar-aging-summary
         teaching_role: anchor
-        why_it_matters: Use the AR summary to see whether billed revenue is translating into timely collections at the customer level.
+        why_it_matters: The AR summary shows whether billed revenue is translating into timely collections at the customer level.
         discussion_questions:
           - Which customer groups hold the most open and past-due receivables?
           - Does the aging mix suggest stable collections or growing stress?
@@ -240,7 +240,7 @@ packs:
           href: /docs/analytics/cases/working-capital-and-cash-conversion-case
       - report_slug: monthly-ar-aging-detail
         teaching_role: drill-down
-        why_it_matters: Use the invoice-level AR detail to inspect the exact documents driving the summary aging pattern.
+        why_it_matters: The invoice-level AR detail shows the exact documents driving the summary aging pattern.
         discussion_questions:
           - Which invoices remain open across multiple month-ends?
           - Where do due-date timing and settlement behavior diverge most sharply?
@@ -251,7 +251,7 @@ packs:
           - Compare cash applied and credit memo applied against the remaining open balance.
       - report_slug: monthly-ap-aging-summary
         teaching_role: drill-down
-        why_it_matters: Use the AP summary to compare commercial growth and collections against the company's cash obligations to suppliers.
+        why_it_matters: The AP summary compares commercial growth and collections against the company's cash obligations to suppliers.
         discussion_questions:
           - Which supplier groups carry the largest open balances?
           - Does AP aging suggest deliberate working-capital management or payment strain?
@@ -265,7 +265,7 @@ packs:
           href: /docs/analytics/cases/working-capital-and-cash-conversion-case
       - report_slug: monthly-ap-aging-detail
         teaching_role: drill-down
-        why_it_matters: Use the invoice-level AP detail to see which supplier documents are driving the month-end obligation profile.
+        why_it_matters: The invoice-level AP detail shows which supplier documents are driving the month-end obligation profile.
         discussion_questions:
           - Which supplier invoices remain open across multiple month-ends?
           - Where do payment timing and due-date timing diverge most clearly?
@@ -287,7 +287,7 @@ packs:
           - Use the result to set up supplier-risk discussion.
       - report_slug: cash-conversion-timing-review
         teaching_role: anchor
-        why_it_matters: Use the timing review to link commercial activity and procurement activity to the actual pace of settlement.
+        why_it_matters: The timing review links commercial activity and procurement activity to the actual pace of settlement.
         discussion_questions:
           - Which document family takes the longest to reach first settlement?
           - Are settlement delays concentrated in AR, AP, or goods-receipt timing?
@@ -301,7 +301,7 @@ packs:
           href: /docs/analytics/cases/working-capital-and-cash-conversion-case
   - slug: operations-and-risk
     title: Operations and Risk
-    summary: Use this pack to connect planning, supply reliability, capacity, workforce structure, and control signals into one operational-risk storyline.
+    summary: This perspective connects planning, supply reliability, capacity, workforce structure, and control signals into one operational-risk storyline.
     opening_paragraphs:
       - Operations and Risk frames the company as an execution system. It asks whether demand, supply, capacity, workforce structure, and controls are aligned well enough for the business to deliver reliably without creating hidden operational or financial stress.
       - Operational problems often surface before they appear clearly in financial statements. Supplier delays, weak inventory coverage, overcommitted work centers, unstable forecasts, and control exceptions can all signal future pressure on service, margin, and risk.
@@ -342,7 +342,7 @@ packs:
           href: /docs/analytics/cases/demand-planning-and-replenishment-case
       - report_slug: rough-cut-capacity-load-vs-available-hours
         teaching_role: drill-down
-        why_it_matters: Use the rough-cut plan to inspect the week-level load behind utilization pressure and identify where capacity is overtly overcommitted.
+        why_it_matters: The rough-cut plan shows the week-level load behind utilization pressure and highlights where capacity is overtly overcommitted.
         discussion_questions:
           - Which weeks or work centers are over capacity versus merely tight?
           - Is planned load concentrated in a small number of work centers?
@@ -409,7 +409,7 @@ packs:
           - Use the result to frame workforce-risk follow-up questions.
       - report_slug: approval-and-sod-review
         teaching_role: anchor
-        why_it_matters: Use the SOD review to show that operational performance should be evaluated together with control design, not separately from it.
+        why_it_matters: The SOD review shows that operational performance should be evaluated together with control design, not separately from it.
         discussion_questions:
           - Which approval or same-user conflicts appear most concerning?
           - Are control issues concentrated in particular processes?
@@ -423,7 +423,7 @@ packs:
           href: /docs/analytics/cases/audit-review-pack-case
       - report_slug: potential-anomaly-review
         teaching_role: drill-down
-        why_it_matters: Use the anomaly review as a broad risk screen that can point students toward the specific operating or control areas most worth investigating.
+        why_it_matters: The anomaly review acts as a broad risk screen that can point students toward the specific operating or control areas most worth investigating.
         discussion_questions:
           - Which anomaly families appear most meaningful operationally?
           - Are the exceptions isolated or repeated across processes?
@@ -437,7 +437,7 @@ packs:
           href: /docs/analytics/cases/audit-review-pack-case
   - slug: payroll-perspective
     title: Payroll and Workforce
-    summary: Use this perspective to connect people cost, payroll calculation, cash movement, time support, and payroll-control risk into one guided storyline.
+    summary: This perspective connects people cost, payroll calculation, cash movement, time support, and payroll-control risk into one guided storyline.
     opening_paragraphs:
       - Payroll and Workforce treats payroll as more than a routine back-office process. It is one of the clearest places where workforce structure, operating time, accounting, cash movement, and control discipline all meet in the same monthly cycle.
       - Payroll can look stable on the surface while still hiding meaningful issues underneath. Students need to see where people cost sits, how gross pay turns into net pay, how liabilities clear through payments and remittances, and whether approved time actually supports what was paid.
@@ -482,7 +482,7 @@ packs:
           - Use the result to decide which workforce group deserves deeper follow-up.
       - report_slug: gross-to-net-payroll-review
         teaching_role: anchor
-        why_it_matters: Use the register-level gross-to-net bridge to explain payroll calculation clearly before turning to cash movement or exception review.
+        why_it_matters: The register-level gross-to-net bridge explains payroll calculation clearly before the reader turns to cash movement or exception review.
         discussion_questions:
           - Which employees or cost centers show the largest gross-to-net spread?
           - How much of the payroll picture sits in employee withholdings versus employer burden?
@@ -496,7 +496,7 @@ packs:
           href: /docs/analytics/cases/workforce-cost-and-org-control-case
       - report_slug: punch-to-pay-bridge-for-hourly-workers
         teaching_role: anchor
-        why_it_matters: Use the punch-to-pay bridge to connect raw workforce activity to approved hours, labor allocation, and hourly payroll outcome.
+        why_it_matters: The punch-to-pay bridge connects raw workforce activity to approved hours, labor allocation, and hourly payroll outcome.
         discussion_questions:
           - How closely do punch counts, approved hours, labor hours, and pay align?
           - Which hourly employees or periods appear hardest to explain?
@@ -510,7 +510,7 @@ packs:
           href: /docs/analytics/cases/workforce-coverage-and-attendance-case
       - report_slug: payroll-and-people-cost-mix-by-cost-center-job-family-level
         teaching_role: drill-down
-        why_it_matters: Use the people-cost mix report to compare payroll concentration to the shape of the workforce rather than reading payroll totals in isolation.
+        why_it_matters: The people-cost mix report compares payroll concentration to the shape of the workforce rather than treating payroll totals in isolation.
         discussion_questions:
           - Which job families or levels drive the most people cost within each cost center?
           - Where do headcount concentration and payroll concentration diverge?
@@ -538,7 +538,7 @@ packs:
           href: /docs/analytics/cases/working-capital-and-cash-conversion-case
       - report_slug: payroll-liability-rollforward
         teaching_role: drill-down
-        why_it_matters: Use the liability rollforward to show whether payroll obligations accumulate and clear in a pattern that makes accounting and cash sense.
+        why_it_matters: The liability rollforward shows whether payroll obligations accumulate and clear in a pattern that makes accounting and cash sense.
         discussion_questions:
           - Which payroll-liability accounts carry the largest ending balances?
           - Do liabilities appear to clear regularly or build up over time?
@@ -552,7 +552,7 @@ packs:
           href: /docs/analytics/cases/working-capital-and-cash-conversion-case
       - report_slug: labor-and-headcount-by-work-location-job-family-cost-center
         teaching_role: drill-down
-        why_it_matters: Use this report to connect payroll totals back to workforce structure, approved time, and direct labor usage across the organization.
+        why_it_matters: This report connects payroll totals back to workforce structure, approved time, and direct labor usage across the organization.
         discussion_questions:
           - Which locations or job families combine high people cost with high approved or direct labor hours?
           - Where does workforce structure appear operationally heavy or light?
@@ -594,7 +594,7 @@ packs:
           href: /docs/analytics/cases/workforce-coverage-and-attendance-case
       - report_slug: payroll-control-review
         teaching_role: drill-down
-        why_it_matters: Use the payroll control review to test whether the payroll cycle has basic approval, payment-timing, and register-quality discipline.
+        why_it_matters: The payroll control review tests whether the payroll cycle has basic approval, payment-timing, and register-quality discipline.
         discussion_questions:
           - Which payroll-control issue types appear most frequently?
           - Which exception would create the greatest trust problem in payroll reporting?

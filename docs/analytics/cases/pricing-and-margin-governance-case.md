@@ -9,16 +9,26 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Pricing and Margin Governance Case
 
-## Audience and Purpose
-
-- audience: financial analytics, managerial analytics, and commercial-policy students
-- purpose: connect list price, negotiated pricing, promotions, and net margin without introducing a separate quote system
+This case follows the commercial pricing rules that sit beneath billed revenue and realized margin. It gives students a way to explain how list price, promotions, customer-specific pricing, and override approvals change the commercial result before that result reaches the statements.
 
 ## Business Scenario
 
 The dataset prices from formal segment and customer price lists with explicit promotions and override approvals. Students need to explain how price realization changes by customer mix, where promotions dilute revenue, and when override approvals become commercially significant.
 
-## Query Sequence
+## The Problem to Solve
+
+Commercial leadership needs to understand whether lower price realization is coming from deliberate policy choices, portfolio mix, promotion strategy, or weak pricing governance.
+
+## Key Data Sources
+
+- `PriceList`
+- `PriceListLine`
+- `PromotionProgram`
+- `PriceOverrideApproval`
+- `SalesOrderLine`
+- `SalesInvoiceLine`
+
+## Recommended Query Sequence
 
 <QuerySequence items={caseQuerySequences["pricing-and-margin-governance-case"]} />
 
@@ -42,3 +52,9 @@ The dataset prices from formal segment and customer price lists with explicit pr
 2. Which collections rely most on promotions to drive billed volume?
 3. Which sales reps show the highest override concentration?
 4. Where does customer-specific pricing appear commercially justified versus administratively heavy?
+
+## Next Steps
+
+- Read [Commercial and Working Capital](../reports/commercial-and-working-capital.md) when you want the broader commercial story around pricing and settlement timing.
+- Read [Pricing Governance Audit Case](pricing-governance-audit-case.md) when you want the control-focused follow-through on the same pricing framework.
+- Read [Financial Analytics](../financial.md) and [Managerial Analytics](../managerial.md) for the wider pricing and margin query sets.

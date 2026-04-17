@@ -9,16 +9,25 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Pricing Governance Audit Case
 
-## Audience and Purpose
-
-- audience: audit, AIS, and controls-focused analytics students
-- purpose: review whether formal price lists, promotions, and override approvals are being used as designed
+This case reads the pricing framework as a control system rather than just a margin system. Students move from the approved commercial rules into flagged exceptions and decide which pricing failures reflect poor master data, poor execution, or missing approval discipline.
 
 ## Business Scenario
 
 The dataset maintains formal price lists, seasonal promotions, and explicit override approvals. Students need to determine whether the commercial-control design is being followed and where transaction pricing no longer matches the approved pricing framework.
 
-## Query Sequence
+## The Problem to Solve
+
+The review team needs to identify where transaction pricing breaks from the approved pricing design and which exceptions should be escalated as governance failures rather than normal commercial variation.
+
+## Key Data Sources
+
+- `PriceList`
+- `PriceListLine`
+- `PromotionProgram`
+- `PriceOverrideApproval`
+- `SalesOrderLine`
+
+## Recommended Query Sequence
 
 <QuerySequence items={caseQuerySequences["pricing-governance-audit-case"]} />
 
@@ -41,3 +50,9 @@ The dataset maintains formal price lists, seasonal promotions, and explicit over
 2. Which exceptions are master-data failures versus transaction-execution failures?
 3. Which pricing exceptions would require immediate remediation before the next sales cycle?
 4. Which pricing controls should be reviewed by sales leadership versus finance leadership?
+
+## Next Steps
+
+- Read [Pricing and Margin Governance Case](pricing-and-margin-governance-case.md) when you want the commercial interpretation beside the audit interpretation.
+- Read [Audit Analytics](../audit.md) for the broader control-review query library.
+- Read [Commercial and Working Capital](../reports/commercial-and-working-capital.md) when you want the business perspective that sits above the control issues.

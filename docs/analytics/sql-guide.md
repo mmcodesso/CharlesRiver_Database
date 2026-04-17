@@ -6,9 +6,9 @@ sidebar_label: SQL Guide
 
 # SQL Guide
 
-## What This Page Helps You Do
+## Opening the Dataset in SQL
 
-Use this page when you are opening the SQLite dataset for the first time. It shows you which file to open, which tool to use first, how to run a starter query, and how to move from a result set into the topic pages and cases.
+The SQL guide is the practical starting point for students who want to work directly in the SQLite file. It shows the first tool, the first file, the first starter query, and the next move after a result set appears.
 
 ## What File to Open
 
@@ -42,7 +42,7 @@ At this point, you are ready to copy SQL from the analytics pages in the docs an
 
 ## How to Run Your First Query
 
-Use this first-pass workflow:
+Start with this first-pass workflow:
 
 1. Open [Financial Analytics](financial.md).
 2. In the starter SQL list, expand `Working-capital bridge by month`.

@@ -9,6 +9,7 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Master Data and Workforce Audit Case
 
+This case focuses on whether the employee master remains trustworthy enough to support approvals, payroll, timekeeping, and organization analysis at the same time. It turns workforce validity into an audit question rather than treating the employee table as static background setup.
 
 ## Business Scenario
 
@@ -16,7 +17,11 @@ The dataset keeps a more realistic employee master. The company has one CEO, one
 
 This case asks students to test whether operational activity, approvals, and payroll behavior still respect that workforce lifecycle.
 
-## Main Tables and Worksheets
+## The Problem to Solve
+
+The review team needs to determine whether employee lifecycle, active-status ownership, approval roles, and downstream activity still line up well enough to trust the workforce-control environment.
+
+## Key Data Sources
 
 - `Employee`
 - `CostCenter`
@@ -55,3 +60,9 @@ This case asks students to test whether operational activity, approvals, and pay
 - Which roles should be unique in a company like this one, and why?
 - Why is it useful to keep terminated employees in the master table for historical traceability?
 - Which approvals would you expect the CFO, Controller, Accounting Manager, and Production Manager to own?
+
+## Next Steps
+
+- Read [Workforce Cost and Org-Control Case](workforce-cost-and-org-control-case.md) when you want the managerial and approval-concentration follow-through.
+- Read [Payroll](../../processes/payroll.md) when you want the operational and accounting path behind the same employee-control questions.
+- Read [Audit Analytics](../audit.md) for the wider workforce-control query set.

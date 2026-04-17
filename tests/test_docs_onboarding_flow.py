@@ -70,6 +70,35 @@ PROCESS_NEXT_STEP_LINKS: dict[Path, tuple[str, ...]] = {
     ),
 }
 
+FORBIDDEN_PUBLIC_COPY = (
+    "Audience and Purpose",
+    "Use this page when",
+    "Use this case when",
+    "Use this pack",
+    "Use this perspective",
+    "This perspective matters because",
+    "Why this matters",
+    "Why This Report Belongs",
+    "Why it matters here",
+    "This page matters because",
+)
+
+CASE_DOCS_WITH_KEY_DATA_SOURCES = (
+    Path("docs/analytics/cases/attendance-control-audit-case.md"),
+    Path("docs/analytics/cases/audit-exception-lab.md"),
+    Path("docs/analytics/cases/audit-review-pack-case.md"),
+    Path("docs/analytics/cases/demand-planning-and-replenishment-case.md"),
+    Path("docs/analytics/cases/financial-statement-bridge-case.md"),
+    Path("docs/analytics/cases/master-data-and-workforce-audit-case.md"),
+    Path("docs/analytics/cases/pricing-and-margin-governance-case.md"),
+    Path("docs/analytics/cases/pricing-governance-audit-case.md"),
+    Path("docs/analytics/cases/product-portfolio-profitability-case.md"),
+    Path("docs/analytics/cases/replenishment-support-audit-case.md"),
+    Path("docs/analytics/cases/workforce-cost-and-org-control-case.md"),
+    Path("docs/analytics/cases/workforce-coverage-and-attendance-case.md"),
+    Path("docs/analytics/cases/working-capital-and-cash-conversion-case.md"),
+)
+
 
 def _read(path: Path) -> str:
     assert path.exists(), f"Missing doc page: {path}"
@@ -120,3 +149,27 @@ def test_start_here_and_process_flows_point_into_the_same_learning_sequence() ->
         "../analytics/cases/index.md",
     ):
         assert snippet in process_flows
+
+
+def test_public_docs_and_generated_manifest_drop_template_style_phrasing() -> None:
+    doc_paths = Path("docs").rglob("*.md")
+
+    for path in doc_paths:
+        text = _read(path)
+        for forbidden in FORBIDDEN_PUBLIC_COPY:
+            assert forbidden not in text, f"Found forbidden copy in {path}: {forbidden}"
+
+    manifest_text = Path("src/generated/reportPackManifest.js").read_text(encoding="utf-8")
+    for forbidden in FORBIDDEN_PUBLIC_COPY:
+        assert forbidden not in manifest_text, f"Found forbidden copy in generated manifest: {forbidden}"
+
+
+def test_remaining_case_pages_use_key_data_sources_and_next_steps() -> None:
+    for path in CASE_DOCS_WITH_KEY_DATA_SOURCES:
+        text = _read(path)
+        assert "## Key Data Sources" in text, f"Missing Key Data Sources in {path}"
+        assert "## Recommended Query Sequence" in text, f"Missing Recommended Query Sequence in {path}"
+        assert "## Next Steps" in text, f"Missing Next Steps in {path}"
+        assert "## Main Tables" not in text, f"Old Main Tables label still present in {path}"
+        assert "## Main Tables and Worksheets" not in text, f"Old Main Tables and Worksheets label still present in {path}"
+        assert "## Query Sequence" not in text, f"Old Query Sequence label still present in {path}"

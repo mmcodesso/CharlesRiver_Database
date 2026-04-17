@@ -6,7 +6,7 @@ sidebar_label: GLEntry Posting
 
 # GLEntry Posting Reference
 
-Use this page when you need to confirm which business events post to `GLEntry`, which documents remain operational only, which accounts move, and which posting date the dataset uses.
+This reference explains which business events post to `GLEntry`, which documents remain operational only, which accounts move, and which posting date the dataset uses.
 
 Students can use it with the process guides and Schema Reference to understand how source documents turn into accounting results.
 

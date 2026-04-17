@@ -40,7 +40,7 @@ Read the main diagram as planning support, internal demand, supplier commitment,
 This page is organized around business flow first and data navigation second. The main diagram shows the normal inventory and materials path. The smaller diagrams below show one analytical task at a time, such as planning support, PO-to-receipt traceability, three-way match, or payment timing. The fuller relationship map belongs on [Schema Reference](../reference/schema.md), not on this process page.
 
 :::tip
-Use this page to separate the operational chain from the accounting chain. Start with why the purchase was needed, then move into supplier commitment, receiving, invoicing, and payment.
+Start with why the purchase was needed, then move into supplier commitment, receiving, invoicing, and payment so the operational chain and the accounting chain stay distinct.
 :::
 
 ## Core Tables and What They Represent
@@ -90,7 +90,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `DemandForecast` | Shows the expected demand pattern behind planned replenishment |
 | `InventoryPolicy` | Shows safety stock, reorder logic, and lead-time assumptions |
@@ -120,7 +120,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `PurchaseRequisition` | Shows the original internal demand |
 | `PurchaseOrder`, `PurchaseOrderLine` | Show the supplier commitment and ordered line detail |
@@ -153,7 +153,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `GoodsReceiptLine` | Provides the receipt-match basis for inventory invoicing |
 | `PurchaseInvoice`, `PurchaseInvoiceLine` | Show the supplier bill and matched billed line |
@@ -183,7 +183,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `PurchaseInvoice` | Creates the payable and anchors due-date analysis |
 | `DisbursementPayment` | Shows how and when the invoice was settled |

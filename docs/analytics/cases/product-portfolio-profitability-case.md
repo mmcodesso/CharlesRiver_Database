@@ -9,15 +9,17 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Product Portfolio Profitability Case
 
-## Audience and Purpose
-
-Use this case when students need a richer portfolio-analysis exercise than simple item-group reporting.
+This case treats the product portfolio as a management problem rather than just a sales summary. It helps students compare collections, style families, lifecycle groups, and supply modes to see where gross margin, contribution, service, and return pressure reinforce or contradict one another.
 
 ## Business Scenario
 
 Management wants to know which collections and lifecycle groups are carrying the business. They also want to know whether manufactured and purchased items behave differently on gross margin, contribution margin, service performance, and return pressure.
 
-## Main Tables and Worksheets
+## The Problem to Solve
+
+Management needs a portfolio view that explains which product families drive commercial value, which ones create operational strain, and where lifecycle or supply-mode differences change the interpretation.
+
+## Key Data Sources
 
 - `Item`
 - `SalesInvoiceLine`
@@ -48,3 +50,9 @@ Management wants to know which collections and lifecycle groups are carrying the
 - Which collection looks strongest on gross margin but weaker on contribution margin?
 - Which portfolio attribute is most useful for explaining return pressure?
 - When would management prefer a collection-level view over an item-level view?
+
+## Next Steps
+
+- Read [Product Portfolio and Lifecycle Case](product-portfolio-and-lifecycle-case.md) when you want the item-master and lifecycle setup behind this profitability view.
+- Read [Operations and Risk](../reports/operations-and-risk.md) and [Managerial Reports](../reports/managerial.md) when you want the broader portfolio and planning perspective.
+- Read [Managerial Analytics](../managerial.md) for the wider product-mix and margin query set.

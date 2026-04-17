@@ -11,7 +11,7 @@
 
 The dataset includes both operational activity and finance-controlled journal activity. Finance records the recurring and period-end entries that students expect in a real accounting system: rent, utilities, depreciation, month-end accruals, accrual adjustments, factory-overhead journals, manufacturing labor and overhead reclasses, and year-end close.
 
-This page matters because it shows what happens outside the normal document chains. Students can compare operational postings from shipments, receipts, payroll, and purchasing with finance-controlled entries that start directly in the journal process. The most important cross-process bridge is accrued-expense settlement, where a finance estimate is later cleared operationally through AP.
+This process shows what happens outside the normal document chains. Students can compare operational postings from shipments, receipts, payroll, and purchasing with finance-controlled entries that start directly in the journal process. The most important cross-process bridge is accrued-expense settlement, where a finance estimate is later cleared operationally through AP.
 
 That distinction matters. A recurring journal is not an operational source document. An accrual is not the same thing as the later supplier invoice that clears it. A year-end close is not just another monthly recurring journal. Students can see those stages separately in the data and use that separation for financial-accounting, working-capital, and audit questions.
 
@@ -38,7 +38,7 @@ Read the main diagram as a finance calendar. Most of the page is about recurring
 This page is organized around business flow first and data navigation second. The main diagram shows the recurring finance-controlled path. The smaller diagrams below show one analytical task at a time, such as recurring operating journals, manufacturing-support reclasses, or accrual settlement. The fuller relationship map belongs on [Schema Reference](../reference/schema.md), not on this process page.
 
 :::tip
-Use this page in three passes: first recurring journals, then the accrual-settlement bridge, then the boundary entries for opening balance and year-end close.
+Read this page in three passes: first recurring journals, then the accrual-settlement bridge, then the boundary entries for opening balance and year-end close.
 :::
 
 ## Core Tables and What They Represent
@@ -90,7 +90,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `JournalEntry` | Shows posting date, entry type, approval support, and reversal linkage |
 | `GLEntry` | Shows posted debit and credit detail |
@@ -125,7 +125,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `JournalEntry` | Stores the factory-overhead and reclass journal headers |
 | `GLEntry` | Shows the posted effect on manufacturing clearing and expense accounts |
@@ -162,7 +162,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `JournalEntry` | Stores the original accrual estimate and any later adjustment |
 | `PurchaseInvoiceLine` | Stores the direct service settlement link back to the accrual |

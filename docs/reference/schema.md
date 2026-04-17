@@ -6,11 +6,11 @@ sidebar_label: Schema Reference
 
 # Schema Reference
 
-Use this page when you need the table map: which tables belong together, how the main relationships work, which keys matter most, and where the bridges between groups live.
+This reference is the table map for the dataset: which tables belong together, how the main relationships work, which keys matter most, and where the bridges between groups live.
 
 If you need the big-picture business story first, start with [Dataset Guide](../start-here/dataset-overview.md) and [Process Flows](../learn-the-business/process-flows.md).
 
-## How to Use This Page
+## How the Reference Is Organized
 
 - Start with **Table Groups** to see how the model is divided.
 - Use **How to Read the ER Diagrams** before you treat any one group diagram as a complete process story.
@@ -37,13 +37,13 @@ If you need the big-picture business story first, start with [Dataset Guide](../
 - These ERs are **schema-direct** diagrams. An edge appears only when a stored key supports it, or when a polymorphic source-document trace is called out explicitly in prose.
 - The diagrams are intentionally simplified. The compact tables below each diagram carry the highest-value fields students usually need first.
 - Cross-group bridges such as `ItemID`, `SupplyPlanRecommendationID`, and `AccrualJournalEntryID` are summarized separately so the group diagrams stay readable.
-- Use the process pages when you need business flow. Use this page when you need table structure and join logic.
+- The process pages explain business flow. This reference explains table structure and join logic.
 
 ## Cross-Group Bridge Keys
 
 These are the main keys students use to move across groups.
 
-| Bridge key | Main bridge | Why it matters |
+| Bridge key | Main bridge | How it connects |
 |---|---|---|
 | `ItemID` | Master data into O2C, P2P, manufacturing, and planning | Product-level analysis across the whole dataset |
 | `SupplyPlanRecommendationID` | Demand planning into requisitions, work orders, MRP, and rough-cut capacity | Connects planning pressure to later purchasing or manufacturing execution |
@@ -57,7 +57,7 @@ These are the main keys students use to move across groups.
 
 ## Accounting Core
 
-Use this group when you need the posting anchor for any process. `JournalEntry` is the finance-controlled header, `GLEntry` is the posted detail, and `Account` gives the reporting and control-account meaning.
+This group provides the posting anchor for every process. `JournalEntry` is the finance-controlled header, `GLEntry` is the posted detail, and `Account` gives the reporting and control-account meaning.
 
 ```mermaid
 erDiagram
@@ -79,7 +79,7 @@ erDiagram
 
 ## Order-to-Cash
 
-Use this group when you need the full customer-side relationship map: pricing setup, order capture, fulfillment, billing, cash settlement, and the return-credit-refund branch.
+This group holds the full customer-side relationship map: pricing setup, order capture, fulfillment, billing, cash settlement, and the return-credit-refund branch.
 
 ```mermaid
 erDiagram
@@ -145,7 +145,7 @@ erDiagram
 
 ## Procure-to-Pay
 
-Use this group when you need the supplier-side relationship map: requisition, PO, receipt, invoice, and payment. The main cross-group bridge here is the accrued-service path through `AccrualJournalEntryID`.
+This group holds the supplier-side relationship map: requisition, PO, receipt, invoice, and payment. The main cross-group bridge here is the accrued-service path through `AccrualJournalEntryID`.
 
 ```mermaid
 erDiagram
@@ -186,7 +186,7 @@ erDiagram
 
 ## Manufacturing
 
-Use this group when you need the local manufacturing structure: recipe, routing, work center, work order, issue, completion, and close. Planning and payroll bridges are summarized separately above.
+This group covers the local manufacturing structure: recipe, routing, work center, work order, issue, completion, and close. Planning and payroll bridges are summarized separately above.
 
 ```mermaid
 erDiagram
@@ -238,7 +238,7 @@ erDiagram
 
 ## Payroll and Time
 
-Use this group when you need the workforce-side relationship map: shifts, rosters, raw punches, approved time, labor detail, payroll registers, payments, and remittances.
+This group holds the workforce-side relationship map: shifts, rosters, raw punches, approved time, labor detail, payroll registers, payments, and remittances.
 
 ```mermaid
 erDiagram
@@ -345,7 +345,7 @@ erDiagram
 
 ## Demand Planning and MRP
 
-Use this group when you need the planning layer that sits ahead of later purchasing and manufacturing execution. This group explains why replenishment pressure existed before a requisition or work order appeared.
+This group covers the planning layer that sits ahead of later purchasing and manufacturing execution. It explains why replenishment pressure existed before a requisition or work order appeared.
 
 ```mermaid
 erDiagram

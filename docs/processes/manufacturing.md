@@ -55,7 +55,7 @@ Read the main diagram as planning, execution, and costing or close. Planning sta
 This page is organized around business flow first and data navigation second. The main diagram shows the normal manufacturing path. The smaller diagrams below show one analytical task at a time, such as planning pressure, routing design, work-order scheduling, component support, labor traceability, or work-order close. The fuller relationship map belongs on [Schema Reference](../reference/schema.md), not on this process page.
 
 :::tip
-Use this page in three passes: first `planning`, then `execution`, then `costing and close`. That sequence keeps students from mixing weekly planning signals with daily execution rows or accounting-close events.
+Read this page in three passes: first `planning`, then `execution`, then `costing and close`. That sequence keeps students from mixing weekly planning signals with daily execution rows or accounting-close events.
 :::
 
 ## Core Tables and What They Represent
@@ -110,7 +110,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `DemandForecast` | Shows the weekly demand signal behind planned replenishment |
 | `InventoryPolicy` | Shows safety stock, reorder logic, and lead-time assumptions |
@@ -149,7 +149,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `Item` | Identifies which products are manufactured and stores standard cost components |
 | `BillOfMaterial`, `BillOfMaterialLine` | Define the component recipe for the finished good |
@@ -182,7 +182,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `SupplyPlanRecommendation` | Shows the planning row that supported the work-order release |
 | `WorkOrder` | Shows the released production order |
@@ -223,7 +223,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `PurchaseRequisition`, `PurchaseOrder`, `GoodsReceipt` | Show how P2P supports missing materials and packaging |
 | `WorkOrder` | Anchors the production order that consumes the components |
@@ -256,7 +256,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `EmployeeShiftRoster`, `TimeClockEntry` | Show planned and approved labor support beneath payroll |
 | `LaborTimeEntry` | Shows the costing bridge from approved time into production analysis |
@@ -290,7 +290,7 @@ flowchart LR
 
 **Tables involved**
 
-| Table | Why it matters here |
+| Table | Role in the flow |
 |---|---|
 | `MaterialIssue` | Shows material already consumed into WIP before completion |
 | `LaborTimeEntry` | Shows labor support that contributes to cost traceability |

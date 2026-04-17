@@ -9,15 +9,17 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Workforce Cost and Org-Control Case
 
-## Audience and Purpose
-
-Use this case when students need to connect people-cost analysis to workforce structure and approval design.
+This case brings people cost, workforce structure, and approval design into one review. It helps students explain not only where payroll cost sits, but also whether the organization and control ownership behind that cost still look credible.
 
 ## Business Scenario
 
 Leadership wants to understand where people cost sits, how workforce structure varies by location and cost center, and whether approval activity lines up with the intended organization design.
 
-## Main Tables and Worksheets
+## The Problem to Solve
+
+Leadership needs a workforce view that connects payroll concentration, organizational structure, and approval ownership without treating those as separate discussions.
+
+## Key Data Sources
 
 - `Employee`
 - `CostCenter`
@@ -50,3 +52,9 @@ Leadership wants to understand where people cost sits, how workforce structure v
 - Which job families drive the most payroll cost?
 - Which approvals would you expect to be concentrated in finance roles?
 - When does a concentrated approval pattern look efficient, and when does it look risky?
+
+## Next Steps
+
+- Read [Payroll and Workforce](../reports/payroll-perspective.md) when you want the report-level perspective on payroll, labor support, and control review.
+- Read [Payroll](../../processes/payroll.md) when you want the business-process view behind the same workforce and approval patterns.
+- Read [Master Data and Workforce Audit Case](master-data-and-workforce-audit-case.md) when you want the audit follow-through on employee validity and ownership.

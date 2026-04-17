@@ -9,15 +9,17 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Attendance Control Audit Case
 
-## Audience and Purpose
-
-Use this case when students need a focused audit lab around workforce-planning controls and timekeeping exceptions.
+Attendance control is one of the clearest places where workforce planning, timekeeping, payroll support, and audit review meet. This case turns those layers into one investigation so students can explain an exception from planned shift through raw evidence and approved time.
 
 ## Business Scenario
 
 Internal audit has been asked to review whether scheduled work, raw punches, approved time, absences, and overtime approvals stay aligned. The objective is to identify attendance-control failures without losing the operational context behind them.
 
-## Main Tables and Worksheets
+## The Problem to Solve
+
+The audit team needs to determine which attendance exceptions reflect documentation gaps, which reflect approval failures, and which create a real payroll-risk concern.
+
+## Key Data Sources
 
 - `EmployeeShiftRoster`
 - `EmployeeAbsence`
@@ -50,3 +52,9 @@ Internal audit has been asked to review whether scheduled work, raw punches, app
 - When should auditors move from a summary exception query into the raw attendance tables?
 - Which attendance exception would create the greatest payroll overstatement risk?
 - Which attendance exception is operationally serious even if the payroll impact is small?
+
+## Next Steps
+
+- Read [Payroll](../../processes/payroll.md) when you want the wider business and accounting flow behind attendance and payroll support.
+- Read [Payroll and Workforce](../reports/payroll-perspective.md) when you want the report-level interpretation of the same control questions.
+- Read [Audit Analytics](../audit.md) when you want the broader exception and control-review query set.

@@ -9,15 +9,17 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Workforce Coverage and Attendance Case
 
-## Audience and Purpose
-
-Use this case when students need to connect planned staffing, approved worked time, and work-center demand.
+This case follows staffing pressure from planned roster through approved time and overtime response. It helps students explain whether workforce coverage kept pace with operational demand and where absence or overtime patterns start changing the production story.
 
 ## Business Scenario
 
 Operations leaders want to understand whether work-center staffing kept pace with scheduled load, where absences concentrated, and how overtime was used to protect throughput.
 
-## Main Tables and Worksheets
+## The Problem to Solve
+
+Operations leaders need to decide whether coverage pressure is coming from weak staffing, concentrated absence, uneven load, or short-term overtime response.
+
+## Key Data Sources
 
 - `EmployeeShiftRoster`
 - `EmployeeAbsence`
@@ -52,3 +54,9 @@ Operations leaders want to understand whether work-center staffing kept pace wit
 - Does overtime concentrate where coverage gaps persist?
 - Are absences more concentrated by location, job family, or shift?
 - Which attendance trend would matter most to a production planner?
+
+## Next Steps
+
+- Read [Operations and Risk](../reports/operations-and-risk.md) when you want the broader planning, capacity, and workforce-risk perspective.
+- Read [Attendance Control Audit Case](attendance-control-audit-case.md) when you want the control-focused review of the same attendance evidence.
+- Read [Manufacturing](../../processes/manufacturing.md) when you want the work-center and production side of the coverage story.

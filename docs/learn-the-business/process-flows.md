@@ -9,7 +9,7 @@ sidebar_label: Process Flows
 
 Process Flows is the bridge from the company story into the operating cycles that actually create the dataset. Students should read these cycles as one connected business system: customer demand creates sales activity, purchasing supports inventory and operations, manufacturing transforms materials and labor, payroll supports the workforce and liabilities, and finance closes the resulting accounting picture.
 
-This page matters because the site is easiest to understand when analysis grows out of the business process. Reports, SQL, and cases make more sense after the reader understands where the process starts, what it changes, and how it finally reaches `GLEntry`.
+The site is easiest to understand when analysis grows out of the business process. Reports, SQL, and cases make more sense after the reader understands where the process starts, what it changes, and how it finally reaches `GLEntry`.
 
 ## The Main Business Cycles
 

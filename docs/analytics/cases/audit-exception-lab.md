@@ -9,12 +9,17 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
 # Audit Exception Lab
 
+This lab keeps the audit work close to the published anomaly set. Students move from flagged exceptions into source evidence, compare different anomaly families, and practice explaining control failures without losing the operational context behind them.
 
 ## Business Scenario
 
 The finance and audit team receives the published five-year dataset with a moderate set of planted anomalies. This lab teaches students how to trace flagged exceptions to source documents, identify the related control, and explain the business risk in plain language. In class, you can narrow the review to one fiscal year with a filter when you want a smaller lab.
 
-## Main Tables
+## The Problem to Solve
+
+The audit team needs to decide which exception patterns are timing issues, which are approval or linkage failures, and which deserve the fastest escalation.
+
+## Key Data Sources
 
 - `PurchaseInvoice`
 - `DisbursementPayment`
@@ -52,3 +57,9 @@ The finance and audit team receives the published five-year dataset with a moder
 - Which audit queries surface the strongest exception evidence directly from source tables?
 - How does a validation-only audit seed differ from an anomaly-log family in the way students should explain it?
 - Which exception would you escalate first in a real audit discussion, and why?
+
+## Next Steps
+
+- Read [Audit Review Pack Case](audit-review-pack-case.md) when you want a broader control-triage exercise beyond the anomaly lab.
+- Read [Audit Analytics](../audit.md) when you want the wider audit query library around the same exception families.
+- Read [Schema Reference](../../reference/schema.md) when you need the table bridges behind a flagged row.
