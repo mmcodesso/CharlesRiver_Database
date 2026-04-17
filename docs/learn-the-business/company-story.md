@@ -60,8 +60,8 @@ Students can move from business story to process flow to tables to ledger withou
 
 That combination makes the dataset useful across AIS, accounting analytics, auditing, financial accounting, managerial accounting, and business-process work. Students can ask what happened operationally, when accounting recognized it, which documents mattered, and which ledger accounts moved, all inside one coherent company context.
 
-## Recommended Next Reading
+## Best Next Steps
 
-1. Read [Process Flows](process-flows.md) to see how the company story breaks into the main business cycles.
-2. Read [Dataset Guide](../start-here/dataset-overview.md) for scope, glossary, and navigation.
-3. Read [Analytics Hub](../analytics/index.md) when you are ready to move into the analysis layer.
+1. Read [Process Flows](process-flows.md) to see how the company story becomes the main business cycles.
+2. Open one process page such as [O2C](../processes/o2c.md), [P2P](../processes/p2p.md), [Manufacturing](../processes/manufacturing.md), or [Payroll](../processes/payroll.md).
+3. Then move into [Analytics Hub](../analytics/index.md) or [Reports Hub](../analytics/reports/index.md) when you are ready to interpret the business results.

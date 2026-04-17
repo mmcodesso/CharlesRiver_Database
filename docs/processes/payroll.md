@@ -289,10 +289,11 @@ flowchart LR
 - Which attendance exceptions still appear alongside approved or paid payroll activity?
 - How does payroll support manufacturing labor analysis without changing the dataset to full actual-cost inventory?
 
-## Where to Go Next
+## Best Next Steps
 
+- Read [Payroll and Workforce](../analytics/reports/payroll-perspective.md) when you want the guided business perspective that ties people cost, approved time, payroll cash, liabilities, and payroll-control review together.
+- Read [Financial Reports](../analytics/reports/financial.md), [Managerial Reports](../analytics/reports/managerial.md), and [Audit Reports](../analytics/reports/audit.md) when you want the broader payroll and workforce report inventory by area.
+- Read [Workforce Cost and Org-Control Case](../analytics/cases/workforce-cost-and-org-control-case.md) or [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md) when you want a guided payroll or time-control investigation.
 - Jump to [Time, Attendance, and Approved Hours](#time-attendance-and-approved-hours) when you want the upstream support layer for hourly payroll.
 - Read [Manufacturing](manufacturing.md) when you want the production side of direct labor and work-order traceability.
-- Read [GLEntry Posting Reference](../reference/posting.md) for the detailed payroll, remittance, and reclass posting rules.
-- Read [Schema Reference for full table relationships](../reference/schema.md) when you need the broader process-level table map.
-- Read [Financial Analytics](../analytics/financial.md), [Managerial Analytics](../analytics/managerial.md), and [Audit Analytics](../analytics/audit.md) for starter payroll and workforce analysis.
+- Read [GLEntry Posting Reference](../reference/posting.md) and [Schema Reference](../reference/schema.md) when you need the detailed payroll posting or join logic.

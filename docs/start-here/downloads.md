@@ -7,20 +7,34 @@ sidebar_label: Downloads
 
 # Downloads
 
+The published teaching files are the delivered evidence of the same business described throughout the site. They are not separate products. The SQLite file, Excel workbook, and CSV package all reflect the same company, the same business cycles, and the same posted accounting.
+
+That matters because students should not start by treating the files as disconnected tools. The better sequence is to download the package, learn the company and the process flow, and then use the file that best matches the assignment.
+
 - <ReleaseDownloadLink type="sqlite">Download the SQLite database</ReleaseDownloadLink>
 - <ReleaseDownloadLink type="excel">Download the Excel workbook</ReleaseDownloadLink>
 - <ReleaseDownloadLink type="csv">Download the CSV zip package</ReleaseDownloadLink>
 
-## Which File Should You Use?
+## The File Package
 
-- Use <FileName type="sqlite" /> for SQL work.
-- Use <FileName type="excel" /> for pivots, charts, filters, and workbook-based analysis.
-- Use <FileName type="csv" /> when you want one CSV per dataset table.
+| File | What it represents in the learning flow |
+|---|---|
+| <FileName type="sqlite" /> | The strongest path for tracing documents, joins, subledgers, and `GLEntry` in SQL |
+| <FileName type="excel" /> | The strongest path for workbook-based review of the same business results |
+| <FileName type="csv" /> | A table-by-table export of the same dataset for external tools and imports |
 
-## Recommended Next Step
+## How the Files Fit the Business Story
 
-After downloading the files:
+The files become much easier to read after the business logic is clear:
+
+1. the company story explains what kind of business this is
+2. the process pages explain how sales, purchasing, manufacturing, payroll, and close create the data
+3. the files then become the detailed record of those business cycles
+4. the analytics pages help students interpret what those cycles mean
+
+## Best Next Steps
 
 1. Read [Start Here](index.md).
 2. Read [Company Story](../learn-the-business/company-story.md).
 3. Read [Process Flows](../learn-the-business/process-flows.md).
+4. Then open [Analytics Hub](../analytics/index.md) or [Reports Hub](../analytics/reports/index.md).

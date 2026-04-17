@@ -7,19 +7,19 @@ sidebar_label: Process Flows
 
 # Process Flows
 
-Use this page after [Company Story](company-story.md). This is the bridge from business context into the detailed process guides. The goal is not to repeat every process page. It is to show how the major cycles relate to one another and how they eventually converge into `GLEntry`.
+Process Flows is the bridge from the company story into the operating cycles that actually create the dataset. Students should read these cycles as one connected business system: customer demand creates sales activity, purchasing supports inventory and operations, manufacturing transforms materials and labor, payroll supports the workforce and liabilities, and finance closes the resulting accounting picture.
 
-## How to Use This Section
+This page matters because the site is easiest to understand when analysis grows out of the business process. Reports, SQL, and cases make more sense after the reader understands where the process starts, what it changes, and how it finally reaches `GLEntry`.
 
-Start with the process that matches your class question:
+## The Main Business Cycles
 
-| Process | Why students use it |
+| Process | What it means inside the company |
 |---|---|
-| [O2C](../processes/o2c.md) | To follow a sale through order, shipment, invoice, cash receipt, application, and the main return or refund exception path |
-| [P2P](../processes/p2p.md) | To trace internal demand through supplier ordering, receiving, invoicing, and payment |
-| [Manufacturing](../processes/manufacturing.md) | To see how planning, materials, labor, and completion turn selected products into finished goods |
-| [Payroll](../processes/payroll.md) | To follow time and attendance support, gross-to-net payroll, liabilities, payments, remittances, and labor reclass |
-| [Manual Journals and Close](../processes/manual-journals-and-close.md) | To study recurring journals, accrual settlement, and boundary entries outside the day-to-day document cycles |
+| [O2C](../processes/o2c.md) | The customer-demand path from order through shipment, invoice, cash receipt, application, and the return or refund exception path |
+| [P2P](../processes/p2p.md) | The supplier-side path from internal need through ordering, receiving, invoicing, payment, and accrual settlement |
+| [Manufacturing](../processes/manufacturing.md) | The production path from planning and component support through execution, completion, and close |
+| [Payroll](../processes/payroll.md) | The workforce and pay path from scheduled work and approved time into payroll posting, liabilities, payment, remittance, and labor reclass |
+| [Manual Journals and Close](../processes/manual-journals-and-close.md) | The accounting layer that estimates, reclassifies, and closes activity around the operating cycles |
 
 ## Process Map
 
@@ -53,9 +53,9 @@ flowchart LR
     GL --> AN
 ```
 
-Read the map from left to right. Customer demand creates the O2C cycle. Supplier activity creates the P2P cycle. Manufacturing sits between demand and inventory availability, with P2P supporting materials and Payroll supporting labor. Manual journals and close sit beside the document-driven cycles and complete the accounting environment. All of those threads eventually reach `GLEntry`.
+Read the map from left to right. The company story becomes process activity. Process activity becomes posted accounting. Posted accounting becomes reporting, analysis, and case-based interpretation.
 
-## Subledger-to-Ledger Traceability
+## How Process Becomes Reporting and Analysis
 
 ```mermaid
 flowchart LR
@@ -75,30 +75,21 @@ flowchart LR
     GL --> R
 ```
 
-This is the core design idea behind the dataset: many source processes exist, but posted accounting converges into `GLEntry`.
+The most important teaching bridge in the site is this one: business process first, accounting second, analysis third. That is why the reports, perspectives, SQL pages, and cases should be read as follow-through from the business cycle rather than as separate documentation tracks.
 
-The most important traceability fields are:
+## Process to Analysis Bridges
 
-- `VoucherType`
-- `VoucherNumber`
-- `SourceDocumentType`
-- `SourceDocumentID`
-- `SourceLineID`
-- `FiscalYear`
-- `FiscalPeriod`
+| Process | Strongest perspective or report follow-through | Strongest case follow-through |
+|---|---|---|
+| [O2C](../processes/o2c.md) | [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md), [Financial Reports](../analytics/reports/financial.md) | [O2C Trace Case](../analytics/cases/o2c-trace-case.md) |
+| [P2P](../processes/p2p.md) | [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md), [Financial Reports](../analytics/reports/financial.md) | [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md) |
+| [Manufacturing](../processes/manufacturing.md) | [Operations and Risk](../analytics/reports/operations-and-risk.md), [Managerial Reports](../analytics/reports/managerial.md) | [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md) |
+| [Payroll](../processes/payroll.md) | [Payroll and Workforce](../analytics/reports/payroll-perspective.md), [Audit Reports](../analytics/reports/audit.md) | [Workforce Cost and Org-Control Case](../analytics/cases/workforce-cost-and-org-control-case.md), [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md) |
+| [Manual Journals and Close](../processes/manual-journals-and-close.md) | [Executive Overview](../analytics/reports/executive-overview.md), [Financial Reports](../analytics/reports/financial.md) | [Financial Statement Bridge Case](../analytics/cases/financial-statement-bridge-case.md) |
 
-## Recommended Reading Order
+## Best Next Steps
 
-1. Read [Company Story](company-story.md) to understand the company identity and business model.
-2. Read [O2C](../processes/o2c.md) and [P2P](../processes/p2p.md) to learn the customer and supplier cycles.
-3. Use the return, credit, and refund section inside [O2C](../processes/o2c.md) for the main customer-side exception path.
-4. Read [Manufacturing](../processes/manufacturing.md) to see how planning, execution, and costing connect.
-5. Read [Payroll](../processes/payroll.md) for time and attendance support, the pay cycle, and related accounting.
-6. Read [Manual Journals and Close](../processes/manual-journals-and-close.md) for recurring journals, accrual settlement, and close-cycle activity.
-7. Read [Dataset Guide](../start-here/dataset-overview.md) when you are ready to work directly with tables and joins.
-
-## Where to Go Next
-
-- Read [Dataset Guide](../start-here/dataset-overview.md) for table families and navigation paths.
-- Read [Schema Reference](../reference/schema.md) when you need table relationships and join cues.
-- Read [GLEntry Posting Reference](../reference/posting.md) when you want the posting rules behind each process.
+1. Read the process page that matches the business cycle you want to follow first.
+2. Then move into [Analytics Hub](../analytics/index.md) to see how that process becomes reports, SQL, and cases.
+3. Use [Reports Hub](../analytics/reports/index.md) when you want a management-style view of the same business cycle.
+4. Use [Analytics Cases](../analytics/cases/index.md) when you want a guided walkthrough that turns the process into interpretation.

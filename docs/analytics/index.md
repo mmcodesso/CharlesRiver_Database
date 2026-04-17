@@ -7,26 +7,28 @@ sidebar_label: Analytics Hub
 
 # Analytics Starter Layer
 
-Use this page as the main entry point for the analytics section. The sidebar groups the three topic guides under `Analytics Hub`, then keeps the SQL, Excel, report, and case paths directly accessible below.
+Once the company story and the business cycles are clear, the analytics layer becomes the place where students interpret what those cycles mean. The goal is not to leave the process behind. The goal is to follow the process forward into reporting, statements, working capital, payroll, planning, controls, and business judgment.
 
-## What This Starter Layer Includes
+This page works best as a bridge from process understanding into analytical interpretation. Read it as the point where operational evidence becomes management questions, control questions, and accounting explanations.
+
+## From Process to Analysis
+
+| Process backbone | Main analytical destinations |
+|---|---|
+| `O2C` | [Commercial and Working Capital](reports/commercial-and-working-capital.md), [Financial Analytics](financial.md), [O2C Trace Case](cases/o2c-trace-case.md) |
+| `P2P` | [Commercial and Working Capital](reports/commercial-and-working-capital.md), [Financial Analytics](financial.md), [P2P Accrual Case](cases/p2p-accrual-settlement-case.md) |
+| `Manufacturing` | [Operations and Risk](reports/operations-and-risk.md), [Managerial Analytics](managerial.md), [Manufacturing Labor Case](cases/manufacturing-labor-cost-case.md) |
+| `Payroll` | [Payroll and Workforce](reports/payroll-perspective.md), [Financial Analytics](financial.md), [Audit Analytics](audit.md) |
+| `Close and statement presentation` | [Executive Overview](reports/executive-overview.md), [Financial Analytics](financial.md), [Financial Statement Bridge Case](cases/financial-statement-bridge-case.md) |
+
+## What This Layer Includes
 
 - topic guides for financial, managerial, and audit analytics
 - student-first report pages with preview and download artifacts
+- business perspectives that interpret the company from a management viewpoint
 - a SQLite-first starter SQL package in `queries/`
 - Excel workflow guidance using the published dataset workbook
-- richer employee and item master fields for role, lifecycle, and catalog analysis
-- guided walkthrough cases that pair query packs with business scenarios
-
-## Recommended Progression
-
-Use this sequence for most student work:
-
-1. read the topic page
-2. open the matching report page when you want a ready-to-use teaching artifact
-3. run the starter SQL files in that topic
-4. open the paired case
-5. recreate one or two ideas in Excel
+- guided walkthrough cases that pair business process, query work, and interpretation
 
 ## Coverage Map
 
@@ -50,10 +52,10 @@ The current analytics layer is organized around these strengths:
 - weekly demand-planning and MRP review through forecasts, policies, recommendations, component plans, and rough-cut capacity
 - formal commercial-pricing review through price lists, promotions, override approvals, and line-level pricing lineage
 
+## Best Next Steps
 
-## Where to Go Next
-
-- Start with [SQL Guide](sql-guide.md) when you need the SQLite first-use path, then move to [Financial Analytics](financial.md), [Managerial Analytics](managerial.md), or [Audit Analytics](audit.md).
-- Use [Reports Hub](reports/index.md) when you want either a guided business perspective or a curated preview-and-download layer before moving into raw SQL.
-- Then open [Analytics Cases](cases/index.md) for guided walkthroughs.
-- Use [Excel Guide](excel-guide.md) when you want to reconstruct the same ideas in the workbook.
+1. Start with the topic page that matches the business cycle you are following.
+2. Move into [Reports Hub](reports/index.md) when you want a perspective-led or report-led reading of the same process.
+3. Run the starter SQL in [SQL Guide](sql-guide.md) when you want to trace the logic directly.
+4. Open [Analytics Cases](cases/index.md) when you want a guided process-to-analysis walkthrough.
+5. Use [Excel Guide](excel-guide.md) when you want to reconstruct the same ideas in the workbook.

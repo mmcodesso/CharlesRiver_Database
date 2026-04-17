@@ -207,10 +207,11 @@ flowchart LR
 - Which AP lines cleared a prior accrual instead of matching a receipt?
 - How do receiving, invoicing, and payment timing differ by supplier, item group, or cost center?
 
-## Where to Go Next
+## Best Next Steps
 
+- Read [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md) when you want the wider view of supplier settlement, AP timing, and working-capital pressure.
+- Read [Financial Reports](../analytics/reports/financial.md) when you want the reporting layer behind AP, accrual settlement, and cash conversion.
+- Read [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md) when you want a guided walkthrough from requisition and receipt into AP and payment.
 - Jump to [Accrual Estimate to AP Settlement](../processes/manual-journals-and-close.md#accrual-estimate-to-ap-settlement) when you want the finance-to-AP bridge for accrued services.
 - Read [Manufacturing](manufacturing.md) to see how purchasing supports work orders and material availability.
-- Read [Dataset Guide](../start-here/dataset-overview.md) for navigation patterns and join paths.
-- Read [GLEntry Posting Reference](../reference/posting.md) for the detailed posting rules behind receipts, supplier invoices, and payments.
-- Read [Schema Reference for full table relationships](../reference/schema.md) when you need the broader process-level table map.
+- Read [GLEntry Posting Reference](../reference/posting.md) and [Schema Reference](../reference/schema.md) when you need the detailed posting or join logic.

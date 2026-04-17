@@ -7,73 +7,44 @@ sidebar_label: Start Here
 
 # Start Here
 
-<DatasetName /> is a synthetic business database for accounting analytics courses. Use this page to move from the classroom file package to the business story, process logic, reference pages, and analytics work without getting lost in the documentation.
+<DatasetName /> is easiest to understand when it is treated as one company moving through a small number of connected business cycles. Sales demand becomes fulfillment and cash collection. Purchasing supports inventory and operating needs. Manufacturing turns materials and labor into finished goods. Payroll supports labor, liabilities, and cash settlement. Finance closes the whole picture in the ledger.
 
-## 1. Start With the Files
+That is the main learning path of the site. Students should begin with the business itself, then move into the processes, and only then move into reports, SQL, Excel, or cases. The published files are important, but they make more sense after the company and the business cycles are clear.
 
-Begin with the ready-to-use classroom package from [Downloads](downloads.md).
+## Start With the Company and the Cycles
 
-The main files are:
+Read the first pages as one sequence:
 
-- <FileName type="sqlite" /> for SQL work
-- <FileName type="excel" /> for Excel pivots, charts, filters, and workbook-based analysis
-- <FileName type="csv" /> for one-CSV-per-table delivery
+1. [Downloads](downloads.md) to get the published teaching package
+2. [Company Story](../learn-the-business/company-story.md) to understand the business model
+3. [Process Flows](../learn-the-business/process-flows.md) to see how the major cycles connect
+4. One process page such as [O2C](../processes/o2c.md), [P2P](../processes/p2p.md), [Manufacturing](../processes/manufacturing.md), or [Payroll](../processes/payroll.md)
 
-## 2. Learn the Business Before the Tables
+This sequence keeps the business logic in front of the data. By the time students open a table or query, they should already know what the company is doing and where the accounting evidence comes from.
 
-Read these pages in order:
+## How the Business Reaches Analysis
 
-1. [Company Story](../learn-the-business/company-story.md)
-2. [Process Flows](../learn-the-business/process-flows.md)
-3. [Dataset Guide](dataset-overview.md)
+| Business cycle | What it changes in the company | Best analytical follow-through |
+|---|---|---|
+| [O2C](../processes/o2c.md) | Revenue, receivables, collections, returns, and customer corrections | [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md), [Financial Reports](../analytics/reports/financial.md), [O2C Trace Case](../analytics/cases/o2c-trace-case.md) |
+| [P2P](../processes/p2p.md) | Supplier commitments, receipts, AP timing, and accrual settlement | [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md), [Financial Reports](../analytics/reports/financial.md), [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md) |
+| [Manufacturing](../processes/manufacturing.md) | Planning pressure, component usage, labor support, completion, and close | [Operations and Risk](../analytics/reports/operations-and-risk.md), [Managerial Reports](../analytics/reports/managerial.md), [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md) |
+| [Payroll](../processes/payroll.md) | People cost, approved time, payroll liabilities, cash settlement, and control review | [Payroll and Workforce](../analytics/reports/payroll-perspective.md), [Financial Reports](../analytics/reports/financial.md), [Workforce Cost and Org-Control Case](../analytics/cases/workforce-cost-and-org-control-case.md) |
+| [Manual Journals and Close](../processes/manual-journals-and-close.md) | Accruals, reclasses, retained earnings, and final statement presentation | [Executive Overview](../analytics/reports/executive-overview.md), [Financial Reports](../analytics/reports/financial.md), [Financial Statement Bridge Case](../analytics/cases/financial-statement-bridge-case.md) |
 
-That sequence gives you the operating story before you start writing joins, tracing documents, or building pivots.
+## The Published Teaching Files
 
-## 3. Know What the Dataset Covers
+The downloaded files are different views of the same business system:
 
-The current dataset includes tables across:
+- <FileName type="sqlite" /> is the best file for source-to-ledger SQL analysis.
+- <FileName type="excel" /> is the best file for workbook-based review, pivots, charts, and filters.
+- <FileName type="csv" /> is the best file when you want one table per file for external tools or import workflows.
 
-- accounting core
-- order-to-cash
-- procure-to-pay
-- manufacturing
-- payroll and time
-- master data
-- organizational planning
+Students should read the files as evidence packages produced by the same company story, not as separate learning paths.
 
-It is designed for accounting analytics classes where you need to connect process documents, operational data, and posted `GLEntry` activity.
+## Best Next Steps
 
-## 4. Use These References While You Work
-
-These pages are the fastest way to check how the model works while you analyze the data:
-
-- [Schema Reference](../reference/schema.md)
-- [GLEntry Posting Reference](../reference/posting.md)
-
-Use them when you need to trace a process, confirm a join path, or verify what posts to the ledger.
-
-## 5. Choose Your Analysis Path
-
-Move into the analysis layer from the path that matches your assignment:
-
-- [Analytics Hub](../analytics/index.md) for the overall starter map
-- [SQL Guide](../analytics/sql-guide.md) to open the SQLite file and run starter queries
-- [Excel Guide](../analytics/excel-guide.md) for workbook-based work
-- [Financial Analytics](../analytics/financial.md), [Managerial Analytics](../analytics/managerial.md), and [Audit Analytics](../analytics/audit.md) for topic-specific starting points
-
-## 6. Use Guided Cases When You Need Structure
-
-Use [Analytics Cases](../analytics/cases/index.md) when you want a guided assignment path. The case set pairs process context with starter SQL, interpretation prompts, and structured walkthroughs.
-
-## Where to Go Next
-
-If you are new to the dataset, use this reading order:
-
-1. [Downloads](downloads.md)
-2. [Company Story](../learn-the-business/company-story.md)
-3. [Process Flows](../learn-the-business/process-flows.md)
-4. [Dataset Guide](dataset-overview.md)
-5. [Schema Reference](../reference/schema.md)
-6. [GLEntry Posting Reference](../reference/posting.md)
-7. [Analytics Hub](../analytics/index.md)
-8. [Analytics Cases](../analytics/cases/index.md)
+1. Read [Company Story](../learn-the-business/company-story.md).
+2. Read [Process Flows](../learn-the-business/process-flows.md).
+3. Open the process page that matches the business question you want to follow first.
+4. Then move into [Analytics Hub](../analytics/index.md), [Reports Hub](../analytics/reports/index.md), or [Analytics Cases](../analytics/cases/index.md).

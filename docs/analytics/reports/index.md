@@ -6,18 +6,21 @@ sidebar_label: Reports Hub
 
 # Reports Hub
 
-The reports section is the most direct way to turn the dataset into a business conversation. It brings the transactional model forward as recurring management-style artifacts so students can start with performance, liquidity, working capital, payroll, operations, and control signals before they need to read SQL.
+The reports section is where the business cycles begin to look like management review. Instead of reading one document or one transaction at a time, students can step back and see how sales, purchasing, payroll, production, and close accumulate into performance, liquidity, working capital, operational pressure, and control signals.
 
-That matters from a learning perspective because strong analysis usually begins with a storyline, not with isolated tables. A reader should be able to look at a statement pack, an aging summary, or an operational review and understand what seems healthy, where pressure is building, and which question deserves the next drill-down.
+That is why reports belong after the process pages. A report should feel like a business perspective on the same company activity students already understand, not like a disconnected export.
 
-This section supports that progression in two complementary ways. `Business Perspectives` groups reports into guided narratives with discussion prompts and suggested analysis. `Report Library` keeps the full area-based inventory available when the goal is broader exploration or direct report access.
+This section keeps two reading levels together. `Business Perspectives` shows a guided storyline across related reports. `Report Library` keeps the broader financial, managerial, and audit report inventory available when students want to browse by area.
 
-## How to Use This Section
+## How Process Becomes Report
 
-- Start with `Business Perspectives` when you want a structured business storyline and a recommended reading sequence.
-- Move to `Report Library` when you want the broader report inventory by financial, managerial, or audit area.
-- Use the preview to read the report in the site, then download `Excel` or `CSV` when you want to work with the full output.
-- Move into SQL guides or case pages when the next step is explaining how the reported result was produced.
+| Process backbone | Strongest report follow-through |
+|---|---|
+| `O2C` | [Commercial and Working Capital](commercial-and-working-capital.md), [Financial Reports](financial.md) |
+| `P2P` | [Commercial and Working Capital](commercial-and-working-capital.md), [Financial Reports](financial.md) |
+| `Manufacturing` | [Operations and Risk](operations-and-risk.md), [Managerial Reports](managerial.md) |
+| `Payroll` | [Payroll and Workforce](payroll-perspective.md), [Financial Reports](financial.md), [Audit Reports](audit.md) |
+| `Close` | [Executive Overview](executive-overview.md), [Financial Reports](financial.md) |
 
 ## Business Perspectives
 
@@ -36,8 +39,8 @@ This section supports that progression in two complementary ways. `Business Pers
 | Managerial | Budget, margin, capacity, workforce, payroll operations, and supply-risk review | [Managerial Reports](managerial.md) |
 | Audit | Approval, segregation-of-duties, payroll and time controls, and anomaly review | [Audit Reports](audit.md) |
 
-## Suggested Learning Flow
+## Best Next Steps
 
-- Start with a business perspective when students need context, interpretation guidance, and a clear storyline before moving into report detail.
-- Move to the report library when they need the broader inventory in that area.
-- Use the case pages when you want a longer analytical narrative around the same data and reports.
+1. Start with the perspective or report area that matches the business cycle you just studied.
+2. Use the in-site preview to read the report as a business summary before downloading the full artifact.
+3. Then move into [SQL Guide](../sql-guide.md) or [Analytics Cases](../cases/index.md) when you want to explain how the reported result was produced.

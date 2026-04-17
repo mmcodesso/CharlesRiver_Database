@@ -6,7 +6,9 @@ sidebar_label: Analytics Cases
 
 # Analytics Walkthrough Cases
 
-Use this page as the main entry point for the case library. The sidebar now groups cases by topic so instructors and students can move from the overview page into the specific case set they need.
+Analytics Cases turns the business processes and analytical layers into guided investigation. A case should feel like a structured follow-through from the company story and the process pages, not like a separate assignment universe. Students should already know the business cycle they are entering; the case then gives them a focused question, a sequence of evidence, and a path toward interpretation.
+
+That makes the case library the most useful after the reader has already seen the process flow or the matching business perspective. The cases are where business context, query work, and analytical explanation come together.
 
 ## Core Walkthroughs
 
@@ -45,6 +47,15 @@ Use this page as the main entry point for the case library. The sidebar now grou
 | [Pricing Governance Audit Case](pricing-governance-audit-case.md) | exception review | audit + source-table review |
 | [Audit Exception Lab](audit-exception-lab.md) | exception review | audit |
 
+## How Cases Fit the Learning Path
+
+Read the case library as a deeper layer beneath the process and report pages:
+
+1. start with the process page or business perspective
+2. move into the matching report or topic guide
+3. use the case when you want a guided investigation of the same business cycle
+4. recreate part of the result in SQL or Excel
+
 ## Suggested Case Sequence
 
 1. start with the topic page in [Financial Analytics](../financial.md), [Managerial Analytics](../managerial.md), or [Audit Analytics](../audit.md)
@@ -65,8 +76,8 @@ When the class is ready for pricing and margin governance, extend the sequence w
 10. use the pricing and margin case for financial and managerial pricing analysis
 11. use the pricing-governance audit case for expired pricing, promotion misuse, and override-completeness review
 
-## Where to Go Next
+## Best Next Steps
 
-- Use [Analytics Hub](../index.md) for the broader starter map.
-- Use [SQL Guide](../sql-guide.md) for query-running workflow.
-- Use [Excel Guide](../excel-guide.md) for workbook-side reconstruction.
+1. Start from [Analytics Hub](../index.md) or [Reports Hub](../reports/index.md) when you need the broader business context first.
+2. Pick the case that matches the process you want to investigate.
+3. Use [SQL Guide](../sql-guide.md) for query-running workflow and [Excel Guide](../excel-guide.md) for workbook-side reconstruction.

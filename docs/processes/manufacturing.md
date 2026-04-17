@@ -318,10 +318,11 @@ flowchart LR
 - Which work orders were completed but not yet closed?
 - How much manufacturing variance was posted by month, work center, or item group?
 
-## Where to Go Next
+## Best Next Steps
 
+- Read [Operations and Risk](../analytics/reports/operations-and-risk.md) when you want the business perspective built around planning pressure, supply reliability, capacity, workforce context, and controls.
+- Read [Managerial Reports](../analytics/reports/managerial.md) when you want the broader report layer behind utilization, planning, workforce context, and supply risk.
+- Read [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md) when you want a guided walkthrough from production support into costing and close.
 - Read [P2P](p2p.md) to see how raw materials and packaging are replenished when manufacturing needs purchased support.
 - Read [Payroll](payroll.md#time-attendance-and-approved-hours) for approved attendance support and [Payroll](payroll.md#direct-labor-and-manufacturing-reclass) for the labor and reclass side of the same production story.
-- Read [Dataset Guide](../start-here/dataset-overview.md) for the broader planning, manufacturing, and ledger navigation paths.
-- Read [GLEntry Posting Reference](../reference/posting.md) for the detailed posting rules behind issues, completions, close, and reclass support.
-- Read [Schema Reference for full table relationships](../reference/schema.md) when you need the broader process-level table map.
+- Read [GLEntry Posting Reference](../reference/posting.md) and [Schema Reference](../reference/schema.md) when you need the detailed posting or join logic.

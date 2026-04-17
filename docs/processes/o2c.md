@@ -278,9 +278,10 @@ This local lineage view separates two outcomes that students often mix together.
 - Which returns reduced open AR versus created customer credit?
 - How do revenue, receivables, unapplied cash, collections timing, and return corrections differ by period?
 
-## Where to Go Next
+## Best Next Steps
 
+- Read [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md) when you want the business perspective built around pricing, collections, receivables, payables, and settlement timing.
+- Read [Financial Reports](../analytics/reports/financial.md) when you want the broader reporting layer behind revenue, AR, working capital, and cash conversion.
+- Read [O2C Trace Case](../analytics/cases/o2c-trace-case.md) when you want a guided walkthrough from order through posting and settlement.
 - Jump to [Returns, Credits, and Refunds](#returns-credits-and-refunds) when you want the main O2C exception path.
-- Read [Dataset Guide](../start-here/dataset-overview.md) for the main joins used in analysis.
-- Read [GLEntry Posting Reference](../reference/posting.md) when you want the detailed posting rules.
-- Read [Schema Reference for full table relationships](../reference/schema.md) when you need the broader process-level table map.
+- Read [GLEntry Posting Reference](../reference/posting.md) and [Schema Reference](../reference/schema.md) when you need the detailed posting or join logic.
