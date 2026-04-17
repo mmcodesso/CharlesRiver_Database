@@ -89,10 +89,13 @@ Use these when you want to scale the dataset up or down for course difficulty, p
 - `export_excel`
 - `export_support_excel`
 - `export_csv_zip`
+- `export_reports`
 - `sqlite_path`
 - `excel_path`
 - `support_excel_path`
 - `csv_zip_path`
+- `report_output_dir`
+- `report_preview_row_count`
 - `generation_log_path`
 
 Use these when you want to control which files are produced and where they are written.
@@ -131,6 +134,7 @@ The generator writes:
 - <FileName type="excel" prefix="outputs/" />
 - <FileName type="support" prefix="outputs/" />
 - <FileName type="csv" prefix="outputs/" />
+- `outputs/site/reports/`
 - `outputs/generation.log`
 
 The main SQLite database and main Excel workbook are the core student-facing dataset files. Share the support workbook when the course uses exception review or validation context. Share the CSV zip when flat-file delivery is useful.
@@ -139,6 +143,7 @@ The main SQLite database and main Excel workbook are the core student-facing dat
 
 - Share the SQLite database for SQL work.
 - Share the Excel workbook for pivot and chart-based analysis.
+- Share curated report downloads through the report pages in the documentation site when you want a student-first Excel and CSV layer.
 - Share the support workbook when classes need anomaly and validation companion material.
 - Share the CSV zip when students or analysts need one CSV per table.
 - Publish the student files through GitHub Releases or your course LMS.

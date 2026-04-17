@@ -60,6 +60,9 @@ class Settings:
     support_excel_path: str = "outputs/{short_name}_support.xlsx"
     export_csv_zip: bool = False
     csv_zip_path: str = "outputs/{short_name}_csv.zip"
+    export_reports: bool = False
+    report_output_dir: str = "outputs/site/reports"
+    report_preview_row_count: int = 25
     validation_report_path: str | None = None
     generation_log_path: str = "outputs/generation.log"
 
@@ -112,11 +115,21 @@ def load_settings(config_path: str | Path) -> Settings:
     if "export_csv_zip" not in normalized:
         normalized["export_csv_zip"] = False
 
+    if "export_reports" not in normalized:
+        normalized["export_reports"] = False
+
+    if "report_output_dir" not in normalized:
+        normalized["report_output_dir"] = "outputs/site/reports"
+
+    if "report_preview_row_count" not in normalized:
+        normalized["report_preview_row_count"] = 25
+
     for path_key in [
         "sqlite_path",
         "excel_path",
         "support_excel_path",
         "csv_zip_path",
+        "report_output_dir",
         "generation_log_path",
         "validation_report_path",
     ]:
@@ -124,6 +137,12 @@ def load_settings(config_path: str | Path) -> Settings:
             normalized.get(path_key),
             short_name=short_name,
         )
+
+    if normalized["export_reports"] and not normalized["export_sqlite"]:
+        raise ValueError("export_reports requires export_sqlite to be enabled.")
+
+    if int(normalized["report_preview_row_count"]) <= 0:
+        raise ValueError("report_preview_row_count must be greater than zero.")
 
     return Settings(**normalized)
 

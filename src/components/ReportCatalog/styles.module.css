@@ -1,0 +1,241 @@
+.section {
+  margin: 1.5rem 0;
+}
+
+.sectionHelper {
+  margin: 0 0 1rem;
+  color: var(--ifm-font-color-base);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.group + .group {
+  margin-top: 2rem;
+}
+
+.groupHeader {
+  margin-bottom: 0.85rem;
+}
+
+.groupTitle {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.groupGrid {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.card {
+  overflow: hidden;
+  border: 1px solid rgba(31, 107, 82, 0.14);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(246, 242, 232, 0.96));
+  box-shadow: 0 0.8rem 1.6rem rgba(23, 58, 47, 0.06);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding: 1.1rem 1.2rem;
+}
+
+.cardText {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+
+.cardDescription {
+  margin: 0.45rem 0 0;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.8rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(36, 108, 84, 0.1);
+  color: #1d5844;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.actionRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 11rem;
+}
+
+.primaryAction,
+.secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.7rem;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.primaryAction {
+  border: 0;
+  background: #246c54;
+  color: #fff9f0;
+  cursor: pointer;
+}
+
+.primaryAction:hover {
+  background: #1d5844;
+}
+
+.primaryAction:focus-visible,
+.secondaryAction:focus-visible {
+  outline: 2px solid var(--ifm-color-primary-light);
+  outline-offset: 2px;
+}
+
+.secondaryAction {
+  border: 1px solid rgba(31, 107, 82, 0.16);
+  background: rgba(255, 255, 255, 0.68);
+  color: #1d5844;
+}
+
+.secondaryAction:hover {
+  border-color: rgba(31, 107, 82, 0.28);
+  background: rgba(255, 255, 255, 0.92);
+  color: #154a38;
+}
+
+.previewPanel {
+  padding: 0 1.2rem 1.2rem;
+  border-top: 1px solid rgba(31, 107, 82, 0.12);
+}
+
+.previewBody {
+  margin-top: 1rem;
+}
+
+.previewMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  margin-bottom: 0.8rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.86rem;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border: 1px solid rgba(31, 107, 82, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.previewTable {
+  width: 100%;
+  min-width: 32rem;
+  margin-bottom: 0;
+}
+
+.previewTable th {
+  white-space: nowrap;
+}
+
+.previewTable th,
+.previewTable td {
+  font-size: 0.9rem;
+}
+
+.message {
+  margin: 1rem 0 0;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.error {
+  color: var(--ifm-color-danger-dark);
+}
+
+:global(html[data-theme="dark"]) .card {
+  border-color: rgba(132, 201, 168, 0.18);
+  background:
+    linear-gradient(180deg, rgba(28, 48, 40, 0.98), rgba(22, 38, 31, 0.96));
+  box-shadow: none;
+}
+
+:global(html[data-theme="dark"]) .cardDescription,
+:global(html[data-theme="dark"]) .previewMeta {
+  color: rgba(236, 244, 239, 0.8);
+}
+
+:global(html[data-theme="dark"]) .chip {
+  background: rgba(132, 201, 168, 0.14);
+  color: #d6efe1;
+}
+
+:global(html[data-theme="dark"]) .primaryAction {
+  background: #2d7b61;
+  color: #fff7e5;
+}
+
+:global(html[data-theme="dark"]) .primaryAction:hover {
+  background: #256650;
+}
+
+:global(html[data-theme="dark"]) .secondaryAction {
+  border-color: rgba(132, 201, 168, 0.18);
+  background: rgba(20, 35, 28, 0.88);
+  color: #d6efe1;
+}
+
+:global(html[data-theme="dark"]) .secondaryAction:hover {
+  border-color: rgba(132, 201, 168, 0.28);
+  background: rgba(24, 43, 35, 0.96);
+}
+
+:global(html[data-theme="dark"]) .previewPanel {
+  border-top-color: rgba(132, 201, 168, 0.16);
+}
+
+:global(html[data-theme="dark"]) .tableWrapper {
+  border-color: rgba(132, 201, 168, 0.16);
+  background: rgba(16, 32, 25, 0.92);
+}
+
+@media (max-width: 996px) {
+  .cardHeader {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .actionRow {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .previewPanel {
+    padding: 0 1rem 1rem;
+  }
+}

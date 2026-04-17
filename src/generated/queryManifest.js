@@ -479,6 +479,36 @@ const queryManifest = {
     "filename": "38_cash_flow_statement_direct_annual.sql",
     "publicPath": "/financial/38_cash_flow_statement_direct_annual.sql"
   },
+  "financial/39_annual_income_to_equity_bridge.sql": {
+    "category": "financial",
+    "filename": "39_annual_income_to_equity_bridge.sql",
+    "publicPath": "/financial/39_annual_income_to_equity_bridge.sql"
+  },
+  "financial/40_post_close_profit_and_loss_leakage_review.sql": {
+    "category": "financial",
+    "filename": "40_post_close_profit_and_loss_leakage_review.sql",
+    "publicPath": "/financial/40_post_close_profit_and_loss_leakage_review.sql"
+  },
+  "financial/41_round_dollar_manual_journal_close_sensitivity_review.sql": {
+    "category": "financial",
+    "filename": "41_round_dollar_manual_journal_close_sensitivity_review.sql",
+    "publicPath": "/financial/41_round_dollar_manual_journal_close_sensitivity_review.sql"
+  },
+  "financial/42_annual_net_revenue_bridge.sql": {
+    "category": "financial",
+    "filename": "42_annual_net_revenue_bridge.sql",
+    "publicPath": "/financial/42_annual_net_revenue_bridge.sql"
+  },
+  "financial/43_invoice_revenue_cutoff_exception_summary.sql": {
+    "category": "financial",
+    "filename": "43_invoice_revenue_cutoff_exception_summary.sql",
+    "publicPath": "/financial/43_invoice_revenue_cutoff_exception_summary.sql"
+  },
+  "financial/44_invoice_revenue_cutoff_exception_trace.sql": {
+    "category": "financial",
+    "filename": "44_invoice_revenue_cutoff_exception_trace.sql",
+    "publicPath": "/financial/44_invoice_revenue_cutoff_exception_trace.sql"
+  },
   "managerial/01_budget_vs_actual_by_cost_center.sql": {
     "category": "managerial",
     "filename": "01_budget_vs_actual_by_cost_center.sql",

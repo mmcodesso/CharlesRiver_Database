@@ -36,6 +36,17 @@ const sidebars = {
         "analytics/excel-guide",
         {
           type: "category",
+          label: "Reports",
+          link: { type: "doc", id: "analytics/reports/index" },
+          collapsed: true,
+          items: [
+            "analytics/reports/financial",
+            "analytics/reports/managerial",
+            "analytics/reports/audit",
+          ],
+        },
+        {
+          type: "category",
           label: "Analytics Hub",
           link: { type: "doc", id: "analytics/index" },
           collapsed: true,

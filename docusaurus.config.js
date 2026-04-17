@@ -14,7 +14,7 @@ const config = {
   projectName: "greenfield_database",
   trailingSlash: false,
   onBrokenLinks: "throw",
-  staticDirectories: ["static", "queries"],
+  staticDirectories: ["static", "queries", "outputs/site"],
   i18n: {
     defaultLocale: "en",
     locales: ["en"],

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import logging
 import sys
 import time
@@ -14,6 +15,7 @@ from generator_dataset.budgets import generate_budgets, generate_opening_balance
 from generator_dataset.exporters import (
     export_csv_zip,
     export_excel,
+    export_reports,
     export_sqlite,
     export_support_excel,
     export_validation_report,
@@ -166,6 +168,7 @@ def log_settings(settings: Settings, config_path: str | Path) -> None:
     LOGGER.info("Excel export enabled: %s | path=%s", settings.export_excel, settings.excel_path)
     LOGGER.info("Support workbook enabled: %s | path=%s", settings.export_support_excel, settings.support_excel_path)
     LOGGER.info("CSV zip export enabled: %s | path=%s", settings.export_csv_zip, settings.csv_zip_path)
+    LOGGER.info("Report export enabled: %s | path=%s", settings.export_reports, settings.report_output_dir)
     LOGGER.info("Generation log path: %s", generation_log_path(settings))
 
 
@@ -186,6 +189,23 @@ def log_validation_results(phase_name: str, results: dict[str, Any]) -> None:
     for key, value in results.items():
         if isinstance(value, dict) and "exception_count" in value:
             LOGGER.info("VALIDATION | %s.%s | exception_count=%s", phase_name, key, value["exception_count"])
+            scalar_metrics: list[str] = []
+            for metric_key, metric_value in value.items():
+                if metric_key in {"exception_count", "exceptions"}:
+                    continue
+                if isinstance(metric_value, dict):
+                    continue
+                if isinstance(metric_value, list):
+                    if not metric_value:
+                        scalar_metrics.append(f"{metric_key}=[]")
+                    else:
+                        scalar_metrics.append(
+                            f"{metric_key}={json.dumps(metric_value, default=str, ensure_ascii=True)}"
+                        )
+                    continue
+                scalar_metrics.append(f"{metric_key}={metric_value}")
+            if scalar_metrics:
+                LOGGER.info("VALIDATION | %s.%s | %s", phase_name, key, " | ".join(scalar_metrics))
 
 
 def _run_generation_step(
@@ -1168,6 +1188,13 @@ def build_full_dataset(
     else:
         LOGGER.info("SKIP | SQLite export disabled.")
 
+    if context.settings.export_reports:
+        with logged_step("Export curated reports"):
+            export_reports(context)
+            LOGGER.info("EXPORT | reports | path=%s", context.settings.report_output_dir)
+    else:
+        LOGGER.info("SKIP | Report export disabled.")
+
     if context.settings.export_excel:
         with logged_step("Export Excel workbook"):
             export_excel(context)
@@ -1264,6 +1291,8 @@ def print_summary(context: GenerationContext) -> None:
     print(f"Anomalies logged: {len(context.anomaly_log)}")
     print(f"SQLite export: {context.settings.sqlite_path}")
     print(f"Excel export: {context.settings.excel_path}")
+    if context.settings.export_reports:
+        print(f"Report output directory: {context.settings.report_output_dir}")
     print(f"Support workbook: {context.settings.support_excel_path}")
     print(f"CSV zip export: {context.settings.csv_zip_path}")
     print(f"Generation log: {generation_log_path(context)}")

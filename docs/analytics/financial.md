@@ -29,6 +29,20 @@ import { starterQueryMaps } from "@site/src/generated/queryDocCollections";
 
 <QueryCatalog items={starterQueryMaps.financial} />
 
+## Financial Statement Reconciliation Path
+
+- Start from `config/settings_reconciliation.yaml` when the goal is financial-integrity investigation. It keeps the full-size build, disables anomaly injection, turns off non-SQLite exports, and writes separate clean SQLite and generation-log outputs so the clean investigation run does not overwrite anomaly evidence.
+- Treat the default `config/settings.yaml` build as the anomaly-enriched comparison set when `anomaly_mode` remains `standard`.
+- Run `financial/39_annual_income_to_equity_bridge.sql` first to compare annual income-statement net income, the retained-earnings close to `3030`, year-end retained earnings, and the annual balance-sheet residual.
+- Run `financial/40_post_close_profit_and_loss_leakage_review.sql` next to find any revenue, expense, or `8010` balances that remain open after the close.
+- Run `financial/41_round_dollar_manual_journal_close_sensitivity_review.sql` when the anomaly build shows unexplained residuals and you need likely manual-journal candidates.
+- Start the account-by-account workflow with `financial/42_annual_net_revenue_bridge.sql`.
+- When annual net revenue does not tie from source documents into the GL, run `financial/43_invoice_revenue_cutoff_exception_summary.sql` to isolate the invoice headers whose invoice year differs from the revenue GL fiscal year or whose revenue posting is incomplete.
+- Run `financial/44_invoice_revenue_cutoff_exception_trace.sql` next to inspect the affected invoice lines, linked shipment lines, and operating-revenue GL rows.
+- Keep `audit/04_cutoff_and_timing_analysis.sql` and `audit/06_potential_anomaly_review.sql` as supporting context. They provide the broader timing scan; the new financial queries narrow the population to the invoices that actually affect annual net-revenue reconciliation.
+- If the clean build returns rows in `financial/43_invoice_revenue_cutoff_exception_summary.sql`, treat that as a real process defect. If the clean build stays empty and the anomaly build shows `InvoiceBeforeShipmentFlag = 1` with `InvoiceYearVsGlYearFlag = 1`, classify the result as seeded anomaly behavior rather than a statement-query defect.
+- After net revenue, repeat the same source-to-GL-to-statement-to-close pattern for COGS, manufacturing variance, labor, overhead, operating expenses, other income and expense, and retained earnings.
+
 ## Recommended Case Pairings
 
 - Use [Working Capital and Cash Conversion Case](cases/working-capital-and-cash-conversion-case.md) when you want a balance-sheet and settlement-timing exercise.
@@ -56,3 +70,4 @@ import { starterQueryMaps } from "@site/src/generated/queryDocCollections";
 - The indirect-method cash flow starter queries reconcile from pre-close net income into operating cash, then combine that with investing and financing cash movements.
 - The direct-method cash flow starter queries classify cash-ledger activity into teaching buckets such as customer receipts, supplier payments, payroll, and other operating cash.
 - The cash flow starter queries treat opening journals as the `Beginning Cash` seed for the first reporting period instead of showing them as operating, investing, or financing flows.
+- The published default SQLite is anomaly-enriched when `anomaly_mode` is `standard`, so it is useful for teaching comparisons but not as the clean baseline for database-integrity reconciliation.

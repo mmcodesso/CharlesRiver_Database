@@ -151,6 +151,30 @@ export const starterQueryMaps = {
     {
       "label": "Annual direct cash flow statement",
       "queryKey": "financial/38_cash_flow_statement_direct_annual.sql"
+    },
+    {
+      "label": "Annual net-income-to-equity bridge",
+      "queryKey": "financial/39_annual_income_to_equity_bridge.sql"
+    },
+    {
+      "label": "Post-close P&L leakage review",
+      "queryKey": "financial/40_post_close_profit_and_loss_leakage_review.sql"
+    },
+    {
+      "label": "Round-dollar manual-journal close-sensitivity review",
+      "queryKey": "financial/41_round_dollar_manual_journal_close_sensitivity_review.sql"
+    },
+    {
+      "label": "Annual net revenue bridge",
+      "queryKey": "financial/42_annual_net_revenue_bridge.sql"
+    },
+    {
+      "label": "Invoice revenue cutoff exception summary",
+      "queryKey": "financial/43_invoice_revenue_cutoff_exception_summary.sql"
+    },
+    {
+      "label": "Invoice revenue cutoff exception trace",
+      "queryKey": "financial/44_invoice_revenue_cutoff_exception_trace.sql"
     }
   ],
   "managerial": [

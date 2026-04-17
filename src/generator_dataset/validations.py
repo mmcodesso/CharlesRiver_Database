@@ -845,6 +845,11 @@ def validate_o2c_phase11_controls(context: GenerationContext) -> dict[str, Any]:
     invoice_lookup = sales_invoices.set_index("SalesInvoiceID").to_dict("index") if not sales_invoices.empty else {}
     return_line_lookup = sales_return_lines.set_index("SalesReturnLineID").to_dict("index") if not sales_return_lines.empty else {}
 
+    invoice_before_shipment_count = 0
+    invoice_gl_year_mismatch_count = 0
+    invoice_gl_year_mismatch_amount = 0.0
+    invoice_gl_year_mismatch_by_pair: list[dict[str, int | float]] = []
+
     if not sales_invoice_lines.empty:
         linked_invoice_lines = sales_invoice_lines[sales_invoice_lines["ShipmentLineID"].notna()]
         valid_shipment_line_ids = set(shipment_lines["ShipmentLineID"].astype(int)) if not shipment_lines.empty else set()
@@ -1154,12 +1159,158 @@ def validate_o2c_phase11_controls(context: GenerationContext) -> dict[str, Any]:
                 "year_end_dso_series": year_end_dso_series,
             })
 
+    if not sales_invoice_lines.empty and not shipment_lines.empty and not shipments.empty:
+        invoice_shipment_dates = (
+            sales_invoice_lines[["SalesInvoiceID", "ShipmentLineID", "LineTotal"]]
+            .merge(
+                shipment_lines[["ShipmentLineID", "ShipmentID"]],
+                on="ShipmentLineID",
+                how="left",
+            )
+            .merge(
+                shipments[["ShipmentID", "ShipmentDate"]],
+                on="ShipmentID",
+                how="left",
+            )
+        )
+        invoice_shipment_summary = (
+            invoice_shipment_dates.groupby("SalesInvoiceID", dropna=False)
+            .agg(
+                FirstShipmentDate=("ShipmentDate", "min"),
+                InvoiceSubTotal=("LineTotal", "sum"),
+                InvoiceLineCount=("ShipmentLineID", "count"),
+            )
+            .reset_index()
+        )
+
+        revenue_accounts = context.tables["Account"][
+            context.tables["Account"]["AccountType"].eq("Revenue")
+            & context.tables["Account"]["AccountSubType"].eq("Operating Revenue")
+            & context.tables["Account"]["AccountNumber"].astype(int).between(4000, 4059)
+        ][["AccountID", "AccountNumber"]]
+
+        revenue_gl = context.tables["GLEntry"][
+            context.tables["GLEntry"]["SourceDocumentType"].eq("SalesInvoice")
+            & context.tables["GLEntry"]["SourceDocumentID"].notna()
+            & context.tables["GLEntry"]["SourceLineID"].notna()
+        ].merge(
+            revenue_accounts,
+            on="AccountID",
+            how="inner",
+        )
+
+        if not revenue_gl.empty:
+            revenue_gl_summary = (
+                revenue_gl.groupby("SourceDocumentID", dropna=False)
+                .agg(
+                    RevenueGlFiscalYearMin=("FiscalYear", "min"),
+                    RevenueGlFiscalYearMax=("FiscalYear", "max"),
+                    RevenueAmount=("Credit", "sum"),
+                    RevenueDebitAmount=("Debit", "sum"),
+                    RevenueGlLineCount=("SourceLineID", "nunique"),
+                )
+                .reset_index()
+                .rename(columns={"SourceDocumentID": "SalesInvoiceID"})
+            )
+            revenue_gl_summary["RevenueAmount"] = (
+                revenue_gl_summary["RevenueAmount"].astype(float) - revenue_gl_summary["RevenueDebitAmount"].astype(float)
+            ).round(2)
+            revenue_gl_summary["RevenueGlFiscalYear"] = revenue_gl_summary["RevenueGlFiscalYearMin"].where(
+                revenue_gl_summary["RevenueGlFiscalYearMin"].eq(revenue_gl_summary["RevenueGlFiscalYearMax"])
+            )
+            revenue_gl_summary = revenue_gl_summary.drop(columns=["RevenueDebitAmount"])
+        else:
+            revenue_gl_summary = pd.DataFrame(
+                columns=[
+                    "SalesInvoiceID",
+                    "RevenueGlFiscalYearMin",
+                    "RevenueGlFiscalYearMax",
+                    "RevenueAmount",
+                    "RevenueGlLineCount",
+                    "RevenueGlFiscalYear",
+                ]
+            )
+
+        invoice_cutoff = sales_invoices[["SalesInvoiceID", "InvoiceDate"]].merge(
+            invoice_shipment_summary,
+            on="SalesInvoiceID",
+            how="left",
+        ).merge(
+            revenue_gl_summary,
+            on="SalesInvoiceID",
+            how="left",
+        )
+        invoice_cutoff["InvoiceYear"] = pd.to_datetime(invoice_cutoff["InvoiceDate"]).dt.year.astype(int)
+        invoice_cutoff["InvoiceBeforeShipmentFlag"] = (
+            invoice_cutoff["FirstShipmentDate"].notna()
+            & (pd.to_datetime(invoice_cutoff["InvoiceDate"]) < pd.to_datetime(invoice_cutoff["FirstShipmentDate"]))
+        )
+        invoice_cutoff["InvoiceYearVsGlYearFlag"] = False
+        has_gl_year = invoice_cutoff["RevenueGlFiscalYear"].notna()
+        invoice_cutoff.loc[has_gl_year, "InvoiceYearVsGlYearFlag"] = (
+            invoice_cutoff.loc[has_gl_year, "InvoiceYear"].astype(int)
+            != invoice_cutoff.loc[has_gl_year, "RevenueGlFiscalYear"].astype(int)
+        )
+        mixed_gl_years = (
+            invoice_cutoff["RevenueGlFiscalYearMin"].notna()
+            & invoice_cutoff["RevenueGlFiscalYearMax"].notna()
+            & invoice_cutoff["RevenueGlFiscalYearMin"].ne(invoice_cutoff["RevenueGlFiscalYearMax"])
+        )
+        invoice_cutoff.loc[mixed_gl_years, "InvoiceYearVsGlYearFlag"] = True
+
+        invoice_before_shipment_count = int(invoice_cutoff["InvoiceBeforeShipmentFlag"].sum())
+
+        mismatch_rows = invoice_cutoff[invoice_cutoff["InvoiceYearVsGlYearFlag"]].copy()
+        invoice_gl_year_mismatch_count = int(len(mismatch_rows))
+        invoice_gl_year_mismatch_amount = round(float(mismatch_rows["RevenueAmount"].fillna(0.0).sum()), 2)
+        if not mismatch_rows.empty:
+            grouped_pairs = (
+                mismatch_rows.groupby(["InvoiceYear", "RevenueGlFiscalYear"], dropna=False)
+                .agg(
+                    InvoiceCount=("SalesInvoiceID", "nunique"),
+                    RevenueAmount=("RevenueAmount", "sum"),
+                )
+                .reset_index()
+                .sort_values(["InvoiceYear", "RevenueGlFiscalYear"], kind="stable")
+            )
+            invoice_gl_year_mismatch_by_pair = [
+                {
+                    "invoice_year": int(row["InvoiceYear"]),
+                    "revenue_gl_fiscal_year": (
+                        int(row["RevenueGlFiscalYear"]) if pd.notna(row["RevenueGlFiscalYear"]) else -1
+                    ),
+                    "invoice_count": int(row["InvoiceCount"]),
+                    "revenue_amount": round(float(row["RevenueAmount"]), 2),
+                }
+                for _, row in grouped_pairs.iterrows()
+            ]
+
+        if context.settings.anomaly_mode == "none":
+            if invoice_before_shipment_count > 0:
+                exceptions.append({
+                    "type": "invoice_before_shipment_detected",
+                    "message": "One or more invoices are dated before their linked shipment date in the clean build.",
+                    "invoice_before_shipment_count": invoice_before_shipment_count,
+                })
+            if invoice_gl_year_mismatch_count > 0:
+                exceptions.append({
+                    "type": "invoice_gl_year_mismatch_detected",
+                    "message": "One or more invoices are dated in a different fiscal year than their posted operating-revenue GL rows in the clean build.",
+                    "invoice_gl_year_mismatch_count": invoice_gl_year_mismatch_count,
+                    "invoice_gl_year_mismatch_amount": invoice_gl_year_mismatch_amount,
+                    "invoice_gl_year_mismatch_by_pair": invoice_gl_year_mismatch_by_pair,
+                })
+
     return {
         "exception_count": len(exceptions),
         "exceptions": exceptions,
         "open_state": o2c_open_state(context),
         "receivables_metrics": receivables_metrics,
         "year_end_dso_series": year_end_dso_series,
+        "invoice_before_shipment_count": invoice_before_shipment_count,
+        "invoice_gl_year_mismatch_count": invoice_gl_year_mismatch_count,
+        "invoice_gl_year_mismatch_amount": invoice_gl_year_mismatch_amount,
+        "invoice_gl_year_mismatch_by_pair": invoice_gl_year_mismatch_by_pair,
     }
 
 

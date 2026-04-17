@@ -10,11 +10,12 @@
   "scripts": {
     "generate-site-branding": "node scripts/generate-site-branding.mjs",
     "generate-query-manifest": "node scripts/generate-query-manifest.mjs",
-    "prestart": "npm run generate-site-branding && npm run generate-query-manifest",
+    "generate-report-manifest": "node scripts/generate-report-manifest.mjs",
+    "prestart": "npm run generate-site-branding && npm run generate-query-manifest && npm run generate-report-manifest",
     "start": "docusaurus start",
-    "prebuild": "npm run generate-site-branding && npm run generate-query-manifest",
+    "prebuild": "npm run generate-site-branding && npm run generate-query-manifest && npm run generate-report-manifest",
     "build": "docusaurus build",
-    "preserve": "npm run generate-site-branding && npm run generate-query-manifest",
+    "preserve": "npm run generate-site-branding && npm run generate-query-manifest && npm run generate-report-manifest",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
     "deploy": "docusaurus deploy"

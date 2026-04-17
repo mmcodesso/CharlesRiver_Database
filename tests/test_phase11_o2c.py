@@ -69,14 +69,19 @@ def test_phase11_full_dataset_clean_validation(full_dataset_artifacts: dict[str,
     context = full_dataset_artifacts["context"]
     phase11 = context.validation_results["phase11"]
     row_counts = phase11["row_counts"]
+    o2c_controls = phase11["o2c_controls"]
 
     assert phase11["exceptions"] == []
     assert phase11["gl_balance"]["exception_count"] == 0
     assert phase11["trial_balance_difference"] == 0
     assert phase11["account_rollforward"]["exception_count"] == 0
-    assert phase11["o2c_controls"]["exception_count"] == 0
+    assert o2c_controls["exception_count"] == 0
     assert phase11["p2p_controls"]["exception_count"] == 0
     assert phase11["journal_controls"]["exception_count"] == 0
+    assert o2c_controls["invoice_before_shipment_count"] == 0
+    assert o2c_controls["invoice_gl_year_mismatch_count"] == 0
+    assert float(o2c_controls["invoice_gl_year_mismatch_amount"]) == 0.0
+    assert o2c_controls["invoice_gl_year_mismatch_by_pair"] == []
     assert row_counts["CashReceiptApplication"] > row_counts["CashReceipt"]
     assert row_counts["SalesReturn"] > 0
     assert row_counts["CreditMemo"] > 0
@@ -122,3 +127,29 @@ def test_phase11_full_dataset_receivables_realism(full_dataset_artifacts: dict[s
     generation_log_text = full_dataset_artifacts["generation_log_path"].read_text(encoding="utf-8")
     assert "implied_dso=" in generation_log_text
     assert "aging_90_plus_share=" in generation_log_text
+    assert "invoice_before_shipment_count=0" in generation_log_text
+    assert "invoice_gl_year_mismatch_count=0" in generation_log_text
+    assert "invoice_gl_year_mismatch_by_pair=[]" in generation_log_text
+
+
+def test_phase11_default_anomaly_dataset_surfaces_invoice_cutoff_guardrails(
+    default_anomaly_dataset_artifacts: dict[str, object],
+) -> None:
+    context = default_anomaly_dataset_artifacts["context"]
+    o2c_controls = context.validation_results["phase11"]["o2c_controls"]
+
+    assert o2c_controls["invoice_before_shipment_count"] == 15
+    assert o2c_controls["invoice_gl_year_mismatch_count"] == 13
+    assert round(float(o2c_controls["invoice_gl_year_mismatch_amount"]), 2) == 22892.64
+    assert o2c_controls["invoice_gl_year_mismatch_by_pair"] == [
+        {"invoice_year": 2025, "revenue_gl_fiscal_year": 2026, "invoice_count": 1, "revenue_amount": 1858.96},
+        {"invoice_year": 2026, "revenue_gl_fiscal_year": 2027, "invoice_count": 3, "revenue_amount": 11915.23},
+        {"invoice_year": 2027, "revenue_gl_fiscal_year": 2028, "invoice_count": 3, "revenue_amount": 2544.87},
+        {"invoice_year": 2028, "revenue_gl_fiscal_year": 2029, "invoice_count": 3, "revenue_amount": 3521.75},
+        {"invoice_year": 2029, "revenue_gl_fiscal_year": 2030, "invoice_count": 3, "revenue_amount": 3051.83},
+    ]
+
+    generation_log_text = default_anomaly_dataset_artifacts["generation_log_path"].read_text(encoding="utf-8")
+    assert "invoice_before_shipment_count=15" in generation_log_text
+    assert "invoice_gl_year_mismatch_count=13" in generation_log_text
+    assert "invoice_gl_year_mismatch_amount=22892.64" in generation_log_text

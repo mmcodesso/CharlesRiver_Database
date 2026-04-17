@@ -1,0 +1,121 @@
+reports:
+  - slug: monthly-income-statement
+    title: Monthly Income Statement
+    area: financial
+    process_group: monthly-close-and-statements
+    cadence: Monthly
+    description: Review revenue, cost of goods sold, operating expenses, and net income by fiscal period.
+    query_path: queries/financial/27_income_statement_monthly.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: monthly-balance-sheet
+    title: Monthly Balance Sheet
+    area: financial
+    process_group: monthly-close-and-statements
+    cadence: Monthly
+    description: Analyze monthly ending balances for assets, liabilities, equity, and current year earnings.
+    query_path: queries/financial/30_balance_sheet_monthly.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: monthly-indirect-cash-flow
+    title: Monthly Indirect Cash Flow
+    area: financial
+    process_group: monthly-close-and-statements
+    cadence: Monthly
+    description: Reconcile net income to cash movement and review monthly operating, investing, and financing activity.
+    query_path: queries/financial/33_cash_flow_statement_indirect_monthly.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: monthly-revenue-and-gross-margin
+    title: Monthly Revenue and Gross Margin
+    area: financial
+    process_group: revenue-and-working-capital
+    cadence: Monthly
+    description: Compare invoiced revenue, gross margin, discounts, and returns across fiscal periods.
+    query_path: queries/financial/01_monthly_revenue_and_gross_margin.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: ar-aging
+    title: AR Aging
+    area: financial
+    process_group: revenue-and-working-capital
+    cadence: Current snapshot
+    description: Review open customer invoices by aging bucket and identify collection pressure.
+    query_path: queries/financial/02_ar_aging_open_invoices.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: ap-aging
+    title: AP Aging
+    area: financial
+    process_group: revenue-and-working-capital
+    cadence: Current snapshot
+    description: Review open supplier invoices by aging bucket and identify upcoming cash commitments.
+    query_path: queries/financial/03_ap_aging_open_invoices.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: budget-vs-actual-by-cost-center
+    title: Budget vs Actual by Cost Center
+    area: managerial
+    process_group: performance-and-planning
+    cadence: Monthly
+    description: Compare budgeted and actual spend by cost center and account classification.
+    query_path: queries/managerial/01_budget_vs_actual_by_cost_center.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: sales-and-margin-by-collection-and-style
+    title: Sales and Margin by Collection and Style
+    area: managerial
+    process_group: performance-and-planning
+    cadence: Monthly
+    description: Review sales volume, margin, and portfolio mix by collection, style family, and material.
+    query_path: queries/managerial/30_sales_margin_by_collection_style_material.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: monthly-work-center-utilization
+    title: Monthly Work Center Utilization
+    area: managerial
+    process_group: performance-and-planning
+    cadence: Monthly
+    description: Compare scheduled and available hours to evaluate manufacturing capacity usage by month.
+    query_path: queries/managerial/20_monthly_work_center_utilization.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: headcount-by-cost-center-and-job-family
+    title: Headcount by Cost Center and Job Family
+    area: managerial
+    process_group: performance-and-planning
+    cadence: Current snapshot
+    description: Review workforce structure by cost center, job family, and employment status.
+    query_path: queries/managerial/29_headcount_by_cost_center_job_family_status.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: approval-and-sod-review
+    title: Approval and SOD Review
+    area: audit
+    process_group: control-review
+    cadence: Exception review
+    description: Review approval assignments, same-user conflicts, and segregation-of-duties issues across source documents.
+    query_path: queries/audit/03_approval_and_sod_review.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true
+  - slug: potential-anomaly-review
+    title: Potential Anomaly Review
+    area: audit
+    process_group: control-review
+    cadence: Exception review
+    description: Run a broad control-screening report that surfaces anomalies across journals, purchasing, sales, and payments.
+    query_path: queries/audit/06_potential_anomaly_review.sql
+    preview_row_limit: 25
+    excel_enabled: true
+    csv_enabled: true

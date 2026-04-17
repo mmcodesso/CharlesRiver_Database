@@ -19,6 +19,7 @@ from pandas.api.types import (
 )
 
 from generator_dataset.settings import GenerationContext
+from generator_dataset.reports import ReportDefinition, load_report_catalog
 
 
 ANOMALY_LOG_COLUMNS = [
@@ -375,6 +376,97 @@ def export_csv_zip(context: GenerationContext) -> None:
             buffer = StringIO()
             df.to_csv(buffer, index=False)
             archive.writestr(f"{table_name}.csv", buffer.getvalue().encode("utf-8"))
+
+
+def _json_safe_value(value: object) -> object:
+    if pd.isna(value):
+        return None
+    if isinstance(value, pd.Timestamp):
+        return value.isoformat()
+    if hasattr(value, "isoformat"):
+        try:
+            return value.isoformat()
+        except TypeError:
+            pass
+    if isinstance(value, (dict, list)):
+        return json.loads(json.dumps(value, default=str, ensure_ascii=True))
+    if hasattr(value, "item"):
+        try:
+            return value.item()
+        except ValueError:
+            pass
+    return value
+
+
+def _report_asset_dir(context: GenerationContext, report: ReportDefinition) -> Path:
+    return Path(context.settings.report_output_dir).joinpath(*report.asset_parts)
+
+
+def _report_preview_payload(
+    context: GenerationContext,
+    report: ReportDefinition,
+    frame: pd.DataFrame,
+    *,
+    generated_at: str,
+) -> dict[str, object]:
+    limit = min(report.preview_row_limit, context.settings.report_preview_row_count)
+    preview_frame = frame.head(limit)
+
+    rows = []
+    for row in preview_frame.to_dict(orient="records"):
+        rows.append({key: _json_safe_value(value) for key, value in row.items()})
+
+    return {
+        "slug": report.slug,
+        "title": report.title,
+        "area": report.area,
+        "processGroup": report.process_group,
+        "cadence": report.cadence,
+        "description": report.description,
+        "generatedAt": generated_at,
+        "rowCount": int(len(frame.index)),
+        "previewRowCount": int(len(preview_frame.index)),
+        "previewRowLimit": limit,
+        "columns": [str(column) for column in frame.columns],
+        "rows": rows,
+    }
+
+
+def _write_report_excel(path: Path, report: ReportDefinition, frame: pd.DataFrame) -> None:
+    sheet_name = report.title[:31] or "Report"
+    _write_excel_workbook(path, {sheet_name: frame})
+
+
+def export_reports(context: GenerationContext) -> None:
+    catalog = load_report_catalog()
+    generated_at = pd.Timestamp.now(tz="UTC").isoformat()
+    sqlite_path = Path(context.settings.sqlite_path)
+
+    report_root = Path(context.settings.report_output_dir)
+    report_root.mkdir(parents=True, exist_ok=True)
+
+    with sqlite3.connect(sqlite_path) as connection:
+        for report in catalog:
+            frame = pd.read_sql_query(report.query_file.read_text(encoding="utf-8"), connection)
+            asset_dir = _report_asset_dir(context, report)
+            asset_dir.mkdir(parents=True, exist_ok=True)
+
+            if report.excel_enabled:
+                _write_report_excel(asset_dir / f"{report.slug}.xlsx", report, frame)
+
+            if report.csv_enabled:
+                frame.to_csv(asset_dir / f"{report.slug}.csv", index=False)
+
+            preview_payload = _report_preview_payload(
+                context,
+                report,
+                frame,
+                generated_at=generated_at,
+            )
+            (asset_dir / "preview.json").write_text(
+                json.dumps(preview_payload, indent=2, ensure_ascii=True),
+                encoding="utf-8",
+            )
 
 
 def export_validation_report(context: GenerationContext) -> None:
