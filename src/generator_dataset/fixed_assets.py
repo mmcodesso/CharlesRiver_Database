@@ -8,6 +8,7 @@ from typing import Any
 import pandas as pd
 import yaml
 
+from generator_dataset import scenario
 from generator_dataset.settings import GenerationContext
 from generator_dataset.utils import money
 
@@ -46,14 +47,27 @@ def _normalize_capex_plan(raw: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-@lru_cache(maxsize=1)
-def load_capex_plan(capex_plan_path: str | Path = DEFAULT_CAPEX_PLAN_PATH) -> dict[str, Any]:
-    resolved_path = Path(capex_plan_path)
-    with resolved_path.open("r", encoding="utf-8") as handle:
+CAPEX_PLAN_DATE_FIELDS = ("in_service_date", "event_date", "payment_start_date")
+
+
+@lru_cache(maxsize=4)
+def _load_capex_plan(resolved_path: str, year_offset: int) -> dict[str, Any]:
+    with Path(resolved_path).open("r", encoding="utf-8") as handle:
         raw = yaml.safe_load(handle) or {}
     if not isinstance(raw, dict):
         raise ValueError(f"CAPEX plan must contain a mapping: {resolved_path}")
-    return _normalize_capex_plan(raw)
+    plan = _normalize_capex_plan(raw)
+    # The plan's dates are those of the default build; a rolled scenario moves them with it.
+    for section in ("opening_assets", "events"):
+        for row in plan[section]:
+            for field_name in CAPEX_PLAN_DATE_FIELDS:
+                if row.get(field_name):
+                    row[field_name] = scenario.shift_date(str(row[field_name]), year_offset)
+    return plan
+
+
+def load_capex_plan(capex_plan_path: str | Path = DEFAULT_CAPEX_PLAN_PATH) -> dict[str, Any]:
+    return _load_capex_plan(str(Path(capex_plan_path)), scenario.year_offset())
 
 
 def capex_item_definitions(capex_plan_path: str | Path = DEFAULT_CAPEX_PLAN_PATH) -> dict[str, dict[str, Any]]:

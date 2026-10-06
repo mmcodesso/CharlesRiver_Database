@@ -66,6 +66,10 @@ class Settings:
     published_sqlite_url: str | None = None
     validation_report_path: str | None = None
     generation_log_path: str = "outputs/generation.log"
+    # The year the scenario ends (see scenario.py); defaults to the year of fiscal_year_end.
+    scenario_end_year: int | None = None
+    # Storylines the Accounting Analytics textbook relies on (see scenario.py, book_scenarios.py); off when absent.
+    book_scenarios: dict[str, Any] | None = None
 
 
 @dataclass
@@ -150,6 +154,9 @@ def load_settings(config_path: str | Path) -> Settings:
 
 
 def initialize_context(settings: Settings) -> GenerationContext:
+    from generator_dataset import scenario
+
+    scenario.configure(settings)
     rng = np.random.default_rng(settings.random_seed)
     operational_calendar_end = (
         pd.Timestamp(settings.fiscal_year_end).normalize() + pd.Timedelta(days=OPERATIONAL_HORIZON_BUFFER_DAYS)

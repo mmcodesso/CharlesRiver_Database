@@ -1,0 +1,21 @@
+# Exact versions for building a dataset release (Python 3.13).
+#
+# The data depend on these packages: Faker supplies the names, addresses, and customer-since dates,
+# and pandas' handling of missing values reaches some anomalies. With these versions, the code on
+# branch book-roll-feasibility rebuilds release v2026.1 table for table (verified 2026-10-02).
+# requirements.txt stays unpinned for development; build a release with:
+#
+#   python -m venv .venv
+#   .venv\Scripts\python -m pip install -r requirements-lock.txt     (Windows)
+#   .venv/bin/python -m pip install -r requirements-lock.txt         (macOS, Linux)
+#   .venv\Scripts\python generate_dataset.py
+#
+# Each build logs its Python and package versions ("Environment:" in the generation log).
+pandas==3.0.2
+numpy==2.4.4
+faker==40.15.0
+pyyaml==6.0.3
+openpyxl==3.1.5
+xlsxwriter==3.2.9
+pytest
+pysqlite3-binary; platform_system == "Linux"

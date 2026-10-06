@@ -1,6 +1,8 @@
 random_seed: 20260401
 fiscal_year_start: "2026-01-01"
 fiscal_year_end: "2027-12-31"
+# Keep the default build's calibration years (see scenario.py).
+scenario_end_year: 2026
 company_name: "Charles River Home Furnishings, Inc."
 short_name: "CharlesRiver"
 base_url: "https://charlesriver.accountinganalyticshub.com"

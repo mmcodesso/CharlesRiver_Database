@@ -8,6 +8,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from generator_dataset import scenario
 from generator_dataset.master_data import approver_employee_id, current_role_employee_id, eligible_item_mask
 from generator_dataset.schema import TABLE_COLUMNS
 from generator_dataset.settings import GenerationContext
@@ -74,7 +75,8 @@ MANUFACTURED_COMPONENT_NEED_OFFSET_DAYS = 14
 DEMAND_ANNUAL_GROWTH_RATE = 0.025
 # Anchor the late-year manufactured calibration to the 3-year default build so
 # narrower clean-validation windows inherit the steady-state posture instead of
-# restarting the bridge year.
+# restarting the bridge year. The years are those of the default build (fiscal
+# 2024-2026); scenario.year_offset() moves them with a rolled window.
 MANUFACTURED_LOAD_CALIBRATION_START_YEAR = 2024
 MANUFACTURED_LATE_YEAR_SELL_THROUGH_UPLIFT_BY_YEAR = {
     2024: 1.00,
@@ -174,7 +176,8 @@ def manufactured_late_year_sell_through_factor(year: int) -> float:
     if not MANUFACTURED_LATE_YEAR_SELL_THROUGH_UPLIFT_BY_YEAR:
         return 1.0
     calibration_years = sorted(int(value) for value in MANUFACTURED_LATE_YEAR_SELL_THROUGH_UPLIFT_BY_YEAR)
-    resolved_year = min(max(int(year), calibration_years[0]), calibration_years[-1])
+    base_year = int(year) - scenario.year_offset()
+    resolved_year = min(max(base_year, calibration_years[0]), calibration_years[-1])
     return float(MANUFACTURED_LATE_YEAR_SELL_THROUGH_UPLIFT_BY_YEAR.get(
         resolved_year,
         MANUFACTURED_LATE_YEAR_SELL_THROUGH_UPLIFT_BY_YEAR[calibration_years[-1]],
@@ -198,7 +201,7 @@ def manufactured_effective_policy_profile(
 ) -> dict[str, Any]:
     bucket_year = int(pd.Timestamp(bucket_start).year)
     normalized_lifecycle = str(lifecycle_status or "Core")
-    if bucket_year <= MANUFACTURED_LOAD_CALIBRATION_START_YEAR:
+    if bucket_year <= MANUFACTURED_LOAD_CALIBRATION_START_YEAR + scenario.year_offset():
         phase = "bridge"
         target_days = int(MANUFACTURED_BRIDGE_TARGET_DAYS_BY_LIFECYCLE.get(normalized_lifecycle, 10))
         safety_stock = float(MANUFACTURED_BRIDGE_SAFETY_STOCK_BY_LIFECYCLE.get(normalized_lifecycle, 6.0))

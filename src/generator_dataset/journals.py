@@ -6,6 +6,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from generator_dataset import scenario
 from generator_dataset.accrual_catalog import ACCRUAL_ACCOUNT_METADATA, MONTHLY_ACCRUAL_BASES
 from generator_dataset.fixed_assets import (
     debt_schedule_lines_for_month,
@@ -367,7 +368,7 @@ def create_journal(
 def payroll_amounts_by_cost_center(context: GenerationContext, year: int) -> dict[int, dict[str, float]]:
     employees = sorted_employees(context)
     cost_center_names = context.tables["CostCenter"].set_index("CostCenterID")["CostCenterName"].to_dict()
-    growth_factor = 1.0 + ((year - 2026) * ANNUAL_GROWTH_RATE)
+    growth_factor = 1.0 + ((year - scenario.end_year()) * ANNUAL_GROWTH_RATE)
     salary_totals = {int(cost_center_id): 0.0 for cost_center_id in cost_center_names}
 
     for employee in employees.itertuples(index=False):
@@ -395,13 +396,13 @@ def payroll_amounts_by_cost_center(context: GenerationContext, year: int) -> dic
 
 
 def monthly_rent_amount(context: GenerationContext, year: int, month: int, rent_type: str) -> float:
-    growth_factor = 1.0 + ((year - 2026) * ANNUAL_GROWTH_RATE)
+    growth_factor = 1.0 + ((year - scenario.end_year()) * ANNUAL_GROWTH_RATE)
     jitter = stable_uniform(context, 0.98, 1.02, "rent", rent_type, year, month)
     return money(MONTHLY_RENT_BASES[rent_type] * growth_factor * jitter)
 
 
 def monthly_utilities_amount(context: GenerationContext, year: int, month: int) -> float:
-    growth_factor = 1.0 + ((year - 2026) * ANNUAL_GROWTH_RATE)
+    growth_factor = 1.0 + ((year - scenario.end_year()) * ANNUAL_GROWTH_RATE)
     if month in {6, 7, 8}:
         seasonality = 1.12
     elif month in {1, 2, 12}:
@@ -413,7 +414,7 @@ def monthly_utilities_amount(context: GenerationContext, year: int, month: int) 
 
 
 def monthly_accrual_amount(context: GenerationContext, year: int, month: int, account_number: str) -> float:
-    growth_factor = 1.0 + ((year - 2026) * ANNUAL_GROWTH_RATE)
+    growth_factor = 1.0 + ((year - scenario.end_year()) * ANNUAL_GROWTH_RATE)
     jitter = stable_uniform(context, 0.97, 1.03, "accrual", account_number, year, month)
     return money(MONTHLY_ACCRUAL_BASES[account_number] * growth_factor * jitter)
 

@@ -6,6 +6,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from generator_dataset import scenario
 from generator_dataset.fixed_assets import monthly_depreciation_by_debit_account
 from generator_dataset.master_data import current_role_employee_id
 from generator_dataset.schema import TABLE_COLUMNS
@@ -242,7 +243,7 @@ def payroll_period_month(period: dict[str, Any]) -> tuple[int, int]:
 
 
 def growth_factor_for_year(year: int) -> float:
-    return 1.0 + max(int(year) - 2026, 0) * 0.035
+    return 1.0 + max(int(year) - scenario.end_year(), 0) * 0.035
 
 
 def implied_hourly_rate(employee: pd.Series | dict[str, Any], fiscal_year: int) -> float:

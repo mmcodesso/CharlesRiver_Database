@@ -11,6 +11,7 @@ from typing import Any, Iterable, Iterator
 import pandas as pd
 
 from generator_dataset.anomalies import inject_anomalies, invalidate_all_caches
+from generator_dataset.book_scenarios import apply_after_subledgers
 from generator_dataset.budgets import generate_budgets, generate_opening_balances
 from generator_dataset.capex import generate_month_capex_activity, generate_opening_fixed_asset_records
 from generator_dataset.exporters import (
@@ -169,12 +170,29 @@ def logged_step(name: str) -> Iterator[None]:
     LOGGER.info("DONE | %s | elapsed_seconds=%.2f", name, elapsed)
 
 
+def environment_versions() -> str:
+    """The Python and package versions of this build. The data depend on them (Faker supplies the
+    names; pandas' handling of missing values reaches some anomalies), so a build must name them."""
+    import platform
+    from importlib import metadata
+
+    parts = [f"Python {platform.python_version()}"]
+    for package in ("pandas", "numpy", "faker"):
+        try:
+            parts.append(f"{package} {metadata.version(package)}")
+        except metadata.PackageNotFoundError:
+            parts.append(f"{package} not installed")
+    return ", ".join(parts)
+
+
 def log_settings(settings: Settings, config_path: str | Path) -> None:
     LOGGER.info("Config path: %s", Path(config_path))
     LOGGER.info("Company: %s", settings.company_name)
     LOGGER.info("Fiscal range: %s to %s", settings.fiscal_year_start, settings.fiscal_year_end)
     LOGGER.info("Random seed: %s", settings.random_seed)
+    LOGGER.info("Scenario end year: %s", settings.scenario_end_year or pd.Timestamp(settings.fiscal_year_end).year)
     LOGGER.info("Anomaly mode: %s", settings.anomaly_mode)
+    LOGGER.info("Environment: %s", environment_versions())
     LOGGER.info("SQLite export enabled: %s | path=%s", settings.export_sqlite, settings.sqlite_path)
     LOGGER.info("Excel export enabled: %s | path=%s", settings.export_excel, settings.excel_path)
     LOGGER.info("Support workbook enabled: %s | path=%s", settings.export_support_excel, settings.support_excel_path)
@@ -1767,6 +1785,9 @@ def build_full_dataset(
             ),
             "monthly transactions",
         )
+
+    with logged_step("Apply book scenarios to the subledger documents"):
+        apply_after_subledgers(context)
 
     with logged_step("Validate operational subledger data"):
         log_validation_results("phase5", validate_phase5(context))

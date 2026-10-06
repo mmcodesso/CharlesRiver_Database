@@ -3246,7 +3246,18 @@ def final_work_order_activity_dates(context: GenerationContext) -> dict[int, pd.
     return final_dates
 
 
-def close_eligible_work_orders(context: GenerationContext, year: int, month: int) -> None:
+def close_eligible_work_orders(
+    context: GenerationContext,
+    year: int,
+    month: int,
+    force_work_order_ids: set[int] | None = None,
+) -> None:
+    """Close the work orders that are completed and whose payroll has been processed.
+
+    `force_work_order_ids` names work orders to close without waiting for the payroll gate (the book scenario that
+    settles the work orders still open from earlier years, book_scenarios.py); they still need completed quantities,
+    a completion date in or before the month, and direct labor.
+    """
     work_orders = context.tables["WorkOrder"]
     if work_orders.empty:
         return
@@ -3282,12 +3293,13 @@ def close_eligible_work_orders(context: GenerationContext, year: int, month: int
         direct_labor_date = direct_labor_dates.get(int(work_order.WorkOrderID))
         if direct_labor_date is not None:
             activity_date = max(activity_date, direct_labor_date)
+        forced = force_work_order_ids is not None and int(work_order.WorkOrderID) in force_work_order_ids
         payroll_gate_date = payroll_period_processing_gate_date(context, activity_date)
-        if payroll_gate_date is not None and payroll_gate_date > month_end:
+        if payroll_gate_date is not None and payroll_gate_date > month_end and not forced:
             continue
         if direct_labor_date is None:
             completion_payroll_gate = payroll_period_processing_gate_date(context, completed_date)
-            if completion_payroll_gate is not None and completion_payroll_gate > month_end:
+            if completion_payroll_gate is not None and completion_payroll_gate > month_end and not forced:
                 continue
         payroll_period_end = payroll_period_end_for_date(context, activity_date)
         close_anchor_date = max(activity_date, payroll_period_end) if payroll_period_end is not None else activity_date

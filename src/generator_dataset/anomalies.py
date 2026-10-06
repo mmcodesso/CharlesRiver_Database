@@ -6,6 +6,7 @@ from typing import Any
 import pandas as pd
 import yaml
 
+from generator_dataset import scenario
 from generator_dataset.schema import TABLE_COLUMNS
 from generator_dataset.settings import GenerationContext
 from generator_dataset.utils import money, next_id, qty
@@ -516,16 +517,42 @@ def inject_invoice_before_shipment(context: GenerationContext, count_per_year: i
     if invoices.empty or shipments.empty or count_per_year <= 0:
         return
 
+    # Book scenario "cutoff_invoices" (see book_scenarios.py). Its planner chooses, for each year after the first, the
+    # invoices that tell the book's revenue cutoff story (the first invoices of the year, as below, where they already
+    # do, as in the default build); a planted invoice also never falls before the first fiscal year.
+    book_cutoff = scenario.book_scenario(context, "cutoff_invoices") is not None
+    cutoff_plan = getattr(context, "book_cutoff_plan", None) or {}
+    fiscal_start = pd.Timestamp(context.settings.fiscal_year_start)
     shipment_by_order = shipments.sort_values("ShipmentDate").drop_duplicates("SalesOrderID").set_index("SalesOrderID")
     for year in fiscal_years(context):
         selected = rows_for_year(invoices, "InvoiceDate", year)
-        injected = 0
-        for row in selected.itertuples(index=False):
-            if injected >= count_per_year or int(row.SalesOrderID) not in shipment_by_order.index:
-                continue
 
+        def planted_date(row: Any) -> pd.Timestamp | None:
+            if int(row.SalesOrderID) not in shipment_by_order.index:
+                return None
             shipment_date = pd.Timestamp(shipment_by_order.loc[int(row.SalesOrderID), "ShipmentDate"])
             invoice_date = shipment_date - pd.Timedelta(days=2)
+            if book_cutoff and invoice_date < fiscal_start:
+                return None  # the date would fall before the first fiscal year
+            return invoice_date
+
+        planned: list[tuple[Any, pd.Timestamp]] = []
+        planned_ids = cutoff_plan.get(year) if book_cutoff else None
+        if planned_ids:
+            by_id = {int(row.SalesInvoiceID): row for row in selected.itertuples(index=False)}
+            members = [(by_id.get(invoice_id), invoice_id) for invoice_id in planned_ids]
+            dated = [(row, planted_date(row)) for row, _ in members if row is not None]
+            if len(dated) == len(planned_ids) and all(invoice_date is not None for _, invoice_date in dated):
+                planned = dated
+        if not planned:
+            for row in selected.itertuples(index=False):
+                if len(planned) >= count_per_year:
+                    break
+                invoice_date = planted_date(row)
+                if invoice_date is not None:
+                    planned.append((row, invoice_date))
+
+        for row, invoice_date in planned:
             due_date = invoice_date + (pd.Timestamp(row.DueDate) - pd.Timestamp(row.InvoiceDate))
             mask = context.tables["SalesInvoice"]["SalesInvoiceID"].astype(int).eq(int(row.SalesInvoiceID))
             context.tables["SalesInvoice"].loc[mask, "InvoiceDate"] = invoice_date.strftime("%Y-%m-%d")
@@ -539,7 +566,6 @@ def inject_invoice_before_shipment(context: GenerationContext, count_per_year: i
                 "Sales invoice date intentionally precedes related shipment date.",
                 "Invoice date before earliest shipment date by sales order.",
             )
-            injected += 1
 
 
 def inject_late_reversals(context: GenerationContext, count_per_year: int) -> None:
@@ -594,7 +620,11 @@ def inject_duplicate_vendor_payment_reference(context: GenerationContext, count_
                 continue
 
             first_payment = supplier_rows.iloc[0]
-            duplicate_reference = first_payment["CheckNumber"] or first_payment["PaymentNumber"]
+            # A check payment's number becomes the shared reference. An ACH or wire payment has no
+            # check number, and the pair keeps none, whatever pandas stores for a missing value: the
+            # book's 2026 edition relies on this (2 of the 6 planted pairs show a repeated check number).
+            first_reference = first_payment["CheckNumber"]
+            duplicate_reference = first_reference if isinstance(first_reference, str) and first_reference else None
             first_mask = context.tables["DisbursementPayment"]["DisbursementID"].astype(int).eq(int(first_payment["DisbursementID"]))
             context.tables["DisbursementPayment"].loc[first_mask, "CheckNumber"] = duplicate_reference
             duplicate_row = supplier_rows.iloc[1]

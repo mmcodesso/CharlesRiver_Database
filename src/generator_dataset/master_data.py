@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from datetime import timedelta
 from pathlib import Path
 
 import numpy as np
@@ -11,6 +12,7 @@ try:
 except ModuleNotFoundError:
     Faker = None
 
+from generator_dataset import scenario
 from generator_dataset.accrual_catalog import ACCRUAL_SERVICE_ITEMS
 from generator_dataset.fixed_assets import capex_item_definitions
 from generator_dataset.schema import TABLE_COLUMNS
@@ -1813,6 +1815,7 @@ def generate_customers(context: GenerationContext) -> None:
     industries = ["Hospitality", "Retail", "Office", "Real Estate", "Interior Design"]
     terms = ["Net 30", "Net 45", "Net 60", "Net 90"]
     term_probabilities = [0.45, 0.30, 0.20, 0.05]
+    reference_date = pd.Timestamp(scenario.reference_date()).date()
     records = []
 
     for index in range(context.settings.customer_count):
@@ -1840,7 +1843,12 @@ def generate_customers(context: GenerationContext) -> None:
             "Email": f"customer{customer_id:04d}@example.com",
             "CreditLimit": money(credit_limit),
             "PaymentTerms": choose(rng, terms, term_probabilities),
-            "CustomerSince": fake.date_between(start_date="-10y", end_date="-1y").strftime("%Y-%m-%d"),
+            # Ten to one years before the scenario's reference date, computed as Faker computes "-10y"
+            # and "-1y" from today, so the build does not depend on the day it runs.
+            "CustomerSince": fake.date_between(
+                start_date=reference_date + timedelta(days=365.24 * -10),
+                end_date=reference_date + timedelta(days=365.24 * -1),
+            ).strftime("%Y-%m-%d"),
             "SalesRepEmployeeID": int(choose(rng, sales_reps)),
             "CustomerSegment": segment,
             "Industry": choose(rng, industries),

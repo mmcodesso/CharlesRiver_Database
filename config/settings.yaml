@@ -24,3 +24,12 @@ report_output_dir: "outputs/reports"
 report_preview_row_count: 25
 published_sqlite_url: "https://github.com/mmcodesso/CharlesRiver_Database/releases/latest/download/{short_name}.sqlite"
 generation_log_path: "outputs/generation.log"
+
+# Storylines the Accounting Analytics textbook relies on, stated relative to the fiscal window. A step plants its
+# storyline only when the build does not already contain it, so this window (fiscal 2024-2026) is unchanged and a
+# rolled window (2025-2027, 2026-2028) keeps the same story. See docs/technical/dataset-delivery.md.
+book_scenarios:
+  enabled: true
+  cutoff_invoices: true          # planted invoices stay inside the window; those of the last year tell the revenue cutoff story
+  traced_sale: true              # the sale Chapters 1, 3 and 5 trace (two desks, freight and tax, paid by one check among several)
+  stranded_work_orders: true     # no work order released before the last year is still open
