@@ -1,5 +1,32 @@
 # AGENTS.md
 
+## Website Redesign Mission and Frozen Baseline
+
+Charles River is an open teaching environment within Accounting Analytics Hub. The fictional greater-Boston home-furnishings company connects merchandise, selected manufacturing, and hourly Design Services to accounting evidence. Teach in this order: understand the company → understand the process → explore evidence → analyze → interpret → decide. The Accounting Analytics textbook supplies conceptual depth; this site supplies the shared company, data, practice, and cases. Future AIS and tool courses are planned resources, not currently available courses.
+
+The website redesign is based on frozen commit `7c21218dce19201013f7a71eb7263e12a85af09a`. Work only on `feature/charles-river-website-redesign` (or an explicitly selected successor). Do not merge this redesign into main, push main, deploy, dispatch a production workflow, publish a dataset version, or change GitHub Releases. Initial consolidation found main and book-roll-feasibility already identical after fetch; no merge was necessary.
+
+### Protected scope during website work
+
+These rules override maintenance instructions below that describe generation, schema updates, or data/config edits. Treat `generate_dataset.py`, `src/generator_dataset/`, all generator configurations and source-of-truth inputs under `config/`, canonical SQL under `queries/`, existing generator tests and validation logic, dataset/report generation scripts, released packages, and all SQLite/Excel/CSV/support-workbook outputs as read-only. Do not regenerate the dataset, alter transactions/schema/anomalies/calculations, or replace downloads. Read SQLite using `mode=ro`; inspect source and query files without edits. Do not change generator code to accommodate presentation.
+
+Editable scope: `docs/`, authored `src/pages/`, `src/components/`, `src/theme/`, `src/css/`, `sidebars.js`, `docusaurus.config.js`, authored static presentation assets, website-specific tests/docs, this file, and project agent instructions. Generated site manifests may be refreshed only by their existing scripts. Report assets may be validated and reused; never hand-edit them. If a build would recreate missing report assets, stop that preparation and report the missing prerequisite. Keep a SHA-256 inventory of existing dataset/report artifacts and compare it at handoff, along with a protected-path Git diff against the frozen baseline.
+
+### Editorial, learning, design, and SEO standards
+
+- Keep a process-led documentation architecture, shallow resource discovery, direct downloads, and stable public routes. Put private planning in `planning/website-redesign/`, outside published docs.
+- Distinguish illustrative fictional business scenarios from records actually present in the published dataset. Never invent numerical outcomes, customer records, operational capabilities, identifiers, adoption claims, or solutions disguised as student instructions. Verify technical claims against the checksum-matched release, not just current generator source.
+- Activities specify context/problem, objectives, prerequisites, tools, source documents/tables, evidence workflow, assessed deliverable, interpretation, and limitations. Preserve case headings `Key Data Sources`, `Recommended Query Sequence`, and `Next Steps`, and existing query/report components. Progress from foundational exercises through applied analysis to integrated cases.
+- Align with the current local Accounting Analytics Hub visual system: restrained teal/navy/paper palette, readable serif headings, clear sans-serif body, modest borders, purposeful diagrams. Keep Charles River recognizable. Use semantic HTML, visible keyboard focus, labeled controls, meaningful link text, touch targets, responsive layouts, reduced-motion support, and readable light/dark themes; aim for WCAG 2.2 AA.
+- Every public page needs a specific title/description and one primary heading. Preserve canonical URLs, sitemap, robots access, breadcrumbs, Open Graph metadata, meaningful internal links, and server-rendered essential content. Structured data must describe visible verified content. Use actual release URLs, license, creator, and citations; never invent a DOI or promise search-engine rich results.
+- Keep the Hub and textbook links visible in orientation and instructor pathways; link to relevant learning resources without duplicating textbook chapters. Describe future courses as planned.
+
+### Delegation and final review
+
+Use the project roles in `.codex/agents/` for independent architecture, storytelling, UX, cases, and SEO/QA work when delegation is requested. Assign exclusive file ownership; only the primary agent performs Git mutations and branch operations. Do not let agents concurrently edit the same files. Inherit model and permission settings.
+
+Run the production build with existing report assets, targeted website checks, read-only dataset claim verification, keyboard/interactive checks, and representative desktop/tablet/mobile review when tooling permits. Report actual results and unavailable checks candidly. Record changed/preserved routes, case improvements, manifest refreshes, artifact hashes, commands, limitations, and local preview instructions in the final report. Do not claim full accessibility conformance from automated checks alone.
+
 ## Project Overview
 
 `greenfield_database` is the source repository for the Charles River synthetic accounting analytics teaching environment. The primary artifact is the Docusaurus documentation site; the SQLite/Excel/support-workbook/CSV outputs and generated report assets exist to support that site and classroom use.
