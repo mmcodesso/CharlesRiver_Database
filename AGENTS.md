@@ -4,7 +4,7 @@
 
 Charles River is an open teaching environment within Accounting Analytics Hub. The fictional greater-Boston home-furnishings company connects merchandise, selected manufacturing, and hourly Design Services to accounting evidence. Teach in this order: understand the company → understand the process → explore evidence → analyze → interpret → decide. The Accounting Analytics textbook supplies conceptual depth; this site supplies the shared company, data, practice, and cases. Future AIS and tool courses are planned resources, not currently available courses.
 
-The website redesign is based on frozen commit `7c21218dce19201013f7a71eb7263e12a85af09a`. Work only on `feature/charles-river-website-redesign` (or an explicitly selected successor). Do not merge this redesign into main, push main, deploy, dispatch a production workflow, publish a dataset version, or change GitHub Releases. Initial consolidation found main and book-roll-feasibility already identical after fetch; no merge was necessary.
+The website redesign is based on frozen commit `7c21218dce19201013f7a71eb7263e12a85af09a`. On 17 October 2026, the user approved merging the reviewed redesign into main and deploying the website on Cloudflare. This approval supersedes the initial local-review restriction on merging, pushing main, and deploying. Use the existing `greenfield` Cloudflare Worker and its Git integration for `charlesriver.accountinganalyticshub.com`; preserve the dataset/report freeze below. Do not publish a dataset version or change GitHub Releases. Initial consolidation found main and book-roll-feasibility already identical after fetch; no merge was necessary at that stage.
 
 ### Protected scope during website work
 

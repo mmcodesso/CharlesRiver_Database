@@ -1,5 +1,7 @@
 # Charles River website redesign — review handoff
 
+**Publication approved, 17 October 2026:** the user approved merging the reviewed website into main and deploying on Cloudflare. The existing production target is the `greenfield` Worker at `https://charlesriver.accountinganalyticshub.com`, connected to this repository's main branch. The initial local-only notes below describe the earlier review phase. Dataset generation, SQL, release packages, and the 293 frozen dataset/report artifacts remain unchanged.
+
 **Unified Query Library:** [the query consolidation handoff](QUERY_LIBRARY_CONSOLIDATION.md) replaces three query subpages with one catalog using the reports' six business topics. All 170 queries and both learning paths remain. Current totals are 47 authored documents and 23 learning resources. Earlier delivery notes below retain their historical counts.
 
 **Diagram consistency:** [the diagram interaction follow-up](DIAGRAM_INTERACTIONS.md) makes all 48 Mermaid previews clickable, with the same expanded-view entry behavior as BPMN, keyboard activation, and focus restoration.
