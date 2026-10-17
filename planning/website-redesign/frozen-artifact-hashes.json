@@ -1,0 +1,1177 @@
+{
+  "baseline": "7c21218dce19201013f7a71eb7263e12a85af09a",
+  "artifacts": [
+    {
+      "path": "outputs/CharlesRiver_csv.zip",
+      "sha256": "5f2821ee81f86c2da60702a9feaa51fa18f72687e5d0807c44a7d5489fecffb6"
+    },
+    {
+      "path": "outputs/CharlesRiver_support.xlsx",
+      "sha256": "52d947135db58fe44698777f40768de8fb72158382e44f7ce7fe8bd47947a165"
+    },
+    {
+      "path": "outputs/CharlesRiver.sqlite",
+      "sha256": "de861968e07412d71032b6ed6a0fb8eb9825cf6911886b1597c4a628a914474c"
+    },
+    {
+      "path": "outputs/CharlesRiver.xlsx",
+      "sha256": "185d42bd069fad177fae23c5e30df93edc7cf2669f687236c8a9f29435388e09"
+    },
+    {
+      "path": "outputs/reports/audit/control-review/approval-and-sod-review/approval-and-sod-review.csv",
+      "sha256": "a5672d3b05440eadb904a30113edf024b83c2ccf0cbec685f866b3ad0010b307"
+    },
+    {
+      "path": "outputs/reports/audit/control-review/approval-and-sod-review/approval-and-sod-review.xlsx",
+      "sha256": "b8ed5af823f667caad541dac6b97451ea41014ccb4f63c8be7169761f287b148"
+    },
+    {
+      "path": "outputs/reports/audit/control-review/approval-and-sod-review/preview.json",
+      "sha256": "f4a3955e490afad96a9c93a1e43b62b2b3b1b0d24c9ae9140fd741823a040621"
+    },
+    {
+      "path": "outputs/reports/audit/control-review/potential-anomaly-review/potential-anomaly-review.csv",
+      "sha256": "00c4790e4e35b6ba07929aa5916bf0cf930793af957f4812488898d295b4e52c"
+    },
+    {
+      "path": "outputs/reports/audit/control-review/potential-anomaly-review/potential-anomaly-review.xlsx",
+      "sha256": "ef0a6d5b2f6a8a76879d0105499f3205f63f38c8063a86054ba27489f1027f34"
+    },
+    {
+      "path": "outputs/reports/audit/control-review/potential-anomaly-review/preview.json",
+      "sha256": "148f76f015b67e3f991e57012c64b523a88ab11931688c6f1e2f29ea628414e6"
+    },
+    {
+      "path": "outputs/reports/audit/payroll-and-time-controls/paid-without-clock-and-clock-without-pay-review/paid-without-clock-and-clock-without-pay-review.csv",
+      "sha256": "46bd32f8a3c4ba0cccda7e5fef7ac155c25a6e1829a6e77f7b4d5cfaf9d37223"
+    },
+    {
+      "path": "outputs/reports/audit/payroll-and-time-controls/paid-without-clock-and-clock-without-pay-review/paid-without-clock-and-clock-without-pay-review.xlsx",
+      "sha256": "b347c068485fd9166a44f4506433a8e015cbdd649ba4252da0bce6b1835ffefd"
+    },
+    {
+      "path": "outputs/reports/audit/payroll-and-time-controls/paid-without-clock-and-clock-without-pay-review/preview.json",
+      "sha256": "30e79154b479fd8c9745385682c26a60cc1da813cfae0c68fe5db67d34acc5df"
+    },
+    {
+      "path": "outputs/reports/audit/payroll-and-time-controls/payroll-control-review/payroll-control-review.csv",
+      "sha256": "fc66ed1a348148f473c2d553a8e8d70a2fa66434aa9c43390105c5cf35a8e99d"
+    },
+    {
+      "path": "outputs/reports/audit/payroll-and-time-controls/payroll-control-review/payroll-control-review.xlsx",
+      "sha256": "53123c8b61e930a8c95b3160d0696308a1b3a31faac80723a9d251c15ab14ce5"
+    },
+    {
+      "path": "outputs/reports/audit/payroll-and-time-controls/payroll-control-review/preview.json",
+      "sha256": "a7d3faeca6c2fc8b1c15d16529733b1c7a9dcba8b190ca79050935b905442754"
+    },
+    {
+      "path": "outputs/reports/financial/customer-pricing-and-settlement/customer-credit-and-refunds/customer-credit-and-refunds.csv",
+      "sha256": "17d5acb7de3602ff4836804e52c2e81313b9c53a774c26f4d8c889842867ec30"
+    },
+    {
+      "path": "outputs/reports/financial/customer-pricing-and-settlement/customer-credit-and-refunds/customer-credit-and-refunds.xlsx",
+      "sha256": "cd7077d5ac042db20e920d21fe5b2178c1d803b0bcb5fe0d55de387ace8f7e02"
+    },
+    {
+      "path": "outputs/reports/financial/customer-pricing-and-settlement/customer-credit-and-refunds/preview.json",
+      "sha256": "5f8cb9744415fd6c61647c95b1465ef2ffa5ce52ef8f6b5d03983640d05abeba"
+    },
+    {
+      "path": "outputs/reports/financial/customer-pricing-and-settlement/price-realization-vs-list-by-customer-and-portfolio/preview.json",
+      "sha256": "299cf55c49418ded7b5cda5f69e8e2f53ef6a89fcf613f94ede107a3cb6e6110"
+    },
+    {
+      "path": "outputs/reports/financial/customer-pricing-and-settlement/price-realization-vs-list-by-customer-and-portfolio/price-realization-vs-list-by-customer-and-portfolio.csv",
+      "sha256": "673a83c0286f21771fc481c5952246539517b43f15170cf5c67862f4cbb9ec6d"
+    },
+    {
+      "path": "outputs/reports/financial/customer-pricing-and-settlement/price-realization-vs-list-by-customer-and-portfolio/price-realization-vs-list-by-customer-and-portfolio.xlsx",
+      "sha256": "b2b33e581e6545f5a92cb3d12147f1fa47c258906abfb4f994619e9bdb758ff3"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/budget-vs-actual-statement-bridge-monthly.csv",
+      "sha256": "9738c65e09cf7cc4d295d0654d1a18e8b4fe53bb5e10a903a8effb221455a813"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/budget-vs-actual-statement-bridge-monthly.xlsx",
+      "sha256": "dcb3958cdbac64352c884218818e9897f71ba84b8a3a901918284443ceaf47b7"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/preview.json",
+      "sha256": "e9aaf3b3ec333daa816245a686b04926482616ae94db742936aa2442ef54a1a5"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/monthly-balance-sheet/monthly-balance-sheet.csv",
+      "sha256": "2c0378003dc365aca3d9f65a7bde88bd5aab30c5bc97e364d266caa57b3982a7"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/monthly-balance-sheet/monthly-balance-sheet.xlsx",
+      "sha256": "fc4746a9d0eb202bb6cfc7b0cbd58342eba7618076d0762164d040afec108a69"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/monthly-balance-sheet/preview.json",
+      "sha256": "7657f2444a53ed0639df48a02a0cf81dacc55b3ee179c0a4ad4a4fd267baf970"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/monthly-income-statement/monthly-income-statement.csv",
+      "sha256": "d047209cdf6923a502ff8b86f188aa2b4ebf1136dacb34cdc4d2b7fec7142236"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/monthly-income-statement/monthly-income-statement.xlsx",
+      "sha256": "ad7a72b72bb76c44d83e79738c2ee3fe15c30fbb0234d42d680f73b97a68bd66"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/monthly-income-statement/preview.json",
+      "sha256": "c1fdf102b148f1ab839a06b50eaf1b8945181319f9faa26329ead7793e2ef461"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/monthly-indirect-cash-flow/monthly-indirect-cash-flow.csv",
+      "sha256": "be8536315fbf63ed41b20ebe6d3392977aff15a36ffdee1e1eb773bfa257d6c5"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/monthly-indirect-cash-flow/monthly-indirect-cash-flow.xlsx",
+      "sha256": "b9ce3c38976d2a5afa41b03acd3a2de6b0c1e658c410459efa0e2fc6c0c5e9b3"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/monthly-indirect-cash-flow/preview.json",
+      "sha256": "c26b9b4a16a02edca38f29caf37149ea4d9cb0d1f8fef6e4eced177ab34de1f1"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/preview.json",
+      "sha256": "4e7b89ca86dd09f0ad607dfec960e1ddfa07c007b0ce97c22edf06411200c5ec"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/pro-forma-monthly-balance-sheet.csv",
+      "sha256": "98edfb6d1ae933e1910b3cd1a7a1a2cebdda894182b8a97550a77932cb86274b"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/pro-forma-monthly-balance-sheet.xlsx",
+      "sha256": "3407f62142eb5c8dbf8bb36382ee36ac2a97f12d871cfd13972d28ca2027aeb1"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/preview.json",
+      "sha256": "9c91fe84d46e5431457dbb863890b4e22d8ecabafca7ea876a224668f6e6c38e"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/pro-forma-monthly-income-statement.csv",
+      "sha256": "577e09e0081b26810a1fddc1efef4bd29690310687cc547793aeeb8e822cfdb1"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/pro-forma-monthly-income-statement.xlsx",
+      "sha256": "d5d4dc9586800d46776bf44d81be4bc4a28c60078c97d3a7681d90e6a74bc2bc"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/preview.json",
+      "sha256": "f7462b00f73b7c617f021a1ba1bbd7b28030e37b6dff85cd079bf12576b3b717"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/pro-forma-monthly-indirect-cash-flow.csv",
+      "sha256": "27973b04f2b22e2654fc8060bd0a52f03eba85507e428da128ae7891fe0b723f"
+    },
+    {
+      "path": "outputs/reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/pro-forma-monthly-indirect-cash-flow.xlsx",
+      "sha256": "4308493fcc980ddd342ff6e950f94c7fadcd6190ab62667201eeba5637b986a9"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cash-and-liabilities/payroll-cash-payments-and-remittances/payroll-cash-payments-and-remittances.csv",
+      "sha256": "b27ba0ac9d1ebc22163d0cb15d50e2422e90065cdd7ee4460899a8742725ddbc"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cash-and-liabilities/payroll-cash-payments-and-remittances/payroll-cash-payments-and-remittances.xlsx",
+      "sha256": "43e2ee7ba8e8e1d1a01adf89996934e37f456dc7fa6eb0d639322e75569d82bb"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cash-and-liabilities/payroll-cash-payments-and-remittances/preview.json",
+      "sha256": "bd34beaf88701c52b8f77a8da9222f21e904e4270bfcbb7a112ea1f2e709fce6"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cash-and-liabilities/payroll-liability-rollforward/payroll-liability-rollforward.csv",
+      "sha256": "1b2a68d0ab02f5e9cf65acfa829e4359a8a67051f799d324187be25ba27667b3"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cash-and-liabilities/payroll-liability-rollforward/payroll-liability-rollforward.xlsx",
+      "sha256": "0225708faf1d84c485fb2539db7d7d7f459ef500492e720a5225a96953c8768e"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cash-and-liabilities/payroll-liability-rollforward/preview.json",
+      "sha256": "0d86760cb0a218e8e4f93f8a9a15c5912e6730021313f5caa8420da4e356f55b"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/gross-to-net-payroll-review/gross-to-net-payroll-review.csv",
+      "sha256": "adcd218a157557b51375ac33e37db6ce17a33f6db73ec74a250368bc53642a84"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/gross-to-net-payroll-review/gross-to-net-payroll-review.xlsx",
+      "sha256": "04ab829f43667bd17f266ee11da1168346082b6c42ec90cc6fcf25725e3ed439"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/gross-to-net-payroll-review/preview.json",
+      "sha256": "7c77addd466830af7089e5ca7eb1ddda6126e10ef314f9907319bb7410d8c40e"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/hourly-payroll-hours-to-paid-earnings-bridge/hourly-payroll-hours-to-paid-earnings-bridge.csv",
+      "sha256": "dc04c0a421f3aecb1feb2a08f1d70b6b884fd6c78967cdd8b4213dd9aa612899"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/hourly-payroll-hours-to-paid-earnings-bridge/hourly-payroll-hours-to-paid-earnings-bridge.xlsx",
+      "sha256": "c6c272099ca3d4eb21ed150f4a432fe95648c21b7953473165ade5289f18b09a"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/hourly-payroll-hours-to-paid-earnings-bridge/preview.json",
+      "sha256": "2b36f63ba79f09bc016f3327d91e11655d1c9f0e46625c8e5d842d71aa9893c4"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/payroll-and-people-cost-mix-by-cost-center-job-family-level/payroll-and-people-cost-mix-by-cost-center-job-family-level.csv",
+      "sha256": "176acd5293fc90615c41a9a93a754ba97de23267cc8191a6a1498f399c2c0157"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/payroll-and-people-cost-mix-by-cost-center-job-family-level/payroll-and-people-cost-mix-by-cost-center-job-family-level.xlsx",
+      "sha256": "1664fd1d3cde97c0e5f228b557cc2229479ece5d8efc532690efd589191837d8"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/payroll-and-people-cost-mix-by-cost-center-job-family-level/preview.json",
+      "sha256": "e086d83a952843eb430be11fe6c459b6f2410de975eeb1e7196a4223d3db8a74"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/payroll-expense-mix-by-cost-center-and-pay-class/payroll-expense-mix-by-cost-center-and-pay-class.csv",
+      "sha256": "0e40d894cbeeff799d4ca5b4d477a054d99bc5140da24cdcf921cfaf3d060ab4"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/payroll-expense-mix-by-cost-center-and-pay-class/payroll-expense-mix-by-cost-center-and-pay-class.xlsx",
+      "sha256": "c5221f8391909629dbb4e984ea821ea2c9ef57df4b3a095d1c75ac48de9e2963"
+    },
+    {
+      "path": "outputs/reports/financial/payroll-cost-and-mix/payroll-expense-mix-by-cost-center-and-pay-class/preview.json",
+      "sha256": "dae1f103b6d30f5798ec4e123480497f501d4ee1e17d000986259bc7b88a14b1"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/ap-aging/ap-aging.csv",
+      "sha256": "912411aff5b3faa78811bbac7f328a00ad63125e0e84ab0fb87e9f806f93ecdb"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/ap-aging/ap-aging.xlsx",
+      "sha256": "5ddd703124b96aa7322be353132cd9fd68869753e4cc5de0ae2ff1d29b758073"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/ap-aging/preview.json",
+      "sha256": "94ff6e6a41b4ff935f0d6a6adaba078779976b1a26f2c922e31c85f03f7085be"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/ar-aging/ar-aging.csv",
+      "sha256": "a73f12e75a443e8af2a5ffecd24bbc27f30e5ef287821f4a7d5e0f96a9ce8189"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/ar-aging/ar-aging.xlsx",
+      "sha256": "967c449608ddb284a8f342c7f425719247630cc93c5408a188c073c2916eea18"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/ar-aging/preview.json",
+      "sha256": "e7e615c97be5ee3a5f9a6c9c02407f3a751e329bf52e3ab39fa34dc9b14ea9d7"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ap-aging-detail/monthly-ap-aging-detail.csv",
+      "sha256": "5a7a8bdeb9e4b8806fa18b3b432ccc91eb77b8cd1d78d06f78e88733f09b9eb6"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ap-aging-detail/monthly-ap-aging-detail.xlsx",
+      "sha256": "0602199a2dc38ddee983a6e385ce99c60a61e07e12126934ece3350f5517a696"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ap-aging-detail/preview.json",
+      "sha256": "1a096c85735f41f8f89c533c0a62a7b4725484aa4e6df60e4a108a44da4b4beb"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ap-aging-summary/monthly-ap-aging-summary.csv",
+      "sha256": "db673985ab36ddff1e2211bdd4a04c76ea09bfde946228e162b55cf1bc3e0508"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ap-aging-summary/monthly-ap-aging-summary.xlsx",
+      "sha256": "067b66e3ca775efb2f4504454730cd04ad1d3b8d34603b7cedaeffddc8c77d9d"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ap-aging-summary/preview.json",
+      "sha256": "d92607209022fa5c92f75d20dc793d9a4b84ead02bbec3b47c89e681aaef0f72"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ar-aging-detail/monthly-ar-aging-detail.csv",
+      "sha256": "e0e7e6162166901474b92d22b22344ecbd0cd5beec833352948d21cb18ddc4e4"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ar-aging-detail/monthly-ar-aging-detail.xlsx",
+      "sha256": "8918381fd123f887f1d7e3f3e1f46ea3a218a1eb223522454bd0ef942a9ce3c9"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ar-aging-detail/preview.json",
+      "sha256": "21825e65a4a48f38a649b0cbef1d8bef58138c80557598f2497f5e4846916741"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ar-aging-summary/monthly-ar-aging-summary.csv",
+      "sha256": "eaa00cea92b619b46a7352ba322c2182c5756c4231a475bd7a58622f6ed25853"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ar-aging-summary/monthly-ar-aging-summary.xlsx",
+      "sha256": "ae42e36ab135264e7d81e4344920ff447a6b776e52e8b2a3d503dca7dc95af53"
+    },
+    {
+      "path": "outputs/reports/financial/receivables-and-payables-aging/monthly-ar-aging-summary/preview.json",
+      "sha256": "17f08f20817f42581b397ba543710528697d0b636d3747946dcd656c7dbb9bd0"
+    },
+    {
+      "path": "outputs/reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/design-service-revenue-and-billed-hours.csv",
+      "sha256": "c3035aa272e282e5113d3c909bdd40f728bb1fb679f8615ead1a0d16d57bd51b"
+    },
+    {
+      "path": "outputs/reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/design-service-revenue-and-billed-hours.xlsx",
+      "sha256": "8bfa559a670fb8dd4f6b0f5bd98d8ee9bfd90fb7ddd92a9a7707c7ba7cfc9b01"
+    },
+    {
+      "path": "outputs/reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/preview.json",
+      "sha256": "4442eb9a223b3bdb363a8df2e00e317426721272144f50867d176e42059f2227"
+    },
+    {
+      "path": "outputs/reports/financial/revenue-and-working-capital/monthly-revenue-and-gross-margin/monthly-revenue-and-gross-margin.csv",
+      "sha256": "4c3b63c6c336958d7f4d179f4c28899c17b8d1df09c2738fa67696859260a1da"
+    },
+    {
+      "path": "outputs/reports/financial/revenue-and-working-capital/monthly-revenue-and-gross-margin/monthly-revenue-and-gross-margin.xlsx",
+      "sha256": "6d429edf4a9865609931b603d75f266b1e78c22215c475e542c96de3ee4ac125"
+    },
+    {
+      "path": "outputs/reports/financial/revenue-and-working-capital/monthly-revenue-and-gross-margin/preview.json",
+      "sha256": "86dcfa4a7a0a6ae7f98820107ca67d4598fe1d6a673499a86f367f1248288f3d"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/budget-vs-actual-working-capital-and-cash-bridge.csv",
+      "sha256": "8c1d630fd6bec3b0818496a674339479ca478e10d12e4d4bbdd12fb81846514c"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/budget-vs-actual-working-capital-and-cash-bridge.xlsx",
+      "sha256": "49a8ac182297d8b2b4fd328e9d822dec8b7f3e382e0b0c3d7a42f717f56b8a7d"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/preview.json",
+      "sha256": "05282a00a231bbc2d29fb565e2d7f8524efbec78a807d05816b069723fa43dbb"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/cash-conversion-timing-review/cash-conversion-timing-review.csv",
+      "sha256": "29f0028e13e3f57eb07a37fcecceed7849eb9ef1ccab308d5ec770d66c70385d"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/cash-conversion-timing-review/cash-conversion-timing-review.xlsx",
+      "sha256": "81feb419c0a025a16046991ba8491617582c0ecc0df5d5f86980d599ea4118a0"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/cash-conversion-timing-review/preview.json",
+      "sha256": "98e2415b8d012e9c203b4df772de0716c1cfd8e627f48edd85b58fad4cd44718"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/customer-deposits-and-unapplied-cash-aging/customer-deposits-and-unapplied-cash-aging.csv",
+      "sha256": "a068edfce9b47f60985d0b661457f335ca9e1ef7f5b9408768e88fca013e1669"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/customer-deposits-and-unapplied-cash-aging/customer-deposits-and-unapplied-cash-aging.xlsx",
+      "sha256": "2b0d672ea22efc4a8826c9c6b7f4c29736a2ea8e3a46b36c9c74604bd12c3716"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/customer-deposits-and-unapplied-cash-aging/preview.json",
+      "sha256": "2b2345f03bd1804c9f68fa58a928c30e385fda49f2a5a67dda64e657e7a41d7b"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/preview.json",
+      "sha256": "1f9f960366e522cbc07c7f3a075f3d070a865d5f5196e3705d8e07863a21dd0d"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/sales-commission-payable-rollforward.csv",
+      "sha256": "111acd490ba798166a4c7de923f5ef2df2e397dd65f7addd108c78985c4f609c"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/sales-commission-payable-rollforward.xlsx",
+      "sha256": "fdcf6f296b64a903c05549e1e5ca2db71b7ffd8147db5a2b6d0a4b046a42bf59"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/working-capital-bridge-by-month/preview.json",
+      "sha256": "74ef1a09d20931a6601df214a11b974f9afd2f9ace51a0bb4fdc73b023a8edd6"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/working-capital-bridge-by-month/working-capital-bridge-by-month.csv",
+      "sha256": "dbcc37e081822f52d62615769b06f9ae2010dbd08371f0bbfa72df9a676ee8b7"
+    },
+    {
+      "path": "outputs/reports/financial/working-capital-and-cash-conversion/working-capital-bridge-by-month/working-capital-bridge-by-month.xlsx",
+      "sha256": "393fcc95be253c2495558064d4c407df4971908637732e94eb2162aef422636c"
+    },
+    {
+      "path": "outputs/reports/managerial/customer-and-supplier-analysis/customer-sales-mix-by-region-and-item-group/customer-sales-mix-by-region-and-item-group.csv",
+      "sha256": "efc6fb470a236c04ccfe13c3cdde20423c01d125dadaa13a4c037ef8b528c5da"
+    },
+    {
+      "path": "outputs/reports/managerial/customer-and-supplier-analysis/customer-sales-mix-by-region-and-item-group/customer-sales-mix-by-region-and-item-group.xlsx",
+      "sha256": "ade85e78d47cc7ec4b59ebf43cc4bd79a92173ae73e7261ebcf9dd5308af386b"
+    },
+    {
+      "path": "outputs/reports/managerial/customer-and-supplier-analysis/customer-sales-mix-by-region-and-item-group/preview.json",
+      "sha256": "15de7f2d48756d67c163d550bc6b1dfd2fe96ed199856fa4ff5caefb2c212ce9"
+    },
+    {
+      "path": "outputs/reports/managerial/customer-and-supplier-analysis/supplier-purchasing-activity-by-category/preview.json",
+      "sha256": "3513447f1462f99b7ed48bcbd2eecff669c6060b1fedb4a7b463a7e601860a96"
+    },
+    {
+      "path": "outputs/reports/managerial/customer-and-supplier-analysis/supplier-purchasing-activity-by-category/supplier-purchasing-activity-by-category.csv",
+      "sha256": "ebf48a1754ced286cbd942f5061111ee4fe2c797942d4193a353fc0b48c921c1"
+    },
+    {
+      "path": "outputs/reports/managerial/customer-and-supplier-analysis/supplier-purchasing-activity-by-category/supplier-purchasing-activity-by-category.xlsx",
+      "sha256": "1edbffa8dc0b7469bdd37863b98160b9cf7cb2a866a81c748b33cd38b084cb5d"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/budget-vs-actual-by-cost-center/budget-vs-actual-by-cost-center.csv",
+      "sha256": "eb4e6489894e1e38707d6000d583db2a1d1246ae989bfac6e183bc7234d4a1fd"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/budget-vs-actual-by-cost-center/budget-vs-actual-by-cost-center.xlsx",
+      "sha256": "69a113027782057d2d3127516ce2f38e8f88ef1c97f32ef84e6f6285f5be1c19"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/budget-vs-actual-by-cost-center/preview.json",
+      "sha256": "8062c6ca415bd593afd41a113cbc3aa23dac75f1a80fd9528b9310b6049c7949"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/budget-vs-actual-revenue-price-volume-cost-bridge.csv",
+      "sha256": "23d490532286844120efa107d524e908825828de94fb0fcbc98be587086214a9"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/budget-vs-actual-revenue-price-volume-cost-bridge.xlsx",
+      "sha256": "aeb429ffe7563840021fddb1bfe72dfc1b4a850431b5ae8af8868acf51313de6"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/preview.json",
+      "sha256": "5eed453d4a7d24409f9237135144bbda690042926187a80d549765490ecb809c"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/headcount-by-cost-center-and-job-family/headcount-by-cost-center-and-job-family.csv",
+      "sha256": "ae9b93b3411765d24298ba56022478e335d7d809214fbcef418381e08fdec778"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/headcount-by-cost-center-and-job-family/headcount-by-cost-center-and-job-family.xlsx",
+      "sha256": "cc57c2785a0924a24e6fb99e6294ef5699caddba348e1da45327943bd99fc4f4"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/headcount-by-cost-center-and-job-family/preview.json",
+      "sha256": "f01d326e6a2aba6e84a274a7d187bb1fe2978e781e7ee2dd7826a0df47f9f811"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/monthly-work-center-utilization/monthly-work-center-utilization.csv",
+      "sha256": "9a62fa3fb5526a8149d07ea34210422c851a739246e8d3b8b77daaa24a4504ca"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/monthly-work-center-utilization/monthly-work-center-utilization.xlsx",
+      "sha256": "607f2c74a3641d63d2608218727d585eda217b58c4188ff52b7df8ad66124c8b"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/monthly-work-center-utilization/preview.json",
+      "sha256": "1107daa1ca8c1df522f0f3d4078c2f1ee49817ca917ea30baa4d525a77b18aa2"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/sales-and-margin-by-collection-and-style/preview.json",
+      "sha256": "e4f4947dd743dfc36dcc5c8a2da73b919ae0981d0654aff1486280667ae39557"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/sales-and-margin-by-collection-and-style/sales-and-margin-by-collection-and-style.csv",
+      "sha256": "2c4419eccdda74a00ba24df3f9bfd1be8c43d8716fa479e5a522104ab55a387b"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/sales-and-margin-by-collection-and-style/sales-and-margin-by-collection-and-style.xlsx",
+      "sha256": "92a8fd807c05aa3926b061cd5f898d16e7b78c0049d1fe6afe60f625c636443f"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/preview.json",
+      "sha256": "ce5638d4fc3a802190592b6c3e72107de428bfd6636f056996dc60e12f7c8a13"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/sales-commission-expense-by-rep-segment.csv",
+      "sha256": "6dda98d04613e52fbd7e6e1970bbe3ef02976520bf667fa95979705ee390c308"
+    },
+    {
+      "path": "outputs/reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/sales-commission-expense-by-rep-segment.xlsx",
+      "sha256": "3d495c1ed0f2f9aef516b60f81d68a8c0768041d2febd3d19a3f8f930c551ca9"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/forecast-error-and-bias-by-collection-and-style-family/forecast-error-and-bias-by-collection-and-style-family.csv",
+      "sha256": "ae6e32b57862943cfc66da532ab3cb68e71fc3f64fa6bb2d5e44570bac7e0f52"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/forecast-error-and-bias-by-collection-and-style-family/forecast-error-and-bias-by-collection-and-style-family.xlsx",
+      "sha256": "33c07b6495d9028bf5a21858321e5ccdfad25a572a0570de47ecdb7343cd3944"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/forecast-error-and-bias-by-collection-and-style-family/preview.json",
+      "sha256": "a2b6a5afb210930b99c7feb9b99e80d20dbef870eec53813025398e20a66bb54"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/inventory-coverage-and-projected-stockout-risk/inventory-coverage-and-projected-stockout-risk.csv",
+      "sha256": "37775ccf9a15fd5e677533d202ed8c3e8d87804e5e5ce8c16ed5e7bbd10e6d7b"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/inventory-coverage-and-projected-stockout-risk/inventory-coverage-and-projected-stockout-risk.xlsx",
+      "sha256": "75af62390f948bece938661c0d3ce70215dc6bfeaf1efc5edbfb9377d4060f9a"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/inventory-coverage-and-projected-stockout-risk/preview.json",
+      "sha256": "eca95883d0fc7fdbd7f20394cc97ce6304cb0ba7b5f369c0ee8fe27b98f76e1c"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/rough-cut-capacity-load-vs-available-hours/preview.json",
+      "sha256": "21bd17bf987fe5fd4fbb2817e9639a4b75c0a96d5a5d9e63017a048217673628"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/rough-cut-capacity-load-vs-available-hours/rough-cut-capacity-load-vs-available-hours.csv",
+      "sha256": "2a7777ab9b2c9a975a0b12d843ef2665dcdb35e48e311980d48e6525248fbbef"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/rough-cut-capacity-load-vs-available-hours/rough-cut-capacity-load-vs-available-hours.xlsx",
+      "sha256": "b963ac8ce11c232cca984d49f0dbb1118611b2768e3f5124aba962173a351371"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/supplier-lead-time-and-receipt-reliability/preview.json",
+      "sha256": "db8dec42eb18c539cf44291532c8314dce55892982f122293033e52004318701"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/supplier-lead-time-and-receipt-reliability/supplier-lead-time-and-receipt-reliability.csv",
+      "sha256": "c5c221b462c4e51e19dea194f3cdaee90b6fb32c192fc231367ccc72daf5fa57"
+    },
+    {
+      "path": "outputs/reports/managerial/planning-and-supply-risk/supplier-lead-time-and-receipt-reliability/supplier-lead-time-and-receipt-reliability.xlsx",
+      "sha256": "1b9a11f9489e3d609941a8435cdd37ffe22488fe6f9836d95f4efe201dff358b"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/absence-rate-by-work-location-job-family-month/absence-rate-by-work-location-job-family-month.csv",
+      "sha256": "fb4e0ba34d99fa82834b7fb10681d4fad9ec3fac60361eb1cb945d03594e6b52"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/absence-rate-by-work-location-job-family-month/absence-rate-by-work-location-job-family-month.xlsx",
+      "sha256": "4112e3f31bdce447bae854b1370bde02fa52187725ea8d6cd665ec7e3406e5eb"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/absence-rate-by-work-location-job-family-month/preview.json",
+      "sha256": "d6283f1e23208f6e353be1c008ac05c463b5212a843122c59084fa0bb25ef582"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/labor-and-headcount-by-work-location-job-family-cost-center/labor-and-headcount-by-work-location-job-family-cost-center.csv",
+      "sha256": "6964a5d4f9512b2b3f026830a656676b8f77a03b0d4dd50006dc145aa5668fe2"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/labor-and-headcount-by-work-location-job-family-cost-center/labor-and-headcount-by-work-location-job-family-cost-center.xlsx",
+      "sha256": "4e4de5ea5d3cdd6defdb10c83ae4642373bf756683a44d6ed82349f52fc83913"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/labor-and-headcount-by-work-location-job-family-cost-center/preview.json",
+      "sha256": "025bde864b9e7fdd9871fbb598ad3761b1fa7b5d1738cf5087d39accce6e0bff"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/overtime-approval-coverage-and-concentration/overtime-approval-coverage-and-concentration.csv",
+      "sha256": "9a4ca33c049c27b2dd20da423a16ddd103b76a5aa7ad69148364970acce60c1d"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/overtime-approval-coverage-and-concentration/overtime-approval-coverage-and-concentration.xlsx",
+      "sha256": "7812d929905c08d0b79f46064281b2715066920418df49a4e581e0d2e6aec366"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/overtime-approval-coverage-and-concentration/preview.json",
+      "sha256": "41b6a62e3a978a8d36684220aac5cda038a9ec23c8dc3cdeb1f4e2c94f979f8e"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/punch-to-pay-bridge-for-hourly-workers/preview.json",
+      "sha256": "e54b2358bf9525abc7a5d8e8f52a1bc329b75d9a03a9bdac825047b9ea902386"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/punch-to-pay-bridge-for-hourly-workers/punch-to-pay-bridge-for-hourly-workers.csv",
+      "sha256": "66574238d9e09a68c13c4d701a5d39810ff7769b08eefbe21bfc0879b6abe515"
+    },
+    {
+      "path": "outputs/reports/managerial/workforce-and-payroll-operations/punch-to-pay-bridge-for-hourly-workers/punch-to-pay-bridge-for-hourly-workers.xlsx",
+      "sha256": "49b06a2e86f96541845b01ec15471d1c05fc17924b35de4ce2152b8c4e4f3c20"
+    },
+    {
+      "path": "outputs/_site_build/CharlesRiver.sqlite",
+      "sha256": "90ca20af1d05b9bf50a4eaca9c6d7471766485b8fbf6d89a0930aab8f491d992"
+    },
+    {
+      "path": "static/reports/audit/control-review/approval-and-sod-review/approval-and-sod-review.csv",
+      "sha256": "a5672d3b05440eadb904a30113edf024b83c2ccf0cbec685f866b3ad0010b307"
+    },
+    {
+      "path": "static/reports/audit/control-review/approval-and-sod-review/approval-and-sod-review.xlsx",
+      "sha256": "1348a08b1c76f39a770aad0a0fdb8964e60efcbdcdf6b2f90612cf9f591c1f72"
+    },
+    {
+      "path": "static/reports/audit/control-review/approval-and-sod-review/preview.json",
+      "sha256": "12e88150c6b7616eeeaf6df9c8e2e42db22f9f9fa8a6879f8ac6268fafb14ab5"
+    },
+    {
+      "path": "static/reports/audit/control-review/potential-anomaly-review/potential-anomaly-review.csv",
+      "sha256": "00c4790e4e35b6ba07929aa5916bf0cf930793af957f4812488898d295b4e52c"
+    },
+    {
+      "path": "static/reports/audit/control-review/potential-anomaly-review/potential-anomaly-review.xlsx",
+      "sha256": "1016c60725ef6ae405d68f11d2c8c54d8ed0089510ed6b1b191cce04869bdf90"
+    },
+    {
+      "path": "static/reports/audit/control-review/potential-anomaly-review/preview.json",
+      "sha256": "6084b89d8a6aaafac6bc6ccea7af794869e3f43ee1952c9fdb4ad75fac253c8e"
+    },
+    {
+      "path": "static/reports/audit/payroll-and-time-controls/paid-without-clock-and-clock-without-pay-review/paid-without-clock-and-clock-without-pay-review.csv",
+      "sha256": "46bd32f8a3c4ba0cccda7e5fef7ac155c25a6e1829a6e77f7b4d5cfaf9d37223"
+    },
+    {
+      "path": "static/reports/audit/payroll-and-time-controls/paid-without-clock-and-clock-without-pay-review/paid-without-clock-and-clock-without-pay-review.xlsx",
+      "sha256": "c1b5e0bba1daf2b283a450f23e84b3f5fa78d2a6d7ce32ec8df25d234e0bce19"
+    },
+    {
+      "path": "static/reports/audit/payroll-and-time-controls/paid-without-clock-and-clock-without-pay-review/preview.json",
+      "sha256": "dead0c1e0886d4c102f8a5ee4bb62d92d8d24cb998327269974805e52c6d49c8"
+    },
+    {
+      "path": "static/reports/audit/payroll-and-time-controls/payroll-control-review/payroll-control-review.csv",
+      "sha256": "fc66ed1a348148f473c2d553a8e8d70a2fa66434aa9c43390105c5cf35a8e99d"
+    },
+    {
+      "path": "static/reports/audit/payroll-and-time-controls/payroll-control-review/payroll-control-review.xlsx",
+      "sha256": "32d5150471fa5d43fa0f71128fa9877baeb81e55405d5f1ccc30c9b8fabce6c1"
+    },
+    {
+      "path": "static/reports/audit/payroll-and-time-controls/payroll-control-review/preview.json",
+      "sha256": "192b0324a96c2910aef4341b3cd2b25d79164b78aaadf53433e71ce3a41d2074"
+    },
+    {
+      "path": "static/reports/financial/customer-pricing-and-settlement/customer-credit-and-refunds/customer-credit-and-refunds.csv",
+      "sha256": "17d5acb7de3602ff4836804e52c2e81313b9c53a774c26f4d8c889842867ec30"
+    },
+    {
+      "path": "static/reports/financial/customer-pricing-and-settlement/customer-credit-and-refunds/customer-credit-and-refunds.xlsx",
+      "sha256": "6d1e67d162e379388244f8017848ef8e451c03028003f8338fb8c09e5110ff86"
+    },
+    {
+      "path": "static/reports/financial/customer-pricing-and-settlement/customer-credit-and-refunds/preview.json",
+      "sha256": "2ec19113d95e88e1b79a30009dcd60caf10f85183f5d17fe05dd317d7e288a0c"
+    },
+    {
+      "path": "static/reports/financial/customer-pricing-and-settlement/price-realization-vs-list-by-customer-and-portfolio/preview.json",
+      "sha256": "d1a873966a1f27ac0d64e6f433d3526e61609566ca177999e54c5793b1093e3c"
+    },
+    {
+      "path": "static/reports/financial/customer-pricing-and-settlement/price-realization-vs-list-by-customer-and-portfolio/price-realization-vs-list-by-customer-and-portfolio.csv",
+      "sha256": "673a83c0286f21771fc481c5952246539517b43f15170cf5c67862f4cbb9ec6d"
+    },
+    {
+      "path": "static/reports/financial/customer-pricing-and-settlement/price-realization-vs-list-by-customer-and-portfolio/price-realization-vs-list-by-customer-and-portfolio.xlsx",
+      "sha256": "2477d2f0275c20a8c98de4e40612aa467f20f4c6421fcafec80762774389e87e"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/budget-vs-actual-statement-bridge-monthly.csv",
+      "sha256": "9738c65e09cf7cc4d295d0654d1a18e8b4fe53bb5e10a903a8effb221455a813"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/budget-vs-actual-statement-bridge-monthly.xlsx",
+      "sha256": "73eae5691e33ac69179e3d32e82b0eb68a9e34a3fb276f1f0836c2e35cf8069a"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/preview.json",
+      "sha256": "e8a4af8f30204feedd88ef4153f338facbea39fc12d4840ce4e9ff2dc22a46c4"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/monthly-balance-sheet/monthly-balance-sheet.csv",
+      "sha256": "2c0378003dc365aca3d9f65a7bde88bd5aab30c5bc97e364d266caa57b3982a7"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/monthly-balance-sheet/monthly-balance-sheet.xlsx",
+      "sha256": "3997f62aaee9404a3e57b4dd3c1eb78643c280e41bc202e521370ebb8003df03"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/monthly-balance-sheet/preview.json",
+      "sha256": "2e1d6c0fdf88f8eb1edafd2cb3fc7c02aad94cd388d0c04d4ea81ca26ea4f65f"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/monthly-income-statement/monthly-income-statement.csv",
+      "sha256": "d047209cdf6923a502ff8b86f188aa2b4ebf1136dacb34cdc4d2b7fec7142236"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/monthly-income-statement/monthly-income-statement.xlsx",
+      "sha256": "7f7c37d3aef01f5de5d1c906d6b47f9e64340478b7dc5f9d6a3205122949be25"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/monthly-income-statement/preview.json",
+      "sha256": "d055bb31ed4d77088c76b991de636408f140c8cfeb6ce75b3799ef86f19ca30d"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/monthly-indirect-cash-flow/monthly-indirect-cash-flow.csv",
+      "sha256": "be8536315fbf63ed41b20ebe6d3392977aff15a36ffdee1e1eb773bfa257d6c5"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/monthly-indirect-cash-flow/monthly-indirect-cash-flow.xlsx",
+      "sha256": "33231e4b3973e8c0d8fc223bcaeec9533e4fd47658de6555295239319ce3379f"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/monthly-indirect-cash-flow/preview.json",
+      "sha256": "74eba82b67bfaf486f9585a2f98ef00e87efd97ee029466364880da8a37725a9"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/preview.json",
+      "sha256": "b54f27f7145f6eefc742bafc6adca5d72fee233adc454009ca9e975cf557d44d"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/pro-forma-monthly-balance-sheet.csv",
+      "sha256": "98edfb6d1ae933e1910b3cd1a7a1a2cebdda894182b8a97550a77932cb86274b"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/pro-forma-monthly-balance-sheet.xlsx",
+      "sha256": "a32e30500f72365e44bd4d8df778c420151e417971b4b6b86c604fd626fa67f3"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/preview.json",
+      "sha256": "ed3f28e6a09555d1c8dc28a025f333ae4e360d01fbe992ded1df44158094ece8"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/pro-forma-monthly-income-statement.csv",
+      "sha256": "577e09e0081b26810a1fddc1efef4bd29690310687cc547793aeeb8e822cfdb1"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/pro-forma-monthly-income-statement.xlsx",
+      "sha256": "bae1d3d653917bc2bf144bb748edb191a291e7e6216de9adeb878a36a89fe235"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/preview.json",
+      "sha256": "d768f1cd5a0dad333a2a6919516957bd2a242ad38cf998f6c0e2b9b71fe30353"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/pro-forma-monthly-indirect-cash-flow.csv",
+      "sha256": "27973b04f2b22e2654fc8060bd0a52f03eba85507e428da128ae7891fe0b723f"
+    },
+    {
+      "path": "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/pro-forma-monthly-indirect-cash-flow.xlsx",
+      "sha256": "bab679103e1f8a2da29b25d053eea344c4d60a1b084d7dd28be66417543f7df4"
+    },
+    {
+      "path": "static/reports/financial/payroll-cash-and-liabilities/payroll-cash-payments-and-remittances/payroll-cash-payments-and-remittances.csv",
+      "sha256": "b27ba0ac9d1ebc22163d0cb15d50e2422e90065cdd7ee4460899a8742725ddbc"
+    },
+    {
+      "path": "static/reports/financial/payroll-cash-and-liabilities/payroll-cash-payments-and-remittances/payroll-cash-payments-and-remittances.xlsx",
+      "sha256": "8e7e599eeda2b82da9bf3961419ec92862e6ee4f47aeef3bda02b4e408245f1e"
+    },
+    {
+      "path": "static/reports/financial/payroll-cash-and-liabilities/payroll-cash-payments-and-remittances/preview.json",
+      "sha256": "239ed207db0970745c2dce988ebd44f5d56b113980fc459c0f19299be2668c76"
+    },
+    {
+      "path": "static/reports/financial/payroll-cash-and-liabilities/payroll-liability-rollforward/payroll-liability-rollforward.csv",
+      "sha256": "1b2a68d0ab02f5e9cf65acfa829e4359a8a67051f799d324187be25ba27667b3"
+    },
+    {
+      "path": "static/reports/financial/payroll-cash-and-liabilities/payroll-liability-rollforward/payroll-liability-rollforward.xlsx",
+      "sha256": "bdfcaf71bc02b75f1b3a2ebf2ff8d452db7ae80c89f30cee2543ac7be27bc0aa"
+    },
+    {
+      "path": "static/reports/financial/payroll-cash-and-liabilities/payroll-liability-rollforward/preview.json",
+      "sha256": "f49875c9104e9b6a5ad6948d19d9ac7967debe0879c808447757f4fd2e8f92da"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/gross-to-net-payroll-review/gross-to-net-payroll-review.csv",
+      "sha256": "adcd218a157557b51375ac33e37db6ce17a33f6db73ec74a250368bc53642a84"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/gross-to-net-payroll-review/gross-to-net-payroll-review.xlsx",
+      "sha256": "27d447b9ed3f8a942c50499a62be64a877dfbb4317750a6d0dc348ed92fe206e"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/gross-to-net-payroll-review/preview.json",
+      "sha256": "fcf1a3db64878dd53eeba727ee300416f387dacb45187b2540b136eec7fb37b7"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/hourly-payroll-hours-to-paid-earnings-bridge/hourly-payroll-hours-to-paid-earnings-bridge.csv",
+      "sha256": "dc04c0a421f3aecb1feb2a08f1d70b6b884fd6c78967cdd8b4213dd9aa612899"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/hourly-payroll-hours-to-paid-earnings-bridge/hourly-payroll-hours-to-paid-earnings-bridge.xlsx",
+      "sha256": "c711e9e66459d07d80f7b8c3d5eb91076e1ed4c27ab04213e895e80a53768b08"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/hourly-payroll-hours-to-paid-earnings-bridge/preview.json",
+      "sha256": "40b495c37674a0261c875d56d99d3971ec4683b9497750029bff040a791853ab"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/payroll-and-people-cost-mix-by-cost-center-job-family-level/payroll-and-people-cost-mix-by-cost-center-job-family-level.csv",
+      "sha256": "176acd5293fc90615c41a9a93a754ba97de23267cc8191a6a1498f399c2c0157"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/payroll-and-people-cost-mix-by-cost-center-job-family-level/payroll-and-people-cost-mix-by-cost-center-job-family-level.xlsx",
+      "sha256": "3b55d44d7c10a0ab270a29a6be16115636d722c2634f8a704f23768f1315ca3f"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/payroll-and-people-cost-mix-by-cost-center-job-family-level/preview.json",
+      "sha256": "a6baf4a513f5986a01686ff5a8524b4d02c75fa1ef7cf6ec926409cc527bdf87"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/payroll-expense-mix-by-cost-center-and-pay-class/payroll-expense-mix-by-cost-center-and-pay-class.csv",
+      "sha256": "0e40d894cbeeff799d4ca5b4d477a054d99bc5140da24cdcf921cfaf3d060ab4"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/payroll-expense-mix-by-cost-center-and-pay-class/payroll-expense-mix-by-cost-center-and-pay-class.xlsx",
+      "sha256": "ccd8ac3feb46373d6538cd85baed65327f0c6356e981f70a8e3e88b7c2225f3b"
+    },
+    {
+      "path": "static/reports/financial/payroll-cost-and-mix/payroll-expense-mix-by-cost-center-and-pay-class/preview.json",
+      "sha256": "883257953a25a44458c5203b464698070de8d004bdf14ea2b09fa08f44ed7c34"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/ap-aging/ap-aging.csv",
+      "sha256": "912411aff5b3faa78811bbac7f328a00ad63125e0e84ab0fb87e9f806f93ecdb"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/ap-aging/ap-aging.xlsx",
+      "sha256": "43671f1313b05158f441e1ca6fd07b569208f58bf9e8dfdb54c779e5597d51bc"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/ap-aging/preview.json",
+      "sha256": "001ec1bb56d420d1ec2847d1b982c21dcc522dd98a44d1a56bd255ca2d960d06"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/ar-aging/ar-aging.csv",
+      "sha256": "a73f12e75a443e8af2a5ffecd24bbc27f30e5ef287821f4a7d5e0f96a9ce8189"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/ar-aging/ar-aging.xlsx",
+      "sha256": "0e7233012c85e87f067022ecae867468e547d20676f4411a2b230b3c6c46cfe2"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/ar-aging/preview.json",
+      "sha256": "ad8298ff0c35f7db02ae444189bb65261554f222e133cbe7a21f6a21ad38395b"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ap-aging-detail/monthly-ap-aging-detail.csv",
+      "sha256": "5a7a8bdeb9e4b8806fa18b3b432ccc91eb77b8cd1d78d06f78e88733f09b9eb6"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ap-aging-detail/monthly-ap-aging-detail.xlsx",
+      "sha256": "5a441af0f9ee70b5ed5a9d0e9533114fcac70301ed701550687f5e514c2d7926"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ap-aging-detail/preview.json",
+      "sha256": "ed0d70f61714a237bde3fb4cc79d45a7591ee2c41f69c20e5088009bfd26eb2f"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ap-aging-summary/monthly-ap-aging-summary.csv",
+      "sha256": "db673985ab36ddff1e2211bdd4a04c76ea09bfde946228e162b55cf1bc3e0508"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ap-aging-summary/monthly-ap-aging-summary.xlsx",
+      "sha256": "47e19032b9b9f83a6abd3f5c78868a3d6efd57a69b7e8252a39b1f3889862b25"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ap-aging-summary/preview.json",
+      "sha256": "7f9e9f6652f7fec1162f0154402d052edd0f041848247dae38b360c7fa6ae61b"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ar-aging-detail/monthly-ar-aging-detail.csv",
+      "sha256": "e0e7e6162166901474b92d22b22344ecbd0cd5beec833352948d21cb18ddc4e4"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ar-aging-detail/monthly-ar-aging-detail.xlsx",
+      "sha256": "22ee227d66e8d6e2b272f1ce0f65040833b5106870768a79ba265cd5010cfea9"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ar-aging-detail/preview.json",
+      "sha256": "e35b23726a5d4833157cc7af0e54d4465681930dcdd57d5f98cd9102769bf6d3"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ar-aging-summary/monthly-ar-aging-summary.csv",
+      "sha256": "eaa00cea92b619b46a7352ba322c2182c5756c4231a475bd7a58622f6ed25853"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ar-aging-summary/monthly-ar-aging-summary.xlsx",
+      "sha256": "17426737fe7255f746cde07d0d2d28431bd7850dbbfe2be0b79ecf7e4538255f"
+    },
+    {
+      "path": "static/reports/financial/receivables-and-payables-aging/monthly-ar-aging-summary/preview.json",
+      "sha256": "1b0f08f8bdbf0ac856288397183a049280aee2b28bf521c703c364fd933632d1"
+    },
+    {
+      "path": "static/reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/design-service-revenue-and-billed-hours.csv",
+      "sha256": "c3035aa272e282e5113d3c909bdd40f728bb1fb679f8615ead1a0d16d57bd51b"
+    },
+    {
+      "path": "static/reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/design-service-revenue-and-billed-hours.xlsx",
+      "sha256": "669b918a04a29e7ce0f765fdff276e5ce88f7effa9914224f084bc1ad4c4b817"
+    },
+    {
+      "path": "static/reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/preview.json",
+      "sha256": "6863490820ac41ea0d8b2bc9eae697ee3749fedb1b24a91b58aa43689564ce98"
+    },
+    {
+      "path": "static/reports/financial/revenue-and-working-capital/monthly-revenue-and-gross-margin/monthly-revenue-and-gross-margin.csv",
+      "sha256": "4c3b63c6c336958d7f4d179f4c28899c17b8d1df09c2738fa67696859260a1da"
+    },
+    {
+      "path": "static/reports/financial/revenue-and-working-capital/monthly-revenue-and-gross-margin/monthly-revenue-and-gross-margin.xlsx",
+      "sha256": "449a13f3d2390ced1f494f90b9bf99ab2e178b854033201261650d83f7cfd829"
+    },
+    {
+      "path": "static/reports/financial/revenue-and-working-capital/monthly-revenue-and-gross-margin/preview.json",
+      "sha256": "5be44cb15ed2414d1da5884e5b2689757c1f6ce872ddcf57f22f225d565bf9cb"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/budget-vs-actual-working-capital-and-cash-bridge.csv",
+      "sha256": "8c1d630fd6bec3b0818496a674339479ca478e10d12e4d4bbdd12fb81846514c"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/budget-vs-actual-working-capital-and-cash-bridge.xlsx",
+      "sha256": "570be37eb46c4b6279e78042cccf62e9ccc1c4486a8932f4906564bbc5027b21"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/preview.json",
+      "sha256": "b11ca383f05ad0985a09637aed55ab468a9411f16c4df89499a62be1c1bfc1d1"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/cash-conversion-timing-review/cash-conversion-timing-review.csv",
+      "sha256": "29f0028e13e3f57eb07a37fcecceed7849eb9ef1ccab308d5ec770d66c70385d"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/cash-conversion-timing-review/cash-conversion-timing-review.xlsx",
+      "sha256": "75ab00566a70826b5d0ab1a15761c5571261af58af0a0f93a9aa6cc22c8f7248"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/cash-conversion-timing-review/preview.json",
+      "sha256": "5cec0c744242751704d10caf2411417fe214d6b72e565b6411589df3f1318a21"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/customer-deposits-and-unapplied-cash-aging/customer-deposits-and-unapplied-cash-aging.csv",
+      "sha256": "a068edfce9b47f60985d0b661457f335ca9e1ef7f5b9408768e88fca013e1669"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/customer-deposits-and-unapplied-cash-aging/customer-deposits-and-unapplied-cash-aging.xlsx",
+      "sha256": "9cdf05e82767eea03249142485ad314807beea8d1f51011dfa033b8538f07486"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/customer-deposits-and-unapplied-cash-aging/preview.json",
+      "sha256": "339d190dfd1d7757691aa6db9fb06f7b176c09392f2ff0507e1cb374414b97c1"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/preview.json",
+      "sha256": "980ccb794f5ebf41f33df46598cc970dc5b4f64fa5cd0f11dc966554501c13c2"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/sales-commission-payable-rollforward.csv",
+      "sha256": "111acd490ba798166a4c7de923f5ef2df2e397dd65f7addd108c78985c4f609c"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/sales-commission-payable-rollforward.xlsx",
+      "sha256": "dd95d4024b11ed153ea03b3a8c143ec753b22b8e7752d815fb8f4c1c6e51b591"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/working-capital-bridge-by-month/preview.json",
+      "sha256": "c88aa8fb4e1a798c312e49b542108ec4ace113b6509ae8654bb5b330a152f87f"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/working-capital-bridge-by-month/working-capital-bridge-by-month.csv",
+      "sha256": "dbcc37e081822f52d62615769b06f9ae2010dbd08371f0bbfa72df9a676ee8b7"
+    },
+    {
+      "path": "static/reports/financial/working-capital-and-cash-conversion/working-capital-bridge-by-month/working-capital-bridge-by-month.xlsx",
+      "sha256": "ffcd9bd26154c90cad39d4a5900021933aade57184c5380d580f8c3e5a07f7b3"
+    },
+    {
+      "path": "static/reports/managerial/customer-and-supplier-analysis/customer-sales-mix-by-region-and-item-group/customer-sales-mix-by-region-and-item-group.csv",
+      "sha256": "efc6fb470a236c04ccfe13c3cdde20423c01d125dadaa13a4c037ef8b528c5da"
+    },
+    {
+      "path": "static/reports/managerial/customer-and-supplier-analysis/customer-sales-mix-by-region-and-item-group/customer-sales-mix-by-region-and-item-group.xlsx",
+      "sha256": "fba2ad58fd7abc8edd0068f84bd7b62c3215bc498ec9d69ad95028b16e2027b3"
+    },
+    {
+      "path": "static/reports/managerial/customer-and-supplier-analysis/customer-sales-mix-by-region-and-item-group/preview.json",
+      "sha256": "cae486338b1d4490b49e60cce1fee92ecc06928afa48ecff21f83d8508b03a81"
+    },
+    {
+      "path": "static/reports/managerial/customer-and-supplier-analysis/supplier-purchasing-activity-by-category/preview.json",
+      "sha256": "20df589df59933ce2e23392c3cbdce8e392f2f02bd413d9a8a9c131c46551f16"
+    },
+    {
+      "path": "static/reports/managerial/customer-and-supplier-analysis/supplier-purchasing-activity-by-category/supplier-purchasing-activity-by-category.csv",
+      "sha256": "ebf48a1754ced286cbd942f5061111ee4fe2c797942d4193a353fc0b48c921c1"
+    },
+    {
+      "path": "static/reports/managerial/customer-and-supplier-analysis/supplier-purchasing-activity-by-category/supplier-purchasing-activity-by-category.xlsx",
+      "sha256": "dfc06ba4a3ab8ddc11ac3644889d8205c1f84dcff2c5694e9d14e6cdbac75525"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/budget-vs-actual-by-cost-center/budget-vs-actual-by-cost-center.csv",
+      "sha256": "eb4e6489894e1e38707d6000d583db2a1d1246ae989bfac6e183bc7234d4a1fd"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/budget-vs-actual-by-cost-center/budget-vs-actual-by-cost-center.xlsx",
+      "sha256": "cc183011693f6924f67c7e8a724350c64e9ef4717a918acb6deaea04b0595fe7"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/budget-vs-actual-by-cost-center/preview.json",
+      "sha256": "861b2c235fc34cb9f70b59b7f81258ff93d4e9d73cbc6f4fec03d0aea4bbbde5"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/budget-vs-actual-revenue-price-volume-cost-bridge.csv",
+      "sha256": "23d490532286844120efa107d524e908825828de94fb0fcbc98be587086214a9"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/budget-vs-actual-revenue-price-volume-cost-bridge.xlsx",
+      "sha256": "2b37dc136ad8bb95f727baf9a0d06cb2a17dd99df5fd113feb9b12ff1a8fbc89"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/preview.json",
+      "sha256": "e050a72820e2004ff20f26f64ae88fe18a15eb1b6d9b80c2fb1111e1de687b20"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/headcount-by-cost-center-and-job-family/headcount-by-cost-center-and-job-family.csv",
+      "sha256": "ae9b93b3411765d24298ba56022478e335d7d809214fbcef418381e08fdec778"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/headcount-by-cost-center-and-job-family/headcount-by-cost-center-and-job-family.xlsx",
+      "sha256": "63c5291bfbbe84a9f7bf7a543b7c39c9389792277b44392aae6f3444f6aeb427"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/headcount-by-cost-center-and-job-family/preview.json",
+      "sha256": "930f81e22615c7783631600b4a56762d28c40b75315c6455b0d7c3e24f4b0395"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/monthly-work-center-utilization/monthly-work-center-utilization.csv",
+      "sha256": "9a62fa3fb5526a8149d07ea34210422c851a739246e8d3b8b77daaa24a4504ca"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/monthly-work-center-utilization/monthly-work-center-utilization.xlsx",
+      "sha256": "f2186c4742bdf73639d65f76307bd81e0256fad8e16332e713958b1b05e29cb6"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/monthly-work-center-utilization/preview.json",
+      "sha256": "8f9fe97080afa528b354a58e99a040a4b1b686c4c9e99f45a3ce24d393089206"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/sales-and-margin-by-collection-and-style/preview.json",
+      "sha256": "387db0647fed50db83c467c4ce6107d1c680b5f8690cc8dd914aec5d4b224d35"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/sales-and-margin-by-collection-and-style/sales-and-margin-by-collection-and-style.csv",
+      "sha256": "2c4419eccdda74a00ba24df3f9bfd1be8c43d8716fa479e5a522104ab55a387b"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/sales-and-margin-by-collection-and-style/sales-and-margin-by-collection-and-style.xlsx",
+      "sha256": "dffe0578aec9d38c8c5484905a18b7906cd873b9d4771d58f86e3265e826e737"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/preview.json",
+      "sha256": "1706cd0b537255bcea1dad58a4df48a5c94e22a74ea842082d7ffa8649bd8b91"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/sales-commission-expense-by-rep-segment.csv",
+      "sha256": "6dda98d04613e52fbd7e6e1970bbe3ef02976520bf667fa95979705ee390c308"
+    },
+    {
+      "path": "static/reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/sales-commission-expense-by-rep-segment.xlsx",
+      "sha256": "ce13fbfde59c9ae7eef3b9573cd5a50ccc6584f8f48bd02813e944241fd82d4b"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/forecast-error-and-bias-by-collection-and-style-family/forecast-error-and-bias-by-collection-and-style-family.csv",
+      "sha256": "ae6e32b57862943cfc66da532ab3cb68e71fc3f64fa6bb2d5e44570bac7e0f52"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/forecast-error-and-bias-by-collection-and-style-family/forecast-error-and-bias-by-collection-and-style-family.xlsx",
+      "sha256": "6da0ebc0ba55fd0f85083738ecdad3f514017019645a6bd5d2ec120d4e505050"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/forecast-error-and-bias-by-collection-and-style-family/preview.json",
+      "sha256": "1bf580e2a4d2fc1c1911d613d2d4dc30658ef314d5b9ec8ef0400f5c880e30d3"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/inventory-coverage-and-projected-stockout-risk/inventory-coverage-and-projected-stockout-risk.csv",
+      "sha256": "37775ccf9a15fd5e677533d202ed8c3e8d87804e5e5ce8c16ed5e7bbd10e6d7b"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/inventory-coverage-and-projected-stockout-risk/inventory-coverage-and-projected-stockout-risk.xlsx",
+      "sha256": "ca0e912721cf08920e9ffa7a1c4d56889ba4181b66ee5f8324829683987070bb"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/inventory-coverage-and-projected-stockout-risk/preview.json",
+      "sha256": "a9ffde518ebb4757668bed2f5becf17aef5c2679d9f0bf27fb51e8fe9b5c2de5"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/rough-cut-capacity-load-vs-available-hours/preview.json",
+      "sha256": "d4fb93ab3fecbd79bd2abf0c8e592e85de9b17aada0a93200954ef1e85b3e14e"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/rough-cut-capacity-load-vs-available-hours/rough-cut-capacity-load-vs-available-hours.csv",
+      "sha256": "2a7777ab9b2c9a975a0b12d843ef2665dcdb35e48e311980d48e6525248fbbef"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/rough-cut-capacity-load-vs-available-hours/rough-cut-capacity-load-vs-available-hours.xlsx",
+      "sha256": "516b0f35b8ea9589b3f319593d974611616c8635e90bdde2efef8d3c8cccec6b"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/supplier-lead-time-and-receipt-reliability/preview.json",
+      "sha256": "f3b945d9f2757e7ee827955aad3a30a7e23f8c56cef004f8cb440c197aa67aec"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/supplier-lead-time-and-receipt-reliability/supplier-lead-time-and-receipt-reliability.csv",
+      "sha256": "c5c221b462c4e51e19dea194f3cdaee90b6fb32c192fc231367ccc72daf5fa57"
+    },
+    {
+      "path": "static/reports/managerial/planning-and-supply-risk/supplier-lead-time-and-receipt-reliability/supplier-lead-time-and-receipt-reliability.xlsx",
+      "sha256": "6221d14a9f2242aaab609af278683e11bba7a91b65170aa9451476a10c46ad04"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/absence-rate-by-work-location-job-family-month/absence-rate-by-work-location-job-family-month.csv",
+      "sha256": "fb4e0ba34d99fa82834b7fb10681d4fad9ec3fac60361eb1cb945d03594e6b52"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/absence-rate-by-work-location-job-family-month/absence-rate-by-work-location-job-family-month.xlsx",
+      "sha256": "7789dfb5b17689b459f3b0cb1f89226cb5cdf78ea977216a01fb4931e3818570"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/absence-rate-by-work-location-job-family-month/preview.json",
+      "sha256": "3bd895a21c250341387b5bd62501aba3cd97c6dc61accac7770b7c0fdb89a189"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/labor-and-headcount-by-work-location-job-family-cost-center/labor-and-headcount-by-work-location-job-family-cost-center.csv",
+      "sha256": "6964a5d4f9512b2b3f026830a656676b8f77a03b0d4dd50006dc145aa5668fe2"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/labor-and-headcount-by-work-location-job-family-cost-center/labor-and-headcount-by-work-location-job-family-cost-center.xlsx",
+      "sha256": "e01145beb33a5030a4922b8e5766f2ea88427dccfd711b34a4413a83229b72b7"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/labor-and-headcount-by-work-location-job-family-cost-center/preview.json",
+      "sha256": "840bf132f629723b84348a353e752a989ef697af6245dc3c6dde2ba5c6c5f7bc"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/overtime-approval-coverage-and-concentration/overtime-approval-coverage-and-concentration.csv",
+      "sha256": "9a4ca33c049c27b2dd20da423a16ddd103b76a5aa7ad69148364970acce60c1d"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/overtime-approval-coverage-and-concentration/overtime-approval-coverage-and-concentration.xlsx",
+      "sha256": "1fb163a6d89bdc257ac28e0924bf1b542058cb815b17a3688f25c0cd16d3dadd"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/overtime-approval-coverage-and-concentration/preview.json",
+      "sha256": "e873b18b581f305ad1c9aa70272abf07705b7b353642d2bdb94b2cf8ec69ba18"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/punch-to-pay-bridge-for-hourly-workers/preview.json",
+      "sha256": "f835d49bf1ae89d0b0cf17ed8e084434d19002049760d92e775070050e26e204"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/punch-to-pay-bridge-for-hourly-workers/punch-to-pay-bridge-for-hourly-workers.csv",
+      "sha256": "66574238d9e09a68c13c4d701a5d39810ff7769b08eefbe21bfc0879b6abe515"
+    },
+    {
+      "path": "static/reports/managerial/workforce-and-payroll-operations/punch-to-pay-bridge-for-hourly-workers/punch-to-pay-bridge-for-hourly-workers.xlsx",
+      "sha256": "a29e6c99ac4decd62bdd5a74ee55abacaf5c62df151b0f5f9de02c11ab2a3627"
+    }
+  ]
+}
