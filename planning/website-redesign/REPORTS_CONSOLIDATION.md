@@ -1,5 +1,7 @@
 # Reports, analytics, and query navigation consolidation
 
+**Later query update:** [the unified-query handoff](QUERY_LIBRARY_CONSOLIDATION.md) supersedes the query-domain/subpage structure recorded below. The Query Library now uses the same six topics as reports, with 47 authored documents overall.
+
 The canonical report hub is `/docs/analytics`. Nine former report documents were removed and their URLs redirect to this page or a relevant business-topic anchor. Header, sidebar, homepage, process, exercise, case, and instructor links now lead to the unified hub.
 
 All 48 reports appear once in six authored presentation topics:

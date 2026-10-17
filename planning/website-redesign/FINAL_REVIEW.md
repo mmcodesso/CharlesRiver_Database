@@ -1,5 +1,7 @@
 # Charles River website redesign — review handoff
 
+**Unified Query Library:** [the query consolidation handoff](QUERY_LIBRARY_CONSOLIDATION.md) replaces three query subpages with one catalog using the reports' six business topics. All 170 queries and both learning paths remain. Current totals are 47 authored documents and 23 learning resources. Earlier delivery notes below retain their historical counts.
+
 **Diagram consistency:** [the diagram interaction follow-up](DIAGRAM_INTERACTIONS.md) makes all 48 Mermaid previews clickable, with the same expanded-view entry behavior as BPMN, keyboard activation, and focus restoration.
 
 **BPMN extension:** [the current BPMN/AIS handoff](bpmn/REVIEW_HANDOFF.md) adds 11 editable models with SVGs, a controls workshop, and a proposed 14-week sequence. The model library and notation are consolidated into `/docs/process-flows`; `/docs/process-models` redirects there. The subsequent report consolidation brings current totals to 50 documents and 23 learning resources. The initial redesign record below retains its original counts and validation history.

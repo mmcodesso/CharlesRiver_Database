@@ -1,12 +1,11 @@
 # Page and route inventory
 
-The site now has 50 authored documents. Nine overlapping report pages were consolidated into the existing `/docs/analytics` hub at the user's request; each former report URL redirects to the hub or a business-topic anchor. The added Process Models page was previously consolidated into `/docs/process-flows`, with its former URL redirected. All 17 cases, 23 learning activities, six process guides, 48 report assets, and 170 SQL files remain available.
+The site now has 47 authored documents. The three query subpages are consolidated into the top-level Query Library, organized using the same six business topics as Reports and Analytics. Nine overlapping report pages were consolidated into the existing `/docs/analytics` hub at the user's request; each former report URL redirects to the hub or a business-topic anchor. The added Process Models page was previously consolidated into `/docs/process-flows`, with its former URL redirected. All 17 cases, 23 learning activities, six process guides, 48 report assets, and 170 SQL files remain available.
 
 | Page | Route | Treatment |
 | --- | --- | --- |
 | [docs/learn-and-practice/bpmn-controls-workshop.md](../../docs/learn-and-practice/bpmn-controls-workshop.md) | `/docs/learn-and-practice/bpmn-controls-workshop` | Added AIS interpretation, evidence trace, risk/control matrix, and modeling extension |
-| [docs/analytics/analysis-tracks.md](../../docs/analytics/analysis-tracks.md) | `/docs/analytics/analysis-tracks` | Top-level Query Library; shared catalog styling, search/filtering, all 170 SQL files and downloads; URL preserved |
-| [docs/analytics/audit.md](../../docs/analytics/audit.md) | `/docs/analytics/audit` | Refined or rewritten; URL preserved |
+| [docs/analytics/analysis-tracks.md](../../docs/analytics/analysis-tracks.md) | `/docs/analytics/analysis-tracks` | Unified Query Library; six business topics matching reports, all 170 SQL files, guidance and linked learning paths; URL preserved |
 | [docs/analytics/cases/attendance-control-audit-case.md](../../docs/analytics/cases/attendance-control-audit-case.md) | `/docs/analytics/cases/attendance-control-audit-case` | Refined or rewritten; URL preserved |
 | [docs/analytics/cases/audit-review-pack-case.md](../../docs/analytics/cases/audit-review-pack-case.md) | `/docs/analytics/cases/audit-review-pack-case` | Refined or rewritten; URL preserved |
 | [docs/analytics/cases/capex-fixed-asset-lifecycle-case.md](../../docs/analytics/cases/capex-fixed-asset-lifecycle-case.md) | `/docs/analytics/cases/capex-fixed-asset-lifecycle-case` | Refined or rewritten; URL preserved |
@@ -26,9 +25,7 @@ The site now has 50 authored documents. Nine overlapping report pages were conso
 | [docs/analytics/cases/workforce-coverage-and-attendance-case.md](../../docs/analytics/cases/workforce-coverage-and-attendance-case.md) | `/docs/analytics/cases/workforce-coverage-and-attendance-case` | Refined or rewritten; URL preserved |
 | [docs/analytics/cases/working-capital-and-cash-conversion-case.md](../../docs/analytics/cases/working-capital-and-cash-conversion-case.md) | `/docs/analytics/cases/working-capital-and-cash-conversion-case` | Refined or rewritten; URL preserved |
 | [docs/analytics/excel-guide.md](../../docs/analytics/excel-guide.md) | `/docs/analytics/excel-guide` | Refined or rewritten; URL preserved |
-| [docs/analytics/financial.md](../../docs/analytics/financial.md) | `/docs/analytics/financial` | Refined or rewritten; URL preserved |
 | [docs/analytics/index.md](../../docs/analytics/index.md) | `/docs/analytics` | Unified report catalog, six business topics, search/filtering, previews, downloads, and learning prompts; URL preserved |
-| [docs/analytics/managerial.md](../../docs/analytics/managerial.md) | `/docs/analytics/managerial` | Refined or rewritten; URL preserved |
 | [docs/analytics/sql-guide.md](../../docs/analytics/sql-guide.md) | `/docs/analytics/sql-guide` | Refined or rewritten; URL preserved |
 | [docs/learn-and-practice/index.md](../../docs/learn-and-practice/index.md) | `/docs/learn-and-practice` | Added |
 | [docs/learn-and-practice/manufacturing-cost-flow.md](../../docs/learn-and-practice/manufacturing-cost-flow.md) | `/docs/learn-and-practice/manufacturing-cost-flow` | Added |
@@ -70,3 +67,11 @@ The nine former report documents are removed from authored navigation and the si
 | `/docs/analytics/reports/operations-and-risk` | `/docs/analytics#production-and-planning` |
 | `/docs/analytics/reports/payroll-perspective` | `/docs/analytics#people-and-payroll` |
 | `/docs/analytics/reports/audit` | `/docs/analytics#controls-and-exceptions` |
+
+## Consolidated query routes
+
+| Former route | Destination |
+| --- | --- |
+| `/docs/analytics/financial` | `/docs/analytics/analysis-tracks` |
+| `/docs/analytics/managerial` | `/docs/analytics/analysis-tracks` |
+| `/docs/analytics/audit` | `/docs/analytics/analysis-tracks` |

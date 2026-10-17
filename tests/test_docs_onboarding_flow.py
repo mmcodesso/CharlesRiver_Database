@@ -104,10 +104,10 @@ def test_unified_report_hub_and_query_pages_keep_catalog_components() -> None:
     assert "<ReportCatalog topics={reportTopics}" in report
     assert "@site/src/data/reportTopics.json" in report
     assert not list((DOCS_ROOT / "analytics/reports").glob("*.md"))
+    query = _read(DOCS_ROOT / "analytics/analysis-tracks.md")
+    assert "<QueryLibrary" in query
     for area in ("financial", "managerial", "audit"):
-        query = _read(DOCS_ROOT / f"analytics/{area}.md")
-        assert "<QueryGroupCatalog" in query
-        assert f"queryLibraryGroups.{area}" in query
+        assert not (DOCS_ROOT / f"analytics/{area}.md").exists()
 
 
 def test_orientation_and_instructor_paths_link_to_hub_and_textbook() -> None:

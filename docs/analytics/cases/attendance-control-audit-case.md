@@ -36,7 +36,7 @@ The audit team needs to determine which attendance exceptions reflect schedule-l
 - Main tables: `EmployeeShiftRoster`, `EmployeeAbsence`, `TimeClockPunch`, `TimeClockEntry`, `OvertimeApproval`, `Employee`
 - Related process page: [Payroll](../../processes/payroll.md)
 - Related report: [People and Payroll](../index.md#people-and-payroll)
-- Related guide: [Audit Queries](../audit.md)
+- Related guide: [People and Payroll queries](../analysis-tracks.md#people-and-payroll)
 - Related case: [Workforce Coverage and Attendance Case](workforce-coverage-and-attendance-case.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case is the formal exception-testing follow-through for attendance controls. Use the workforce coverage case when you want the managerial coverage-pressure view before audit testing.
@@ -248,4 +248,4 @@ An attendance exception does not establish an overpayment. Quantifying pay impac
 - Read [Workforce Coverage and Attendance Case](workforce-coverage-and-attendance-case.md) when you want the managerial coverage-pressure view that precedes formal exception testing.
 - Read [Payroll](../../processes/payroll.md) when you want the wider business and accounting flow behind attendance and payroll support.
 - Read [People and Payroll](../index.md#people-and-payroll) when you want the report-level interpretation of the same control questions.
-- Read [Audit Queries](../audit.md) when you want the broader exception and control-review query set.
+- Read [People and Payroll queries](../analysis-tracks.md#people-and-payroll) when you want the broader exception and control-review query set.

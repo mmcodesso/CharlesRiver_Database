@@ -73,14 +73,9 @@ const sidebars = {
       id: "analytics/index",
     },
     {
-      type: "category",
+      type: "doc",
       label: "Query Library",
-      link: { type: "doc", id: "analytics/analysis-tracks" },
-      items: [
-        "analytics/financial",
-        "analytics/managerial",
-        "analytics/audit",
-      ],
+      id: "analytics/analysis-tracks",
     },
     {
       type: "category",

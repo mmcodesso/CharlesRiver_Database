@@ -1,6 +1,6 @@
 # BPMN and AIS extension — review handoff
 
-**Current site:** the later [report and query navigation consolidation](../REPORTS_CONSOLIDATION.md) brings the authored document count to 50, with 23 learning resources. The BPMN/process delivery records below retain their counts at the time of that work.
+**Current site:** the later [report and query navigation consolidation](../REPORTS_CONSOLIDATION.md) and subsequent [query-library consolidation](../QUERY_LIBRARY_CONSOLIDATION.md) bring the authored document count to 47, with 23 learning resources. The BPMN/process delivery records below retain their counts at the time of that work.
 
 ## Process-page consolidation
 

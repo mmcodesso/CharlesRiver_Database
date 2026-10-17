@@ -34,7 +34,7 @@ The review team needs to determine whether employee lifecycle, active-status own
 - Source documents: Employee master, current assignments, payroll and time records, roster entries, purchase approvals, and journal approvals.
 - Evidence grain: Retain employee and transaction-date keys for historical tests; assess current assignments as a separate population.
 - Main tables: `Employee`, `CostCenter`, `PayrollRegister`, `TimeClockEntry`, `LaborTimeEntry`, `EmployeeShiftRoster`, `TimeClockPunch`, `OvertimeApproval`, `PurchaseOrder`, `JournalEntry`
-- Related guide: [Audit Queries](../audit.md)
+- Related guide: [People and Payroll queries](../analysis-tracks.md#people-and-payroll)
 - Related process page: [Payroll](../../processes/payroll.md)
 - Related case: [Workforce Cost and Org-Control Case](workforce-cost-and-org-control-case.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
@@ -257,4 +257,4 @@ The employee master is not a complete effective-dated organization history. Curr
 - Read [Workforce Cost and Org-Control Case](workforce-cost-and-org-control-case.md) when you want the managerial and approval-concentration follow-through.
 - Read [Attendance Control Audit Case](attendance-control-audit-case.md) when you want a deeper punch, absence, and overtime exception review.
 - Read [Payroll](../../processes/payroll.md) when you want the operational and accounting path behind the same employee-control questions.
-- Read [Audit Queries](../audit.md) for the wider workforce-control query set.
+- Read [People and Payroll queries](../analysis-tracks.md#people-and-payroll) for the wider workforce-control query set.

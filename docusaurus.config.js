@@ -71,6 +71,10 @@ const config = {
       {
         redirects: [
           {
+            to: "/docs/analytics/analysis-tracks",
+            from: ["/docs/analytics/financial", "/docs/analytics/managerial", "/docs/analytics/audit"],
+          },
+          {
             to: "/docs/analytics",
             from: ["/docs/analytics/reports", "/docs/analytics/reports/lens-packs"],
           },

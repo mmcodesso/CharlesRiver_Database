@@ -140,12 +140,29 @@ test("top-level query library renders every SQL file with shared browsing contro
   const html = fs.readFileSync(builtFile("/docs/analytics/analysis-tracks"), "utf8");
   assert.match(html, /aria-label="Browse SQL queries"/);
   assert.match(html, /id="query-search"/);
-  assert.match(html, /id="query-domain"/);
+  assert.match(html, /id="query-topic"/);
+  for (const topic of require("../../src/data/queryTopics.json")) {
+    assert.ok(html.includes(`id="${topic.id}"`), `Missing query topic: ${topic.id}`);
+  }
   assert.equal((html.match(/>Show SQL<\/button>/g) ?? []).length, 170);
   const links = [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*download[^>]*>Download SQL<\/a>/g)].map((match) => match[1]);
   assert.equal(links.length, 170);
   assert.equal(new Set(links).size, 170);
   for (const link of links) assert.ok(builtFile(link), `Missing SQL asset: ${link}`);
+  const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
+  const queryPaths = require("../../src/data/queryLearningPaths.json");
+  for (const learningPath of queryPaths) {
+    assert.ok(ids.has(learningPath.id), `Missing learning path: ${learningPath.id}`);
+    for (const item of learningPath.items) {
+      const anchor = `query-${item.queryKey.replace(/\.sql$/, "").replace(/[\/_]/g, "-")}`;
+      assert.ok(ids.has(anchor), `Missing guided query target: ${anchor}`);
+      assert.ok(html.includes(`href="#${anchor}"`));
+    }
+  }
+  for (const area of ["financial", "managerial", "audit"]) {
+    assert.ok(fs.readFileSync(builtFile(`/docs/analytics/${area}`), "utf8").includes("/docs/analytics/analysis-tracks"));
+    assert.ok(!fs.readFileSync(path.join(build, "sitemap.xml"), "utf8").includes(`<loc>${branding.baseUrl}/docs/analytics/${area}</loc>`));
+  }
 });
 
 test("rendered internal links and static downloads point to existing build files", () => {

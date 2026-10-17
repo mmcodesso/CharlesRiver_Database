@@ -50,7 +50,8 @@ test("learning sequence is shallow and every authored doc is discoverable once",
   assert.ok(cases.items.every((item) => typeof item === "string"));
   const reportIndex = docsSidebar.findIndex((item) => item.label === "Reports and Analytics");
   assert.equal(docsSidebar[reportIndex + 1].label, "Query Library");
-  assert.equal(docsSidebar[reportIndex + 1].link.id, "analytics/analysis-tracks");
+  assert.equal(docsSidebar[reportIndex + 1].id, "analytics/analysis-tracks");
+  assert.equal(docsSidebar[reportIndex + 1].type, "doc");
 });
 
 test("established public routes and redirects remain stable", () => {
@@ -113,6 +114,34 @@ test("one report hub covers the frozen catalog once and redirects every former r
   const reportNav = config.themeConfig.navbar.items.flatMap((item) => item.items ?? [item]);
   assert.equal(reportNav.filter((item) => item.to === "/docs/analytics").length, 1);
   assert.ok(!reportNav.some((item) => item.to?.startsWith("/docs/analytics/reports")));
+});
+
+test("query and report topics agree and every SQL file appears once in the unified library", () => {
+  const topics = require("../../src/data/queryTopics.json");
+  const reportTopics = require("../../src/data/reportTopics.json");
+  const paths = require("../../src/data/queryLearningPaths.json");
+  assert.deepEqual(topics.map(({ id, title }) => ({ id, title })), reportTopics.map(({ id, title }) => ({ id, title })));
+  const keys = topics.flatMap((topic) => topic.queries);
+  const sourceKeys = walk(path.join(root, "queries")).filter((file) => file.endsWith(".sql")).map((file) => path.relative(path.join(root, "queries"), file).replaceAll(path.sep, "/"));
+  assert.equal(keys.length, 170);
+  assert.equal(new Set(keys).size, 170);
+  assert.deepEqual([...keys].sort(), sourceKeys.sort());
+  const queryTopics = new Map(topics.flatMap((topic) => topic.queries.map((key) => [key, topic.id])));
+  const reports = yaml.load(fs.readFileSync(path.join(root, "config/report_catalog.yaml"), "utf8")).reports;
+  const reportDefinitions = new Map(reports.map((report) => [report.slug, report]));
+  for (const topic of reportTopics) for (const slug of topic.reports) {
+    const key = reportDefinitions.get(slug).query_path.replace(/^queries\//, "");
+    assert.equal(queryTopics.get(key), topic.id, `Query/report topic mismatch: ${slug}`);
+  }
+  assert.equal(paths.length, 2);
+  for (const learningPath of paths) {
+    assert.equal(learningPath.items.length, 6);
+    assert.ok(learningPath.items.every((item) => queryTopics.has(item.queryKey)));
+  }
+  const redirects = config.plugins.find(([name]) => name === "@docusaurus/plugin-client-redirects")[1].redirects;
+  for (const area of ["financial", "managerial", "audit"]) {
+    assert.equal(redirects.find((item) => item.from.includes(`/docs/analytics/${area}`)).to, "/docs/analytics/analysis-tracks");
+  }
 });
 
 test("indexing, sitemap, breadcrumb, and canonical settings remain enabled", () => {

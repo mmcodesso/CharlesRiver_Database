@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import CodeBlock from "@theme/CodeBlock";
+import Heading from "@theme/Heading";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import queryManifest from "@site/src/generated/queryManifest";
 import styles from "./styles.module.css";
@@ -77,11 +78,13 @@ export function QueryReference({
   helperText,
   showMetadata = false,
   showDownload = false,
+  anchorId,
+  children,
 }) {
   const entry = getQueryEntry(queryKey);
   const queryUrl = useBaseUrl(entry.publicPath);
   const displayLabel = label ?? humanizeQueryFilename(entry.filename);
-  const Label = showDownload ? "h4" : "div";
+  const Label = anchorId ? Heading : showDownload ? "h4" : "div";
   const [expanded, setExpanded] = useState(false);
   const [sql, setSql] = useState("");
   const [status, setStatus] = useState("idle");
@@ -123,7 +126,7 @@ export function QueryReference({
     <div className={clsx(styles.reference, styles[variant])}>
       <div className={styles.referenceHeader}>
         <div className={styles.referenceText}>
-          <Label className={clsx(styles.referenceLabel, showDownload && styles.libraryLabel)}>{displayLabel}</Label>
+          <Label as={anchorId ? "h4" : undefined} id={anchorId} className={clsx(styles.referenceLabel, showDownload && styles.libraryLabel)}>{displayLabel}</Label>
           {helperText ? <p className={styles.referenceHelper}>{helperText}</p> : null}
           {showMetadata ? (
             <div className={styles.metadata}>
@@ -161,6 +164,7 @@ export function QueryReference({
           {showDownload ? <a className={styles.download} href={queryUrl} download>Download SQL</a> : null}
         </div>
       </div>
+      {children}
       {expanded ? (
         <div className={styles.codePanel}>
           {status === "loading" ? (

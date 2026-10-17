@@ -1,37 +1,46 @@
 import React, { useState } from "react";
 import Heading from "@theme/Heading";
+import useBrokenLinks from "@docusaurus/useBrokenLinks";
 import { QueryReference, humanizeQueryFilename } from "@site/src/components/QueryReference";
 import queryManifest from "@site/src/generated/queryManifest";
+import { auditAnomalyCoverage } from "@site/src/generated/queryDocCollections";
+import queryTopics from "@site/src/data/queryTopics.json";
+import topicGuidance from "@site/src/data/queryTopicGuidance.json";
+import learningPaths from "@site/src/data/queryLearningPaths.json";
 import styles from "@site/src/components/ReportCatalog/styles.module.css";
 
-const domains = [
-  { id: "financial", title: "Financial Queries", description: "Statements, balances, settlement timing, and financial reconciliation." },
-  { id: "managerial", title: "Managerial Queries", description: "Cost, pricing, portfolio performance, workforce, and operational planning." },
-  { id: "audit", title: "Audit Queries", description: "Completeness, approvals, controls, and exceptions requiring investigation." },
-  { id: "cases", title: "Case Trace Queries", description: "Source-to-ledger traces for the core process cases." },
-];
-const queries = Object.entries(queryManifest).map(([queryKey, entry]) => ({
-  ...entry,
-  queryKey,
-  label: humanizeQueryFilename(entry.filename),
+const queryAnchor = (key) => `query-${key.replace(/\.sql$/, "").replace(/[\/_]/g, "-")}`;
+const coverageByQuery = Object.fromEntries(auditAnomalyCoverage.map((item) => [item.queryKey, item]));
+const queries = queryTopics.flatMap((topic) => topic.queries.map((queryKey) => {
+  const entry = queryManifest[queryKey];
+  if (!entry) throw new Error(`Unknown query key: ${queryKey}`);
+  return { ...entry, queryKey, topicId: topic.id, topicTitle: topic.title, label: humanizeQueryFilename(entry.filename) };
 }));
+
+function Note({ text }) {
+  return text.split(/(`[^`]+`)/g).map((part, index) => part.startsWith("`")
+    ? <code key={index}>{part.slice(1, -1)}</code>
+    : part);
+}
 
 export default function QueryLibrary() {
   const [query, setQuery] = useState("");
-  const [domainId, setDomainId] = useState("all");
+  const [topicId, setTopicId] = useState("all");
+  const brokenLinks = useBrokenLinks();
+  learningPaths.forEach((path) => brokenLinks.collectAnchor(path.id));
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const visible = queries.filter((entry) => {
-    const text = `${entry.label} ${entry.teachingObjective} ${entry.outputShape} ${entry.mainTables}`.toLowerCase();
-    return (domainId === "all" || domainId === entry.category) && words.every((word) => text.includes(word));
+    const text = `${entry.label} ${entry.teachingObjective} ${entry.outputShape} ${entry.mainTables} ${entry.topicTitle}`.toLowerCase();
+    return (topicId === "all" || topicId === entry.topicId) && words.every((word) => text.includes(word));
   });
-  const reset = () => { setQuery(""); setDomainId("all"); };
+  const reset = () => { setQuery(""); setTopicId("all"); };
 
   return (
     <section className={styles.section} aria-label="Browse SQL queries">
-      <nav className={styles.topicLinks} aria-label="Query domains">
-        {domains.map((domain) => (
-          <a key={domain.id} href={`#${domain.id}-queries`} onClick={reset}>
-            {domain.title} <span>({queries.filter((entry) => entry.category === domain.id).length})</span>
+      <nav className={styles.topicLinks} aria-label="Query topics">
+        {queryTopics.map((topic) => (
+          <a key={topic.id} href={`#${topic.id}`} onClick={reset}>
+            {topic.title} <span>({topic.queries.length})</span>
           </a>
         ))}
       </nav>
@@ -39,30 +48,64 @@ export default function QueryLibrary() {
         <label htmlFor="query-search">Search queries
           <input id="query-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try cash, payroll, or a table name…" />
         </label>
-        <label htmlFor="query-domain">Query domain
-          <select id="query-domain" value={domainId} onChange={(event) => setDomainId(event.target.value)}>
-            <option value="all">All domains</option>
-            {domains.map((domain) => <option key={domain.id} value={domain.id}>{domain.title}</option>)}
+        <label htmlFor="query-topic">Business topic
+          <select id="query-topic" value={topicId} onChange={(event) => setTopicId(event.target.value)}>
+            <option value="all">All topics</option>
+            {queryTopics.map((topic) => <option key={topic.id} value={topic.id}>{topic.title}</option>)}
           </select>
         </label>
-        <button className={styles.secondaryAction} type="button" onClick={reset} disabled={!query && domainId === "all"}>Clear filters</button>
+        <button className={styles.secondaryAction} type="button" onClick={reset} disabled={!query && topicId === "all"}>Clear filters</button>
       </div>
       <p className={styles.resultCount} role="status" aria-live="polite">Showing {visible.length} of {queries.length} queries</p>
       {!visible.length ? <p className={styles.empty}>No queries match these filters. Try another term or clear the filters to browse all queries.</p> : null}
-      {domains.map((domain) => {
-        const items = visible.filter((entry) => entry.category === domain.id);
+      {queryTopics.map((topic) => {
+        const items = visible.filter((entry) => entry.topicId === topic.id);
         return items.length ? (
-          <section key={domain.id} className={styles.group} aria-labelledby={`${domain.id}-queries`}>
+          <section key={topic.id} className={styles.group} aria-labelledby={topic.id}>
             <div className={styles.groupHeader}>
-              <Heading as="h3" id={`${domain.id}-queries`} className={styles.groupTitle}>{domain.title}</Heading>
-              <p>{domain.description}</p>
+              <Heading as="h3" id={topic.id} className={styles.groupTitle}>{topic.title}</Heading>
+              <p>{topic.description}</p>
+              <details className={styles.guidance}>
+                <summary>Interpret these results</summary>
+                <div className={styles.guidanceBody}>
+                  <ul>{topicGuidance[topic.id].map((note) => <li key={note}><Note text={note} /></li>)}</ul>
+                </div>
+              </details>
             </div>
             <div className={styles.groupGrid}>
-              {items.map((entry) => <QueryReference key={entry.queryKey} queryKey={entry.queryKey} label={entry.label} showMetadata showDownload />)}
+              {items.map((entry) => {
+                const coverage = coverageByQuery[entry.queryKey];
+                return <article key={entry.queryKey} className={styles.queryItem} aria-label={entry.label}>
+                  <QueryReference queryKey={entry.queryKey} label={entry.label} anchorId={queryAnchor(entry.queryKey)} showMetadata showDownload>
+                    {coverage ? <details className={styles.guidance}>
+                      <summary>Anomaly coverage</summary>
+                      <div className={styles.guidanceBody}>
+                        <p><strong>Review focus:</strong> {coverage.recommendedUse}</p>
+                        <p><strong>Expected anomaly types:</strong> <Note text={coverage.expectedAnomalyTypes} /></p>
+                        <p>Trace flagged rows to their source documents before concluding that a control failed.</p>
+                      </div>
+                    </details> : null}
+                  </QueryReference>
+                </article>;
+              })}
             </div>
           </section>
         ) : null;
       })}
+      <section className={styles.group} aria-label="Guided query paths">
+        <Heading as="h3" id="guided-query-paths">Guided Query Paths</Heading>
+        <p>Follow these sequences when the question requires several linked queries. Each step links to its query above.</p>
+        {learningPaths.map((path) => <details key={path.id} id={path.id} className={styles.guidance}>
+          <summary>{path.title}</summary>
+          <div className={styles.guidanceBody}>
+            <p>{path.description}</p>
+            <ol>{path.items.map((item) => <li key={item.queryKey}>
+              <a href={`#${queryAnchor(item.queryKey)}`} onClick={reset}>{humanizeQueryFilename(queryManifest[item.queryKey].filename)}</a>
+              <p><Note text={item.lead} /></p>
+            </li>)}</ol>
+          </div>
+        </details>)}
+      </section>
     </section>
   );
 }

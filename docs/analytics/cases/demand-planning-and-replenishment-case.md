@@ -36,7 +36,7 @@ You need to prove where forecast demand diverges from actual order demand, what 
 - Source documents: Weekly forecast, inventory policy, supply recommendation, material requirement, rough-cut capacity plan, and linked requisition or work order.
 - Evidence grain: Keep item-week demand, recommendation, and work-center capacity grains distinct and align periods before synthesis.
 - Main tables: `DemandForecast`, `InventoryPolicy`, `SupplyPlanRecommendation`, `MaterialRequirementPlan`, `RoughCutCapacityPlan`, `PurchaseRequisition`, `WorkOrder`, `Item`
-- Related guides: [Production and Planning](../index.md#production-and-planning), [Managerial Queries](../managerial.md)
+- Related guides: [Production and Planning](../index.md#production-and-planning), [Production and Planning queries](../analysis-tracks.md#production-and-planning)
 - Related process pages: [Manufacturing Process](../../processes/manufacturing.md), [Procure-to-Pay Process](../../processes/p2p.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case stays at the planning-signal layer before execution and audit follow-up. Use the replenishment audit case for planning-governance failures and the manufacturing process page when you need execution follow-through.
@@ -258,4 +258,4 @@ Projected availability and rough-cut capacity are planning signals. They do not 
 - Use [Replenishment Support Audit Case](replenishment-support-audit-case.md) when you want to test forecast approval, policy coverage, unsupported planning documents, and late recommendation conversion.
 - Use [Manufacturing Process](../../processes/manufacturing.md) when you want to trace rough-cut pressure into released work orders and detailed operation schedules.
 - Use [Production and Planning](../index.md#production-and-planning) when you want the broader report-level interpretation of the same planning signals.
-- Use [Managerial Queries](../managerial.md) for the wider planning, capacity, and supply-risk query set.
+- Use [Production and Planning queries](../analysis-tracks.md#production-and-planning) for the wider planning, capacity, and supply-risk query set.

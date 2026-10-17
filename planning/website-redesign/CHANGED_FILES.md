@@ -1,6 +1,6 @@
 # Changed files
 
-Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb7263e12a85af09a`, including BPMN, process-page consolidation, the unified report hub, and the top-level Query Library. Protected generator/config/query/data paths are absent. Dataset/report artifacts remain unchanged. Removed report documents are listed as deletions and their former public URLs redirect.
+Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb7263e12a85af09a`, including BPMN, process-page consolidation, the unified report hub, the unified Query Library, and consistent diagram interactions. Protected generator/config/query/data paths are absent. Dataset/report artifacts remain unchanged. Removed report documents are listed as deletions and their former public URLs redirect.
 
 | File | Scope |
 | --- | --- |
@@ -13,7 +13,7 @@ Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb726
 | [AGENTS.md](../../AGENTS.md) | Website navigation / contributor standards |
 | [README.md](../../README.md) | Teaching documentation |
 | [docs/analytics/analysis-tracks.md](../../docs/analytics/analysis-tracks.md) | Teaching documentation |
-| [docs/analytics/audit.md](../../docs/analytics/audit.md) | Teaching documentation |
+| `docs/analytics/audit.md` | Removed; former URL redirects to the corresponding unified hub |
 | [docs/analytics/cases/attendance-control-audit-case.md](../../docs/analytics/cases/attendance-control-audit-case.md) | Teaching documentation |
 | [docs/analytics/cases/audit-review-pack-case.md](../../docs/analytics/cases/audit-review-pack-case.md) | Teaching documentation |
 | [docs/analytics/cases/capex-fixed-asset-lifecycle-case.md](../../docs/analytics/cases/capex-fixed-asset-lifecycle-case.md) | Teaching documentation |
@@ -33,18 +33,18 @@ Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb726
 | [docs/analytics/cases/workforce-coverage-and-attendance-case.md](../../docs/analytics/cases/workforce-coverage-and-attendance-case.md) | Teaching documentation |
 | [docs/analytics/cases/working-capital-and-cash-conversion-case.md](../../docs/analytics/cases/working-capital-and-cash-conversion-case.md) | Teaching documentation |
 | [docs/analytics/excel-guide.md](../../docs/analytics/excel-guide.md) | Teaching documentation |
-| [docs/analytics/financial.md](../../docs/analytics/financial.md) | Teaching documentation |
+| `docs/analytics/financial.md` | Removed; former URL redirects to the corresponding unified hub |
 | [docs/analytics/index.md](../../docs/analytics/index.md) | Teaching documentation |
-| [docs/analytics/managerial.md](../../docs/analytics/managerial.md) | Teaching documentation |
-| `docs/analytics/reports/audit.md` | Removed; former report URL redirects to the unified hub |
-| `docs/analytics/reports/commercial-and-working-capital.md` | Removed; former report URL redirects to the unified hub |
-| `docs/analytics/reports/executive-overview.md` | Removed; former report URL redirects to the unified hub |
-| `docs/analytics/reports/financial.md` | Removed; former report URL redirects to the unified hub |
-| `docs/analytics/reports/index.md` | Removed; former report URL redirects to the unified hub |
-| `docs/analytics/reports/lens-packs.md` | Removed; former report URL redirects to the unified hub |
-| `docs/analytics/reports/managerial.md` | Removed; former report URL redirects to the unified hub |
-| `docs/analytics/reports/operations-and-risk.md` | Removed; former report URL redirects to the unified hub |
-| `docs/analytics/reports/payroll-perspective.md` | Removed; former report URL redirects to the unified hub |
+| `docs/analytics/managerial.md` | Removed; former URL redirects to the corresponding unified hub |
+| `docs/analytics/reports/audit.md` | Removed; former URL redirects to the corresponding unified hub |
+| `docs/analytics/reports/commercial-and-working-capital.md` | Removed; former URL redirects to the corresponding unified hub |
+| `docs/analytics/reports/executive-overview.md` | Removed; former URL redirects to the corresponding unified hub |
+| `docs/analytics/reports/financial.md` | Removed; former URL redirects to the corresponding unified hub |
+| `docs/analytics/reports/index.md` | Removed; former URL redirects to the corresponding unified hub |
+| `docs/analytics/reports/lens-packs.md` | Removed; former URL redirects to the corresponding unified hub |
+| `docs/analytics/reports/managerial.md` | Removed; former URL redirects to the corresponding unified hub |
+| `docs/analytics/reports/operations-and-risk.md` | Removed; former URL redirects to the corresponding unified hub |
+| `docs/analytics/reports/payroll-perspective.md` | Removed; former URL redirects to the corresponding unified hub |
 | [docs/analytics/sql-guide.md](../../docs/analytics/sql-guide.md) | Teaching documentation |
 | [docs/learn-and-practice/bpmn-controls-workshop.md](../../docs/learn-and-practice/bpmn-controls-workshop.md) | Teaching documentation |
 | [docs/learn-and-practice/index.md](../../docs/learn-and-practice/index.md) | Teaching documentation |
@@ -73,6 +73,7 @@ Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb726
 | [planning/website-redesign/DIAGRAM_INTERACTIONS.md](../../planning/website-redesign/DIAGRAM_INTERACTIONS.md) | Private website planning / validation |
 | [planning/website-redesign/FINAL_REVIEW.md](../../planning/website-redesign/FINAL_REVIEW.md) | Private website planning / validation |
 | [planning/website-redesign/PAGE_CHANGE_INVENTORY.md](../../planning/website-redesign/PAGE_CHANGE_INVENTORY.md) | Private website planning / validation |
+| [planning/website-redesign/QUERY_LIBRARY_CONSOLIDATION.md](../../planning/website-redesign/QUERY_LIBRARY_CONSOLIDATION.md) | Private website planning / validation |
 | [planning/website-redesign/REPORTS_CONSOLIDATION.md](../../planning/website-redesign/REPORTS_CONSOLIDATION.md) | Private website planning / validation |
 | [planning/website-redesign/WEBSITE_REDESIGN_AUDIT.md](../../planning/website-redesign/WEBSITE_REDESIGN_AUDIT.md) | Private website planning / validation |
 | [planning/website-redesign/bpmn/DIAGRAM_INVENTORY.md](../../planning/website-redesign/bpmn/DIAGRAM_INVENTORY.md) | Private website planning / validation |
@@ -102,6 +103,9 @@ Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb726
 | [src/css/custom.css](../../src/css/custom.css) | Authored website presentation |
 | [src/data/bpmnModels.json](../../src/data/bpmnModels.json) | Authored website presentation |
 | [src/data/caseCatalog.js](../../src/data/caseCatalog.js) | Authored website presentation |
+| [src/data/queryLearningPaths.json](../../src/data/queryLearningPaths.json) | Authored website presentation |
+| [src/data/queryTopicGuidance.json](../../src/data/queryTopicGuidance.json) | Authored website presentation |
+| [src/data/queryTopics.json](../../src/data/queryTopics.json) | Authored website presentation |
 | [src/data/reportTopics.json](../../src/data/reportTopics.json) | Authored website presentation |
 | [src/pages/index.jsx](../../src/pages/index.jsx) | Authored website presentation |
 | [src/pages/index.module.css](../../src/pages/index.module.css) | Authored website presentation |
@@ -135,4 +139,4 @@ Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb726
 | [tests/website/rendered-site.test.cjs](../../tests/website/rendered-site.test.cjs) | Website regression checks |
 | [tests/website/test_bpmn_models.py](../../tests/website/test_bpmn_models.py) | Website regression checks |
 
-130 files in this website scope.
+134 files in this website scope.

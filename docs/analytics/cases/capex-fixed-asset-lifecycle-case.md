@@ -36,7 +36,7 @@ You need to explain one CAPEX story from source documents through the asset regi
 - Source documents: Capital purchase records, fixed-asset record and events, debt agreement and schedule, payments, journals, and GL rows.
 - Evidence grain: Reconcile asset-event detail to the asset rollforward; evaluate debt-schedule and period-level cash-flow evidence separately.
 - Main tables: `PurchaseRequisition`, `PurchaseOrder`, `PurchaseInvoice`, `DisbursementPayment`, `FixedAsset`, `FixedAssetEvent`, `DebtAgreement`, `DebtScheduleLine`, `Warehouse`, `WorkCenter`, `CostCenter`, `JournalEntry`, `GLEntry`, `Account`
-- Related guides: [Financial Queries](../financial.md), [Statements and Cash](../index.md#statements-and-cash)
+- Related guides: [Statements and Cash queries](../analysis-tracks.md#statements-and-cash), [Statements and Cash](../index.md#statements-and-cash)
 - Related process pages: [Procure-to-Pay Process](../../processes/p2p.md), [Manufacturing Process](../../processes/manufacturing.md), [Manual Journals and Close Cycle](../../processes/manual-journals-and-close.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case follows the fixed-asset lifecycle from the posted subledger and related financing records. It does not extend into budget or pro-forma cash-flow planning.
@@ -249,4 +249,4 @@ Recognition of a capital asset does not mean the same amount was paid in cash th
 - Use [Manufacturing Process](../../processes/manufacturing.md) to connect plant-equipment depreciation back into manufacturing clearing and standard-cost interpretation.
 - Use [Manual Journals and Close Cycle](../../processes/manual-journals-and-close.md) for the debt reclass, depreciation, note payment, and disposal journals that complete the lifecycle.
 - Use [GLEntry Posting Reference](../../reference/posting.md) and [Schema Reference](../../reference/schema.md) when you need the exact posting rules or table bridges.
-- Use [Financial Queries](../financial.md) when you want the wider statement and cash-flow analysis around the same CAPEX events.
+- Use [Statements and Cash queries](../analysis-tracks.md#statements-and-cash) when you want the wider statement and cash-flow analysis around the same CAPEX events.

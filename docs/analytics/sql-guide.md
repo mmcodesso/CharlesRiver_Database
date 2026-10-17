@@ -90,20 +90,23 @@ After your first query runs, check four things before you write another one:
 
 Then move to the next layer:
 
-1. stay on the topic page and run a second query in the same area
+1. choose a second query in the same business topic
 2. open the paired case in [Cases](cases/index.md)
 3. use [Schema Reference](../reference/schema.md) when you need table and key help
 4. use [GLEntry Posting Reference](../reference/posting.md) when the question reaches the ledger
 
-The starter SQL is organized into three compact topic groups:
+The [Query Library](analysis-tracks.md) uses the same six business topics as the reports:
 
-| Topic page | What it covers |
+| Business topic | What it covers |
 |---|---|
-| [Financial Queries](financial.md) | revenue, margin, working capital, accruals, payroll, close-cycle, and pricing review |
-| [Managerial Queries](managerial.md) | budget, portfolio mix, labor, service levels, planning, replenishment, and pricing governance |
-| [Audit Queries](audit.md) | document-chain review, approvals, workforce controls, planning support, pricing governance, and anomaly review |
+| [Statements and Cash](analysis-tracks.md#statements-and-cash) | statements, close, working capital, cash, accruals, assets, and debt |
+| [Sales and Customers](analysis-tracks.md#sales-and-customers) | revenue, pricing, margins, customer balances, services, and commissions |
+| [Purchasing and Inventory](analysis-tracks.md#purchasing-and-inventory) | supplier settlement, receipts, inventory, and supply reliability |
+| [Production and Planning](analysis-tracks.md#production-and-planning) | forecasts, capacity, work orders, material usage, and manufacturing cost |
+| [People and Payroll](analysis-tracks.md#people-and-payroll) | workforce structure, time, payroll, labor allocation, and related controls |
+| [Controls and Exceptions](analysis-tracks.md#controls-and-exceptions) | cross-process approvals, authority, segregation of duties, and broad screening |
 
-The topic pages surface these queries directly in the docs, so most students can work from the website without opening any repository folders.
+Each query is available on the main library page, so students can inspect SQL and download the original file without opening repository folders.
 
 ## Other Tools You Can Use
 
@@ -148,6 +151,6 @@ Then paste a starter query copied from the docs into the prompt and run it direc
 
 ## Next Steps
 
-- Use [Financial Queries](financial.md), [Managerial Queries](managerial.md), or [Audit Queries](audit.md) to choose your next query set.
+- Browse the [Query Library](analysis-tracks.md) to choose your next business question and query set.
 - Use [Cases](cases/index.md) when you want a guided business question after the first query.
 - Use [Excel Guide](excel-guide.md) when you want to recreate a SQL result in the workbook.

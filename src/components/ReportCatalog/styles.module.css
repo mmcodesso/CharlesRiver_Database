@@ -91,6 +91,10 @@
   gap: 0.95rem;
 }
 
+.queryItem > div {
+  margin-bottom: 0;
+}
+
 .card {
   scroll-margin-top: 6rem;
   overflow: hidden;

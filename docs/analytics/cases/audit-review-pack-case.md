@@ -35,7 +35,7 @@ The review team needs to separate timing issues, approval failures, linkage fail
 - Evidence grain: Retain each test's document, employee-date, operation, or planning grain; overlapping test counts are not additive.
 - Main tables: `Employee`, `Item`, `PurchaseInvoice`, `DisbursementPayment`, `PayrollRegister`, `PayrollPayment`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `WorkCenter`, `LaborTimeEntry`, `TimeClockEntry`
 - Related processes: [Order-to-Cash](../../processes/o2c.md), [Procure-to-Pay](../../processes/p2p.md), [Manufacturing](../../processes/manufacturing.md), [Payroll](../../processes/payroll.md)
-- Related guide: [Audit Queries](../audit.md)
+- Related guide: [Controls and Exceptions queries](../analysis-tracks.md#controls-and-exceptions)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case is the broad audit triage and source-tracing case. Use the specialized audit cases when you need deeper follow-through for workforce validity, attendance controls, replenishment support, or pricing governance.
 
@@ -339,6 +339,6 @@ This is a teaching triage exercise, not an audit opinion. Specialized seeds may 
 
 ## Next Steps
 
-- Read [Audit Queries](../audit.md) when you want the broader audit query library around these anomaly families.
+- Read [Controls and Exceptions queries](../analysis-tracks.md#controls-and-exceptions) when you want the broader audit query library around these anomaly families.
 - Read [Schema Reference](../../reference/schema.md) when you need the table bridges behind a flagged exception.
 - Read [Attendance Control Audit Case](attendance-control-audit-case.md), [Replenishment Support Audit Case](replenishment-support-audit-case.md), or [Pricing Governance Audit Case](pricing-governance-audit-case.md) when the broad triage points to a specialized control area.
