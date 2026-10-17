@@ -6,12 +6,12 @@ const branding = loadSiteBranding();
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: branding.datasetName,
-  tagline: "Student-first documentation for accounting analytics courses.",
+  tagline: "One company. Connected accounting processes. Evidence for better decisions.",
   favicon: "img/favicon.svg",
   url: branding.baseUrl,
   baseUrl: "/",
   organizationName: "mmcodesso",
-  projectName: "greenfield_database",
+  projectName: "CharlesRiver_Database",
   trailingSlash: false,
   onBrokenLinks: "throw",
   staticDirectories: ["static", "queries"],
@@ -50,10 +50,15 @@ const config = {
           path: "docs",
           routeBasePath: "docs",
           sidebarPath: require.resolve("./sidebars.js"),
+          breadcrumbs: true,
           showLastUpdateAuthor: false,
           showLastUpdateTime: false,
         },
         blog: false,
+        sitemap: {
+          changefreq: null,
+          priority: null,
+        },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
@@ -98,6 +103,10 @@ const config = {
   },
   themeConfig: {
     image: "img/site-social-card.svg",
+    metadata: [
+      { name: "theme-color", content: "#196252" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
     colorMode: {
       defaultMode: "light",
       disableSwitch: false,
@@ -123,18 +132,41 @@ const config = {
     navbar: {
       title: branding.displayName,
       items: [
-        { to: "/docs/", label: "Start Here", position: "left" },
+        {
+          label: "Learn",
+          position: "left",
+          items: [
+            { to: "/docs/", label: "Getting Started" },
+            { to: "/docs/company-story", label: "The Company" },
+            { to: "/docs/process-flows", label: "Business Processes" },
+            { to: "/docs/learn-and-practice", label: "Learn and Practice" },
+            { to: "/docs/analytics/cases", label: "Cases" },
+          ],
+        },
+        {
+          label: "Explore",
+          position: "left",
+          items: [
+            { to: "/docs/analytics", label: "Reports and Analytics" },
+            { to: "/docs/analytics/reports", label: "Report Library" },
+            { to: "/docs/analytics/analysis-tracks", label: "Query Library" },
+            { to: "/docs/reference/schema", label: "Dataset Reference" },
+            { to: "/docs/technical-guide", label: "Technical Guide" },
+          ],
+        },
         { to: "/docs/downloads", label: "Downloads", position: "left" },
-        { to: "/docs/analytics", label: "Analytics", position: "left" },
         {
           to: "/docs/teach-with-data/instructor-adoption",
-          label: "Adopt",
+          label: "For Instructors",
           position: "left",
         },
         {
-          to: "/docs/reference/schema",
-          label: "Reference",
-          position: "left",
+          label: "Hub & Textbook",
+          position: "right",
+          items: [
+            { href: "https://accountinganalyticshub.com/", label: "Accounting Analytics Hub" },
+            { href: "https://aa.accountinganalyticshub.com/", label: "Accounting Analytics Textbook" },
+          ],
         },
       ],
     },
@@ -142,22 +174,32 @@ const config = {
       style: "dark",
       links: [
         {
-          title: "Start Here",
+          title: "Learn",
           items: [
-            { label: "Start Here", to: "/docs/" },
+            { label: "Getting Started", to: "/docs/" },
+            { label: "The Company", to: "/docs/company-story" },
+            { label: "Learn and Practice", to: "/docs/learn-and-practice" },
             { label: "Downloads", to: "/docs/downloads" },
-            { label: "Dataset Guide", to: "/docs/dataset-overview" },
           ],
         },
         {
-          title: "Teaching",
+          title: "Investigate",
+          items: [
+            { label: "Business Processes", to: "/docs/process-flows" },
+            { label: "Cases", to: "/docs/analytics/cases" },
+            { label: "Reports and Analytics", to: "/docs/analytics" },
+            { label: "Dataset Reference", to: "/docs/reference/schema" },
+          ],
+        },
+        {
+          title: "Teach and Connect",
           items: [
             {
               label: "Instructor Adoption Guide",
               to: "/docs/teach-with-data/instructor-adoption",
             },
-            { label: "Analytics Hub", to: "/docs/analytics" },
-            { label: "Process Flows", to: "/docs/process-flows" },
+            { label: "Accounting Analytics Hub", href: "https://accountinganalyticshub.com/" },
+            { label: "Accounting Analytics Textbook", href: "https://aa.accountinganalyticshub.com/" },
           ],
         },
         {
@@ -166,6 +208,10 @@ const config = {
             {
               label: "GitHub Repository",
               href: branding.repositoryUrl,
+            },
+            {
+              label: "Published Dataset Release",
+              href: `${branding.repositoryUrl}/releases/tag/v2027.1`,
             },
             {
               label: "Contributing",

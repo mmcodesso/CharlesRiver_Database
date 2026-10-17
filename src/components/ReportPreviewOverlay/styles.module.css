@@ -16,9 +16,8 @@
   width: min(1200px, 100%);
   height: min(88vh, 900px);
   border: 1px solid rgba(31, 107, 82, 0.2);
-  border-radius: 1.25rem;
-  background:
-    linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(246, 242, 232, 0.96));
+  border-radius: 3px;
+  background: var(--ifm-background-surface-color);
   box-shadow: 0 1.4rem 4rem rgba(0, 0, 0, 0.32);
   overflow: hidden;
 }
@@ -186,3 +185,7 @@
     min-width: 28rem;
   }
 }
+
+/* Match the shared keyboard-focus treatment. */
+button:focus-visible, a:focus-visible { outline: 3px solid #b36a21; outline-offset: 4px; }
+.closeButton:focus-visible { outline: 3px solid #b36a21; outline-offset: 4px; }

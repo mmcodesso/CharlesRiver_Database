@@ -120,6 +120,8 @@ function MermaidRenderer({ value }) {
   const inlineRef = useRef(null);
   const modalRef = useRef(null);
   const viewportRef = useRef(null);
+  const dialogRef = useRef(null);
+  const closeButtonRef = useRef(null);
   const panzoomRef = useRef(null);
   const svgRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -130,9 +132,29 @@ function MermaidRenderer({ value }) {
     }
 
     const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement;
+    const focusFrame = requestAnimationFrame(() => closeButtonRef.current?.focus());
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
+        event.preventDefault();
         setIsOpen(false);
+      }
+      if (event.key === "Tab") {
+        const targets = dialogRef.current?.querySelectorAll(
+          'button, a[href], [tabindex]:not([tabindex="-1"])',
+        );
+        if (!targets?.length) {
+          return;
+        }
+        const first = targets[0];
+        const last = targets[targets.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
 
@@ -141,7 +163,9 @@ function MermaidRenderer({ value }) {
 
     return () => {
       document.body.style.overflow = previousOverflow;
+      cancelAnimationFrame(focusFrame);
       document.removeEventListener("keydown", handleKeyDown);
+      previousFocus?.focus({ preventScroll: true });
     };
   }, [isOpen]);
 
@@ -217,6 +241,7 @@ function MermaidRenderer({ value }) {
         bounds: true,
         boundsPadding: 0.02,
         smoothScroll: false,
+        filterKey: () => true,
       });
       panzoomRef.current = localPanzoom;
 
@@ -259,29 +284,44 @@ function MermaidRenderer({ value }) {
     return null;
   }
 
-  const zoomIn = () => {
+  const zoomBy = (factor) => {
     if (!panzoomRef.current || !viewportRef.current) {
       return;
     }
 
     const center = getViewportCenter(viewportRef.current);
-    panzoomRef.current.smoothZoom(center.x, center.y, 1.2);
-  };
-
-  const zoomOut = () => {
-    if (!panzoomRef.current || !viewportRef.current) {
-      return;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      panzoomRef.current.zoomTo(center.x, center.y, factor);
+    } else {
+      panzoomRef.current.smoothZoom(center.x, center.y, factor);
     }
-
-    const center = getViewportCenter(viewportRef.current);
-    panzoomRef.current.smoothZoom(center.x, center.y, 1 / 1.2);
   };
+  const zoomIn = () => zoomBy(1.2);
+  const zoomOut = () => zoomBy(1 / 1.2);
   const resetZoom = () => {
     fitDiagramInViewport({
       panzoom: panzoomRef.current,
       svg: svgRef.current,
       viewport: viewportRef.current,
     });
+  };
+
+  const handleViewportKeyDown = (event) => {
+    const offsets = { ArrowLeft: [40, 0], ArrowRight: [-40, 0], ArrowUp: [0, 40], ArrowDown: [0, -40] };
+    if (offsets[event.key]) {
+      event.preventDefault();
+      panzoomRef.current?.moveBy(...offsets[event.key]);
+    } else if (event.key === "+" || event.key === "=") {
+      event.preventDefault();
+      zoomIn();
+    } else if (event.key === "-") {
+      event.preventDefault();
+      zoomOut();
+    } else if (event.key === "0") {
+      event.preventDefault();
+      resetZoom();
+    }
   };
 
   return (
@@ -319,6 +359,7 @@ function MermaidRenderer({ value }) {
           }}
         >
           <div
+            ref={dialogRef}
             className={styles.modal}
             role="dialog"
             aria-modal="true"
@@ -329,14 +370,14 @@ function MermaidRenderer({ value }) {
               <div>
                 <p className={styles.modalTitle}>Diagram viewer</p>
                 <p className={styles.modalHint}>
-                  Drag to pan. Use the mouse wheel, trackpad, or controls to zoom.
+                  Drag to pan or focus the diagram and use arrow keys. Use + and - to zoom; 0 resets the view.
                 </p>
               </div>
               <div className={styles.controlGroup}>
-                <button type="button" className={styles.controlButton} onClick={zoomOut}>
+                <button type="button" className={styles.controlButton} onClick={zoomOut} aria-label="Zoom out">
                   -
                 </button>
-                <button type="button" className={styles.controlButton} onClick={zoomIn}>
+                <button type="button" className={styles.controlButton} onClick={zoomIn} aria-label="Zoom in">
                   +
                 </button>
                 <button
@@ -350,13 +391,21 @@ function MermaidRenderer({ value }) {
                   type="button"
                   className={clsx(styles.controlButton, styles.textButton)}
                   onClick={() => setIsOpen(false)}
+                  ref={closeButtonRef}
                 >
                   Close
                 </button>
               </div>
             </div>
 
-            <div ref={viewportRef} className={styles.viewport}>
+            <div
+              ref={viewportRef}
+              className={styles.viewport}
+              tabIndex={0}
+              role="region"
+              aria-label="Diagram. Arrow keys pan; plus and minus zoom; zero resets the view."
+              onKeyDown={handleViewportKeyDown}
+            >
               <MermaidMarkup
                 renderResult={renderResult}
                 containerRef={modalRef}

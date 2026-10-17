@@ -1,0 +1,40 @@
+.map { background: #e9efea; border: 1px solid #c8d5cb; padding: 26px; margin: 0; color: #152b35; border-radius: 3px; }
+.mapTop { display: flex; justify-content: space-between; gap: 12px; color: #4b6359; font-size: .6rem; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 28px; }
+.map .mapTitle { font-size: 1.75rem; font-weight: 400; line-height: 1.2; margin-bottom: 24px; }
+.processes { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 9px; }
+.processes a { display: flex; flex-direction: column; padding: 14px 10px; border: 1px solid #bfcec3; border-radius: 2px; background: #faf9f5; color: #152b35; text-decoration: none; }
+.processes a:hover { border-color: #196252; background: #fff; }
+.processes a > span { color: #527061; font-size: .58rem; margin-bottom: 10px; }
+.processes strong { font-size: .72rem; font-weight: 600; line-height: 1.5; }
+.processes small { font-size: .62rem; color: #53636a; margin-top: 4px; }
+.support { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-block: 1px solid #c2d0c6; margin-top: 15px; padding: 12px 0; }
+.support a { font-size: .65rem; color: #225d4c; text-underline-offset: 3px; }
+.connector { text-align: center; font-size: 1.4rem; color: #648273; height: 34px; }
+.flow { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.flow li { background: #faf9f5; border: 1px solid #c7d3ca; padding: 14px 16px; display: grid; gap: 3px; }
+.flow li:nth-child(2) { background: #196252; color: #fff; border-color: #196252; }
+.flow span { font-size: .58rem; text-transform: uppercase; letter-spacing: .08em; }
+.flow strong { font-size: .86rem; font-weight: 600; }
+.flow small { font-size: .65rem; opacity: .85; }
+.map figcaption { font-size: .65rem; color: #53636a; line-height: 1.7; margin-top: 20px; }
+.explorer { display: grid; grid-template-columns: .75fr 1.5fr; border: 1px solid var(--ifm-toc-border-color); border-radius: 3px; }
+.explorerIntro { padding: 30px; background: var(--ifm-background-surface-color); }
+.explorerIntro label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: 12px; }
+.explorerIntro select { width: 100%; max-width: 100%; font: inherit; font-size: .9rem; padding: 12px 10px; border: 1px solid var(--ifm-toc-border-color); border-radius: 2px; color: var(--ifm-font-color-base); background: var(--ifm-background-color); }
+.explorerIntro p { font-size: .85rem; color: var(--ifm-color-emphasis-700); line-height: 1.8; margin-top: 22px; }
+.guideLink { display: inline-flex; gap: 12px; padding-block: 8px; font-size: .85rem; font-weight: 600; }
+.evidence { padding: 30px 35px; }
+.evidence h3 { font-size: 1.5rem; font-weight: 400; }
+.evidence ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 20px; }
+.evidence li { padding-left: 18px; border-left: 2px solid var(--ifm-toc-border-color); }
+.evidence li > span { font-size: .64rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ifm-color-primary); font-weight: 600; }
+.evidence p { font-size: .9rem; line-height: 1.75; margin: 6px 0 0; }
+.source { overflow-wrap: anywhere; font-family: var(--ifm-font-family-monospace); font-size: .8rem !important; }
+:global(html[data-theme="dark"]) .map { background: #203941; color: #eff4f1; border-color: #4a625e; }
+:global(html[data-theme="dark"]) .mapTop, :global(html[data-theme="dark"]) .map figcaption { color: #c0ced1; }
+:global(html[data-theme="dark"]) .processes a, :global(html[data-theme="dark"]) .flow li { background: #13272f; color: #eff4f1; border-color: #4a625e; }
+:global(html[data-theme="dark"]) .processes small, :global(html[data-theme="dark"]) .processes a > span, :global(html[data-theme="dark"]) .support a { color: #bfdbcb; }
+:global(html[data-theme="dark"]) .flow li:nth-child(2) { background: #196252; border-color: #8ebba5; }
+:global(html[data-theme="dark"]) .support { border-color: #4a625e; }
+@media (max-width: 850px) { .map { max-width: 620px; width: 100%; justify-self: center; } .explorer { grid-template-columns: 1fr; } .explorerIntro, .evidence { padding: 24px; } }
+@media (max-width: 480px) { .map { padding: 20px 16px; } .processes { gap: 6px; } .processes a { padding: 12px 8px; } .processes small { display: none; } .processes strong { font-size: .68rem; } .map h2 { font-size: 1.6rem; } .evidence { padding: 22px 18px; } }
