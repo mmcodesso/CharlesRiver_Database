@@ -1,9 +1,11 @@
 # Page and route inventory
 
-All original public document routes remain unchanged. No pages were removed or consolidated; the six pre-existing client redirects are retained. The new hub and exercises add four routes.
+All original public document routes remain unchanged. No pages were removed or consolidated; the six pre-existing client redirects are retained. The practice hub and three exercises added four routes; the BPMN extension adds the Process Models library and controls workshop, for 60 authored documents in total. The six process guides and process-flows now integrate BPMN while preserving all existing Mermaid blocks and query/report/case links.
 
 | Page | Route | Treatment |
 | --- | --- | --- |
+| [docs/process-models/index.md](../../docs/process-models/index.md) | `/docs/process-models` | Added BPMN library, notation, text evidence, downloads, and expanded viewer |
+| [docs/learn-and-practice/bpmn-controls-workshop.md](../../docs/learn-and-practice/bpmn-controls-workshop.md) | `/docs/learn-and-practice/bpmn-controls-workshop` | Added AIS interpretation, evidence trace, risk/control matrix, and modeling extension |
 | [docs/analytics/analysis-tracks.md](../../docs/analytics/analysis-tracks.md) | `/docs/analytics/analysis-tracks` | Refined or rewritten; URL preserved |
 | [docs/analytics/audit.md](../../docs/analytics/audit.md) | `/docs/analytics/audit` | Refined or rewritten; URL preserved |
 | [docs/analytics/cases/attendance-control-audit-case.md](../../docs/analytics/cases/attendance-control-audit-case.md) | `/docs/analytics/cases/attendance-control-audit-case` | Refined or rewritten; URL preserved |

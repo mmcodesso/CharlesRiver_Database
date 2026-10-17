@@ -1,6 +1,6 @@
 # BPMN and AIS extension — review handoff
 
-Completed 17 October 2026 on `feature/charles-river-website-redesign`, extending the initial website redesign at `1ea2e71`. Main remains at frozen baseline `7c21218dce19201013f7a71eb7263e12a85af09a`. No merge, push, deployment, release edit, or dataset generation occurred.
+Completed 17 October 2026 on `feature/charles-river-website-redesign`, extending the initial website redesign at `1ea2e71`. Implementation commit: `3ede287`. Main remains at frozen baseline `7c21218dce19201013f7a71eb7263e12a85af09a`. No merge, push, deployment, release edit, or dataset generation occurred.
 
 ## Delivered library and teaching flow
 
@@ -45,9 +45,10 @@ All explicit automated test processes used a **3,600,000 ms process timeout**. P
 | `node --test tests/website/navigation-seo.test.cjs tests/website/rendered-site.test.cjs` | **13 passed**; all 60 document routes/meta, 23 learning resources, 22 diagram links, process/activity/case links, existing static downloads, and shallow discovery checked |
 | `.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_docs_onboarding_flow.py tests/test_report_preview_overlay.py tests/website/test_bpmn_models.py` | **69 passed**: 57 BPMN checks plus 12 existing website checks |
 | `.venv\Scripts\python.exe -B -m compileall -q src tests` | Passed |
-| Read-only release checks | Every model's named evidence tables exists; mixed AR/customer-credit posting confirmed; no database writes |
+| Read-only release checks | All named evidence tables exist; mixed AR/customer-credit posting confirmed; no database writes |
 | Browser SVG publication | All 11 standalone SVGs rendered actual shapes/text with their accessible titles |
 | Browser viewer and responsive review | Passed at 1440×1000, 820×1180, and 390×844; representative O2C/P2P/conversion, workshop and text explanations; no page overflow; light/dark, zoom/fit/keyboard, forward/reverse Tab wrapping, Close/Escape and opener focus restoration checked |
+| Existing Mermaid interaction | P2P's five Mermaid diagrams rendered without alerts; expansion, zoom, Escape, and opener focus restoration still work alongside BPMN |
 | Source/SVG parity | All sources contain editable native cells; exports preserve those cells and connector parents/endpoints; source hashes match; built SVGs match published files byte-for-byte |
 | Preservation comparison with `1ea2e71` | 37 Mermaid blocks and 101 original link occurrences retained across seven process pages |
 | `pwsh -NoProfile -File planning/website-redesign/verify-freeze.ps1` | Passed: protected paths unchanged; **all 293 frozen dataset/report hashes identical** |
