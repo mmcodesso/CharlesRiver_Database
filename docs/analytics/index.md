@@ -1,15 +1,23 @@
 ---
 title: Analyze the Data
-description: Section landing page for SQL, Excel, query library, reports, and cases built on the published dataset.
+description: Progress from a first SQL or Excel evidence exercise to applied accounting analysis, reports, and integrated Charles River cases.
 slug: /analytics
 sidebar_label: Analyze the Data
 ---
 
 # Analyze the Data
 
-Once the company story and the business cycles are clear, this section becomes the place where students work with the data. Students can run SQL, rebuild evidence in Excel, read reports, follow guided cases, or browse reusable queries.
+Start with a business question you can explain. After reading the [company story](../learn-the-business/company-story.md) and a [business process](../learn-the-business/process-flows.md), choose a small evidence task, learn its source grain, and build toward a supported decision.
 
-For a first assignment, start with SQL Guide, Excel Guide, Reports Hub, or a foundation case. Query Library is useful after students know what kind of question they are trying to answer.
+The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) develops the concepts. This section supplies practice with the company's source records, ledger, reports, and teaching cases. Obtain the assigned file from [Downloads](../start-here/downloads.md) before starting.
+
+## From First Evidence to an Integrated Case
+
+| Stage | Work to complete | Evidence to submit |
+|---|---|---|
+| Foundational exercise | Trace [one order line in SQL](sql-guide.md#foundation-exercise-one-order-line-and-its-evidence) or build [a catalog profile in Excel](excel-guide.md#foundation-exercise-a-catalog-profile). | Source keys or row-count check, an annotated result, and a short explanation of its limits. |
+| Applied analysis | Complete an [O2C](cases/o2c-trace-case.md), [P2P](cases/p2p-accrual-settlement-case.md), or [manufacturing](cases/manufacturing-labor-cost-case.md) trace; then compare measures in a financial or managerial case. | Reproducible evidence schedule, accounting explanation, and a supported recommendation. |
+| Integrated business case | Combine timing systems in [working capital](cases/working-capital-and-cash-conversion-case.md), reconcile the [statement bridge](cases/financial-statement-bridge-case.md), or scope an [audit review](cases/audit-review-pack-case.md). | Reconciled views, explicit assumptions, prioritized action, and the next check that could change the conclusion. |
 
 ## What Students Do Here
 
@@ -40,7 +48,7 @@ Use this order when students are new to the analytics layer:
 | guided assignment flow | [Cases](cases/index.md) |
 | reusable query inventory | [Query Library](analysis-tracks.md) |
 
-Each subsection should stay focused on its own job. SQL Guide explains SQL workflow. Excel Guide explains workbook workflow. Query Library organizes reusable SQL. Reports Hub explains reports and perspectives. Cases explains guided assignments.
+Keep four questions beside every result: What does one row represent? Which business event created it? How does it affect accounting? What does the evidence support, and what remains uncertain?
 
 ## Next Steps
 

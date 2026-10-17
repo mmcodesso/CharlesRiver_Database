@@ -1,4 +1,5 @@
 ---
+title: Payroll, Approved Time, and Liability Settlement
 description: Learn the payroll process in the synthetic accounting analytics dataset, from approved time and payroll registers to payments, remittances, and GLEntry.
 ---
 
@@ -19,7 +20,13 @@ That distinction matters. Raw punches are not the same thing as approved hours. 
 
 Payroll also connects to manufacturing. Approved time can flow into `LaborTimeEntry`, direct labor can be tied to a work-order operation, and payroll later supports direct-labor and manufacturing-overhead reclass activity without switching the dataset to full actual-cost inventory.
 
-Payroll now also connects to the customer-facing design-services line. Design employees still move through normal payroll registers, payments, and liabilities, but their engagement margin is analyzed through `ServiceTimeEntry` cost snapshots instead of through manufacturing costing.
+Payroll also connects to the customer-facing design-services line. Design employees still move through normal payroll registers, payments, and liabilities, but their engagement margin is analyzed through `ServiceTimeEntry` cost snapshots instead of through manufacturing costing.
+
+## Decisions and Evidence
+
+Workforce supervision checks whether the planned shift and approved hours are supported. Payroll explains earnings, deductions, and employer cost. Treasury distinguishes employee net pay from later withholding and benefit remittances. A paid employee therefore does not establish that all payroll liabilities have cleared.
+
+For a first analysis, choose one employee and pay period, preserve the approved-time and payroll identifiers, and explain the register, payment, and remittance dates. Move to the [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md) after you can distinguish raw punches from approved hours. Exception records guide follow-up; they do not establish misconduct on their own.
 
 ## Normal Process Overview
 
@@ -127,11 +134,11 @@ flowchart LR
 
 **Starter analytical question:** Which work centers show the biggest gap between rostered hours, approved hours, and approved overtime?
 
-```sql
--- Teaching objective: Compare expected hours, raw attendance evidence, and approved daily time.
--- Main join path: EmployeeShiftRoster -> TimeClockPunch -> TimeClockEntry, plus EmployeeAbsence and OvertimeApproval.
--- Suggested analysis: Group by work center, shift, or payroll period.
-```
+**Analytical plan**
+
+- Objective: Compare expected hours, raw attendance evidence, and approved daily time.
+- Evidence path: EmployeeShiftRoster -> TimeClockPunch -> TimeClockEntry, plus EmployeeAbsence and OvertimeApproval.
+- Comparison: Group by work center, shift, or payroll period.
 
 ### Approved Hours to Gross Pay
 
@@ -166,11 +173,11 @@ flowchart LR
 - `PayrollRegisterLine.LaborTimeEntryID -> LaborTimeEntry.LaborTimeEntryID`
 - `PayrollRegister.PayrollRegisterID -> PayrollRegisterLine.PayrollRegisterID`
 
-```sql
--- Teaching objective: Trace approved hourly support into earnings lines on the payroll register.
--- Main join path: TimeClockEntry -> LaborTimeEntry -> PayrollRegisterLine, plus PayrollRegister.
--- Suggested analysis: Compare regular and overtime hours to regular and overtime earnings by employee or period.
-```
+**Analytical plan**
+
+- Objective: Trace approved hourly support into earnings lines on the payroll register.
+- Evidence path: TimeClockEntry -> LaborTimeEntry -> PayrollRegisterLine, plus PayrollRegister.
+- Comparison: Compare regular and overtime hours to regular and overtime earnings by employee or period.
 
 ### Gross-to-Net, Payment, and Remittance
 
@@ -203,11 +210,11 @@ flowchart LR
 
 **Starter analytical question:** Which payroll liabilities remain open after employees are paid, and how long do those remittance balances stay outstanding?
 
-```sql
--- Teaching objective: Separate payroll posting from employee payment and later remittance.
--- Main join path: PayrollRegister -> PayrollPayment and PayrollLiabilityRemittance, with GLEntry for posted effect.
--- Suggested analysis: Compare approved payroll date, payment date, and remittance date by payroll period.
-```
+**Analytical plan**
+
+- Objective: Separate payroll posting from employee payment and later remittance.
+- Evidence path: PayrollRegister -> PayrollPayment and PayrollLiabilityRemittance, with GLEntry for posted effect.
+- Comparison: Compare approved payroll date, payment date, and remittance date by payroll period.
 
 ### Direct Labor and Manufacturing Reclass
 
@@ -243,11 +250,11 @@ flowchart LR
 - `PayrollRegisterLine.LaborTimeEntryID -> LaborTimeEntry.LaborTimeEntryID`
 - `GLEntry.SourceDocumentType` plus `SourceDocumentID` for reclass trace
 
-```sql
--- Teaching objective: Trace direct manufacturing labor from approved time into payroll support and reclass accounting.
--- Main join path: TimeClockEntry -> LaborTimeEntry -> WorkOrderOperation, plus PayrollRegisterLine and reclass journals.
--- Suggested analysis: Group by work order, work center, item, or payroll period.
-```
+**Analytical plan**
+
+- Objective: Trace direct manufacturing labor from approved time into payroll support and reclass accounting.
+- Evidence path: TimeClockEntry -> LaborTimeEntry -> WorkOrderOperation, plus PayrollRegisterLine and reclass journals.
+- Comparison: Group by work order, work center, item, or payroll period.
 
 ### Design-Service Labor Support
 
@@ -285,11 +292,11 @@ flowchart LR
 
 **Starter analytical question:** Which exception types are most common by work center, and how often do they still end up supporting paid hourly payroll?
 
-```sql
--- Teaching objective: Compare planned shifts, raw attendance evidence, approved time, and logged exceptions.
--- Main join path: AttendanceException -> EmployeeShiftRoster and TimeClockEntry, with TimeClockPunch for evidence.
--- Suggested analysis: Group by exception type, work center, supervisor, or payroll period.
-```
+**Analytical plan**
+
+- Objective: Compare planned shifts, raw attendance evidence, approved time, and logged exceptions.
+- Evidence path: AttendanceException -> EmployeeShiftRoster and TimeClockEntry, with TimeClockPunch for evidence.
+- Comparison: Group by exception type, work center, supervisor, or payroll period.
 
 ## Common Student Questions
 

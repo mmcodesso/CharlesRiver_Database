@@ -1,4 +1,5 @@
 ---
+title: Procure-to-Pay Accounting Process
 description: Learn the procure-to-pay process in the synthetic accounting analytics dataset, from requisitions and receipts to supplier invoices, disbursements, and GLEntry.
 ---
 
@@ -19,7 +20,13 @@ That distinction matters. A requisition is not the same thing as a purchase orde
 
 Most P2P activity follows the normal inventory and materials path: plan, requisition, order, receive, invoice, pay. A secondary AP path also exists for certain operating expenses. Finance may estimate the expense first through an accrual, then AP later clears that estimate through a direct service invoice that has no goods receipt behind it.
 
-Capital purchases now follow the same front-end P2P approvals and supplier-document path. The difference shows up after invoicing: a CAPEX item creates a `FixedAsset` and `FixedAssetEvent` trail, cash purchases settle through the normal disbursement path, and note-financed purchases are later reclassed from AP into notes payable instead of being paid immediately in cash.
+Capital purchases follow the same front-end P2P approvals and supplier-document path. The difference shows up after invoicing: a CAPEX item creates a `FixedAsset` and `FixedAssetEvent` trail, cash purchases settle through the normal disbursement path, and note-financed purchases are later reclassed from AP into notes payable instead of being paid immediately in cash.
+
+## Decisions and Evidence
+
+Purchasing commits to a supplier; receiving establishes what arrived; AP determines the liability; treasury settles it. A match between ordered, received, and invoiced quantities supports a different conclusion from a payment-timing review. For an accrued service, the original journal estimate replaces the physical receipt as the settlement bridge.
+
+Start with the [receipt-to-payable exercise](../learn-and-practice/receipt-to-payable.md), which stays within a receipt-matched line. The [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md) then compares that path with accrued-service settlement. Assess open AP as of a stated date even when a later payment is present in the file.
 
 ## Normal Process Overview
 
@@ -76,7 +83,7 @@ Start with why the purchase was needed, then move into supplier commitment, rece
 - `PurchaseInvoiceLine.GoodsReceiptLineID` is the authoritative receipt-match link for inventory and material invoicing.
 - `PurchaseInvoiceLine.AccrualJournalEntryID` is the authoritative link for direct accrued-service settlement.
 - `FixedAssetEvent.PurchaseInvoiceID`, `PurchaseInvoiceLineID`, and `DisbursementID` extend that same trace when the purchased item is capitalized instead of expensed or stocked.
-- P2P is multi-period in the current generator. Receipt, invoicing, and payment do not need to occur in the same month.
+- P2P spans periods in the published dataset. Receipt, invoicing, and payment do not need to occur in the same month.
 
 ## Analytical Subsections
 
@@ -106,11 +113,11 @@ flowchart LR
 
 **Starter analytical question:** Which purchase requisitions were clearly supported by weekly planning versus created as residual execution demand?
 
-```sql
--- Teaching objective: Trace purchased demand from planning support into requisition creation.
--- Main join path: SupplyPlanRecommendation -> PurchaseRequisition, with DemandForecast and InventoryPolicy for planning context.
--- Suggested analysis: Group by item group, warehouse, planner, or driver type.
-```
+**Analytical plan**
+
+- Objective: Trace purchased demand from planning support into requisition creation.
+- Evidence path: SupplyPlanRecommendation -> PurchaseRequisition, with DemandForecast and InventoryPolicy for planning context.
+- Comparison: Group by item group, warehouse, planner, or driver type.
 
 ### Purchase Order to Receipt Traceability
 
@@ -139,11 +146,11 @@ flowchart LR
 - `GoodsReceiptLine.POLineID -> PurchaseOrderLine.POLineID`
 - `GoodsReceiptLine.GoodsReceiptID -> GoodsReceipt.GoodsReceiptID`
 
-```sql
--- Teaching objective: Trace supplier orders into one or more physical receipts.
--- Main join path: PurchaseRequisition -> PurchaseOrderLine -> GoodsReceiptLine.
--- Suggested analysis: Compare requisition date, order date, expected delivery date, and receipt date by supplier or item group.
-```
+**Analytical plan**
+
+- Objective: Trace supplier orders into one or more physical receipts.
+- Evidence path: PurchaseRequisition -> PurchaseOrderLine -> GoodsReceiptLine.
+- Comparison: Compare requisition date, order date, expected delivery date, and receipt date by supplier or item group.
 
 ### Receipt to Supplier Invoice Matching
 
@@ -168,11 +175,11 @@ flowchart LR
 
 **Starter analytical question:** Which supplier invoice lines matched receipts cleanly, and which receipt lines remained uninvoiced at period end?
 
-```sql
--- Teaching objective: Trace receipt-based invoicing through the three-way-match path.
--- Main join path: GoodsReceiptLine -> PurchaseInvoiceLine -> PurchaseInvoice.
--- Suggested analysis: Compare receipt date and invoice date by supplier, item, or month-end.
-```
+**Analytical plan**
+
+- Objective: Trace receipt-based invoicing through the three-way-match path.
+- Evidence path: GoodsReceiptLine -> PurchaseInvoiceLine -> PurchaseInvoice.
+- Comparison: Compare receipt date and invoice date by supplier, item, or month-end.
 
 ### Supplier Payment and Open AP
 
@@ -198,11 +205,11 @@ flowchart LR
 
 **Starter analytical question:** Which supplier invoices remained unpaid after due date, and how does payment lag vary by supplier or item group?
 
-```sql
--- Teaching objective: Separate supplier invoicing from supplier payment.
--- Main join path: PurchaseInvoice -> DisbursementPayment, with GLEntry for posted effect.
--- Suggested analysis: Compare invoice date, due date, and payment date by supplier or spend type.
-```
+**Analytical plan**
+
+- Objective: Separate supplier invoicing from supplier payment.
+- Evidence path: PurchaseInvoice -> DisbursementPayment, with GLEntry for posted effect.
+- Comparison: Compare invoice date, due date, and payment date by supplier or spend type.
 
 ## Common Student Questions
 

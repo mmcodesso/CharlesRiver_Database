@@ -9,7 +9,9 @@ import { queryLibraryGroups } from "@site/src/generated/queryDocCollections";
 
 # Financial Queries
 
-Use this page as the financial-accounting query library. The groups below organize reusable SQL by the question students are trying to answer: statement tie-out, settlement timing, working capital, sales-commission payable, payroll liabilities, manufacturing cost, CAPEX, budget, and commercial performance.
+An invoice, a shipment, and a cash movement can occur in different periods. Financial analysis explains how those events build balances and how the balances become statements. Choose a group for statement reconciliation, settlement timing, working capital, commissions, payroll liabilities, manufacturing cost, CAPEX, budget, or commercial performance.
+
+Read the matching [process](../learn-the-business/process-flows.md) first. Before comparing results, record the fiscal period, source population, row grain, and sign convention. A ledger balance, an invoice amount, and a cash payment answer different questions.
 
 ## Financial Query Groups
 

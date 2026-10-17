@@ -1,4 +1,5 @@
 ---
+title: Manufacturing and Conversion Accounting Process
 description: Learn the manufacturing process in the synthetic accounting analytics dataset, from planning and work orders to material issue, production completion, close, and GLEntry.
 ---
 
@@ -18,6 +19,12 @@ This company both buys finished goods and manufactures selected products in-hous
 In this dataset, the manufacturing story starts with planning, not with a work order. Weekly forecasts, inventory policies, open finished-goods demand, and current supply pressure create replenishment signals. Manufactured signals move into work orders, components may need help from the purchasing cycle, warehouse staff issue material into production, approved labor support flows into cost traceability, finished goods are completed back into inventory, and accounting closes the order when standard and actual amounts are resolved.
 
 That distinction matters. A planning recommendation is not a work order. A rough-cut capacity row is not the same thing as an operation schedule. A completion is not the same thing as a close. Students can see those stages separately in the data and use that separation for managerial, financial, and audit questions.
+
+## Decisions and Evidence
+
+A planner asks whether supply and capacity can meet demand. A production supervisor asks whether work is scheduled and supported. Accounting asks how issues, labor reclasses, completions, and close affect WIP, finished goods, clearing, and variance. Answering one of these questions does not answer the others.
+
+The [manufacturing cost-flow exercise](../learn-and-practice/manufacturing-cost-flow.md) establishes the event sequence before the [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md) adds operation-level and labor evidence. Standard-cost completion and approved actual labor support coexist; do not describe this as a complete actual-cost inventory system.
 
 ## Normal Process Overview
 
@@ -49,7 +56,9 @@ flowchart LR
     MRP --> P2P --> MI
     WOS --> MI
     WOS --> LAB --> MI
-    MI --> PC --> WC --> O2C
+    MI --> PC
+    PC --> O2C
+    PC --> WC
 ```
 
 Read the main diagram as planning, execution, and costing or close. Planning starts the story. BOMs and routings explain how the item can be built. Work-order execution shows what actually happened on the floor. Close and reclass activity explain the accounting effect after production activity is finished.
@@ -130,11 +139,11 @@ flowchart LR
 
 **Starter analytical question:** Which manufactured recommendations created both component pressure and rough-cut capacity pressure before execution began?
 
-```sql
--- Teaching objective: Link manufactured recommendations to component demand and weekly capacity pressure.
--- Main join path: SupplyPlanRecommendation -> MaterialRequirementPlan and RoughCutCapacityPlan.
--- Suggested analysis: Group by item, work center, warehouse, or bucket week.
-```
+**Analytical plan**
+
+- Objective: Link manufactured recommendations to component demand and weekly capacity pressure.
+- Evidence path: SupplyPlanRecommendation -> MaterialRequirementPlan and RoughCutCapacityPlan.
+- Comparison: Group by item, work center, warehouse, or bucket week.
 
 ### Standard Recipe, Routing, and Work Centers
 
@@ -164,11 +173,11 @@ flowchart LR
 
 **Starter analytical question:** Which manufactured item groups use the most complex routing or the heaviest component structure?
 
-```sql
--- Teaching objective: Compare recipe complexity and routing complexity across manufactured items.
--- Main join path: Item -> BillOfMaterial -> BillOfMaterialLine and Item -> Routing -> RoutingOperation.
--- Suggested analysis: Group by item group, collection, or work center.
-```
+**Analytical plan**
+
+- Objective: Compare recipe complexity and routing complexity across manufactured items.
+- Evidence path: Item -> BillOfMaterial -> BillOfMaterialLine and Item -> Routing -> RoutingOperation.
+- Comparison: Group by item group, collection, or work center.
 
 ### Work Order Release and Operation Scheduling
 
@@ -203,11 +212,11 @@ flowchart LR
 - `WorkOrderOperationSchedule.WorkOrderOperationID -> WorkOrderOperation.WorkOrderOperationID`
 - `WorkOrderOperationSchedule.WorkCenterID -> WorkCenterCalendar.WorkCenterID`
 
-```sql
--- Teaching objective: Trace one released work order from planning support into operation-level daily schedule rows.
--- Main join path: SupplyPlanRecommendation -> WorkOrder -> WorkOrderOperation -> WorkOrderOperationSchedule.
--- Suggested analysis: Compare release date, due date, schedule date, and actual operation timing.
-```
+**Analytical plan**
+
+- Objective: Trace one released work order from planning support into operation-level daily schedule rows.
+- Evidence path: SupplyPlanRecommendation -> WorkOrder -> WorkOrderOperation -> WorkOrderOperationSchedule.
+- Comparison: Compare release date, due date, schedule date, and actual operation timing.
 
 ### Purchased Component Support and Material Issue
 
@@ -237,11 +246,11 @@ flowchart LR
 
 **Starter analytical question:** Which work orders depended on purchased component support before material could be issued into production?
 
-```sql
--- Teaching objective: Compare upstream purchased support to the later physical issue of components into WIP.
--- Main join path: SupplyPlanRecommendation -> PurchaseRequisition and WorkOrder -> MaterialIssue -> MaterialIssueLine.
--- Suggested analysis: Compare receipt timing, issue timing, and work-order release timing.
-```
+**Analytical plan**
+
+- Objective: Compare upstream purchased support to the later physical issue of components into WIP.
+- Evidence path: SupplyPlanRecommendation -> PurchaseRequisition and WorkOrder -> MaterialIssue -> MaterialIssueLine.
+- Comparison: Compare receipt timing, issue timing, and work-order release timing.
 
 ### Labor Capture, Payroll Bridge, and Manufacturing Cost
 
@@ -272,11 +281,11 @@ flowchart LR
 
 **Starter analytical question:** Which work centers or work orders show the highest approved labor support relative to planned operation timing?
 
-```sql
--- Teaching objective: Connect approved factory time to work-order operations and payroll-supported reclass activity.
--- Main join path: TimeClockEntry -> LaborTimeEntry -> WorkOrderOperation, plus PayrollRegister and JournalEntry.
--- Suggested analysis: Group by work center, work order, payroll period, or labor type.
-```
+**Analytical plan**
+
+- Objective: Connect approved factory time to work-order operations and payroll-supported reclass activity.
+- Evidence path: TimeClockEntry -> LaborTimeEntry -> WorkOrderOperation, plus PayrollRegister and JournalEntry.
+- Comparison: Group by work center, work order, payroll period, or labor type.
 
 ### Production Completion, Close, and Finished-Goods Availability
 
@@ -305,11 +314,11 @@ flowchart LR
 
 **Starter analytical question:** Which work orders were physically completed in one period but not closed until a later period?
 
-```sql
--- Teaching objective: Separate physical completion from accounting close and finished-goods availability.
--- Main join path: WorkOrder -> ProductionCompletion -> ProductionCompletionLine -> WorkOrderClose.
--- Suggested analysis: Compare completion date, close date, quantity completed, and variance amount by month.
-```
+**Analytical plan**
+
+- Objective: Separate physical completion from accounting close and finished-goods availability.
+- Evidence path: WorkOrder -> ProductionCompletion -> ProductionCompletionLine -> WorkOrderClose.
+- Comparison: Compare completion date, close date, quantity completed, and variance amount by month.
 
 ## Common Student Questions
 

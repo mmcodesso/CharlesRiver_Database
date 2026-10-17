@@ -12,7 +12,9 @@ import {
 
 # Audit Queries
 
-Use this page as the audit and controls query library. The groups below organize reusable SQL by control question: process completeness, manufacturing controls, workforce and attendance, master data, financial timing, planning support, pricing governance, and design-service billing support.
+An exception query identifies records for review; source evidence determines what the result means. These groups organize completeness, manufacturing, workforce, master-data, timing, planning, pricing, and Design Services tests around the control expectation being assessed.
+
+State the criterion, population, period, and result grain before testing. Retain source keys, trace selected rows back to the process records, and separate missing evidence from a demonstrated accounting effect. A zero-row result is valid within its stated scope; it is not an assurance conclusion about every control.
 
 ## Audit Query Groups
 

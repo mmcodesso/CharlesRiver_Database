@@ -47,7 +47,7 @@ These documents are generated for process analysis but do **not** create `GLEntr
 
 | Event | Source tables | Posting date used | Debit | Credit |
 |---|---|---|---|---|
-| Opening balance journal | `JournalEntry` plus seeded GL rows | `2026-01-01` | Asset accounts and selected opening balances | Liability, equity, contra-asset balances, and retained earnings plug |
+| Opening balance journal | `JournalEntry` plus seeded GL rows | `2024-01-01` in published v2027.1 | Asset accounts and selected opening balances | Liability, equity, contra-asset balances, and retained earnings plug |
 | Rent | `JournalEntry` plus seeded GL rows | First business day of month | `6070` Warehouse Rent or `6080` Office Rent | `1010` Cash and Cash Equivalents |
 | Utilities | `JournalEntry` plus seeded GL rows | Last business day of month | `6090` Utilities Expense | `1010` Cash and Cash Equivalents |
 | Factory overhead | `JournalEntry` plus seeded GL rows | Last business day of month | `1090` Manufacturing Cost Clearing, or `5080` Manufacturing Variance when the month has no capitalizable direct labor | `1010` Cash and Cash Equivalents |

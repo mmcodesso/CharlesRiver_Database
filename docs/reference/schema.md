@@ -1,18 +1,18 @@
 ---
 title: Schema Reference
-description: Student-friendly reference for the 77 implemented tables, key columns, and ER relationships.
+description: Reference for the 82 published Charles River SQLite tables, key columns, source-document bridges, and entity relationships.
 sidebar_label: Schema Reference
 ---
 
 # Schema Reference
 
-This reference is the table map for the dataset: which tables belong together, how the main relationships work, which keys matter most, and where the bridges between groups live.
+This reference is the table map for the published dataset: which tables belong together, how the main relationships work, which keys matter most, and where the bridges between groups live. The `v2027.1` SQLite release contains 82 user tables, including five sales-commission tables and four fixed-asset and financing tables.
 
 If you need the big-picture business story first, start with [Dataset Guide](../start-here/dataset-overview.md) and [Process Flows](../learn-the-business/process-flows.md).
 
 ## SQLite Physical Schema
 
-- The generated SQLite file now includes a physical primary key on each table's main surrogate ID column.
+- The published SQLite file includes a physical primary key on each table's main surrogate ID column.
 - The SQLite file also includes a curated index set for high-value joins and stable business identifiers, but it does not index every relationship column in the model.
 - Some business identifiers remain intentionally non-unique in anomaly scenarios, so fields such as supplier invoice numbers or payment references are not universally enforced as unique in SQLite.
 
@@ -29,14 +29,14 @@ If you need the big-picture business story first, start with [Dataset Guide](../
 |---|---|---:|
 | Accounting core | Accounts, journals, and posted ledger detail | 3 |
 | Fixed assets and financing | Asset register, lifecycle events, and note schedules | 4 |
-| Order-to-cash | Customers, commercial pricing, goods orders, service engagements, shipments, invoices, cash, returns, credits, and refunds | 22 |
+| Order-to-cash | Customers, pricing, goods and service orders, shipments, invoices, commissions, cash, returns, credits, and refunds | 27 |
 | Procure-to-pay | Requisitions, purchase orders, receipts, supplier invoices, and disbursements | 9 |
 | Manufacturing | BOMs, routings, work centers, work orders, issues, completions, and close | 14 |
 | Payroll and time | Shifts, rosters, absences, overtime approvals, punches, approved daily time, payroll, and remittances | 14 |
 | Master data | Item, warehouse, and employee records | 3 |
 | Organizational planning | Cost centers, budget summary, and budget detail | 3 |
 | Demand planning and MRP | Forecasting, inventory policy, recommendations, MRP, and rough-cut capacity | 5 |
-| Total |  | 77 |
+| Total | Published user tables | 82 |
 
 ## How to Read the ER Diagrams
 

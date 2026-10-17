@@ -5,10 +5,15 @@ sidebar_label: Attendance Control Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Attendance Control Audit Case
 
+<CaseOverview slug="attendance-control-audit-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 Internal audit has been asked to review whether scheduled work, raw punches, approved time, absences, and overtime approvals stay aligned. The objective is to identify attendance-control failures without losing the operational context behind them.
 
@@ -18,16 +23,16 @@ This case starts after the managerial workforce coverage question. Here the focu
 
 The audit team needs to determine which attendance exceptions reflect schedule-linkage gaps, raw punch integrity failures, absence conflicts, overtime approval failures, or post-termination roster control issues.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A roster and punch linkage review that separates missing punch evidence from detached punch activity.
-- A raw punch integrity view that identifies incomplete or invalid punch sequences.
-- An absence conflict review that shows where absent days still carry worked-time evidence.
-- An overtime approval review that identifies missing or insufficient approval support.
-- A post-termination roster control conclusion that identifies whether scheduling continued after employment ended.
+- Test roster links and punch integrity at a defined employee-date grain.
+- Evaluate absence conflicts and overtime support separately.
+- Assess payroll risk and identify evidence needed before quantifying an impact.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Shift roster, raw punch sequence, approved time entry, absence record, overtime approval, and employment dates.
+- Evidence grain: Retain employee, roster, time-entry, and punch keys; overlapping tests must not multiply distinct affected shifts.
 - Main tables: `EmployeeShiftRoster`, `EmployeeAbsence`, `TimeClockPunch`, `TimeClockEntry`, `OvertimeApproval`, `Employee`
 - Related process page: [Payroll](../../processes/payroll.md)
 - Related report: [Payroll and Workforce](../reports/payroll-perspective.md)
@@ -36,7 +41,7 @@ The audit team needs to determine which attendance exceptions reflect schedule-l
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case is the formal exception-testing follow-through for attendance controls. Use the workforce coverage case when you want the managerial coverage-pressure view before audit testing.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Test schedule and punch linkage
 
@@ -210,12 +215,14 @@ The query joins `EmployeeShiftRoster` to terminated employees, left joins approv
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Prepare an employee-date exception register with test family, source keys, scheduled or worked hours, approval support, and review status.
+- **Accounting or business interpretation:** Explain the expected control and potential payroll or operating consequence for the selected families.
+- **Database explanation:** Trace a selected result to roster, raw punch, approved time, absence, or approval support and explain how overlapping results were handled.
+- **Management or audit conclusion:** Prioritize supervisor, payroll, or employee-master follow-up, separating a control gap from an unproven monetary impact.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -231,6 +238,10 @@ Submit a short case memo or notebook note with these four artifacts:
 - Database/source evidence: Which source table and employee-date grain would you trace first to defend the finding?
 - Analytics judgment: Is the strongest pattern schedule linkage, punch integrity, absence conflict, overtime support, or terminated-employee roster control?
 - Escalation/next step: Which issue should move to supervisors, payroll, or formal audit follow-up first?
+
+## Limitations and Judgment
+
+An attendance exception does not establish an overpayment. Quantifying pay impact requires payroll linkage and review of approved time and absence context.
 
 ## Next Steps
 

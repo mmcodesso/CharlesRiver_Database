@@ -5,10 +5,15 @@ sidebar_label: Product Portfolio Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Product Portfolio and Lifecycle Case
 
+<CaseOverview slug="product-portfolio-and-lifecycle-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 Charles River Home Furnishings sells finished goods across multiple collections, style families, materials, and finishes. Merchandising, sales, and operations all depend on the same `Item` master while the catalog is active. They need product attributes that are clear enough to support reporting and reliable enough to support real decisions.
 
@@ -20,22 +25,22 @@ Your job is to explain the portfolio structure first, confirm that the item mast
 
 You need to prove which item attributes define the portfolio in a usable way. Confirm that lifecycle labels and active status align with the current catalog state. Confirm that sales and portfolio mix differ by collection, style family, lifecycle status, and supply mode. Confirm that lifecycle exceptions appear in real operational activity.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A clean description of the portfolio structure for one or more collections.
-- A lifecycle-status interpretation tied directly to item-master fields.
-- A mix analysis using collection, style family, lifecycle status, and supply mode.
-- An exception view for missing attributes, inconsistent status, or post-discontinuation activity.
-- A short management-facing conclusion on which catalog dimensions deserve follow-up in the separate profitability case.
+- Describe the catalog using collection, style, material, lifecycle, and supply-mode attributes.
+- Evaluate completeness and consistency before grouping transaction activity.
+- Distinguish current item status from evidence about activity dates.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Item-master record and the order, purchase, manufacturing, shipment, invoice, return, and credit lines selected by the queries.
+- Evidence grain: Establish one row per item for the catalog profile; trace transaction lines separately before aggregating.
 - Main tables: `Item`, `SalesInvoiceLine`, `ShipmentLine`, `SalesOrderLine`, `SalesReturnLine`, `CreditMemoLine`, `WorkOrder`, `PurchaseOrderLine`
 - Related process pages: [Order-to-Cash Process](../../processes/o2c.md), [Manufacturing Process](../../processes/manufacturing.md), [Procure-to-Pay Process](../../processes/p2p.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case stays focused on catalog structure and lifecycle interpretation. Use the separate portfolio profitability case when you need deeper margin analysis.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define the portfolio structure in the item master
 
@@ -210,12 +215,14 @@ The audit query overlays item lifecycle fields with transaction dates from sales
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Submit a catalog profile for a stated item population and a source-keyed register of completeness, status, or lifecycle-timing issues, including a zero-exception result if applicable.
+- **Accounting or business interpretation:** Explain how missing attributes or current lifecycle labels change the usefulness of portfolio reporting.
+- **Database explanation:** Identify item and transaction grains, document exclusions, and distinguish transaction counts from distinct item counts.
+- **Management or audit conclusion:** Recommend a master-data correction or a portfolio dimension for profitability follow-up, with evidence and an unresolved question.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -231,6 +238,10 @@ Submit a short case memo or notebook note with these four artifacts:
 - Database/source evidence: Which item attribute, lifecycle field, activity row, or status-alignment key supports the portfolio segmentation?
 - Analytics judgment: Which item-master quality issue would most weaken management reporting?
 - Escalation/next step: Which portfolio dimension should management carry into the profitability case next?
+
+## Limitations and Judgment
+
+Current item attributes are not a complete catalog history. Associations among sales, returns, and lifecycle labels do not establish why a customer returned an item.
 
 ## Next Steps
 

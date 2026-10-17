@@ -5,10 +5,15 @@ sidebar_label: Statement Bridge Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Financial Statement Bridge Case
 
+<CaseOverview slug="financial-statement-bridge-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 The finance team needs to explain how operating activity, control accounts, finance journals, and year-end close produce the reported statements. Process pages already explain where transactions begin. This case starts later. It asks whether the posted ledger ties cleanly into the trial balance, whether major control accounts reconcile to source activity, and whether annual net income closes into retained earnings the way it should.
 
@@ -20,23 +25,23 @@ Your job is to build that bridge from the ledger outward, then follow one varian
 
 You need to prove how posted operational and finance-controlled activity builds the trial balance, which control accounts can be reconciled from source activity, how year-end close changes presentation without changing operating history, how annual net income ties into retained earnings, and how a statement-level variance can be narrowed into annual net-revenue and cutoff evidence.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A statement-level bridge from ledger activity into reported balances.
-- A control-account explanation grounded in operational source documents.
-- A clear separation of recurring or manual journals from close entries.
-- An annual net-income to retained-earnings explanation.
-- One drill-down path from statement variance into revenue cutoff evidence.
+- Connect trial balance and control accounts to statement interpretation.
+- Explain annual income, retained earnings, and close-entry effects.
+- Drill into source cutoff evidence when statement and operational views differ.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Account master, posted GL, journals and close entries, invoices, shipments, receipts, payroll, and work-order close records.
+- Evidence grain: Reconcile account-period totals before drilling to vouchers and source lines; separate close effects from ordinary period movement.
 - Main tables: `GLEntry`, `Account`, `JournalEntry`, `SalesInvoice`, `SalesInvoiceLine`, `CreditMemo`, `CreditMemoLine`, `PurchaseInvoice`, `DisbursementPayment`, `GoodsReceiptLine`, `ShipmentLine`, `PayrollRegister`, `WorkOrderClose`
 - Related guides: [Financial Queries](../financial.md), [Executive Overview](../reports/executive-overview.md)
 - Related process pages: [Manual Journals and Close Cycle](../../processes/manual-journals-and-close.md), [Order-to-Cash Process](../../processes/o2c.md), [Procure-to-Pay Process](../../processes/p2p.md), [Manufacturing Process](../../processes/manufacturing.md), [Payroll Process](../../processes/payroll.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case starts at the posted-ledger and presentation layer rather than tracing one operating document chain. Use the working-capital case when you need settlement timing and current-liability pressure instead of statement tie-out.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define the statement scaffold from the trial balance
 
@@ -230,12 +235,14 @@ The annual bridge compares invoice-line and credit-memo totals with pre-close re
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Submit a statement-to-source schedule covering trial balance, selected control accounts, close activity, income-to-equity, and a scoped cutoff review.
+- **Accounting or business interpretation:** Explain how close entries change the relationship among P&L activity, current-year income, and retained earnings.
+- **Database explanation:** Provide the account-period and voucher/source-key trail for a selected difference, or demonstrate a tie within your stated tolerance.
+- **Management or audit conclusion:** Distinguish reconciled balances, timing differences, and unresolved exceptions, then identify the next source check.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -251,6 +258,10 @@ Submit a short case memo or notebook note with these four artifacts:
 - Database/source evidence: Which account, journal, retained-earnings, invoice, or GL trace path proves the break?
 - Analytics judgment: Which bridge issue changes management confidence in the statements most?
 - Escalation/next step: When should you stop at summary evidence, and when should you open the line-level cutoff trace?
+
+## Limitations and Judgment
+
+A balanced GL does not prove correct recognition or cutoff. Inspect source timing and scope before proposing an adjustment for a bridge difference.
 
 ## Next Steps
 

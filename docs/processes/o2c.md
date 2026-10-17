@@ -1,4 +1,5 @@
 ---
+title: Order-to-Cash Accounting Process
 description: Learn the order-to-cash process in the synthetic accounting analytics dataset, from sales orders and shipments to invoices, cash application, and GLEntry.
 ---
 
@@ -19,7 +20,13 @@ That distinction matters. A customer order is not revenue. A shipment is not the
 
 Most sales follow the normal path of order, shipment, invoice, cash, and settlement. Some sales later move into the customer-side exception path of return, credit, and sometimes refund. That exception path is part of O2C, not a separate business cycle.
 
-The company now also uses O2C for hourly design services. Those sales still start from `SalesOrder` and `SalesOrderLine`, but they move into `ServiceEngagement`, `ServiceTimeEntry`, and monthly billing instead of shipment. Students should read that as a second customer-fulfillment path inside O2C, not as a separate receivables system.
+The company also uses O2C for hourly design services. Those sales still start from `SalesOrder` and `SalesOrderLine`, but they move into `ServiceEngagement`, `ServiceTimeEntry`, and monthly billing instead of shipment. Students should read that as a second customer-fulfillment path inside O2C, not as a separate receivables system.
+
+## Decisions and Evidence
+
+Sales, warehouse operations, customer accounting, and treasury answer different questions about the same sale. Is demand accepted? Have goods left inventory? Has the customer been billed? Did cash arrive, and was it applied? A useful investigation names the event and its date before it calculates a balance or labels a delay.
+
+Begin with the [goods-sale tracing exercise](../learn-and-practice/source-to-ledger.md), then extend the evidence into the [O2C Trace Case](../analytics/cases/o2c-trace-case.md). Record a real order and line from your assigned file; any fictional buyer scenario supplies context rather than a transaction to locate.
 
 ## Normal Process Overview
 
@@ -124,11 +131,11 @@ flowchart LR
 
 **Starter analytical question:** Which sales lines used standard price-list logic versus promotion pricing versus approved override logic?
 
-```sql
--- Teaching objective: Compare pricing method, promotion use, and override approvals.
--- Main join path: SalesOrderLine -> PriceListLine -> PriceList, plus PromotionProgram and PriceOverrideApproval.
--- Suggested analysis: Group by PricingMethod, customer segment, item group, or sales rep.
-```
+**Analytical plan**
+
+- Objective: Compare pricing method, promotion use, and override approvals.
+- Evidence path: SalesOrderLine -> PriceListLine -> PriceList, plus PromotionProgram and PriceOverrideApproval.
+- Comparison: Group by PricingMethod, customer segment, item group, or sales rep.
 
 ### 2. Sales Commissions and Payable Settlement
 
@@ -161,11 +168,11 @@ flowchart LR
 
 **Starter analytical question:** Which sales reps and customer segments generated the highest net commission expense after credit-memo clawbacks?
 
-```sql
--- Teaching objective: Review commission expense and clawbacks by rep, segment, and month.
--- Main join path: SalesCommissionAccrual -> SalesCommissionAdjustment, plus Employee and Customer.
--- Suggested analysis: Compare gross commission expense, clawbacks, and net commission expense by revenue type.
-```
+**Analytical plan**
+
+- Objective: Review commission expense and clawbacks by rep, segment, and month.
+- Evidence path: SalesCommissionAccrual -> SalesCommissionAdjustment, plus Employee and Customer.
+- Comparison: Compare gross commission expense, clawbacks, and net commission expense by revenue type.
 
 ### 3. Shipment to Invoice Traceability
 
@@ -197,11 +204,11 @@ flowchart LR
 - `SalesInvoiceLine.ShipmentLineID -> ShipmentLine.ShipmentLineID`
 - `GLEntry.SourceDocumentType` plus `SourceDocumentID` or `SourceLineID` for posting trace
 
-```sql
--- Teaching objective: Trace billed revenue back to the shipped line that supported it.
--- Main join path: SalesOrderLine -> ShipmentLine -> SalesInvoiceLine.
--- Suggested analysis: Filter invoice and shipment dates by month-end to test cutoff timing.
-```
+**Analytical plan**
+
+- Objective: Trace billed revenue back to the shipped line that supported it.
+- Evidence path: SalesOrderLine -> ShipmentLine -> SalesInvoiceLine.
+- Comparison: Filter invoice and shipment dates by month-end to test cutoff timing.
 
 ### 4. Cash Receipt, Application, and Settlement
 
@@ -231,11 +238,11 @@ flowchart LR
 Do not use `CashReceipt.SalesInvoiceID` as the main settlement link. The authoritative settlement path is `CashReceiptApplication`, because one receipt can settle multiple invoices and some cash can remain unapplied temporarily.
 :::
 
-```sql
--- Teaching objective: Separate cash arrival from invoice settlement.
--- Main join path: CashReceipt -> CashReceiptApplication -> SalesInvoice.
--- Suggested analysis: Compare receipt date, application date, and invoice due date for open-AR review.
-```
+**Analytical plan**
+
+- Objective: Separate cash arrival from invoice settlement.
+- Evidence path: CashReceipt -> CashReceiptApplication -> SalesInvoice.
+- Comparison: Compare receipt date, application date, and invoice due date for open-AR review.
 
 ### 5. Design Services and Monthly Hour Billing
 
@@ -266,11 +273,11 @@ flowchart LR
 
 **Starter analytical question:** Which customers or engagements show the biggest gap between approved service hours and billed service hours at month-end?
 
-```sql
--- Teaching objective: Trace approved service hours into the monthly customer invoice.
--- Main join path: SalesOrderLine -> ServiceEngagement -> ServiceTimeEntry -> ServiceBillingLine -> SalesInvoiceLine.
--- Suggested analysis: Compare planned hours, approved billable hours, billed hours, and labor cost by customer or engagement.
-```
+**Analytical plan**
+
+- Objective: Trace approved service hours into the monthly customer invoice.
+- Evidence path: SalesOrderLine -> ServiceEngagement -> ServiceTimeEntry -> ServiceBillingLine -> SalesInvoiceLine.
+- Comparison: Compare planned hours, approved billable hours, billed hours, and labor cost by customer or engagement.
 
 ### 6. Backorder to Shipment Lag
 
@@ -299,11 +306,11 @@ flowchart LR
 
 **Starter analytical question:** Which customers or item groups show the longest lag between order capture, shipment, and billing?
 
-```sql
--- Teaching objective: Measure fulfillment lag from ordered quantity to shipped quantity and billed quantity.
--- Main join path: SalesOrderLine -> ShipmentLine -> SalesInvoiceLine.
--- Suggested analysis: Compare order date, shipment date, and invoice date by customer, item group, or month.
-```
+**Analytical plan**
+
+- Objective: Measure fulfillment lag from ordered quantity to shipped quantity and billed quantity.
+- Evidence path: SalesOrderLine -> ShipmentLine -> SalesInvoiceLine.
+- Comparison: Compare order date, shipment date, and invoice date by customer, item group, or month.
 
 ## Returns, Credits, and Refunds
 

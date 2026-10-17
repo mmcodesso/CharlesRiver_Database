@@ -5,10 +5,15 @@ sidebar_label: Workforce Cost Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Workforce Cost and Org-Control Case
 
+<CaseOverview slug="workforce-cost-and-org-control-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 Leadership wants to understand where people cost sits, how workforce structure varies by location and cost center, and whether approval activity lines up with the intended organization design.
 
@@ -18,16 +23,16 @@ The review should not stop at payroll totals. A useful workforce-cost case needs
 
 Leadership needs a workforce view that connects payroll concentration, labor utilization, executive role ownership, and approval design without treating those as separate discussions.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A payroll-cost concentration view by cost center, job family, job level, and pay class.
-- A work-location and labor-use view that connects headcount, payroll cost, approved time, and direct labor.
-- A control-owner review for key executive and management roles.
-- An approval-design interpretation that compares expected role families to actual approvers.
-- A management-facing conclusion on whether the first action belongs in cost management, labor utilization, executive role ownership, or approval governance.
+- Relate payroll-cost concentration to headcount, approved time, and labor use.
+- Distinguish cost center, location, job family, and approval ownership.
+- Separate cost-management recommendations from control-design findings.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Employee and cost-center masters, payroll registers, approved time, labor allocation, executive-role assignments, and approval-bearing documents.
+- Evidence grain: Keep headcount, payroll-period cost, employee-time allocation, and approval-event populations distinct before comparing organization groups.
 - Main tables: `Employee`, `CostCenter`, `PayrollRegister`, `TimeClockEntry`, `LaborTimeEntry`, `PurchaseRequisition`, `PurchaseOrder`, `JournalEntry`
 - Related report: [Payroll and Workforce](../reports/payroll-perspective.md)
 - Related process page: [Payroll](../../processes/payroll.md)
@@ -35,7 +40,7 @@ Leadership needs a workforce view that connects payroll concentration, labor uti
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case explains workforce cost, labor utilization, and control ownership. Use the master-data workforce audit case when the question is employee-validity exceptions rather than cost and organization-control interpretation.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define payroll cost concentration
 
@@ -209,12 +214,14 @@ The query unions approval events across purchasing, credit, refund, journal, and
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Produce a people-cost and organization review with stated scope, payroll burden, headcount, labor use, and control-owner evidence.
+- **Accounting or business interpretation:** Explain cost concentration and workforce use without treating all payroll cost as productive direct labor.
+- **Database explanation:** Document population and period differences among master headcount, payroll totals, time entries, labor allocation, and approval events.
+- **Management or audit conclusion:** Assign separate action owners for the strongest cost or utilization issue and the strongest governance issue, or explain why one has no supported finding.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -230,6 +237,10 @@ Submit a short case memo or notebook note with these four artifacts:
 - Database/source evidence: Which payroll, headcount, work-location, executive-role, or approval-source grain supports the conclusion?
 - Analytics judgment: Does labor utilization support the payroll-cost ranking, or does control design change the priority?
 - Escalation/next step: Should management act first on cost concentration, labor utilization, executive-role design, or approval concentration?
+
+## Limitations and Judgment
+
+Current employee groupings do not supply a complete historical organization chart. Cost and approval concentration do not prove inefficiency or misconduct.
 
 ## Next Steps
 

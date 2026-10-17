@@ -5,10 +5,15 @@ sidebar_label: Demand Planning Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Demand Planning and Replenishment Case
 
+<CaseOverview slug="demand-planning-and-replenishment-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 The planning team reviews replenishment weekly, long before receipts, work orders, or monthly financial results appear. Forecasts set the demand signal. Inventory policy shapes the expected buffer. Supply recommendations translate that planning state into proposed replenishment actions across purchased and manufactured items.
 
@@ -20,23 +25,23 @@ This case stays at the planning layer. Your job is to explain why the recommenda
 
 You need to prove where forecast demand diverges from actual order demand, what is driving the recommendation pool, where projected availability looks weak, and where recommendation pressure escalates into expedites and rough-cut capacity strain. You also need to explain which planning issue deserves management follow-up first.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A forecast-quality narrative that explains where weekly demand signals diverge from actual order intake.
-- A supply-plan explanation that separates forecast-driven replenishment from backlog, safety-stock, and component-demand pressure.
-- A projected-availability interpretation that identifies the areas with the strongest stockout risk.
-- An urgency and conversion explanation tied to expedites and recommendation follow-through.
-- A short management-facing recommendation on which planning issue should move next into audit review or execution follow-through.
+- Distinguish forecast error and bias from replenishment and execution outcomes.
+- Connect recommendation drivers and projected availability to urgency and capacity.
+- Prioritize a planning response and identify the execution evidence still needed.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Weekly forecast, inventory policy, supply recommendation, material requirement, rough-cut capacity plan, and linked requisition or work order.
+- Evidence grain: Keep item-week demand, recommendation, and work-center capacity grains distinct and align periods before synthesis.
 - Main tables: `DemandForecast`, `InventoryPolicy`, `SupplyPlanRecommendation`, `MaterialRequirementPlan`, `RoughCutCapacityPlan`, `PurchaseRequisition`, `WorkOrder`, `Item`
 - Related guides: [Operations and Risk](../reports/operations-and-risk.md), [Managerial Queries](../managerial.md)
 - Related process pages: [Manufacturing Process](../../processes/manufacturing.md), [Procure-to-Pay Process](../../processes/p2p.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case stays at the planning-signal layer before execution and audit follow-up. Use the replenishment audit case for planning-governance failures and the manufacturing process page when you need execution follow-through.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define the demand signal and forecast quality
 
@@ -220,12 +225,14 @@ The query starts from `RoughCutCapacityPlan`, joins `WorkCenter`, aggregates pla
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Submit a planning-pressure brief covering forecast error and bias, recommendation drivers, projected availability, conversion or expedite evidence, and rough-cut capacity.
+- **Accounting or business interpretation:** Explain how a demand, inventory-policy, or component-demand signal can create a planning response before execution begins.
+- **Database explanation:** Document item, warehouse, week, recommendation, and work-center grains and differences in aggregation.
+- **Management or audit conclusion:** Prioritize one planning follow-up and identify the execution record or approval evidence needed to test the explanation.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -241,6 +248,10 @@ Submit a short case memo or notebook note with these four artifacts:
 - Database/source evidence: Which item, week, warehouse, recommendation, or work-center grain supports your conclusion?
 - Analytics judgment: Where do forecast bias, projected stockout risk, expedite pressure, and capacity tightness overlap?
 - Escalation/next step: Should the next action stay in planning, move to manufacturing execution, or move into the replenishment audit case?
+
+## Limitations and Judgment
+
+Projected availability and rough-cut capacity are planning signals. They do not prove an actual stockout, late delivery, or realized production outcome.
 
 ## Next Steps
 

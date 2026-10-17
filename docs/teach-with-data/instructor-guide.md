@@ -1,92 +1,91 @@
 ---
-title: Instructor Adoption Guide
-description: Course adoption guidance for instructors using this accounting dataset in analytics classes.
+title: Teaching Accounting with Charles River
+description: Plan process-led accounting modules, select foundational exercises and integrated cases, and assess evidence, interpretation, and decisions with Charles River.
 slug: /teach-with-data/instructor-adoption
-sidebar_label: Instructor Adoption
+sidebar_label: For Instructors
 ---
 
 # Instructor Adoption Guide
 
-## Why instructors adopt this dataset
+Start with an accounting question students should be able to explain. <DisplayName /> supplies one fictional company, connected business processes, published teaching files, reports, query resources, and cases. You can assign a focused document trace or build a wider investigation without requiring students to run the dataset generator.
 
-<DisplayName /> is ready for classroom use from the published teaching files and the documentation site. Instructors do not need to assemble a separate business case, build process notes, or create a starter query path before the first assignment. The site already connects business context, process logic, dataset navigation, references, analytics guides, and case-based activities in one teaching environment.
+Charles River is part of [Accounting Analytics Hub](https://accountinganalyticshub.com/). The [Accounting Analytics: An Integrated Approach textbook](https://aa.accountinganalyticshub.com/) supplies conceptual depth and tool instruction; this site supplies the company, records, and applied work. The textbook's [instructor preface](https://aa.accountinganalyticshub.com/front-matter/preface.html#to-the-instructor) provides additional adoption context. The Hub's future AIS and tool courses are planned resources, rather than available courses required for this material.
 
-That structure makes adoption practical across several accounting courses. The same dataset can support AIS, business-process instruction, SQL and accounting analytics, Excel-based analysis, auditing and controls, and managerial or cost-accounting work. Instructors can begin with a clear default path and expand into cases, references, and optional customization only when the course needs it.
+## Prepare the Class Files
 
-## What students need first
+Choose the published format that matches the intended evidence workflow:
 
-For most courses, start students with the published teaching files and the teaching-facing documentation.
+- <ReleaseDownloadLink type="sqlite">SQLite database</ReleaseDownloadLink> for joins, document tracing, and query-based analysis.
+- <ReleaseDownloadLink type="excel">Excel workbook</ReleaseDownloadLink> for filters, Power Query imports, PivotTables, and visual interpretation.
+- <ReleaseDownloadLink type="csv">CSV package</ReleaseDownloadLink> for table imports into a course-selected tool.
 
-- Use <FileName type="sqlite" /> when the course emphasizes SQL, joins, and query-based analysis.
-- Use <FileName type="excel" /> when the course emphasizes pivots, filters, formulas, charts, and workbook-based interpretation.
-- Use [Start Here](../start-here/index.md), [Company Story](../learn-the-business/company-story.md), [Process Flows](../learn-the-business/process-flows.md), and [Dataset Guide](../start-here/dataset-overview.md) before the first technical assignment.
+Record the release version, retain the source files, and give students a common reporting period. The published database contains 82 user tables. Its main operating window covers 2024–2026; supplier disbursements can settle in early 2027. Assign a clear reporting date so subsequent settlements do not silently change a period-end conclusion.
 
+Review the chosen activity with the actual class file before assigning it. The default teaching data deliberately includes anomalies; an exception result is a lead for evidence work, not a supplied diagnosis.
 
-## Where the dataset fits in the curriculum
+## Recommended Teaching Sequence
 
-| Course emphasis | Begin with | Then use |
-|---|---|---|
-| AIS and business processes | [Company Story](../learn-the-business/company-story.md), [Process Flows](../learn-the-business/process-flows.md) | source-document tracing, process mapping, and source-to-ledger explanation |
-| SQL and accounting analytics | [Start Here](../start-here/index.md), [Dataset Guide](../start-here/dataset-overview.md), [SQL Guide](../analytics/sql-guide.md) | starter SQL packs, guided cases, and topic-based analysis |
-| Excel analytics | [Start Here](../start-here/index.md), [Company Story](../learn-the-business/company-story.md), [Excel Guide](../analytics/excel-guide.md) | workbook-based pivots, charts, and interpretation exercises |
-| Auditing and controls | [Process Flows](../learn-the-business/process-flows.md), [Audit Queries](../analytics/audit.md) | support-workbook review, control testing, and exception-focused cases |
-| Managerial and cost accounting | [Dataset Guide](../start-here/dataset-overview.md), [Managerial Queries](../analytics/managerial.md) | portfolio, labor, variance, planning, and capacity analysis |
+1. **Understand the company.** Assign [Start Here](../start-here/index.md) and [Company Story](../learn-the-business/company-story.md). Ask students to explain the difference between purchased goods, manufactured goods, and hourly services.
+2. **Understand a process.** Use [Process Flows](../learn-the-business/process-flows.md), then one detailed process page. Identify the business need, documents, approvals, and handoffs.
+3. **Explore the evidence.** Use [Dataset Guide](../start-here/dataset-overview.md) and a foundational task in [Learn and Practice](../learn-and-practice/index.md). Keep the [Schema Reference](../reference/schema.md) and [Posting Reference](../reference/posting.md) available as lookup tools.
+4. **Analyze a population.** Choose the [SQL Guide](../analytics/sql-guide.md), [Excel Guide](../analytics/excel-guide.md), a [query resource](../analytics/analysis-tracks.md), or a [report perspective](../analytics/reports/index.md).
+5. **Interpret and decide.** Assign an [integrated case](../analytics/cases/index.md). Require a supported accounting explanation, limitations, and a specific recommendation or request for further evidence.
 
-## Recommended teaching sequence
+## Three Core AIS Process Modules
 
-This sequence works well for most first-time adoptions:
+These modules support source-document, relational-data, posting, and control instruction within an existing AIS course. They can also anchor financial, managerial, or audit modules while the complementary AIS textbook is in development.
 
-1. Share the published teaching files.
-2. Assign [Start Here](../start-here/index.md).
-3. Assign [Company Story](../learn-the-business/company-story.md).
-4. Review [Process Flows](../learn-the-business/process-flows.md).
-5. Assign [Dataset Guide](../start-here/dataset-overview.md).
-6. Choose the first reusable SQL path in [Query Library](../analytics/analysis-tracks.md).
-7. Use [Cases](../analytics/cases/index.md) once students understand the basic document and table flow.
+| Process module | Foundational task | Applied or integrated continuation | Assess the distinction between |
+|---|---|---|---|
+| [Order-to-cash](../processes/o2c.md) | [Goods sale source-to-ledger trace](../learn-and-practice/source-to-ledger.md) | [O2C Trace Case](../analytics/cases/o2c-trace-case.md) | Order, shipment, invoice, cash receipt, and invoice settlement |
+| [Procure-to-pay](../processes/p2p.md) | [Receipt-to-payable timing](../learn-and-practice/receipt-to-payable.md) | [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md) | Commitment, receipt, GRNI, AP, payment, and accrued-service settlement |
+| [Conversion and manufacturing](../processes/manufacturing.md) | [Manufacturing cost-flow map](../learn-and-practice/manufacturing-cost-flow.md) | [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md) | Planning, execution, standard-cost completion, labor support, and close |
 
-This order helps students understand the business and the process logic before they move into SQL, Excel, or open-ended analysis.
+## Pathways Across the Curriculum
 
-## Including the Support Workbook
+| Course emphasis | Starting evidence and preparation | Suggested continuation | Student submission |
+|---|---|---|---|
+| Accounting information systems | Company story, one core process, and document/line keys | Process exercise followed by a related case | Annotated document-to-table-to-ledger map with a control question |
+| Accounting analytics | One process plus the SQL or Excel guide; define row grain before joining | [Query Library](../analytics/analysis-tracks.md) and a matching case | Reproducible analysis, source checks, and a decision memo |
+| Financial accounting | Recognition and settlement concepts; `GLEntry` and `Account` | [Financial Statement Bridge Case](../analytics/cases/financial-statement-bridge-case.md) or [CAPEX Lifecycle Case](../analytics/cases/capex-fixed-asset-lifecycle-case.md) | Reconciliation with source support and reporting-date explanation |
+| Managerial accounting | Product, cost, labor, and planning concepts | [Operations and Risk](../analytics/reports/operations-and-risk.md), portfolio or planning cases | Defined performance measure, a supported comparison, and limitations |
+| Auditing | A normal process trace before exception testing | Specialized [audit cases](../analytics/cases/index.md), then the [Audit Review Pack Case](../analytics/cases/audit-review-pack-case.md) | Exception triage, alternative explanations, and a proposed evidence procedure |
 
-Include <FileName type="support" /> when you want students to:
+The case library retains its existing difficulty labels. A short foundational exercise is narrower than a Foundation case: establish the single-event explanation first, then widen the population and judgment required.
 
-- review anomaly families alongside source-table evidence
-- compare validation exceptions to operational or accounting records
-- work through audit and control cases with guided exception context
-- triage issues before moving into deeper source-document review
+## Specify the Assignment Before Choosing More Queries
 
-The published default build also carries a small intentional manufacturing audit-seed set in the validation companion material. Use that set when you want a short manufacturing-control lab that is visible in source tables and in the support workbook without broadening the anomaly pack.
+Give students a defined business problem, learning objectives, prerequisite reading, permitted tools, source tables or documents, evidence workflow, submission format, interpretation requirements, and scope limits. The [Learn and Practice](../learn-and-practice/index.md) pages demonstrate this structure.
 
+A useful assessed submission has four parts:
 
-## How to stage assignments
+| Criterion | Evidence of learning |
+|---|---|
+| Business and accounting explanation | Correctly distinguishes events, recognition, settlement, and the relevant process |
+| Reproducible evidence | Retains version, dates, identifiers, query or workbook steps, and the meaning of one result row |
+| Analytical checking | Tests source totals, join multiplicity, filters, and the basis of compared measures |
+| Interpretation and judgment | Separates findings from hypotheses, states limitations, and proposes a supported next action |
 
-Start with guided work and then widen the analytical scope.
+Set the required length and weighting for your course. Assess the explanation as well as the output; a correct-looking total does not demonstrate that the student preserved the intended population.
 
-- Use topic guides and starter queries to establish the first analytical pattern.
-- Move next into [Cases](../analytics/cases/index.md) when students need structured interpretation prompts and business context.
-- Use open-ended analysis only after students can explain the source documents, process flow, and ledger effect behind the result.
-- Use [Schema Reference](../reference/schema.md) and [GLEntry Posting Reference](../reference/posting.md) as supporting references during assignments, not as the first reading.
+## Teaching with Intentional Exceptions
 
-This progression usually produces stronger explanations and better query design than starting with a blank-screen assignment.
+Students should first explain the normal process, then investigate where source evidence or timing departs from that expectation. Require them to distinguish a business condition, a model limitation, an analytical error, and a potential control issue before recommending action.
 
-## Optional customization
+If you supply <FileName type="support" />, use it as companion context for anomaly families and validation review. The workbook is available in local instructor materials but is not included among the public release downloads. Confirm version compatibility and provide it explicitly when an activity depends on it. Support summaries guide investigation; the underlying source records remain necessary evidence.
 
-Most instructors can adopt <DisplayName /> successfully with the published teaching package. Use [Customize](../technical/dataset-delivery.md) only when you want a local variant, a different fiscal range, different scale settings, or a different output set for instructor preparation.
+For broad capstone work, limit the initial assignment to selected exception families unless students already know the related document chains. Avoid grading students against an undisclosed fictional event or an assumed numerical outcome.
 
-## Adoption checklist
+## Adoption Checklist
 
-- Decide whether the course will begin in SQL, Excel, or both.
-- Download and review the published teaching files before the course begins.
-- Assign the business and process pages before the first technical task.
-- Choose one analytics track as the first structured module.
-- Add the support workbook only when the assignment needs anomaly or validation context.
-- Use guided cases before open-ended projects when students are new to integrated accounting datasets.
-- Keep schema and posting references available during assignments.
+- Choose the process and accounting judgment you want students to demonstrate.
+- Review the matching published file, reporting boundary, and activity before class.
+- Assign the company and process reading before a technical task.
+- Begin with a focused exercise, then progress to applied analysis and integrated cases.
+- Require source checks and a reproducible evidence trail in SQL and Excel submissions.
+- State whether a separately provided support workbook is required.
+- Link to the textbook for conceptual development instead of duplicating its chapters.
 
 ## Next Steps
 
-- Use [Start Here](../start-here/index.md) as the primary student launch page.
-- Use [Query Library](../analytics/analysis-tracks.md) to choose the first reusable SQL pack.
-- Use [Cases](../analytics/cases/index.md) for guided assignments.
-- Use [Schema Reference](../reference/schema.md) and [GLEntry Posting Reference](../reference/posting.md) as assignment support references.
-- Use [Customize](../technical/dataset-delivery.md) only when you need a locally generated variant.
+Share [Start Here](../start-here/index.md) with students, choose the first activity in [Learn and Practice](../learn-and-practice/index.md), and use the [Case Library](../analytics/cases/index.md) to extend the module. The [technical documentation](../technical/technical-guide.md) describes the existing project for instructors who need implementation context.

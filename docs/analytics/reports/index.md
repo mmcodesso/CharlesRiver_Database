@@ -1,6 +1,6 @@
 ---
 title: Reports Hub
-description: Student-first report layer built on top of the current SQLite analytics package.
+description: Read accounting reports through executive, commercial, workforce, and operations perspectives, then trace questions into SQL and cases.
 sidebar_label: Reports Hub
 ---
 
@@ -16,7 +16,7 @@ This section keeps two reading levels together. `Business Perspectives` is the b
 
 | Perspective | Best use | Go to |
 |---|---|---|
-| Executive Overview | Performance, position, cash, and working capital in one management storyline | [Business Perspectives Hub](lens-packs.md) |
+| Executive Overview | Performance, position, cash, and working capital in one management storyline | [Executive Overview](executive-overview.md) |
 | Commercial and Working Capital | Revenue quality, pricing, design-service billing, receivables, payables, and settlement timing | [Commercial and Working Capital](commercial-and-working-capital.md) |
 | Payroll and Workforce | People cost, gross-to-net pay, payroll cash, time support, and payroll-control interpretation | [Payroll and Workforce](payroll-perspective.md) |
 | Operations and Risk | Capacity, supply reliability, planning pressure, workforce context, and controls | [Operations and Risk](operations-and-risk.md) |
@@ -30,6 +30,8 @@ This section keeps two reading levels together. `Business Perspectives` is the b
 | Audit | Approval, segregation-of-duties, payroll and time controls, and anomaly review | [Audit Reports](audit.md) |
 
 ## Next Steps
+
+Before drawing a conclusion, record the reporting period, units, grouping, and comparison basis. Preview rows are a reading aid; inspect the downloadable report for the full result and use its source query when you need to test scope or trace a document. Different reports may summarize different populations, so matching headings alone do not establish a reconciliation.
 
 1. Start with the perspective or report area that matches the business cycle you just studied.
 2. Use the in-site preview to read the report as a business summary before downloading the full artifact.

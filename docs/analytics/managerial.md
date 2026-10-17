@@ -9,7 +9,9 @@ import { queryLibraryGroups } from "@site/src/generated/queryDocCollections";
 
 # Managerial Queries
 
-Use this page as the managerial and cost-accounting query library. The groups below organize reusable SQL around cost management, portfolio performance, sales commissions, inventory and supplier behavior, manufacturing operations, workforce coverage, planning, replenishment, and design-service utilization.
+Managers need to explain performance before choosing an action: a margin ranking may change under a different cost assumption, and overtime may respond to either load or missing coverage. These query groups connect cost, portfolio, supplier, manufacturing, workforce, planning, pricing, and Design Services questions to their source records.
+
+Begin with the relevant [business process](../learn-the-business/process-flows.md). Align periods and populations before comparing measures, document denominators for rates, and distinguish an observed association from a supported explanation.
 
 ## Managerial Query Groups
 
@@ -38,15 +40,15 @@ Use this page as the managerial and cost-accounting query library. The groups be
 
 ## Interpretation Notes
 
-- The item master now supports collection, style family, material, finish, color, lifecycle, and supply-mode analysis inside the existing `Item` table.
-- The employee master now supports work location, job family, job level, employment status, and current-state active analysis without adding a separate HR-history model.
+- The item master supports collection, style family, material, finish, color, lifecycle, and supply-mode analysis inside the existing `Item` table.
+- The employee master supports work location, job family, job level, employment status, and current-state active analysis without a separate HR-history model.
 - Supply mode changes the meaning of cost analysis. Manufactured items can support both absorption and contribution-margin work because fixed overhead is stored separately.
 - Portfolio mix and profitability should be read together with service-level measures such as fill rate, shipment lag, and return pressure.
 - Work location and cost center answer different questions. Use both when students compare workforce structure to payroll or labor usage.
-- Workforce-planning analysis is stronger now that rostered hours, approved worked hours, absences, raw punches, and overtime approvals can be compared directly.
+- Workforce-planning analysis compares rostered hours, approved worked hours, absences, raw punches, and overtime approvals while retaining their different source grains.
 - The dataset includes a weekly planning layer, so students can compare forecast, policy, recommendation, and rough-cut capacity pressure before execution starts.
 - The dataset includes commercial-pricing coverage, so students can compare list price, resolved price-list pricing, promotions, overrides, and net realized margin without introducing a separate quote system.
 - Sales commissions are modeled as a separate selling-cost subledger, so students can compare commission expense by rep, segment, and revenue type without mixing it into payroll.
-- The budget model now starts from `BudgetLine`, so students can move from forecast, planned price, standard cost, payroll, and timing assumptions into the summary `Budget` table and the pro forma statements.
+- The budget model starts from `BudgetLine`, so students can move from forecast, planned price, standard cost, payroll, and timing assumptions into the summary `Budget` table and the pro forma statements.
 - The current manufacturing model is still a foundation. It supports operations, labor, and contribution-margin analysis without switching inventory valuation to actual cost.
 - Demand-planning analysis is most useful when students connect `DemandForecast`, `InventoryPolicy`, `SupplyPlanRecommendation`, `MaterialRequirementPlan`, and `RoughCutCapacityPlan` in one analytical path.

@@ -1,4 +1,5 @@
 ---
+title: Hourly Design Services Accounting Process
 description: Learn the design-services process in the synthetic accounting analytics dataset, from customer demand and staffing through approved hours, monthly billing, payroll support, and GLEntry.
 ---
 
@@ -13,11 +14,17 @@ description: Learn the design-services process in the synthetic accounting analy
 
 ## Business Storyline
 
-<CompanyName /> now earns revenue from two customer-facing lines: physical goods and hourly design services. The design-services line is intentionally operational, not decorative. Customers can hire the company for consultation, planning, specification work, and project coordination even when the engagement is not tied to a shipment of finished goods.
+<CompanyName /> earns revenue from physical goods and hourly Design Services. In the fictional company setting, students can picture design staff helping a customer plan furnishing choices. The dataset records engagement staffing, approved hours, monthly billing, payroll expense, and settlement; that illustrative setting does not establish a separate operational workflow for every kind of design task.
 
 The process starts with the same commercial promise as the rest of O2C. Sales records a service order line, operations opens a customer engagement, managers staff that engagement with one or more employees, approved service time accumulates through the month, and accounting bills the approved billable hours at the agreed hourly rate. Treasury and accounting then settle the invoice through the normal cash-receipt and cash-application path.
 
-That distinction matters. An engagement is not revenue. Approved time is not revenue. Revenue appears only when the approved billable hours are invoiced. Payroll expense also remains a normal period expense. Students can see the customer billing side and the labor-cost side together without turning the dataset into project-based actual costing.
+In this dataset, an engagement and its approved time support the monthly service invoice; they do not post service revenue themselves. Payroll expense remains a normal period expense. Students can see the customer-billing side and the labor-cost side together without treating the service line as project-based actual costing.
+
+## Decisions and Evidence
+
+An engagement manager needs to distinguish planned work, assigned people, approved hours, and billed hours. Customer accounting needs the monthly billing bridge. An analyst comparing service revenue with labor cost must also state whether the measure includes non-billable hours and which broader costs it omits.
+
+Read the [Company Story](../learn-the-business/company-story.md) for the illustrative service setting. Use the actual engagement and invoice records for findings. The billing and payroll rules described here belong to the synthetic model and should not be generalized into a revenue-recognition policy for every service business.
 
 ## Normal Process Overview
 

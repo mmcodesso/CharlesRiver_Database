@@ -1,4 +1,5 @@
 ---
+title: Accounting Journals, Accruals, and Financial Close
 description: Learn the manual journals and close cycle in the synthetic accounting analytics dataset, from recurring journal entries and accrual settlement to year-end close and GLEntry.
 ---
 
@@ -18,6 +19,12 @@ The dataset includes both operational activity and finance-controlled journal ac
 This process shows what happens outside the normal document chains. Students can compare operational postings from shipments, receipts, payroll, and purchasing with finance-controlled entries that start directly in the journal process. The most important cross-process bridge is accrued-expense settlement, where a finance estimate is later cleared operationally through AP.
 
 That distinction matters. A recurring journal is not an operational source document. An accrual is not the same thing as the later supplier invoice that clears it. A year-end close is not just another monthly recurring journal. Students can see those stages separately in the data and use that separation for financial-accounting, working-capital, and audit questions.
+
+## Decisions and Evidence
+
+Finance must explain both the posting and the period it belongs to. An estimate, a later supplier invoice, a payment, and an accrual adjustment can relate to the same underlying need while answering different recognition and settlement questions. Asset depreciation and financing also require their own register or schedule support.
+
+Begin by tracing one journal type into `GLEntry` and stating its purpose. Use the [Financial Statement Bridge Case](../analytics/cases/financial-statement-bridge-case.md) for the wider reconciliation. Keep opening and year-end closing entries visible in a balance reconciliation while applying the documented close-entry exclusions when analyzing operating P&L activity.
 
 ## Normal Process Overview
 
@@ -109,11 +116,11 @@ flowchart LR
 
 **Starter analytical question:** Which recurring journal families appear each month, and how stable are they by amount and cost center?
 
-```sql
--- Teaching objective: Compare recurring journal families across months and cost centers.
--- Main join path: JournalEntry -> GLEntry -> Account, with CostCenter when available.
--- Suggested analysis: Group by EntryType, month, account, or cost center.
-```
+**Analytical plan**
+
+- Objective: Compare recurring journal families across months and cost centers.
+- Evidence path: JournalEntry -> GLEntry -> Account, with CostCenter when available.
+- Comparison: Group by EntryType, month, account, or cost center.
 
 ### Factory Overhead Journals
 
@@ -141,11 +148,11 @@ Warehouse payroll, warehouse rent, and warehouse supplies stay in operating expe
 
 **Starter analytical question:** How much finance-controlled factory-overhead activity exists beside the operational manufacturing postings in each month?
 
-```sql
--- Teaching objective: Isolate finance-controlled manufacturing support journals from operational manufacturing postings.
--- Main join path: JournalEntry -> GLEntry -> Account.
--- Suggested analysis: Filter EntryType to Factory Overhead.
-```
+**Analytical plan**
+
+- Objective: Isolate finance-controlled manufacturing support journals from operational manufacturing postings.
+- Evidence path: JournalEntry -> GLEntry -> Account.
+- Comparison: Filter EntryType to Factory Overhead.
 
 ### Accrual Estimate to AP Settlement
 
@@ -189,11 +196,11 @@ Use `PurchaseInvoiceLine.AccrualJournalEntryID` for accrued-service settlement. 
 - `DisbursementPayment.PurchaseInvoiceID -> PurchaseInvoice.PurchaseInvoiceID`
 - `JournalEntry.ReversesJournalEntryID` for linked `Accrual Adjustment` cleanup review
 
-```sql
--- Teaching objective: Trace an accrued expense from the original estimate into later AP settlement and linked cleanup activity.
--- Main join path: JournalEntry -> PurchaseInvoiceLine -> PurchaseInvoice -> DisbursementPayment.
--- Suggested analysis: Compare accrual date, invoice approval date, payment date, and any later accrual adjustment.
-```
+**Analytical plan**
+
+- Objective: Trace an accrued expense from the original estimate into later AP settlement and linked cleanup activity.
+- Evidence path: JournalEntry -> PurchaseInvoiceLine -> PurchaseInvoice -> DisbursementPayment.
+- Comparison: Compare accrual date, invoice approval date, payment date, and any later accrual adjustment.
 
 ## Opening Balance and Year-End Close
 

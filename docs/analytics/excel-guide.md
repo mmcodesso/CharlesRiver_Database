@@ -1,10 +1,14 @@
 ---
 title: Excel Guide
-description: How to use the published Excel workbooks for student and classroom analysis.
+description: Build a first accounting evidence workbook with Power Query, profile the item catalog, check source totals, and extend the analysis into guided cases.
 sidebar_label: Excel Guide
 ---
 
 # Excel Starter Guide
+
+Begin with a small, explainable result. The foundation exercise below uses one source table to help you establish row grain, check a control total, and write an interpretation before attempting a multi-table model.
+
+Read the [company story](../learn-the-business/company-story.md), then obtain the workbook from [Downloads](../start-here/downloads.md). The [SQL Guide](sql-guide.md) offers a parallel route into source evidence.
 
 ## Workbook Setup
 
@@ -24,6 +28,24 @@ For each new exercise:
 6. build pivots, formulas, charts, or summary tabs from the imported tables
 
 This approach keeps each exercise cleaner, reduces workbook clutter, and makes it easier to control row counts, joins, and refresh steps.
+
+## Foundation Exercise: A Catalog Profile
+
+**Context and problem.** Merchandising needs to understand the composition of the product catalog before comparing profitability. This is an illustrative management request. Use actual item records from the assigned workbook and make no assumption about which collection will be largest.
+
+**Learning objectives.** Recognize one row per item, distinguish counts from monetary measures, and explain how lifecycle and supply mode organize a catalog. Prerequisites: the company story, basic Excel tables, and PivotTables. Tools: Excel with Power Query, the published source workbook, and a separate working workbook. Source: `Item`.
+
+1. Import only `Item` into the working workbook. Record the source filename or release, table name, import steps, and any filters.
+2. Confirm that `ItemID` identifies the item rows. Check for blank or duplicate keys and retain the imported row count as a control total.
+3. Build a PivotTable with `CollectionName` as rows, `LifecycleStatus` as columns, and count of `ItemID` as the value. Treat blank descriptive attributes as visible data-quality observations.
+4. Add `SupplyMode` as a filter or a second view. Reconcile the unfiltered pivot grand total to the imported row count; explain any difference before proceeding.
+5. Write an interpretation of the catalog mix and one question to investigate with transaction data. Do not describe an item count as sales, demand, or profit.
+
+**Assessed deliverable.** Submit a workbook containing the source/import note, key and row-count checks, the catalog pivot, and a brief interpretation. A reviewer should be able to refresh the import and reproduce the total. Assessment focuses on traceable inputs, correct counts, and a conclusion within the evidence's limits.
+
+**Interpretation and limits.** This is a current catalog profile. It does not establish historical status, revenue, profitability, or customer demand. Those questions need dated transaction evidence and explicit join logic.
+
+Continue to the [Product Portfolio and Lifecycle Case](cases/product-portfolio-and-lifecycle-case.md) for applied master-data and activity review. Use the [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) for the concepts behind analysis and interpretation.
 
 ## Recommended Workflow Pattern
 
@@ -55,6 +77,8 @@ Typical examples:
 - managerial exercise: `Item`, `SalesInvoiceLine`, `Employee`, `CostCenter`
 - audit exercise: `Employee`, `PurchaseOrder`, `JournalEntry`, `TimeClockEntry`
 
+The topic lists below are starting sets, not complete join recipes. Inspect the paired case and SQL first, identify every table and key required for your chosen measure, and preserve one-to-many relationships when merging in Power Query. Aggregate each population to a compatible grain before comparing totals; never fix a duplicated measure by deleting arbitrary result rows.
+
 ## Financial Workflows
 
 ### Working capital and cash conversion
@@ -66,6 +90,8 @@ Use:
 - `SalesInvoice`
 - `CashReceiptApplication`
 - `PurchaseInvoice`
+- `PurchaseInvoiceLine`
+- `GoodsReceipt`
 - `DisbursementPayment`
 - `PayrollRegister`
 - `PayrollLiabilityRemittance`

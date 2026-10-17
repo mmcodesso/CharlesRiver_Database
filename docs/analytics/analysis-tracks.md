@@ -9,9 +9,9 @@ import { caseSupportTraceQueries } from "@site/src/generated/queryDocCollections
 
 # Query Library
 
-The Query Library is the reusable SQL repository for this section. It is best after students know the business question they are working on. If students are still learning how to run SQL or read the company story, start with [SQL Guide](sql-guide.md), [Reports Hub](reports/index.md), or [Cases](cases/index.md) first.
+Begin with the question: how did an event reach the ledger, why did a measure change, or which control needs review? Choose a query domain below, read the objective and output grain, then inspect the SQL. For a first tool exercise, start with the [SQL Guide](sql-guide.md).
 
-Reports and cases answer different teaching needs. Reports show finished outputs. Cases give students a guided assignment flow. The Query Library sits underneath both: it exposes the SQL building blocks and the source-table logic behind the learning path.
+The query cards expose reusable logic behind [reports](reports/index.md) and [cases](cases/index.md). Keep the assigned release unchanged, retain document keys in exported evidence, and record the period and filters behind each result.
 
 ## Query Domains
 
