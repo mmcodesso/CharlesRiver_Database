@@ -25,9 +25,9 @@ Begin with the company and its business need. Read a BPMN model to identify acti
 
 ## Before You Start
 
-**Prerequisites:** read [Company Story](../learn-the-business/company-story.md), [Process Flows](../learn-the-business/process-flows.md), and the notation introduction in [Process Models](../process-models/index.md). Complete one of the [foundational exercises](index.md), or review it with your instructor before attempting the evidence extension.
+**Prerequisites:** read [Company Story](../learn-the-business/company-story.md) and [Business Processes and Models](../learn-the-business/process-flows.md), including its BPMN reading guide. Complete one of the [foundational exercises](index.md), or review it with your instructor before attempting the evidence extension.
 
-**Tools and files:** view the published SVG in a browser. For the modeling extension, download an editable `.drawio` file from Process Models and open a separate working copy in diagrams.net. Use the assigned published SQLite database in read-only mode, or analyze copies of selected Excel tables in a separate workbook. Follow the [SQL Guide](../analytics/sql-guide.md) or [Excel Guide](../analytics/excel-guide.md); record your release version and reporting date.
+**Tools and files:** view the diagrams in a browser. For the modeling extension, download an editable `.drawio` file from the model library and open a separate working copy in diagrams.net. Use the assigned published SQLite database in read-only mode, or analyze copies of selected Excel tables in a separate workbook. Follow the [SQL Guide](../analytics/sql-guide.md) or [Excel Guide](../analytics/excel-guide.md); record your release version and reporting date.
 
 **Sources:** choose a process from the table below. Read its full process page and use the [Schema Reference](../reference/schema.md) and [Posting Reference](../reference/posting.md) to confirm the actual columns and accounting sources before joining. Listed tables are starting evidence, rather than a claim that one join connects every row.
 
@@ -114,4 +114,4 @@ The published data supports source-record investigation, with intentional anomal
 
 ## Next Steps
 
-Continue with the [O2C Trace Case](../analytics/cases/o2c-trace-case.md), [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md), [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md), or [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md). Reuse the matrix with the chosen case's existing query sequence. Return to [Process Models](../process-models/index.md) for another cycle or to [Learn and Practice](index.md) for a narrower evidence exercise.
+Continue with the [O2C Trace Case](../analytics/cases/o2c-trace-case.md), [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md), [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md), or [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md). Reuse the matrix with the chosen case's existing query sequence. Return to the [model library](../learn-the-business/process-flows.md#model-library) for another cycle or to [Learn and Practice](index.md) for a narrower evidence exercise.

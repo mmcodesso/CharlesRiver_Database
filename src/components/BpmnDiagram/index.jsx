@@ -156,7 +156,7 @@ export default function BpmnDiagram({ modelId }) {
       <p>Confirm keys and accounting sources in the <Link to="/docs/reference/schema">Schema Reference</Link> and <Link to="/docs/reference/posting">Posting Reference</Link>.</p>
       <p>{model.boundary}</p>
     </details>
-    <p className={styles.note}>Editable visual model in Draw.io XML; this is not executable BPMN XML. <Link to="/docs/process-models">Notation and model library</Link>.</p>
+    <p className={styles.note}>Editable visual model in Draw.io XML; this is not executable BPMN XML. <Link to="/docs/process-flows#a-short-bpmn-reading-guide">Notation and model library</Link>.</p>
     {isOpen ? <dialog ref={dialogRef} className={`${diagramStyles.modal} ${styles.dialog}`} aria-label={`${model.title} BPMN viewer`} onKeyDown={handleDialogKey} onCancel={(event) => { event.preventDefault(); setIsOpen(false); }}>
       <div className={diagramStyles.modalToolbar}><div><p className={diagramStyles.modalTitle}>Diagram viewer</p><p className={diagramStyles.modalHint}>Drag to pan or focus the diagram and use arrow keys. Use + and - to zoom; 0 resets the view.</p></div>
         <div className={diagramStyles.controlGroup}>

@@ -1,10 +1,9 @@
 # Page and route inventory
 
-All original public document routes remain unchanged. No pages were removed or consolidated; the six pre-existing client redirects are retained. The practice hub and three exercises added four routes; the BPMN extension adds the Process Models library and controls workshop, for 60 authored documents in total. The six process guides and process-flows now integrate BPMN while preserving all existing Mermaid blocks and query/report/case links.
+All 54 original public document routes remain unchanged, and the six pre-existing client redirects are retained. The practice hub, three exercises, and controls workshop add five authored routes, for 59 documents in total. At the user's request, the added Process Models page was consolidated into the existing Process Flows hub; `/docs/process-models` now redirects to `/docs/process-flows`. The six process guides preserve their Mermaid blocks and query/report/case links.
 
 | Page | Route | Treatment |
 | --- | --- | --- |
-| [docs/process-models/index.md](../../docs/process-models/index.md) | `/docs/process-models` | Added BPMN library, notation, text evidence, downloads, and expanded viewer |
 | [docs/learn-and-practice/bpmn-controls-workshop.md](../../docs/learn-and-practice/bpmn-controls-workshop.md) | `/docs/learn-and-practice/bpmn-controls-workshop` | Added AIS interpretation, evidence trace, risk/control matrix, and modeling extension |
 | [docs/analytics/analysis-tracks.md](../../docs/analytics/analysis-tracks.md) | `/docs/analytics/analysis-tracks` | Refined or rewritten; URL preserved |
 | [docs/analytics/audit.md](../../docs/analytics/audit.md) | `/docs/analytics/audit` | Refined or rewritten; URL preserved |
@@ -45,7 +44,7 @@ All original public document routes remain unchanged. No pages were removed or c
 | [docs/learn-and-practice/receipt-to-payable.md](../../docs/learn-and-practice/receipt-to-payable.md) | `/docs/learn-and-practice/receipt-to-payable` | Added |
 | [docs/learn-and-practice/source-to-ledger.md](../../docs/learn-and-practice/source-to-ledger.md) | `/docs/learn-and-practice/source-to-ledger` | Added |
 | [docs/learn-the-business/company-story.md](../../docs/learn-the-business/company-story.md) | `/docs/company-story` | Refined or rewritten; URL preserved |
-| [docs/learn-the-business/process-flows.md](../../docs/learn-the-business/process-flows.md) | `/docs/process-flows` | Refined or rewritten; URL preserved |
+| [docs/learn-the-business/process-flows.md](../../docs/learn-the-business/process-flows.md) | `/docs/process-flows` | Consolidated process overview, model library, notation, and analysis pathways; URL preserved |
 | [docs/processes/design-services.md](../../docs/processes/design-services.md) | `/docs/processes/design-services` | Refined or rewritten; URL preserved |
 | [docs/processes/manual-journals-and-close.md](../../docs/processes/manual-journals-and-close.md) | `/docs/processes/manual-journals-and-close` | Refined or rewritten; URL preserved |
 | [docs/processes/manufacturing.md](../../docs/processes/manufacturing.md) | `/docs/processes/manufacturing` | Refined or rewritten; URL preserved |

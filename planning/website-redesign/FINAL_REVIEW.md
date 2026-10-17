@@ -1,6 +1,6 @@
 # Charles River website redesign — review handoff
 
-**BPMN extension:** [the current BPMN/AIS handoff](bpmn/REVIEW_HANDOFF.md) adds 11 editable models with SVGs, two routes, a controls workshop, and a proposed 14-week sequence. Current totals are 60 documents and 23 learning resources. The initial redesign record below retains its original counts and validation history.
+**BPMN extension:** [the current BPMN/AIS handoff](bpmn/REVIEW_HANDOFF.md) adds 11 editable models with SVGs, a controls workshop, and a proposed 14-week sequence. The model library and notation are consolidated into `/docs/process-flows`; `/docs/process-models` redirects there. Current totals are 59 documents and 23 learning resources. The initial redesign record below retains its original counts and validation history.
 
 Completed 17 October 2026 on `feature/charles-river-website-redesign`. The redesign is committed locally and remains separate from main and production.
 

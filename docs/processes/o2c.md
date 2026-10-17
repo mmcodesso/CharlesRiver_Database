@@ -67,7 +67,7 @@ A physical return restores inventory. An approved credit memo reduces open recei
 | Incomplete billing: account for shipped quantities | `ShipmentLine` and `SalesInvoiceLine.ShipmentLineID` | An independent shipment-to-invoice reconciliation is a **proposed teaching control**, not a stored automated blocking rule |
 | Incorrect settlement or refund: distinguish cash, AR, and customer credit | `CashReceiptApplication`, `CreditMemo` approval fields, `CustomerRefund` | Compare authorizers and dates; do not infer a complete control procedure from lane separation |
 
-The Mermaid views below explain document lineage and posting effects. They complement the BPMN activities rather than representing additional approval workflows. The [Process Models](../process-models/index.md) library explains the notation and provides editable sources.
+The Mermaid views below explain document lineage and posting effects. They complement the BPMN activities rather than representing additional approval workflows. The [model library](../learn-the-business/process-flows.md#model-library) explains the notation and provides editable sources.
 
 ## Normal Process Overview
 

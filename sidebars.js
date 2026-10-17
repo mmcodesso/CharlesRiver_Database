@@ -22,7 +22,6 @@ const sidebars = {
       label: "Business Processes",
       link: { type: "doc", id: "learn-the-business/process-flows" },
       items: [
-        "process-models/index",
         "processes/o2c",
         "processes/design-services",
         "processes/p2p",

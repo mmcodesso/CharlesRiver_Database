@@ -54,7 +54,7 @@ Within Charles River, **Employees** supply attendance evidence, **Supervisors** 
 | Unresolved attendance concern: identify follow-up before drawing a conclusion | `AttendanceException` status, reviewer, and review-date fields | A logged issue does not prove misconduct, an automatic pay hold, or completed review |
 | Incomplete liability settlement: distinguish employee net pay from remittances | `PayrollRegister`, `PayrollPayment`, `PayrollLiabilityRemittance`, `GLEntry` | An independent liability roll-forward and approval review is a **proposed teaching control**; payment alone does not establish all obligations cleared |
 
-The Mermaid views below explain attendance, payroll, labor, and posting relationships. The [Process Models](../process-models/index.md) library provides the notation guide and editable sources.
+The Mermaid views below explain attendance, payroll, labor, and posting relationships. The [model library](../learn-the-business/process-flows.md#model-library) provides the notation guide and editable sources.
 
 ## Normal Process Overview
 

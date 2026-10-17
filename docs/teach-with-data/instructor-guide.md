@@ -26,7 +26,7 @@ Review the chosen activity with the actual class file before assigning it. The d
 ## Recommended Teaching Sequence
 
 1. **Understand the company.** Assign [Start Here](../start-here/index.md) and [Company Story](../learn-the-business/company-story.md). Ask students to explain the difference between purchased goods, manufactured goods, and hourly services.
-2. **Understand a process.** Use [Process Flows](../learn-the-business/process-flows.md), then one detailed process page. Pair the [BPMN process models](../process-models/index.md) with the existing Mermaid views to distinguish activities and responsibilities from information relationships and accounting effects. Identify the business need, documents, approvals, and handoffs.
+2. **Understand a process.** Use [Business Processes and Models](../learn-the-business/process-flows.md), then one detailed process page. Pair BPMN with Mermaid to distinguish activities and responsibilities from information relationships and accounting effects. Identify the business need, documents, approvals, and handoffs.
 3. **Explore the evidence.** Use [Dataset Guide](../start-here/dataset-overview.md) and a foundational task in [Learn and Practice](../learn-and-practice/index.md). Keep the [Schema Reference](../reference/schema.md) and [Posting Reference](../reference/posting.md) available as lookup tools.
 4. **Analyze a population.** Choose the [SQL Guide](../analytics/sql-guide.md), [Excel Guide](../analytics/excel-guide.md), a [query resource](../analytics/analysis-tracks.md), or a [report perspective](../analytics/reports/index.md).
 5. **Interpret and decide.** Assign an [integrated case](../analytics/cases/index.md). Require a supported accounting explanation, limitations, and a specific recommendation or request for further evidence.
@@ -52,7 +52,7 @@ Keep the same company, assigned release, and evidence standards throughout the t
 | Week | Process or AIS focus | Charles River preparation and practice | Assessable artifact |
 |---|---|---|---|
 | 1 | Company, value creation, and evidence boundaries | [Company Story](../learn-the-business/company-story.md) and [Dataset Guide](../start-here/dataset-overview.md) | Company explanation, selected release, and scope statement |
-| 2 | Process architecture and BPMN responsibilities | [Process Models](../process-models/index.md); workshop Activity 1 | Annotated normal path with participants, handoffs, and a decision |
+| 2 | Process architecture and BPMN responsibilities | [model library](../learn-the-business/process-flows.md#model-library); workshop Activity 1 | Annotated normal path with participants, handoffs, and a decision |
 | 3 | Documents, relational records, and posting lineage | [Schema Reference](../reference/schema.md), [Posting Reference](../reference/posting.md), and a course-selected SQL or Excel introduction | Activity-to-document-to-table map with grain and keys |
 | 4 | Order-to-cash: demand, fulfillment, and billing | [Order-to-Cash](../processes/o2c.md) and [Goods Sale Trace](../learn-and-practice/source-to-ledger.md) | Reproducible goods-line trace with accounting explanation |
 | 5 | Order-to-cash: settlement, exceptions, and controls | [O2C Trace Case](../analytics/cases/o2c-trace-case.md); workshop matrix | Cash-versus-settlement explanation and risk/control questions |

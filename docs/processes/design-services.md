@@ -52,7 +52,7 @@ The **customer** is external. **Sales** captures the service order; the **Engage
 | Missing or incorrect billing: connect approved billable hours to the monthly invoice | `ServiceBillingLine.ServiceEngagementID`, `SalesInvoiceLineID`, and billing-period dates | An independent hours-to-billing reconciliation is a **proposed teaching control**, not a documented automated hold |
 | Misleading margin: keep customer billing and labor cost on stated bases | `ServiceTimeEntry.ExtendedCost`, billable and non-billable hours, invoice-line revenue | This is a labor-cost analytical bridge; it does not establish full engagement profitability or capitalize service payroll into inventory |
 
-The Mermaid views below connect the service activities to records and accounting effects. The [Process Models](../process-models/index.md) library includes editable sources and notation guidance.
+The Mermaid views below connect the service activities to records and accounting effects. The [model library](../learn-the-business/process-flows.md#model-library) includes editable sources and notation guidance.
 
 ## Normal Process Overview
 

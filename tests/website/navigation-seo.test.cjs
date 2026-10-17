@@ -55,7 +55,7 @@ test("established public routes and redirects remain stable", () => {
     "start-here/index": "/", "start-here/why-this-dataset": "/why-this-dataset",
     "start-here/downloads": "/downloads", "start-here/dataset-overview": "/dataset-overview",
     "learn-the-business/company-story": "/company-story", "learn-the-business/process-flows": "/process-flows",
-    "analytics/index": "/analytics", "process-models/index": "/process-models", "teach-with-data/instructor-guide": "/teach-with-data/instructor-adoption",
+    "analytics/index": "/analytics", "teach-with-data/instructor-guide": "/teach-with-data/instructor-adoption",
     "technical/technical-guide": "/technical-guide", "technical/dataset-delivery": "/technical/dataset-delivery",
     "technical/roadmap": "/roadmap", "technical/contributing": "/technical/contributing",
     "technical/license": "/technical/license",
@@ -72,9 +72,10 @@ test("established public routes and redirects remain stable", () => {
   }
   const redirects = config.plugins.find(([name]) => name === "@docusaurus/plugin-client-redirects")[1].redirects;
   const sources = redirects.flatMap((redirect) => redirect.from);
-  for (const route of ["/docs/quick-start", "/docs/accounting-analytics-dataset", "/docs/accounting-sql-practice-database", "/docs/processes/o2c-returns-credits-refunds", "/docs/processes/time-clocks", "/docs/analytics/cases/audit-exception-lab"]) {
+  for (const route of ["/docs/quick-start", "/docs/accounting-analytics-dataset", "/docs/accounting-sql-practice-database", "/docs/processes/o2c-returns-credits-refunds", "/docs/processes/time-clocks", "/docs/analytics/cases/audit-exception-lab", "/docs/process-models"]) {
     assert.ok(sources.includes(route), `Missing established redirect: ${route}`);
   }
+  assert.equal(redirects.find((redirect) => redirect.from.includes("/docs/process-models")).to, "/docs/process-flows");
 });
 
 test("navigation retains direct downloads, Hub, textbook, and verified release", () => {

@@ -127,7 +127,12 @@ test("rendered internal links and static downloads point to existing build files
 
 test("BPMN library publishes every editable source, SVG, evidence explanation, and learning connection", () => {
   const models = require("../../src/data/bpmnModels.json");
-  const library = fs.readFileSync(builtFile("/docs/process-models"), "utf8");
+  const library = fs.readFileSync(builtFile("/docs/process-flows"), "utf8");
+  assert.ok(!docs.some(({ id }) => id === "process-models/index"), "The separate model page must be removed");
+  const redirect = fs.readFileSync(builtFile("/docs/process-models"), "utf8");
+  assert.ok(redirect.includes("/docs/process-flows"), "The previous URL must redirect to the combined hub");
+  assert.equal((library.match(/src="\/diagrams\/bpmn\/process-architecture\.svg"/g) ?? []).length, 1, "The architecture must appear once");
+  assert.ok(!fs.readFileSync(path.join(build, "sitemap.xml"), "utf8").includes(`<loc>${branding.baseUrl}/docs/process-models</loc>`));
   assert.equal(models.length, 11);
   assert.match(library, /BPMN model inventory/);
   assert.match(library, /executable BPMN/);

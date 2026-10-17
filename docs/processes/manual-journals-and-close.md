@@ -61,7 +61,7 @@ The original estimate, a later direct service invoice, any linked residual adjus
 | Duplicate recognition or stale estimate: distinguish accrual from later AP settlement | `PurchaseInvoiceLine.AccrualJournalEntryID`, `JournalEntry.ReversesJournalEntryID`, `GLEntry` | An independent accrual roll-forward is a **proposed teaching control**; missing later settlement at cutoff is not automatically an error |
 | Misstated operating analysis: distinguish routine activity from close boundaries | `JournalEntry.EntryType`, posting dates, accounts, and ledger source fields | An independent close reconciliation is a **proposed teaching control**; a year-end entry is not ordinary operating revenue or expense |
 
-The Mermaid views below show journal, settlement, and accounting relationships. The [Process Models](../process-models/index.md) library includes notation guidance and editable sources.
+The Mermaid views below show journal, settlement, and accounting relationships. The [model library](../learn-the-business/process-flows.md#model-library) includes notation guidance and editable sources.
 
 ## Normal Process Overview
 

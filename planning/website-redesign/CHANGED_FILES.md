@@ -1,6 +1,6 @@
 # Changed files
 
-Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb7263e12a85af09a`, including the BPMN extension. Protected generator/config/query/data paths are absent. The 22 new diagram assets are intentional teaching publications; frozen dataset and report artifacts remain unchanged.
+Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb7263e12a85af09a`, including the BPMN extension and process-page consolidation. Protected generator/config/query/data paths are absent. The 22 diagram assets are intentional teaching publications; frozen dataset and report artifacts remain unchanged. The former model-library page is now consolidated into the existing Process Flows page.
 
 | File | Scope |
 | --- | --- |
@@ -45,7 +45,6 @@ Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb726
 | [docs/learn-and-practice/source-to-ledger.md](../../docs/learn-and-practice/source-to-ledger.md) | Teaching documentation |
 | [docs/learn-the-business/company-story.md](../../docs/learn-the-business/company-story.md) | Teaching documentation |
 | [docs/learn-the-business/process-flows.md](../../docs/learn-the-business/process-flows.md) | Teaching documentation |
-| [docs/process-models/index.md](../../docs/process-models/index.md) | Teaching documentation |
 | [docs/processes/design-services.md](../../docs/processes/design-services.md) | Teaching documentation |
 | [docs/processes/manual-journals-and-close.md](../../docs/processes/manual-journals-and-close.md) | Teaching documentation |
 | [docs/processes/manufacturing.md](../../docs/processes/manufacturing.md) | Teaching documentation |

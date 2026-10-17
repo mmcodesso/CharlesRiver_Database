@@ -71,6 +71,10 @@ const config = {
       {
         redirects: [
           {
+            to: "/docs/process-flows",
+            from: ["/docs/process-models"],
+          },
+          {
             to: "/docs/",
             from: ["/docs/quick-start"],
           },

@@ -1,5 +1,15 @@
 # BPMN and AIS extension — review handoff
 
+## Process-page consolidation
+
+At the user's request, the process overview and model-library page now form one **Business Processes and Models** hub at `/docs/process-flows`. Removed `docs/process-models/index.md` and its sidebar entry; added a client redirect from `/docs/process-models`. Updated every authored link and diagram footer to the combined page or its notation/library anchors. There are now **59 authored documents**, with 23 learning resources unchanged. The earlier delivery records below retain their original counts and page names as history.
+
+The hub contains one BPMN architecture embed, the original Mermaid information map, the full 11-model catalog, notation and control guidance, the teaching sequence, and report pathways. Removed the duplicate Order-to-Cash preview (its detailed process guide retains it), repeated introductions, duplicate core/supporting process tables, and repeated case links. All 11 editable sources/SVGs remain available; all 37 original Mermaid blocks, the process-led flow, required case headings, and existing query/report references remain intact.
+
+Validation: `npm run build` passed with strict link checks; the Node website checks passed **13/13**, including the redirect, sitemap exclusion of the retired page, one architecture embed, and all model/learning/download connections. The repo `.venv` documentation slice passed **9/9**. Both test processes used one-hour timeouts. An initial rendered-site check ran before the build completed; the completed-build rerun passed. The freeze guard confirmed **all 293 artifacts unchanged**; manifests refreshed through normal build hooks with no content diff, and existing reports were reused. No dataset or diagram regeneration occurred.
+
+Browser review confirmed the production-build redirect, one architecture and Mermaid map, 11 catalog rows, working viewer and notation anchor, no extra sidebar entry, and contained table scrolling at 390px. A separate owned port-3001 production-preview server was stopped after review. A port-3000 preview remains available for the user at `http://localhost:3000/docs/process-flows`; the old URL was also verified to redirect there. [Consolidated page screenshot](../../../outputs/_website_redesign/bpmn/process-consolidated.png).
+
 ## Viewer refinement requested after library delivery
 
 Removed standalone Open SVG / View SVG navigation from the figures and library. Each diagram is now a keyboard-accessible image button opening the same dialog as Expand model. The inline toolbar and viewer reuse Mermaid's actual CSS module: the same buttons, paper background, rounded modal, dimensions, dark theme, and Zoom out / Zoom in / Reset / Close controls. The existing `panzoom` dependency supplies drag/pinch interaction and keyboard pan/zoom; Reset fits the whole image and cancels an in-progress zoom animation. Editable Draw.io downloads and text evidence remain available.
@@ -85,4 +95,4 @@ npm run build
 npm run serve -- --host 127.0.0.1 --port 3000 --no-open
 ```
 
-Open `http://127.0.0.1:3000/docs/process-models`, download a source, compare its process guide's Mermaid view, and follow the workshop into an existing case. Publication remains a separate user decision.
+Open `http://127.0.0.1:3000/docs/process-flows`, download a source, compare its process guide's Mermaid view, and follow the workshop into an existing case. Publication remains a separate user decision.

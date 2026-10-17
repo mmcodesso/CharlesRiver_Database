@@ -61,7 +61,7 @@ Read completion, cost support, and `WorkOrderClose` as distinct evidence. A reco
 | Incorrect consumption or labor allocation: support the work-order cost trail | `MaterialIssueLine`, `LaborTimeEntry`, `WorkOrderOperation` | Compare records at their own grain; an independent consumption reconciliation is a **proposed teaching control** |
 | Incomplete close: explain residual balances and variance | `ProductionCompletionLine`, `WorkOrderClose`, `GLEntry` | `ClosedByEmployeeID` identifies recorded responsibility; an independent variance sign-off is a **proposed teaching control**, not a stored approval chain |
 
-The Mermaid views below retain the detailed planning, document, and costing relationships. The [Process Models](../process-models/index.md) library provides notation and editable sources.
+The Mermaid views below retain the detailed planning, document, and costing relationships. The [model library](../learn-the-business/process-flows.md#model-library) provides notation and editable sources.
 
 ## Normal Process Overview
 

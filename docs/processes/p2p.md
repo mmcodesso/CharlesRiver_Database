@@ -63,7 +63,7 @@ An accrued service uses the finance estimate and `PurchaseInvoiceLine.AccrualJou
 | Incorrect liability: compare ordered, received, and invoiced quantities at line grain | `PurchaseOrderLine`, `GoodsReceiptLine.POLineID`, `PurchaseInvoiceLine.GoodsReceiptLineID` | The links support a three-way comparison; an automated match tolerance, payment block, or exception queue is **not established** by them |
 | Duplicate or unsupported payment: pay an approved, supported liability | `PurchaseInvoice` approval fields and `DisbursementPayment` | An independent duplicate-payment review is a **proposed teaching control**; investigate differences before concluding error |
 
-The Mermaid views below focus on the operational records and accounting effects. The [Process Models](../process-models/index.md) library supplies the notation guide and editable sources.
+The Mermaid views below focus on the operational records and accounting effects. The [model library](../learn-the-business/process-flows.md#model-library) supplies the notation guide and editable sources.
 
 ## Normal Process Overview
 
