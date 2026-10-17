@@ -351,8 +351,7 @@ flowchart LR
 
 ## Next Steps
 
-- Read [Payroll and Workforce](../analytics/reports/payroll-perspective.md) when you want the guided business perspective that ties people cost, approved time, payroll cash, liabilities, and payroll-control review together.
-- Read [Financial Reports](../analytics/reports/financial.md), [Managerial Reports](../analytics/reports/managerial.md), and [Audit Reports](../analytics/reports/audit.md) when you want the broader payroll and workforce report inventory by area.
+- Read [People and Payroll](../analytics/index.md#people-and-payroll) to connect people cost, approved time, payroll cash, liabilities, and control review in one report topic.
 - Read [Workforce Cost and Org-Control Case](../analytics/cases/workforce-cost-and-org-control-case.md) or [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md) when you want a guided payroll or time-control investigation.
 - Jump to [Time, Attendance, and Approved Hours](#time-attendance-and-approved-hours) when you want the upstream support layer for hourly payroll.
 - Read [Manufacturing](manufacturing.md) when you want the production side of direct labor and work-order traceability.

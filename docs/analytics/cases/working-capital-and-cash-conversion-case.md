@@ -36,7 +36,7 @@ You need to prove which working-capital buckets moved the most by month, which t
 - Source documents: GL and accounts, sales and purchase invoices, receipts and applications, goods receipts, commissions, payroll and remittances, accrual journals, and budget lines.
 - Evidence grain: Anchor the bridge at account and fiscal-period level; reconcile separate source and timing views before synthesis.
 - Main tables: `GLEntry`, `Account`, `SalesInvoice`, `CashReceipt`, `CashReceiptApplication`, `SalesCommissionAccrual`, `SalesCommissionAdjustment`, `SalesCommissionPayment`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment`, `GoodsReceipt`, `PayrollRegister`, `PayrollPayment`, `PayrollLiabilityRemittance`, `JournalEntry`
-- Related guides: [Financial Queries](../financial.md), [Commercial and Working Capital](../reports/commercial-and-working-capital.md)
+- Related guides: [Financial Queries](../financial.md), [Statements and Cash](../index.md#statements-and-cash)
 - Related process pages: [Order-to-Cash Process](../../processes/o2c.md), [Procure-to-Pay Process](../../processes/p2p.md), [Payroll Process](../../processes/payroll.md), [Manual Journals and Close Cycle](../../processes/manual-journals-and-close.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case does not trace one document chain. It synthesizes customer, supplier, payroll, and finance-controlled timing into one cash-pressure diagnosis.
@@ -285,6 +285,6 @@ Days to first settlement are not days to final settlement. This timing synthesis
 
 ## Next Steps
 
-- Use [Commercial and Working Capital](../reports/commercial-and-working-capital.md) when you want the report-level interpretation after the bridge is clear.
+- Use [Statements and Cash](../index.md#statements-and-cash) when you want the working-capital and cash reports after the bridge is clear.
 - Use [Financial Queries](../financial.md) for the broader financial query set behind this case.
 - Use [Financial Statement Bridge Case](financial-statement-bridge-case.md) when you want to move from working-capital balances into full statement and close-cycle interpretation.

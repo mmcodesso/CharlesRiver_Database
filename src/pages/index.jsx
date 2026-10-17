@@ -63,7 +63,7 @@ export default function Home() {
         <section className={styles.section} aria-labelledby="resources-heading"><div className={styles.resourceGrid}>
           <div><p className={styles.eyebrow}>One environment, connected resources</p><h2 id="resources-heading">Teach the concepts.<br />Examine the company.<br />Interpret the results.</h2><p className={styles.lede}>Accounting Analytics Hub brings the learning resources together. The textbook develops the concepts; {displayName} provides the company, data, and investigations.</p><a className={styles.textLink} href="https://aa.accountinganalyticshub.com/">Read Accounting Analytics: An Integrated Approach <span aria-hidden="true">↗</span></a></div>
           <div className={styles.resourceList}>
-            <Link to="/docs/analytics/reports"><strong>Reports & analytics</strong><span>48 reports, four guided perspectives, and 170 SQL files.</span><span aria-hidden="true">→</span></Link>
+            <Link to="/docs/analytics"><strong>Reports & analytics</strong><span>48 reports organized by business topic, plus 170 SQL files.</span><span aria-hidden="true">→</span></Link>
             <Link to="/docs/reference/schema"><strong>Dataset reference</strong><span>Look up keys, document relationships, and posting logic.</span><span aria-hidden="true">→</span></Link>
             <Link to="/docs/teach-with-data/instructor-adoption"><strong>For instructors</strong><span>Connect AIS, analytics, financial, managerial, and audit coursework.</span><span aria-hidden="true">→</span></Link>
             <a href="https://accountinganalyticshub.com/"><strong>Accounting Analytics Hub</strong><span>Open textbooks and planned learning pathways.</span><span aria-hidden="true">↗</span></a>

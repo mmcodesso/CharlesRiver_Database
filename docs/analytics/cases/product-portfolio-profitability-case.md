@@ -37,7 +37,7 @@ You need to prove which collections and lifecycle groups generate the strongest 
 - Source documents: Item master, invoice and credit lines, order and shipment lines, return lines, and customer refunds used by the queries.
 - Evidence grain: Align collection and lifecycle groupings across financial and service views; keep refund-allocation assumptions visible.
 - Main tables: `Item`, `SalesInvoiceLine`, `CreditMemoLine`, `SalesReturnLine`, `ShipmentLine`, `SalesOrderLine`, `CustomerRefund`
-- Related guides: [Managerial Queries](../managerial.md), [Financial Queries](../financial.md), [Operations and Risk](../reports/operations-and-risk.md)
+- Related guides: [Managerial Queries](../managerial.md), [Financial Queries](../financial.md), [Sales and Customers](../index.md#sales-and-customers)
 - Related cases: [Product Portfolio and Lifecycle Case](product-portfolio-and-lifecycle-case.md), [Pricing and Margin Governance Case](pricing-and-margin-governance-case.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case ranks portfolio families across multiple performance lenses rather than tracing one document flow. Use the lighter portfolio case for catalog setup and the pricing case for commercial-policy interpretation.
@@ -248,4 +248,4 @@ The contribution view follows the supplied cost assumptions; it is not a complet
 
 - Use [Product Portfolio and Lifecycle Case](product-portfolio-and-lifecycle-case.md) when you want the catalog and lifecycle setup behind this ranking view.
 - Use [Pricing and Margin Governance Case](pricing-and-margin-governance-case.md) when you want the commercial pricing explanation beneath realized revenue and margin.
-- Use [Managerial Queries](../managerial.md) and [Operations and Risk](../reports/operations-and-risk.md) for the broader portfolio and performance context.
+- Use [Managerial Queries](../managerial.md) and [Sales and Customers](../index.md#sales-and-customers) for the broader portfolio and performance context.

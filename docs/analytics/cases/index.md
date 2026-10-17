@@ -45,7 +45,7 @@ These are teaching pathways for current resources. The complementary AIS textboo
 ## How Cases Fit the Learning Path
 
 1. Understand the company and read the linked process page.
-2. Read a relevant [report perspective](../reports/lens-packs.md) to frame the business question.
+2. Read a relevant [Reports and Analytics](../index.md) to frame the business question.
 3. Define the release, period, population, and source grain before running SQL.
 4. Follow the query sequence, retain source keys, and distinguish observations from explanations.
 5. Submit the case-specific evidence schedule and decision memo. State assumptions, limitations, and the next check that could change the conclusion.
@@ -55,5 +55,5 @@ The cases present instructional management requests, not predetermined findings.
 ## Next Steps
 
 - Prepare your tool with the [SQL Guide](../sql-guide.md) or [Excel Guide](../excel-guide.md).
-- Browse the [Reports Hub](../reports/index.md) for business summaries and the [Query Library](../analysis-tracks.md) for reusable SQL.
+- Browse the [Reports and Analytics](../index.md) for business summaries and the [Query Library](../analysis-tracks.md) for reusable SQL.
 - For course sequencing and assessment choices, read the [Instructor Adoption Guide](../../teach-with-data/instructor-guide.md).

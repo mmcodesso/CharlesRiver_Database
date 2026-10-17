@@ -434,8 +434,8 @@ This local lineage view distinguishes AR correction from customer credit. Its la
 
 ## Next Steps
 
-- Read [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md) when you want the business perspective built around pricing, collections, receivables, payables, and settlement timing.
-- Read [Financial Reports](../analytics/reports/financial.md) when you want the broader reporting layer behind revenue, AR, working capital, and cash conversion.
+- Read [Sales and Customers](../analytics/index.md#sales-and-customers) to compare revenue, pricing, receivables, customer credits, and deposits.
+- Read [Statements and Cash](../analytics/index.md#statements-and-cash) to connect those results with working capital and cash conversion.
 - Read [Design Services](design-services.md) when you want the full staffing, approved-hours, and monthly service-billing branch that now sits inside customer revenue.
 - Read [O2C Trace Case](../analytics/cases/o2c-trace-case.md) when you want a guided walkthrough from order through posting and settlement.
 - Jump to [Returns, Credits, and Refunds](#returns-credits-and-refunds) when you want the main O2C exception path.

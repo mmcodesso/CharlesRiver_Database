@@ -192,5 +192,5 @@ The same service staff still pass through the normal payroll cycle. That means s
 
 - Read [O2C](o2c.md) when you want the broader customer-demand and settlement cycle around invoices, cash, returns, and working capital.
 - Read [Payroll](payroll.md) when you want the payroll posting, liability, and cash-settlement side of the same service staff.
-- Read [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md) or [Managerial Reports](../analytics/reports/managerial.md) when you want the service activity summarized as management reporting.
+- Read [Sales and Customers](../analytics/index.md#sales-and-customers) to compare service revenue and billed hours.
 - Read [Schema Reference](../reference/schema.md) and [GLEntry Posting Reference](../reference/posting.md) when you need the exact joins and posting rules.

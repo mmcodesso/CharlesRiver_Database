@@ -384,8 +384,7 @@ flowchart LR
 
 ## Next Steps
 
-- Read [Operations and Risk](../analytics/reports/operations-and-risk.md) when you want the business perspective built around planning pressure, supply reliability, capacity, workforce context, and controls.
-- Read [Managerial Reports](../analytics/reports/managerial.md) when you want the broader report layer behind utilization, planning, workforce context, and supply risk.
+- Read [Production and Planning](../analytics/index.md#production-and-planning) to compare utilization, forecasts, and capacity; add [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory) for supply reliability and coverage.
 - Read [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md) when you want a guided walkthrough from production support into costing and close.
 - Read [CAPEX and Fixed Asset Lifecycle Case](../analytics/cases/capex-fixed-asset-lifecycle-case.md) when you want to add plant-equipment depreciation and note-financed equipment into the manufacturing-cost story.
 - Read [P2P](p2p.md) to see how raw materials and packaging are replenished when manufacturing needs purchased support.

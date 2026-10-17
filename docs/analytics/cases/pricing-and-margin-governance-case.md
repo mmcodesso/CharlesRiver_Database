@@ -36,7 +36,7 @@ You need to prove where price realization falls below base list pricing, how muc
 - Source documents: Price-list header and lines, promotion, override approval, sales order and lines, and invoice lines.
 - Evidence grain: Compare like customer, item, collection, and period populations; retain sales-line keys for approval follow-up.
 - Main tables: `PriceList`, `PriceListLine`, `PromotionProgram`, `PriceOverrideApproval`, `SalesOrder`, `SalesOrderLine`, `SalesInvoice`, `SalesInvoiceLine`, `Customer`, `Item`
-- Related guides: [Financial Queries](../financial.md), [Managerial Queries](../managerial.md), [Commercial and Working Capital](../reports/commercial-and-working-capital.md)
+- Related guides: [Financial Queries](../financial.md), [Managerial Queries](../managerial.md), [Sales and Customers](../index.md#sales-and-customers)
 - Related process page: [Order-to-Cash Process](../../processes/o2c.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case starts from realized pricing outcomes, then explains the policy layers beneath them rather than tracing one operational document chain. Use the pricing audit case when you need full control-exception review.
@@ -256,5 +256,5 @@ Promotion and non-promotion groups can differ in customer, product, and period m
 ## Next Steps
 
 - Use [Pricing Governance Audit Case](pricing-governance-audit-case.md) when you want the full control-focused follow-through.
-- Use [Commercial and Working Capital](../reports/commercial-and-working-capital.md) when you want the broader commercial perspective above the case.
+- Use [Sales and Customers](../index.md#sales-and-customers) when you want revenue, pricing, margins, and customer balances alongside the case.
 - Use [Financial Queries](../financial.md) and [Managerial Queries](../managerial.md) for the broader pricing and margin query sets.

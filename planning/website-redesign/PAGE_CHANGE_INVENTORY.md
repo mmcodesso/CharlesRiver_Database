@@ -1,11 +1,11 @@
 # Page and route inventory
 
-All 54 original public document routes remain unchanged, and the six pre-existing client redirects are retained. The practice hub, three exercises, and controls workshop add five authored routes, for 59 documents in total. At the user's request, the added Process Models page was consolidated into the existing Process Flows hub; `/docs/process-models` now redirects to `/docs/process-flows`. The six process guides preserve their Mermaid blocks and query/report/case links.
+The site now has 50 authored documents. Nine overlapping report pages were consolidated into the existing `/docs/analytics` hub at the user's request; each former report URL redirects to the hub or a business-topic anchor. The added Process Models page was previously consolidated into `/docs/process-flows`, with its former URL redirected. All 17 cases, 23 learning activities, six process guides, 48 report assets, and 170 SQL files remain available.
 
 | Page | Route | Treatment |
 | --- | --- | --- |
 | [docs/learn-and-practice/bpmn-controls-workshop.md](../../docs/learn-and-practice/bpmn-controls-workshop.md) | `/docs/learn-and-practice/bpmn-controls-workshop` | Added AIS interpretation, evidence trace, risk/control matrix, and modeling extension |
-| [docs/analytics/analysis-tracks.md](../../docs/analytics/analysis-tracks.md) | `/docs/analytics/analysis-tracks` | Refined or rewritten; URL preserved |
+| [docs/analytics/analysis-tracks.md](../../docs/analytics/analysis-tracks.md) | `/docs/analytics/analysis-tracks` | Top-level Query Library; shared catalog styling, search/filtering, all 170 SQL files and downloads; URL preserved |
 | [docs/analytics/audit.md](../../docs/analytics/audit.md) | `/docs/analytics/audit` | Refined or rewritten; URL preserved |
 | [docs/analytics/cases/attendance-control-audit-case.md](../../docs/analytics/cases/attendance-control-audit-case.md) | `/docs/analytics/cases/attendance-control-audit-case` | Refined or rewritten; URL preserved |
 | [docs/analytics/cases/audit-review-pack-case.md](../../docs/analytics/cases/audit-review-pack-case.md) | `/docs/analytics/cases/audit-review-pack-case` | Refined or rewritten; URL preserved |
@@ -27,17 +27,8 @@ All 54 original public document routes remain unchanged, and the six pre-existin
 | [docs/analytics/cases/working-capital-and-cash-conversion-case.md](../../docs/analytics/cases/working-capital-and-cash-conversion-case.md) | `/docs/analytics/cases/working-capital-and-cash-conversion-case` | Refined or rewritten; URL preserved |
 | [docs/analytics/excel-guide.md](../../docs/analytics/excel-guide.md) | `/docs/analytics/excel-guide` | Refined or rewritten; URL preserved |
 | [docs/analytics/financial.md](../../docs/analytics/financial.md) | `/docs/analytics/financial` | Refined or rewritten; URL preserved |
-| [docs/analytics/index.md](../../docs/analytics/index.md) | `/docs/analytics` | Refined or rewritten; URL preserved |
+| [docs/analytics/index.md](../../docs/analytics/index.md) | `/docs/analytics` | Unified report catalog, six business topics, search/filtering, previews, downloads, and learning prompts; URL preserved |
 | [docs/analytics/managerial.md](../../docs/analytics/managerial.md) | `/docs/analytics/managerial` | Refined or rewritten; URL preserved |
-| [docs/analytics/reports/audit.md](../../docs/analytics/reports/audit.md) | `/docs/analytics/reports/audit` | Preserved |
-| [docs/analytics/reports/commercial-and-working-capital.md](../../docs/analytics/reports/commercial-and-working-capital.md) | `/docs/analytics/reports/commercial-and-working-capital` | Preserved |
-| [docs/analytics/reports/executive-overview.md](../../docs/analytics/reports/executive-overview.md) | `/docs/analytics/reports/executive-overview` | Preserved |
-| [docs/analytics/reports/financial.md](../../docs/analytics/reports/financial.md) | `/docs/analytics/reports/financial` | Preserved |
-| [docs/analytics/reports/index.md](../../docs/analytics/reports/index.md) | `/docs/analytics/reports` | Refined or rewritten; URL preserved |
-| [docs/analytics/reports/lens-packs.md](../../docs/analytics/reports/lens-packs.md) | `/docs/analytics/reports/lens-packs` | Preserved |
-| [docs/analytics/reports/managerial.md](../../docs/analytics/reports/managerial.md) | `/docs/analytics/reports/managerial` | Preserved |
-| [docs/analytics/reports/operations-and-risk.md](../../docs/analytics/reports/operations-and-risk.md) | `/docs/analytics/reports/operations-and-risk` | Preserved |
-| [docs/analytics/reports/payroll-perspective.md](../../docs/analytics/reports/payroll-perspective.md) | `/docs/analytics/reports/payroll-perspective` | Preserved |
 | [docs/analytics/sql-guide.md](../../docs/analytics/sql-guide.md) | `/docs/analytics/sql-guide` | Refined or rewritten; URL preserved |
 | [docs/learn-and-practice/index.md](../../docs/learn-and-practice/index.md) | `/docs/learn-and-practice` | Added |
 | [docs/learn-and-practice/manufacturing-cost-flow.md](../../docs/learn-and-practice/manufacturing-cost-flow.md) | `/docs/learn-and-practice/manufacturing-cost-flow` | Added |
@@ -63,3 +54,19 @@ All 54 original public document routes remain unchanged, and the six pre-existin
 | [docs/technical/license.md](../../docs/technical/license.md) | `/docs/technical/license` | Preserved |
 | [docs/technical/roadmap.md](../../docs/technical/roadmap.md) | `/docs/roadmap` | Preserved |
 | [docs/technical/technical-guide.md](../../docs/technical/technical-guide.md) | `/docs/technical-guide` | Preserved |
+
+## Consolidated report routes
+
+The nine former report documents are removed from authored navigation and the sitemap. Their URLs redirect through `docusaurus.config.js`:
+
+| Former route | Destination |
+| --- | --- |
+| `/docs/analytics/reports` | `/docs/analytics` |
+| `/docs/analytics/reports/lens-packs` | `/docs/analytics` |
+| `/docs/analytics/reports/financial` | `/docs/analytics#statements-and-cash` |
+| `/docs/analytics/reports/executive-overview` | `/docs/analytics#statements-and-cash` |
+| `/docs/analytics/reports/commercial-and-working-capital` | `/docs/analytics#sales-and-customers` |
+| `/docs/analytics/reports/managerial` | `/docs/analytics#production-and-planning` |
+| `/docs/analytics/reports/operations-and-risk` | `/docs/analytics#production-and-planning` |
+| `/docs/analytics/reports/payroll-perspective` | `/docs/analytics#people-and-payroll` |
+| `/docs/analytics/reports/audit` | `/docs/analytics#controls-and-exceptions` |

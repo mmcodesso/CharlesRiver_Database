@@ -31,7 +31,7 @@ Expand from one trace to a defined population. These pathways reuse the existing
 |---|---|---|---|
 | [SQL Guide](../analytics/sql-guide.md) and [Query Library](../analytics/analysis-tracks.md) | Run an existing query, define its row grain, inspect a source sample, and change one documented date or grouping choice | Saved query or query reference, result excerpt, and source reconciliation | Explain what changed and whether the comparison is valid |
 | [Excel Guide](../analytics/excel-guide.md) | Import only the required tables, preserve keys, construct a summary, and check a source total | Working workbook with import notes, one PivotTable or chart, and a check | Explain the measure and show that joins or filters did not duplicate it |
-| [Reports Hub](../analytics/reports/index.md) | Select a process perspective, read the report definition, compare periods, and drill into source evidence | One annotated report and a short decision memo | Distinguish an observed pattern from an explanation requiring more evidence |
+| [Reports and Analytics](../analytics/index.md) | Choose a business topic, read the report definition, compare periods, and drill into source evidence | One annotated report and a short decision memo | Distinguish an observed pattern from an explanation requiring more evidence |
 
 Use the [Schema Reference](../reference/schema.md) for keys and the [GLEntry Posting Reference](../reference/posting.md) for event-to-accounting rules. The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) provides deeper methods, including the [SQL essentials chapter](https://aa.accountinganalyticshub.com/chapters/09-sql-essentials/chapter.html).
 

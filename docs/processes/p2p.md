@@ -273,8 +273,8 @@ flowchart LR
 
 ## Next Steps
 
-- Read [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md) when you want the wider view of supplier settlement, AP timing, and working-capital pressure.
-- Read [Financial Reports](../analytics/reports/financial.md) when you want the reporting layer behind AP, accrual settlement, and cash conversion.
+- Read [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory) when you want the wider view of supplier settlement, AP timing, and working-capital pressure.
+- Read [Statements and Cash](../analytics/index.md#statements-and-cash) when you want the reporting layer behind AP, accrual settlement, and cash conversion.
 - Read [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md) when you want a guided walkthrough from requisition and receipt into AP and payment.
 - Read [CAPEX and Fixed Asset Lifecycle Case](../analytics/cases/capex-fixed-asset-lifecycle-case.md) when you want to keep the same P2P document trail in view while teaching capitalization, financing, and disposal.
 - Jump to [Accrual Estimate to AP Settlement](../processes/manual-journals-and-close.md#accrual-estimate-to-ap-settlement) when you want the finance-to-AP bridge for accrued services.

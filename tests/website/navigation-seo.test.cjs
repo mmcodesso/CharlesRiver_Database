@@ -38,7 +38,7 @@ function sidebarIds(items, depth = 0) {
 test("learning sequence is shallow and every authored doc is discoverable once", () => {
   assert.deepEqual(docsSidebar.map((item) => item.label), [
     "Getting Started", "The Company", "Business Processes", "Learn and Practice",
-    "Cases", "Reports and Analytics", "Dataset Reference", "For Instructors", "Technical",
+    "Cases", "Reports and Analytics", "Query Library", "Dataset Reference", "For Instructors", "Technical",
   ]);
   const ids = sidebarIds(docsSidebar);
   const files = walk(path.join(root, "docs")).filter((file) => file.endsWith(".md"));
@@ -48,6 +48,9 @@ test("learning sequence is shallow and every authored doc is discoverable once",
   const cases = docsSidebar.find((item) => item.label === "Cases");
   assert.equal(cases.items.length, 17);
   assert.ok(cases.items.every((item) => typeof item === "string"));
+  const reportIndex = docsSidebar.findIndex((item) => item.label === "Reports and Analytics");
+  assert.equal(docsSidebar[reportIndex + 1].label, "Query Library");
+  assert.equal(docsSidebar[reportIndex + 1].link.id, "analytics/analysis-tracks");
 });
 
 test("established public routes and redirects remain stable", () => {
@@ -88,6 +91,28 @@ test("navigation retains direct downloads, Hub, textbook, and verified release",
   for (const [type, suffix] of [["sqlite", ".sqlite"], ["excel", ".xlsx"], ["csv", "_csv.zip"]]) {
     assert.equal(getReleaseDownloadUrl(branding, type), `${branding.releaseBaseUrl}/${branding.shortName}${suffix}`);
   }
+});
+
+test("one report hub covers the frozen catalog once and redirects every former report page", () => {
+  const topics = require("../../src/data/reportTopics.json");
+  const reports = yaml.load(fs.readFileSync(path.join(root, "config/report_catalog.yaml"), "utf8")).reports;
+  const ids = topics.flatMap((topic) => topic.reports);
+  assert.equal(topics.length, 6);
+  assert.equal(new Set(topics.map((topic) => topic.id)).size, topics.length);
+  assert.equal(ids.length, 48);
+  assert.equal(new Set(ids).size, ids.length, "A report must appear in exactly one topic");
+  assert.deepEqual([...ids].sort(), reports.map((report) => report.slug).sort());
+  const redirects = config.plugins.find(([name]) => name === "@docusaurus/plugin-client-redirects")[1].redirects;
+  for (const name of ["", "/lens-packs", "/financial", "/managerial", "/audit", "/executive-overview", "/commercial-and-working-capital", "/payroll-perspective", "/operations-and-risk"]) {
+    const redirect = redirects.find((item) => item.from.includes(`/docs/analytics/reports${name}`));
+    assert.ok(redirect, `Missing report redirect: ${name}`);
+    assert.equal(redirect.to.split("#")[0], "/docs/analytics");
+    const anchor = redirect.to.split("#")[1];
+    if (anchor) assert.ok(topics.some((topic) => topic.id === anchor), `Unknown report topic: ${anchor}`);
+  }
+  const reportNav = config.themeConfig.navbar.items.flatMap((item) => item.items ?? [item]);
+  assert.equal(reportNav.filter((item) => item.to === "/docs/analytics").length, 1);
+  assert.ok(!reportNav.some((item) => item.to?.startsWith("/docs/analytics/reports")));
 });
 
 test("indexing, sitemap, breadcrumb, and canonical settings remain enabled", () => {

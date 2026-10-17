@@ -55,4 +55,4 @@ This exercise covers receipt-matched inventory and materials. Accrued services u
 
 ## Next Steps
 
-Compare the receipt path with the finance-to-AP bridge in the [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md), or inspect working-capital timing in [Financial Reports](../analytics/reports/financial.md). Return to [Learn and Practice](index.md) for the next foundational activity.
+Compare the receipt path with the finance-to-AP bridge in the [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md), or inspect working-capital timing in [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory). Return to [Learn and Practice](index.md) for the next foundational activity.

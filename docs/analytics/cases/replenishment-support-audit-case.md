@@ -37,7 +37,7 @@ The audit team needs to separate planning-governance failures from later executi
 - Main tables: `DemandForecast`, `InventoryPolicy`, `SupplyPlanRecommendation`, `PurchaseRequisition`, `WorkOrder`, `Item`
 - Related case: [Demand Planning and Replenishment Case](demand-planning-and-replenishment-case.md)
 - Related guide: [Audit Queries](../audit.md)
-- Related report: [Operations and Risk](../reports/operations-and-risk.md)
+- Related report: [Purchasing and Inventory](../index.md#purchasing-and-inventory)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case is the formal planning-support control test. Use the demand-planning case when you want to explain forecast quality, supply recommendations, and operational pressure before audit follow-up.
 
@@ -247,4 +247,4 @@ A missing planning link does not prove that a purchase or work order was unneces
 
 - Read [Demand Planning and Replenishment Case](demand-planning-and-replenishment-case.md) when you want the managerial reading of the same planning layer.
 - Read [Audit Queries](../audit.md) for the broader planning-support and control-review query set.
-- Read [Operations and Risk](../reports/operations-and-risk.md) when you want the higher-level operational interpretation.
+- Read [Purchasing and Inventory](../index.md#purchasing-and-inventory) when you want the higher-level operational interpretation.

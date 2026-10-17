@@ -36,7 +36,7 @@ You need to prove where planned load outpaces rostered coverage, where approved 
 - Source documents: Work-center plan, shift roster, approved time entry, absence record, overtime approval, and shift definition.
 - Evidence grain: Align planning, work-center, shift, and employee-date summaries before interpreting coverage or overtime rates.
 - Main tables: `EmployeeShiftRoster`, `WorkOrderOperationSchedule`, `TimeClockEntry`, `EmployeeAbsence`, `OvertimeApproval`, `ShiftDefinition`, `WorkCenter`, `Employee`
-- Related guides: [Operations and Risk](../reports/operations-and-risk.md), [Payroll and Workforce](../reports/payroll-perspective.md)
+- Related guides: [People and Payroll](../index.md#people-and-payroll)
 - Related process pages: [Payroll Process](../../processes/payroll.md), [Manufacturing Process](../../processes/manufacturing.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case diagnoses staffing coverage and attendance pressure rather than formal punch or approval exceptions. Use the audit case for exception testing and the workforce-cost case for payroll-cost interpretation.
@@ -248,4 +248,4 @@ Planned load, rostered coverage, and approved time are different measures. A gap
 - Use [Attendance Control Audit Case](attendance-control-audit-case.md) when you want to test punch, approval, and absence exceptions formally.
 - Use [Payroll Process](../../processes/payroll.md) when you want the broader support-to-payroll flow behind approved hours and overtime.
 - Use [Workforce Cost and Org-Control Case](workforce-cost-and-org-control-case.md) when you want to connect workforce structure to payroll cost and approval design.
-- Use [Operations and Risk](../reports/operations-and-risk.md) when you want the broader operational reporting perspective on staffing pressure and throughput risk.
+- Use [People and Payroll](../index.md#people-and-payroll) when you want reports on staffing, attendance, payroll, and time controls.

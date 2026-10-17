@@ -62,4 +62,4 @@ This exercise focuses on the goods path. Returns, credits, commissions, and serv
 
 ## Next Steps
 
-Extend the investigation in the [O2C Trace Case](../analytics/cases/o2c-trace-case.md), or compare periods in [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md). Return to [Learn and Practice](index.md) to choose a second process.
+Extend the investigation in the [O2C Trace Case](../analytics/cases/o2c-trace-case.md), or compare periods in [Sales and Customers](../analytics/index.md#sales-and-customers). Return to [Learn and Practice](index.md) to choose a second process.

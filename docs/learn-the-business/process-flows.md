@@ -102,19 +102,19 @@ Each major process page includes an optional AIS activity that moves from model 
 
 ## Process to Analysis Bridges
 
-The model library supplies the focused activities and cases. These report perspectives extend a trace into a wider population.
+The model library supplies the focused activities and cases. These report topics extend a trace into a wider population.
 
-| Process | Reports and perspectives |
+| Process | Report topics |
 |---|---|
-| [Order-to-cash](../processes/o2c.md) | [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md), [Financial Reports](../analytics/reports/financial.md) |
-| [Design Services](../processes/design-services.md) | [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md), [Managerial Reports](../analytics/reports/managerial.md) |
-| [Procure-to-pay](../processes/p2p.md) | [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md), [Financial Reports](../analytics/reports/financial.md) |
-| [Manufacturing](../processes/manufacturing.md) | [Operations and Risk](../analytics/reports/operations-and-risk.md), [Managerial Reports](../analytics/reports/managerial.md) |
-| [Payroll](../processes/payroll.md) | [Payroll and Workforce](../analytics/reports/payroll-perspective.md), [Audit Reports](../analytics/reports/audit.md) |
-| [Manual Journals and Close](../processes/manual-journals-and-close.md) | [Executive Overview](../analytics/reports/executive-overview.md), [Financial Reports](../analytics/reports/financial.md) |
+| [Order-to-cash](../processes/o2c.md) | [Sales and Customers](../analytics/index.md#sales-and-customers), [Statements and Cash](../analytics/index.md#statements-and-cash) |
+| [Design Services](../processes/design-services.md) | [Sales and Customers](../analytics/index.md#sales-and-customers) |
+| [Procure-to-pay](../processes/p2p.md) | [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory), [Statements and Cash](../analytics/index.md#statements-and-cash) |
+| [Manufacturing](../processes/manufacturing.md) | [Production and Planning](../analytics/index.md#production-and-planning), [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory) |
+| [Payroll](../processes/payroll.md) | [People and Payroll](../analytics/index.md#people-and-payroll) |
+| [Manual Journals and Close](../processes/manual-journals-and-close.md) | [Statements and Cash](../analytics/index.md#statements-and-cash), [Controls and Exceptions](../analytics/index.md#controls-and-exceptions) |
 
 For a broader comparison of payroll responsibilities and employee costs, continue to the [Workforce Cost and Org-Control Case](../analytics/cases/workforce-cost-and-org-control-case.md).
 
 ## Next Steps
 
-Choose one core module, then complete its first task in [Learn and Practice](../learn-and-practice/index.md). Use [Analyze the Data](../analytics/index.md) to choose SQL, Excel, reports, or a case once the evidence chain is clear. The [instructor guide](../teach-with-data/instructor-guide.md) proposes a 14-week AIS sequence and ways to adapt these modules for a course.
+Choose one core module, then complete its first task in [Learn and Practice](../learn-and-practice/index.md). Browse [Reports and Analytics](../analytics/index.md) once the evidence chain is clear. The [instructor guide](../teach-with-data/instructor-guide.md) proposes a 14-week AIS sequence and ways to adapt these modules for a course.

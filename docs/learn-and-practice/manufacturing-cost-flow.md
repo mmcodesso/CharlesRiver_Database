@@ -55,4 +55,4 @@ Keep weekly planning, operation schedules, actual activity, and accounting close
 
 ## Next Steps
 
-Extend the trace through labor and operations in the [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md), then read [Operations and Risk](../analytics/reports/operations-and-risk.md) for the wider managerial view. Return to [Learn and Practice](index.md) to compare another process.
+Extend the trace through labor and operations in the [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md), then read [Production and Planning](../analytics/index.md#production-and-planning) for the wider managerial view. Return to [Learn and Practice](index.md) to compare another process.

@@ -35,7 +35,7 @@ The audit team needs to determine which attendance exceptions reflect schedule-l
 - Evidence grain: Retain employee, roster, time-entry, and punch keys; overlapping tests must not multiply distinct affected shifts.
 - Main tables: `EmployeeShiftRoster`, `EmployeeAbsence`, `TimeClockPunch`, `TimeClockEntry`, `OvertimeApproval`, `Employee`
 - Related process page: [Payroll](../../processes/payroll.md)
-- Related report: [Payroll and Workforce](../reports/payroll-perspective.md)
+- Related report: [People and Payroll](../index.md#people-and-payroll)
 - Related guide: [Audit Queries](../audit.md)
 - Related case: [Workforce Coverage and Attendance Case](workforce-coverage-and-attendance-case.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
@@ -247,5 +247,5 @@ An attendance exception does not establish an overpayment. Quantifying pay impac
 
 - Read [Workforce Coverage and Attendance Case](workforce-coverage-and-attendance-case.md) when you want the managerial coverage-pressure view that precedes formal exception testing.
 - Read [Payroll](../../processes/payroll.md) when you want the wider business and accounting flow behind attendance and payroll support.
-- Read [Payroll and Workforce](../reports/payroll-perspective.md) when you want the report-level interpretation of the same control questions.
+- Read [People and Payroll](../index.md#people-and-payroll) when you want the report-level interpretation of the same control questions.
 - Read [Audit Queries](../audit.md) when you want the broader exception and control-review query set.

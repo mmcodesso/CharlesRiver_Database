@@ -33,7 +33,7 @@ The [Dataset Guide](dataset-overview.md), [Schema Reference](../reference/schema
 
 ## Practice That Progresses
 
-[Learn and Practice](../learn-and-practice/index.md) begins with focused evidence tasks. Existing [SQL and Excel guides](../analytics/index.md), [query resources](../analytics/analysis-tracks.md), [reports](../analytics/reports/index.md), and [cases](../analytics/cases/index.md) extend the work into applied analysis and integrated investigation.
+[Learn and Practice](../learn-and-practice/index.md) begins with focused evidence tasks. Existing [SQL](../analytics/sql-guide.md) and [Excel guides](../analytics/excel-guide.md), [query resources](../analytics/analysis-tracks.md), [Reports and Analytics](../analytics/index.md), and [cases](../analytics/cases/index.md) extend the work into applied analysis and integrated investigation.
 
 The goal is a supported explanation. Students identify the population, preserve source references, interpret a result, state its limitations, and recommend a next action. A query result alone is not a complete accounting conclusion.
 

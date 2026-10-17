@@ -112,6 +112,42 @@ test("dataset metadata and direct release links are present before JavaScript ru
   assert.ok(fs.readFileSync(path.join(build, "robots.txt"), "utf8").includes(`${branding.baseUrl}/sitemap.xml`));
 });
 
+test("unified report catalog renders every report, topic, learning prompt, and unchanged download", () => {
+  const topics = require("../../src/data/reportTopics.json");
+  const html = fs.readFileSync(builtFile("/docs/analytics"), "utf8");
+  const reports = yaml.load(fs.readFileSync(path.join(root, "config/report_catalog.yaml"), "utf8")).reports;
+  assert.match(html, /aria-label="Browse business reports"/);
+  assert.match(html, /id="report-search"/);
+  assert.match(html, /id="report-topic"/);
+  assert.equal((html.match(/<article\b[^>]*id="report-/g) ?? []).length, 48);
+  for (const topic of topics) assert.ok(html.includes(`id="${topic.id}"`), `Missing topic anchor: ${topic.id}`);
+  for (const report of reports) {
+    assert.equal((html.match(new RegExp(`id="report-${report.slug}"`, "g")) ?? []).length, 1, report.slug);
+  }
+  const packs = yaml.load(fs.readFileSync(path.join(root, "config/report_pack_catalog.yaml"), "utf8"));
+  // All reports with prior teaching guidance retain an expandable interpretation section.
+  const guidedIds = new Set(packs.packs.flatMap((pack) => pack.reports.map((item) => item.report_slug)));
+  assert.equal((html.match(/<summary>Interpret this report<\/summary>/g) ?? []).length, guidedIds.size);
+  const sitemap = fs.readFileSync(path.join(build, "sitemap.xml"), "utf8");
+  assert.ok(!sitemap.includes(`${branding.baseUrl}/docs/analytics/reports`));
+  for (const name of ["", "/lens-packs", "/financial", "/managerial", "/audit", "/executive-overview", "/commercial-and-working-capital", "/payroll-perspective", "/operations-and-risk"]) {
+    const redirect = fs.readFileSync(builtFile(`/docs/analytics/reports${name}`), "utf8");
+    assert.ok(redirect.includes("/docs/analytics"), `Former report page: ${name}`);
+  }
+});
+
+test("top-level query library renders every SQL file with shared browsing controls", () => {
+  const html = fs.readFileSync(builtFile("/docs/analytics/analysis-tracks"), "utf8");
+  assert.match(html, /aria-label="Browse SQL queries"/);
+  assert.match(html, /id="query-search"/);
+  assert.match(html, /id="query-domain"/);
+  assert.equal((html.match(/>Show SQL<\/button>/g) ?? []).length, 170);
+  const links = [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*download[^>]*>Download SQL<\/a>/g)].map((match) => match[1]);
+  assert.equal(links.length, 170);
+  assert.equal(new Set(links).size, 170);
+  for (const link of links) assert.ok(builtFile(link), `Missing SQL asset: ${link}`);
+});
+
 test("rendered internal links and static downloads point to existing build files", () => {
   for (const route of ["/", ...docs.map((doc) => doc.route)]) {
     const file = builtFile(route);

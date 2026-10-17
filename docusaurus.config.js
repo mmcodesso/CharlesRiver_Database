@@ -71,6 +71,30 @@ const config = {
       {
         redirects: [
           {
+            to: "/docs/analytics",
+            from: ["/docs/analytics/reports", "/docs/analytics/reports/lens-packs"],
+          },
+          {
+            to: "/docs/analytics#statements-and-cash",
+            from: ["/docs/analytics/reports/financial", "/docs/analytics/reports/executive-overview"],
+          },
+          {
+            to: "/docs/analytics#sales-and-customers",
+            from: ["/docs/analytics/reports/commercial-and-working-capital"],
+          },
+          {
+            to: "/docs/analytics#production-and-planning",
+            from: ["/docs/analytics/reports/managerial", "/docs/analytics/reports/operations-and-risk"],
+          },
+          {
+            to: "/docs/analytics#people-and-payroll",
+            from: ["/docs/analytics/reports/payroll-perspective"],
+          },
+          {
+            to: "/docs/analytics#controls-and-exceptions",
+            from: ["/docs/analytics/reports/audit"],
+          },
+          {
             to: "/docs/process-flows",
             from: ["/docs/process-models"],
           },
@@ -152,7 +176,6 @@ const config = {
           position: "left",
           items: [
             { to: "/docs/analytics", label: "Reports and Analytics" },
-            { to: "/docs/analytics/reports", label: "Report Library" },
             { to: "/docs/analytics/analysis-tracks", label: "Query Library" },
             { to: "/docs/reference/schema", label: "Dataset Reference" },
             { to: "/docs/technical-guide", label: "Technical Guide" },

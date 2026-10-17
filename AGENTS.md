@@ -144,7 +144,7 @@ Notes:
 - Preserve the teaching sequence: business context first, then process flow, then analytics/reports/cases. Do not rewrite student-facing pages into generic feature or product marketing copy.
 - Public docs should not reintroduce the template phrases already blocked by tests, including `Audience and Purpose`, `Use this page when`, `Use this case when`, `Use this pack`, `Use this perspective`, and `Why this matters`.
 - Case pages are expected to keep `## Key Data Sources`, `## Recommended Query Sequence`, and `## Next Steps`. Existing cases use `QuerySequence` from `@site/src/components/QueryReference`.
-- Report-library pages use `ReportCatalog` plus `reportAreaCollections`. Report-perspective pages use `ReportLearningPack` plus `reportPackManifest`.
+- Keep a single Reports and Analytics hub at `/docs/analytics`, using `ReportCatalog` and the authored `src/data/reportTopics.json` presentation map. Every report belongs to exactly one business topic. Retain search, topic filtering, previews, downloads, and report-level learning prompts from `reportPackManifest`; do not recreate separate perspective or Financial/Managerial/Audit report pages. Those former URLs redirect to the hub. Query-library domains remain separate and unchanged. Presentation grouping must not change frozen report IDs, manifests, catalogs, or asset paths.
 - Shared naming/file copy should use the site-branding components from `src/components/SiteBranding` such as `<DisplayName />`, `<DatasetName />`, `<FileName />`, and related helpers instead of hard-coding names.
 - Mermaid is enabled. Keep diagrams simple, readable, and faithful to process/schema logic.
 - If you change a page slug or route, also update `sidebars.js` and any redirect rules in `docusaurus.config.js`.

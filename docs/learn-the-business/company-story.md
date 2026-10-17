@@ -125,4 +125,4 @@ The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) deve
 
 1. Read [Process Flows](process-flows.md) and select one operating cycle.
 2. Begin a focused task in [Learn and Practice](../learn-and-practice/index.md).
-3. Move into the matching [case](../analytics/cases/index.md) or [report perspective](../analytics/reports/index.md) after you can explain the evidence trail.
+3. Move into the matching [case](../analytics/cases/index.md) or [Reports and Analytics](../analytics/index.md) after you can explain the evidence trail.

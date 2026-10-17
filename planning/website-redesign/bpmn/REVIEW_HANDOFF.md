@@ -1,5 +1,7 @@
 # BPMN and AIS extension — review handoff
 
+**Current site:** the later [report and query navigation consolidation](../REPORTS_CONSOLIDATION.md) brings the authored document count to 50, with 23 learning resources. The BPMN/process delivery records below retain their counts at the time of that work.
+
 ## Process-page consolidation
 
 At the user's request, the process overview and model-library page now form one **Business Processes and Models** hub at `/docs/process-flows`. Removed `docs/process-models/index.md` and its sidebar entry; added a client redirect from `/docs/process-models`. Updated every authored link and diagram footer to the combined page or its notation/library anchors. There are now **59 authored documents**, with 23 learning resources unchanged. The earlier delivery records below retain their original counts and page names as history.

@@ -28,7 +28,7 @@ Review the chosen activity with the actual class file before assigning it. The d
 1. **Understand the company.** Assign [Start Here](../start-here/index.md) and [Company Story](../learn-the-business/company-story.md). Ask students to explain the difference between purchased goods, manufactured goods, and hourly services.
 2. **Understand a process.** Use [Business Processes and Models](../learn-the-business/process-flows.md), then one detailed process page. Pair BPMN with Mermaid to distinguish activities and responsibilities from information relationships and accounting effects. Identify the business need, documents, approvals, and handoffs.
 3. **Explore the evidence.** Use [Dataset Guide](../start-here/dataset-overview.md) and a foundational task in [Learn and Practice](../learn-and-practice/index.md). Keep the [Schema Reference](../reference/schema.md) and [Posting Reference](../reference/posting.md) available as lookup tools.
-4. **Analyze a population.** Choose the [SQL Guide](../analytics/sql-guide.md), [Excel Guide](../analytics/excel-guide.md), a [query resource](../analytics/analysis-tracks.md), or a [report perspective](../analytics/reports/index.md).
+4. **Analyze a population.** Choose the [SQL Guide](../analytics/sql-guide.md), [Excel Guide](../analytics/excel-guide.md), a [query resource](../analytics/analysis-tracks.md), or a [Reports and Analytics](../analytics/index.md).
 5. **Interpret and decide.** Assign an [integrated case](../analytics/cases/index.md). Require a supported accounting explanation, limitations, and a specific recommendation or request for further evidence.
 
 ## Three Core AIS Process Modules
@@ -83,7 +83,7 @@ Public activities contain student prompts rather than instructor solutions. Keep
 | Accounting information systems | Company story, one core process, and document/line keys | Process exercise followed by a related case | Annotated document-to-table-to-ledger map with a control question |
 | Accounting analytics | One process plus the SQL or Excel guide; define row grain before joining | [Query Library](../analytics/analysis-tracks.md) and a matching case | Reproducible analysis, source checks, and a decision memo |
 | Financial accounting | Recognition and settlement concepts; `GLEntry` and `Account` | [Financial Statement Bridge Case](../analytics/cases/financial-statement-bridge-case.md) or [CAPEX Lifecycle Case](../analytics/cases/capex-fixed-asset-lifecycle-case.md) | Reconciliation with source support and reporting-date explanation |
-| Managerial accounting | Product, cost, labor, and planning concepts | [Operations and Risk](../analytics/reports/operations-and-risk.md), portfolio or planning cases | Defined performance measure, a supported comparison, and limitations |
+| Managerial accounting | Product, cost, labor, and planning concepts | [Production and Planning](../analytics/index.md#production-and-planning), portfolio or planning cases | Defined performance measure, a supported comparison, and limitations |
 | Auditing | A normal process trace before exception testing | Specialized [audit cases](../analytics/cases/index.md), then the [Audit Review Pack Case](../analytics/cases/audit-review-pack-case.md) | Exception triage, alternative explanations, and a proposed evidence procedure |
 
 The case library retains its existing difficulty labels. A short foundational exercise is narrower than a Foundation case: establish the single-event explanation first, then widen the population and judgment required.

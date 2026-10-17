@@ -17,7 +17,7 @@ Start with the business before the joins. You do not need to learn every table o
 2. **Follow one process.** Open [Process Flows](../learn-the-business/process-flows.md), then choose order-to-cash, procure-to-pay, or manufacturing.
 3. **Get the evidence.** Download the published teaching files below. Use the [Dataset Guide](dataset-overview.md) to identify the tables for your chosen process.
 4. **Try a focused task.** Begin with a foundational exercise in [Learn and Practice](../learn-and-practice/index.md). Keep the [SQL Guide](../analytics/sql-guide.md) or [Excel Guide](../analytics/excel-guide.md) beside your work.
-5. **Interpret and decide.** Explain the accounting meaning of your evidence before moving into an [integrated case](../analytics/cases/index.md) or a [report perspective](../analytics/reports/index.md).
+5. **Interpret and decide.** Explain the accounting meaning of your evidence before moving into an [integrated case](../analytics/cases/index.md) or a [Reports and Analytics](../analytics/index.md).
 
 ## Download the Teaching Files
 
@@ -38,7 +38,7 @@ Choose the format your assignment uses. The published SQLite, Excel, and CSV fil
 | Understand how a sale becomes accounting evidence | [Order-to-cash exercise](../learn-and-practice/source-to-ledger.md) | A document trace and an explanation of recognition and settlement |
 | Explain purchasing and liability timing | [Receipt-to-payable exercise](../learn-and-practice/receipt-to-payable.md) | A timeline separating commitment, receipt, invoice, and payment |
 | Understand conversion and manufacturing cost | [Manufacturing cost-flow exercise](../learn-and-practice/manufacturing-cost-flow.md) | A work-order evidence map separating completion from close |
-| Read business performance before writing queries | [Reports Hub](../analytics/reports/index.md) | A report interpretation grounded in its source and scope |
+| Read business performance before writing queries | [Reports and Analytics](../analytics/index.md) | A report interpretation grounded in its source and scope |
 | Prepare a course or module | [Instructor Adoption Guide](../teach-with-data/instructor-guide.md) | A sequenced pathway with a defined student submission |
 
 ## One Company in a Wider Learning Environment

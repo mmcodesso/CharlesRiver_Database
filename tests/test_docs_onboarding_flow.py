@@ -65,7 +65,7 @@ def test_core_process_pages_connect_evidence_with_cases() -> None:
         text = _read(DOCS_ROOT / f"processes/{process}.md")
         assert "## Next Steps" in text
         assert f"../analytics/cases/{case_file}" in text
-        assert "../analytics/reports/" in text
+        assert "../analytics/index.md#" in text
 
 
 def test_foundational_practice_precedes_integrated_cases() -> None:
@@ -99,20 +99,15 @@ def test_cases_preserve_guided_evidence_and_assessed_deliverables() -> None:
         assert "<CaseOverview" in text, f"Case needs visible discovery metadata: {path}"
 
 
-def test_report_and_query_pages_keep_existing_catalog_components() -> None:
+def test_unified_report_hub_and_query_pages_keep_catalog_components() -> None:
+    report = _read(DOCS_ROOT / "analytics/index.md")
+    assert "<ReportCatalog topics={reportTopics}" in report
+    assert "@site/src/data/reportTopics.json" in report
+    assert not list((DOCS_ROOT / "analytics/reports").glob("*.md"))
     for area in ("financial", "managerial", "audit"):
-        report = _read(DOCS_ROOT / f"analytics/reports/{area}.md")
-        assert "<ReportCatalog" in report
-        assert "reportAreaCollections" in report
         query = _read(DOCS_ROOT / f"analytics/{area}.md")
         assert "<QueryGroupCatalog" in query
         assert f"queryLibraryGroups.{area}" in query
-    for perspective in (
-        "executive-overview", "commercial-and-working-capital", "payroll-perspective", "operations-and-risk"
-    ):
-        report = _read(DOCS_ROOT / f"analytics/reports/{perspective}.md")
-        assert "<ReportLearningPack" in report
-        assert "reportPackManifest" in report
 
 
 def test_orientation_and_instructor_paths_link_to_hub_and_textbook() -> None:

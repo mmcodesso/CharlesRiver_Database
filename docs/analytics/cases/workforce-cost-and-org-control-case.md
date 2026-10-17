@@ -34,7 +34,7 @@ Leadership needs a workforce view that connects payroll concentration, labor uti
 - Source documents: Employee and cost-center masters, payroll registers, approved time, labor allocation, executive-role assignments, and approval-bearing documents.
 - Evidence grain: Keep headcount, payroll-period cost, employee-time allocation, and approval-event populations distinct before comparing organization groups.
 - Main tables: `Employee`, `CostCenter`, `PayrollRegister`, `TimeClockEntry`, `LaborTimeEntry`, `PurchaseRequisition`, `PurchaseOrder`, `JournalEntry`
-- Related report: [Payroll and Workforce](../reports/payroll-perspective.md)
+- Related report: [People and Payroll](../index.md#people-and-payroll)
 - Related process page: [Payroll](../../processes/payroll.md)
 - Related case: [Master Data and Workforce Audit Case](master-data-and-workforce-audit-case.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
@@ -244,6 +244,6 @@ Current employee groupings do not supply a complete historical organization char
 
 ## Next Steps
 
-- Read [Payroll and Workforce](../reports/payroll-perspective.md) when you want the report-level perspective on payroll, labor support, and control review.
+- Read [People and Payroll](../index.md#people-and-payroll) when you want reports on payroll, labor support, and control review.
 - Read [Payroll](../../processes/payroll.md) when you want the business-process view behind the same workforce and approval patterns.
 - Read [Master Data and Workforce Audit Case](master-data-and-workforce-audit-case.md) when you want the audit follow-through on employee validity and ownership.

@@ -68,35 +68,18 @@ const sidebars = {
       ],
     },
     {
-      type: "category",
+      type: "doc",
       label: "Reports and Analytics",
-      link: { type: "doc", id: "analytics/index" },
+      id: "analytics/index",
+    },
+    {
+      type: "category",
+      label: "Query Library",
+      link: { type: "doc", id: "analytics/analysis-tracks" },
       items: [
-        "analytics/reports/index",
-        {
-          type: "category",
-          label: "Report Perspectives",
-          link: { type: "doc", id: "analytics/reports/lens-packs" },
-          items: [
-            "analytics/reports/executive-overview",
-            "analytics/reports/commercial-and-working-capital",
-            "analytics/reports/payroll-perspective",
-            "analytics/reports/operations-and-risk",
-          ],
-        },
-        "analytics/reports/financial",
-        "analytics/reports/managerial",
-        "analytics/reports/audit",
-        {
-          type: "category",
-          label: "Query Library",
-          link: { type: "doc", id: "analytics/analysis-tracks" },
-          items: [
-            "analytics/financial",
-            "analytics/managerial",
-            "analytics/audit",
-          ],
-        },
+        "analytics/financial",
+        "analytics/managerial",
+        "analytics/audit",
       ],
     },
     {
