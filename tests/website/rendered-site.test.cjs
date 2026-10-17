@@ -134,7 +134,7 @@ test("BPMN library publishes every editable source, SVG, evidence explanation, a
   for (const model of models) {
     for (const suffix of ["svg", "drawio"]) {
       const asset = `/diagrams/bpmn/${model.id}.${suffix}`;
-      assert.ok(library.includes(`href="${asset}"`), `Missing library download: ${asset}`);
+      if (suffix === "drawio") assert.ok(library.includes(`href="${asset}"`), `Missing library download: ${asset}`);
       assert.ok(builtFile(asset), `Unpublished diagram: ${asset}`);
     }
     for (const route of [model.processPath, model.exercisePath, model.casePath]) {
@@ -142,6 +142,8 @@ test("BPMN library publishes every editable source, SVG, evidence explanation, a
       assert.ok(library.includes(`href="${route}"`), `Missing library connection: ${route}`);
     }
     const process = fs.readFileSync(builtFile(model.processPath), "utf8");
+    assert.ok(!process.includes(`href="/diagrams/bpmn/${model.id}.svg"`), `Diagram must open its viewer rather than a standalone SVG: ${model.id}`);
+    assert.match(process, new RegExp(`<button[^>]*aria-label="View ${model.title} in diagram viewer"[^>]*><img[^>]*src="/diagrams/bpmn/${model.id}\\.svg"`));
     assert.ok(process.includes(`/diagrams/bpmn/${model.id}.svg`), `Model absent from its process guide: ${model.id}`);
     assert.ok(process.includes("Text description and database evidence"));
     assert.ok(process.includes(model.tables[0]), `Missing evidence explanation: ${model.id}`);

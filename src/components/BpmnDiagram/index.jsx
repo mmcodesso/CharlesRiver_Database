@@ -1,18 +1,19 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "@docusaurus/Link";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import models from "@site/src/data/bpmnModels.json";
+import diagramStyles from "@site/src/theme/Mermaid/styles.module.css";
 import styles from "./styles.module.css";
 
 export function BpmnModelCatalog() {
   const assetRoot = useBaseUrl("/diagrams/bpmn/");
   return <div className={styles.inventory} tabIndex={0} role="region" aria-label="BPMN model inventory, scroll to view all columns"><table>
-    <thead><tr><th>Model</th><th>Scope</th><th>Explore the evidence</th><th>Reusable files</th></tr></thead>
+    <thead><tr><th>Model</th><th>Scope</th><th>Explore the evidence</th><th>Editable source</th></tr></thead>
     <tbody>{models.map((model) => <tr key={model.id}>
       <td><strong>{model.title}</strong><br /><small>{model.kind}</small></td>
       <td>{model.description}</td>
       <td><Link to={model.processPath}>Process guide</Link><br /><Link to={model.exercisePath}>Learning activity</Link><br /><Link to={model.casePath}>Related case</Link></td>
-      <td><a href={`${assetRoot}${model.id}.svg`}>View SVG</a><br /><a href={`${assetRoot}${model.id}.drawio`} download>Editable Draw.io</a></td>
+      <td><a href={`${assetRoot}${model.id}.drawio`} download>Editable Draw.io</a></td>
     </tr>)}</tbody>
   </table></div>;
 }
@@ -20,14 +21,15 @@ export function BpmnModelCatalog() {
 export default function BpmnDiagram({ modelId }) {
   const model = models.find((entry) => entry.id === modelId);
   if (!model) throw new Error(`Unknown BPMN model: ${modelId}`);
-  const titleId = useId();
   const svgUrl = useBaseUrl(`/diagrams/bpmn/${model.id}.svg`);
   const sourceUrl = useBaseUrl(`/diagrams/bpmn/${model.id}.drawio`);
   const dialogRef = useRef(null);
   const closeRef = useRef(null);
   const openerRef = useRef(null);
+  const imageRef = useRef(null);
+  const surfaceRef = useRef(null);
+  const panzoomRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -43,17 +45,85 @@ export default function BpmnDiagram({ modelId }) {
     };
   }, [isOpen]);
 
+  function resetView() {
+    const image = imageRef.current;
+    const surface = surfaceRef.current;
+    const panzoom = panzoomRef.current;
+    if (!image?.naturalWidth || !surface?.clientHeight || !panzoom) return;
+    const scale = Math.min(
+      (surface.clientWidth - 24) / image.naturalWidth,
+      (surface.clientHeight - 24) / image.naturalHeight,
+    );
+    if (scale <= 0) return;
+    panzoom.zoomTo(0, 0, 1);
+    panzoom.moveTo(0, 0);
+    panzoom.zoomAbs(0, 0, 1);
+    panzoom.moveTo(0, 0);
+    panzoom.zoomAbs(0, 0, scale);
+    const fittedScale = panzoom.getTransform().scale;
+    panzoom.moveTo(
+      (surface.clientWidth - image.naturalWidth * fittedScale) / 2,
+      (surface.clientHeight - image.naturalHeight * fittedScale) / 2,
+    );
+  }
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const image = imageRef.current;
+    let cancelled = false;
+    let panzoom;
+    let observer;
+    async function initialize() {
+      const { default: createPanzoom } = await import("panzoom");
+      if (cancelled) return;
+      panzoom = createPanzoom(image, {
+        maxZoom: 6,
+        minZoom: 0.05,
+        bounds: true,
+        boundsPadding: 0.02,
+        smoothScroll: false,
+        disableKeyboardInteraction: true,
+        filterKey: () => true,
+      });
+      panzoomRef.current = panzoom;
+      image.addEventListener("load", resetView);
+      observer = new ResizeObserver(resetView);
+      observer.observe(surfaceRef.current);
+      resetView();
+    }
+    initialize();
+    return () => {
+      cancelled = true;
+      image.removeEventListener("load", resetView);
+      observer?.disconnect();
+      panzoom?.dispose();
+      panzoomRef.current = null;
+    };
+  }, [isOpen]);
+
   function open(event) {
     openerRef.current = event.currentTarget;
-    setZoom(1);
     setIsOpen(true);
   }
-  function zoomBy(amount) { setZoom((value) => Math.max(0.5, Math.min(8, value + amount))); }
+  function zoomBy(factor) {
+    const panzoom = panzoomRef.current;
+    const surface = surfaceRef.current;
+    if (!panzoom || !surface) return;
+    const x = surface.clientWidth / 2;
+    const y = surface.clientHeight / 2;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) panzoom.zoomTo(x, y, factor);
+    else panzoom.smoothZoom(x, y, factor);
+  }
   function handleKey(event) {
-    if (["+", "=", "-", "0"].includes(event.key)) {
+    const offsets = { ArrowLeft: [40, 0], ArrowRight: [-40, 0], ArrowUp: [0, 40], ArrowDown: [0, -40] };
+    if (offsets[event.key]) {
       event.preventDefault();
-      if (event.key === "0") setZoom(1);
-      else zoomBy(event.key === "-" ? -0.25 : 0.25);
+      panzoomRef.current?.zoomTo(0, 0, 1);
+      panzoomRef.current?.moveBy(...offsets[event.key]);
+    } else if (["+", "=", "-", "0"].includes(event.key)) {
+      event.preventDefault();
+      if (event.key === "0") resetView();
+      else zoomBy(event.key === "-" ? 1 / 1.2 : 1.2);
     }
   }
   function handleDialogKey(event) {
@@ -70,20 +140,15 @@ export default function BpmnDiagram({ modelId }) {
     }
   }
 
-  return <figure className={styles.figure} aria-labelledby={titleId}>
-    <figcaption>
-      <p className={styles.eyebrow}>BPMN 2.0 / activities and responsibilities</p>
-      <strong id={titleId} className={styles.title}>{model.title}</strong>
-      <p>{model.description}</p>
-    </figcaption>
-    <div className={styles.toolbar}>
-      <button type="button" onClick={open} aria-haspopup="dialog">Expand {model.title} model</button>
-      <a href={svgUrl} target="_blank" rel="noopener noreferrer">Open SVG</a>
-      <a href={sourceUrl} download>Download editable Draw.io</a>
+  return <figure className={diagramStyles.figure} aria-label={model.title}>
+    <div className={diagramStyles.inlineToolbar}>
+      <figcaption className={diagramStyles.inlineHint}>Expand the diagram for a larger view with zoom and pan controls.</figcaption>
+      <button className={diagramStyles.expandButton} type="button" onClick={open} aria-haspopup="dialog" aria-label={`Expand ${model.title} model`}>Expand model</button>
     </div>
-    <a className={styles.preview} href={svgUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open full-size ${model.title} SVG`}>
+    <button className={styles.preview} type="button" onClick={open} aria-haspopup="dialog" aria-label={`View ${model.title} in diagram viewer`}>
       <img src={svgUrl} alt={model.alt} loading="lazy" />
-    </a>
+    </button>
+    <p className={styles.resources}><a href={sourceUrl} download>Download editable Draw.io</a></p>
     <details className={styles.description}>
       <summary>Text description and database evidence</summary>
       <ol>{model.steps.map((step) => <li key={step}>{step}</li>)}</ol>
@@ -92,18 +157,19 @@ export default function BpmnDiagram({ modelId }) {
       <p>{model.boundary}</p>
     </details>
     <p className={styles.note}>Editable visual model in Draw.io XML; this is not executable BPMN XML. <Link to="/docs/process-models">Notation and model library</Link>.</p>
-    {isOpen ? <dialog ref={dialogRef} className={styles.dialog} aria-label={`${model.title} BPMN viewer`} onKeyDown={handleDialogKey} onCancel={(event) => { event.preventDefault(); setIsOpen(false); }}>
-      <div className={styles.dialogHeader}><div><strong>{model.title}</strong><p>Focus the image area to scroll. Use + and − to zoom, 0 to fit, and Escape to close.</p></div>
-        <div className={styles.controls}>
-          <button type="button" aria-label="Zoom out BPMN model" onClick={() => zoomBy(-0.25)} disabled={zoom <= 0.5}>−</button>
-          <button type="button" aria-label="Zoom in BPMN model" onClick={() => zoomBy(0.25)} disabled={zoom >= 8}>+</button>
-          <button type="button" onClick={() => setZoom(1)}>Fit</button>
-          <button ref={closeRef} type="button" onClick={() => setIsOpen(false)}>Close</button>
+    {isOpen ? <dialog ref={dialogRef} className={`${diagramStyles.modal} ${styles.dialog}`} aria-label={`${model.title} BPMN viewer`} onKeyDown={handleDialogKey} onCancel={(event) => { event.preventDefault(); setIsOpen(false); }}>
+      <div className={diagramStyles.modalToolbar}><div><p className={diagramStyles.modalTitle}>Diagram viewer</p><p className={diagramStyles.modalHint}>Drag to pan or focus the diagram and use arrow keys. Use + and - to zoom; 0 resets the view.</p></div>
+        <div className={diagramStyles.controlGroup}>
+          <button className={diagramStyles.controlButton} type="button" aria-label="Zoom out" onClick={() => zoomBy(1 / 1.2)}>-</button>
+          <button className={diagramStyles.controlButton} type="button" aria-label="Zoom in" onClick={() => zoomBy(1.2)}>+</button>
+          <button className={`${diagramStyles.controlButton} ${diagramStyles.textButton}`} type="button" onClick={resetView}>Reset</button>
+          <button className={`${diagramStyles.controlButton} ${diagramStyles.textButton}`} ref={closeRef} type="button" onClick={() => setIsOpen(false)}>Close</button>
         </div>
       </div>
-      <p className={styles.zoom} role="status" aria-live="polite">{Math.round(zoom * 100)}% of fitted width</p>
-      <div className={styles.viewport} tabIndex={0} role="region" aria-label={`${model.title} diagram, scroll to inspect`} onKeyDown={handleKey}>
-        <img src={svgUrl} alt={model.alt} style={{ width: `${zoom * 100}%` }} />
+      <div className={`${diagramStyles.viewport} ${styles.viewport}`} tabIndex={0} role="region" aria-label={`${model.title} diagram. Arrow keys pan; plus and minus zoom; zero resets the view.`} onKeyDown={handleKey}>
+        <div ref={surfaceRef} className={`${diagramStyles.modalDiagram} ${diagramStyles.zoomSurface}`}>
+          <img ref={imageRef} className={styles.zoomImage} src={svgUrl} alt={model.alt} draggable={false} />
+        </div>
       </div>
     </dialog> : null}
   </figure>;

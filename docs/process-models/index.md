@@ -33,7 +33,7 @@ The six collapsed activities show independently triggered business cycles. Share
 
 ## Model Library
 
-The predictable filenames below pair an editable `.drawio` source with an SVG exported by Draw.io. View the SVG in a browser without installing an editor. Download the source to adapt a model in [diagrams.net](https://app.diagrams.net/) or Draw.io Desktop. Keep any proposed change clearly labeled as a teaching proposal.
+The predictable filenames pair an editable `.drawio` source with an SVG exported by Draw.io. Click a diagram or its Expand model button to view it with zoom and pan controls. Download the source below to adapt a model in [diagrams.net](https://app.diagrams.net/) or Draw.io Desktop. Keep any proposed change clearly labeled as a teaching proposal.
 
 <BpmnModelCatalog />
 

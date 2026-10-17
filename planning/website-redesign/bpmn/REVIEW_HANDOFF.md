@@ -1,5 +1,17 @@
 # BPMN and AIS extension — review handoff
 
+## Viewer refinement requested after library delivery
+
+Removed standalone Open SVG / View SVG navigation from the figures and library. Each diagram is now a keyboard-accessible image button opening the same dialog as Expand model. The inline toolbar and viewer reuse Mermaid's actual CSS module: the same buttons, paper background, rounded modal, dimensions, dark theme, and Zoom out / Zoom in / Reset / Close controls. The existing `panzoom` dependency supplies drag/pinch interaction and keyboard pan/zoom; Reset fits the whole image and cancels an in-progress zoom animation. Editable Draw.io downloads and text evidence remain available.
+
+Changed the BPMN component and its small image/native-dialog CSS overrides, the library introduction, the existing rendered-site assertions, `AGENTS.md`, and this handoff. No Mermaid source, process/case sequence, query/report link, diagram source, or exported asset changed. The process-led teaching flow and required case headings remain intact.
+
+Validation: `npm run build` passed; the existing Node website checks passed **13/13** using the documented one-hour process timeout; the freeze guard confirmed all **293 artifacts unchanged**; `git diff --check` passed. Browser checks at 1440×1000 and 390×844 confirmed both openers, keyboard image activation, zoom, reset, focus containment/restoration, Escape, and light/dark layouts. Computed desktop modal size, corner radius, and background matched the existing Mermaid dialog exactly. The screenshot shows the [updated inline format](../../../outputs/_website_redesign/bpmn/viewer-refinement.png).
+
+Build hooks refreshed manifests with no content diff and reused the existing reports. SVGs were not regenerated. Python/generator tests were not rerun for this component/CSS-only behavior change; the original library checks below remain the source/model validation record. The temporary preview server was stopped after review.
+
+## Initial library delivery
+
 Completed 17 October 2026 on `feature/charles-river-website-redesign`, extending the initial website redesign at `1ea2e71`. Implementation commit: `3ede287`. Main remains at frozen baseline `7c21218dce19201013f7a71eb7263e12a85af09a`. No merge, push, deployment, release edit, or dataset generation occurred.
 
 ## Delivered library and teaching flow
