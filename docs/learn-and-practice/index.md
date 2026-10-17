@@ -35,6 +35,8 @@ Expand from one trace to a defined population. These pathways reuse the existing
 
 Use the [Schema Reference](../reference/schema.md) for keys and the [GLEntry Posting Reference](../reference/posting.md) for event-to-accounting rules. The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) provides deeper methods, including the [SQL essentials chapter](https://aa.accountinganalyticshub.com/chapters/09-sql-essentials/chapter.html).
 
+For an AIS extension, use the [BPMN and Controls Workshop](bpmn-controls-workshop.md) with an editable [process model](../process-models/index.md). Interpret responsibilities, trace an activity to actual records, build a risk and control matrix, and propose a change with a testable evidence plan. Start after one foundational trace so the control discussion rests on source evidence.
+
 ## 3. Integrated Business Cases
 
 The [Case Library](../analytics/cases/index.md) combines business context, related query sequences, accounting logic, and interpretation. Begin with the matching process case, then progress toward wider financial, managerial, or audit synthesis.

@@ -65,7 +65,7 @@ test("every authored page is rendered with a unique title, description, canonica
 
 test("learning activities have server-rendered accurate LearningResource metadata", () => {
   const activities = docs.filter(({ id }) => (id.startsWith("analytics/cases/") && id !== "analytics/cases/index") || (id.startsWith("learn-and-practice/") && id !== "learn-and-practice/index") || ["analytics/sql-guide", "analytics/excel-guide"].includes(id));
-  assert.equal(activities.length, 22);
+  assert.equal(activities.length, 23);
   for (const { route, metadata } of activities) {
     const html = fs.readFileSync(builtFile(route), "utf8");
     const resource = structuredData(html).find((entry) => entry["@type"] === "LearningResource");
@@ -122,5 +122,29 @@ test("rendered internal links and static downloads point to existing build files
       const url = new URL(href.replaceAll("&amp;", "&"), branding.baseUrl);
       assert.ok(builtFile(url.pathname), `Missing target ${href} from ${route}`);
     }
+  }
+});
+
+test("BPMN library publishes every editable source, SVG, evidence explanation, and learning connection", () => {
+  const models = require("../../src/data/bpmnModels.json");
+  const library = fs.readFileSync(builtFile("/docs/process-models"), "utf8");
+  assert.equal(models.length, 11);
+  assert.match(library, /BPMN model inventory/);
+  assert.match(library, /executable BPMN/);
+  for (const model of models) {
+    for (const suffix of ["svg", "drawio"]) {
+      const asset = `/diagrams/bpmn/${model.id}.${suffix}`;
+      assert.ok(library.includes(`href="${asset}"`), `Missing library download: ${asset}`);
+      assert.ok(builtFile(asset), `Unpublished diagram: ${asset}`);
+    }
+    for (const route of [model.processPath, model.exercisePath, model.casePath]) {
+      assert.ok(builtFile(route), `Missing learning connection: ${model.id} -> ${route}`);
+      assert.ok(library.includes(`href="${route}"`), `Missing library connection: ${route}`);
+    }
+    const process = fs.readFileSync(builtFile(model.processPath), "utf8");
+    assert.ok(process.includes(`/diagrams/bpmn/${model.id}.svg`), `Model absent from its process guide: ${model.id}`);
+    assert.ok(process.includes("Text description and database evidence"));
+    assert.ok(process.includes(model.tables[0]), `Missing evidence explanation: ${model.id}`);
+    assert.match(process, /<img[^>]*alt="[^"]{80,}"/);
   }
 });

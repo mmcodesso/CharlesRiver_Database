@@ -1,9 +1,21 @@
 ---
 title: Accounting Journals, Accruals, and Financial Close
-description: Learn the manual journals and close cycle in the synthetic accounting analytics dataset, from recurring journal entries and accrual settlement to year-end close and GLEntry.
+description: Connect BPMN journal and close activities to Mermaid posting flows, approval evidence, accrued-service settlement, year-end boundaries, and an AIS review activity.
 ---
 
+import BpmnDiagram from "@site/src/components/BpmnDiagram";
+
 # Manual Journals and Close Cycle
+
+## Business Storyline
+
+**Illustrative scenario:** at period end, Charles River finance needs to recognize an expense estimate, explain its support, and distinguish that estimate from later supplier settlement. Annual close introduces a separate reporting boundary. Select actual journals and links from your assigned file; this scenario does not establish an unrecorded close checklist or sign-off procedure.
+
+The dataset includes both operational activity and finance-controlled journal activity. Finance records the recurring and period-end entries that students expect in a real accounting system: rent, utilities, depreciation, month-end accruals, accrual adjustments, factory-overhead journals, fixed-asset debt reclasses, debt payments, asset disposals, and year-end close.
+
+This process shows what happens outside the normal document chains. Students can compare operational postings from shipments, receipts, payroll, and purchasing with finance-controlled entries that start directly in the journal process. The most important cross-process bridge is accrued-expense settlement, where a finance estimate is later cleared operationally through AP.
+
+That distinction matters. A recurring journal is not an operational source document. An accrual is not the same thing as the later supplier invoice that clears it. A year-end close is not just another monthly recurring journal. Students can see those stages separately in the data and use that separation for financial-accounting, working-capital, and audit questions.
 
 ## What Students Should Learn
 
@@ -12,19 +24,44 @@ description: Learn the manual journals and close cycle in the synthetic accounti
 - Identify the core tables used for recurring journals, manufacturing reclass support, accrual cleanup, and close-cycle analysis.
 - Recognize which journal families belong in recurring monthly analysis and which should be filtered from raw multi-year P&L review.
 
-## Business Storyline
-
-The dataset includes both operational activity and finance-controlled journal activity. Finance records the recurring and period-end entries that students expect in a real accounting system: rent, utilities, depreciation, month-end accruals, accrual adjustments, factory-overhead journals, fixed-asset debt reclasses, debt payments, asset disposals, and year-end close.
-
-This process shows what happens outside the normal document chains. Students can compare operational postings from shipments, receipts, payroll, and purchasing with finance-controlled entries that start directly in the journal process. The most important cross-process bridge is accrued-expense settlement, where a finance estimate is later cleared operationally through AP.
-
-That distinction matters. A recurring journal is not an operational source document. An accrual is not the same thing as the later supplier invoice that clears it. A year-end close is not just another monthly recurring journal. Students can see those stages separately in the data and use that separation for financial-accounting, working-capital, and audit questions.
-
 ## Decisions and Evidence
 
 Finance must explain both the posting and the period it belongs to. An estimate, a later supplier invoice, a payment, and an accrual adjustment can relate to the same underlying need while answering different recognition and settlement questions. Asset depreciation and financing also require their own register or schedule support.
 
 Begin by tracing one journal type into `GLEntry` and stating its purpose. Use the [Financial Statement Bridge Case](../analytics/cases/financial-statement-bridge-case.md) for the wider reconciliation. Keep opening and year-end closing entries visible in a balance reconciliation while applying the documented close-entry exclusions when analyzing operating P&L activity.
+
+## Participants and Responsibilities
+
+The **Preparer** assembles a finance-controlled entry, an **Approver** supplies the approval represented on the journal header, and **Accounting or the Controller** interprets the posted result and close boundary. **AP** and **Treasury** participate when an accrual is later invoiced and paid. These are modeled responsibilities; compare `CreatedByEmployeeID` and `ApprovedByEmployeeID` before making any claim about independent review.
+
+## BPMN Business Process
+
+<BpmnDiagram modelId="manual-journals-close" />
+
+### Interpret the Activities and Decisions
+
+1. A finance-calendar event or accounting need begins preparation of a supported journal. Approval metadata and posted ledger detail are different evidence layers; there is no separate journal-line table.
+2. The entry reaches `GLEntry`, where accounts, dates, and debit/credit effects can be inspected. A balanced entry alone does not establish the correctness of its business purpose or period.
+3. Year-end close is a separate branch that moves P&L through income summary to retained earnings. Routine monthly entries do not all traverse that annual boundary.
+
+<details>
+<summary>Follow an accrual into supplier settlement</summary>
+
+<BpmnDiagram modelId="accrual-settlement" />
+
+The original estimate, a later direct service invoice, any linked residual adjustment, and disbursement remain separate events. The invoice uses `AccrualJournalEntryID`; it does not require a physical receipt. An estimate can remain outstanding at a reporting date.
+
+</details>
+
+### Risks, Controls, and Evidence
+
+| Risk and control objective | Evidence available | Teaching boundary |
+|---|---|---|
+| Unsupported journal: identify preparation and approval support | `JournalEntry` creator, approver, and date fields, plus `GLEntry` | Test actual identities and dates; the diagram does not establish an enforced independent-review workflow |
+| Duplicate recognition or stale estimate: distinguish accrual from later AP settlement | `PurchaseInvoiceLine.AccrualJournalEntryID`, `JournalEntry.ReversesJournalEntryID`, `GLEntry` | An independent accrual roll-forward is a **proposed teaching control**; missing later settlement at cutoff is not automatically an error |
+| Misstated operating analysis: distinguish routine activity from close boundaries | `JournalEntry.EntryType`, posting dates, accounts, and ledger source fields | An independent close reconciliation is a **proposed teaching control**; a year-end entry is not ordinary operating revenue or expense |
+
+The Mermaid views below show journal, settlement, and accounting relationships. The [Process Models](../process-models/index.md) library includes notation guidance and editable sources.
 
 ## Normal Process Overview
 
@@ -234,6 +271,18 @@ flowchart LR
 - `JournalEntry` remains the journal header anchor for both opening balance and year-end close.
 - `GLEntry` remains the posted detail layer students should use for financial-statement analysis.
 - Year-end close entries should be filtered from raw multi-year P&L analysis when students want underlying operating activity instead of formal close mechanics.
+
+## Optional AIS Activity: Evaluate an Accrual or Close Review
+
+**Context and objective:** finance needs a supported explanation of one estimate or reporting-boundary entry. Locate preparation, approval, posting, and any later settlement evidence, then propose a review that addresses a defined risk.
+
+**Prerequisites, tools, and sources:** review accrual recognition, liabilities, and closing entries. Use a SQL tool with the published SQLite file, or Excel filters and lookups, plus a copy of the editable Draw.io model. Sources are `JournalEntry`, `GLEntry`, `Account`, and, for an accrued service, `PurchaseInvoiceLine`, `PurchaseInvoice`, and `DisbursementPayment`. Use fixed-asset and debt records only when the chosen journal family requires them.
+
+1. Record the release, journal type, reporting date, and actual keys. Mark the entry's purpose, preparation, approval, and posting on the model.
+2. Trace the entry to ledger detail and retain the relevant date boundaries. For an accrual, inspect linked invoices and adjustments without assuming blanket reversal; for close, distinguish operating activity from the annual transfer.
+3. Add one **proposed teaching control** for approval, accrual review, or close reconciliation. Specify the risk, objective, owner, evidence, test, and limitation in the [workshop matrix](../learn-and-practice/bpmn-controls-workshop.md).
+
+**Assessed deliverable:** submit an annotated model, a reproducible journal-to-ledger schedule, and the risk/control row. Explain what finding would warrant follow-up and what additional support would be needed. The file does not establish a complete finance-calendar workflow or prove review quality merely through an approver field. Continue through the existing accrual, financial query, and statement-bridge links on this page.
 
 ## Common Student Questions
 

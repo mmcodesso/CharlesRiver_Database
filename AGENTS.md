@@ -149,6 +149,25 @@ Notes:
 - Mermaid is enabled. Keep diagrams simple, readable, and faithful to process/schema logic.
 - If you change a page slug or route, also update `sidebars.js` and any redirect rules in `docusaurus.config.js`.
 
+## BPMN Authoring and Maintenance
+
+- `static/diagrams/bpmn/<model-id>.drawio` is the authoritative editable diagram. Use diagrams.net / Draw.io's BPMN 2.0 library; keep the matching `<model-id>.svg` as its published export. These are intentional tracked teaching assets, unlike generated dataset/report outputs.
+- Keep the diagram files in LF format as specified by `.gitattributes`, so embedded source hashes remain stable across Windows and Unix checkouts.
+- Start with the process guide and actual schema/posting evidence. BPMN explains activities, participants, decisions, and controls; preserve Mermaid for document relationships, data lineage, and accounting effects. Follow business scenario → objectives/participants → BPMN/interpretation → Mermaid/tables/postings → investigation/activity.
+- Use internal lanes for teaching responsibilities and separate pools for external participants. Sequence flows stay within a pool; message flows cross pools, with open source circles and unfilled arrowheads. Label exclusive alternatives. Parallel branches must all be required by the stated scope and synchronize without optional bypasses.
+- Use native tasks/events/gateways and a solid normal collapsed subprocess with the boxed-plus marker. Draw.io's `bpmnShapeType=subprocess` renders an **event subprocess** with a dashed border; a normal collapsed activity uses `bpmnShapeType=task;isLoopSub=1`. Avoid a cell ID of `join` (rejected by the tested Desktop exporter); use descriptive IDs such as `settlement-join`.
+- Match the library's Arial type, teal outlines, white canvas, lane spacing, and connector conventions. Keep labels within lanes with room below events. Use overview/detail models rather than crowding every exception into one view. Explicitly label proposed controls; a stored approval or lane assignment does not prove control effectiveness or access independence.
+- Maintain `src/data/bpmnModels.json` with the title, descriptive alt text, ordered text explanation, actual evidence tables, scope boundary, process page, exercise, and related case. `BpmnDiagram` publishes viewing, keyboard zoom/expanded view, text evidence, and editable downloads; `BpmnModelCatalog` derives the website inventory from the same metadata.
+- Edit the `.drawio` source first. Export through installed Draw.io Desktop, then add the accessible SVG title/description and source hash using the checked-in helper:
+  ```powershell
+  pwsh -NoProfile -File planning/website-redesign/bpmn/export-diagrams.ps1 -ModelId order-to-cash
+  # Omit -ModelId to export the whole library; use -DrawioPath for another installation.
+  ```
+  The helper invokes Draw.io's SVG exporter with embedded editable XML, native text, a light canvas, and no remote font embedding. It does not generate datasets or reports. Do not replace published SVG geometry with a separately hand-drawn version. The tested Desktop version is 29.6.6.
+- Verify each source opens/exports as editable cells, compare its SVG with the source, and inspect the rendered diagram at readable zoom. Run `tests/website/test_bpmn_models.py` using the repo `.venv` and the test timeout rules below, plus `npm run build` and the website Node checks. Review responsive layout, download links, text alternatives, and keyboard focus/zoom/Escape behavior after viewer changes.
+- For new notation or viewer conventions, complete and review an Order-to-Cash pilot before applying them to the library. The initial pilot record is `planning/website-redesign/bpmn/PILOT_REVIEW.md`; the maintained inventory and validation handoff are in that directory.
+- Draw.io XML is an editable visual format, **not executable BPMN 2.0 XML**. Any future execution/interchange deliverable needs a separate standards-based export and engine/schema validation. Keep student prompts public and instructor solutions in private course materials.
+
 ## Data, SQL, And Analytics Guidance
 
 - There is no raw external data directory. Source-of-truth lives in Python code plus `config/*.yaml` and `config/accounts.csv`.

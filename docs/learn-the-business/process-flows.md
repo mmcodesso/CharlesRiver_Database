@@ -1,15 +1,27 @@
 ---
 title: Connected Accounting Business Processes
-description: Follow order-to-cash, procure-to-pay, manufacturing, Design Services, payroll, and close from business activity to accounting evidence and analysis.
+description: Explore the Charles River BPMN process architecture and Mermaid information flows linking six business cycles to accounting evidence, internal-control activities, and analysis.
 slug: /process-flows
 sidebar_label: Process Flows
 ---
+
+import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
 # Process Flows
 
 Customer demand connects Charles River's departments. Sales needs goods to fulfill orders. Purchasing supports merchandise and components. Manufacturing uses materials and labor to make selected products. Design Services uses employee time to serve engagements. Finance records the accounting effects, settles obligations, and closes the period.
 
 Read each cycle as a sequence of decisions and evidence. A document may record a promise, an approval, physical activity, an accounting event, or a settlement. Those meanings matter before you choose a join or total a column.
+
+## Business Process Architecture
+
+<BpmnDiagram modelId="process-architecture" />
+
+The architecture groups the company's business cycles and responsibilities. Each cycle has its own trigger and boundary; the drawing does not impose a single serial schedule on all transactions. Purchasing supplies merchandise and components, manufacturing supplies selected finished goods, payroll supports factory and service staff, and finance complements the operating cycles with journals and close.
+
+Open the [Process Models](../process-models/index.md) library to view and download the editable BPMN models. BPMN shows participants, activities, decisions, and exceptions. The Mermaid map below shows conceptual information dependencies and posting flows; the detailed process pages connect those views to actual tables and ledger events.
+
+Role allocations are teaching models grounded in the synthetic records. Stored approvals and source links can support evidence tests, but proposed independent reconciliations, holds, and review procedures must be labeled **proposed teaching controls**. A diagram alone does not establish how effectively a control operated.
 
 ## The Connected Business
 
@@ -66,12 +78,15 @@ The modules can support an existing AIS course now. The complementary AIS textbo
 ## Read Every Process in the Same Order
 
 1. Identify the **business need and decision**: customer demand, an internal purchasing requirement, production, service delivery, or a period-end estimate.
-2. Identify the **source documents and grain**: what one header, line, approval, or event represents.
-3. Distinguish **support from recognition**: a plan or approval can explain activity without creating a ledger entry.
-4. Trace **posting and settlement** separately: the event creating a receivable or liability may precede the cash event.
-5. Choose an **analysis and conclusion**: state the population, dates, evidence, limitations, and next action.
+2. Read the **BPMN participants and activities**: follow the trigger, responsibility handoffs, labeled decision paths, and stated end boundary.
+3. Identify the **source documents and grain** in the Mermaid views: what one header, line, approval, or event represents.
+4. Distinguish **support from recognition**: a plan or approval can explain activity without creating a ledger entry.
+5. Trace **posting and settlement** separately: the event creating a receivable or liability may precede the cash event.
+6. Choose an **analysis and conclusion**: state the population, dates, evidence, limitations, and next action.
 
 The [Dataset Guide](../start-here/dataset-overview.md) provides table-family navigation. The [Schema Reference](../reference/schema.md) provides stored keys. The [GLEntry Posting Reference](../reference/posting.md) provides event-specific accounting rules.
+
+Each major process page includes an optional AIS activity that moves from model interpretation to a supported risk/control evaluation. The [BPMN and controls workshop](../learn-and-practice/bpmn-controls-workshop.md) provides a common evidence workflow and reusable matrix. These activities support current classroom work and the forthcoming AIS textbook; they do not imply that a future Hub course is already available.
 
 ## Process to Analysis Bridges
 
