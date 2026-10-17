@@ -67,6 +67,19 @@
   margin: 0;
 }
 
+.inlinePreview {
+  width: 100%;
+  color: inherit;
+  font: inherit;
+  text-align: initial;
+  cursor: zoom-in;
+}
+
+.inlinePreview:focus-visible {
+  outline: 3px solid var(--ifm-color-primary);
+  outline-offset: 3px;
+}
+
 .backdrop {
   position: fixed;
   inset: 0;

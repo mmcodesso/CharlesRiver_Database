@@ -100,17 +100,20 @@ function fitDiagramInViewport({ panzoom, svg, viewport }) {
   return true;
 }
 
-function MermaidMarkup({ renderResult, containerRef, className }) {
+function MermaidMarkup({ renderResult, containerRef, className, as: Element = "div", ...props }) {
   useEffect(() => {
-    bindDiagramInteractions(renderResult, containerRef);
+    if (renderResult) {
+      bindDiagramInteractions(renderResult, containerRef);
+    }
   }, [containerRef, renderResult]);
 
   return (
-    <div
+    <Element
+      {...props}
       ref={containerRef}
       className={clsx(MermaidContainerClassName, className)}
       // eslint-disable-next-line react/no-danger
-      dangerouslySetInnerHTML={{ __html: renderResult.svg }}
+      dangerouslySetInnerHTML={{ __html: renderResult?.svg ?? "" }}
     />
   );
 }
@@ -122,6 +125,7 @@ function MermaidRenderer({ value }) {
   const viewportRef = useRef(null);
   const dialogRef = useRef(null);
   const closeButtonRef = useRef(null);
+  const openerRef = useRef(null);
   const panzoomRef = useRef(null);
   const svgRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -132,7 +136,7 @@ function MermaidRenderer({ value }) {
     }
 
     const previousOverflow = document.body.style.overflow;
-    const previousFocus = document.activeElement;
+    const previousFocus = openerRef.current ?? document.activeElement;
     const focusFrame = requestAnimationFrame(() => closeButtonRef.current?.focus());
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
@@ -165,7 +169,9 @@ function MermaidRenderer({ value }) {
       document.body.style.overflow = previousOverflow;
       cancelAnimationFrame(focusFrame);
       document.removeEventListener("keydown", handleKeyDown);
-      previousFocus?.focus({ preventScroll: true });
+      if (previousFocus?.isConnected) {
+        previousFocus.focus({ preventScroll: true });
+      }
     };
   }, [isOpen]);
 
@@ -232,12 +238,15 @@ function MermaidRenderer({ value }) {
       }
 
       svgRef.current = svg;
+      const dimensions = getSvgDimensions(svg);
       svg.style.maxWidth = "none";
-      svg.style.height = "auto";
+      // Panzoom coordinates must match the SVG viewBox rather than its percentage width.
+      svg.style.width = `${dimensions.width}px`;
+      svg.style.height = `${dimensions.height}px`;
 
       localPanzoom = createPanzoom(svg, {
         maxZoom: 6,
-        minZoom: 0.35,
+        minZoom: 0.05,
         bounds: true,
         boundsPadding: 0.02,
         smoothScroll: false,
@@ -284,6 +293,11 @@ function MermaidRenderer({ value }) {
     return null;
   }
 
+  const openViewer = (event) => {
+    openerRef.current = event.currentTarget;
+    setIsOpen(true);
+  };
+
   const zoomBy = (factor) => {
     if (!panzoomRef.current || !viewportRef.current) {
       return;
@@ -329,23 +343,28 @@ function MermaidRenderer({ value }) {
       <figure className={styles.figure}>
         <div className={styles.inlineToolbar}>
           <figcaption className={styles.inlineHint}>
-            Expand the diagram for a larger view with zoom and pan controls.
+            Click the diagram or use Expand diagram for a larger view with zoom and pan controls.
           </figcaption>
           <button
             type="button"
             className={styles.expandButton}
-            onClick={() => setIsOpen(true)}
+            onClick={openViewer}
+            aria-haspopup="dialog"
           >
             Expand diagram
           </button>
         </div>
-        {!isOpen ? (
-          <MermaidMarkup
-            renderResult={renderResult}
-            containerRef={inlineRef}
-            className={styles.inlineDiagram}
-          />
-        ) : null}
+        <MermaidMarkup
+          as="button"
+          type="button"
+          onClick={openViewer}
+          aria-haspopup="dialog"
+          aria-label="View Mermaid diagram in diagram viewer"
+          // Keep the opener mounted for focus restoration, with SVG IDs in only one view.
+          renderResult={isOpen ? null : renderResult}
+          containerRef={inlineRef}
+          className={clsx(styles.inlineDiagram, styles.inlinePreview)}
+        />
       </figure>
 
       {isOpen ? (

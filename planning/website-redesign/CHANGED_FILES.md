@@ -70,6 +70,7 @@ Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb726
 | [docusaurus.config.js](../../docusaurus.config.js) | Website navigation / contributor standards |
 | [planning/website-redesign/CHANGED_FILES.md](../../planning/website-redesign/CHANGED_FILES.md) | Private website planning / validation |
 | [planning/website-redesign/DESIGN_STRATEGY.md](../../planning/website-redesign/DESIGN_STRATEGY.md) | Private website planning / validation |
+| [planning/website-redesign/DIAGRAM_INTERACTIONS.md](../../planning/website-redesign/DIAGRAM_INTERACTIONS.md) | Private website planning / validation |
 | [planning/website-redesign/FINAL_REVIEW.md](../../planning/website-redesign/FINAL_REVIEW.md) | Private website planning / validation |
 | [planning/website-redesign/PAGE_CHANGE_INVENTORY.md](../../planning/website-redesign/PAGE_CHANGE_INVENTORY.md) | Private website planning / validation |
 | [planning/website-redesign/REPORTS_CONSOLIDATION.md](../../planning/website-redesign/REPORTS_CONSOLIDATION.md) | Private website planning / validation |
@@ -134,4 +135,4 @@ Complete website scope relative to frozen baseline `7c21218dce19201013f7a71eb726
 | [tests/website/rendered-site.test.cjs](../../tests/website/rendered-site.test.cjs) | Website regression checks |
 | [tests/website/test_bpmn_models.py](../../tests/website/test_bpmn_models.py) | Website regression checks |
 
-129 files in this website scope.
+130 files in this website scope.
