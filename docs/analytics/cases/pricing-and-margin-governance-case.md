@@ -5,10 +5,15 @@ sidebar_label: Pricing and Margin Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Pricing and Margin Governance Case
 
+<CaseOverview slug="pricing-and-margin-governance-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 Commercial leadership is reviewing why realized pricing differs from list price across customers, segments, collections, and style families. The company prices through formal price lists, promotions, customer-specific pricing, and rare override approvals. Those choices shape billed revenue before the result reaches the statements.
 
@@ -20,23 +25,23 @@ Your job is to explain the pricing policy stack first, then show how that stack 
 
 You need to prove where price realization falls below base list pricing, how much of that result comes from promotions, customer-specific pricing, and override behavior, which customers, collections, and sales teams depend most on non-standard pricing paths, and when pricing pressure starts changing realized margin materially.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A pricing-policy narrative from list price through promotions, customer-specific pricing, and overrides.
-- A realized-pricing explanation by customer and portfolio segment.
-- A promotion-effect explanation tied to revenue and gross margin.
-- An override and price-floor pressure explanation tied to commercial concentration rather than audit exception testing.
-- A short management-facing conclusion on where pricing governance deserves follow-up first.
+- Compare list and realized prices using a defined commercial population.
+- Assess promotions, customer pricing, overrides, and margin together.
+- Separate commercial associations from pricing-control conclusions.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Price-list header and lines, promotion, override approval, sales order and lines, and invoice lines.
+- Evidence grain: Compare like customer, item, collection, and period populations; retain sales-line keys for approval follow-up.
 - Main tables: `PriceList`, `PriceListLine`, `PromotionProgram`, `PriceOverrideApproval`, `SalesOrder`, `SalesOrderLine`, `SalesInvoice`, `SalesInvoiceLine`, `Customer`, `Item`
-- Related guides: [Financial Queries](../financial.md), [Managerial Queries](../managerial.md), [Commercial and Working Capital](../reports/commercial-and-working-capital.md)
+- Related guides: [Sales and Customers queries](../analysis-tracks.md#sales-and-customers), [Sales and Customers](../index.md#sales-and-customers)
 - Related process page: [Order-to-Cash Process](../../processes/o2c.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case starts from realized pricing outcomes, then explains the policy layers beneath them rather than tracing one operational document chain. Use the pricing audit case when you need full control-exception review.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define realized pricing against list price
 
@@ -220,12 +225,14 @@ The query reads `PriceOverrideApproval`, `SalesOrderLine`, `SalesOrder`, `Custom
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Build a comparison schedule for realized versus list pricing, promotion participation, customer-specific pricing, and override concentration in a stated population.
+- **Accounting or business interpretation:** Explain pricing and standard-cost margin, separating price variation from volume and product-mix differences.
+- **Database explanation:** Record dimensions, weights, period, and source-line grain. Trace a selected outcome to its governing price or approval record.
+- **Management or audit conclusion:** Recommend a commercial-policy or approval review, with evidence and an alternative explanation that remains plausible.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -242,8 +249,12 @@ Submit a short case memo or notebook note with these four artifacts:
 - Analytics judgment: Where does discounting look commercially justified, and where does it look like governance pressure?
 - Escalation/next step: Which pattern should stay in commercial follow-up, and which should move into the pricing audit case?
 
+## Limitations and Judgment
+
+Promotion and non-promotion groups can differ in customer, product, and period mix. A margin difference alone does not measure the causal effect of a promotion.
+
 ## Next Steps
 
 - Use [Pricing Governance Audit Case](pricing-governance-audit-case.md) when you want the full control-focused follow-through.
-- Use [Commercial and Working Capital](../reports/commercial-and-working-capital.md) when you want the broader commercial perspective above the case.
-- Use [Financial Queries](../financial.md) and [Managerial Queries](../managerial.md) for the broader pricing and margin query sets.
+- Use [Sales and Customers](../index.md#sales-and-customers) when you want revenue, pricing, margins, and customer balances alongside the case.
+- Use [Sales and Customers queries](../analysis-tracks.md#sales-and-customers) for the broader pricing and margin query sets.

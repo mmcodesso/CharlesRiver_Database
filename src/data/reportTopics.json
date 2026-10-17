@@ -1,0 +1,92 @@
+[
+  {
+    "id": "statements-and-cash",
+    "title": "Statements and Cash",
+    "description": "Read the statements, compare actual results with plans, and explain working-capital and cash movements.",
+    "reports": [
+      "monthly-income-statement",
+      "monthly-balance-sheet",
+      "monthly-indirect-cash-flow",
+      "pro-forma-monthly-income-statement",
+      "pro-forma-monthly-balance-sheet",
+      "pro-forma-monthly-indirect-cash-flow",
+      "budget-vs-actual-statement-bridge-monthly",
+      "budget-vs-actual-by-cost-center",
+      "working-capital-bridge-by-month",
+      "budget-vs-actual-working-capital-and-cash-bridge",
+      "cash-conversion-timing-review"
+    ]
+  },
+  {
+    "id": "sales-and-customers",
+    "title": "Sales and Customers",
+    "description": "Connect revenue and margins with pricing, customer mix, receivables, deposits, and commissions.",
+    "reports": [
+      "monthly-revenue-and-gross-margin",
+      "sales-and-margin-by-collection-and-style",
+      "budget-vs-actual-revenue-price-volume-cost-bridge",
+      "price-realization-vs-list-by-customer-and-portfolio",
+      "customer-sales-mix-by-region-and-item-group",
+      "design-service-revenue-and-billed-hours",
+      "ar-aging",
+      "monthly-ar-aging-summary",
+      "monthly-ar-aging-detail",
+      "customer-credit-and-refunds",
+      "customer-deposits-and-unapplied-cash-aging",
+      "sales-commission-expense-by-rep-segment",
+      "sales-commission-payable-rollforward"
+    ]
+  },
+  {
+    "id": "purchasing-and-inventory",
+    "title": "Purchasing and Inventory",
+    "description": "Review supplier activity, receipt reliability, inventory coverage, and the timing of payables.",
+    "reports": [
+      "supplier-purchasing-activity-by-category",
+      "supplier-lead-time-and-receipt-reliability",
+      "inventory-coverage-and-projected-stockout-risk",
+      "ap-aging",
+      "monthly-ap-aging-summary",
+      "monthly-ap-aging-detail"
+    ]
+  },
+  {
+    "id": "production-and-planning",
+    "title": "Production and Planning",
+    "description": "Compare forecasts, work-center utilization, and planned capacity before investigating operational pressure.",
+    "reports": [
+      "forecast-error-and-bias-by-collection-and-style-family",
+      "monthly-work-center-utilization",
+      "rough-cut-capacity-load-vs-available-hours"
+    ]
+  },
+  {
+    "id": "people-and-payroll",
+    "title": "People and Payroll",
+    "description": "Follow headcount and time through earnings, people cost, cash payments, liabilities, and payroll controls.",
+    "reports": [
+      "headcount-by-cost-center-and-job-family",
+      "labor-and-headcount-by-work-location-job-family-cost-center",
+      "payroll-expense-mix-by-cost-center-and-pay-class",
+      "payroll-and-people-cost-mix-by-cost-center-job-family-level",
+      "absence-rate-by-work-location-job-family-month",
+      "overtime-approval-coverage-and-concentration",
+      "punch-to-pay-bridge-for-hourly-workers",
+      "hourly-payroll-hours-to-paid-earnings-bridge",
+      "gross-to-net-payroll-review",
+      "payroll-cash-payments-and-remittances",
+      "payroll-liability-rollforward",
+      "payroll-control-review",
+      "paid-without-clock-and-clock-without-pay-review"
+    ]
+  },
+  {
+    "id": "controls-and-exceptions",
+    "title": "Controls and Exceptions",
+    "description": "Scope cross-process approval, segregation-of-duties, and exception reviews; investigate flags before drawing conclusions.",
+    "reports": [
+      "approval-and-sod-review",
+      "potential-anomaly-review"
+    ]
+  }
+]

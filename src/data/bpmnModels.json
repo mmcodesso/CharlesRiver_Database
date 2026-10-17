@@ -1,0 +1,201 @@
+[
+  {
+    "id": "order-to-cash",
+    "title": "Order-to-Cash",
+    "kind": "Core process",
+    "description": "A goods fulfillment pass separates the customer order, available shipment, invoice and commission accrual, cash receipt, and application.",
+    "alt": "BPMN collaboration with an external customer and Charles River Sales, Warehouse, Customer Accounting, and Treasury lanes. Unavailable goods remain open; available goods proceed to shipment, invoice, receipt, and cash application.",
+    "processPath": "/docs/processes/o2c",
+    "exercisePath": "/docs/learn-and-practice/source-to-ledger",
+    "casePath": "/docs/analytics/cases/o2c-trace-case",
+    "tables": ["SalesOrder", "SalesOrderLine", "Shipment", "ShipmentLine", "SalesInvoice", "SalesInvoiceLine", "SalesCommissionAccrual", "CashReceipt", "CashReceiptApplication", "GLEntry"],
+    "steps": [
+      "The customer communicates an order. Sales records demand and commercial pricing; an order is not recognized revenue.",
+      "Warehouse considers the available shipment for this pass. Unfilled quantity remains open; the model does not invent a rejection or automatic replenishment workflow.",
+      "Available goods ship. Customer accounting invoices the shipped lines and records invoice-related commission accrual.",
+      "Treasury records cash arrival as cash and unapplied customer money. Advance receipts may occur independently of the sequence shown here.",
+      "Customer accounting reviews allocation of received cash. Applications may be recorded, or money may remain unapplied. The end records completion of this review pass, not full order or invoice settlement. The related detail includes receipt capture for context; this parent review starts after the receipt."
+    ],
+    "boundary": "This goods-path teaching allocation summarizes stored events, not a verified workflow engine or proof of segregation of duties. Service delivery, returns, and detailed cash application have separate models. Independent shipment-to-billing-to-GL reconciliation is a proposed teaching control."
+  },
+  {
+    "id": "procure-to-pay",
+    "title": "Procure-to-Pay",
+    "kind": "Core process",
+    "description": "Follow goods procurement from approved need through purchasing, receipt, invoice linkage, and supplier payment.",
+    "alt": "BPMN collaboration between an external supplier and Charles River Requester, Purchasing, Receiving, Accounts Payable, and Treasury lanes. A goods requirement proceeds through requisition, purchase order, goods receipt, invoice, and payment.",
+    "processPath": "/docs/processes/p2p",
+    "exercisePath": "/docs/learn-and-practice/receipt-to-payable",
+    "casePath": "/docs/analytics/cases/p2p-accrual-settlement-case",
+    "tables": ["PurchaseRequisition", "PurchaseOrder", "PurchaseOrderLine", "GoodsReceipt", "GoodsReceiptLine", "PurchaseInvoice", "PurchaseInvoiceLine", "DisbursementPayment", "GLEntry"],
+    "steps": [
+      "An operating need leads to a requisition and an authorized purchase order communicated to the supplier.",
+      "Receiving records delivered goods. The selected supplier invoice links its lines to receipt evidence; the diagram does not require invoice arrival and receipt on the same day.",
+      "Accounts payable records the invoice and Treasury records a supplier disbursement. Supplier payments can extend beyond the operating-year boundary.",
+      "This goods path excludes direct service-accrual settlement, which has a separate model without a goods receipt."
+    ],
+    "boundary": "Stored authorization and receipt/invoice links support evidence checks. They do not establish a system-enforced three-way-match block. Independent quantity matching and payment authorization review are proposed teaching controls."
+  },
+  {
+    "id": "manufacturing-conversion",
+    "title": "Manufacturing and Conversion",
+    "kind": "Core process",
+    "description": "Separate planning, material issue, production execution, finished-goods completion, and cost close.",
+    "alt": "BPMN process across Charles River Planning, Warehouse, Production, and Cost Accounting lanes. Supply planning leads to work-order release, material issue, labor-supported execution, standard-cost finished-goods completion, and a distinct later cost close.",
+    "processPath": "/docs/processes/manufacturing",
+    "exercisePath": "/docs/learn-and-practice/manufacturing-cost-flow",
+    "casePath": "/docs/analytics/cases/manufacturing-labor-cost-case",
+    "tables": ["SupplyPlanRecommendation", "WorkOrder", "WorkOrderOperation", "MaterialIssueLine", "ProductionCompletionLine", "WorkOrderClose", "LaborTimeEntry", "GLEntry"],
+    "steps": [
+      "Planning reviews demand, supply, materials, and capacity support before a work order references its bill of material and routing.",
+      "Warehouse issues components into work in process. Production executes operations with recorded labor support.",
+      "Completion makes finished goods available at standard cost. Work-order cost close records a distinct accounting event.",
+      "A separate variance-review model proposes an analytical activity; it is not a gate that delays finished-goods availability."
+    ],
+    "boundary": "Planning rows do not prove authorization or execution. Labor analysis must distinguish operational support from payroll expense. Independent cost reconciliation and variance review are proposed controls rather than stored approvals."
+  },
+  {
+    "id": "design-services",
+    "title": "Design Services",
+    "kind": "Core process",
+    "description": "Trace an hourly service engagement through approved time, billable classification, monthly invoicing, and customer cash.",
+    "alt": "BPMN collaboration with a customer and Charles River Sales, Design Team, Customer Accounting, and Treasury lanes. Approved billable hours proceed to invoice and cash application; non-billable hours retain cost support without customer billing.",
+    "processPath": "/docs/processes/design-services",
+    "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
+    "casePath": "/docs/analytics/cases/pricing-and-margin-governance-case",
+    "tables": ["SalesOrderLine", "ServiceEngagement", "ServiceEngagementAssignment", "ServiceTimeEntry", "ServiceBillingLine", "SalesInvoiceLine", "CashReceiptApplication", "GLEntry"],
+    "steps": [
+      "Sales records an hourly service order; the Design team establishes an engagement and staff assignments.",
+      "Approved time is classified as billable or non-billable. Non-billable hours retain analytical cost support but do not enter customer billing.",
+      "Approved billable hours roll into monthly billing and an invoice, without a goods shipment.",
+      "Customer payment leads to the separate receipt/allocation review subprocess. Cash may be applied or remain unapplied; the end means this review pass is complete. Payroll remains a separate expense cycle."
+    ],
+    "boundary": "The gateway represents a selected time classification, not a claim that all engagement hours take the same path. Assignment-to-approval-to-billing reconciliation is a proposed teaching control; labor margin is not full engagement profit."
+  },
+  {
+    "id": "payroll",
+    "title": "Payroll",
+    "kind": "Core process",
+    "description": "Distinguish attendance and approved time from the payroll register, employee net pay, and liability remittance.",
+    "alt": "BPMN process with Employee and Supervisor, Payroll Accounting, and Treasury lanes, plus external tax and benefit recipients. Approved time leads to a payroll register, then parallel employee-payment and liability-remittance streams with an eventual synchronization.",
+    "processPath": "/docs/processes/payroll",
+    "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
+    "casePath": "/docs/analytics/cases/attendance-control-audit-case",
+    "tables": ["TimeClockPunch", "TimeClockEntry", "OvertimeApproval", "AttendanceException", "PayrollRegister", "PayrollRegisterLine", "PayrollPayment", "PayrollLiabilityRemittance", "GLEntry"],
+    "steps": [
+      "The payroll period triggers attendance capture and approval of daily time; exception records are evidence for investigation.",
+      "Payroll accounting calculates and approves a register from supported time and compensation inputs.",
+      "A parallel split creates two required settlement streams: employee net pay and payroll liability remittance.",
+      "The join defines eventual completion of both streams, not same-day payment. Either obligation can remain open at a reporting cutoff."
+    ],
+    "boundary": "An attendance flag does not prove an automatic payroll block. The parallel join is a chosen end-state scope, not a reporting prerequisite. Independent time-to-register-to-ledger review is a proposed teaching control."
+  },
+  {
+    "id": "manual-journals-close",
+    "title": "Manual Journals and Close",
+    "kind": "Core process",
+    "description": "Follow journal preparation, recorded approval, posted detail, and the separate year-end closing branch.",
+    "alt": "BPMN process across Journal Preparer, Journal Approver, and Finance or Controller lanes. Reporting-period activity leads to journal preparation, approval, and posting; an exclusive year-end decision either ends the period activity or records annual closing entries.",
+    "processPath": "/docs/processes/manual-journals-and-close",
+    "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
+    "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
+    "tables": ["JournalEntry", "GLEntry", "Account"],
+    "steps": [
+      "Reporting-period activity leads to preparation of a journal and its source rationale.",
+      "A distinct teaching role records approval; accounting posts detail to GLEntry under the JournalEntry header.",
+      "Ordinary period activity ends after posting. The year-end branch closes profit and loss through income summary and retained earnings.",
+      "Accrued-service invoices and later accrual adjustments have separate timing and reversal links, explained in the related detailed model."
+    ],
+    "boundary": "The dataset does not provide a separate journal-line table, a period-lock system, or a full close checklist. Role lanes do not establish access independence. Reconciliation and segregation-of-duties review are proposed controls."
+  },
+  {
+    "id": "returns-credit-refunds",
+    "title": "Returns, Credit Memos and Refunds",
+    "kind": "Detailed exception",
+    "description": "Separate the physical goods return, credit memo, receivable correction, open customer credit, and optional cash refund.",
+    "alt": "BPMN collaboration between a customer and Warehouse, Customer Accounting, and Treasury. A return leads to credit allocation against open AR with any excess retained as customer credit. Remaining customer credit can stay open or proceed to a recorded cash refund.",
+    "processPath": "/docs/processes/o2c",
+    "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
+    "casePath": "/docs/analytics/cases/working-capital-and-cash-conversion-case",
+    "tables": ["SalesReturn", "SalesReturnLine", "CreditMemo", "CreditMemoLine", "SalesCommissionAdjustment", "CustomerRefund", "GLEntry"],
+    "steps": [
+      "The scope starts with returned goods from an already shipped and billed sale; Warehouse records the physical return.",
+      "Customer accounting approves and issues a credit memo, including the related accounting and commission adjustment evidence.",
+      "Allocate the memo against open receivables and retain any excess as customer credit. A single memo can affect both AR and customer credit; these are not mutually exclusive whole-memo outcomes.",
+      "A customer credit may remain open or be refunded in cash. The gateway describes the recorded resolution, not an automatic refund policy."
+    ],
+    "boundary": "Invoice, return, credit, refund, and commission records have different grains and dates. Independent validation of quantity, original invoice, approval, clawback, and refund authorization is a proposed teaching control."
+  },
+  {
+    "id": "cash-application",
+    "title": "Cash Application",
+    "kind": "Detailed subprocess",
+    "description": "Explain why cash arrival, invoice allocation, and residual unapplied money require separate evidence.",
+    "alt": "BPMN process with a customer, Treasury, and Customer Accounting. A payment is recorded as cash and unapplied money; identified allocations become invoice applications, while unmatched or remaining amounts stay unapplied after the selected review pass.",
+    "processPath": "/docs/processes/o2c",
+    "exercisePath": "/docs/learn-and-practice/source-to-ledger",
+    "casePath": "/docs/analytics/cases/working-capital-and-cash-conversion-case",
+    "tables": ["CashReceipt", "CashReceiptApplication", "SalesInvoice", "GLEntry"],
+    "steps": [
+      "Treasury records an incoming customer payment as cash and unapplied money, independently of invoice settlement.",
+      "If an invoice allocation is identified, Customer Accounting records one or more applications. An unmatched receipt remains unapplied.",
+      "After the selected applications, any remaining receipt amount stays unapplied; a fully allocated receipt ends this pass without a residual.",
+      "Use CashReceiptApplication as the invoice-settlement bridge. CashReceipt.SalesInvoiceID is not an authoritative application link."
+    ],
+    "boundary": "The model describes one selected receipt/application review pass, not an implemented matching queue. Reconciliation of dated receipts, applications, residual cash, and invoice balances is a proposed teaching control."
+  },
+  {
+    "id": "accrual-settlement",
+    "title": "Accrued-Service Settlement",
+    "kind": "Detailed exception",
+    "description": "Follow an expense estimate into a linked supplier service invoice and AP payment without inventing a goods receipt.",
+    "alt": "BPMN collaboration between a service supplier and Finance, Accounts Payable, and Treasury. A service expense estimate creates an accrual; a later supplier invoice links to it, establishes payable and any excess expense, and proceeds to AP payment.",
+    "processPath": "/docs/processes/p2p",
+    "exercisePath": "/docs/learn-and-practice/receipt-to-payable",
+    "casePath": "/docs/analytics/cases/p2p-accrual-settlement-case",
+    "tables": ["JournalEntry", "PurchaseInvoice", "PurchaseInvoiceLine", "DisbursementPayment", "GLEntry"],
+    "steps": [
+      "Finance estimates an incurred service expense and records an accrued liability.",
+      "The supplier invoice is linked through PurchaseInvoiceLine.AccrualJournalEntryID; the service path has no GoodsReceiptLineID.",
+      "The invoice establishes accounts payable and records any amount above the estimate. Treasury later pays that payable.",
+      "An invoice below the estimate may leave a residual accrual. Later adjustment journals use reversal links and need not wait for cash payment."
+    ],
+    "boundary": "Payment is settlement of AP, not proof that every original accrual has cleared. Residual-accrual aging and independent reconciliation are proposed teaching controls, not stored workflow queues."
+  },
+  {
+    "id": "manufacturing-variances",
+    "title": "Manufacturing Variances",
+    "kind": "Proposed teaching review",
+    "description": "A clearly proposed evidence-review activity for explaining work-order cost close and planning further investigation.",
+    "alt": "BPMN teaching proposal with Cost Analyst and Independent Reviewer lanes. A selected close record leads to evidence collection and reconciliation; an exclusive decision leads either to a supported variance explanation or a request for further evidence.",
+    "processPath": "/docs/processes/manufacturing",
+    "exercisePath": "/docs/learn-and-practice/manufacturing-cost-flow",
+    "casePath": "/docs/analytics/cases/manufacturing-labor-cost-case",
+    "tables": ["WorkOrder", "MaterialIssue", "ProductionCompletion", "LaborTimeEntry", "WorkOrderClose", "GLEntry"],
+    "steps": [
+      "A student selects a recorded work-order close and defines the reporting boundary.",
+      "The proposed analyst role collects material, completion, labor, and close evidence, then reconciles recorded cost support.",
+      "The proposed reviewer evaluates whether the evidence explains the difference. A supported explanation is documented; otherwise targeted follow-up identifies missing evidence.",
+      "The activity ends with a student conclusion or an unresolved evidence request. It does not prescribe a favorable or unfavorable answer."
+    ],
+    "boundary": "Every analyst/reviewer task is a proposed classroom activity. The database does not implement this independent review, its sign-off, or a finished-goods hold. Submit a risk/control matrix rather than assuming control operation."
+  },
+  {
+    "id": "process-architecture",
+    "title": "Business-Process Architecture",
+    "kind": "Architecture overview",
+    "description": "Six separately triggered business cycles share operational evidence and the ledger; each collapsed activity corresponds to a detailed model.",
+    "alt": "High-level BPMN architecture with six Charles River responsibility lanes for goods sales, purchasing, production, Design Services, payroll, and finance. Each independently triggered path contains a collapsed subprocess and its own end; customer demand is communicated from a separate pool.",
+    "processPath": "/docs/process-flows",
+    "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
+    "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
+    "tables": ["SalesOrder", "SalesInvoice", "PurchaseOrder", "PurchaseInvoice", "WorkOrder", "ProductionCompletion", "ServiceEngagement", "ServiceBillingLine", "PayrollRegister", "JournalEntry", "GLEntry"],
+    "steps": [
+      "Customer demand starts goods sales or Design Services. Supply needs, production needs, payroll periods, and reporting periods trigger other scopes independently.",
+      "Each collapsed activity expands into one of the six main process models, with its own participants, evidence, decisions, and boundary.",
+      "Shared master data, purchasing support, production output, labor, and ledger records connect the cycles. The accompanying Mermaid architecture explains those information dependencies.",
+      "Each end indicates recorded activity within that scope. There is no global join requiring every cycle or settlement to finish before reporting."
+    ],
+    "boundary": "These are alternative process scopes at architecture level, not one serial order lifecycle or a claim of simultaneous execution. Internal roles are teaching allocations. Read the detailed models and process guides before inferring controls or accounting effects."
+  }
+]

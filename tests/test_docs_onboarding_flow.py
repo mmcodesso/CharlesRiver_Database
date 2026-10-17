@@ -1,56 +1,13 @@
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
-
-FLAGSHIP_DOCS: dict[Path, tuple[str, ...]] = {
-    Path("docs/start-here/index.md"): (
-        "business cycles",
-        "Students should not start by browsing every table or every query",
-        "How the Business Reaches Analysis",
-        "## Next Steps",
-    ),
-    Path("docs/start-here/downloads.md"): (
-        "same business",
-        "How the Files Fit the Business Story",
-        "## Next Steps",
-    ),
-    Path("docs/learn-the-business/company-story.md"): (
-        "connected operating system",
-        "How the Business Actually Works",
-        "## Next Steps",
-    ),
-    Path("docs/learn-the-business/process-flows.md"): (
-        "Process to Analysis Bridges",
-        "business process first, accounting second, analysis third",
-        "## Next Steps",
-    ),
-}
+import yaml
 
 
-PROCESS_NEXT_STEP_LINKS: dict[Path, tuple[str, ...]] = {
-    Path("docs/processes/o2c.md"): (
-        "## Next Steps",
-        "../analytics/reports/commercial-and-working-capital.md",
-        "../analytics/cases/o2c-trace-case.md",
-    ),
-    Path("docs/processes/p2p.md"): (
-        "## Next Steps",
-        "../analytics/reports/commercial-and-working-capital.md",
-        "../analytics/cases/p2p-accrual-settlement-case.md",
-    ),
-    Path("docs/processes/manufacturing.md"): (
-        "## Next Steps",
-        "../analytics/reports/operations-and-risk.md",
-        "../analytics/cases/manufacturing-labor-cost-case.md",
-    ),
-    Path("docs/processes/payroll.md"): (
-        "## Next Steps",
-        "../analytics/reports/payroll-perspective.md",
-        "../analytics/cases/workforce-cost-and-org-control-case.md",
-    ),
-}
-
+DOCS_ROOT = Path("docs")
+CASE_DOCS = sorted((DOCS_ROOT / "analytics/cases").glob("*-case.md"))
 FORBIDDEN_PUBLIC_COPY = (
     "Audience and Purpose",
     "Use this page when",
@@ -64,224 +21,112 @@ FORBIDDEN_PUBLIC_COPY = (
     "This page matters because",
 )
 
-CASE_DETAIL_DOCS = (
-    Path("docs/analytics/cases/o2c-trace-case.md"),
-    Path("docs/analytics/cases/p2p-accrual-settlement-case.md"),
-    Path("docs/analytics/cases/manufacturing-labor-cost-case.md"),
-    Path("docs/analytics/cases/product-portfolio-and-lifecycle-case.md"),
-    Path("docs/analytics/cases/working-capital-and-cash-conversion-case.md"),
-    Path("docs/analytics/cases/financial-statement-bridge-case.md"),
-    Path("docs/analytics/cases/capex-fixed-asset-lifecycle-case.md"),
-    Path("docs/analytics/cases/pricing-and-margin-governance-case.md"),
-    Path("docs/analytics/cases/product-portfolio-profitability-case.md"),
-    Path("docs/analytics/cases/workforce-coverage-and-attendance-case.md"),
-    Path("docs/analytics/cases/demand-planning-and-replenishment-case.md"),
-    Path("docs/analytics/cases/master-data-and-workforce-audit-case.md"),
-    Path("docs/analytics/cases/workforce-cost-and-org-control-case.md"),
-    Path("docs/analytics/cases/audit-review-pack-case.md"),
-    Path("docs/analytics/cases/attendance-control-audit-case.md"),
-    Path("docs/analytics/cases/replenishment-support-audit-case.md"),
-    Path("docs/analytics/cases/pricing-governance-audit-case.md"),
-)
-
 
 def _read(path: Path) -> str:
-    assert path.exists(), f"Missing doc page: {path}"
     return path.read_text(encoding="utf-8")
 
 
-def test_flagship_docs_keep_process_led_structure() -> None:
-    for path, expected_snippets in FLAGSHIP_DOCS.items():
+def test_public_docs_have_specific_metadata_and_a_primary_heading() -> None:
+    titles: dict[str, Path] = {}
+    for path in sorted(DOCS_ROOT.rglob("*.md")):
         text = _read(path)
-        opening = "\n".join(text.splitlines()[:24]).lower()
-
-        for snippet in expected_snippets:
-            assert snippet in text, f"Missing expected snippet in {path}: {snippet}"
-
-        assert "choose your path" not in opening
-        assert "when to use it" not in opening
-        assert "what this helps students do" not in opening
-
-
-def test_process_pages_bridge_into_perspectives_reports_and_cases() -> None:
-    for path, expected_snippets in PROCESS_NEXT_STEP_LINKS.items():
-        text = _read(path)
-
-        for snippet in expected_snippets:
-            assert snippet in text, f"Missing expected snippet in {path}: {snippet}"
+        sections = text.split("---", 2)
+        assert len(sections) == 3, f"Missing YAML front matter: {path}"
+        metadata = yaml.safe_load(sections[1])
+        assert metadata.get("title"), f"Missing explicit title: {path}"
+        assert len(metadata.get("description", "")) >= 30, f"Missing useful description: {path}"
+        assert metadata["title"] not in titles, f"Duplicate page title: {path} and {titles.get(metadata['title'])}"
+        titles[metadata["title"]] = path
+        headings = len(re.findall(r"(?m)^# ", sections[2]))
+        headings += sections[2].count("<CompanyStoryHero")
+        assert headings == 1, f"Expected one primary heading in {path}; found {headings}"
 
 
-def test_start_here_and_process_flows_point_into_the_same_learning_sequence() -> None:
-    start_here = _read(Path("docs/start-here/index.md"))
-    process_flows = _read(Path("docs/learn-the-business/process-flows.md"))
-
-    for snippet in (
+def test_orientation_connects_company_process_practice_and_downloads() -> None:
+    text = _read(DOCS_ROOT / "start-here/index.md")
+    for target in (
         "../learn-the-business/company-story.md",
         "../learn-the-business/process-flows.md",
-        "../processes/design-services.md",
-        "../analytics/index.md",
-        "../analytics/reports/index.md",
+        "../learn-and-practice/index.md",
+        "downloads.md",
         "../analytics/cases/index.md",
     ):
-        assert snippet in start_here
-
-    for snippet in (
-        "../processes/o2c.md",
-        "../processes/p2p.md",
-        "../processes/manufacturing.md",
-        "../processes/payroll.md",
-        "../analytics/index.md",
-        "../analytics/reports/index.md",
-        "../analytics/cases/index.md",
-    ):
-        assert snippet in process_flows
+        assert target in text, f"Orientation does not link to {target}"
 
 
-def test_company_story_keeps_required_story_anchors_and_links() -> None:
-    company_story = _read(Path("docs/learn-the-business/company-story.md"))
-
-    for snippet in (
-        "Charles River",
-        "greater Boston area",
-        "buys some finished goods",
-        "manufactures a selected subset",
-        "Design Services",
-        "connected operating system",
-        "## How the Business Actually Works",
-        "## Next Steps",
-        "process-flows.md",
-        "../processes/design-services.md",
-        "../analytics/index.md",
-        "../analytics/reports/index.md",
-    ):
-        assert snippet in company_story
+def test_core_process_pages_connect_evidence_with_cases() -> None:
+    related_cases = {
+        "o2c": "o2c-trace-case.md",
+        "p2p": "p2p-accrual-settlement-case.md",
+        "manufacturing": "manufacturing-labor-cost-case.md",
+        "payroll": "workforce-cost-and-org-control-case.md",
+    }
+    for process, case_file in related_cases.items():
+        text = _read(DOCS_ROOT / f"processes/{process}.md")
+        assert "## Next Steps" in text
+        assert f"../analytics/cases/{case_file}" in text
+        assert "../analytics/index.md#" in text
 
 
-def test_analyze_data_sidebar_uses_query_library_label_and_keeps_cases_above_it() -> None:
-    sidebar_text = _read(Path("sidebars.js"))
-    analytics_page = _read(Path("docs/analytics/index.md"))
-    query_library_page = _read(Path("docs/analytics/analysis-tracks.md"))
-    cases_page = _read(Path("docs/analytics/cases/index.md"))
-
-    assert 'label: "Analyze the Data"' in sidebar_text
-    assert 'label: "Cases"' in sidebar_text
-    assert 'label: "Query Library"' in sidebar_text
-    assert sidebar_text.count('"analytics/analysis-tracks"') == 1
-    assert 'title: Analyze the Data' in analytics_page
-    assert 'sidebar_label: Analyze the Data' in analytics_page
-    assert 'title: Query Library' in query_library_page
-    assert 'sidebar_label: Query Library' in query_library_page
-    assert "not the easiest first reading page" in _read(Path("docs/start-here/index.md"))
-    assert "not the first reading page for beginners" in query_library_page
-    assert "Financial Queries" in query_library_page
-    assert "Managerial Queries" in query_library_page
-    assert "Audit Queries" in query_library_page
-    assert "Case-Support Trace Queries" in query_library_page
-    assert "read a report first as a business summary" in _read(Path("docs/analytics/reports/index.md"))
-    assert 'title: Cases' in cases_page
-    assert 'sidebar_label: Cases' in cases_page
-    for snippet in (
-        "sql-guide.md",
-        "excel-guide.md",
-        "reports/index.md",
-        "cases/index.md",
-        "analysis-tracks.md",
-    ):
-        assert snippet in analytics_page
-    assert "How Cases Fit the Learning Path" in cases_page
-    assert "## Case Matrix" in cases_page
-    assert "## Difficulty Labels" in cases_page
-    assert "For first undergraduate assignments, start with the Foundation cases" in cases_page
-    assert "Foundation process tracing" in cases_page
-    assert "Advanced synthesis" in cases_page
-    assert "Capstone" in cases_page
-    assert "## Next Steps" in cases_page
-
-    cases_position = sidebar_text.index('label: "Cases"')
-    query_library_position = sidebar_text.index('label: "Query Library"')
-    assert cases_position < query_library_position
+def test_foundational_practice_precedes_integrated_cases() -> None:
+    practice = _read(DOCS_ROOT / "learn-and-practice/index.md")
+    for target in ("source-to-ledger.md", "receipt-to-payable.md", "manufacturing-cost-flow.md"):
+        assert target in practice
+        exercise = _read(DOCS_ROOT / "learn-and-practice" / target)
+        assert "##" in exercise
+        assert "../processes/" in exercise
+        assert "../analytics/" in exercise
+    assert "../analytics/cases/index.md" in practice
 
 
-def test_query_library_pages_use_grouped_catalogs_and_manifest_metadata() -> None:
-    query_library_page = _read(Path("docs/analytics/analysis-tracks.md"))
-    financial_page = _read(Path("docs/analytics/financial.md"))
-    managerial_page = _read(Path("docs/analytics/managerial.md"))
-    audit_page = _read(Path("docs/analytics/audit.md"))
-    query_collections = _read(Path("src/generated/queryDocCollections.js"))
-    query_manifest = _read(Path("src/generated/queryManifest.js"))
-
-    assert "caseSupportTraceQueries" in query_library_page
-    assert "cases/01_o2c_line_trace_order_shipment_invoice.sql" in query_collections
-    assert "financial/45_monthly_ar_aging_detail.sql" in query_collections
-    assert "financial/48_monthly_ap_aging_summary.sql" in query_collections
-
-    for page, expected in (
-        (financial_page, "queryLibraryGroups.financial"),
-        (managerial_page, "queryLibraryGroups.managerial"),
-        (audit_page, "queryLibraryGroups.audit"),
-    ):
-        assert "<QueryGroupCatalog" in page
-        assert expected in page
-        assert "Starter SQL Map" not in page
-
-    for snippet in (
-        '"teachingObjective"',
-        '"mainTables"',
-        '"outputShape"',
-    ):
-        assert snippet in query_manifest
-
-
-def test_public_docs_and_generated_manifest_drop_template_style_phrasing() -> None:
-    doc_paths = Path("docs").rglob("*.md")
-
-    for path in doc_paths:
-        text = _read(path)
-        for forbidden in FORBIDDEN_PUBLIC_COPY:
-            assert forbidden not in text, f"Found forbidden copy in {path}: {forbidden}"
-
-    manifest_text = Path("src/generated/reportPackManifest.js").read_text(encoding="utf-8")
-    for forbidden in FORBIDDEN_PUBLIC_COPY:
-        assert forbidden not in manifest_text, f"Found forbidden copy in generated manifest: {forbidden}"
-
-
-def test_case_detail_pages_no_longer_use_old_case_shell_sections() -> None:
-    for path in Path("docs/analytics/cases").glob("*.md"):
-        if path.name == "index.md":
-            continue
-        text = _read(path)
-        assert "## Key Data Sources" not in text, f"Old Key Data Sources label still present in {path}"
-        assert "## Recommended Query Sequence" not in text, f"Old Recommended Query Sequence label still present in {path}"
-        assert "## Main Tables" not in text, f"Old Main Tables label still present in {path}"
-        assert "## Main Tables and Worksheets" not in text, f"Old Main Tables and Worksheets label still present in {path}"
-        assert "## Query Sequence" not in text, f"Old Query Sequence label still present in {path}"
-
-
-def test_case_detail_pages_use_guided_assignment_shell() -> None:
-    for path in CASE_DETAIL_DOCS:
+def test_cases_preserve_guided_evidence_and_assessed_deliverables() -> None:
+    assert len(CASE_DOCS) == 17
+    for path in CASE_DOCS:
         text = _read(path)
         for heading in (
             "## Business Scenario",
             "## The Problem to Solve",
-            "## What You Need to Develop",
-            "## Before You Start",
-            "## Step-by-Step Walkthrough",
+            "## Learning Objectives",
+            "## Key Data Sources",
+            "## Recommended Query Sequence",
             "## Required Student Output",
-            "## Optional Excel Follow-Through",
             "## Wrap-Up Questions",
             "## Next Steps",
         ):
-            assert heading in text, f"Missing {heading} in {path}"
-        for snippet in (
-            "Evidence summary:",
-            "Accounting or business interpretation:",
-            "Database explanation:",
-            "Management or audit conclusion:",
-            "Accounting/process:",
-            "Database/source evidence:",
-            "Analytics judgment:",
-            "Escalation/next step:",
-        ):
-            assert snippet in text, f"Missing guided-assignment snippet in {path}: {snippet}"
-        assert "## Key Data Sources" not in text, f"Old Key Data Sources label still present in {path}"
-        assert "## Recommended Query Sequence" not in text, f"Old Recommended Query Sequence label still present in {path}"
+            assert heading in text, f"Missing {heading}: {path}"
+        assert re.search(r"<(?:QueryReference|QuerySequence)\b", text), f"Missing query component: {path}"
+        assert "../../processes/" in text, f"Case needs a process connection: {path}"
+        assert "<CaseOverview" in text, f"Case needs visible discovery metadata: {path}"
+
+
+def test_unified_report_hub_and_query_pages_keep_catalog_components() -> None:
+    report = _read(DOCS_ROOT / "analytics/index.md")
+    assert "<ReportCatalog topics={reportTopics}" in report
+    assert "@site/src/data/reportTopics.json" in report
+    assert not list((DOCS_ROOT / "analytics/reports").glob("*.md"))
+    query = _read(DOCS_ROOT / "analytics/analysis-tracks.md")
+    assert "<QueryLibrary" in query
+    for area in ("financial", "managerial", "audit"):
+        assert not (DOCS_ROOT / f"analytics/{area}.md").exists()
+
+
+def test_orientation_and_instructor_paths_link_to_hub_and_textbook() -> None:
+    for relative_path in ("start-here/index.md", "teach-with-data/instructor-guide.md"):
+        text = _read(DOCS_ROOT / relative_path)
+        assert "https://accountinganalyticshub.com" in text
+        assert "https://aa.accountinganalyticshub.com" in text
+
+
+def test_relative_markdown_links_resolve_to_authored_pages() -> None:
+    for path in DOCS_ROOT.rglob("*.md"):
+        for target in re.findall(r"\]\(([^)\s]+\.md)(?:#[^)]*)?\)", _read(path)):
+            if "://" in target or target.startswith("/"):
+                continue
+            assert (path.parent / target).resolve().is_file(), f"Broken Markdown link {target}: {path}"
+
+
+def test_public_teaching_copy_avoids_template_phrasing() -> None:
+    for path in DOCS_ROOT.rglob("*.md"):
+        text = _read(path)
+        for phrase in FORBIDDEN_PUBLIC_COPY:
+            assert phrase not in text, f"Template copy {phrase}: {path}"

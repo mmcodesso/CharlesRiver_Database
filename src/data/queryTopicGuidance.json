@@ -1,0 +1,54 @@
+{
+  "statements-and-cash": [
+    "Working-capital analysis gets stronger when students separate balances from timing.",
+    "Accrued-expense analysis should focus on `2040`, `PurchaseInvoiceLine.AccrualJournalEntryID`, the service-item lines that settle finance-managed estimates, and the outbound-freight accrual and settlement pattern created from `Shipment.FreightCost`.",
+    "Year-end close entries are real posted journals and should be filtered when you want raw multi-year P&L activity.",
+    "The income-statement starter queries use pre-close P&L activity, so they exclude the year-end close journals that zero out revenue and expense accounts.",
+    "The balance-sheet starter queries are point-in-time ending-balance statements, not monthly activity reports.",
+    "The balance-sheet starter queries derive `Current Year Earnings` for interim periods so assets continue to tie to liabilities plus equity before the annual close moves earnings into retained earnings.",
+    "The indirect-method cash flow starter queries reconcile from pre-close net income into operating cash, then combine that with investing and financing cash movements.",
+    "The direct-method cash flow starter queries classify cash-ledger activity into teaching buckets such as customer receipts, supplier payments, payroll, and other operating cash.",
+    "The cash flow starter queries treat opening journals as the `Beginning Cash` seed for the first reporting period instead of showing them as operating, investing, or financing flows.",
+    "Warehouse and office fixed-asset depreciation debits `6130`, which keeps those assets in operating expense even when they share the same broad fixed-asset lifecycle controls as plant equipment.",
+    "CAPEX additions, note-financing reclasses, debt payments, and disposals now sit in the same financial-analysis path, so students can reconcile the asset register to investing cash, financing cash, and gain-or-loss activity.",
+    "The budget model starts from `BudgetLine`, so students can move from forecast, planned price, standard cost, payroll, and timing assumptions into the summary `Budget` table and the pro forma statements."
+  ],
+  "sales-and-customers": [
+    "Revenue posts at invoicing. COGS posts at shipment.",
+    "`CashReceipt` does not equal settled AR by itself. Use `CashReceiptApplication`.",
+    "Explicit price-list, promotion, and override lineage lets students analyze revenue and margin against commercial rules.",
+    "The richer item master now supports collection, style family, lifecycle, and supply-mode financial analysis without changing the underlying posting model.",
+    "Customer deposits and unapplied cash analysis should start from `CashReceipt` and `CashReceiptApplication`, alongside AR.",
+    "Sales commission analysis should start from `SalesInvoiceLine.LineTotal`, then trace `SalesCommissionAccrual`, `SalesCommissionAdjustment`, `SalesCommissionPaymentLine`, and `SalesCommissionPayment` into `2034` and `6290`.",
+    "Supply mode changes the meaning of cost analysis. Manufactured items can support both absorption and contribution-margin work because fixed overhead is stored separately.",
+    "Portfolio mix and profitability should be read together with service-level measures such as fill rate, shipment lag, and return pressure.",
+    "The dataset includes commercial-pricing coverage, so students can compare list price, resolved price-list pricing, promotions, overrides, and net realized margin without introducing a separate quote system.",
+    "Sales commissions are modeled as a separate selling-cost subledger, so students can compare commission expense by rep, segment, and revenue type without mixing it into payroll.",
+    "Pricing-control review should distinguish price-list master-data failures from transaction-level override and promotion-use failures."
+  ],
+  "purchasing-and-inventory": [
+    "Forecast, policy, and replenishment tables support planning-informed working-capital and inventory-timing analysis.",
+    "The item master supports collection, style family, material, finish, color, lifecycle, and supply-mode analysis inside the existing `Item` table.",
+    "Item-master review should distinguish current-state lifecycle and launch-date logic from operational usage timing."
+  ],
+  "production-and-planning": [
+    "Manufacturing-equipment depreciation debits `1090` Manufacturing Cost Clearing, so it belongs in manufacturing-cost interpretation rather than warehouse or office operating expense review.",
+    "The dataset includes a weekly planning layer, so students can compare forecast, policy, recommendation, and rough-cut capacity pressure before execution starts.",
+    "The current manufacturing model is still a foundation. It supports operations, labor, and contribution-margin analysis without switching inventory valuation to actual cost.",
+    "Demand-planning analysis is most useful when students connect `DemandForecast`, `InventoryPolicy`, `SupplyPlanRecommendation`, `MaterialRequirementPlan`, and `RoughCutCapacityPlan` in one analytical path."
+  ],
+  "people-and-payroll": [
+    "Payroll register activity records liabilities first; cash leaves through payroll payments and remittances later.",
+    "The richer employee master now supports job-family, job-level, and people-cost review without requiring a separate HR-history subledger.",
+    "The employee master supports work location, job family, job level, employment status, and current-state active analysis without a separate HR-history model.",
+    "Work location and cost center answer different questions. Use both when students compare workforce structure to payroll or labor usage.",
+    "Workforce-planning analysis compares rostered hours, approved worked hours, absences, raw punches, and overtime approvals while retaining their different source grains.",
+    "Employee-master review should distinguish current-state `IsActive` from historical validity driven by `HireDate` and `TerminationDate`."
+  ],
+  "controls-and-exceptions": [
+    "The published default SQLite is anomaly-enriched when `anomaly_mode` is `standard`, so it is useful for teaching comparisons but not as the clean baseline for database-integrity reconciliation.",
+    "Exception-oriented queries are designed to return reviewable control patterns from the published dataset.",
+    "The GL remains balanced even when audit queries identify exceptions.",
+    "Source-table tracing should remain the final step in explaining each exception pattern."
+  ]
+}

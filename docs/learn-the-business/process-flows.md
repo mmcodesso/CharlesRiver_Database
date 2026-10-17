@@ -1,103 +1,120 @@
 ---
-title: Process Flows
-description: Hub for understanding how the main business cycles move through the database and into the ledger.
+title: Accounting Business Processes and BPMN Models
+description: Explore Charles River's connected business cycles, BPMN model library, Mermaid information flows, notation, control evidence, and accounting learning activities in one place.
 slug: /process-flows
 sidebar_label: Process Flows
 ---
 
-# Process Flows
+import BpmnDiagram, { BpmnModelCatalog } from "@site/src/components/BpmnDiagram";
 
-Process Flows is the bridge from the company story into the operating cycles that actually create the dataset. Students should read these cycles as one connected business system: customer demand creates sales activity, design services turn some of that demand into staffed hourly work, purchasing supports inventory and operations, manufacturing transforms materials and labor, payroll supports the workforce and liabilities, and finance closes the resulting accounting picture.
+# Business Processes and Models
 
-The site is easiest to understand when analysis grows out of the business process. Reports, SQL, and cases make more sense after the reader understands where the process starts, what it changes, and how it finally reaches `GLEntry`.
+Customer demand connects Charles River's departments. Sales needs goods to fulfill orders. Purchasing supports merchandise and components. Manufacturing uses materials and labor to make selected products. Design Services uses employee time to serve engagements. Finance records the accounting effects, settles obligations, and closes the period.
 
-## The Main Business Cycles
+Read each cycle from business activity to accounting evidence. **BPMN** shows participants, responsibilities, events, and decisions. **Mermaid** shows information relationships and postings. The linked activities ask you to investigate those views using actual records. If BPMN is new to you, start with the [reading guide](#a-short-bpmn-reading-guide).
 
-| Process | What it means inside the company |
-|---|---|
-| [O2C](../processes/o2c.md) | The customer-demand path from order through shipment or service billing, invoice, cash receipt, application, and the return or refund exception path |
-| [Design Services](../processes/design-services.md) | The hourly service path from a customer order line into staffing, approved time, monthly billing, payroll support, and service-margin analysis |
-| [P2P](../processes/p2p.md) | The supplier-side path from internal need through ordering, receiving, invoicing, payment, and accrual settlement |
-| [Manufacturing](../processes/manufacturing.md) | The production path from planning and component support through execution, completion, and close |
-| [Payroll](../processes/payroll.md) | The workforce and pay path from scheduled work and approved time into payroll posting, liabilities, payment, remittance, and labor reclass |
-| [Manual Journals and Close](../processes/manual-journals-and-close.md) | The accounting layer that estimates, reclassifies, and closes activity around the operating cycles |
+These models support the forthcoming *Accounting Information Systems: An Integrated Approach* and the current [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/). They are reusable teaching models grounded in the published synthetic dataset.
 
-## Process Map
+## Business Process Architecture
+
+<BpmnDiagram modelId="process-architecture" />
+
+The architecture groups the company's business cycles and responsibilities. Each cycle has its own trigger and boundary; the drawing does not impose a single serial schedule on all transactions. Purchasing supplies merchandise and components, manufacturing supplies selected finished goods, payroll supports factory and service staff, and finance complements the operating cycles with journals and close.
+
+The Mermaid map below connects those cycles through information and posting flows. Choose a detailed process guide and editable source in the [model library](#model-library).
+
+## The Connected Business
 
 ```mermaid
-flowchart LR
-    STORY[Company Operations]
-    O2C[Order-to-Cash]
-    DS[Design Services]
-    O2CEX[Returns Credits Refunds]
-    P2P[Procure-to-Pay]
-    MFG[Manufacturing]
-    TIME[Time and Attendance Support]
-    PAY[Payroll]
-    CLOSE[Manual Journals and Close]
-    GL[GLEntry]
-    AN[Analytics and Reporting]
+flowchart TD
+    DEMAND[Customer demand]
+    O2C[Order-to-cash: goods fulfillment and billing]
+    DS[Design Services: approved hours and billing]
+    P2P[Procure-to-pay: merchandise and components]
+    MFG[Manufacturing: issues, completion, and close]
+    PAY[Payroll: approved time, pay, and liabilities]
+    FIN[Finance: journals, assets, and period-end close]
+    GL[Posted accounting in GLEntry]
+    ANALYSIS[Analyze evidence, interpret, and decide]
 
-    STORY --> O2C
-    STORY --> P2P
-    STORY --> MFG
-    STORY --> TIME
-    O2C --> DS
-    O2C --> O2CEX
-    P2P --> MFG
-    TIME --> PAY
-    TIME --> MFG
-    TIME --> DS
+    DEMAND --> O2C
+    DEMAND --> DS
+    O2C -->|Supply needs| P2P
+    O2C -->|Selected products| MFG
+    P2P -->|Materials| MFG
+    PAY -->|Labor support| MFG
+    PAY -->|People cost| DS
     O2C --> GL
-    DS --> GL
-    O2CEX --> GL
+    DS -->|Service invoices| GL
     P2P --> GL
     MFG --> GL
     PAY --> GL
-    CLOSE --> GL
-    GL --> AN
+    FIN --> GL
+    GL --> ANALYSIS
 ```
 
-Read the map from left to right. The company story becomes process activity. Process activity becomes posted accounting. Posted accounting becomes reporting, analysis, and case-based interpretation.
+This is a conceptual process map. The arrows show dependencies and posting flows; they do not assert direct foreign keys. Planning, assignments, and approved time often support an accounting event without posting themselves.
 
-## How Process Becomes Reporting and Analysis
+## Model Library
 
-```mermaid
-flowchart LR
-    O2C[O2C source documents]
-    DS[Design-service documents]
-    P2P[P2P source documents]
-    MFG[Manufacturing source documents]
-    PAY[Payroll and time source documents]
-    CLOSE[JournalEntry]
-    GL[GLEntry]
-    R[Financial and analytical reporting]
+Begin with **Order-to-Cash**, **Procure-to-Pay**, or **Manufacturing and Conversion** for the three core AIS modules. Design Services, payroll, and finance connect those cycles to employee time, customer billing, settlement, and close. Focused detail models keep exceptions and proposed reviews separate from the main paths.
 
-    O2C --> GL
-    DS --> GL
-    P2P --> GL
-    MFG --> GL
-    PAY --> GL
-    CLOSE --> GL
-    GL --> R
-```
+Each row links a model to its process guide, learning activity, case, and editable `.drawio` source. Click a diagram or its Expand model button to open the viewer. Download the source to adapt it in [diagrams.net](https://app.diagrams.net/) or Draw.io Desktop; keep proposed changes explicitly labeled. Viewing the published diagrams requires only a browser.
 
-The most important teaching bridge in the site is this one: business process first, accounting second, analysis third. That is why the reports, perspectives, SQL pages, and cases should be read as follow-through from the business cycle rather than as separate documentation tracks.
+<BpmnModelCatalog />
+
+## A Short BPMN Reading Guide
+
+| Symbol or connector | Meaning in this library | Reading check |
+|---|---|---|
+| Thin start circle; thick end circle | A process instance begins or reaches its stated boundary | An end can mean an open item remains; read the label rather than assuming full settlement |
+| Envelope in a start or double-ring intermediate circle | A message triggers a process or is awaited during it | Identify the other participant; a message is communication, not a ledger posting |
+| Rounded task rectangle | An activity at the stated responsibility | Check its associated tables and evidence before inferring automation or authorization |
+| Rounded activity with a boxed plus at the bottom | A collapsed subprocess with a separate detailed model | The plus is a subprocess marker, not a parallel gateway |
+| Diamond with X | An exclusive decision or merge | Take one labeled alternative for the selected instance |
+| Diamond with + | Parallel split or synchronization | All split branches are required; a join waits for every required incoming branch |
+| Pool and lane | A participant boundary and responsibility within it | Charles River's lanes are internal; customers, suppliers, and agencies are separate pools |
+| Solid arrow | Sequence within one pool | It may cross lanes but must not cross a participant boundary |
+| Dashed arrow with open source circle and open target | Message between participants | It cannot be used as an internal lane-to-lane handoff |
+
+Read the [OMG BPMN 2.0.2 specification](https://www.omg.org/spec/BPMN/2.0.2/) for the formal notation and [Draw.io's BPMN library guide](https://www.drawio.com/docs/diagram-types/bpmn-2-0/) for authoring. In a notation conflict, the OMG specification is authoritative. This introduction selects the symbols used here; it does not reproduce the full standard.
+
+## Evidence and Control Boundaries
+
+A stored approver, status, or posting link can support a specific test. It does not establish that every transaction was approved, that people had incompatible duties, or that an exception was automatically blocked. Compare actual source records at the correct dates and grain.
+
+Reconciliations, independent review, holds, and segregation-of-duties improvements that are not represented by a documented field or event are **proposed teaching controls**. Identify them in your annotations and risk/control matrix. Do not present a proposed queue, credit policy, or automated matching rule as a feature of the published dataset.
+
+These `.drawio` files use Draw.io's native XML format. They are **editable visual models, not standards-compliant executable BPMN XML**. Execution or interchange with a BPMN engine would require a separate BPMN export, modeling review, and schema/engine validation.
+
+## Read Every Process in the Same Order
+
+1. Identify the **business need and decision**: customer demand, an internal purchasing requirement, production, service delivery, or a period-end estimate.
+2. Read the **BPMN participants and activities**: follow the trigger, responsibility handoffs, labeled decision paths, and stated end boundary.
+3. Identify the **source documents and grain** in the Mermaid views: what one header, line, approval, or event represents.
+4. Distinguish **support from recognition**: a plan or approval can explain activity without creating a ledger entry.
+5. Trace **posting and settlement** separately: the event creating a receivable or liability may precede the cash event.
+6. Choose an **analysis and conclusion**: state the population, dates, evidence, limitations, and next action.
+
+The [Dataset Guide](../start-here/dataset-overview.md) provides table-family navigation. The [Schema Reference](../reference/schema.md) provides stored keys. The [GLEntry Posting Reference](../reference/posting.md) provides event-specific accounting rules.
+
+Each major process page includes an optional AIS activity that moves from model interpretation to a supported risk/control evaluation. The [BPMN and controls workshop](../learn-and-practice/bpmn-controls-workshop.md) provides a common evidence workflow and reusable matrix. These activities support current classroom work and the forthcoming AIS textbook; they do not imply that a future Hub course is already available.
 
 ## Process to Analysis Bridges
 
-| Process | Strongest perspective or report follow-through | Strongest case follow-through |
-|---|---|---|
-| [O2C](../processes/o2c.md) | [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md), [Financial Reports](../analytics/reports/financial.md) | [O2C Trace Case](../analytics/cases/o2c-trace-case.md) |
-| [Design Services](../processes/design-services.md) | [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md), [Financial Reports](../analytics/reports/financial.md), [Managerial Reports](../analytics/reports/managerial.md) | Use the report libraries when you want to move from engagement staffing into billed hours, labor margin, or service revenue concentration |
-| [P2P](../processes/p2p.md) | [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md), [Financial Reports](../analytics/reports/financial.md) | [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md) |
-| [Manufacturing](../processes/manufacturing.md) | [Operations and Risk](../analytics/reports/operations-and-risk.md), [Managerial Reports](../analytics/reports/managerial.md) | [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md) |
-| [Payroll](../processes/payroll.md) | [Payroll and Workforce](../analytics/reports/payroll-perspective.md), [Audit Reports](../analytics/reports/audit.md) | [Workforce Cost and Org-Control Case](../analytics/cases/workforce-cost-and-org-control-case.md), [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md) |
-| [Manual Journals and Close](../processes/manual-journals-and-close.md) | [Executive Overview](../analytics/reports/executive-overview.md), [Financial Reports](../analytics/reports/financial.md) | [Financial Statement Bridge Case](../analytics/cases/financial-statement-bridge-case.md) |
+The model library supplies the focused activities and cases. These report topics extend a trace into a wider population.
+
+| Process | Report topics |
+|---|---|
+| [Order-to-cash](../processes/o2c.md) | [Sales and Customers](../analytics/index.md#sales-and-customers), [Statements and Cash](../analytics/index.md#statements-and-cash) |
+| [Design Services](../processes/design-services.md) | [Sales and Customers](../analytics/index.md#sales-and-customers) |
+| [Procure-to-pay](../processes/p2p.md) | [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory), [Statements and Cash](../analytics/index.md#statements-and-cash) |
+| [Manufacturing](../processes/manufacturing.md) | [Production and Planning](../analytics/index.md#production-and-planning), [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory) |
+| [Payroll](../processes/payroll.md) | [People and Payroll](../analytics/index.md#people-and-payroll) |
+| [Manual Journals and Close](../processes/manual-journals-and-close.md) | [Statements and Cash](../analytics/index.md#statements-and-cash), [Controls and Exceptions](../analytics/index.md#controls-and-exceptions) |
+
+For a broader comparison of payroll responsibilities and employee costs, continue to the [Workforce Cost and Org-Control Case](../analytics/cases/workforce-cost-and-org-control-case.md).
 
 ## Next Steps
 
-1. Read the process page that matches the business cycle you want to follow first.
-2. Then move into [Analyze the Data](../analytics/index.md) to choose between SQL, Excel, reports, cases, and topic tracks.
-3. Use [Reports Hub](../analytics/reports/index.md) when you want a management-style view of the same business cycle.
-4. Use [Cases](../analytics/cases/index.md) when you want a guided walkthrough that turns the process into interpretation.
+Choose one core module, then complete its first task in [Learn and Practice](../learn-and-practice/index.md). Browse [Reports and Analytics](../analytics/index.md) once the evidence chain is clear. The [instructor guide](../teach-with-data/instructor-guide.md) proposes a 14-week AIS sequence and ways to adapt these modules for a course.

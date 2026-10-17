@@ -5,10 +5,15 @@ sidebar_label: O2C Trace Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # O2C Trace Case
 
+<CaseOverview slug="o2c-trace-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 Charles River Home Furnishings receives an order from a regional interior-design firm furnishing a small hospitality renovation in the Boston area. The customer wants finished goods on a tight schedule, but inventory is not evenly available across every line. Sales can confirm the order immediately, yet warehouse fulfillment, billing, and cash settlement may unfold over different dates.
 
@@ -20,21 +25,22 @@ Your job is to explain that chain as one connected business story and one connec
 
 You need to prove that one O2C transaction can be traced cleanly from customer order to shipment, invoice, cash settlement, and possible exception follow-up. Confirm the document sequence. Confirm that each accounting entry follows the correct operational event.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A clear trace narrative from order entry to shipment to invoice to cash application.
-- A short explanation of which events are operational and which events create ledger impact.
-- A timing analysis showing where backorders, invoice lag, and open AR can arise.
-- An exception follow-up showing how returns and credits change the original trace.
+- Distinguish order, fulfillment, billing, and settlement events in one customer evidence trail.
+- Explain shipment and invoice accounting without treating cash receipt as invoice settlement.
+- Assess completeness and identify the next source document needed for an unresolved link.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Customer order, shipment, invoice, receipt and receipt application, and linked returns or credit memos.
+- Evidence grain: Retain the selected order-line key as the trace expands to shipment lines, invoice lines, GL rows, and receipt applications.
 - Main tables: `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt`, `CashReceiptApplication`, `SalesReturn`, `SalesReturnLine`, `CreditMemo`, `SalesCommissionAccrual`, `SalesCommissionAdjustment`, `SalesCommissionPayment`, `GLEntry`
 - Related process page: [Order-to-Cash Process](../../processes/o2c.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case uses both starter query packs and two case-support SQL files built specifically for document tracing.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define the order population and document chain
 
@@ -209,12 +215,14 @@ The query aggregates shipments and billings by order line, then overlays return 
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Build an evidence map for one actual order line, retaining source keys, dates, quantities or amounts, and query filenames. Mark missing links explicitly.
+- **Accounting or business interpretation:** Explain when the selected documents affect revenue, inventory relief, receivables, and settlement. Separate cash arrival from application.
+- **Database explanation:** Show the header-to-line and one-to-many relationships and how you checked that repeated detail rows did not inflate totals.
+- **Management or audit conclusion:** Recommend one follow-up for the selected chain and identify what additional source evidence would resolve uncertainty.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -230,6 +238,10 @@ Submit a short case memo or notebook note with these four artifacts:
 - Database/source evidence: Which order, shipment, invoice, commission, cash-application, return, or GL key proves the trace?
 - Analytics judgment: Which part of the order-to-cash chain carries the greatest cutoff or settlement risk?
 - Escalation/next step: How should a later return or credit change the conclusion about the original sale?
+
+## Limitations and Judgment
+
+A document-chain gap is a review signal. Partial shipments, open orders, deposits, and timing differences require context before you call them errors.
 
 ## Next Steps
 

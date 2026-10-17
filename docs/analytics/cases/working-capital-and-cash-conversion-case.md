@@ -5,10 +5,15 @@ sidebar_label: Working Capital Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Working Capital and Cash Conversion Case
 
+<CaseOverview slug="working-capital-and-cash-conversion-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 The finance team is reviewing why cash feels tighter than expected even though sales and operations still look healthy on the surface. Management does not need another generic balance-sheet recap. It needs a cross-process explanation of where working-capital pressure is building and which timing pattern deserves action first.
 
@@ -20,23 +25,23 @@ Your job is to build that story from the control accounts first, then narrow it 
 
 You need to prove which working-capital buckets moved the most by month, which timing patterns sit behind those balances, and how AR, AP, receipt timing, sales-commission payable, payroll liabilities, customer deposits, and accrued expenses change cash pressure. You also need to decide which driver deserves management follow-up first instead of treating every variance as equally important.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A month-by-month working-capital pressure map built from the control accounts.
-- A customer-side explanation that separates open AR from cash already received but not yet applied.
-- A supplier-side explanation that separates open AP from receipt-to-payment timing and GRNI behavior.
-- A liability-layer explanation for sales commissions, payroll, and accrued expenses that sits alongside the classic cash-conversion buckets.
-- A short management-facing conclusion on which driver deserves follow-up first.
+- Explain monthly working-capital balances using customer, supplier, payroll, commission, and accrual evidence.
+- Distinguish cash arrival, invoice application, liability recognition, and settlement.
+- Prioritize a cash-timing investigation after comparing actual balances and plan.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: GL and accounts, sales and purchase invoices, receipts and applications, goods receipts, commissions, payroll and remittances, accrual journals, and budget lines.
+- Evidence grain: Anchor the bridge at account and fiscal-period level; reconcile separate source and timing views before synthesis.
 - Main tables: `GLEntry`, `Account`, `SalesInvoice`, `CashReceipt`, `CashReceiptApplication`, `SalesCommissionAccrual`, `SalesCommissionAdjustment`, `SalesCommissionPayment`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment`, `GoodsReceipt`, `PayrollRegister`, `PayrollPayment`, `PayrollLiabilityRemittance`, `JournalEntry`
-- Related guides: [Financial Queries](../financial.md), [Commercial and Working Capital](../reports/commercial-and-working-capital.md)
+- Related guides: [Statements and Cash queries](../analysis-tracks.md#statements-and-cash), [Statements and Cash](../index.md#statements-and-cash)
 - Related process pages: [Order-to-Cash Process](../../processes/o2c.md), [Procure-to-Pay Process](../../processes/p2p.md), [Payroll Process](../../processes/payroll.md), [Manual Journals and Close Cycle](../../processes/manual-journals-and-close.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case does not trace one document chain. It synthesizes customer, supplier, payroll, and finance-controlled timing into one cash-pressure diagnosis.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define the monthly pressure map from the control accounts
 
@@ -250,12 +255,14 @@ The budget bridge combines `BudgetLine` with running actual balances from `GLEnt
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Prepare a monthly working-capital bridge with separate customer, supplier, commission, payroll, and accrual timing schedules in a consistent scope.
+- **Accounting or business interpretation:** Distinguish ending-balance changes from cash movement, including unapplied receipts and unsettled liabilities.
+- **Database explanation:** Record GL periods, source populations, aging dates, and first-settlement conventions; identify amounts that cannot be combined directly.
+- **Management or audit conclusion:** Rank the drivers against plan and recommend one first follow-up, with evidence and a competing explanation.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -272,8 +279,12 @@ Submit a short case memo or notebook note with these four artifacts:
 - Analytics judgment: Where can cash tighten even while top-line activity remains strong?
 - Escalation/next step: Which follow-up path should open first: unapplied customer cash, supplier timing, sales-commission payable, payroll liabilities, or accrual accuracy?
 
+## Limitations and Judgment
+
+Days to first settlement are not days to final settlement. This timing synthesis does not by itself calculate a complete industry-standard cash conversion cycle.
+
 ## Next Steps
 
-- Use [Commercial and Working Capital](../reports/commercial-and-working-capital.md) when you want the report-level interpretation after the bridge is clear.
-- Use [Financial Queries](../financial.md) for the broader financial query set behind this case.
+- Use [Statements and Cash](../index.md#statements-and-cash) when you want the working-capital and cash reports after the bridge is clear.
+- Use [Statements and Cash queries](../analysis-tracks.md#statements-and-cash) for the broader financial query set behind this case.
 - Use [Financial Statement Bridge Case](financial-statement-bridge-case.md) when you want to move from working-capital balances into full statement and close-cycle interpretation.

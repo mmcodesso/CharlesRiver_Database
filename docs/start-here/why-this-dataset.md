@@ -1,107 +1,52 @@
 ---
-title: Why Use This Accounting Analytics Dataset
-description: Why this synthetic accounting analytics dataset works for SQL, Excel, audit, financial, managerial, and business-process teaching paths.
+title: Why Teach with an Integrated Accounting Dataset
+description: Connect accounting information systems, analytics, financial accounting, managerial accounting, and auditing through one openly licensed synthetic company.
 slug: /why-this-dataset
 sidebar_label: Why This Dataset
 ---
 
 # Why This Dataset
 
-## Overview
+A revenue total becomes more useful when a student can explain the order, shipment, invoice, and cash application behind it. <DisplayName /> provides a shared business setting for that explanation: one fictional company whose operating records connect to posted accounting.
 
-Accounting analytics becomes more meaningful when students can connect business events, source documents, and ledger impact inside one teaching model. <DisplayName /> gives them that model. It brings together business context, process flows, source documents, posted GLEntry activity, and classroom-ready guidance in one openly shareable package.
+## A Common Business Across Accounting Courses
 
-Students can trace business activity from operations to accounting. Instructors can teach SQL, Excel, audit, financial, managerial, and process-focused work within one company model.
+<CompanyName /> buys merchandise, manufactures selected products, and sells hourly Design Services. The three activities create different evidence and cost questions while sharing customers, employees, organizational data, and the general ledger.
 
-## How the Dataset Supports Teaching
+| Teaching emphasis | Question the environment makes possible |
+|---|---|
+| Accounting information systems | Which document records an event, which approval supports it, and which stored key carries the event forward? |
+| Financial accounting | When does the event affect inventory, revenue, a receivable, a liability, or cash? |
+| Managerial accounting | How do product mix, standard cost, labor, capacity, and planning assumptions affect the interpretation of performance? |
+| Auditing | Does the source evidence support a posting, and what further work does an exception require? |
+| Accounting analytics | Can another analyst reproduce the population, joins, measures, and conclusion? |
 
-Instructors need data they can distribute widely and explain clearly. Students need a model that shows how a business event creates a document chain, moves through operational activity, and reaches the ledger. <DisplayName /> supports both goals with one coherent structure.
+The [Company Story](../learn-the-business/company-story.md) makes the operating model understandable before students encounter table names. [Process Flows](../learn-the-business/process-flows.md) then connects departments, documents, recognition, and analysis.
 
-The dataset supports process analysis, accounting analysis, control review, and source-to-ledger explanation in the same environment. The synthetic design also supports broad classroom use, open distribution, and course reuse across institutions.
+## Traceable Accounting Evidence
 
-## What the Dataset Models
+The ledger retains `SourceDocumentType`, `SourceDocumentID`, `SourceLineID`, `VoucherType`, and `VoucherNumber`. These fields let students investigate where a posting came from, while the operational tables explain the event behind it.
 
-<DisplayName /> models one fictional company: <CompanyName />. The business buys some finished goods, manufactures others, and delivers hourly design services. That hybrid structure gives students a realistic view of how customer demand, supplier activity, inventory movement, labor usage, service delivery, and finance connect inside one operating system.
+Goods sales and Design Services offer a useful comparison. Goods follow shipment and invoice records. Services follow engagements, approved time, and `ServiceBillingLine`. Both reach customer receivables and cash application, but their fulfillment evidence differs. Manufacturing adds a separate distinction between material issue, production completion, payroll-supported labor, and work-order close.
 
-The model brings together these core threads:
+The [Dataset Guide](dataset-overview.md), [Schema Reference](../reference/schema.md), and [GLEntry Posting Reference](../reference/posting.md) support that work without asking students to memorize the full model first.
 
-- customer demand, commercial pricing, shipment, service billing, receipt, return, credit, and refund activity
-- purchasing, receiving, supplier invoicing, and payment activity
-- manufacturing planning, material issue, production completion, and work-order close activity
-- time, payroll, labor allocation, design-service support, and payroll liability settlement activity
-- recurring journals, accruals, close-cycle entries, and posted ledger activity
+## Practice That Progresses
 
-Students can see how revenue connects to fulfillment and service delivery, how purchasing supports manufacturing, how labor supports both operations and services, and how those events affect the ledger. For the full business narrative, use [Company Story](../learn-the-business/company-story.md). For the detailed cycle walkthroughs, use [Process Flows](../learn-the-business/process-flows.md).
+[Learn and Practice](../learn-and-practice/index.md) begins with focused evidence tasks. Existing [SQL](../analytics/sql-guide.md) and [Excel guides](../analytics/excel-guide.md), [query resources](../analytics/analysis-tracks.md), [Reports and Analytics](../analytics/index.md), and [cases](../analytics/cases/index.md) extend the work into applied analysis and integrated investigation.
 
-## How the Data Reaches the Ledger
+The goal is a supported explanation. Students identify the population, preserve source references, interpret a result, state its limitations, and recommend a next action. A query result alone is not a complete accounting conclusion.
 
-The dataset carries business events into posted ledger detail and preserves the trace fields that let users move back to the source.
+## Open Reuse with Clear Limits
 
-Take a short order-to-cash example:
+The project uses [CC BY-SA 4.0](../technical/license.md), allowing sharing and adaptation with attribution and the same license for adaptations. Instructors can assign the published files and adapt the teaching sequence to their course.
 
-`Customer -> SalesOrder -> SalesOrderLine -> Shipment -> ShipmentLine -> SalesInvoice -> SalesInvoiceLine -> CashReceiptApplication -> GLEntry`
+The environment is synthetic and deliberately includes anomalies. It supports practice with evidence and controls, but it does not demonstrate how a real company performed or establish that a flagged condition is fraud. Illustrated business scenarios supply context; students must derive findings from actual records in their assigned file.
 
-Students can ask several important questions along that path. Which document created revenue. Which event moved inventory into cost of goods sold. Which invoice remained open at period end. Which cash application cleared the receivable. Which ledger entries belong to the same business event.
+## The Textbook and the Teaching Environment
 
-The design-services branch adds a second revenue path:
+[Accounting Analytics Hub](https://accountinganalyticshub.com/) connects this environment with the [Accounting Analytics: An Integrated Approach textbook](https://aa.accountinganalyticshub.com/). The textbook develops the conceptual and analytical methods. Charles River supplies a company, connected data, and opportunities to apply those methods.
 
-`Customer -> SalesOrder -> SalesOrderLine -> ServiceEngagement -> ServiceTimeEntry -> ServiceBillingLine -> SalesInvoiceLine -> GLEntry`
+The Hub's future AIS and tool courses are planned resources. Instructors can use the current Charles River materials independently, guided by the [Instructor Adoption Guide](../teach-with-data/instructor-guide.md).
 
-<DisplayName /> supports that work because posted ledger rows include the traceability fields that matter most:
-
-- `SourceDocumentType`
-- `SourceDocumentID`
-- `SourceLineID`
-- `VoucherType`
-- `VoucherNumber`
-- `PostingDate`
-- `FiscalYear`
-- `FiscalPeriod`
-
-Those fields make the ledger a strong teaching asset. An instructor can ask students to explain a revenue posting from its shipment or service-billing records. A student can start in `GLEntry` and work back to the source document chain. An auditing assignment can test whether the ledger reflects the expected document path. For the event-by-event rules, use [GLEntry Posting Reference](../reference/posting.md). For the table-level structure behind those paths, use [Schema Reference](../reference/schema.md).
-
-## What Teaching Materials Come With It
-
-<DisplayName /> is a teaching package with linked materials that support orientation, analysis, and course adoption.
-
-- [Company Story](../learn-the-business/company-story.md): explains the business model and why the company structure matters for accounting analysis
-- [Process Flows](../learn-the-business/process-flows.md): shows the major business cycles and how events move toward the ledger
-- [Dataset Guide](dataset-overview.md): gives the mental model for the table families, key joins, and navigation paths
-- [Schema Reference](../reference/schema.md): supports table lookup, high-value fields, and join cues
-- [GLEntry Posting Reference](../reference/posting.md): explains what posts and which accounts move
-- [SQL Guide](../analytics/sql-guide.md): gives a structured path into query-based work
-- [Excel Guide](../analytics/excel-guide.md): gives a parallel path for workbook-based analysis
-- [Analyze the Data](../analytics/index.md): introduces the SQL, Excel, reports, cases, and topic-track paths
-- [Cases](../analytics/cases/index.md): provides guided walkthroughs that connect business context, starter SQL, and interpretation
-- [Instructor Adoption Guide](../teach-with-data/instructor-guide.md): helps instructors sequence the material and choose assignment paths
-
-These materials give students and instructors a coherent path from orientation to analysis.
-
-## Why the OER Model Helps
-
-<DisplayName /> is designed as an open educational resource. Instructors and institutions can adopt it, adapt it, and extend it for teaching. The project uses the `CC BY-SA 4.0` license so users can share the material with attribution and keep derivative versions under the same open terms.
-
-That licensing model supports long-term classroom use. Faculty can revise assignments, localize cases, add course notes, and build new teaching sequences on top of the same foundation. Curriculum developers can use the model as a reusable platform for continued teaching and development.
-
-## Who Should Use It
-
-The dataset is designed for three main groups:
-
-- instructors who need a reusable environment for accounting analytics, AIS, audit, process, or cost-accounting modules
-- students who need to learn how business events become accounting information through SQL, Excel, and guided process analysis
-- researchers and curriculum developers who need an openly licensed teaching environment that can support reuse, comparison, and extension
-
-## Where to Start
-
-Use this reading path when you want to move from orientation to adoption quickly:
-
-- [Start Here](index.md): begin with the classroom files and the core reading order
-- [Company Story](../learn-the-business/company-story.md): learn the business model before reading tables
-- [Process Flows](../learn-the-business/process-flows.md): follow the major cycles that drive the dataset
-- [Dataset Guide](dataset-overview.md): understand the table families and navigation paths
-- [SQL Guide](../analytics/sql-guide.md): start the query-based path
-- [Excel Guide](../analytics/excel-guide.md): start the workbook-based path
-- [Cases](../analytics/cases/index.md): use guided assignments before open-ended analysis
-- [Instructor Adoption Guide](../teach-with-data/instructor-guide.md): plan course sequencing and adoption
-
-<DisplayName /> works best when readers start with the business model, move through the process pages, and then open the data. That sequence keeps the joins meaningful and keeps the ledger tied to business reasoning.
+Begin at [Start Here](index.md), get the [published files](downloads.md), or review the [first exercises](../learn-and-practice/index.md).

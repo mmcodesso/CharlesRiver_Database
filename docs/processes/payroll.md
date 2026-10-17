@@ -1,8 +1,23 @@
 ---
-description: Learn the payroll process in the synthetic accounting analytics dataset, from approved time and payroll registers to payments, remittances, and GLEntry.
+title: Payroll, Approved Time, and Liability Settlement
+description: Trace payroll responsibilities with BPMN and Mermaid, distinguishing approved attendance, gross-to-net payroll, employee payment, liability remittance, and control evidence.
 ---
 
+import BpmnDiagram from "@site/src/components/BpmnDiagram";
+
 # Payroll Process
+
+## Business Storyline
+
+**Illustrative scenario:** Charles River needs to pay employees for supported work and settle the related tax and benefit obligations. A supervisor, payroll specialist, and treasury may answer different questions about the same pay period. Choose actual employee and payroll records for the investigation rather than assuming this scenario identifies a particular payment.
+
+In this dataset, payroll is an operating cycle with its own support, accounting, and settlement stages. Supervisors define shift expectations, the company records rostered workdays and raw punches, approved daily attendance becomes payroll support for hourly employees, payroll builds a gross-to-net register, treasury pays employees, and liabilities are remitted later to agencies and benefit providers.
+
+That distinction matters. Raw punches are not the same thing as approved hours. Approved hours are not the same thing as payroll posting. Payroll posting is not the same thing as employee payment. Students can see each stage separately in the data and use that separation for accounting, analytics, and controls work.
+
+Payroll also connects to manufacturing. Approved time can flow into `LaborTimeEntry`, direct labor can be tied to a work-order operation, and payroll later supports direct-labor and manufacturing-overhead reclass activity without switching the dataset to full actual-cost inventory.
+
+Payroll also connects to the customer-facing design-services line. Design employees still move through normal payroll registers, payments, and liabilities, but their engagement margin is analyzed through `ServiceTimeEntry` cost snapshots instead of through manufacturing costing.
 
 ## What Students Should Learn
 
@@ -11,15 +26,35 @@ description: Learn the payroll process in the synthetic accounting analytics dat
 - Identify the core tables used for approved hours, labor traceability, payroll settlement, and manufacturing reclass.
 - Recognize timing differences that matter for payroll controls, open liabilities, overtime review, and manufacturing labor analysis.
 
-## Business Storyline
+## Decisions and Evidence
 
-In this dataset, payroll is an operating cycle with its own support, accounting, and settlement stages. Supervisors define shift expectations, the company records rostered workdays and raw punches, approved daily attendance becomes payroll support for hourly employees, payroll builds a gross-to-net register, treasury pays employees, and liabilities are remitted later to agencies and benefit providers.
+Workforce supervision checks whether the planned shift and approved hours are supported. Payroll explains earnings, deductions, and employer cost. Treasury distinguishes employee net pay from later withholding and benefit remittances. A paid employee therefore does not establish that all payroll liabilities have cleared.
 
-That distinction matters. Raw punches are not the same thing as approved hours. Approved hours are not the same thing as payroll posting. Payroll posting is not the same thing as employee payment. Students can see each stage separately in the data and use that separation for accounting, analytics, and controls work.
+For a first analysis, choose one employee and pay period, preserve the approved-time and payroll identifiers, and explain the register, payment, and remittance dates. Move to the [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md) after you can distinguish raw punches from approved hours. Exception records guide follow-up; they do not establish misconduct on their own.
 
-Payroll also connects to manufacturing. Approved time can flow into `LaborTimeEntry`, direct labor can be tied to a work-order operation, and payroll later supports direct-labor and manufacturing-overhead reclass activity without switching the dataset to full actual-cost inventory.
+## Participants and Responsibilities
 
-Payroll now also connects to the customer-facing design-services line. Design employees still move through normal payroll registers, payments, and liabilities, but their engagement margin is analyzed through `ServiceTimeEntry` cost snapshots instead of through manufacturing costing.
+Within Charles River, **Employees** supply attendance evidence, **Supervisors** provide roster and approval support, **Payroll** prepares and approves the gross-to-net register, and **Treasury** makes payments and remittances. **Agencies and benefit providers** are external recipients. The employee remains inside the company pool; internal time approval is a lane handoff, while remittance communicates with another participant. Use recorded employee fields to test actual responsibility rather than assuming the model establishes independent duties.
+
+## BPMN Business Process
+
+<BpmnDiagram modelId="payroll" />
+
+### Interpret the Activities and Decisions
+
+1. Roster expectations and raw punches support approved attendance. Hourly payroll uses `TimeClockEntry`, while absence and overtime records provide additional support.
+2. Payroll produces an approved gross-to-net register. Exception records can guide review, but their existence does not establish that payroll was automatically blocked.
+3. Employee payment and liability remittance are separate required settlement branches. A parallel join describes eventual completion of both branches, not settlement on the same day or within the same reporting period. An employee can be paid while related liabilities remain open at the cutoff.
+
+### Risks, Controls, and Evidence
+
+| Risk and control objective | Evidence available | Teaching boundary |
+|---|---|---|
+| Unsupported paid hours: relate approved hours to attendance evidence | `EmployeeShiftRoster`, `TimeClockPunch`, `TimeClockEntry`, `OvertimeApproval`, `EmployeeAbsence` | Raw punches are evidence, not the authoritative hours source; compare specific approval fields and dates |
+| Unresolved attendance concern: identify follow-up before drawing a conclusion | `AttendanceException` status, reviewer, and review-date fields | A logged issue does not prove misconduct, an automatic pay hold, or completed review |
+| Incomplete liability settlement: distinguish employee net pay from remittances | `PayrollRegister`, `PayrollPayment`, `PayrollLiabilityRemittance`, `GLEntry` | An independent liability roll-forward and approval review is a **proposed teaching control**; payment alone does not establish all obligations cleared |
+
+The Mermaid views below explain attendance, payroll, labor, and posting relationships. The [model library](../learn-the-business/process-flows.md#model-library) provides the notation guide and editable sources.
 
 ## Normal Process Overview
 
@@ -127,11 +162,11 @@ flowchart LR
 
 **Starter analytical question:** Which work centers show the biggest gap between rostered hours, approved hours, and approved overtime?
 
-```sql
--- Teaching objective: Compare expected hours, raw attendance evidence, and approved daily time.
--- Main join path: EmployeeShiftRoster -> TimeClockPunch -> TimeClockEntry, plus EmployeeAbsence and OvertimeApproval.
--- Suggested analysis: Group by work center, shift, or payroll period.
-```
+**Analytical plan**
+
+- Objective: Compare expected hours, raw attendance evidence, and approved daily time.
+- Evidence path: EmployeeShiftRoster -> TimeClockPunch -> TimeClockEntry, plus EmployeeAbsence and OvertimeApproval.
+- Comparison: Group by work center, shift, or payroll period.
 
 ### Approved Hours to Gross Pay
 
@@ -166,11 +201,11 @@ flowchart LR
 - `PayrollRegisterLine.LaborTimeEntryID -> LaborTimeEntry.LaborTimeEntryID`
 - `PayrollRegister.PayrollRegisterID -> PayrollRegisterLine.PayrollRegisterID`
 
-```sql
--- Teaching objective: Trace approved hourly support into earnings lines on the payroll register.
--- Main join path: TimeClockEntry -> LaborTimeEntry -> PayrollRegisterLine, plus PayrollRegister.
--- Suggested analysis: Compare regular and overtime hours to regular and overtime earnings by employee or period.
-```
+**Analytical plan**
+
+- Objective: Trace approved hourly support into earnings lines on the payroll register.
+- Evidence path: TimeClockEntry -> LaborTimeEntry -> PayrollRegisterLine, plus PayrollRegister.
+- Comparison: Compare regular and overtime hours to regular and overtime earnings by employee or period.
 
 ### Gross-to-Net, Payment, and Remittance
 
@@ -203,11 +238,11 @@ flowchart LR
 
 **Starter analytical question:** Which payroll liabilities remain open after employees are paid, and how long do those remittance balances stay outstanding?
 
-```sql
--- Teaching objective: Separate payroll posting from employee payment and later remittance.
--- Main join path: PayrollRegister -> PayrollPayment and PayrollLiabilityRemittance, with GLEntry for posted effect.
--- Suggested analysis: Compare approved payroll date, payment date, and remittance date by payroll period.
-```
+**Analytical plan**
+
+- Objective: Separate payroll posting from employee payment and later remittance.
+- Evidence path: PayrollRegister -> PayrollPayment and PayrollLiabilityRemittance, with GLEntry for posted effect.
+- Comparison: Compare approved payroll date, payment date, and remittance date by payroll period.
 
 ### Direct Labor and Manufacturing Reclass
 
@@ -243,11 +278,11 @@ flowchart LR
 - `PayrollRegisterLine.LaborTimeEntryID -> LaborTimeEntry.LaborTimeEntryID`
 - `GLEntry.SourceDocumentType` plus `SourceDocumentID` for reclass trace
 
-```sql
--- Teaching objective: Trace direct manufacturing labor from approved time into payroll support and reclass accounting.
--- Main join path: TimeClockEntry -> LaborTimeEntry -> WorkOrderOperation, plus PayrollRegisterLine and reclass journals.
--- Suggested analysis: Group by work order, work center, item, or payroll period.
-```
+**Analytical plan**
+
+- Objective: Trace direct manufacturing labor from approved time into payroll support and reclass accounting.
+- Evidence path: TimeClockEntry -> LaborTimeEntry -> WorkOrderOperation, plus PayrollRegisterLine and reclass journals.
+- Comparison: Group by work order, work center, item, or payroll period.
 
 ### Design-Service Labor Support
 
@@ -285,11 +320,23 @@ flowchart LR
 
 **Starter analytical question:** Which exception types are most common by work center, and how often do they still end up supporting paid hourly payroll?
 
-```sql
--- Teaching objective: Compare planned shifts, raw attendance evidence, approved time, and logged exceptions.
--- Main join path: AttendanceException -> EmployeeShiftRoster and TimeClockEntry, with TimeClockPunch for evidence.
--- Suggested analysis: Group by exception type, work center, supervisor, or payroll period.
-```
+**Analytical plan**
+
+- Objective: Compare planned shifts, raw attendance evidence, approved time, and logged exceptions.
+- Evidence path: AttendanceException -> EmployeeShiftRoster and TimeClockEntry, with TimeClockPunch for evidence.
+- Comparison: Group by exception type, work center, supervisor, or payroll period.
+
+## Optional AIS Activity: Evaluate Time and Settlement Evidence
+
+**Context and objective:** a payroll review needs to distinguish supported hourly earnings, employee payment, and later liability remittance. Read the model's responsibilities and identify one control objective without treating every attendance exception as wrongdoing.
+
+**Prerequisites, tools, and sources:** review gross-to-net payroll and the time-source distinctions on this page. Use a SQL tool with the published SQLite file, or Excel filters and lookups, plus a copy of the editable Draw.io model. Sources are `Employee`, `PayrollPeriod`, `EmployeeShiftRoster`, `TimeClockPunch`, `TimeClockEntry`, `AttendanceException`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance`, and `GLEntry`. Add absence, overtime, or labor records when relevant.
+
+1. State the release, employee, pay period, reporting date, and source keys. Annotate the approved-time, register, and settlement activities.
+2. Compare selected hourly support with earnings, then inspect employee payment and period-level remittances separately. Do not duplicate a period-level remittance across employee register rows.
+3. Propose one independent review and label it a **proposed teaching control**. State its risk, objective, owner, evidence, test, and unresolved follow-up in the [workshop matrix](../learn-and-practice/bpmn-controls-workshop.md).
+
+**Assessed deliverable:** submit an annotated model, a reproducible evidence schedule that preserves each source's grain, and the risk/control row. Explain which liability or attendance issue warrants review as of the selected date and what cannot be concluded from the records. The sample does not establish all employee entitlements, successful bank execution, or control effectiveness. Continue through the existing attendance and workforce cases and payroll reports below.
 
 ## Common Student Questions
 
@@ -304,8 +351,7 @@ flowchart LR
 
 ## Next Steps
 
-- Read [Payroll and Workforce](../analytics/reports/payroll-perspective.md) when you want the guided business perspective that ties people cost, approved time, payroll cash, liabilities, and payroll-control review together.
-- Read [Financial Reports](../analytics/reports/financial.md), [Managerial Reports](../analytics/reports/managerial.md), and [Audit Reports](../analytics/reports/audit.md) when you want the broader payroll and workforce report inventory by area.
+- Read [People and Payroll](../analytics/index.md#people-and-payroll) to connect people cost, approved time, payroll cash, liabilities, and control review in one report topic.
 - Read [Workforce Cost and Org-Control Case](../analytics/cases/workforce-cost-and-org-control-case.md) or [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md) when you want a guided payroll or time-control investigation.
 - Jump to [Time, Attendance, and Approved Hours](#time-attendance-and-approved-hours) when you want the upstream support layer for hourly payroll.
 - Read [Manufacturing](manufacturing.md) when you want the production side of direct labor and work-order traceability.

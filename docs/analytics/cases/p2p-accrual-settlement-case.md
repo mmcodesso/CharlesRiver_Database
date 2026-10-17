@@ -5,10 +5,15 @@ sidebar_label: P2P Accrual Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # P2P Accrual Settlement Case
 
+<CaseOverview slug="p2p-accrual-settlement-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 Month-end close is approaching at Charles River Home Furnishings. Some recent purchases followed the normal materials path: requisition, purchase order, goods receipt, supplier invoice, and later payment. At the same time, finance recorded accrued expenses for insurance, software, and professional services that had been consumed before the supplier invoices arrived.
 
@@ -20,22 +25,22 @@ Your job is to explain both paths as one connected P2P story, then show why the 
 
 You need to prove that supplier activity can be traced cleanly through the normal P2P path and the accrued-service settlement path. Confirm the support path. Confirm that the accounting effect matches the kind of purchase being settled.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A clear trace of the normal receipt-matched P2P path from requisition through PO, receipt, invoice, and payment.
-- A clear trace of the accrual-linked service-settlement path from month-end journal estimate to supplier invoice and disbursement.
-- A short explanation of which events are operational and which events create ledger impact.
-- A timing analysis showing how accrual date, invoice date, and payment date can diverge.
-- An exception follow-up showing what makes an accrued-service settlement unusual enough for audit review.
+- Distinguish receipt-matched purchases from accrual-linked service invoices.
+- Explain original recognition, invoice clearing, and payment across liabilities and periods.
+- Trace selected source documents to GL evidence without combining incompatible line populations.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Requisition, purchase order, goods receipt, supplier invoice and lines, original accrual journal, and disbursement.
+- Evidence grain: Follow purchase-invoice lines to their receipt or accrual origin before rolling up to invoice and payment totals.
 - Main tables: `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment`, `JournalEntry`, `GLEntry`
 - Related process pages: [Procure-to-Pay Process](../../processes/p2p.md), [Manual Journals and Close Cycle](../../processes/manual-journals-and-close.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case uses both starter query packs and two case-support SQL files built specifically to separate receipt-matched AP from accrual-linked AP settlement.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define the normal P2P document chain
 
@@ -210,12 +215,14 @@ The query starts with accrual headers, joins to `PurchaseInvoiceLine` where `Acc
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Create two evidence trails: one receipt-matched line and one accrual-linked service line, with source keys, dates, and GL references. Report if your assigned scope contains no example of either path.
+- **Accounting or business interpretation:** Explain recognition and clearing of GRNI or accrued expense, AP recognition, and cash settlement for the selected paths.
+- **Database explanation:** Name the join keys and grain at each stage; reconcile line detail to its invoice without duplicating payment totals.
+- **Management or audit conclusion:** Identify a support or timing issue for purchasing, AP, or finance follow-up and defend the assigned owner.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -231,6 +238,10 @@ Submit a short case memo or notebook note with these four artifacts:
 - Database/source evidence: Which receipt, invoice-line, accrual-journal, payment, or GL key distinguishes the settlement path?
 - Analytics judgment: When is a missing goods receipt valid accrual settlement evidence rather than a process break?
 - Escalation/next step: What timing or amount pattern would make an accrued-service settlement worth audit follow-up?
+
+## Limitations and Judgment
+
+Receipt-matched merchandise and accrued services follow different recognition paths. An open liability or a later payment does not by itself establish a control failure.
 
 ## Next Steps
 

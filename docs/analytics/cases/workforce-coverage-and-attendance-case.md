@@ -5,10 +5,15 @@ sidebar_label: Workforce Coverage Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Workforce Coverage and Attendance Case
 
+<CaseOverview slug="workforce-coverage-and-attendance-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 Operations leaders can see production pressure building across several work centers. Scheduled load remains high, but coverage is uneven from one team and shift to the next. Some areas appear fully staffed on the roster, yet approved worked hours still fall short once absences, late arrivals, and early departures are included.
 
@@ -20,23 +25,23 @@ This case treats attendance as an operating signal first. The goal is to explain
 
 You need to prove where planned load outpaces rostered coverage, where approved worked hours recover that gap, and where absence or attendance drift keeps work centers under pressure. You also need to show whether overtime stabilizes operations or only hides recurring staffing weakness.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A work-center coverage narrative from planned load to rostered hours to approved worked hours.
-- An absence interpretation that shows which workforce groups carry the most pressure.
-- An overtime-response explanation tied to coverage gaps and recurring staffing strain.
-- An attendance-drift interpretation by shift and department.
-- A short management-facing recommendation on where planners or supervisors should act first.
+- Compare planned work-center load with rostered and approved worked hours.
+- Evaluate absence, overtime, and attendance drift without double counting employee-days.
+- Separate managerial coverage pressure from exceptions needing formal control testing.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Work-center plan, shift roster, approved time entry, absence record, overtime approval, and shift definition.
+- Evidence grain: Align planning, work-center, shift, and employee-date summaries before interpreting coverage or overtime rates.
 - Main tables: `EmployeeShiftRoster`, `WorkOrderOperationSchedule`, `TimeClockEntry`, `EmployeeAbsence`, `OvertimeApproval`, `ShiftDefinition`, `WorkCenter`, `Employee`
-- Related guides: [Operations and Risk](../reports/operations-and-risk.md), [Payroll and Workforce](../reports/payroll-perspective.md)
+- Related guides: [People and Payroll](../index.md#people-and-payroll)
 - Related process pages: [Payroll Process](../../processes/payroll.md), [Manufacturing Process](../../processes/manufacturing.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case diagnoses staffing coverage and attendance pressure rather than formal punch or approval exceptions. Use the audit case for exception testing and the workforce-cost case for payroll-cost interpretation.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define staffing coverage against planned load
 
@@ -210,12 +215,14 @@ The query compares scheduled start and end times from `EmployeeShiftRoster` to a
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Prepare a staffing-pressure schedule connecting load, rostered hours, worked hours, absence, overtime, and attendance drift for a stated scope.
+- **Accounting or business interpretation:** Explain whether the evidence suggests coverage shortfall, attendance pressure, overtime response, or a mixture, without assuming causation.
+- **Database explanation:** Show grain, denominator, and period alignment, including how multiple roster or time rows were handled.
+- **Management or audit conclusion:** Recommend an operational response and identify any unresolved issue for the attendance-control audit case.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -232,9 +239,13 @@ Submit a short case memo or notebook note with these four artifacts:
 - Analytics judgment: Where does overtime look like a temporary response versus recurring dependency?
 - Escalation/next step: Should the next action sit with planners, supervisors, or the attendance-control audit case?
 
+## Limitations and Judgment
+
+Planned load, rostered coverage, and approved time are different measures. A gap does not establish individual productivity or prove an attendance-control violation.
+
 ## Next Steps
 
 - Use [Attendance Control Audit Case](attendance-control-audit-case.md) when you want to test punch, approval, and absence exceptions formally.
 - Use [Payroll Process](../../processes/payroll.md) when you want the broader support-to-payroll flow behind approved hours and overtime.
 - Use [Workforce Cost and Org-Control Case](workforce-cost-and-org-control-case.md) when you want to connect workforce structure to payroll cost and approval design.
-- Use [Operations and Risk](../reports/operations-and-risk.md) when you want the broader operational reporting perspective on staffing pressure and throughput risk.
+- Use [People and Payroll](../index.md#people-and-payroll) when you want reports on staffing, attendance, payroll, and time controls.

@@ -5,10 +5,15 @@ sidebar_label: Workforce Audit Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Master Data and Workforce Audit Case
 
+<CaseOverview slug="master-data-and-workforce-audit-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 The dataset keeps a realistic employee master. The company has one CEO, one CFO, one Controller, one Production Manager, and one Accounting Manager. Frontline roles repeat where that makes business sense. Some employees terminate during the modeled range, replacements are hired into the same operating structure, and the historical rows remain in the employee master for traceability.
 
@@ -18,24 +23,24 @@ The audit question is whether employee status, current ownership, approval activ
 
 The review team needs to determine whether employee lifecycle, active-status ownership, approval roles, and downstream workforce activity line up well enough to trust the workforce-control environment.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A workforce status baseline by cost center, job family, job level, and employment status.
-- A post-termination activity view that separates historical traceability from invalid downstream use.
-- A current-state ownership review for managers, work-center leaders, warehouse managers, and sales reps.
-- An approval-role and authority-limit interpretation across operational and accounting documents.
-- A workforce-control conclusion that identifies whether the next follow-up belongs in master-data cleanup, approval review, attendance-control audit, or workforce-cost interpretation.
+- Distinguish historical employment validity from current assignment ownership.
+- Test employee activity and approval authority against dates and roles.
+- Develop a supported control finding without treating all inactive employees' historical activity as invalid.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Employee master, current assignments, payroll and time records, roster entries, purchase approvals, and journal approvals.
+- Evidence grain: Retain employee and transaction-date keys for historical tests; assess current assignments as a separate population.
 - Main tables: `Employee`, `CostCenter`, `PayrollRegister`, `TimeClockEntry`, `LaborTimeEntry`, `EmployeeShiftRoster`, `TimeClockPunch`, `OvertimeApproval`, `PurchaseOrder`, `JournalEntry`
-- Related guide: [Audit Queries](../audit.md)
+- Related guide: [People and Payroll queries](../analysis-tracks.md#people-and-payroll)
 - Related process page: [Payroll](../../processes/payroll.md)
 - Related case: [Workforce Cost and Org-Control Case](workforce-cost-and-org-control-case.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case audits employee-master trust across lifecycle, ownership, approval, and workforce-control layers. It does not treat employee data as static setup, and it does not replace the workforce-cost case for payroll-cost interpretation.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Establish the workforce population and status baseline
 
@@ -219,12 +224,14 @@ The roster query joins `EmployeeShiftRoster` to `Employee`, then adds time-clock
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Create a workpaper separating post-termination activity, stale current assignments, role-design questions, and authority-limit exceptions.
+- **Accounting or business interpretation:** Explain the control expectation and why a historical transaction may remain valid for an employee who is inactive today.
+- **Database explanation:** Retain employee, source-document, activity-date, employment-date, and approver keys; distinguish historical tests from current-state tests.
+- **Management or audit conclusion:** Rank supported findings and assign follow-up owners, distinguishing authorization design from employee-master maintenance.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -241,9 +248,13 @@ Submit a short case memo or notebook note with these four artifacts:
 - Analytics judgment: Are exceptions driven more by lifecycle status, stale ownership, authority limits, or workforce-control behavior?
 - Escalation/next step: Should the next action go to employee-master cleanup, approval review, attendance audit, or workforce-cost interpretation?
 
+## Limitations and Judgment
+
+The employee master is not a complete effective-dated organization history. Current role or active status alone cannot prove past authorization.
+
 ## Next Steps
 
 - Read [Workforce Cost and Org-Control Case](workforce-cost-and-org-control-case.md) when you want the managerial and approval-concentration follow-through.
 - Read [Attendance Control Audit Case](attendance-control-audit-case.md) when you want a deeper punch, absence, and overtime exception review.
 - Read [Payroll](../../processes/payroll.md) when you want the operational and accounting path behind the same employee-control questions.
-- Read [Audit Queries](../audit.md) for the wider workforce-control query set.
+- Read [People and Payroll queries](../analysis-tracks.md#people-and-payroll) for the wider workforce-control query set.

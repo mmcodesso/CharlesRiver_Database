@@ -27,7 +27,7 @@ Then point students to:
 - [Start Here](../start-here/index.md)
 - [Downloads](../start-here/downloads.md)
 - [Dataset Guide](../start-here/dataset-overview.md)
-- [Analyze the Data](../analytics/index.md)
+- [Reports and Analytics](../analytics/index.md)
 
 ## When Customization Is Useful
 

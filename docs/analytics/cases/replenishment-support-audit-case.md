@@ -5,10 +5,15 @@ sidebar_label: Replenishment Audit Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Replenishment Support Audit Case
 
+<CaseOverview slug="replenishment-support-audit-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 The dataset expects weekly planning support behind normal replenishment activity. The audit task is to identify missing forecast approval, inactive policy coverage, unsupported requisitions or work orders, late recommendation conversion, and prelaunch or discontinued planning activity.
 
@@ -18,24 +23,25 @@ This case treats planning support as an audit trail rather than only a forecasti
 
 The audit team needs to separate planning-governance failures from later execution failures and decide which unsupported replenishment documents create the strongest control concern.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A forecast governance view that separates missing approval from unusual override behavior.
-- An inventory policy coverage review for missing, duplicate, or inactive planning policies.
-- A document-support test for requisitions and work orders that lack supply-plan recommendations.
-- A recommendation timing view that identifies conversions after need-by date.
-- A lifecycle control conclusion for prelaunch or discontinued planning activity.
+- Test forecast approval and inventory-policy support before execution.
+- Trace requisitions and work orders to recommendations where applicable.
+- Distinguish missing support from later execution or service outcomes.
 
-## Before You Start
+## Key Data Sources
 
+- Related processes: [Procure-to-Pay](../../processes/p2p.md), [Manufacturing](../../processes/manufacturing.md)
+- Source documents: Forecast approvals, inventory policy, supply recommendation, requisition, work order, and item lifecycle dates.
+- Evidence grain: Evaluate forecast and policy at their item/warehouse/week scope; trace recommendation and execution-document keys separately.
 - Main tables: `DemandForecast`, `InventoryPolicy`, `SupplyPlanRecommendation`, `PurchaseRequisition`, `WorkOrder`, `Item`
 - Related case: [Demand Planning and Replenishment Case](demand-planning-and-replenishment-case.md)
-- Related guide: [Audit Queries](../audit.md)
-- Related report: [Operations and Risk](../reports/operations-and-risk.md)
+- Related guide: [Purchasing and Inventory queries](../analysis-tracks.md#purchasing-and-inventory)
+- Related report: [Purchasing and Inventory](../index.md#purchasing-and-inventory)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case is the formal planning-support control test. Use the demand-planning case when you want to explain forecast quality, supply recommendations, and operational pressure before audit follow-up.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Test forecast approval and override governance
 
@@ -209,12 +215,14 @@ The query unions planning and replenishment source tables, joins each source to 
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Create a control matrix and register for forecast approval, inventory policy, replenishment support, conversion timing, and lifecycle use.
+- **Accounting or business interpretation:** Explain the control expectation and whether each selected result concerns governance, linkage, or timing.
+- **Database explanation:** Retain forecast, policy, recommendation, requisition or work-order keys and dates for results from the assigned test families.
+- **Management or audit conclusion:** Rank supported findings and identify follow-up evidence needed before claiming execution impact.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -231,8 +239,12 @@ Submit a short case memo or notebook note with these four artifacts:
 - Analytics judgment: Is the strongest issue forecast governance, policy coverage, unsupported execution, late conversion, or lifecycle misuse?
 - Escalation/next step: Which exception should move from planning review into formal audit follow-up first?
 
+## Limitations and Judgment
+
+A missing planning link does not prove that a purchase or work order was unnecessary. Overrides and late conversions require timing and authorization context.
+
 ## Next Steps
 
 - Read [Demand Planning and Replenishment Case](demand-planning-and-replenishment-case.md) when you want the managerial reading of the same planning layer.
-- Read [Audit Queries](../audit.md) for the broader planning-support and control-review query set.
-- Read [Operations and Risk](../reports/operations-and-risk.md) when you want the higher-level operational interpretation.
+- Read [Purchasing and Inventory queries](../analysis-tracks.md#purchasing-and-inventory) for the broader planning-support and control-review query set.
+- Read [Purchasing and Inventory](../index.md#purchasing-and-inventory) when you want the higher-level operational interpretation.

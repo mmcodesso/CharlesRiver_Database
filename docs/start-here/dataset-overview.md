@@ -1,6 +1,6 @@
 ---
-title: Accounting Dataset Guide
-description: Guide to the synthetic accounting database, table families, key joins, and source-to-ledger paths in the published SQLite dataset.
+title: Charles River Accounting Dataset Guide
+description: Navigate the 82 published SQLite tables, connected accounting processes, key joins, and source-to-ledger evidence paths in Charles River.
 slug: /dataset-overview
 sidebar_label: Dataset Guide
 ---
@@ -10,7 +10,7 @@ sidebar_label: Dataset Guide
 <DatasetStructuredData
   pagePath="/docs/dataset-overview"
   sameAsPath="/"
-  description="Guide to the synthetic accounting database, table families, key joins, and source-to-ledger paths in the published SQLite dataset."
+  description="Navigate the 82 published SQLite tables, connected accounting processes, key joins, and source-to-ledger evidence paths in Charles River."
 />
 
 This page gives the mental model for the dataset: what is in it, how the table families fit together, which paths matter most, and how operational activity reaches `GLEntry`.
@@ -33,18 +33,22 @@ The dataset supports a clean move from business activity to source documents and
 
 ## What the Dataset Contains
 
-The current implementation contains **73 tables** across eight areas:
+The published `v2027.1` SQLite database contains **82 user tables** across nine areas. This count describes the published file, rather than an assumed count from a local generator configuration.
+
+The main operating window is 2024–2026. Supplier disbursements continue into early 2027 to settle prior obligations. State the reporting date and whether subsequent settlement is included when interpreting balances or payment timing.
 
 | Area | What it covers | Count |
 |---|---|---:|
 | Accounting core | Chart of accounts, journals, and posted ledger detail | 3 |
-| Order-to-cash | Customers, commercial pricing, goods orders, service engagements, approved service billing, shipments, invoices, cash, returns, credits, and refunds | 22 |
+| Fixed assets and financing | Asset register, asset lifecycle events, debt agreements, and payment schedules | 4 |
+| Order-to-cash | Customers, pricing, goods and service orders, approved service billing, shipments, invoices, commissions, cash, returns, credits, and refunds | 27 |
 | Procure-to-pay | Requisitions, purchase orders, receipts, supplier invoices, and disbursements | 9 |
 | Manufacturing | BOMs, routings, work centers, work orders, issues, completions, and close | 14 |
 | Payroll and time | Shifts, rosters, absences, overtime approvals, punches, approved daily time, payroll, and remittances | 14 |
 | Master data | Item, warehouse, and employee records | 3 |
 | Organizational planning | Cost centers, budget summary, and budget detail | 3 |
 | Demand planning and MRP | Forecasting, inventory policy, recommendations, MRP, and rough-cut capacity | 5 |
+| Total | Published user tables | 82 |
 
 Most classes use these ready-to-use files:
 
@@ -91,6 +95,7 @@ You do not need every key on day one. Start with the keys that anchor document c
 | `ServiceEngagementID` | One service engagement across staffing, approved time, and billing |
 | `ServiceEngagementAssignmentID` | One employee assignment across approved service-time rows |
 | `ServiceBillingLineID` | One billed-hours record back to its engagement and invoice line |
+| `SalesCommissionAccrualID` | An invoice-line commission to later credit adjustments and payment detail |
 | `ShipmentLineID` | Shipped lines to billed lines and returned lines |
 | `SupplierID` | Supplier to purchase orders, invoices, and payments |
 | `PurchaseOrderID` | Purchase order header to receipts and invoices |
@@ -107,12 +112,16 @@ You do not need every key on day one. Start with the keys that anchor document c
 | `ItemID` | Product-level analysis across sales, purchasing, manufacturing, and planning |
 | `AccountID` | `GLEntry`, `Budget`, and `BudgetLine` to the chart of accounts |
 | `CostCenterID` | Operating activity, labor, budgets, and reporting by organization unit |
+| `FixedAssetID` | Asset register to lifecycle events and financing agreements |
+| `DebtAgreementID` | Financing agreement to scheduled principal and interest payments |
 
 For exact field-level lookup, go to [Schema Reference](../reference/schema.md).
 
 ## Core Navigation Paths
 
 These are the fastest ways to move through the model.
+
+Read the paths as navigation sequences. A complete join often passes through line tables or a stored bridge key; use the [Schema Reference](../reference/schema.md) to confirm each relationship and row grain before combining amounts.
 
 ### O2C path
 
@@ -137,6 +146,12 @@ Returns branch from the billed shipment path:
 Commercial pricing is resolved before shipment and billing through:
 
 `Customer -> PriceList -> PriceListLine -> SalesOrderLine <- PromotionProgram and PriceOverrideApproval`
+
+Sales commissions follow the invoice-line revenue path:
+
+`SalesCommissionRate -> SalesCommissionAccrual -> SalesCommissionAdjustment or SalesCommissionPaymentLine -> SalesCommissionPayment`
+
+Commission accruals reference `SalesInvoiceLine`; return-related adjustments reference `CreditMemoLine`. Payment detail preserves the accrual or adjustment source being settled.
 
 ### P2P path
 
@@ -164,6 +179,12 @@ Capacity tieout is tracked through:
 
 `SupplyPlanRecommendation -> RoughCutCapacityPlan -> WorkCenterCalendar`
 
+### Fixed-asset and financing path
+
+`PurchaseInvoiceLine -> FixedAssetEvent -> FixedAsset -> DebtAgreement -> DebtScheduleLine`
+
+Asset events and debt schedule lines link back to finance-controlled journals. Use the event type and stored invoice, disbursement, or journal keys to distinguish acquisition, payment, depreciation, and disposal.
+
 ### Payroll and time path
 
 `ShiftDefinition -> EmployeeShiftAssignment -> EmployeeShiftRoster -> TimeClockPunch -> TimeClockEntry -> LaborTimeEntry -> PayrollPeriod -> PayrollRegister -> PayrollRegisterLine -> PayrollPayment`
@@ -185,6 +206,8 @@ Then use:
 - `VoucherNumber`
 
 to move back to the originating event.
+
+Use the stored source type rather than assuming it always matches a table name. For example, payroll-register postings use `PayrollSummary` as their `GLEntry.SourceDocumentType`; the [Posting Reference](../reference/posting.md) explains the event-to-ledger mapping.
 
 ## How Operational Activity Reaches the Ledger
 
@@ -279,4 +302,5 @@ Start with:
 - Read [Schema Reference](../reference/schema.md) for table-level lookup and high-value fields.
 - Read [Process Flows](../learn-the-business/process-flows.md) for the business-cycle reading path.
 - Read [GLEntry Posting Reference](../reference/posting.md) when you need event-to-ledger rules.
-- Read [Analyze the Data](../analytics/index.md) when you are ready to move into the analysis layer.
+- Read [Reports and Analytics](../analytics/index.md) when you are ready to move into the analysis layer.
+- Begin a focused evidence task in [Learn and Practice](../learn-and-practice/index.md) before attempting a broad case.

@@ -5,10 +5,15 @@ sidebar_label: Portfolio Profitability Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Product Portfolio Profitability Case
 
+<CaseOverview slug="product-portfolio-profitability-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 Management is comparing collections and lifecycle groups to decide which product families truly carry the business. Revenue alone does not answer that question. A collection can drive strong billed sales and still create weaker contribution, slower service, or heavier return pressure.
 
@@ -20,23 +25,24 @@ Your job is to build that portfolio ranking, test where the ranking changes unde
 
 You need to prove which collections and lifecycle groups generate the strongest revenue and gross-margin contribution, whether contribution margin changes that ranking materially, whether service performance reinforces or contradicts the financial view, and whether return and refund pressure changes the final portfolio interpretation.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A ranked portfolio view by collection and lifecycle status.
-- A gross-margin versus contribution-margin explanation.
-- A service-level interpretation tied to fill rate, shipment lag, and backorder pressure.
-- A return and refund interpretation tied to lifecycle grouping.
-- A short management-facing recommendation on the most attractive and least attractive portfolio families.
+- Rank comparable portfolio families using revenue, gross margin, and contribution.
+- Evaluate whether service, returns, and refunds change the financial interpretation.
+- Recommend a portfolio action with visible cost and allocation assumptions.
 
-## Before You Start
+## Key Data Sources
 
+- Related process: [Order-to-Cash Process](../../processes/o2c.md)
+- Source documents: Item master, invoice and credit lines, order and shipment lines, return lines, and customer refunds used by the queries.
+- Evidence grain: Align collection and lifecycle groupings across financial and service views; keep refund-allocation assumptions visible.
 - Main tables: `Item`, `SalesInvoiceLine`, `CreditMemoLine`, `SalesReturnLine`, `ShipmentLine`, `SalesOrderLine`, `CustomerRefund`
-- Related guides: [Managerial Queries](../managerial.md), [Financial Queries](../financial.md), [Operations and Risk](../reports/operations-and-risk.md)
+- Related guides: [Sales and Customers queries](../analysis-tracks.md#sales-and-customers), [Sales and Customers](../index.md#sales-and-customers)
 - Related cases: [Product Portfolio and Lifecycle Case](product-portfolio-and-lifecycle-case.md), [Pricing and Margin Governance Case](pricing-and-margin-governance-case.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case ranks portfolio families across multiple performance lenses rather than tracing one document flow. Use the lighter portfolio case for catalog setup and the pricing case for commercial-policy interpretation.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define the portfolio mix you are evaluating
 
@@ -210,12 +216,14 @@ The query starts from `SalesInvoiceLine`, offsets the billed base with `CreditMe
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Create a portfolio decision matrix with net sales, gross margin, contribution, service measures, and return or refund pressure for comparable families.
+- **Accounting or business interpretation:** Explain a ranking change, or consistent ranking, using the supplied absorption and contribution-cost treatment.
+- **Database explanation:** Document each measure's source grain, period, denominator, and refund allocation. Explain why rates cannot always be added or averaged directly.
+- **Management or audit conclusion:** Recommend a supported portfolio action and identify the operating or commercial evidence that could change it.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -232,8 +240,12 @@ Submit a short case memo or notebook note with these four artifacts:
 - Analytics judgment: Which family combines strong economics with weak service, or weak economics with high return pressure?
 - Escalation/next step: Which portfolio family should management protect, invest in, repair, or reconsider first?
 
+## Limitations and Judgment
+
+The contribution view follows the supplied cost assumptions; it is not a complete product-elimination analysis. Allocated refunds and current catalog groupings require interpretation.
+
 ## Next Steps
 
 - Use [Product Portfolio and Lifecycle Case](product-portfolio-and-lifecycle-case.md) when you want the catalog and lifecycle setup behind this ranking view.
 - Use [Pricing and Margin Governance Case](pricing-and-margin-governance-case.md) when you want the commercial pricing explanation beneath realized revenue and margin.
-- Use [Managerial Queries](../managerial.md) and [Operations and Risk](../reports/operations-and-risk.md) for the broader portfolio and performance context.
+- Use [Sales and Customers queries](../analysis-tracks.md#sales-and-customers) and [Sales and Customers](../index.md#sales-and-customers) for the broader portfolio and performance context.

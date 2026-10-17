@@ -2,282 +2,74 @@ import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import { DatasetStructuredData } from "@site/src/components/SiteBranding";
-
+import ProcessEvidenceMap, { EvidenceExplorer } from "@site/src/components/ProcessEvidenceMap";
 import styles from "./index.module.css";
 
-const proofPoints = [
-  {
-    title: "Process-to-ledger traceability",
-    text: "Follow business events from source documents through process flow and into GLEntry with clear traceability.",
-  },
-  {
-    title: "SQL and Excel ready",
-    text: "Use one integrated environment for query work, workbook analysis, and guided interpretation without rebuilding the dataset first.",
-  },
-  {
-    title: "Teaching materials included",
-    text: "Pair process guides, schema and posting references, analytics pages, and cases so students learn the business before the joins.",
-  },
+const pathways = [
+  { number: "01", label: "Understand the system", title: "Business processes & AIS", text: "Follow an order, a supplier receipt, or a work order. Explain the documents, controls, and accounting consequences before writing a join.", href: "/docs/process-flows", action: "Explore the business processes" },
+  { number: "02", label: "Build analytical skills", title: "SQL, Excel & accounting", text: "Begin with a focused evidence exercise. Then connect tables, compare results, and explain what an accounting measure can tell you.", href: "/docs/learn-and-practice", action: "Find your first exercise" },
+  { number: "03", label: "Investigate a question", title: "Cases, reports & decisions", text: "Examine working capital, manufacturing cost, payroll, pricing, or controls. Support a conclusion with traceable evidence and its limits.", href: "/docs/analytics/cases", action: "Browse the case library" },
 ];
 
-const classroomUses = [
-  {
-    title: "AIS and business process courses",
-    text: "Teach why each document exists, how process cycles connect, and which events actually reach the ledger.",
-  },
-  {
-    title: "SQL and accounting analytics",
-    text: "Support structured query work with one company model that already connects process logic, documents, and accounting outcomes.",
-  },
-  {
-    title: "Excel analytics and interpretation",
-    text: "Use the same environment for pivots, workbook-based analysis, and classroom discussion without losing business context.",
-  },
-  {
-    title: "Auditing, controls, and managerial analysis",
-    text: "Trace approvals, exceptions, labor, variance, portfolio behavior, and control logic inside one integrated teaching dataset.",
-  },
-];
-
-const adoptionPoints = [
-  "One company and one dataset can support multiple accounting courses.",
-  "The same environment works for demos, guided labs, process tracing, SQL, Excel, and open-ended assignments.",
-  "Students can start with business context and then move into analysis without switching models or file structures.",
-];
-
-const includedAssets = [
-  {
-    title: "SQLite accounting database",
-    text: "Download a ready-to-query SQLite database with 73 tables for SQL practice, source-to-ledger tracing, and accounting analytics labs.",
-  },
-  {
-    title: "Excel workbook and CSV export",
-    text: "Work from the same synthetic accounting dataset in an Excel workbook or a CSV package when the class needs pivots, charts, or external tooling.",
-  },
-  {
-    title: "Financial, managerial, and audit paths",
-    text: "Use one dataset across financial reporting, managerial analysis, audit procedures, working-capital review, payroll, and manufacturing cases.",
-  },
-  {
-    title: "Teaching materials with the data",
-    text: "Pair downloads with process flows, schema guidance, SQL walkthroughs, analytics pages, and instructor adoption support instead of starting from bare tables.",
-  },
-];
-
-const faqItems = [
-  {
-    question: "Is this a synthetic accounting analytics dataset?",
-    answer:
-      "Yes. Charles River is a synthetic accounting analytics dataset built for teaching, open reuse, and broad classroom distribution without exposing real company transactions.",
-  },
-  {
-    question: "What files are included?",
-    answer:
-      "The published package includes a SQLite database, an Excel workbook, and a CSV export so users can move between SQL practice, workbook analysis, and table-by-table tooling without switching datasets.",
-  },
-  {
-    question: "Can students use it for SQL practice and audit work?",
-    answer:
-      "Yes. The dataset is designed for SQL practice, source-to-ledger tracing, audit exception review, financial analysis, managerial accounting, and business-process teaching in one connected model.",
-  },
-  {
-    question: "Who is it for?",
-    answer:
-      "It is built for AIS, accounting analytics, audit, financial, managerial, and business-process courses where students need a realistic accounting database plus guided teaching materials.",
-  },
-];
-
-const nextSteps = [
-  {
-    title: "Start Here",
-    text: "Open the main student entry page for the recommended reading order, downloads, and core references.",
-    href: "/docs/",
-  },
-  {
-    title: "Download",
-    text: "Open the published file package when you want the SQLite database, Excel workbook, and CSV export for class use.",
-    href: "/docs/downloads",
-  },
-  {
-    title: "Adopt in a Course",
-    text: "Use the instructor guide when you want teaching sequence, setup notes, and course-ready adoption support.",
-    href: "/docs/teach-with-data/instructor-adoption",
-  },
+const cases = [
+  { tag: "Order-to-cash", title: "Where does an order become accounting evidence?", text: "Trace order lines through shipment, invoicing, and customer settlement.", href: "/docs/analytics/cases/o2c-trace-case" },
+  { tag: "Procure-to-pay", title: "What remains payable at the reporting date?", text: "Compare receipt-based obligations with accrued services and their settlement.", href: "/docs/analytics/cases/p2p-accrual-settlement-case" },
+  { tag: "Conversion & manufacturing", title: "How does production become product cost?", text: "Connect work orders, materials, labor support, completion, and close.", href: "/docs/analytics/cases/manufacturing-labor-cost-case" },
 ];
 
 export default function Home() {
   const { siteConfig } = useDocusaurusContext();
   const branding = siteConfig.customFields?.branding ?? {};
-  const displayName = branding.displayName ?? "Dataset";
-  const datasetName = branding.datasetName ?? "Accounting Dataset";
-  const homeDescription = `${datasetName} is a synthetic accounting analytics dataset and SQLite database for SQL practice, Excel analysis, audit review, financial reporting, managerial accounting, and classroom teaching.`;
-
+  const displayName = branding.displayName ?? "Charles River";
+  const description = `${branding.datasetName ?? "Charles River Accounting Dataset"}: a synthetic company with connected accounting processes, 82 published tables, SQL and Excel exercises, and guided teaching cases.`;
   return (
-    <Layout
-      title="Synthetic Accounting Analytics Dataset for SQL, Excel, Audit, and Teaching"
-      description={homeDescription}
-    >
-      <DatasetStructuredData pagePath="/" description={homeDescription} />
+    <Layout title="Synthetic Accounting Dataset, Business Processes & Teaching Cases" description={description}>
+      <DatasetStructuredData pagePath="/" description={description} />
       <main className={styles.page}>
-        <section className={styles.hero}>
-          <div className={styles.heroBackdrop} />
-          <div className={styles.heroContent}>
-            <p className={styles.kicker}>Synthetic accounting analytics dataset</p>
-            <h1 className={styles.title}>Teach the business before the joins.</h1>
-            <p className={styles.lede}>
-              {displayName} is a synthetic ERP-style accounting analytics
-              environment that helps students trace business activity from
-              source documents to GLEntry using SQL, Excel, and guided teaching
-              materials.
-            </p>
+        <section className={styles.hero} aria-labelledby="home-title">
+          <div className={styles.heroCopy}>
+            <p className={styles.eyebrow}>Accounting Analytics Hub / {displayName}</p>
+            <p className={styles.environment}>A synthetic accounting learning environment</p>
+            <h1 id="home-title">One company.<br />A connected<br /><em>accounting story.</em></h1>
+            <p className={styles.lede}>Meet a fictional Boston-area home-furnishings business. Follow its sales, purchases, production, and people through source documents to the general ledger. Then use SQL, Excel, and guided cases to investigate the evidence.</p>
+            <p className={styles.principle}>Learn the business before the joins.</p>
             <div className={styles.actions}>
-              <Link className="button button--primary button--lg" to="/docs/">
-                Start Here
-              </Link>
-              <Link className="button button--secondary button--lg" to="/docs/downloads">
-                Download
-              </Link>
-              <Link className="button button--secondary button--lg" to="/docs/teach-with-data/instructor-adoption">
-                Adopt in a Course
-              </Link>
+              <Link className="button button--primary" to="/docs/company-story">Meet the company <span aria-hidden="true">→</span></Link>
+              <Link className="button button--outline button--primary" to="/docs/">Begin learning</Link>
             </div>
-            <div className={styles.ribbon}>
-              <span>Source documents to GLEntry</span>
-              <span>SQL and Excel ready</span>
-              <span>Classroom-ready teaching materials</span>
+            <div className={styles.utilityLinks}>
+              <Link to="/docs/downloads">Download the dataset <span aria-hidden="true">↓</span></Link>
+              <Link to="/docs/teach-with-data/instructor-adoption">Plan your teaching <span aria-hidden="true">→</span></Link>
             </div>
           </div>
+          <ProcessEvidenceMap />
         </section>
-
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <p className={styles.sectionLabel}>{branding.whyTitle ?? "Why This Dataset"}</p>
-            <h2>Connect business activity to ledger impact.</h2>
+        <div className={styles.factsBand}><div className={styles.facts} aria-label="Verified published dataset specifications">
+          <p><strong>82</strong><span>tables in release v2027.1</span></p><p><strong>2024–2026</strong><span>main operating years</span></p><p><strong>SQLite · Excel · CSV</strong><span>three published formats</span></p><p><strong>Open educational resource</strong><span>CC BY-SA 4.0</span></p>
+        </div></div>
+        <section className={styles.section} aria-labelledby="company-heading"><div className={styles.companyGrid}>
+          <div><p className={styles.eyebrow}>The business behind the data</p><h2 id="company-heading">Furniture, materials,<br />and a different kind<br />of revenue: time.</h2></div>
+          <div className={styles.companyCopy}><p>{branding.companyName ?? "Charles River Home Furnishings, Inc."} combines purchased merchandise, selected in-house manufacturing, and hourly Design Services. These operating choices connect demand to inventory, labor, receivables, payables, and financial close.</p><p>Students work with synthetic records from one shared business. A company profile and process guides explain the setting; the published data supplies the accounting evidence.</p><Link className={styles.textLink} to="/docs/company-story">Read the company profile <span aria-hidden="true">→</span></Link></div>
+        </div></section>
+        <section className={styles.tintedSection} aria-labelledby="pathways-heading"><div className={styles.sectionInner}>
+          <div className={styles.sectionHeader}><div><p className={styles.eyebrow}>A clear way into the work</p><h2 id="pathways-heading">Start with a question.<br />Build toward a decision.</h2></div><p>Keep the company familiar while the accounting questions become more demanding.</p></div>
+          <div className={styles.pathways}>{pathways.map((path) => <article className={styles.pathway} key={path.number}><p className={styles.pathLabel}>{path.number} / {path.label}</p><h3>{path.title}</h3><p>{path.text}</p><Link className={styles.textLink} to={path.href}>{path.action} <span aria-hidden="true">→</span></Link></article>)}</div>
+        </div></section>
+        <section className={styles.section} aria-labelledby="evidence-heading"><div className={styles.sectionHeader}><div><p className={styles.eyebrow}>From operations to interpretation</p><h2 id="evidence-heading">Follow the evidence.</h2></div><p>An operational event, an accounting entry, and a useful conclusion are different steps. Explore how they connect.</p></div><EvidenceExplorer /></section>
+        <section className={styles.darkSection} aria-labelledby="cases-heading"><div className={styles.sectionInner}>
+          <div className={styles.sectionHeader}><div><p className={styles.eyebrow}>Three starting investigations</p><h2 id="cases-heading">Real accounting questions.<br />Synthetic company records.</h2></div><Link className={styles.textLink} to="/docs/analytics/cases">Explore all 17 cases <span aria-hidden="true">→</span></Link></div>
+          <div className={styles.caseGrid}>{cases.map((item) => <article className={styles.case} key={item.href}><p className={styles.pathLabel}>{item.tag}</p><h3><Link to={item.href}>{item.title}</Link></h3><p>{item.text}</p><Link className={styles.textLink} to={item.href}>Open the guided case <span aria-hidden="true">→</span></Link></article>)}</div>
+        </div></section>
+        <section className={styles.section} aria-labelledby="resources-heading"><div className={styles.resourceGrid}>
+          <div><p className={styles.eyebrow}>One environment, connected resources</p><h2 id="resources-heading">Teach the concepts.<br />Examine the company.<br />Interpret the results.</h2><p className={styles.lede}>Accounting Analytics Hub brings the learning resources together. The textbook develops the concepts; {displayName} provides the company, data, and investigations.</p><a className={styles.textLink} href="https://aa.accountinganalyticshub.com/">Read Accounting Analytics: An Integrated Approach <span aria-hidden="true">↗</span></a></div>
+          <div className={styles.resourceList}>
+            <Link to="/docs/analytics"><strong>Reports & analytics</strong><span>48 reports organized by business topic, plus 170 SQL files.</span><span aria-hidden="true">→</span></Link>
+            <Link to="/docs/reference/schema"><strong>Dataset reference</strong><span>Look up keys, document relationships, and posting logic.</span><span aria-hidden="true">→</span></Link>
+            <Link to="/docs/teach-with-data/instructor-adoption"><strong>For instructors</strong><span>Connect AIS, analytics, financial, managerial, and audit coursework.</span><span aria-hidden="true">→</span></Link>
+            <a href="https://accountinganalyticshub.com/"><strong>Accounting Analytics Hub</strong><span>Open textbooks and planned learning pathways.</span><span aria-hidden="true">↗</span></a>
           </div>
-          <p className={styles.whyText}>
-            Students often see tables before they understand the business
-            process and accounting logic behind them. {displayName} exists to solve
-            that teaching problem by connecting business events, source
-            documents, process flows, and posted ledger activity in one
-            integrated model.
-          </p>
-        </section>
-
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <p className={styles.sectionLabel}>What's Included</p>
-            <h2>One accounting database, multiple classroom-ready formats.</h2>
-          </div>
-          <div className={styles.cardGrid}>
-            {includedAssets.map((asset) => (
-              <article key={asset.title} className={styles.card}>
-                <h3>{asset.title}</h3>
-                <p>{asset.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <p className={styles.sectionLabel}>What Makes It Different</p>
-            <h2>One teaching model, three proof points.</h2>
-          </div>
-          <div className={styles.cardGrid}>
-            {proofPoints.map((point) => (
-              <article key={point.title} className={styles.card}>
-                <h3>{point.title}</h3>
-                <p>{point.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <p className={styles.sectionLabel}>What You Can Do With It</p>
-            <h2>Use one environment across multiple accounting teaching paths.</h2>
-          </div>
-          <div className={styles.cardGrid}>
-            {classroomUses.map((item) => (
-              <article key={item.title} className={styles.card}>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <p className={styles.sectionLabel}>Why Instructors Adopt It</p>
-            <h2>One company, one dataset, multiple course and assignment styles.</h2>
-          </div>
-          <div className={styles.adoptionBlock}>
-            <p className={styles.adoptionText}>
-              {displayName} is designed for reuse across AIS, business process,
-              SQL, Excel, audit, and managerial accounting work. Instructors
-              can keep one integrated environment and vary the emphasis by
-              course, module, or assignment type.
-            </p>
-            <ul className={styles.list}>
-              {adoptionPoints.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <p className={styles.sectionLabel}>Choose Your Next Step</p>
-            <h2>Start with the route that matches what you need next.</h2>
-          </div>
-          <div className={styles.pathGrid}>
-            {nextSteps.map((step) => (
-              <Link key={step.title} className={styles.pathCard} to={step.href}>
-                <strong>{step.title}</strong>
-                <span>{step.text}</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <p className={styles.sectionLabel}>Common Questions</p>
-            <h2>What people usually want to know before they download the dataset.</h2>
-          </div>
-          <div className={styles.cardGrid}>
-            {faqItems.map((item) => (
-              <article key={item.question} className={styles.card}>
-                <h3>{item.question}</h3>
-                <p>{item.answer}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section}>
-          <div className={styles.oerBlock}>
-            <p className={styles.sectionLabel}>Open Educational Resource</p>
-            <p className={styles.oerText}>
-              {datasetName} is an openly licensed open educational resource
-              designed for reuse, adaptation, and course adoption.
-            </p>
-            <div className={styles.oerActions}>
-              <Link className="button button--primary" to="/docs/">
-                Start Here
-              </Link>
-              <Link className="button button--secondary" to="/docs/downloads">
-                Download
-              </Link>
-              <Link className="button button--secondary" to="/docs/teach-with-data/instructor-adoption">
-                Adopt in a Course
-              </Link>
-            </div>
-          </div>
-        </section>
+        </div></section>
+        <section className={styles.downloadSection} aria-labelledby="download-heading"><div className={styles.sectionInner}><div><p className={styles.eyebrow}>Ready to explore</p><h2 id="download-heading">The files are ready.<br />Bring an accounting question.</h2><p>Use the published v2027.1 files for a shared classroom baseline. No generator setup is required.</p><p className={styles.small}>The <Link to="/docs/dataset-overview">Dataset Guide</Link> explains the verified table count and settlement postings beyond the main operating years.</p></div><Link className="button button--primary" to="/docs/downloads">Get the dataset <span aria-hidden="true">↓</span></Link></div></section>
       </main>
     </Layout>
   );

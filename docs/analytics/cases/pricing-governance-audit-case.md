@@ -5,10 +5,15 @@ sidebar_label: Pricing Governance Audit
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Pricing Governance Audit Case
 
+<CaseOverview slug="pricing-governance-audit-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 The dataset maintains formal price lists, seasonal promotions, customer-specific pricing, and explicit override approvals. Students need to determine whether the commercial-control design is being followed and where transaction pricing no longer matches the approved pricing framework.
 
@@ -18,24 +23,25 @@ This case reads pricing as a control system rather than just a margin system. It
 
 The review team needs to identify where transaction pricing breaks from the approved pricing design and which exceptions should be escalated as governance failures rather than normal commercial variation.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A price-list validity review that separates expired use from overlapping active lists.
-- A promotion compliance review for date and scope mismatches.
-- A customer-specific pricing review that identifies bypassed customer-specific lists.
-- A floor-discipline review for below-floor sales without approval.
-- An override documentation conclusion that determines whether approval support is complete enough to defend the exception.
+- Test effective dates and scope for price lists, promotions, and customer pricing.
+- Trace floor and override exceptions to transactions and approvals.
+- Separate master-data ambiguity from transaction authorization failure.
 
-## Before You Start
+## Key Data Sources
 
+- Related process: [Order-to-Cash Process](../../processes/o2c.md)
+- Source documents: Price-list headers and lines, promotions, customer-specific pricing records, sales order and lines, and override approvals.
+- Evidence grain: Retain the sales-line key, governing rule, scope, effective dates, and approval identifier before aggregating.
 - Main tables: `PriceList`, `PriceListLine`, `PromotionProgram`, `PriceOverrideApproval`, `SalesOrder`, `SalesOrderLine`, `Customer`, `Item`
 - Related case: [Pricing and Margin Governance Case](pricing-and-margin-governance-case.md)
-- Related guide: [Audit Queries](../audit.md)
-- Related report: [Commercial and Working Capital](../reports/commercial-and-working-capital.md)
+- Related guide: [Sales and Customers queries](../analysis-tracks.md#sales-and-customers)
+- Related report: [Sales and Customers](../index.md#sales-and-customers)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case is the formal commercial-control audit follow-through. Use the pricing-and-margin case when you want to explain realized pricing and margin effects before audit escalation.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Test price-list validity and overlap
 
@@ -209,12 +215,14 @@ The query builds one set from `PriceOverrideApproval` joined to sales lines and 
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Build a workpaper with test criterion, transaction or master key, rule, dates, approval support, and review status.
+- **Accounting or business interpretation:** Explain whether the result concerns expired or overlapping rules, scope mismatch, customer-price bypass, floor exception, or incomplete approval.
+- **Database explanation:** Trace a selected sales line or price-list pair to source records and explain rule selection where scopes overlap.
+- **Management or audit conclusion:** Recommend a pricing-master or approval-process follow-up, separating confirmed missing support from items needing policy context.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -231,8 +239,12 @@ Submit a short case memo or notebook note with these four artifacts:
 - Analytics judgment: Is the strongest issue master data, promotion compliance, bypass behavior, floor discipline, or approval documentation?
 - Escalation/next step: Which controls should sales leadership own, and which should finance or audit review first?
 
+## Limitations and Judgment
+
+A query flag does not establish commercial loss or unauthorized intent. Review effective dates, overlapping scope, and approved exceptions in context.
+
 ## Next Steps
 
 - Read [Pricing and Margin Governance Case](pricing-and-margin-governance-case.md) when you want the commercial interpretation beside the audit interpretation.
-- Read [Audit Queries](../audit.md) for the broader control-review query library.
-- Read [Commercial and Working Capital](../reports/commercial-and-working-capital.md) when you want the business perspective that sits above the control issues.
+- Read [Sales and Customers queries](../analysis-tracks.md#sales-and-customers) for the broader control-review query library.
+- Read [Sales and Customers](../index.md#sales-and-customers) when you want pricing and customer results alongside the control issues.

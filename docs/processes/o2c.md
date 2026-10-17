@@ -1,8 +1,23 @@
 ---
-description: Learn the order-to-cash process in the synthetic accounting analytics dataset, from sales orders and shipments to invoices, cash application, and GLEntry.
+title: Order-to-Cash Accounting Process
+description: Follow order-to-cash with editable BPMN models, Mermaid source-document flows, internal-control questions, and evidence from sales orders through cash application and GLEntry.
 ---
 
+import BpmnDiagram from "@site/src/components/BpmnDiagram";
+
 # Order-to-Cash Process
+
+## Business Storyline
+
+**Illustrative scenario:** a Charles River customer orders furnishings, receives goods in one or more shipments, and pays an invoice. Follow the business handoffs, then select real records from your assigned file to investigate them; the scenario does not identify a particular customer or order.
+
+In this dataset, the order-to-cash cycle starts when the sales team records customer demand and ends only when that sale is settled in cash. Several teams touch the process along the way. Sales captures the order and freight terms, warehouse staff ship what is available, accounting bills what actually left the warehouse and any billable freight, accounting accrues sales commissions from invoice-line revenue, treasury records the money when it arrives, and accounting applies that cash against open invoices.
+
+That distinction matters. A customer order is not revenue. A shipment is not the same thing as an invoice. A cash receipt is not the same thing as settlement. Students can see those stages separately in the data and use that separation to answer both accounting and audit questions.
+
+Most sales follow the normal path of order, shipment, invoice, cash, and settlement. Some sales later move into the customer-side exception path of return, credit, and sometimes refund. That exception path is part of O2C, not a separate business cycle.
+
+The company also uses O2C for hourly design services. Those sales still start from `SalesOrder` and `SalesOrderLine`, but they move into `ServiceEngagement`, `ServiceTimeEntry`, and monthly billing instead of shipment. Students should read that as a second customer-fulfillment path inside O2C, not as a separate receivables system.
 
 ## What Students Should Learn
 
@@ -11,15 +26,48 @@ description: Learn the order-to-cash process in the synthetic accounting analyti
 - Identify the core tables used for revenue, receivables, fulfillment, cash, and customer-side exceptions.
 - Recognize timing differences that matter for cut-off, completeness, open-AR, working-capital, and return analysis.
 
-## Business Storyline
+## Decisions and Evidence
 
-In this dataset, the order-to-cash cycle starts when the sales team records customer demand and ends only when that sale is settled in cash. Several teams touch the process along the way. Sales captures the order and freight terms, warehouse staff ship what is available, accounting bills what actually left the warehouse and any billable freight, accounting accrues sales commissions from invoice-line revenue, treasury records the money when it arrives, and accounting applies that cash against open invoices.
+Sales, warehouse operations, customer accounting, and treasury answer different questions about the same sale. Is demand accepted? Have goods left inventory? Has the customer been billed? Did cash arrive, and was it applied? A useful investigation names the event and its date before it calculates a balance or labels a delay.
 
-That distinction matters. A customer order is not revenue. A shipment is not the same thing as an invoice. A cash receipt is not the same thing as settlement. Students can see those stages separately in the data and use that separation to answer both accounting and audit questions.
+Begin with the [goods-sale tracing exercise](../learn-and-practice/source-to-ledger.md), then extend the evidence into the [O2C Trace Case](../analytics/cases/o2c-trace-case.md). Record a real order and line from your assigned file; any fictional buyer scenario supplies context rather than a transaction to locate.
 
-Most sales follow the normal path of order, shipment, invoice, cash, and settlement. Some sales later move into the customer-side exception path of return, credit, and sometimes refund. That exception path is part of O2C, not a separate business cycle.
+## Participants and Responsibilities
 
-The company now also uses O2C for hourly design services. Those sales still start from `SalesOrder` and `SalesOrderLine`, but they move into `ServiceEngagement`, `ServiceTimeEntry`, and monthly billing instead of shipment. Students should read that as a second customer-fulfillment path inside O2C, not as a separate receivables system.
+The **customer** is an external participant. Within Charles River, **Sales** records demand and commercial terms; the **Warehouse** fulfills goods orders; **Accounting** bills and applies cash; and **Treasury** records cash received. The BPMN lanes illustrate these responsibilities. Stored employee fields can support specific tests, but the lane layout does not establish segregation of duties in the actual records.
+
+## BPMN Business Process
+
+<BpmnDiagram modelId="order-to-cash" />
+
+### Interpret the Activities and Decisions
+
+1. An order starts a commercial commitment. The available-stock decision separates immediate fulfillment from a backorder that awaits supply. Neither the order nor the decision creates revenue.
+2. Warehouse fulfillment and accounting billing are separate activities. Goods invoices trace to shipped lines; hourly service work follows the [Design Services](design-services.md) model instead.
+3. Cash arrival and invoice application are separate handoffs. The allocation review may record an application or leave cash unapplied; its completion does not mean full settlement. Interpret the boundary with the selected reporting date and actual applications.
+
+<details>
+<summary>Examine cash application and the returns exception</summary>
+
+<BpmnDiagram modelId="cash-application" />
+
+The matching decision explains application versus remaining unapplied cash. The detail includes receipt capture for context; the parent allocation review starts after that receipt. It is a teaching interpretation of the records, not evidence of an automated exception queue or a one-to-one execution binding between diagrams.
+
+<BpmnDiagram modelId="returns-credit-refunds" />
+
+A physical return restores inventory. An approved credit memo reduces open receivables and retains any excess as customer credit; one memo can do both. A later refund clears customer credit in cash. These events need not occur together. Mermaid links show relationship endpoints rather than an exclusive business gateway; use the detailed BPMN allocation step and actual `GLEntry` rows when a memo spans both.
+
+</details>
+
+### Risks, Controls, and Evidence
+
+| Risk and control objective | Evidence available | Teaching boundary |
+|---|---|---|
+| Unauthorized pricing: support an exceptional price with approval | `SalesOrderLine.PriceOverrideApprovalID` and `PriceOverrideApproval` request and approval fields | Test the selected population; the presence of a record does not prove every override was authorized |
+| Incomplete billing: account for shipped quantities | `ShipmentLine` and `SalesInvoiceLine.ShipmentLineID` | An independent shipment-to-invoice reconciliation is a **proposed teaching control**, not a stored automated blocking rule |
+| Incorrect settlement or refund: distinguish cash, AR, and customer credit | `CashReceiptApplication`, `CreditMemo` approval fields, `CustomerRefund` | Compare authorizers and dates; do not infer a complete control procedure from lane separation |
+
+The Mermaid views below explain document lineage and posting effects. They complement the BPMN activities rather than representing additional approval workflows. The [model library](../learn-the-business/process-flows.md#model-library) explains the notation and provides editable sources.
 
 ## Normal Process Overview
 
@@ -124,11 +172,11 @@ flowchart LR
 
 **Starter analytical question:** Which sales lines used standard price-list logic versus promotion pricing versus approved override logic?
 
-```sql
--- Teaching objective: Compare pricing method, promotion use, and override approvals.
--- Main join path: SalesOrderLine -> PriceListLine -> PriceList, plus PromotionProgram and PriceOverrideApproval.
--- Suggested analysis: Group by PricingMethod, customer segment, item group, or sales rep.
-```
+**Analytical plan**
+
+- Objective: Compare pricing method, promotion use, and override approvals.
+- Evidence path: SalesOrderLine -> PriceListLine -> PriceList, plus PromotionProgram and PriceOverrideApproval.
+- Comparison: Group by PricingMethod, customer segment, item group, or sales rep.
 
 ### 2. Sales Commissions and Payable Settlement
 
@@ -161,11 +209,11 @@ flowchart LR
 
 **Starter analytical question:** Which sales reps and customer segments generated the highest net commission expense after credit-memo clawbacks?
 
-```sql
--- Teaching objective: Review commission expense and clawbacks by rep, segment, and month.
--- Main join path: SalesCommissionAccrual -> SalesCommissionAdjustment, plus Employee and Customer.
--- Suggested analysis: Compare gross commission expense, clawbacks, and net commission expense by revenue type.
-```
+**Analytical plan**
+
+- Objective: Review commission expense and clawbacks by rep, segment, and month.
+- Evidence path: SalesCommissionAccrual -> SalesCommissionAdjustment, plus Employee and Customer.
+- Comparison: Compare gross commission expense, clawbacks, and net commission expense by revenue type.
 
 ### 3. Shipment to Invoice Traceability
 
@@ -197,11 +245,11 @@ flowchart LR
 - `SalesInvoiceLine.ShipmentLineID -> ShipmentLine.ShipmentLineID`
 - `GLEntry.SourceDocumentType` plus `SourceDocumentID` or `SourceLineID` for posting trace
 
-```sql
--- Teaching objective: Trace billed revenue back to the shipped line that supported it.
--- Main join path: SalesOrderLine -> ShipmentLine -> SalesInvoiceLine.
--- Suggested analysis: Filter invoice and shipment dates by month-end to test cutoff timing.
-```
+**Analytical plan**
+
+- Objective: Trace billed revenue back to the shipped line that supported it.
+- Evidence path: SalesOrderLine -> ShipmentLine -> SalesInvoiceLine.
+- Comparison: Filter invoice and shipment dates by month-end to test cutoff timing.
 
 ### 4. Cash Receipt, Application, and Settlement
 
@@ -231,11 +279,11 @@ flowchart LR
 Do not use `CashReceipt.SalesInvoiceID` as the main settlement link. The authoritative settlement path is `CashReceiptApplication`, because one receipt can settle multiple invoices and some cash can remain unapplied temporarily.
 :::
 
-```sql
--- Teaching objective: Separate cash arrival from invoice settlement.
--- Main join path: CashReceipt -> CashReceiptApplication -> SalesInvoice.
--- Suggested analysis: Compare receipt date, application date, and invoice due date for open-AR review.
-```
+**Analytical plan**
+
+- Objective: Separate cash arrival from invoice settlement.
+- Evidence path: CashReceipt -> CashReceiptApplication -> SalesInvoice.
+- Comparison: Compare receipt date, application date, and invoice due date for open-AR review.
 
 ### 5. Design Services and Monthly Hour Billing
 
@@ -266,11 +314,11 @@ flowchart LR
 
 **Starter analytical question:** Which customers or engagements show the biggest gap between approved service hours and billed service hours at month-end?
 
-```sql
--- Teaching objective: Trace approved service hours into the monthly customer invoice.
--- Main join path: SalesOrderLine -> ServiceEngagement -> ServiceTimeEntry -> ServiceBillingLine -> SalesInvoiceLine.
--- Suggested analysis: Compare planned hours, approved billable hours, billed hours, and labor cost by customer or engagement.
-```
+**Analytical plan**
+
+- Objective: Trace approved service hours into the monthly customer invoice.
+- Evidence path: SalesOrderLine -> ServiceEngagement -> ServiceTimeEntry -> ServiceBillingLine -> SalesInvoiceLine.
+- Comparison: Compare planned hours, approved billable hours, billed hours, and labor cost by customer or engagement.
 
 ### 6. Backorder to Shipment Lag
 
@@ -299,11 +347,11 @@ flowchart LR
 
 **Starter analytical question:** Which customers or item groups show the longest lag between order capture, shipment, and billing?
 
-```sql
--- Teaching objective: Measure fulfillment lag from ordered quantity to shipped quantity and billed quantity.
--- Main join path: SalesOrderLine -> ShipmentLine -> SalesInvoiceLine.
--- Suggested analysis: Compare order date, shipment date, and invoice date by customer, item group, or month.
-```
+**Analytical plan**
+
+- Objective: Measure fulfillment lag from ordered quantity to shipped quantity and billed quantity.
+- Evidence path: SalesOrderLine -> ShipmentLine -> SalesInvoiceLine.
+- Comparison: Compare order date, shipment date, and invoice date by customer, item group, or month.
 
 ## Returns, Credits, and Refunds
 
@@ -329,13 +377,13 @@ flowchart LR
 |---|---|---|
 | Original billed shipment | `ShipmentLine`, `SalesInvoiceLine` | Identify the shipment and invoice that the correction started from |
 | Physical return | `SalesReturn`, `SalesReturnLine` | Show returned quantity and the operational return event |
-| Financial correction | `CreditMemo`, `CreditMemoLine` | Show the customer-facing credit and whether it reduced AR or created customer credit |
+| Financial correction | `CreditMemo`, `CreditMemoLine` | Show the customer-facing credit and its allocation to AR, customer credit, or both |
 | Cash resolution | `CustomerRefund` | Show when customer credit was returned in cash |
 
 | Event | Business meaning | Accounting effect |
 |---|---|---|
 | Sales return | Goods come back after a shipment and invoice already existed | Debit inventory and credit COGS |
-| Credit memo | Accounting reverses part of the original sale | Debit sales returns and allowances, freight revenue when policy allows a freight credit, and tax reversal, then credit AR or customer credit |
+| Credit memo | Accounting reverses part of the original sale | Debit sales returns and allowances, freight revenue when policy allows a freight credit, and tax reversal, then credit AR, customer credit, or both |
 | Customer refund | Treasury clears customer credit in cash | Debit customer credit and credit cash |
 
 **Traceability notes**
@@ -359,7 +407,19 @@ flowchart LR
     CM -->|Invoice already paid| CC --> RF
 ```
 
-This local lineage view separates two outcomes that students often mix together. A credit memo can reduce open AR when the original invoice is still unsettled, or it can create customer credit that treasury later clears through `CustomerRefund`.
+This local lineage view distinguishes AR correction from customer credit. Its labeled links illustrate common endpoint relationships, not an exclusive gateway or a rule that every memo generates a refund. A memo may reduce the remaining AR and create excess customer credit in the same posting, including after partial settlement. Treasury may later clear that credit through `CustomerRefund`; reconcile both account effects at the selected date.
+
+## Optional AIS Activity: Assess a Customer Handoff
+
+**Context and objective:** accounting needs a defensible view of whether goods fulfillment was billed and settled at a stated date. Interpret the BPMN model, identify a business risk, and connect a control objective to actual source evidence.
+
+**Prerequisites, tools, and sources:** complete the goods-sale tracing exercise linked above. Use the published SQLite file with a SQL tool, or the Excel workbook with filters and lookups, plus the editable Draw.io model. Work from `SalesOrderLine`, `ShipmentLine`, `SalesInvoiceLine`, their headers, `CashReceiptApplication`, `CashReceipt`, and `GLEntry`. Add `PriceOverrideApproval`, `CreditMemo`, or `CustomerRefund` only if your selected issue needs that evidence.
+
+1. Record the release, scope, reporting date, and actual document and line keys. Mark the corresponding activities and responsibilities on a copy of the model.
+2. Compare demand, fulfillment, billing, and application dates without duplicating header totals. Identify an observed gap or timing difference; do not assume a violation.
+3. Write one risk/control-matrix row naming the risk, objective, proposed owner, evidence, test, and limitation. Label any added independent review or hold as a **proposed teaching control**.
+
+**Assessed deliverable:** submit the annotated model, a reproducible evidence table, and the risk/control row. Explain which observation could change a business decision and what follow-up evidence would be needed. One trace cannot establish population completeness, operational effectiveness, or misconduct. Extend the work through the existing O2C case and reports below; the [BPMN and controls workshop](../learn-and-practice/bpmn-controls-workshop.md) supplies a reusable matrix format.
 
 ## Common Student Questions
 
@@ -374,8 +434,8 @@ This local lineage view separates two outcomes that students often mix together.
 
 ## Next Steps
 
-- Read [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md) when you want the business perspective built around pricing, collections, receivables, payables, and settlement timing.
-- Read [Financial Reports](../analytics/reports/financial.md) when you want the broader reporting layer behind revenue, AR, working capital, and cash conversion.
+- Read [Sales and Customers](../analytics/index.md#sales-and-customers) to compare revenue, pricing, receivables, customer credits, and deposits.
+- Read [Statements and Cash](../analytics/index.md#statements-and-cash) to connect those results with working capital and cash conversion.
 - Read [Design Services](design-services.md) when you want the full staffing, approved-hours, and monthly service-billing branch that now sits inside customer revenue.
 - Read [O2C Trace Case](../analytics/cases/o2c-trace-case.md) when you want a guided walkthrough from order through posting and settlement.
 - Jump to [Returns, Credits, and Refunds](#returns-credits-and-refunds) when you want the main O2C exception path.

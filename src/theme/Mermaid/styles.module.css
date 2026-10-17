@@ -48,6 +48,7 @@
 
 .controlButton {
   min-width: 2.75rem;
+  min-height: 2.75rem;
   padding: 0.55rem 0.8rem;
 }
 
@@ -55,8 +56,28 @@
   min-width: auto;
 }
 
+.expandButton:focus-visible,
+.controlButton:focus-visible,
+.viewport:focus-visible {
+  outline: 3px solid var(--ifm-color-primary);
+  outline-offset: 3px;
+}
+
 .inlineDiagram {
   margin: 0;
+}
+
+.inlinePreview {
+  width: 100%;
+  color: inherit;
+  font: inherit;
+  text-align: initial;
+  cursor: zoom-in;
+}
+
+.inlinePreview:focus-visible {
+  outline: 3px solid var(--ifm-color-primary);
+  outline-offset: 3px;
 }
 
 .backdrop {
@@ -218,5 +239,17 @@ html[data-theme="dark"] .inlineHint {
 
   .viewport {
     padding: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .expandButton,
+  .controlButton,
+  .expandButton:hover,
+  .controlButton:hover,
+  .expandButton:focus-visible,
+  .controlButton:focus-visible {
+    transition: none;
+    transform: none;
   }
 }

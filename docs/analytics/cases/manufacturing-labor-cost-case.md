@@ -5,10 +5,15 @@ sidebar_label: Manufacturing Labor Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Manufacturing Labor Cost Case
 
+<CaseOverview slug="manufacturing-labor-cost-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 Charles River Home Furnishings needs to replenish a manufactured finished good under delivery pressure. Planning has already released the work order. The order now moves through scheduled operations, work centers, approved factory time, labor allocation, production completion, and close.
 
@@ -20,22 +25,22 @@ Your job is to explain that chain as one manufacturing story and one cost story.
 
 You need to prove that labor cost on a manufactured item can be explained from standard cost baseline through work-order execution and close. Confirm the operation path. Confirm that approved time and direct labor support align with the work order. Confirm that completion and close create the expected accounting effect.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A standard-cost narrative for the selected manufactured item.
-- A work-order execution narrative through operations, schedule rows, and work centers.
-- A labor-support explanation that separates clock approval, labor allocation, and payroll support.
-- A completion-and-close explanation tied back to `GLEntry`.
-- An exception follow-up on labor timing or delayed close behavior.
+- Explain standard materials, labor, and overhead components for a manufactured item.
+- Trace operations, approved time, productive labor, completion, and close for a work order.
+- Distinguish cost interpretation from labor-support and timing exceptions.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Bill of material, routing, work order, operation schedule, approved clock entry, labor allocation, production completion, and work-order close.
+- Evidence grain: Separate item, work-order, operation, and employee-time grains before reconciling work-order totals.
 - Main tables: `Item`, `BillOfMaterial`, `Routing`, `WorkCenter`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `TimeClockEntry`, `LaborTimeEntry`, `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose`, `GLEntry`
 - Related process pages: [Manufacturing Process](../../processes/manufacturing.md), [Payroll Process](../../processes/payroll.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case uses both starter query packs and two case-support SQL files built specifically for one-work-order tracing.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define the standard cost baseline
 
@@ -224,12 +229,14 @@ The labor-window review compares `LaborTimeEntry.WorkDate` to the scheduled or a
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Prepare a cost bridge for one manufactured item and related work order, with standard components, operation and labor support, completion, and close evidence.
+- **Accounting or business interpretation:** Explain how materials, labor, variable overhead, and fixed overhead connect to WIP, completion, and close in this model.
+- **Database explanation:** Show keys connecting clock time, productive allocation, operation, and work order. Explain why approved and allocated hours need not be identical.
+- **Management or audit conclusion:** Recommend whether the next review concerns cost composition, operation timing, labor support, or close evidence.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -245,6 +252,10 @@ Submit a short case memo or notebook note with these four artifacts:
 - Database/source evidence: Which work-order, operation, clock, labor-allocation, or GL key proves the labor-cost path?
 - Analytics judgment: Where do standard cost, approved time, direct labor allocation, and close variance diverge?
 - Escalation/next step: What timing or support pattern would make labor cost or work-order close worth audit follow-up?
+
+## Limitations and Judgment
+
+This is a standard-cost teaching model. The trace does not establish actual-cost inventory valuation or prove that every difference in hours is a payroll error.
 
 ## Next Steps
 

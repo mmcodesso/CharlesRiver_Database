@@ -1,0 +1,117 @@
+---
+title: BPMN Process and Internal Control Workshop
+description: Interpret Charles River BPMN models, trace business activities to actual database evidence, and propose testable controls without assuming a diagram proves operating effectiveness.
+slug: /learn-and-practice/bpmn-controls-workshop
+sidebar_label: BPMN and Controls Workshop
+---
+
+import { QueryReference } from "@site/src/components/QueryReference";
+
+# BPMN Process and Internal Control Workshop
+
+## Context and Problem
+
+**Illustrative teaching scenario.** A process review team at <CompanyName /> needs to explain how work moves between departments and what accounting evidence supports each handoff. The team also wants recommendations for stronger controls. This request is a classroom setting; it does not identify a particular transaction, establish a control failure, or supply the review's conclusion.
+
+Begin with the company and its business need. Read a BPMN model to identify activities and responsibilities, compare the process page's Mermaid view of information, and then investigate records in your assigned release. Keep the model's teaching roles, stored transaction evidence, and your proposed controls distinct.
+
+## Learning Objectives
+
+- Explain the trigger, participants, normal path, decisions, exceptions, and end state of a process.
+- Distinguish organizational responsibility in BPMN from database relationships and posting lineage in Mermaid.
+- Match selected business activities to source documents, table grains, keys, dates, and `GLEntry` evidence.
+- Identify business risks and control objectives, and design procedures that could assess a proposed control.
+- Explain the limits of transaction data when evaluating authorization and segregation of duties.
+
+## Before You Start
+
+**Prerequisites:** read [Company Story](../learn-the-business/company-story.md) and [Business Processes and Models](../learn-the-business/process-flows.md), including its BPMN reading guide. Complete one of the [foundational exercises](index.md), or review it with your instructor before attempting the evidence extension.
+
+**Tools and files:** view the diagrams in a browser. For the modeling extension, download an editable `.drawio` file from the model library and open a separate working copy in diagrams.net. Use the assigned published SQLite database in read-only mode, or analyze copies of selected Excel tables in a separate workbook. Follow the [SQL Guide](../analytics/sql-guide.md) or [Excel Guide](../analytics/excel-guide.md); record your release version and reporting date.
+
+**Sources:** choose a process from the table below. Read its full process page and use the [Schema Reference](../reference/schema.md) and [Posting Reference](../reference/posting.md) to confirm the actual columns and accounting sources before joining. Listed tables are starting evidence, rather than a claim that one join connects every row.
+
+| Process and reading | Starting source documents and tables | Investigation focus |
+|---|---|---|
+| [Order-to-cash](../processes/o2c.md) | Order, shipment, invoice, receipt and application: `SalesOrderLine`, `ShipmentLine`, `SalesInvoiceLine`, `CashReceipt`, `CashReceiptApplication`; relevant headers and `GLEntry` | Separate goods fulfillment, billing, cash arrival, and settlement |
+| [Procure-to-pay](../processes/p2p.md) | Requisition, PO, receipt, supplier invoice and payment: `PurchaseRequisition`, `PurchaseOrderLine`, `GoodsReceiptLine`, `PurchaseInvoiceLine`, `DisbursementPayment`; relevant headers and `GLEntry` | Distinguish receipt matching from direct accrued-service settlement |
+| [Manufacturing and conversion](../processes/manufacturing.md) | Work order, operation, issue, completion and close: `WorkOrder`, `WorkOrderOperation`, `MaterialIssueLine`, `ProductionCompletionLine`, `WorkOrderClose`, `LaborTimeEntry`; relevant headers and `GLEntry` | Separate planning, physical completion, labor support, and standard-cost close |
+| [Design Services](../processes/design-services.md) | Engagement, approved time and billing: `ServiceEngagement`, `ServiceEngagementAssignment`, `ServiceTimeEntry`, `ServiceBillingLine`, `SalesInvoiceLine`, `GLEntry` | Follow approved hours into monthly billing without assuming shipment |
+| [Payroll](../processes/payroll.md) | Attendance, register and settlement: `TimeClockPunch`, `TimeClockEntry`, `OvertimeApproval`, `AttendanceException`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance`, `GLEntry` | Distinguish raw attendance, approved hours, employee payment, and liability remittance |
+| [Manual journals and close](../processes/manual-journals-and-close.md) | Journal and posted detail: `JournalEntry`, `GLEntry`, `Account`; `PurchaseInvoiceLine` for linked accrual settlement | Separate recurring entries, accrual adjustments, and reporting-boundary entries |
+
+## Activity 1: Interpret Responsibilities and Handoffs
+
+Begin with order-to-cash, then compare procure-to-pay and conversion. Choose one process for the remaining activities.
+
+1. State the business objective and the scope of the model. Identify its trigger, expected end state, external participants, and the responsibilities represented by internal lanes.
+2. Narrate one normal path in business language. At each handoff, identify what the receiving role needs to know and which document or information supports the next activity.
+3. Select a gateway. Explain what question it answers, which outcomes are possible, and whether its outgoing paths represent alternatives or parallel work. Do not infer execution times or concurrency from the dates of unrelated rows.
+4. Identify an exception or an out-of-scope branch. Explain how it changes the question being asked. If the overview omits its detail, follow the related model or process subsection before adding steps yourself.
+5. Compare the BPMN and Mermaid views. Choose one BPMN task and locate the corresponding operational record or posting path. Explain why a lane, a table, and a ledger source are different representations.
+
+For notation checks, sequence flows stay within a pool and can cross its lanes; message flows communicate between participants in separate pools. An exclusive gateway selects an alternative path, while a parallel split activates each outgoing path. Check the [OMG BPMN 2.0.2 specification](https://www.omg.org/spec/BPMN/2.0.2/) and the [official draw.io BPMN guide](https://www.drawio.com/docs/diagram-types/bpmn-2-0/) when reviewing a model.
+
+## Activity 2: Connect a Model to Actual Evidence
+
+1. Select an actual document or line in the assigned file and retain its identifier, date, process branch, and reporting boundary. State what one row represents before following its links.
+2. Build an activity-to-evidence map. For each selected task, record the document, table, stored key, related record, and accounting significance. Mark a task as a teaching interpretation when the data does not directly establish its execution or owner.
+3. Follow at least one source event into `GLEntry`. Explain when recognition occurs and how it differs from settlement or later close. Preserve both header and line keys where the accounting sources use different grains.
+4. Check completeness in a defined direction. Explain whether you started with orders, shipments, receipts, invoices, or another population, and which missing downstream rows that choice can reveal. Check join multiplicity before comparing totals.
+5. Record an unresolved evidence question. Describe plausible timing, valid alternative branches, and analytical errors to investigate before concluding that a process failed. A result without exceptions is acceptable when the scope and criteria are explicit.
+
+These existing queries support the three core process traces; select the one that matches your assignment. They provide evidence paths rather than control-effectiveness conclusions.
+
+<QueryReference
+  queryKey="cases/01_o2c_line_trace_order_shipment_invoice.sql"
+  helperText="Trace actual goods lines from order through shipment and invoice; investigate settlement separately through CashReceiptApplication."
+/>
+
+<QueryReference
+  queryKey="cases/03_p2p_invoice_line_trace_receipt_vs_accrual.sql"
+  helperText="Distinguish receipt-linked invoice lines from accrual-linked service settlement before defining a completeness test."
+/>
+
+<QueryReference
+  queryKey="cases/06_manufacturing_work_order_close_gl_trace.sql"
+  helperText="Compare operational work-order evidence with its close and ledger trail while preserving the reporting date."
+/>
+
+## Activity 3: Build a Risk and Control Matrix
+
+Create a separate matrix for your chosen process. Develop at least four rows covering authorization, transaction completeness, segregation of duties, and reconciliation. Include exception handling in at least one row. Determine the risk and proposed response yourself; the questions below do not assert that a control exists or has failed.
+
+| Matrix field | What your submission must establish |
+|---|---|
+| Process step and business risk | Which task or handoff could prevent the business objective from being achieved, and what could go wrong? |
+| Control objective | What outcome should authorization, completeness, accuracy, timing, or custody safeguards support? |
+| Evidence status | Label the row **observed record**, **documented process interpretation**, or **proposed control**; cite the basis for the label |
+| Control design | Who would act, what would they check, when would they act, and how would exceptions be resolved? Identify preventive or detective intent |
+| Responsibility and independence | Which duties should be separated, and what evidence would establish that the people or access rights are independent? |
+| Database evidence and population | Which actual tables, keys, dates, and row grains could support a procedure? Define the population and comparison |
+| Additional evidence needed | Which approval policy, access record, review sign-off, external document, or other support would you request if absent from the assigned file? |
+| Assessment procedure and limitations | What observation would support or challenge the design, and what would the database alone leave unresolved? |
+
+An approval-related record can support a question about a stored approval; it does not by itself establish the approver's authority, independent access, or consistent control operation. A balanced voucher supports an accounting check but cannot by itself establish transaction authorization or economic validity. Explain those differences in your matrix.
+
+## Advanced Extension: Propose and Assess a Change
+
+Save a copy of the chosen model and add one clearly labeled **proposed control** or **proposed exception procedure**. Preserve the original process view and distinguish your addition with text, not color alone. Use BPMN 2.0 shapes, label the decision outcomes, keep sequence flows inside their pool, and use message flows only for communication between participants. Justify any parallel split and join, including what happens when an exception prevents one branch from completing.
+
+Provide a matching evidence plan. State which existing records could help assess the proposal and which additional information would be required. If the proposed control needs a new log or system capability, describe it as a future design requirement; do not present it as a table or operational feature in the published dataset. Do not modify the class database, canonical SQL library, or original model files.
+
+## Assessed Deliverable
+
+Submit an annotated process interpretation, an activity-to-evidence map with real identifiers and reproducible query or workbook steps, the completed risk and control matrix, and a short recommendation. Include the release version, reporting date, population definition, source checks, alternative explanations, and evidence still needed. For the advanced extension, also submit the editable `.drawio` copy, an SVG, and a readable text explanation of the change.
+
+Assessment considers business understanding, notation, traceability, control reasoning, reproducibility, and judgment. A well-supported conclusion can be that more evidence is needed. Instructors choose the scope and weighting; this public workshop does not provide an answer key or an expected numerical finding.
+
+## Interpretation and Limitations
+
+BPMN expresses a process model; it is not an execution log or proof that the fictional company has implemented every depicted control. Lane assignments explain teaching responsibilities and do not establish actual system access. Mermaid explains selected information relationships and accounting effects; confirm exact cardinality and fields before analysis.
+
+The published data supports source-record investigation, with intentional anomalies and documented model boundaries. Transaction rows alone cannot provide complete assurance about employee conduct, external documents, management review, or control effectiveness. A `.drawio` document is an editable diagram, not validated executable BPMN 2.0 XML.
+
+## Next Steps
+
+Continue with the [O2C Trace Case](../analytics/cases/o2c-trace-case.md), [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md), [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md), or [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md). Reuse the matrix with the chosen case's existing query sequence. Return to the [model library](../learn-the-business/process-flows.md#model-library) for another cycle or to [Learn and Practice](index.md) for a narrower evidence exercise.

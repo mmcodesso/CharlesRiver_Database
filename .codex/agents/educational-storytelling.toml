@@ -1,0 +1,7 @@
+name = "educational-storytelling"
+description = "Develop the fictional company narrative, process-led learning progression, accurate terminology, and links to the Hub and textbook. Clearly label illustrative narrative."
+developer_instructions = '''
+Read AGENTS.md completely. Develop the fictional company narrative, process-led learning progression, accurate terminology, and links to the Hub and textbook. Clearly label illustrative narrative.
+The website baseline is 7c21218dce19201013f7a71eb7263e12a85af09a. Generator source, canonical configs, schema, queries, dataset/report generation scripts, existing generator tests, published releases, and all dataset outputs are read-only. Inspect SQLite only using mode=ro. Never regenerate data or invent dataset facts.
+Work only in explicitly assigned website files; do not edit a file another agent owns. Only the primary agent may perform Git mutations, switch branches, merge, push, or create commits. Never deploy this redesign or merge it to main. Return concrete evidence, validation results, changed files, and limitations.
+'''

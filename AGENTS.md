@@ -1,5 +1,32 @@
 # AGENTS.md
 
+## Website Redesign Mission and Frozen Baseline
+
+Charles River is an open teaching environment within Accounting Analytics Hub. The fictional greater-Boston home-furnishings company connects merchandise, selected manufacturing, and hourly Design Services to accounting evidence. Teach in this order: understand the company → understand the process → explore evidence → analyze → interpret → decide. The Accounting Analytics textbook supplies conceptual depth; this site supplies the shared company, data, practice, and cases. Future AIS and tool courses are planned resources, not currently available courses.
+
+The website redesign is based on frozen commit `7c21218dce19201013f7a71eb7263e12a85af09a`. On 17 October 2026, the user approved merging the reviewed redesign into main and deploying the website on Cloudflare. This approval supersedes the initial local-review restriction on merging, pushing main, and deploying. Use the existing `greenfield` Cloudflare Worker and its Git integration for `charlesriver.accountinganalyticshub.com`; preserve the dataset/report freeze below. Do not publish a dataset version or change GitHub Releases. Initial consolidation found main and book-roll-feasibility already identical after fetch; no merge was necessary at that stage.
+
+### Protected scope during website work
+
+These rules override maintenance instructions below that describe generation, schema updates, or data/config edits. Treat `generate_dataset.py`, `src/generator_dataset/`, all generator configurations and source-of-truth inputs under `config/`, canonical SQL under `queries/`, existing generator tests and validation logic, dataset/report generation scripts, released packages, and all SQLite/Excel/CSV/support-workbook outputs as read-only. Do not regenerate the dataset, alter transactions/schema/anomalies/calculations, or replace downloads. Read SQLite using `mode=ro`; inspect source and query files without edits. Do not change generator code to accommodate presentation.
+
+Editable scope: `docs/`, authored `src/pages/`, `src/components/`, `src/theme/`, `src/css/`, `sidebars.js`, `docusaurus.config.js`, authored static presentation assets, website-specific tests/docs, this file, and project agent instructions. Generated site manifests may be refreshed only by their existing scripts. Report assets may be validated and reused; never hand-edit them. If a build would recreate missing report assets, stop that preparation and report the missing prerequisite. Keep a SHA-256 inventory of existing dataset/report artifacts and compare it at handoff, along with a protected-path Git diff against the frozen baseline.
+
+### Editorial, learning, design, and SEO standards
+
+- Keep a process-led documentation architecture, shallow resource discovery, direct downloads, and stable public routes. Put private planning in `planning/website-redesign/`, outside published docs.
+- Distinguish illustrative fictional business scenarios from records actually present in the published dataset. Never invent numerical outcomes, customer records, operational capabilities, identifiers, adoption claims, or solutions disguised as student instructions. Verify technical claims against the checksum-matched release, not just current generator source.
+- Activities specify context/problem, objectives, prerequisites, tools, source documents/tables, evidence workflow, assessed deliverable, interpretation, and limitations. Preserve case headings `Key Data Sources`, `Recommended Query Sequence`, and `Next Steps`, and existing query/report components. Progress from foundational exercises through applied analysis to integrated cases.
+- Align with the current local Accounting Analytics Hub visual system: restrained teal/navy/paper palette, readable serif headings, clear sans-serif body, modest borders, purposeful diagrams. Keep Charles River recognizable. Use semantic HTML, visible keyboard focus, labeled controls, meaningful link text, touch targets, responsive layouts, reduced-motion support, and readable light/dark themes; aim for WCAG 2.2 AA.
+- Every public page needs a specific title/description and one primary heading. Preserve canonical URLs, sitemap, robots access, breadcrumbs, Open Graph metadata, meaningful internal links, and server-rendered essential content. Structured data must describe visible verified content. Use actual release URLs, license, creator, and citations; never invent a DOI or promise search-engine rich results.
+- Keep the Hub and textbook links visible in orientation and instructor pathways; link to relevant learning resources without duplicating textbook chapters. Describe future courses as planned.
+
+### Delegation and final review
+
+Use the project roles in `.codex/agents/` for independent architecture, storytelling, UX, cases, and SEO/QA work when delegation is requested. Assign exclusive file ownership; only the primary agent performs Git mutations and branch operations. Do not let agents concurrently edit the same files. Inherit model and permission settings.
+
+Run the production build with existing report assets, targeted website checks, read-only dataset claim verification, keyboard/interactive checks, and representative desktop/tablet/mobile review when tooling permits. Report actual results and unavailable checks candidly. Record changed/preserved routes, case improvements, manifest refreshes, artifact hashes, commands, limitations, and local preview instructions in the final report. Do not claim full accessibility conformance from automated checks alone.
+
 ## Project Overview
 
 `greenfield_database` is the source repository for the Charles River synthetic accounting analytics teaching environment. The primary artifact is the Docusaurus documentation site; the SQLite/Excel/support-workbook/CSV outputs and generated report assets exist to support that site and classroom use.
@@ -117,10 +144,32 @@ Notes:
 - Preserve the teaching sequence: business context first, then process flow, then analytics/reports/cases. Do not rewrite student-facing pages into generic feature or product marketing copy.
 - Public docs should not reintroduce the template phrases already blocked by tests, including `Audience and Purpose`, `Use this page when`, `Use this case when`, `Use this pack`, `Use this perspective`, and `Why this matters`.
 - Case pages are expected to keep `## Key Data Sources`, `## Recommended Query Sequence`, and `## Next Steps`. Existing cases use `QuerySequence` from `@site/src/components/QueryReference`.
-- Report-library pages use `ReportCatalog` plus `reportAreaCollections`. Report-perspective pages use `ReportLearningPack` plus `reportPackManifest`.
+- Keep single Reports and Analytics (`/docs/analytics`) and Query Library (`/docs/analytics/analysis-tracks`) hubs as adjacent top-level navigation items. Both use the same six business topics from the authored `src/data/reportTopics.json` and `src/data/queryTopics.json` maps, assigning every report/query once. Keep search, topic filtering, preview/SQL expansion, and original downloads. Retain report prompts from `reportPackManifest`, query interpretation notes, anomaly coverage, and linked learning paths. Do not recreate separate perspective or Financial/Managerial/Audit report/query pages; former URLs redirect to the relevant hub. Presentation grouping must not change frozen query/report IDs, manifests, catalogs, SQL, or asset paths.
 - Shared naming/file copy should use the site-branding components from `src/components/SiteBranding` such as `<DisplayName />`, `<DatasetName />`, `<FileName />`, and related helpers instead of hard-coding names.
 - Mermaid is enabled. Keep diagrams simple, readable, and faithful to process/schema logic.
 - If you change a page slug or route, also update `sidebars.js` and any redirect rules in `docusaurus.config.js`.
+
+## BPMN Authoring and Maintenance
+
+- `static/diagrams/bpmn/<model-id>.drawio` is the authoritative editable diagram. Use diagrams.net / Draw.io's BPMN 2.0 library; keep the matching `<model-id>.svg` as its published export. These are intentional tracked teaching assets, unlike generated dataset/report outputs.
+- Keep the diagram files in LF format as specified by `.gitattributes`, so embedded source hashes remain stable across Windows and Unix checkouts.
+- Start with the process guide and actual schema/posting evidence. BPMN explains activities, participants, decisions, and controls; preserve Mermaid for document relationships, data lineage, and accounting effects. Follow business scenario → objectives/participants → BPMN/interpretation → Mermaid/tables/postings → investigation/activity.
+- Use internal lanes for teaching responsibilities and separate pools for external participants. Sequence flows stay within a pool; message flows cross pools, with open source circles and unfilled arrowheads. Label exclusive alternatives. Parallel branches must all be required by the stated scope and synchronize without optional bypasses.
+- Use native tasks/events/gateways and a solid normal collapsed subprocess with the boxed-plus marker. Draw.io's `bpmnShapeType=subprocess` renders an **event subprocess** with a dashed border; a normal collapsed activity uses `bpmnShapeType=task;isLoopSub=1`. Avoid a cell ID of `join` (rejected by the tested Desktop exporter); use descriptive IDs such as `settlement-join`.
+- Match the library's Arial type, teal outlines, white canvas, lane spacing, and connector conventions. Keep labels within lanes with room below events. Use overview/detail models rather than crowding every exception into one view. Explicitly label proposed controls; a stored approval or lane assignment does not prove control effectiveness or access independence.
+- Maintain `src/data/bpmnModels.json` with the title, descriptive alt text, ordered text explanation, actual evidence tables, scope boundary, process page, exercise, and related case. `BpmnDiagram` publishes viewing, keyboard zoom/expanded view, text evidence, and editable downloads; `BpmnModelCatalog` derives the website inventory from the same metadata.
+- Keep the process overview, model library, and notation guide together in `docs/learn-the-business/process-flows.md` at `/docs/process-flows`. The former `/docs/process-models` URL redirects there; do not recreate a second overview page or duplicate the architecture embed.
+- BPMN figures and viewers reuse `src/theme/Mermaid/styles.module.css` for the same inline toolbar, buttons, modal, and light/dark appearance. Image clicks and Expand model open the same viewer with pan, zoom, Reset, and Close; do not reintroduce standalone Open SVG / View SVG links. Preserve editable-source downloads and accessible text explanations.
+- Mermaid previews are native buttons: clicking the diagram or activating it with Enter/Space opens the same viewer as Expand diagram. Preserve the shared site-wide behavior, focus restoration to the chosen opener, and a single rendered copy of each Mermaid SVG to avoid duplicate IDs between inline and expanded views.
+- Edit the `.drawio` source first. Export through installed Draw.io Desktop, then add the accessible SVG title/description and source hash using the checked-in helper:
+  ```powershell
+  pwsh -NoProfile -File planning/website-redesign/bpmn/export-diagrams.ps1 -ModelId order-to-cash
+  # Omit -ModelId to export the whole library; use -DrawioPath for another installation.
+  ```
+  The helper invokes Draw.io's SVG exporter with embedded editable XML, native text, a light canvas, and no remote font embedding. It does not generate datasets or reports. Do not replace published SVG geometry with a separately hand-drawn version. The tested Desktop version is 29.6.6.
+- Verify each source opens/exports as editable cells, compare its SVG with the source, and inspect the rendered diagram at readable zoom. Run `tests/website/test_bpmn_models.py` using the repo `.venv` and the test timeout rules below, plus `npm run build` and the website Node checks. Review responsive layout, download links, text alternatives, and keyboard focus/zoom/Escape behavior after viewer changes.
+- For new notation or viewer conventions, complete and review an Order-to-Cash pilot before applying them to the library. The initial pilot record is `planning/website-redesign/bpmn/PILOT_REVIEW.md`; the maintained inventory and validation handoff are in that directory.
+- Draw.io XML is an editable visual format, **not executable BPMN 2.0 XML**. Any future execution/interchange deliverable needs a separate standards-based export and engine/schema validation. Keep student prompts public and instructor solutions in private course materials.
 
 ## Data, SQL, And Analytics Guidance
 

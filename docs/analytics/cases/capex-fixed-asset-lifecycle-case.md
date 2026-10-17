@@ -5,10 +5,15 @@ sidebar_label: CAPEX Lifecycle Case
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # CAPEX and Fixed Asset Lifecycle Case
 
+<CaseOverview slug="capex-fixed-asset-lifecycle-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 Charles River now needs a teachable fixed-asset story that matches how a real company behaves. The company adds plant equipment, warehouse equipment, and office or showroom assets across multiple years. Some purchases are paid in cash, some are reclassed from AP into notes payable, some assets are improved later, and some are eventually retired or replaced.
 
@@ -20,23 +25,23 @@ Your job is to explain one CAPEX story from acquisition through financing, depre
 
 You need to explain one CAPEX story from source documents through the asset register and into the financial statements. Show how acquisitions, financing, depreciation, and disposals affect the ledger, cash flow, and manufacturing cost interpretation. You also need to decide where the lifecycle summary is enough and where the analysis must move into broader statement interpretation.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A fixed-asset rollforward explanation that separates manufacturing, warehouse, and office or showroom behavior.
-- A clear acquisition and disposal narrative that distinguishes cash CAPEX from note-financed CAPEX.
-- A financing explanation that separates principal cash from interest cash over the debt schedule.
-- A depreciation-routing explanation that shows why manufacturing equipment affects product cost differently from other assets.
-- A short conclusion on how CAPEX activity changes statement and cash-flow interpretation.
+- Trace additions, improvements, depreciation, financing, and disposal through the asset lifecycle.
+- Separate asset recognition from principal, interest, depreciation, and cash timing.
+- Explain how manufacturing depreciation affects cost interpretation.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Capital purchase records, fixed-asset record and events, debt agreement and schedule, payments, journals, and GL rows.
+- Evidence grain: Reconcile asset-event detail to the asset rollforward; evaluate debt-schedule and period-level cash-flow evidence separately.
 - Main tables: `PurchaseRequisition`, `PurchaseOrder`, `PurchaseInvoice`, `DisbursementPayment`, `FixedAsset`, `FixedAssetEvent`, `DebtAgreement`, `DebtScheduleLine`, `Warehouse`, `WorkCenter`, `CostCenter`, `JournalEntry`, `GLEntry`, `Account`
-- Related guides: [Financial Queries](../financial.md), [Executive Overview](../reports/executive-overview.md)
+- Related guides: [Statements and Cash queries](../analysis-tracks.md#statements-and-cash), [Statements and Cash](../index.md#statements-and-cash)
 - Related process pages: [Procure-to-Pay Process](../../processes/p2p.md), [Manufacturing Process](../../processes/manufacturing.md), [Manual Journals and Close Cycle](../../processes/manual-journals-and-close.md)
 - Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case follows the fixed-asset lifecycle from the posted subledger and related financing records. It does not extend into budget or pro-forma cash-flow planning.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Define the fixed-asset rollforward by behavior group
 
@@ -210,12 +215,14 @@ The query starts from `GLEntry`, `Account`, and `JournalEntry`, builds the close
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Create an asset-lifecycle schedule for a stated asset or behavior group, with beginning position, relevant events, ending position, and supporting source keys.
+- **Accounting or business interpretation:** Explain acquisition, depreciation, disposal, and any financing, distinguishing debt principal and interest from asset cost and depreciation.
+- **Database explanation:** Show how asset events, debt-schedule lines, and GL periods are linked or compared without repeating asset totals across debt installments.
+- **Management or audit conclusion:** State a supported capital or financing follow-up and explain its operating, investing, or financing cash-flow implications.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -232,10 +239,14 @@ Submit a short case memo or notebook note with these four artifacts:
 - Analytics judgment: Which behavior group or financing path changes the CAPEX story most materially?
 - Escalation/next step: When is the asset-level lifecycle summary enough, and when should the analyst open broader statement or cash-flow pages?
 
+## Limitations and Judgment
+
+Recognition of a capital asset does not mean the same amount was paid in cash that period. Follow documented event and financing treatment rather than assuming a cash purchase.
+
 ## Next Steps
 
 - Use [Procure-to-Pay Process](../../processes/p2p.md) to see how CAPEX items still begin in the normal requisition, PO, invoice, and payment flow.
 - Use [Manufacturing Process](../../processes/manufacturing.md) to connect plant-equipment depreciation back into manufacturing clearing and standard-cost interpretation.
 - Use [Manual Journals and Close Cycle](../../processes/manual-journals-and-close.md) for the debt reclass, depreciation, note payment, and disposal journals that complete the lifecycle.
 - Use [GLEntry Posting Reference](../../reference/posting.md) and [Schema Reference](../../reference/schema.md) when you need the exact posting rules or table bridges.
-- Use [Financial Queries](../financial.md) when you want the wider statement and cash-flow analysis around the same CAPEX events.
+- Use [Statements and Cash queries](../analysis-tracks.md#statements-and-cash) when you want the wider statement and cash-flow analysis around the same CAPEX events.

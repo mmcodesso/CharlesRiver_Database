@@ -1,8 +1,21 @@
 ---
-description: Learn the manufacturing process in the synthetic accounting analytics dataset, from planning and work orders to material issue, production completion, close, and GLEntry.
+title: Manufacturing and Conversion Accounting Process
+description: Connect manufacturing BPMN activities to Mermaid planning and cost flows, work-order evidence, standard-cost completion, variance, and an AIS control-evaluation activity.
 ---
 
+import BpmnDiagram from "@site/src/components/BpmnDiagram";
+
 # Manufacturing Process
+
+## Business Storyline
+
+**Illustrative scenario:** customer demand puts pressure on a selected manufactured furniture item. Planning considers supply and capacity, production uses materials and labor, and accounting distinguishes completion from close. This scenario supplies context; choose real recommendations and work orders from your assigned file for evidence.
+
+This company both buys finished goods and manufactures selected products in-house. That hybrid model is one of the most useful teaching features in the dataset because students can compare purchased inventory with manufactured inventory inside the same business.
+
+In this dataset, the manufacturing story starts with planning, not with a work order. Weekly forecasts, inventory policies, open finished-goods demand, and current supply pressure create replenishment signals. Manufactured signals move into work orders, components may need help from the purchasing cycle, warehouse staff issue material into production, approved labor support flows into cost traceability, finished goods are completed back into inventory, and accounting closes the order when standard and actual amounts are resolved.
+
+That distinction matters. A planning recommendation is not a work order. A rough-cut capacity row is not the same thing as an operation schedule. A completion is not the same thing as a close. Students can see those stages separately in the data and use that separation for managerial, financial, and audit questions.
 
 ## What Students Should Learn
 
@@ -11,13 +24,44 @@ description: Learn the manufacturing process in the synthetic accounting analyti
 - Identify the core tables used for MRP, rough-cut capacity, work-order scheduling, material issue, labor support, completion, and close.
 - Recognize timing differences that matter for capacity analysis, open work-order review, product costing, and manufacturing audit work.
 
-## Business Storyline
+## Decisions and Evidence
 
-This company both buys finished goods and manufactures selected products in-house. That hybrid model is one of the most useful teaching features in the dataset because students can compare purchased inventory with manufactured inventory inside the same business.
+A planner asks whether supply and capacity can meet demand. A production supervisor asks whether work is scheduled and supported. Accounting asks how issues, labor reclasses, completions, and close affect WIP, finished goods, clearing, and variance. Answering one of these questions does not answer the others.
 
-In this dataset, the manufacturing story starts with planning, not with a work order. Weekly forecasts, inventory policies, open finished-goods demand, and current supply pressure create replenishment signals. Manufactured signals move into work orders, components may need help from the purchasing cycle, warehouse staff issue material into production, approved labor support flows into cost traceability, finished goods are completed back into inventory, and accounting closes the order when standard and actual amounts are resolved.
+The [manufacturing cost-flow exercise](../learn-and-practice/manufacturing-cost-flow.md) establishes the event sequence before the [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md) adds operation-level and labor evidence. Standard-cost completion and approved actual labor support coexist; do not describe this as a complete actual-cost inventory system.
 
-That distinction matters. A planning recommendation is not a work order. A rough-cut capacity row is not the same thing as an operation schedule. A completion is not the same thing as a close. Students can see those stages separately in the data and use that separation for managerial, financial, and audit questions.
+## Participants and Responsibilities
+
+**Planning** interprets demand and replenishment signals. The **Warehouse** supplies components and receives completed goods. **Production** schedules and executes work-order operations, supported by approved labor records. **Cost Accounting** interprets the costing and close events. Purchasing and payroll provide connected support through their own cycles. These lanes describe teaching responsibilities; use employee and source records to assess actual participation.
+
+## BPMN Business Process
+
+<BpmnDiagram modelId="manufacturing-conversion" />
+
+### Interpret the Activities and Decisions
+
+1. Planning examines component requirements and rough-cut capacity alongside the manufacture recommendation. A weekly capacity signal differs from the daily operation schedule created for execution.
+2. Work-order release leads to scheduling, material support, and production activity. If components need purchasing support, follow the P2P handoff rather than treating a material issue as a purchase.
+3. Completion makes finished goods available at standard cost. Accounting close subsequently resolves residual WIP and manufacturing clearing; goods availability does not wait for that close.
+
+<details>
+<summary>Examine manufacturing close and variance</summary>
+
+<BpmnDiagram modelId="manufacturing-variances" />
+
+Read completion, cost support, and `WorkOrderClose` as distinct evidence. A recorded variance is an accounting result to interpret, not proof of waste, an unauthorized transaction, or a separate approval workflow.
+
+</details>
+
+### Risks, Controls, and Evidence
+
+| Risk and control objective | Evidence available | Teaching boundary |
+|---|---|---|
+| Unsupported production: connect execution to a documented plan | `SupplyPlanRecommendation`, `WorkOrder.SupplyPlanRecommendationID`, release and employee fields | A planning link supports traceability; it does not prove that a separate release-approval control operated |
+| Incorrect consumption or labor allocation: support the work-order cost trail | `MaterialIssueLine`, `LaborTimeEntry`, `WorkOrderOperation` | Compare records at their own grain; an independent consumption reconciliation is a **proposed teaching control** |
+| Incomplete close: explain residual balances and variance | `ProductionCompletionLine`, `WorkOrderClose`, `GLEntry` | `ClosedByEmployeeID` identifies recorded responsibility; an independent variance sign-off is a **proposed teaching control**, not a stored approval chain |
+
+The Mermaid views below retain the detailed planning, document, and costing relationships. The [model library](../learn-the-business/process-flows.md#model-library) provides notation and editable sources.
 
 ## Normal Process Overview
 
@@ -49,7 +93,9 @@ flowchart LR
     MRP --> P2P --> MI
     WOS --> MI
     WOS --> LAB --> MI
-    MI --> PC --> WC --> O2C
+    MI --> PC
+    PC --> O2C
+    PC --> WC
 ```
 
 Read the main diagram as planning, execution, and costing or close. Planning starts the story. BOMs and routings explain how the item can be built. Work-order execution shows what actually happened on the floor. Close and reclass activity explain the accounting effect after production activity is finished.
@@ -130,11 +176,11 @@ flowchart LR
 
 **Starter analytical question:** Which manufactured recommendations created both component pressure and rough-cut capacity pressure before execution began?
 
-```sql
--- Teaching objective: Link manufactured recommendations to component demand and weekly capacity pressure.
--- Main join path: SupplyPlanRecommendation -> MaterialRequirementPlan and RoughCutCapacityPlan.
--- Suggested analysis: Group by item, work center, warehouse, or bucket week.
-```
+**Analytical plan**
+
+- Objective: Link manufactured recommendations to component demand and weekly capacity pressure.
+- Evidence path: SupplyPlanRecommendation -> MaterialRequirementPlan and RoughCutCapacityPlan.
+- Comparison: Group by item, work center, warehouse, or bucket week.
 
 ### Standard Recipe, Routing, and Work Centers
 
@@ -164,11 +210,11 @@ flowchart LR
 
 **Starter analytical question:** Which manufactured item groups use the most complex routing or the heaviest component structure?
 
-```sql
--- Teaching objective: Compare recipe complexity and routing complexity across manufactured items.
--- Main join path: Item -> BillOfMaterial -> BillOfMaterialLine and Item -> Routing -> RoutingOperation.
--- Suggested analysis: Group by item group, collection, or work center.
-```
+**Analytical plan**
+
+- Objective: Compare recipe complexity and routing complexity across manufactured items.
+- Evidence path: Item -> BillOfMaterial -> BillOfMaterialLine and Item -> Routing -> RoutingOperation.
+- Comparison: Group by item group, collection, or work center.
 
 ### Work Order Release and Operation Scheduling
 
@@ -203,11 +249,11 @@ flowchart LR
 - `WorkOrderOperationSchedule.WorkOrderOperationID -> WorkOrderOperation.WorkOrderOperationID`
 - `WorkOrderOperationSchedule.WorkCenterID -> WorkCenterCalendar.WorkCenterID`
 
-```sql
--- Teaching objective: Trace one released work order from planning support into operation-level daily schedule rows.
--- Main join path: SupplyPlanRecommendation -> WorkOrder -> WorkOrderOperation -> WorkOrderOperationSchedule.
--- Suggested analysis: Compare release date, due date, schedule date, and actual operation timing.
-```
+**Analytical plan**
+
+- Objective: Trace one released work order from planning support into operation-level daily schedule rows.
+- Evidence path: SupplyPlanRecommendation -> WorkOrder -> WorkOrderOperation -> WorkOrderOperationSchedule.
+- Comparison: Compare release date, due date, schedule date, and actual operation timing.
 
 ### Purchased Component Support and Material Issue
 
@@ -237,11 +283,11 @@ flowchart LR
 
 **Starter analytical question:** Which work orders depended on purchased component support before material could be issued into production?
 
-```sql
--- Teaching objective: Compare upstream purchased support to the later physical issue of components into WIP.
--- Main join path: SupplyPlanRecommendation -> PurchaseRequisition and WorkOrder -> MaterialIssue -> MaterialIssueLine.
--- Suggested analysis: Compare receipt timing, issue timing, and work-order release timing.
-```
+**Analytical plan**
+
+- Objective: Compare upstream purchased support to the later physical issue of components into WIP.
+- Evidence path: SupplyPlanRecommendation -> PurchaseRequisition and WorkOrder -> MaterialIssue -> MaterialIssueLine.
+- Comparison: Compare receipt timing, issue timing, and work-order release timing.
 
 ### Labor Capture, Payroll Bridge, and Manufacturing Cost
 
@@ -272,11 +318,11 @@ flowchart LR
 
 **Starter analytical question:** Which work centers or work orders show the highest approved labor support relative to planned operation timing?
 
-```sql
--- Teaching objective: Connect approved factory time to work-order operations and payroll-supported reclass activity.
--- Main join path: TimeClockEntry -> LaborTimeEntry -> WorkOrderOperation, plus PayrollRegister and JournalEntry.
--- Suggested analysis: Group by work center, work order, payroll period, or labor type.
-```
+**Analytical plan**
+
+- Objective: Connect approved factory time to work-order operations and payroll-supported reclass activity.
+- Evidence path: TimeClockEntry -> LaborTimeEntry -> WorkOrderOperation, plus PayrollRegister and JournalEntry.
+- Comparison: Group by work center, work order, payroll period, or labor type.
 
 ### Production Completion, Close, and Finished-Goods Availability
 
@@ -305,11 +351,23 @@ flowchart LR
 
 **Starter analytical question:** Which work orders were physically completed in one period but not closed until a later period?
 
-```sql
--- Teaching objective: Separate physical completion from accounting close and finished-goods availability.
--- Main join path: WorkOrder -> ProductionCompletion -> ProductionCompletionLine -> WorkOrderClose.
--- Suggested analysis: Compare completion date, close date, quantity completed, and variance amount by month.
-```
+**Analytical plan**
+
+- Objective: Separate physical completion from accounting close and finished-goods availability.
+- Evidence path: WorkOrder -> ProductionCompletion -> ProductionCompletionLine -> WorkOrderClose.
+- Comparison: Compare completion date, close date, quantity completed, and variance amount by month.
+
+## Optional AIS Activity: Evaluate a Conversion Handoff
+
+**Context and objective:** an operations and finance review needs to explain how a work order moved from planned demand to finished goods and accounting close. Use the BPMN responsibilities to identify a risk without confusing standard-cost accounting with operational actual labor support.
+
+**Prerequisites, tools, and sources:** complete the manufacturing cost-flow exercise linked above and review WIP, manufacturing clearing, and variance. Use a SQL tool with the published SQLite file, or Excel with filters and lookups, plus a copy of the editable Draw.io model. Sources are `SupplyPlanRecommendation`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `MaterialIssueLine`, `MaterialIssue`, `LaborTimeEntry`, `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose`, and `GLEntry`.
+
+1. Record the release, chosen work order, scope, and reporting date. Mark its planning, execution, completion, and close evidence on the model.
+2. Compare the event dates and distinguish an open work order from completed goods awaiting accounting close. Retain document grain and state the cost basis of every amount.
+3. Propose one review of consumption, labor support, or close. Label it a **proposed teaching control** and specify its risk, objective, owner, evidence, test, and limitation using the [workshop matrix](../learn-and-practice/bpmn-controls-workshop.md).
+
+**Assessed deliverable:** submit the annotated process model, a reproducible event and cost schedule, and the matrix row. Explain what evidence would change a production or accounting decision. The records do not establish a complete actual-cost inventory system, every shop-floor action, or the effectiveness of an unrecorded control. Extend the investigation through the existing manufacturing case and operations reports below.
 
 ## Common Student Questions
 
@@ -326,8 +384,7 @@ flowchart LR
 
 ## Next Steps
 
-- Read [Operations and Risk](../analytics/reports/operations-and-risk.md) when you want the business perspective built around planning pressure, supply reliability, capacity, workforce context, and controls.
-- Read [Managerial Reports](../analytics/reports/managerial.md) when you want the broader report layer behind utilization, planning, workforce context, and supply risk.
+- Read [Production and Planning](../analytics/index.md#production-and-planning) to compare utilization, forecasts, and capacity; add [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory) for supply reliability and coverage.
 - Read [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md) when you want a guided walkthrough from production support into costing and close.
 - Read [CAPEX and Fixed Asset Lifecycle Case](../analytics/cases/capex-fixed-asset-lifecycle-case.md) when you want to add plant-equipment depreciation and note-financed equipment into the manufacturing-cost story.
 - Read [P2P](p2p.md) to see how raw materials and packaging are replenished when manufacturing needs purchased support.

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 
 import styles from "./styles.module.css";
@@ -19,7 +19,7 @@ function PreviewTable({ preview }) {
         <span>Showing {preview.previewRowCount}</span>
         <span>Generated {preview.generatedAt}</span>
       </div>
-      <div className={styles.tableWrapper}>
+      <div className={styles.tableWrapper} tabIndex={0} role="region" aria-label="Report data table, scroll to view all columns">
         <table className={styles.previewTable}>
           <thead>
             <tr>
@@ -44,6 +44,7 @@ function PreviewTable({ preview }) {
 }
 
 export function ReportPreviewOverlay({ isOpen, onClose, previewUrl, title }) {
+  const dialogRef = useRef(null);
   const [preview, setPreview] = useState(null);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
@@ -91,9 +92,24 @@ export function ReportPreviewOverlay({ isOpen, onClose, previewUrl, title }) {
     }
 
     const previousOverflow = document.body.style.overflow;
+    const opener = document.activeElement;
+    dialogRef.current?.querySelector("button")?.focus();
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
+        event.preventDefault();
         onClose();
+      }
+      if (event.key === "Tab") {
+        const controls = dialogRef.current?.querySelectorAll('button, a[href], [tabindex="0"]');
+        const first = controls?.[0];
+        const last = controls?.[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
       }
     };
 
@@ -103,6 +119,9 @@ export function ReportPreviewOverlay({ isOpen, onClose, previewUrl, title }) {
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
+      if (opener instanceof HTMLElement && opener.isConnected) {
+        opener.focus();
+      }
     };
   }, [isOpen, onClose]);
 
@@ -121,6 +140,7 @@ export function ReportPreviewOverlay({ isOpen, onClose, previewUrl, title }) {
       }}
     >
       <div
+        ref={dialogRef}
         className={styles.modal}
         role="dialog"
         aria-modal="true"
@@ -136,7 +156,7 @@ export function ReportPreviewOverlay({ isOpen, onClose, previewUrl, title }) {
             Close
           </button>
         </div>
-        <div className={styles.viewport}>
+        <div className={styles.viewport} tabIndex={0} role="region" aria-label="Report preview content">
           {status === "loading" ? <p className={styles.message}>Loading preview...</p> : null}
           {status === "error" ? (
             <p className={clsx(styles.message, styles.error)}>

@@ -5,10 +5,15 @@ sidebar_label: Audit Review Pack
 ---
 
 import { QueryReference } from "@site/src/components/QueryReference";
+import { CaseOverview } from "@site/src/components/CaseExplorer";
 
 # Audit Review Pack Case
 
+<CaseOverview slug="audit-review-pack-case" />
+
 ## Business Scenario
+
+**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
 
 The internal-audit team receives the normal three-year package covering fiscal years 2024 through 2026 with a moderate set of planted anomalies. The job is not to prove every issue from scratch. The job is to use audit starter queries, source tables, and workbook evidence together so the team can explain what happened, where it happened, and what it means.
 
@@ -18,23 +23,23 @@ This case consolidates the former exception lab into the broad review pack. Stud
 
 The review team needs to separate timing issues, approval failures, linkage failures, master-data issues, workforce-control failures, and planning-support exceptions without treating every flagged row as the same kind of risk.
 
-## What You Need to Develop
+## Learning Objectives
 
-- A starting exception map that distinguishes payment, payroll, manufacturing linkage, and operation-sequence issues.
-- A manufacturing audit-seed follow-through from summary evidence to released work-order detail.
-- A master-data and ownership triage view across employee, approver, and item controls.
-- A workforce-control interpretation across terminated activity, roster, punch, absence, overtime, and time-clock exceptions.
-- A planning-support conclusion that separates planning-governance issues from execution failures.
-- A short audit-facing recommendation on which exception family deserves escalation first.
+- Classify exceptions across processes before choosing detailed follow-up.
+- Trace a scoped selection from summary results to source records.
+- Distinguish teaching seeds, query criteria, and supported audit conclusions.
 
-## Before You Start
+## Key Data Sources
 
+- Source documents: Approval, payment, payroll, manufacturing, master-data, attendance, and planning records used by the assigned query families.
+- Evidence grain: Retain each test's document, employee-date, operation, or planning grain; overlapping test counts are not additive.
 - Main tables: `Employee`, `Item`, `PurchaseInvoice`, `DisbursementPayment`, `PayrollRegister`, `PayrollPayment`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `WorkCenter`, `LaborTimeEntry`, `TimeClockEntry`
-- Related guide: [Audit Queries](../audit.md)
+- Related processes: [Order-to-Cash](../../processes/o2c.md), [Procure-to-Pay](../../processes/p2p.md), [Manufacturing](../../processes/manufacturing.md), [Payroll](../../processes/payroll.md)
+- Related guide: [Controls and Exceptions queries](../analysis-tracks.md#controls-and-exceptions)
 - Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
 - This case is the broad audit triage and source-tracing case. Use the specialized audit cases when you need deeper follow-through for workforce validity, attendance controls, replenishment support, or pricing governance.
 
-## Step-by-Step Walkthrough
+## Recommended Query Sequence
 
 ### Step 1. Build the starter exception map
 
@@ -303,12 +308,14 @@ The queries connect planning master data and recommendations to requisitions, wo
 
 ## Required Student Output
 
-Submit a short case memo or notebook note with these four artifacts:
+Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
 
-- Evidence summary: identify the key result rows, metrics, timing patterns, or exception families that changed your diagnosis.
-- Accounting or business interpretation: explain what the evidence means for the process, accounting treatment, managerial decision, or control risk.
-- Database explanation: name the source tables, row grain, join keys, or trace path that make the evidence defensible.
-- Management or audit conclusion: state which driver, document path, or exception family should be followed up first and why.
+- **Evidence summary:** Submit a triage pack for the one or two assigned exception families, with population, criterion, result, source keys, and disposition.
+- **Accounting or business interpretation:** Explain control risk and business consequence, distinguishing approval, timing, linkage, and status issues.
+- **Database explanation:** Trace summary results to source rows, identify test overlap, and record query version, release, period, and selection method.
+- **Management or audit conclusion:** Rank follow-up by supported risk and evidence quality, name process owners, and identify provisional conclusions.
+
+Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
 
 ## Optional Excel Follow-Through
 
@@ -326,8 +333,12 @@ Submit a short case memo or notebook note with these four artifacts:
 - Analytics judgment: Which findings are timing issues, approval failures, linkage failures, master-data issues, or validation-only seeds?
 - Escalation/next step: Which issue should stay in the broad review pack, and which should move to a specialized audit case?
 
+## Limitations and Judgment
+
+This is a teaching triage exercise, not an audit opinion. Specialized seeds may be absent from an assigned release or population; document zero results rather than inferring missing data.
+
 ## Next Steps
 
-- Read [Audit Queries](../audit.md) when you want the broader audit query library around these anomaly families.
+- Read [Controls and Exceptions queries](../analysis-tracks.md#controls-and-exceptions) when you want the broader audit query library around these anomaly families.
 - Read [Schema Reference](../../reference/schema.md) when you need the table bridges behind a flagged exception.
 - Read [Attendance Control Audit Case](attendance-control-audit-case.md), [Replenishment Support Audit Case](replenishment-support-audit-case.md), or [Pricing Governance Audit Case](pricing-governance-audit-case.md) when the broad triage points to a specialized control area.

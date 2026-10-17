@@ -1,8 +1,23 @@
 ---
-description: Learn the procure-to-pay process in the synthetic accounting analytics dataset, from requisitions and receipts to supplier invoices, disbursements, and GLEntry.
+title: Procure-to-Pay Accounting Process
+description: Explore procure-to-pay responsibilities with editable BPMN, Mermaid document flows, approval evidence, and an AIS activity connecting requisitions, receipts, supplier invoices, and payment.
 ---
 
+import BpmnDiagram from "@site/src/components/BpmnDiagram";
+
 # Procure-to-Pay Process
+
+## Business Storyline
+
+**Illustrative scenario:** Charles River needs merchandise or components to support customer demand. A purchasing request becomes a supplier commitment, a receipt, a payable, and eventually a payment. Select actual records from your assigned file rather than treating this scenario as a specific purchase.
+
+The company does not buy inventory or services at random. A department or planning signal identifies a need, purchasing turns that need into supplier orders, warehouse staff receive the goods when they arrive, accounts payable records the supplier invoice, and treasury pays it when approved. Some purchasing demand is routine replenishment, and some supports manufacturing's need for raw materials and packaging.
+
+That distinction matters. A requisition is not the same thing as a purchase order. A receipt is not the same thing as a supplier invoice. A supplier invoice is not the same thing as payment. Students can see each stage separately in the data and use that separation to answer both accounting and audit questions.
+
+Most P2P activity follows the normal inventory and materials path: plan, requisition, order, receive, invoice, pay. A secondary AP path also exists for certain operating expenses. Finance may estimate the expense first through an accrual, then AP later clears that estimate through a direct service invoice that has no goods receipt behind it.
+
+Capital purchases follow the same front-end P2P approvals and supplier-document path. The difference shows up after invoicing: a CAPEX item creates a `FixedAsset` and `FixedAssetEvent` trail, cash purchases settle through the normal disbursement path, and note-financed purchases are later reclassed from AP into notes payable instead of being paid immediately in cash.
 
 ## What Students Should Learn
 
@@ -11,15 +26,44 @@ description: Learn the procure-to-pay process in the synthetic accounting analyt
 - Identify the core tables used for three-way match, open AP, and planning-supported replenishment analysis.
 - Recognize the control difference between receipt-matched inventory invoicing and direct accrued-service settlement.
 
-## Business Storyline
+## Decisions and Evidence
 
-The company does not buy inventory or services at random. A department or planning signal identifies a need, purchasing turns that need into supplier orders, warehouse staff receive the goods when they arrive, accounts payable records the supplier invoice, and treasury pays it when approved. Some purchasing demand is routine replenishment, and some supports manufacturing's need for raw materials and packaging.
+Purchasing commits to a supplier; receiving establishes what arrived; AP determines the liability; treasury settles it. A match between ordered, received, and invoiced quantities supports a different conclusion from a payment-timing review. For an accrued service, the original journal estimate replaces the physical receipt as the settlement bridge.
 
-That distinction matters. A requisition is not the same thing as a purchase order. A receipt is not the same thing as a supplier invoice. A supplier invoice is not the same thing as payment. Students can see each stage separately in the data and use that separation to answer both accounting and audit questions.
+Start with the [receipt-to-payable exercise](../learn-and-practice/receipt-to-payable.md), which stays within a receipt-matched line. The [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md) then compares that path with accrued-service settlement. Assess open AP as of a stated date even when a later payment is present in the file.
 
-Most P2P activity follows the normal inventory and materials path: plan, requisition, order, receive, invoice, pay. A secondary AP path also exists for certain operating expenses. Finance may estimate the expense first through an accrual, then AP later clears that estimate through a direct service invoice that has no goods receipt behind it.
+## Participants and Responsibilities
 
-Capital purchases now follow the same front-end P2P approvals and supplier-document path. The difference shows up after invoicing: a CAPEX item creates a `FixedAsset` and `FixedAssetEvent` trail, cash purchases settle through the normal disbursement path, and note-financed purchases are later reclassed from AP into notes payable instead of being paid immediately in cash.
+The **supplier** is external. Internal lanes distinguish the **Requester or Planner**, **Purchasing**, **Receiving**, **Accounts Payable**, and **Treasury**. Requisition, order, invoice, and payment records include approval support; receiving provides a different kind of evidence about what arrived. The model allocates responsibilities for teaching and does not establish that all duties were performed by different employees.
+
+## BPMN Business Process
+
+<BpmnDiagram modelId="procure-to-pay" />
+
+### Interpret the Activities and Decisions
+
+1. A need becomes an approved requisition and purchase order. The order communicates a supplier commitment; it does not establish that goods arrived.
+2. Receiving records actual quantities. AP links a receipt-matched invoice to the relevant receipt line and records the liability. The overview follows a representative receipt-before-invoice path; receipts, bills, and approvals can have different dates.
+3. Treasury settles the payable through an authorized disbursement. Open AP at a reporting date can coexist with a later payment in the file.
+
+<details>
+<summary>Compare the accrued-service settlement path</summary>
+
+<BpmnDiagram modelId="accrual-settlement" />
+
+An accrued service uses the finance estimate and `PurchaseInvoiceLine.AccrualJournalEntryID`, rather than a goods receipt, as its settlement bridge. Any residual adjustment and later cash payment remain separate events. The [manual journals guide](manual-journals-and-close.md#accrual-estimate-to-ap-settlement) explains that exception.
+
+</details>
+
+### Risks, Controls, and Evidence
+
+| Risk and control objective | Evidence available | Teaching boundary |
+|---|---|---|
+| Unauthorized commitment: establish purchase approval | Requester and approver fields on `PurchaseRequisition`; creator and approver fields on `PurchaseOrder` | Compare identities and amounts with documented authority; an approver field alone does not prove independent authorization |
+| Incorrect liability: compare ordered, received, and invoiced quantities at line grain | `PurchaseOrderLine`, `GoodsReceiptLine.POLineID`, `PurchaseInvoiceLine.GoodsReceiptLineID` | The links support a three-way comparison; an automated match tolerance, payment block, or exception queue is **not established** by them |
+| Duplicate or unsupported payment: pay an approved, supported liability | `PurchaseInvoice` approval fields and `DisbursementPayment` | An independent duplicate-payment review is a **proposed teaching control**; investigate differences before concluding error |
+
+The Mermaid views below focus on the operational records and accounting effects. The [model library](../learn-the-business/process-flows.md#model-library) supplies the notation guide and editable sources.
 
 ## Normal Process Overview
 
@@ -76,7 +120,7 @@ Start with why the purchase was needed, then move into supplier commitment, rece
 - `PurchaseInvoiceLine.GoodsReceiptLineID` is the authoritative receipt-match link for inventory and material invoicing.
 - `PurchaseInvoiceLine.AccrualJournalEntryID` is the authoritative link for direct accrued-service settlement.
 - `FixedAssetEvent.PurchaseInvoiceID`, `PurchaseInvoiceLineID`, and `DisbursementID` extend that same trace when the purchased item is capitalized instead of expensed or stocked.
-- P2P is multi-period in the current generator. Receipt, invoicing, and payment do not need to occur in the same month.
+- P2P spans periods in the published dataset. Receipt, invoicing, and payment do not need to occur in the same month.
 
 ## Analytical Subsections
 
@@ -106,11 +150,11 @@ flowchart LR
 
 **Starter analytical question:** Which purchase requisitions were clearly supported by weekly planning versus created as residual execution demand?
 
-```sql
--- Teaching objective: Trace purchased demand from planning support into requisition creation.
--- Main join path: SupplyPlanRecommendation -> PurchaseRequisition, with DemandForecast and InventoryPolicy for planning context.
--- Suggested analysis: Group by item group, warehouse, planner, or driver type.
-```
+**Analytical plan**
+
+- Objective: Trace purchased demand from planning support into requisition creation.
+- Evidence path: SupplyPlanRecommendation -> PurchaseRequisition, with DemandForecast and InventoryPolicy for planning context.
+- Comparison: Group by item group, warehouse, planner, or driver type.
 
 ### Purchase Order to Receipt Traceability
 
@@ -139,11 +183,11 @@ flowchart LR
 - `GoodsReceiptLine.POLineID -> PurchaseOrderLine.POLineID`
 - `GoodsReceiptLine.GoodsReceiptID -> GoodsReceipt.GoodsReceiptID`
 
-```sql
--- Teaching objective: Trace supplier orders into one or more physical receipts.
--- Main join path: PurchaseRequisition -> PurchaseOrderLine -> GoodsReceiptLine.
--- Suggested analysis: Compare requisition date, order date, expected delivery date, and receipt date by supplier or item group.
-```
+**Analytical plan**
+
+- Objective: Trace supplier orders into one or more physical receipts.
+- Evidence path: PurchaseRequisition -> PurchaseOrderLine -> GoodsReceiptLine.
+- Comparison: Compare requisition date, order date, expected delivery date, and receipt date by supplier or item group.
 
 ### Receipt to Supplier Invoice Matching
 
@@ -168,11 +212,11 @@ flowchart LR
 
 **Starter analytical question:** Which supplier invoice lines matched receipts cleanly, and which receipt lines remained uninvoiced at period end?
 
-```sql
--- Teaching objective: Trace receipt-based invoicing through the three-way-match path.
--- Main join path: GoodsReceiptLine -> PurchaseInvoiceLine -> PurchaseInvoice.
--- Suggested analysis: Compare receipt date and invoice date by supplier, item, or month-end.
-```
+**Analytical plan**
+
+- Objective: Trace receipt-based invoicing through the three-way-match path.
+- Evidence path: GoodsReceiptLine -> PurchaseInvoiceLine -> PurchaseInvoice.
+- Comparison: Compare receipt date and invoice date by supplier, item, or month-end.
 
 ### Supplier Payment and Open AP
 
@@ -198,11 +242,23 @@ flowchart LR
 
 **Starter analytical question:** Which supplier invoices remained unpaid after due date, and how does payment lag vary by supplier or item group?
 
-```sql
--- Teaching objective: Separate supplier invoicing from supplier payment.
--- Main join path: PurchaseInvoice -> DisbursementPayment, with GLEntry for posted effect.
--- Suggested analysis: Compare invoice date, due date, and payment date by supplier or spend type.
-```
+**Analytical plan**
+
+- Objective: Separate supplier invoicing from supplier payment.
+- Evidence path: PurchaseInvoice -> DisbursementPayment, with GLEntry for posted effect.
+- Comparison: Compare invoice date, due date, and payment date by supplier or spend type.
+
+## Optional AIS Activity: Design a Purchasing Review
+
+**Context and objective:** a reviewer wants to distinguish supplier commitment, receipt, liability recognition, and payment. Explain one actual receipt-matched purchase, then propose a control for one identified risk.
+
+**Prerequisites, tools, and sources:** complete the receipt-to-payable exercise linked above and review AP and GRNI concepts. Use a SQL tool with the published SQLite file, or Excel filters and lookups, plus a copy of the editable Draw.io model. Sources are `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment`, and `GLEntry`.
+
+1. State the release, reporting date, and selected line keys. Trace the receipt-matched path and identify the represented responsibility at each activity.
+2. Compare quantities, approval support, and event dates. Explain any unmatched quantity or open balance as of the date before labeling it an exception.
+3. Annotate a **proposed teaching control**, such as independent match review. Specify its risk, objective, owner, evidence, test, and escalation question; do not depict the database as enforcing that proposal.
+
+**Assessed deliverable:** submit an annotated BPMN copy, a line-level evidence schedule, and one risk/control-matrix row using the [workshop format](../learn-and-practice/bpmn-controls-workshop.md). Explain how the proposal could be assessed and what the stored records cannot prove. A receipt-matched sample does not establish controls for direct accrued services, CAPEX financing, or the full payable population. Continue to the existing P2P case and reports below for the wider analysis.
 
 ## Common Student Questions
 
@@ -217,8 +273,8 @@ flowchart LR
 
 ## Next Steps
 
-- Read [Commercial and Working Capital](../analytics/reports/commercial-and-working-capital.md) when you want the wider view of supplier settlement, AP timing, and working-capital pressure.
-- Read [Financial Reports](../analytics/reports/financial.md) when you want the reporting layer behind AP, accrual settlement, and cash conversion.
+- Read [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory) when you want the wider view of supplier settlement, AP timing, and working-capital pressure.
+- Read [Statements and Cash](../analytics/index.md#statements-and-cash) when you want the reporting layer behind AP, accrual settlement, and cash conversion.
 - Read [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md) when you want a guided walkthrough from requisition and receipt into AP and payment.
 - Read [CAPEX and Fixed Asset Lifecycle Case](../analytics/cases/capex-fixed-asset-lifecycle-case.md) when you want to keep the same P2P document trail in view while teaching capitalization, financing, and disposal.
 - Jump to [Accrual Estimate to AP Settlement](../processes/manual-journals-and-close.md#accrual-estimate-to-ap-settlement) when you want the finance-to-AP bridge for accrued services.

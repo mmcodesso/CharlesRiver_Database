@@ -1,47 +1,23 @@
 ---
 title: Query Library
-description: Query repository for financial, managerial, audit, and case-support SQL used in the published teaching dataset.
+description: Browse all 170 Charles River SQL queries in the same six business topics as the reports, inspect source logic, and follow guided reconciliation paths.
 sidebar_label: Query Library
 ---
 
-import { QueryCatalog } from "@site/src/components/QueryReference";
-import { caseSupportTraceQueries } from "@site/src/generated/queryDocCollections";
+import QueryLibrary from "@site/src/components/QueryLibrary";
 
 # Query Library
 
-The Query Library is the reusable SQL repository for this section. It is best after students know the business question they are working on. If students are still learning how to run SQL or read the company story, start with [SQL Guide](sql-guide.md), [Reports Hub](reports/index.md), or [Cases](cases/index.md) first.
+Choose a question from a [business process](../learn-the-business/process-flows.md), then browse the same business topics used in [Reports and Analytics](index.md). Each query appears once, with its objective, output grain, source tables, expandable SQL, and original-file download together.
 
-Reports and cases answer different teaching needs. Reports show finished outputs. Cases give students a guided assignment flow. The Query Library sits underneath both: it exposes the SQL building blocks and the source-table logic behind the learning path.
+Search by question or table, or select a business topic. Expand **Interpret these results** for topic-specific accounting guidance and **Anomaly coverage** where available. The [guided query paths](#guided-query-paths) connect statement reconciliation and CAPEX steps without duplicating query cards.
 
-## Query Domains
+## Browse Queries
 
-| Domain | What students use it for | Go to |
-|---|---|---|
-| Financial Queries | Statements, settlement timing, working capital, payroll liabilities, accruals, CAPEX, budget, and commercial performance | [Financial Queries](financial.md) |
-| Managerial Queries | Cost management, product portfolio, manufacturing, labor, workforce coverage, planning, replenishment, pricing, and design-service utilization | [Managerial Queries](managerial.md) |
-| Audit Queries | Document completeness, approvals, master data, workforce controls, planning support, pricing governance, source tracing, and anomaly review | [Audit Queries](audit.md) |
+<QueryLibrary />
 
-## When to Use the Query Library
+## Build Your Analysis
 
-Open the Query Library when the class needs the SQL inventory rather than a finished report or a guided case. It is not the first reading page for beginners:
+Start with the [SQL Guide](sql-guide.md) for a first query or [Learn and Practice](../learn-and-practice/index.md) for a focused evidence trace. The [cases](cases/index.md) provide structured investigations and assessed outputs.
 
-1. start with [SQL Guide](sql-guide.md) when students need the mechanics of running SQL
-2. open the query domain that matches the accounting or business question after the process is clear
-3. use the compact query cards to read the objective, output grain, and main tables
-4. expand the SQL only when students are ready to inspect joins, filters, or calculations
-5. move into [Reports](reports/index.md) or [Cases](cases/index.md) when students need interpretation or a structured assignment
-
-## Case-Support Trace Queries
-
-These queries are built for the core process-tracing cases. They are public SQL, but they are best used inside the matching case because the case explains the transaction story and the required student output.
-
-<QueryCatalog
-  items={caseSupportTraceQueries}
-  helperText="Use these trace queries with the matching case page. They are source-level support queries rather than general starter packs."
-/>
-
-## Next Steps
-
-1. Use [Financial Queries](financial.md), [Managerial Queries](managerial.md), or [Audit Queries](audit.md) when students need reusable SQL.
-2. Use [Reports Hub](reports/index.md) when students need management-style or perspective-led interpretation.
-3. Use [Cases](cases/index.md) when students need a guided assignment with required output.
+Before comparing results, define the fiscal period, source population, row grain, sign convention, and filters. Keep the assigned release unchanged. Align dates and populations, retain document keys, and distinguish an exception flag from a supported accounting or control conclusion. The [Schema Reference](../reference/schema.md) and [Posting Reference](../reference/posting.md) support the final source-to-ledger check.
