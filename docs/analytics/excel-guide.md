@@ -1,284 +1,120 @@
 ---
-title: Excel Guide
-description: Build a first accounting evidence workbook with Power Query, profile the item catalog, check source totals, and extend the analysis into guided cases.
-sidebar_label: Excel Guide
+title: "Set Up Excel for the Tutorials"
+description: "Import the released customer table into Microsoft 365 Excel, verify its rows, and prepare a separate tutorial workbook."
+sidebar_label: "Set Up Excel"
+pagination_prev: "learn-and-practice/index"
+pagination_next: "learn-and-practice/meet-the-records"
 ---
 
-# Excel Starter Guide
+# Set Up Excel
 
-Begin with a small, explainable result. The foundation exercise below uses one source table to help you establish row grain, check a control total, and write an interpretation before attempting a multi-table model.
+Your first goal is to open a small, understandable table. You will keep the published workbook as a source and build your own analysis in a separate file.
 
-Read the [company story](../learn-the-business/company-story.md), then obtain the workbook from [Downloads](../start-here/downloads.md). The [SQL Guide](sql-guide.md) offers a parallel route into source evidence.
+Use **Microsoft 365 desktop Excel**. The instructions below give the Windows menu path first and the Mac path where it differs. You do not need prior Power Query experience. Power Query is the import window that lets you choose tables and filters before bringing data into your workbook.
 
-## Workbook Setup
+<span id="workbook-setup"></span>
 
-The dataset workbook contains one worksheet for each dataset table. Each worksheet is already exported as a formatted Excel Table with filters and a frozen header row.
+<span id="recommended-excel-setup"></span>
 
-## Recommended Excel Setup
+## 1. Obtain the Source and Create Your Analysis File
 
-The recommended workflow is to treat the published workbook as a source file, not as the place where you build every exercise.
+Get the <ReleaseDownloadLink type="excel">published Excel workbook</ReleaseDownloadLink> from [Downloads](../start-here/downloads.md). Wait for the download to finish, and retain the original filename and release information.
 
-For each new exercise:
+Open Excel and create a **blank workbook**. Save it as **Lesson01.xlsx** in your own analysis folder. Keep the downloaded <FileName type="excel" /> as a separate source file. The lesson calculations and notes belong in Lesson01.
 
-1. create a new blank worksheet in your working Excel file
-2. use `Data -> Get Data -> From File -> From Workbook`
-3. select <FileName type="excel" />
-4. import only the tables required for that exercise through Power Query
-5. load those tables into the current workbook
-6. build pivots, formulas, charts, or summary tabs from the imported tables
+The released workbook is about **129 MB** and contains **82 formatted tables**, so allow time for its table list to appear. You will import only the tables a lesson specifies.
 
-This approach keeps each exercise cleaner, reduces workbook clutter, and makes it easier to control row counts, joins, and refresh steps.
+## 2. Import the Customer Table
 
-## Foundation Exercise: A Catalog Profile
+1. In your blank workbook, choose **Data → Get Data → From File → From Excel Workbook** on Windows. On Mac, choose **Data → Get Data (Power Query)** and select **Excel workbook** as the source.
+2. Browse to the downloaded <FileName type="excel" />.
+3. In the Navigator, select **T4_Customer**, the formatted Excel Table. Do not also select the worksheet named Customer; that would import the same records twice.
+4. Choose **Transform Data** to open Power Query Editor. On Mac, the import dialog may first ask you to select the workbook and continue to its data preview.
+5. In **Query Settings**, set the query name to **CustomerData**.
+6. Confirm the first row contains field names such as CustomerID and CustomerName. Check the type icon beside CustomerID: choose **Whole Number** if necessary. Keep CustomerName and CustomerSegment as **Text**.
+7. Choose **Home → Close & Load** to load the result into a worksheet as a table. On Windows, if a load-options dialog appears, choose **Table** and **New worksheet**.
+8. Click inside the loaded table. On **Table Design** (or the **Table** tab on Mac), confirm its **Table Name** is **CustomerData**. Change that working-table name if Excel assigned another name.
 
-**Context and problem.** Merchandising needs to understand the composition of the product catalog before comparing profitability. This is an illustrative management request. Use actual item records from the assigned workbook and make no assumption about which collection will be largest.
+An import query remembers where the source is and which steps you applied. It does not require you to write SQL or change the source workbook.
 
-**Learning objectives.** Recognize one row per item, distinguish counts from monetary measures, and explain how lifecycle and supply mode organize a catalog. Prerequisites: the company story, basic Excel tables, and PivotTables. Tools: Excel with Power Query, the published source workbook, and a separate working workbook. Source: `Item`.
+## 3. Check the Import
 
-1. Import only `Item` into the working workbook. Record the source filename or release, table name, import steps, and any filters.
-2. Confirm that `ItemID` identifies the item rows. Check for blank or duplicate keys and retain the imported row count as a control total.
-3. Build a PivotTable with `CollectionName` as rows, `LifecycleStatus` as columns, and count of `ItemID` as the value. Treat blank descriptive attributes as visible data-quality observations.
-4. Add `SupplyMode` as a filter or a second view. Reconcile the unfiltered pivot grand total to the imported row count; explain any difference before proceeding.
-5. Write an interpretation of the catalog mix and one question to investigate with transaction data. Do not describe an item count as sales, demand, or profit.
+Create a sheet named **Notes**. In A1, type `Customer rows`. In B1, enter:
 
-**Assessed deliverable.** Submit a workbook containing the source/import note, key and row-count checks, the catalog pivot, and a brief interpretation. A reviewer should be able to refresh the import and reproduce the total. Assessment focuses on traceable inputs, correct counts, and a conclusion within the evidence's limits.
+~~~text
+=ROWS(CustomerData[CustomerID])
+~~~
 
-**Interpretation and limits.** This is a current catalog profile. It does not establish historical status, revenue, profitability, or customer demand. Those questions need dated transaction evidence and explicit join logic.
+Expect **220** customer rows in release **v2027.1**. The header is not a customer row. In the loaded table, open the CustomerID filter and find **130**. Its name should be **Jones, Richardson and Beard**, with segment **Design Trade**. Clear the filter after checking.
 
-Continue to the [Product Portfolio and Lifecycle Case](cases/product-portfolio-and-lifecycle-case.md) for applied master-data and activity review. Use the [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) for the concepts behind analysis and interpretation.
+Record the source filename, release **v2027.1**, imported table **T4_Customer**, working table **CustomerData**, and row count on Notes. Save Lesson01.xlsx.
 
-## Recommended Workflow Pattern
+**Ready check:** you can locate a named table, filter a key, read a row, and save your own working file. These are the prerequisites for [Meet the Records](../learn-and-practice/meet-the-records.md).
 
-For most classes, use this sequence:
+<span id="recommended-workflow-pattern"></span>
 
-1. run the starter SQL file first when a matching SQL path exists
-2. identify the few tables needed for the Excel version of the exercise
-3. import only those tables with `Get Data` and Power Query
-4. recreate the same idea in Excel
-5. compare the workbook output to the SQL result
-6. use the case doc for interpretation questions
+<span id="power-query-import-pattern"></span>
 
-## Power Query Import Pattern
+<span id="using-the-workbook"></span>
 
-Use Power Query as the default import path for Excel analysis.
+## Repeat an Import
 
-It works well because it lets you:
+Each later lesson lists its source-table names, working-table names, and filters. Start a new workbook for each lesson so a previous investigation's filters cannot silently change the next one.
 
-- bring in only the tables required for one exercise
-- keep the original published workbook unchanged
-- filter or reshape data before loading it into the workbook
-- refresh the imported tables if the source file changes
+Repeat the same **Get Data → workbook → table → Transform Data** procedure. In Power Query:
 
-For most student work, import a small set of related tables instead of loading the full dataset workbook into the exercise file.
+1. Give the query the working-table name specified by the lesson.
+2. Set identifier columns to Whole Number, amounts/hours to Decimal Number, and date columns to Date.
+3. Apply any required source filters with the column arrows. Two filters on different columns act together. For alternative IDs in one column, select both values, or use **Number Filters → Equals → Or → Equals**.
+4. For dates, use **Date Filters → Custom Filter** and set both boundaries explicitly. To include all of March, use “on or after January 1” **and** “before April 1” when requested.
+5. Close & Load, then confirm the loaded Excel Table name. Use that name in formulas.
 
-Typical examples:
+For example, `T9_SalesOrder` is the exported table, `SalesOrder` is its source worksheet/database-table name, and `SalesOrderData` can be your local imported table. A formula referring to SalesOrderData works only after that table has been named accordingly.
 
-- financial exercise: `GLEntry`, `Account`, `SalesInvoice`, `CashReceiptApplication`
-- managerial exercise: `Item`, `SalesInvoiceLine`, `Employee`, `CostCenter`
-- audit exercise: `Employee`, `PurchaseOrder`, `JournalEntry`, `TimeClockEntry`
+A **Power Query filter** limits which rows are loaded. A **worksheet filter** only hides rows already loaded. `SUM` includes hidden rows; `SUBTOTAL(109,...)` sums visible rows. Lessons specify which kind of filter and calculation they need.
 
-The topic lists below are starting sets, not complete join recipes. Inspect the paired case and SQL first, identify every table and key required for your chosen measure, and preserve one-to-many relationships when merging in Power Query. Aggregate each population to a compatible grain before comparing totals; never fix a duplicated measure by deleting arbitrary result rows.
+To edit an import, on Windows open **Data → Queries & Connections**, then double-click the query. On Mac use **Data → Get Data (Power Query) → Launch Power Query Editor** and select the query. Refresh the imported table after changing its source query. Refresh a PivotTable separately after its input changes.
 
-## Financial Workflows
+## If Your Result Looks Different
 
-### Working capital and cash conversion
+- **Formula shows a name error:** check the working table and column names. The formulas use English function names; localized Excel may use translated names and semicolons instead of commas.
+- **Date filters behave like text filters:** set the column type to Date in Power Query. For typed cutoff cells, use `DATE(year,month,day)`.
+- **A lookup says “No match”:** compare the stored keys and their types. Do not replace missing matches with a guessed name or zero.
+- **An amount differs:** check release, source filters, worksheet filters, and whether a merge repeated rows.
+- **The source moved:** use **Data Source Settings** to select its new location, then refresh.
+- **Power Query menus are absent:** confirm you are using a current Microsoft 365 desktop installation. The browser version is outside this tutorial's documented route.
 
-Use:
-
-- `GLEntry`
-- `Account`
-- `SalesInvoice`
-- `CashReceiptApplication`
-- `PurchaseInvoice`
-- `PurchaseInvoiceLine`
-- `GoodsReceipt`
-- `DisbursementPayment`
-- `PayrollRegister`
-- `PayrollLiabilityRemittance`
-
-Suggested outputs:
-
-- month-end working-capital bridge
-- invoice-to-application timing
-- invoice-to-payment timing
-- receipt-to-payment timing
-
-Best paired case:
-
-- [Working Capital and Cash Conversion Case](cases/working-capital-and-cash-conversion-case.md)
-
-### Financial-statement bridge
-
-Use:
-
-- `GLEntry`
-- `JournalEntry`
-- `Account`
-- `WorkOrderClose`
-- `PayrollRegister`
-
-Suggested outputs:
-
-- trial balance by month
-- journal-entry type mix
-- control-account bridge
-- retained-earnings and close-entry review
-
-Best paired case:
-
-- [Financial Statement Bridge Case](cases/financial-statement-bridge-case.md)
-
-### Revenue, margin, and payroll mix
-
-Use:
-
-- `SalesInvoiceLine`
-- `CreditMemoLine`
-- `ShipmentLine`
-- `Item`
-- `PayrollRegister`
-- `Employee`
-- `CostCenter`
-
-Suggested outputs:
-
-- revenue and gross margin by collection, style, lifecycle, and supply mode
-- payroll and people-cost mix by cost center, job family, and job level
-- customer deposits and unapplied cash aging
-- price realization versus list price by segment and customer
-- gross-margin comparison for promotion versus non-promotion sales
-
-Best paired case:
-
-- [Pricing and Margin Governance Case](cases/pricing-and-margin-governance-case.md)
-
-## Managerial and Cost-Accounting Workflows
-
-### Product portfolio profitability
-
-Use:
-
-- `Item`
-- `SalesInvoiceLine`
-- `CreditMemoLine`
-- `CustomerRefund`
-- `SalesOrderLine`
-- `ShipmentLine`
-
-Suggested outputs:
-
-- SKU mix by collection, style, lifecycle, and supply mode
-- contribution margin by collection and material
-- return and refund impact by lifecycle status
-- shipment lag and fill rate by collection and style
-
-Best paired case:
-
-- [Product Portfolio Profitability Case](cases/product-portfolio-profitability-case.md)
-
-### Labor and workforce mix
-
-Use:
-
-- `Employee`
-- `CostCenter`
-- `PayrollRegister`
-- `TimeClockEntry`
-- `LaborTimeEntry`
-- `WorkCenter`
-
-Suggested outputs:
-
-- headcount by work location and job family
-- payroll cost by cost center and job level
-- approved clock hours versus direct labor usage
-- workforce mix by employment status
-- staffing coverage versus planned work-center load
-- rostered hours versus approved worked hours by shift
-- absence rate by work location and job family
-- overtime approval coverage and punch-to-pay bridges
-
-Best paired case:
-
-- [Workforce Cost and Org-Control Case](cases/workforce-cost-and-org-control-case.md)
-- [Workforce Coverage and Attendance Case](cases/workforce-coverage-and-attendance-case.md)
-
-### Manufacturing, routing, and capacity
-
-Use:
-
-- `BillOfMaterial`
-- `Routing`
-- `RoutingOperation`
-- `WorkCenterCalendar`
-- `WorkOrder`
-- `WorkOrderOperation`
-- `WorkOrderOperationSchedule`
-- `MaterialIssueLine`
-- `ProductionCompletionLine`
-- `WorkOrderClose`
-
-Suggested outputs:
-
-- BOM cost rollup
-- operation throughput and planned-versus-actual labor
-- daily load versus capacity
-- backlog aging and late-operation review
-- weekly forecast versus actual demand by item family
-- recommendation mix by priority and planner
-- rough-cut capacity pressure by work center and planning week
-- collection revenue and margin before and after promotions
-- customer-specific pricing concentration and override pressure
-
-Best paired case:
-
-- [Demand Planning and Replenishment Case](cases/demand-planning-and-replenishment-case.md)
-
-## Audit Workflows
-
-### Master-data and workforce controls
-
-Use:
-
-- `Employee`
-- `Item`
-- `PayrollRegister`
-- `TimeClockEntry`
-- `LaborTimeEntry`
-- `PurchaseOrder`
-- `JournalEntry`
-
-Suggested outputs:
-
-- post-termination activity by process area
-- duplicate executive-role review
-- missing item-master attributes by item group
-- discontinued or pre-launch item activity
-- approval concentration by expected role family
-- scheduled-without-punch and punch-without-schedule review
-- overtime without approval review
-- absence with worked time review
-- overlapping or incomplete punch review
-- roster after termination review
-- forecast approval and override review
-- inactive or stale inventory policy review
-- requisitions and work orders without planning support
-- recommendation converted after need-by date review
-- discontinued or pre-launch planning activity review
-- sales below floor without approval
-- expired or overlapping price-list review
-- promotion scope and date mismatch review
-- customer-specific price-list bypass review
-- override approval completeness review
-
-## Using the Workbook
-
-- <FileName type="excel" /> is the main source workbook for dataset tables.
-- For most new exercises, create a fresh working sheet and import only the required tables with Power Query.
-- Open the published workbook when you need to inspect source sheets directly, but do the exercise work in your imported tables and analysis sheets.
+Microsoft provides [workbook import instructions](https://support.microsoft.com/en-us/excel/import-data-from-data-sources-power-query) and [Mac Power Query guidance](https://support.microsoft.com/en-gb/excel/import-and-shape-data-in-excel-for-mac-power-query).
 
 ## Next Steps
 
-- Read [SQL Guide](sql-guide.md) for the matching query workflow.
-- Read [Cases](cases/index.md) for guided walkthroughs.
-- Read [Instructor Adoption Guide](../teach-with-data/instructor-guide.md) for classroom sequencing.
+Continue to [1. Meet the Records](../learn-and-practice/meet-the-records.md?tool=excel). Keep the Excel tab selected throughout the tutorials. Each lesson ends with a small result to save and a short interpretation.
+
+<span id="financial-workflows"></span>
+
+<span id="working-capital-and-cash-conversion"></span>
+
+<span id="financial-statement-bridge"></span>
+
+<span id="revenue-margin-and-payroll-mix"></span>
+
+<span id="managerial-and-cost-accounting-workflows"></span>
+
+<span id="product-portfolio-profitability"></span>
+
+<span id="labor-and-workforce-mix"></span>
+
+<span id="manufacturing-routing-and-capacity"></span>
+
+<span id="audit-workflows"></span>
+
+<span id="master-data-and-workforce-controls"></span>
+
+## Continue from an Older Guide {#foundation-exercise-a-catalog-profile}
+
+<details>
+<summary>Continue from an older Excel guide link</summary>
+
+The former catalog exercise and financial, managerial, and audit workflow lists are now replaced by the [numbered tutorials](../learn-and-practice/index.md). Begin with the foundations, then choose a process investigation. For later work, the [Case Library](cases/index.md) and [Reports and Analytics](index.md) retain their broader business topics.
+
+</details>

@@ -1,108 +1,144 @@
 ---
-title: Order-to-Cash Accounting Process
-description: Follow order-to-cash with editable BPMN models, Mermaid source-document flows, internal-control questions, and evidence from sales orders through cash application and GLEntry.
+title: Order-to-Cash — From Customer Order to Settlement
+description: Follow Charles River's customer order through shipment, billing, cash receipt, and invoice settlement before exploring the supporting records and exceptions.
+sidebar_label: Order-to-Cash
+pagination_prev: learn-the-business/process-flows
+pagination_next: processes/design-services
+toc_max_heading_level: 2
 ---
 
 import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
 # Order-to-Cash Process
 
-## Business Storyline
+<span id="business-storyline"></span>
 
-**Illustrative scenario:** a Charles River customer orders furnishings, receives goods in one or more shipments, and pays an invoice. Follow the business handoffs, then select real records from your assigned file to investigate them; the scenario does not identify a particular customer or order.
+<span id="what-students-should-learn"></span>
 
-In this dataset, the order-to-cash cycle starts when the sales team records customer demand and ends only when that sale is settled in cash. Several teams touch the process along the way. Sales captures the order and freight terms, warehouse staff ship what is available, accounting bills what actually left the warehouse and any billable freight, accounting accrues sales commissions from invoice-line revenue, treasury records the money when it arrives, and accounting applies that cash against open invoices.
+## The Customer's Order Starts the Work
 
-That distinction matters. A customer order is not revenue. A shipment is not the same thing as an invoice. A cash receipt is not the same thing as settlement. Students can see those stages separately in the data and use that separation to answer both accounting and audit questions.
+Return to the furnishing project in our [company story](../learn-the-business/company-story.md). The design-trade customer has selected goods, and the sales coordinator records the request. The immediate question is practical: **what has the company promised, and what still needs to happen before the invoice is settled?**
 
-Most sales follow the normal path of order, shipment, invoice, cash, and settlement. Some sales later move into the customer-side exception path of return, credit, and sometimes refund. That exception path is part of O2C, not a separate business cycle.
+This is an illustrative customer situation, not a transaction to search for. You can understand the process here without opening the dataset. Later, you will select actual records for a tracing exercise.
 
-The company also uses O2C for hourly design services. Those sales still start from `SalesOrder` and `SalesOrderLine`, but they move into `ServiceEngagement`, `ServiceTimeEntry`, and monthly billing instead of shipment. Students should read that as a second customer-fulfillment path inside O2C, not as a separate receivables system.
+Order-to-cash, or O2C, connects the customer's order with fulfillment, billing, and settlement. Sales, the warehouse, customer accounting, and treasury each contribute evidence. Their activities answer different questions about the same commercial relationship.
 
-## What Students Should Learn
+<span id="decisions-and-evidence"></span>
 
-- Distinguish the order, shipment, invoice, cash receipt, settlement, and return-correction stages in one customer sale.
-- Trace an O2C transaction from operational documents into `GLEntry`.
-- Identify the core tables used for revenue, receivables, fulfillment, cash, and customer-side exceptions.
-- Recognize timing differences that matter for cut-off, completeness, open-AR, working-capital, and return analysis.
+## Record the Promise, Then Fulfill It
 
-## Decisions and Evidence
+The sales coordinator records the goods, quantities, and commercial terms on the sales order. This gives operations a statement of demand. In the dataset, the order itself creates no ledger posting: no goods have yet left inventory and no customer invoice has been posted.
 
-Sales, warehouse operations, customer accounting, and treasury answer different questions about the same sale. Is demand accepted? Have goods left inventory? Has the customer been billed? Did cash arrive, and was it applied? A useful investigation names the event and its date before it calculates a balance or labels a delay.
+The warehouse then considers what can be shipped. Available stock may support fulfillment, while a backordered quantity awaits supply. An order can therefore lead to more than one shipment. To explain a delivery concern, compare the requested goods with what actually shipped, keeping the dates and quantities in view.
 
-Begin with the [goods-sale tracing exercise](../learn-and-practice/source-to-ledger.md), then extend the evidence into the [O2C Trace Case](../analytics/cases/o2c-trace-case.md). Record a real order and line from your assigned file; any fictional buyer scenario supplies context rather than a transaction to locate.
+A shipment records goods leaving inventory. This is the point at which the dataset recognizes the inventory reduction and cost of goods sold. Outbound freight also has its own expense and accrual effect. Those costs arise from fulfillment even though customer billing is a separate event.
 
-## Participants and Responsibilities
+The operations planner's supply work continues behind this activity. Purchased goods depend on inventory and replenishment; manufactured goods also depend on production. The later purchasing and manufacturing chapters explain those responsibilities. An O2C investigation starts with what the warehouse actually fulfilled.
 
-The **customer** is an external participant. Within Charles River, **Sales** records demand and commercial terms; the **Warehouse** fulfills goods orders; **Accounting** bills and applies cash; and **Treasury** records cash received. The BPMN lanes illustrate these responsibilities. Stored employee fields can support specific tests, but the lane layout does not establish segregation of duties in the actual records.
+## Bill the Goods That Shipped
 
-## BPMN Business Process
+Customer accounting prepares the invoice using the shipped goods as support. The invoice tells the customer what is being charged and records a receivable, the amount owed to Charles River. The dataset records goods revenue at this invoicing event.
+
+This separation makes timing visible. The order shows what was requested, the shipment shows what left inventory, and the invoice shows what was billed. You need each document to explain whether demand was fulfilled and whether shipped goods were invoiced.
+
+In a goods-sale trace, an invoice line links to the shipment line it bills. The order and invoice totals alone cannot establish that relationship. Freight billed to the customer and sales tax also need to be distinguished from merchandise revenue when interpreting an invoice.
+
+The customer may have design work billed as well. That work follows approved hours rather than a shipment. We will follow it in the next chapter; first, complete the goods-sale settlement path.
+
+## Receive the Money and Apply It
+
+Treasury records customer money when it arrives. Customer accounting then identifies which invoice or invoices it settles. The record of that allocation is called a cash application.
+
+In this dataset, a cash receipt increases cash and customer deposits or unapplied cash. Applying the receipt reduces that balance and reduces accounts receivable. This two-stage treatment lets you distinguish money received from an invoice actually settled.
+
+A receipt can be applied across invoices, and an invoice can have settlement activity over time. To explain its open balance, examine the relevant applications as of the reporting date. A convenient receipt reference on an invoice-related record is not a substitute for that application evidence.
+
+For the sales coordinator, the customer relationship may look complete once delivery has occurred. For the controller, the questions continue: was the delivery billed, what is owed, and what has been settled? Each answer belongs to a particular event and date.
+
+<span id="participants-and-responsibilities"></span>
+
+<span id="bpmn-business-process"></span>
+
+<span id="interpret-the-activities-and-decisions"></span>
+
+## Follow the Responsibilities
+
+**Who hands the work to whom?** Read the main BPMN from the customer's request through Sales, Warehouse, Accounting, and Treasury. A lane shows a responsibility; arrows within the company show the sequence of activities.
 
 <BpmnDiagram modelId="order-to-cash" />
 
-### Interpret the Activities and Decisions
+Start with the available-stock decision, then follow fulfillment into billing. At the cash-allocation review, notice that money can remain unapplied. Reaching that review's endpoint does not mean every invoice has been fully settled.
 
-1. An order starts a commercial commitment. The available-stock decision separates immediate fulfillment from a backorder that awaits supply. Neither the order nor the decision creates revenue.
-2. Warehouse fulfillment and accounting billing are separate activities. Goods invoices trace to shipped lines; hourly service work follows the [Design Services](design-services.md) model instead.
-3. Cash arrival and invoice application are separate handoffs. The allocation review may record an application or leave cash unapplied; its completion does not mean full settlement. Interpret the boundary with the selected reporting date and actual applications.
+The lanes are a teaching model. They do not prove that recorded tasks were performed independently by different employees. Actual employee and approval fields support that separate investigation.
 
-<details>
-<summary>Examine cash application and the returns exception</summary>
+<span id="normal-process-overview"></span>
 
-<BpmnDiagram modelId="cash-application" />
+<span id="how-to-read-this-process-in-the-data"></span>
 
-The matching decision explains application versus remaining unapplied cash. The detail includes receipt capture for context; the parent allocation review starts after that receipt. It is a teaching interpretation of the records, not evidence of an automated exception queue or a one-to-one execution binding between diagrams.
+## Connect the Events to the Records
 
-<BpmnDiagram modelId="returns-credit-refunds" />
-
-A physical return restores inventory. An approved credit memo reduces open receivables and retains any excess as customer credit; one memo can do both. A later refund clears customer credit in cash. These events need not occur together. Mermaid links show relationship endpoints rather than an exclusive business gateway; use the detailed BPMN allocation step and actual `GLEntry` rows when a memo spans both.
-
-</details>
-
-### Risks, Controls, and Evidence
-
-| Risk and control objective | Evidence available | Teaching boundary |
-|---|---|---|
-| Unauthorized pricing: support an exceptional price with approval | `SalesOrderLine.PriceOverrideApprovalID` and `PriceOverrideApproval` request and approval fields | Test the selected population; the presence of a record does not prove every override was authorized |
-| Incomplete billing: account for shipped quantities | `ShipmentLine` and `SalesInvoiceLine.ShipmentLineID` | An independent shipment-to-invoice reconciliation is a **proposed teaching control**, not a stored automated blocking rule |
-| Incorrect settlement or refund: distinguish cash, AR, and customer credit | `CashReceiptApplication`, `CreditMemo` approval fields, `CustomerRefund` | Compare authorizers and dates; do not infer a complete control procedure from lane separation |
-
-The Mermaid views below explain document lineage and posting effects. They complement the BPMN activities rather than representing additional approval workflows. The [model library](../learn-the-business/process-flows.md#model-library) explains the notation and provides editable sources.
-
-## Normal Process Overview
+The following map answers a narrower question: **which records help explain the goods, the bill, and its settlement?** You do not need to memorize the table names. Read them as labels for documents you now understand.
 
 ```mermaid
 flowchart LR
-    C[Customer]
-    SO[Sales Order]
-    SH[Shipment]
-    SI[Sales Invoice]
-    SC[Sales Commission Accrual]
-    CR[Cash Receipt]
-    CRA[Cash Receipt Application]
-    GL[GLEntry]
-
-    C --> SO --> SH --> SI
-    SI --> SC
-    C --> CR --> CRA
-    SH -. Posts COGS Inventory and Freight-Out Accrual .-> GL
-    SI -. Posts AR Revenue Freight Revenue and Sales Tax .-> GL
-    SC -. Posts Commission Expense and Commission Payable .-> GL
-    CR -. Posts Cash and Customer Deposits .-> GL
-    CRA -. Clears AR from Customer Deposits .-> GL
+    SO[SalesOrder and SalesOrderLine] --> SH[Shipment and ShipmentLine]
+    SH --> SI[SalesInvoice and SalesInvoiceLine]
+    CR[CashReceipt] --> APP[CashReceiptApplication]
+    APP -->|Applied to| SI
 ```
 
-Read the main diagram as promise, fulfillment, billing, commission accrual, cash, and settlement. Orders show demand. Shipments show physical movement. Invoices create receivables and revenue. Commission accruals match selling expense to the invoice-line revenue that earned it. Cash receipts record the arrival of money. Cash applications show which invoices were actually settled.
+Follow the goods across the top path. Then follow received money through its application to the invoice. This is a reading map; detailed joins belong to the reference sections below.
 
-## How to Read This Process in the Data
+The principal accounting events in the published model are:
 
-This page is organized around business flow first and data navigation second. The main diagram shows the normal O2C path. The smaller diagrams below show local lineage for one analytical task at a time. The fuller relationship map belongs on [Schema Reference](../reference/schema.md), not on this process page.
+| Event | What changes in the accounts |
+|---|---|
+| Sales order | No ledger posting |
+| Shipment | Inventory decreases; cost of goods sold and outbound freight expense are recognized |
+| Invoice | Receivables increase, with revenue and applicable tax recorded |
+| Cash receipt | Cash and customer deposits or unapplied cash increase |
+| Cash application | Customer deposits or unapplied cash and receivables decrease |
 
-:::tip
-Start with the business flow, then move into the subsection diagrams and tables when you need the exact trace for one analytical question.
-:::
+Detailed postings include freight, commissions, and other related amounts. Start by explaining the events above before combining those additional effects.
 
-## Core Tables and What They Represent
+## When Cash Arrives Before Allocation Is Complete
+
+Suppose the controller is reviewing receivables at period end. The customer has sent money, but a receipt has not yet been fully applied. That situation calls for an explanation of both the cash balance and the invoice balance.
+
+The receipt establishes that money was recorded. Applications establish how much reduced the selected invoice by the cutoff. A later application may explain eventual settlement without changing the earlier reporting-date position.
+
+An open invoice is therefore a starting point for investigation. Check its due date, applications, credits, and reporting date before describing a collection failure. The ordinary cash path also has a returns branch: a credit memo can affect what remains owed, and a refund is a separate cash event.
+
+## Check Your Understanding
+
+<details>
+<summary>The order is recorded. Has the dataset recognized the goods revenue?</summary>
+
+No. The order records demand and commercial terms. Shipment records fulfillment and inventory cost; the sales invoice records the receivable and goods revenue in this model.
+
+</details>
+
+<details>
+<summary>A receipt exists, but the invoice still appears open. What should you inspect?</summary>
+
+Inspect the applications to that invoice and their dates, alongside any relevant credits. The receipt alone does not establish how much of the invoice was settled at the selected reporting date.
+
+</details>
+
+## Next Steps
+
+The customer also needs design help. Continue to [Design Services](design-services.md) to follow work that is delivered through staff time rather than goods leaving a warehouse.
+
+When you are ready to work with actual records, the [goods-sale tracing exercise](../learn-and-practice/source-to-ledger.md) follows the document sequence introduced here.
+
+## Optional Reference
+
+Return to these sections when you have a specific question or an assignment that uses the data. The chapter above can be read without opening a file.
+
+<details>
+<summary>Look up documents, accounting entries, and traceability fields</summary>
+
+### Core Tables and What They Represent
 
 | Process stage | Main tables | Grain or event represented | Why students use them |
 |---|---|---|---|
@@ -116,7 +152,7 @@ Start with the business flow, then move into the subsection diagrams and tables 
 | Cash receipt | `CashReceipt` | Cash arrival from the customer | Review collection timing, unapplied cash, and deposit behavior |
 | Settlement | `CashReceiptApplication` | Application of received cash to one or more invoices | Measure true invoice settlement and open-AR reduction |
 
-## When Accounting Happens
+### When Accounting Happens
 
 | Event | Business meaning | Accounting effect |
 |---|---|---|
@@ -129,7 +165,7 @@ Start with the business flow, then move into the subsection diagrams and tables 
 | Cash receipt | Customer money arrives, even if it is not yet matched to a specific invoice | Debit cash and credit customer deposits or unapplied cash |
 | Cash application | Accounting settles one or more open invoices with previously received cash | Debit customer deposits or unapplied cash and credit AR |
 
-## Key Traceability and Data Notes
+### Key Traceability and Data Notes
 
 - `SalesInvoiceLine.ShipmentLineID` is the main shipment-to-invoice traceability field in the normal O2C path.
 - Service invoice lines stay in `SalesInvoiceLine`, but `ShipmentLineID` stays null for those rows because no physical shipment occurred.
@@ -142,11 +178,16 @@ Start with the business flow, then move into the subsection diagrams and tables 
 - `SalesCommissionAdjustment` records credit-memo clawbacks, and `SalesCommissionPaymentLine` shows which accruals and adjustments were included in each sales-rep payment.
 - Some receipts remain unapplied for a period of time, which is useful for open-AR, unapplied-cash, and settlement-timing analysis.
 
-## Analytical Subsections
+</details>
+
+<details>
+<summary>Explore detailed process and analysis paths</summary>
+
+### Analytical Subsections
 
 ### 1. Pricing and Commercial Terms
 
-Before warehouse activity or billing begins, the dataset resolves the commercial terms for the order line. Students should read this step as the pricing decision layer: what was the base price, did a promotion apply, was an override approved, and how did the final pricing method affect margin and pricing-control review. For the full process-level entity relationships, see the [Schema Reference](../reference/schema.md).
+What explains the price on an order line? Follow the base price, promotion, and any approved override into the recorded pricing method. Compare those inputs before interpreting margin or a pricing exception. The [Schema Reference](../reference/schema.md) identifies the full relationships.
 
 ```mermaid
 flowchart LR
@@ -217,7 +258,7 @@ flowchart LR
 
 ### 3. Shipment to Invoice Traceability
 
-This view teaches students how billed revenue ties back to physical fulfillment. Treat this as a traceability diagram, not as a full ER diagram. For the full process-level entity relationships, see the [Schema Reference](../reference/schema.md). This subsection is especially useful for cutoff, completeness, and occurrence testing.
+Which shipped goods support the billed revenue? Follow the shipment line into the invoice line, retaining both dates and quantities. This view supports cutoff, completeness, and occurrence questions; the [Schema Reference](../reference/schema.md) provides the full entity relationships.
 
 ```mermaid
 flowchart LR
@@ -253,7 +294,7 @@ flowchart LR
 
 ### 4. Cash Receipt, Application, and Settlement
 
-This is the section students often need most. The cash receipt is the cash event. The cash application is the settlement event. Those are related, but they are not the same accounting moment. This distinction drives open-AR analysis, unapplied-cash review, and receivables testing.
+Which invoice did the money settle? Follow a receipt into its applications, then inspect the amounts and dates applied to the selected invoice. This separates cash arrival from settlement for open-receivable and unapplied-cash analysis.
 
 ```mermaid
 flowchart LR
@@ -287,42 +328,11 @@ Do not use `CashReceipt.SalesInvoiceID` as the main settlement link. The authori
 
 ### 5. Design Services and Monthly Hour Billing
 
-The design-services branch shares the same customer, invoice, and cash backbone as the rest of O2C, but it does not use shipment. Instead, one service order line opens one engagement, multiple employees can be assigned to that engagement, approved service time accumulates through the month, and `ServiceBillingLine` ties the approved billed hours to the invoice line.
-
-```mermaid
-flowchart LR
-    SOL[Service Order Line]
-    ENG[Service Engagement]
-    ASG[Assignments]
-    TIME[Service Time Entry]
-    BILL[Service Billing Line]
-    SIL[Sales Invoice Line]
-
-    SOL --> ENG --> ASG --> TIME --> BILL --> SIL
-```
-
-**Tables involved**
-
-| Table | Role in the flow |
-|---|---|
-| `SalesOrderLine` | Carries the ordered service hours and fixed hourly rate |
-| `ServiceEngagement` | Defines the customer job, lead employee, planned hours, and status |
-| `ServiceEngagementAssignment` | Shows which employees worked on the engagement and how many hours were assigned |
-| `ServiceTimeEntry` | Stores approved billable and non-billable service hours plus analytical labor cost |
-| `ServiceBillingLine` | Stores the monthly billed-hours rollup tied to `SalesInvoiceLine` |
-| `SalesInvoiceLine` | Stores the billed service quantity and billed amount with null shipment linkage |
-
-**Starter analytical question:** Which customers or engagements show the biggest gap between approved service hours and billed service hours at month-end?
-
-**Analytical plan**
-
-- Objective: Trace approved service hours into the monthly customer invoice.
-- Evidence path: SalesOrderLine -> ServiceEngagement -> ServiceTimeEntry -> ServiceBillingLine -> SalesInvoiceLine.
-- Comparison: Compare planned hours, approved billable hours, billed hours, and labor cost by customer or engagement.
+Hourly billing uses approved service time rather than shipment evidence. Follow the [Design Services chapter](design-services.md) for engagement, staffing, monthly billing, and labor-margin interpretation.
 
 ### 6. Backorder to Shipment Lag
 
-Not every order ships immediately. This subsection helps students see why order date, shipment date, and invoice date can diverge when inventory is short. It is useful for fulfillment-lag analysis, billing-lag review, and period timing differences around month-end.
+Where did time pass between the order, shipment, and invoice? Compare their dates while retaining the ordered and fulfilled quantities. Inventory shortages and partial fulfillment can explain timing differences that deserve closer investigation.
 
 ```mermaid
 flowchart LR
@@ -353,7 +363,20 @@ flowchart LR
 - Evidence path: SalesOrderLine -> ShipmentLine -> SalesInvoiceLine.
 - Comparison: Compare order date, shipment date, and invoice date by customer, item group, or month.
 
-## Returns, Credits, and Refunds
+</details>
+
+<details>
+<summary>Follow specialized process branches</summary>
+
+<BpmnDiagram modelId="cash-application" />
+
+The matching decision explains application versus remaining unapplied cash. The detail includes receipt capture for context; the parent allocation review starts after that receipt. It is a teaching interpretation of the records, not evidence of an automated exception queue or a one-to-one execution binding between diagrams.
+
+<BpmnDiagram modelId="returns-credit-refunds" />
+
+A physical return restores inventory. An approved credit memo reduces open receivables and retains any excess as customer credit; one memo can do both. A later refund clears customer credit in cash. These events need not occur together. Mermaid links show relationship endpoints rather than an exclusive business gateway; use the detailed BPMN allocation step and actual `GLEntry` rows when a memo spans both.
+
+### Returns, Credits, and Refunds
 
 Some sales do not end with the original invoice. In this dataset, returns are the main customer-side exception path inside O2C, not a separate business cycle. The exception starts from something that was already shipped and billed, then moves through physical return, financial correction, and sometimes cash refund if the customer had already paid.
 
@@ -409,7 +432,20 @@ flowchart LR
 
 This local lineage view distinguishes AR correction from customer credit. Its labeled links illustrate common endpoint relationships, not an exclusive gateway or a rule that every memo generates a refund. A memo may reduce the remaining AR and create excess customer credit in the same posting, including after partial settlement. Treasury may later clear that credit through `CustomerRefund`; reconcile both account effects at the selected date.
 
-## Optional AIS Activity: Assess a Customer Handoff
+</details>
+
+<details>
+<summary>Evaluate controls and try the optional AIS activity</summary>
+
+### Risks, Controls, and Evidence
+
+| Risk and control objective | Evidence available | Teaching boundary |
+|---|---|---|
+| Unauthorized pricing: support an exceptional price with approval | `SalesOrderLine.PriceOverrideApprovalID` and `PriceOverrideApproval` request and approval fields | Test the selected population; the presence of a record does not prove every override was authorized |
+| Incomplete billing: account for shipped quantities | `ShipmentLine` and `SalesInvoiceLine.ShipmentLineID` | An independent shipment-to-invoice reconciliation is a **proposed teaching control**, not a stored automated blocking rule |
+| Incorrect settlement or refund: distinguish cash, AR, and customer credit | `CashReceiptApplication`, `CreditMemo` approval fields, `CustomerRefund` | Compare authorizers and dates; do not infer a complete control procedure from lane separation |
+
+### Optional AIS Activity: Assess a Customer Handoff
 
 **Context and objective:** accounting needs a defensible view of whether goods fulfillment was billed and settled at a stated date. Interpret the BPMN model, identify a business risk, and connect a control objective to actual source evidence.
 
@@ -421,7 +457,12 @@ This local lineage view distinguishes AR correction from customer credit. Its la
 
 **Assessed deliverable:** submit the annotated model, a reproducible evidence table, and the risk/control row. Explain which observation could change a business decision and what follow-up evidence would be needed. One trace cannot establish population completeness, operational effectiveness, or misconduct. Extend the work through the existing O2C case and reports below; the [BPMN and controls workshop](../learn-and-practice/bpmn-controls-workshop.md) supplies a reusable matrix format.
 
-## Common Student Questions
+</details>
+
+<details>
+<summary>Choose a further investigation</summary>
+
+### Questions for Further Investigation {#common-student-questions}
 
 - Which orders shipped immediately and which became backorders?
 - Which shipment lines were invoiced later than the shipment date?
@@ -432,11 +473,11 @@ This local lineage view distinguishes AR correction from customer credit. Its la
 - Which returns reduced open AR versus created customer credit?
 - How do revenue, receivables, unapplied cash, collections timing, and return corrections differ by period?
 
-## Next Steps
-
 - Read [Sales and Customers](../analytics/index.md#sales-and-customers) to compare revenue, pricing, receivables, customer credits, and deposits.
 - Read [Statements and Cash](../analytics/index.md#statements-and-cash) to connect those results with working capital and cash conversion.
 - Read [Design Services](design-services.md) when you want the full staffing, approved-hours, and monthly service-billing branch that now sits inside customer revenue.
-- Read [O2C Trace Case](../analytics/cases/o2c-trace-case.md) when you want a guided walkthrough from order through posting and settlement.
+- Read [Resolve a Customer Account Review](../analytics/cases/o2c-trace-case.md) when you want a guided walkthrough from order through posting and settlement.
 - Jump to [Returns, Credits, and Refunds](#returns-credits-and-refunds) when you want the main O2C exception path.
 - Read [GLEntry Posting Reference](../reference/posting.md) and [Schema Reference](../reference/schema.md) when you need the detailed posting or join logic.
+
+</details>

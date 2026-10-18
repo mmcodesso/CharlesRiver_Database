@@ -1,13 +1,17 @@
 ---
-title: Download the Charles River Accounting Dataset
-description: Download the published Charles River SQLite database, Excel workbook, or CSV package and choose a setup path for accounting exercises and cases.
+title: Download and Open the Charles River Teaching Files
+description: Choose the published SQLite, Excel, or CSV format, retain a source copy, and check your first file before beginning a Charles River accounting exercise.
 slug: /downloads
 sidebar_label: Downloads
+pagination_prev: start-here/index
+pagination_next: start-here/dataset-overview
 ---
 
 # Downloads
 
-The published teaching package presents one synthetic company in three formats. Choose the file your assignment needs; you can begin with the downloads without building the dataset locally.
+Choose the format your assignment uses. The published teaching files contain the same synthetic company records in different working formats; you do not need to install or run the dataset generator.
+
+If you are still reading the company and process chapters, you can return here later. Those chapters do not require an open file.
 
 <DatasetStructuredData
   pagePath="/docs/downloads"
@@ -15,37 +19,48 @@ The published teaching package presents one synthetic company in three formats. 
   description="Download the published Charles River SQLite database, Excel workbook, or CSV package for accounting process tracing, analysis, and teaching."
 />
 
-## Published Teaching Files
+<span id="published-teaching-files"></span>
 
-| File | Direct download | Working method |
+## Choose Your Working Format
+
+| Format | Direct download | Choose it for |
 |---|---|---|
-| <FileName type="sqlite" /> | <ReleaseDownloadLink type="sqlite">Download SQLite database</ReleaseDownloadLink> | Query related tables and trace documents into `GLEntry` |
-| <FileName type="excel" /> | <ReleaseDownloadLink type="excel">Download Excel workbook</ReleaseDownloadLink> | Import relevant tables into an exercise workbook, then filter, summarize, and visualize |
-| <FileName type="csv" /> | <ReleaseDownloadLink type="csv">Download CSV zip package</ReleaseDownloadLink> | Extract table files for import into the tool specified by your course |
+| SQLite | <ReleaseDownloadLink type="sqlite">Download the SQLite database</ReleaseDownloadLink> | SQL queries, joins, and document tracing across tables |
+| Excel | <ReleaseDownloadLink type="excel">Download the Excel workbook</ReleaseDownloadLink> | Filters, PivotTables, and analysis in a familiar workbook |
+| CSV | <ReleaseDownloadLink type="csv">Download the CSV package</ReleaseDownloadLink> | Importing individual tables into another tool |
 
-All three links point to the published release assets. The [GitHub releases page](https://github.com/mmcodesso/CharlesRiver_Database/releases) provides release context. Record the version and file used in your submission so another reader can reproduce your work.
+Follow your instructor's choice when one is specified. Otherwise, choose a format that fits the task and a tool you can already use. Excel supports an initial inspection of tables; SQLite is useful when the task requires reproducible relationships across several tables. CSV requires you to manage the import settings in the receiving tool.
 
-## Open Your First File
+Download the complete file before opening it. Keep the published source unchanged and make a separate working copy for your analysis. Record the release version and file format in your notes so another person can understand which evidence you used.
 
-**For SQL:** follow the [SQL Guide](../analytics/sql-guide.md) to open the SQLite file and run the existing starter queries. Keep your source copy unchanged while exploring.
+<span id="open-your-first-file"></span>
 
-**For Excel:** follow the [Excel Guide](../analytics/excel-guide.md). Import only the tables required for the activity into a separate working workbook. This keeps the evidence and your analysis easy to distinguish.
+## Confirm That Your File Opens
 
-**For another tool:** extract the CSV package and retain table and key names. Check date, identifier, and numeric types during import before constructing relationships or totals.
+An opening check should establish that the file is readable and that you can find a familiar table. It is not yet a reconciliation of the entire dataset.
 
-## Scope and Interpretation
+**SQLite:** open the downloaded database with your SQL tool. Confirm that the table list includes `Customer`, `SalesOrder`, and `SalesOrderLine`, then inspect a few rows. The [SQL Guide](../analytics/sql-guide.md) explains the working setup and first queries.
 
-The published database contains 82 user tables. The main operating window covers 2024–2026, with some supplier settlements in early 2027. The [Dataset Guide](dataset-overview.md) explains the table families and the boundary between operational records, planning information, and posted accounting.
+**Excel:** open the workbook and locate the customer and sales-order sheets. Check that column headings and rows are visible before filtering or building a PivotTable. Follow the [Excel Guide](../analytics/excel-guide.md) for analysis steps, working from your copy.
 
-The teaching package includes intentional anomalies. Preserve those records during analysis; an unexpected result may be an assignment lead, a timing difference, or an analytical mistake requiring investigation.
+**CSV:** extract the package and import a table into your chosen tool. Check that fields appear in separate columns and that dates, identifiers, and amounts retain suitable types. Keep the unedited extracted files as your source when repeating an import.
 
-An instructor may separately supply <FileName type="support" /> for validation and anomaly-review activities. It is not one of the public release downloads listed above. If an assignment requires that workbook, obtain the course-provided copy and confirm it matches the dataset version.
+If the tool reports an incomplete or unreadable file, check that the download finished and that you selected the intended format before beginning the exercise.
 
-## Before the First Assignment
+<span id="scope-and-interpretation"></span>
 
-1. Read [Company Story](../learn-the-business/company-story.md).
-2. Choose a cycle in [Process Flows](../learn-the-business/process-flows.md).
-3. Try a foundational task in [Learn and Practice](../learn-and-practice/index.md).
-4. Keep the [Schema Reference](../reference/schema.md) and [GLEntry Posting Reference](../reference/posting.md) available when a question reaches exact keys or accounting rules.
+## Know the Package You Are Using
 
-The project is distributed under [CC BY-SA 4.0](../technical/license.md). For conceptual reading alongside the files, visit the [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) through [Accounting Analytics Hub](https://accountinganalyticshub.com/).
+The verified release contains **82 user tables**. You will usually need only a small group for one investigation. The [Dataset Guide](dataset-overview.md) explains how a document header, its lines, and related records fit together.
+
+The main operating window is **2024–2026**. Some supplier payments settle in early 2027. A later payment can explain eventual settlement while the payable was still open at an earlier reporting date.
+
+The records include intentional anomalies and control exceptions. Preserve them as evidence to investigate. A discrepancy alone does not establish its cause.
+
+The public package provides SQLite, Excel, and CSV downloads. A support workbook may be supplied separately for a course; it is not an additional public release download here. The [license](../technical/license.md) explains attribution and reuse.
+
+<span id="before-the-first-assignment"></span>
+
+## Next Steps
+
+Continue to the [Dataset Guide](dataset-overview.md) to learn how to read the records before beginning the guided tutorials.

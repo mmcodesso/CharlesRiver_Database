@@ -76,21 +76,13 @@ test("learning activities have server-rendered accurate LearningResource metadat
   }
 });
 
-test("case discovery renders separate usable filter options and all cases before hydration", () => {
+test("case discovery renders eight investigations in three levels without tool filters", () => {
   const html = fs.readFileSync(builtFile("/docs/analytics/cases"), "utf8");
-  const selects = Array.from(html.matchAll(/<select\b[^>]*>(.*?)<\/select>/gs), (match) => match[1]);
-  assert.equal(selects.length, 4);
-  for (const select of selects) {
-    const values = Array.from(select.matchAll(/<option\b[^>]*value="([^"]*)"[^>]*>/g), (match) => match[1]);
-    assert.ok(values.length >= 3, "Every filter needs separate named choices");
-    assert.equal(new Set(values).size, values.length, "Filter choices must be unique");
-    assert.ok(!values.includes("[object Set]"), "Iterable values must be materialized before rendering");
-  }
-  assert.match(selects[0], /value="Manufacturing"/);
-  assert.match(selects[2], /value="Foundation"/);
-  const catalog = /<section\b[^>]*aria-label="Browse accounting cases"[^>]*>(.*?)<\/section>/s.exec(html)?.[1];
-  assert.ok(catalog, "Case catalog must be present in server-rendered HTML");
-  assert.equal((catalog.match(/<article>/g) ?? []).length, 17);
+  assert.equal((html.match(/<select\b/g) ?? []).length, 0);
+  for (const level of ["basic", "intermediate", "advanced"]) assert.ok(html.includes('id="cases-' + level + '"'));
+  assert.equal((html.replace(/<!--.*?-->/g, "").match(/>Case [1-8] ·/g) ?? []).length, 8);
+  assert.equal((html.match(/<dt>Deliverable<\/dt>/g) ?? []).length, 8);
+  assert.ok(html.includes("Excel or SQL"));
 });
 
 test("dataset metadata and direct release links are present before JavaScript runs", () => {

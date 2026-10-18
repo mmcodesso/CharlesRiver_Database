@@ -1,65 +1,172 @@
 ---
-title: Trace a Goods Sale from Source to Ledger
-description: A foundational order-to-cash exercise connecting one actual sales line to shipment, invoice, cash application, and posted accounting evidence.
-slug: /learn-and-practice/source-to-ledger
-sidebar_label: Trace a Goods Sale
+title: "4. Follow a Goods Sale"
+description: "Trace a released goods line from order to shipment and invoice with Excel or simple SQL."
+sidebar_label: "4. Follow a Goods Sale"
+pagination_prev: "learn-and-practice/connect-the-records"
+pagination_next: "learn-and-practice/follow-customer-settlement"
+tutorial_number: 4
+toc_max_heading_level: 2
+slug: "/learn-and-practice/source-to-ledger"
 ---
 
-import { QueryReference } from "@site/src/components/QueryReference";
+import ToolSteps from "@site/src/components/Tutorial/ToolSteps";
+import TabItem from "@theme/TabItem";
+import TutorialFigure from "@site/src/components/Tutorial/Figure";
 
-# Trace a Goods Sale from Source to Ledger
+# 4. Follow a Goods Sale
 
-## Context and Problem
+<span id="context-and-problem"></span>
 
-Sales, warehouse operations, and accounting can describe the same customer sale using different dates and documents. Your task is to explain one actual goods-sale line from the published dataset, showing which evidence records demand, physical fulfillment, customer billing, and settlement.
+The operations planner can identify the ordered products. Customer accounting now needs to know which goods were shipped and billed. Follow order line **43**, rather than assuming that an order status proves each downstream event.
 
-This is a foundational exercise. The company setting is fictional; choose a record present in your assigned file rather than assuming that an illustrative customer story identifies a particular order.
+<span id="learning-objectives"></span>
 
-## Learning Objectives
+**Your task:** Trace a released goods line from order to shipment and invoice with Excel or simple SQL.
 
-- Distinguish an order, shipment, invoice, receipt, and cash application.
-- Preserve line-level traceability when a header has multiple lines or shipments.
-- Explain the accounting event behind selected `GLEntry` rows.
-- State what one selected trace can and cannot establish.
+<TutorialFigure figureId="source-to-ledger" />
 
 ## Before You Start
 
-**Prerequisites:** read [Company Story](../learn-the-business/company-story.md) and the [Order-to-Cash Process](../processes/o2c.md); review introductory revenue, inventory, receivable, and cash concepts.
+Finish [Connect the Records](connect-the-records.md) and recall the [Order-to-Cash process](../processes/o2c.md).
 
-**Tools and files:** use the published SQLite file with a query tool, or the Excel workbook with filters and lookups or Power Query. Follow the [SQL Guide](../analytics/sql-guide.md) or [Excel Guide](../analytics/excel-guide.md). Retain the source file and work in a separate analysis file.
+<ToolSteps>
+<TabItem value="excel">
 
-**Sources:** `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, `CashReceipt`, `CashReceiptApplication`, `GLEntry`, and `Account`. The source documents are the order, shipment, invoice, receipt, and application records in those tables.
+In `Lesson04.xlsx`, import `T10_SalesOrderLine` as `OrderLineData` filtered to `SalesOrderLineID = 43`; `T15_ShipmentLine` as `ShipmentLineData` filtered to `SalesOrderLineID = 43`; and `T17_SalesInvoiceLine` as `InvoiceLineData` filtered to `SalesOrderLineID = 43`. Keep the identifier columns.
 
-## Evidence Workflow
+</TabItem>
+<TabItem value="sql">
 
-1. **Set the scope.** Record the dataset version, reporting period, and chosen order and line identifiers. Select a goods line with a stored shipment link; service lines use a different fulfillment path.
-2. **Build the document trace.** Follow `ShipmentLine.SalesOrderLineID`, then `SalesInvoiceLine.ShipmentLineID`. Retain header and line keys. Record the dates and quantities at each stage; do not repeat a header total for every joined line.
-3. **Check settlement separately.** Follow `CashReceiptApplication.SalesInvoiceID` to the invoice and `CashReceiptID` to the receipt. Note applications on or before your reporting date. A receipt may relate to several invoices or leave an unapplied balance.
-4. **Locate the accounting evidence.** Use the source type and identifiers in `GLEntry` to identify postings for the selected events. Check the debit and credit effect using `Account` and the [Posting Reference](../reference/posting.md).
-5. **Explain the sequence.** Describe the difference between order, shipment, invoice, receipt, and application dates. If a link is missing or a quantity differs, identify the evidence needed before calling it an error.
+Open the released SQLite database in your SQL tool. Save this lesson's statements as **Lesson04.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
 
-For SQL support, inspect the existing line-trace query and limit your review to the selected records:
+</TabItem>
+</ToolSteps>
 
-<QueryReference
-  queryKey="cases/01_o2c_line_trace_order_shipment_invoice.sql"
-  helperText="Use the existing line-level trace to inspect order, shipment, and invoice relationships. State the population you select."
-/>
 
-<QueryReference
-  queryKey="cases/02_o2c_source_to_gl_trace.sql"
-  helperText="Use this existing query to inspect the posting trail after the document sequence is clear."
-/>
+These are actual synthetic records from release **v2027.1**, separate from the illustrative customer project in the company story. Use your assigned release when an instructor specifies another file; its results may differ.
 
-## Assessed Deliverable
+<span id="evidence-workflow"></span>
 
-Submit a compact evidence table containing the real document and line identifiers, event dates, quantity or amount definition, linked source, and accounting significance. Add a short explanation of recognition and settlement, one check that protects against duplicated totals, and one follow-up question supported by your evidence. Include your query references or workbook steps so another student can reproduce the trace.
+## 1. Follow the Shipment Link
 
-## Interpretation and Limitations
+The shipment line stores the order-line key. This is the link between what was requested and what left the warehouse.
 
-Explain whether the documents support your selected sale as of the chosen date. Distinguish an observed timing difference from an unsupported claim about a control failure. Do not infer invoice settlement from `CashReceipt.SalesInvoiceID`; the authoritative link is `CashReceiptApplication`.
+<ToolSteps>
+<TabItem value="excel">
 
-This exercise focuses on the goods path. Returns, credits, commissions, and service billing may require additional evidence. A single trace does not establish population-wide completeness or audit assurance.
+1. Open the `OrderLineData` query in Power Query. Choose **Home → Merge Queries → Merge Queries as New**.
+2. Choose `ShipmentLineData` as the second query. Select `SalesOrderLineID` in each preview.
+3. Choose **Left Outer** so the order line would remain visible even without a shipment. Select **OK**.
+4. Expand the resulting table column; clear **Use original column name as prefix**, then retain `ShipmentLineID`, `ShipmentID`, and `QuantityShipped`. Name the new query `GoodsTrace`.
+5. Confirm one row before adding another relationship. An order line with two shipments would legitimately produce two rows.
+
+</TabItem>
+<TabItem value="sql">
+
+The left join retains the chosen order line. A missing shipment would appear as `NULL` in the shipment columns; it would not automatically mean the order was erroneous.
+
+```sql title="l04-shipment-link.sql"
+SELECT sol.SalesOrderLineID, sol.Quantity AS OrderedQuantity,
+       sl.ShipmentLineID, sl.ShipmentID, sl.QuantityShipped
+FROM SalesOrderLine AS sol
+LEFT JOIN ShipmentLine AS sl
+    ON sl.SalesOrderLineID = sol.SalesOrderLineID
+WHERE sol.SalesOrderLineID = 43
+ORDER BY sl.ShipmentLineID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+Expect **one row**: order line **43**, ordered quantity **9**, shipment line **347**, shipment **87**, and shipped quantity **9**.
+
+## 2. Follow the Invoice Link
+
+The invoice line identifies the shipment line it bills. Match that precise line rather than matching an entire order to every invoice.
+
+<ToolSteps>
+<TabItem value="excel">
+
+In Power Query, merge `GoodsTrace` with `InvoiceLineData`: select `ShipmentLineID` in both previews, choose **Left Outer**, then expand (with **Use original column name as prefix** cleared) `SalesInvoiceLineID`, `SalesInvoiceID`, `Quantity`, and `LineTotal`. Keep a clear name such as `InvoicedQuantity` for the invoice quantity. Close & Load the result. Expect one row. Do not remove duplicates to force a preferred count.
+
+</TabItem>
+<TabItem value="sql">
+
+This query starts at the shipment line you just found. The first query establishes its originating order line.
+
+```sql title="l04-invoice-link.sql"
+SELECT sl.ShipmentLineID, sl.QuantityShipped,
+       sil.SalesInvoiceLineID, sil.SalesInvoiceID,
+       sil.Quantity AS InvoicedQuantity, sil.LineTotal
+FROM ShipmentLine AS sl
+LEFT JOIN SalesInvoiceLine AS sil
+    ON sil.ShipmentLineID = sl.ShipmentLineID
+WHERE sl.ShipmentLineID = 347
+ORDER BY sil.SalesInvoiceLineID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+The invoice link is line **272** on invoice **202**, with quantity **9** and line amount **7,845.57**. This amount describes one line, not the entire invoice.
+
+## 3. Put Dates and Totals Beside the Trace
+
+The document headers supply dates and totals shared by their lines. Read them separately before comparing events.
+
+<ToolSteps>
+<TabItem value="excel">
+
+Import `T14_Shipment` as `ShipmentData`, filtered to `ShipmentID = 87`, and `T16_SalesInvoice` as `InvoiceData`, filtered to `SalesInvoiceID = 202`. Read the shipment and invoice dates. On `Notes`, record invoice `SubTotal`, `FreightAmount`, `TaxAmount`, and `GrandTotal`; add the first three and check the fourth.
+
+</TabItem>
+<TabItem value="sql">
+
+Run each header query separately. Neither needs to repeat the invoice total alongside every line.
+
+```sql title="l04-shipment-date.sql"
+SELECT ShipmentID, ShipmentDate, DeliveryDate
+FROM Shipment
+WHERE ShipmentID = 87;
+```
+
+
+```sql title="l04-invoice-total.sql"
+SELECT SalesInvoiceID, InvoiceDate, SubTotal, FreightAmount,
+       TaxAmount, GrandTotal
+FROM SalesInvoice
+WHERE SalesInvoiceID = 202;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+Shipment and invoice are dated **2024-01-31**. Invoice 202 includes **both** order lines: 11,397.78 subtotal + 103.00 freight + 747.55 tax = **12,248.33**. Do not compare one line's 7,845.57 directly with this full invoice total.
+
+<span id="assessed-deliverable"></span>
+
+## Keep Your Evidence
+
+Save the trace 43 → 347 → 272, its document IDs and dates, and the separate invoice-total check. Explain the purpose of each document. Record the release, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+
+<span id="interpretation-and-limitations"></span>
+
+This trace supports shipment and billing of the selected line. It does not establish customer settlement. A missing downstream row needs investigation of timing and process branch before a conclusion about failure.
+
+## Try One Change
+
+Follow order line **42** using the same method. Change the shipment-line filter in the second query to the identifier you actually find.
+
+<details>
+<summary>Compare your reasoning</summary>
+
+Order line 42 leads to shipment line 346 and invoice line 271. It shares shipment 87 and invoice 202 with line 43. The line amount is 3,552.21. Shared headers must still be counted once.
+
+</details>
 
 ## Next Steps
 
-Extend the investigation in the [O2C Trace Case](../analytics/cases/o2c-trace-case.md), or compare periods in [Sales and Customers](../analytics/index.md#sales-and-customers). Return to [Learn and Practice](index.md) to choose a second process.
+The invoice creates a customer balance. Next, distinguish receiving cash from allocating it to that balance. Continue to [Follow Customer Settlement](follow-customer-settlement.md).

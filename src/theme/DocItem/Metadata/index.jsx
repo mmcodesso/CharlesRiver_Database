@@ -13,7 +13,8 @@ export default function Metadata() {
   const isCase = metadata.id.startsWith("analytics/cases/") && metadata.id !== "analytics/cases/index";
   const isPractice = metadata.id.startsWith("learn-and-practice/") && metadata.id !== "learn-and-practice/index";
   const isTutorial = ["analytics/sql-guide", "analytics/excel-guide"].includes(metadata.id);
-  const resourceType = isCase ? "Case study" : isPractice ? "Exercise" : "Tutorial";
+  const isGuidedTutorial = Boolean(metadata.frontMatter.tutorial_number);
+  const resourceType = isCase ? "Case study" : isGuidedTutorial || isTutorial ? "Tutorial" : "Exercise";
   const resource = isCase || isPractice || isTutorial
     ? buildLearningResourceStructuredData(siteConfig.customFields.branding, metadata, resourceType)
     : null;

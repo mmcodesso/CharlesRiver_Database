@@ -2,83 +2,9 @@
   margin: 1.5rem 0 2rem;
 }
 
-.filters {
-  min-width: 0;
-  padding: 1.25rem;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: 0.5rem;
-  background: var(--ifm-background-surface-color);
-}
-
-.filters legend {
-  width: auto;
-  margin: 0;
-  padding: 0 0.4rem;
-  font-weight: 700;
-}
-
-.filters label {
-  display: block;
-  margin-bottom: 0.35rem;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.filters input,
-.filters select {
-  width: 100%;
-  min-width: 0;
-  min-height: 44px;
-  padding: 0.55rem 0.65rem;
-  color: var(--ifm-font-color-base);
-  background: var(--ifm-background-color);
-  border: 1px solid var(--ifm-color-emphasis-500);
-  border-radius: 0.25rem;
-  font: inherit;
-}
-
-.filters input:focus-visible,
-.filters select:focus-visible,
-.reset:focus-visible,
-.cards a:focus-visible,
-.overview a:focus-visible {
-  outline: 3px solid var(--ifm-color-primary);
-  outline-offset: 3px;
-}
-
-.selects {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.helper,
-.boundary {
-  font-size: 0.9rem;
-  color: var(--ifm-color-emphasis-800);
-}
-
-.helper {
-  margin: 1rem 0 0.75rem;
-}
-
-.reset {
-  min-height: 44px;
-  padding: 0.5rem 0.85rem;
-  font: inherit;
-  font-weight: 600;
-  color: var(--ifm-color-primary-darkest);
-  background: var(--ifm-background-color);
-  border: 1px solid var(--ifm-color-emphasis-500);
-  border-radius: 0.25rem;
-  cursor: pointer;
-}
-
-.count {
-  margin: 1rem 0;
-  font-weight: 600;
-}
+ .cards a:focus-visible, .overview a:focus-visible { outline: 3px solid var(--ifm-color-primary); outline-offset: 3px; }
+.level { margin-bottom: 2.5rem; }
+.boundary { font-size: 0.9rem; color: var(--ifm-color-emphasis-800); }
 
 .cards {
   display: grid;
@@ -158,12 +84,10 @@
 }
 
 @media (max-width: 650px) {
-  .cards,
-  .selects {
+  .cards {
     grid-template-columns: 1fr;
   }
 
-  .filters,
   .card,
   .overview {
     padding: 1rem;

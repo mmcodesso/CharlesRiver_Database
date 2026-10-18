@@ -1,58 +1,149 @@
 ---
-title: Explain Receipt-to-Payable Timing
-description: A foundational procure-to-pay exercise tracing a receipt-matched purchase through supplier invoicing, GRNI, accounts payable, and payment timing.
-slug: /learn-and-practice/receipt-to-payable
-sidebar_label: Receipt-to-Payable Timing
+title: "8. Follow a Purchase"
+description: "Follow a receipt-matched purchase through GRNI, supplier invoicing, and a payment after year end."
+sidebar_label: "8. Follow a Purchase"
+pagination_prev: "learn-and-practice/follow-design-time-into-billing"
+pagination_next: "learn-and-practice/manufacturing-cost-flow"
+tutorial_number: 8
+toc_max_heading_level: 2
+slug: "/learn-and-practice/receipt-to-payable"
 ---
 
-import { QueryReference } from "@site/src/components/QueryReference";
+import ToolSteps from "@site/src/components/Tutorial/ToolSteps";
+import TabItem from "@theme/TabItem";
+import TutorialFigure from "@site/src/components/Tutorial/Figure";
 
-# Explain Receipt-to-Payable Timing
+# 8. Follow a Purchase
 
-## Context and Problem
+<span id="context-and-problem"></span>
 
-Purchasing may order goods in one period, receive them in another, and pay the supplier later. A manager asking what the company owes needs more than a purchase-order total. Your task is to explain one receipt-matched purchase line and the evidence supporting its inventory and liability timing.
+The operations planner requests a component for production. Receiving records its arrival, but the supplier bills later and is paid after year end. Follow one small purchased line so you can explain the changing liability without confusing it with the whole purchase order.
 
-## Learning Objectives
+<span id="learning-objectives"></span>
 
-- Separate an internal request, supplier commitment, receipt, invoice, and payment.
-- Trace the stored line keys supporting a receipt match.
-- Explain the relationship between goods received not invoiced (GRNI), AP, and later cash settlement.
-- Apply a reporting date without treating subsequent payment as an earlier settlement.
+**Your task:** Follow a receipt-matched purchase through GRNI, supplier invoicing, and a payment after year end.
+
+<TutorialFigure figureId="receipt-to-payable" />
 
 ## Before You Start
 
-**Prerequisites:** read [Company Story](../learn-the-business/company-story.md) and the [Procure-to-Pay Process](../processes/p2p.md). Review introductory inventory and liability concepts.
+Read [Procure-to-Pay](../processes/p2p.md) and finish the earlier document-tracing lessons. This example uses requisition **21330**, PO line **21074**, receipt line **25479**, and supplier invoice **36461**.
 
-**Tools and files:** use the published SQLite database with a query tool or import the required Excel tables into an exercise workbook. The [SQL Guide](../analytics/sql-guide.md) and [Excel Guide](../analytics/excel-guide.md) provide setup instructions.
+<ToolSteps>
+<TabItem value="excel">
 
-**Sources:** `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment`, `GLEntry`, and `Account`. Their records supply the requisition, PO, receiving, supplier billing, and payment evidence.
+In `Lesson08.xlsx`, import the source tables named in each step using [the import routine](../analytics/excel-guide.md#repeat-an-import), applying the stated identifier filters before loading.
 
-## Evidence Workflow
+</TabItem>
+<TabItem value="sql">
 
-1. **Select a receipt-matched population.** Record the dataset version and reporting date. Choose an inventory or materials invoice line with a populated `GoodsReceiptLineID`; keep its `PILineID` and invoice identifier.
-2. **Trace the originating need.** Follow `GoodsReceiptLine.POLineID` to `PurchaseOrderLine` and its stored `RequisitionID`. Distinguish the PO header from the item and quantity on the selected line.
-3. **Build the event timeline.** Record request, order, receipt, invoice, and payment dates that are supported by the selected records. Retain multiple related receipts or payments when they exist; do not force one-to-one relationships.
-4. **Inspect recognition and settlement.** Locate related `GLEntry` postings by source type and identifier. Use the [Posting Reference](../reference/posting.md) to explain inventory, GRNI, AP, and cash effects at the relevant stages.
-5. **Assess the date boundary.** Describe the obligation at your reporting date and separately note later settlement. Some supplier payments occur in early 2027 even though the main operating window ends in 2026.
+Open the released SQLite database in your SQL tool. Save this lesson's statements as **Lesson08.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
 
-The existing invoice-line query distinguishes receipt matching from the accrued-service branch. Use its receipt-matched records for this first exercise:
+</TabItem>
+</ToolSteps>
 
-<QueryReference
-  queryKey="cases/03_p2p_invoice_line_trace_receipt_vs_accrual.sql"
-  helperText="Inspect the stored receipt or accrual link, then select an actual receipt-matched line for the foundational timeline."
-/>
 
-## Assessed Deliverable
+These are actual synthetic records from release **v2027.1**, separate from the illustrative customer project in the company story. Use your assigned release when an instructor specifies another file; its results may differ.
 
-Submit one dated document timeline with real identifiers and an evidence table explaining the source and meaning of each inventory, liability, or cash event. Add a short conclusion about the reporting-date position, one check against duplicated quantities or amounts, and one question requiring additional evidence. Attach the query reference or workbook steps used to reconstruct the trace.
+<span id="evidence-workflow"></span>
 
-## Interpretation and Limitations
+## 1. Trace Request, Order, and Receipt
 
-A purchase order records a commitment; it does not by itself prove receipt or an AP posting. A later payment does not eliminate the need to explain the earlier liability. Compare values only after defining their basis: ordered quantity, received standard cost, supplier invoice amount, and paid amount can answer different questions.
+The request explains an internal need; the purchase order records a supplier commitment; the receipt records arrival. The requisition link here is stored on the purchase-order line.
 
-This exercise covers receipt-matched inventory and materials. Accrued services use `PurchaseInvoiceLine.AccrualJournalEntryID`; capital purchases require asset and financing evidence. Missing receipt support is not automatically an error when the selected line belongs to a different valid branch. One line cannot establish supplier-wide or population-wide completeness.
+<ToolSteps>
+<TabItem value="excel">
+
+Import `T32_PurchaseRequisition` as `RequestData`, filtered to `RequisitionID = 21330`; `T34_PurchaseOrderLine` as `POLineData`, filtered to `POLineID = 21074`; `T33_PurchaseOrder` as `POData`, filtered to `PurchaseOrderID = 16253`; `T36_GoodsReceiptLine` as `ReceiptLineData`, filtered to `GoodsReceiptLineID = 25479`; and `T35_GoodsReceipt` as `GoodsReceiptData`, filtered to `GoodsReceiptID = 23913`. Read the matching keys, dates, and selected line amounts. Keep the PO's header total separate from the selected line.
+
+</TabItem>
+<TabItem value="sql">
+
+Read the purchase-origin link and receipt link separately. A join follows stored keys, not similar amounts.
+
+```sql title="l08-purchase-origin.sql"
+SELECT r.RequisitionID, r.RequestDate, pol.POLineID,
+       po.PurchaseOrderID, po.OrderDate, pol.LineTotal
+FROM PurchaseOrderLine AS pol
+JOIN PurchaseOrder AS po ON po.PurchaseOrderID = pol.PurchaseOrderID
+JOIN PurchaseRequisition AS r ON r.RequisitionID = pol.RequisitionID
+WHERE pol.POLineID = 21074;
+```
+
+
+```sql title="l08-receipt.sql"
+SELECT l.GoodsReceiptLineID, l.POLineID, r.GoodsReceiptID,
+       r.ReceiptDate, l.QuantityReceived, l.ExtendedStandardCost
+FROM GoodsReceiptLine AS l
+JOIN GoodsReceipt AS r ON r.GoodsReceiptID = l.GoodsReceiptID
+WHERE l.GoodsReceiptLineID = 25479;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+Request and order are dated **2026-09-10**. Receipt **23913** is dated **2026-09-27**. The selected line has standard cost **8.83**. Receipt records materials inventory and goods received not invoiced (**GRNI**); the PO itself does not create that inventory posting.
+
+## 2. Follow the Supplier Invoice and Payment
+
+The invoice moves the received-goods obligation into accounts payable. Its tax amount explains why the eventual payment differs from the selected goods amount.
+
+<ToolSteps>
+<TabItem value="excel">
+
+Import `T38_PurchaseInvoiceLine` as `PILineData`, filtered to `GoodsReceiptLineID = 25479`; `T37_PurchaseInvoice` as `PurchaseInvoiceData`, filtered to `PurchaseInvoiceID = 36461`; and `T39_DisbursementPayment` as `PaymentData`, filtered to the same invoice ID. Check receipt-line 25479 appears on invoice line **36861**. Record the goods amount, tax, full invoice amount, invoice date, and payment date on `Notes`.
+
+</TabItem>
+<TabItem value="sql">
+
+First follow the receipt-to-invoice link. Then read payment as a separate population to avoid repeating an invoice total for every payment.
+
+```sql title="l08-invoice.sql"
+SELECT l.PILineID, l.GoodsReceiptLineID, l.LineTotal,
+       p.PurchaseInvoiceID, p.InvoiceDate, p.SubTotal,
+       p.TaxAmount, p.GrandTotal
+FROM PurchaseInvoiceLine AS l
+JOIN PurchaseInvoice AS p ON p.PurchaseInvoiceID = l.PurchaseInvoiceID
+WHERE l.GoodsReceiptLineID = 25479
+ORDER BY l.PILineID;
+```
+
+
+```sql title="l08-payment.sql"
+SELECT DisbursementID, PurchaseInvoiceID, PaymentDate, Amount
+FROM DisbursementPayment
+WHERE PurchaseInvoiceID = 36461
+ORDER BY PaymentDate, DisbursementID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+The invoice is dated **2026-11-29**: **8.83** goods + **0.13** tax = **8.96** payable. Disbursement **39645** pays **8.96** on **2027-01-08**. At **2026-12-31**, the invoice is still payable even though the file contains its later payment.
+
+<span id="assessed-deliverable"></span>
+
+## Keep Your Evidence
+
+Save the five-event timeline from request to payment, the stored line keys, and the 8.83 + 0.13 = 8.96 check. State the liability at September 30 and December 31. Record the release, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+
+<span id="interpretation-and-limitations"></span>
+
+At September 30, the received amount belongs in GRNI; after the November invoice, it is replaced by the payable. This selected receipt line has one invoice match. Other receipts can be billed in parts. Accrued-service purchases use a different link, which you will investigate in Lesson 11.
+
+## Try One Change
+
+Move the reporting date from December 31, 2026 to January 8, 2027. Which event changes the payable conclusion?
+
+<details>
+<summary>Compare your reasoning</summary>
+
+The recorded disbursement on January 8 settles the 8.96 payable. Its bank-clearing date is January 9, a further date distinction. Do not move the payment into December merely because the invoice is now marked paid.
+
+</details>
 
 ## Next Steps
 
-Compare the receipt path with the finance-to-AP bridge in the [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md), or inspect working-capital timing in [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory). Return to [Learn and Practice](index.md) for the next foundational activity.
+Purchases supply materials for the wider company. Next, follow a separate work order through production. Continue to [Follow Manufacturing Costs](manufacturing-cost-flow.md).

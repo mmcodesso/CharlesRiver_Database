@@ -1,0 +1,405 @@
+[
+  {
+    "id": "case01-handoffs",
+    "caseNumber": 1,
+    "title": "Who must contribute to the customer response?",
+    "question": "Who must contribute to the customer response?",
+    "alt": "Sales coordinator defines the six-order scope. Operations explains shipments and remaining quantities. Controller and treasury explain invoices, cash, and allocation.",
+    "steps": [
+      "Sales coordinator defines the six-order scope.",
+      "Operations explains shipments and remaining quantities.",
+      "Controller and treasury explain invoices, cash, and allocation."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case01-relationships",
+    "caseNumber": 1,
+    "title": "Why must settlement records be summarized separately?",
+    "question": "Why must settlement records be summarized separately?",
+    "alt": "One order can have several shipments and invoices. One receipt can support several invoice applications. Aggregate applications and credits by invoice before comparing balances.",
+    "steps": [
+      "One order can have several shipments and invoices.",
+      "One receipt can support several invoice applications.",
+      "Aggregate applications and credits by invoice before comparing balances."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case01-timeline",
+    "caseNumber": 1,
+    "title": "What changed between the two reviews?",
+    "question": "What changed between the two reviews?",
+    "alt": "March 31: selected invoices less applications leave 28,608.86. April adds invoices, applications, and credit memo 30. April 30: the same order cohort leaves 7,293.32.",
+    "steps": [
+      "March 31: selected invoices less applications leave 28,608.86.",
+      "April adds invoices, applications, and credit memo 30.",
+      "April 30: the same order cohort leaves 7,293.32."
+    ],
+    "kind": "Selected released evidence and teaching explanation"
+  },
+  {
+    "id": "case02-responsibilities",
+    "caseNumber": 2,
+    "title": "Who turns time into a customer bill?",
+    "question": "Who turns time into a customer bill?",
+    "alt": "Design lead establishes engagement terms and staffing. Staff record billable and non-billable time; approval supports billing. Billing connects covered time to an invoice; the controller compares measures.",
+    "steps": [
+      "Design lead establishes engagement terms and staffing.",
+      "Staff record billable and non-billable time; approval supports billing.",
+      "Billing connects covered time to an invoice; the controller compares measures."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case02-billing",
+    "caseNumber": 2,
+    "title": "How does a billing period connect time and invoice evidence?",
+    "question": "How does a billing period connect time and invoice evidence?",
+    "alt": "Time is identified by engagement and work date. A billing line supplies an inclusive start/end period and billed hours. SalesInvoiceLine identifies the invoice; InvoiceDate establishes billing timing.",
+    "steps": [
+      "Time is identified by engagement and work date.",
+      "A billing line supplies an inclusive start/end period and billed hours.",
+      "SalesInvoiceLine identifies the invoice; InvoiceDate establishes billing timing."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case02-bridge",
+    "caseNumber": 2,
+    "title": "Which measures belong in the design review?",
+    "question": "Which measures belong in the design review?",
+    "alt": "1,409.88 billable hours and 73.62 non-billable hours describe effort. 33 billing lines total 244,865.45 for covered work. Time cost of 49,022.40 supports a limited comparison, not complete profit.",
+    "steps": [
+      "1,409.88 billable hours and 73.62 non-billable hours describe effort.",
+      "33 billing lines total 244,865.45 for covered work.",
+      "Time cost of 49,022.40 supports a limited comparison, not complete profit."
+    ],
+    "kind": "Selected released evidence and teaching explanation"
+  },
+  {
+    "id": "case03-branches",
+    "caseNumber": 3,
+    "title": "Why do purchasing obligations follow two paths?",
+    "question": "Why do purchasing obligations follow two paths?",
+    "alt": "Goods: order, receipt, supplier invoice, payment. Services: estimate, linked invoice, residual adjustment, payment. Keep the two selected populations separate before interpreting obligations.",
+    "steps": [
+      "Goods: order, receipt, supplier invoice, payment.",
+      "Services: estimate, linked invoice, residual adjustment, payment.",
+      "Keep the two selected populations separate before interpreting obligations."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case03-transitions",
+    "caseNumber": 3,
+    "title": "How does the obligation change its accounting form?",
+    "question": "How does the obligation change its accounting form?",
+    "alt": "Receipt or expense estimate creates a liability before a supplier bill. The supplier invoice transfers the supported amount into accounts payable. Payment settles AP; an estimate difference may need a separate adjustment.",
+    "steps": [
+      "Receipt or expense estimate creates a liability before a supplier bill.",
+      "The supplier invoice transfers the supported amount into accounts payable.",
+      "Payment settles AP; an estimate difference may need a separate adjustment."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case03-timeline",
+    "caseNumber": 3,
+    "title": "What does the later evidence change?",
+    "question": "What does the later evidence change?",
+    "alt": "March 31 captures selected receipts, invoices, and remaining estimates. April–June adds invoices, expense differences, and payments. June 30 still has selected goods AP and GRNI, while the three expense estimates are settled.",
+    "steps": [
+      "March 31 captures selected receipts, invoices, and remaining estimates.",
+      "April–June adds invoices, expense differences, and payments.",
+      "June 30 still has selected goods AP and GRNI, while the three expense estimates are settled."
+    ],
+    "kind": "Selected released evidence and teaching explanation"
+  },
+  {
+    "id": "case04-decision",
+    "caseNumber": 4,
+    "title": "Which evidence can support a product priority?",
+    "question": "Which evidence can support a product priority?",
+    "alt": "Commercial question: choose one review priority. Compare billed amounts, weighted prices, and a stated cost basis. Inspect source records and competing explanations before recommending action.",
+    "steps": [
+      "Commercial question: choose one review priority.",
+      "Compare billed amounts, weighted prices, and a stated cost basis.",
+      "Inspect source records and competing explanations before recommending action."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case04-relationships",
+    "caseNumber": 4,
+    "title": "Which records explain a billed price?",
+    "question": "Which records explain a billed price?",
+    "alt": "Invoice lines retain quantity, list price, actual price, and pricing identifiers. Order lines and approvals explain the commercial decision. Product master supplies current grouping and standard-cost assumptions.",
+    "steps": [
+      "Invoice lines retain quantity, list price, actual price, and pricing identifiers.",
+      "Order lines and approvals explain the commercial decision.",
+      "Product master supplies current grouping and standard-cost assumptions."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case04-measures",
+    "caseNumber": 4,
+    "title": "Which comparisons can be combined responsibly?",
+    "question": "Which comparisons can be combined responsibly?",
+    "alt": "Realization uses billed line amounts divided by matching list value. Standard-cost margin uses current item cost assumptions. Delivery-line counts and credit-date amounts retain separate scopes.",
+    "steps": [
+      "Realization uses billed line amounts divided by matching list value.",
+      "Standard-cost margin uses current item cost assumptions.",
+      "Delivery-line counts and credit-date amounts retain separate scopes."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case04-conclusion",
+    "caseNumber": 4,
+    "title": "How does a comparison become a decision?",
+    "question": "How does a comparison become a decision?",
+    "alt": "Compare four groups using consistent sales definitions. Trace selected prices and examine delivery and credit evidence separately. Choose a focused review, identify an owner, and state what evidence could change it.",
+    "steps": [
+      "Compare four groups using consistent sales definitions.",
+      "Trace selected prices and examine delivery and credit evidence separately.",
+      "Choose a focused review, identify an owner, and state what evidence could change it."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case05-planning",
+    "caseNumber": 5,
+    "title": "How does a plan become production evidence?",
+    "question": "How does a plan become production evidence?",
+    "alt": "A recommendation and work order describe intended supply. Operations and daily schedules describe planned work-center activity. Actual events establish issue, completion, and financial close.",
+    "steps": [
+      "A recommendation and work order describe intended supply.",
+      "Operations and daily schedules describe planned work-center activity.",
+      "Actual events establish issue, completion, and financial close."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case05-costs",
+    "caseNumber": 5,
+    "title": "What changes when materials become finished goods?",
+    "question": "What changes when materials become finished goods?",
+    "alt": "Material issue moves component cost into work in process. Completion records finished goods at standard material and conversion cost. Close records material and conversion variances after completion.",
+    "steps": [
+      "Material issue moves component cost into work in process.",
+      "Completion records finished goods at standard material and conversion cost.",
+      "Close records material and conversion variances after completion."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case05-grains",
+    "caseNumber": 5,
+    "title": "Which totals can be joined without multiplication?",
+    "question": "Which totals can be joined without multiplication?",
+    "alt": "Summarize issue, labor, completion, and close independently by work order. Join each one-row summary to the fixed 336-order cohort. Analyze daily work-center capacity separately from order cost.",
+    "steps": [
+      "Summarize issue, labor, completion, and close independently by work order.",
+      "Join each one-row summary to the fixed 336-order cohort.",
+      "Analyze daily work-center capacity separately from order cost."
+    ],
+    "kind": "Selected released evidence and teaching explanation"
+  },
+  {
+    "id": "case05-timeline",
+    "caseNumber": 5,
+    "title": "When are goods available, and when is accounting complete?",
+    "question": "When are goods available, and when is accounting complete?",
+    "alt": "WO1 completes January 26 and closes February 1. WO67 completes February 7 and closes February 13. Across the cohort, 336 are complete but only 290 closed by February 29.",
+    "steps": [
+      "WO1 completes January 26 and closes February 1.",
+      "WO67 completes February 7 and closes February 13.",
+      "Across the cohort, 336 are complete but only 290 closed by February 29."
+    ],
+    "kind": "Selected released evidence and teaching explanation"
+  },
+  {
+    "id": "case06-attendance",
+    "caseNumber": 6,
+    "title": "Which evidence describes an employee’s work?",
+    "question": "Which evidence describes an employee’s work?",
+    "alt": "Roster records expected attendance and location. Punches are raw observations; approved time records authorized payroll hours. Payroll calculates pay from its approved support and other pay rules.",
+    "steps": [
+      "Roster records expected attendance and location.",
+      "Punches are raw observations; approved time records authorized payroll hours.",
+      "Payroll calculates pay from its approved support and other pay rules."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case06-grains",
+    "caseNumber": 6,
+    "title": "At what level should pay be connected?",
+    "question": "At what level should pay be connected?",
+    "alt": "Approved time can have many employee-day rows. Summarize hours by employee and payroll period. Join to a unique employee-period payroll register; retain location analysis separately.",
+    "steps": [
+      "Approved time can have many employee-day rows.",
+      "Summarize hours by employee and payroll period.",
+      "Join to a unique employee-period payroll register; retain location analysis separately."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case06-pay",
+    "caseNumber": 6,
+    "title": "How do approved hours become pay and cost?",
+    "question": "How do approved hours become pay and cost?",
+    "alt": "Regular and overtime earnings form gross pay. Employee deductions reduce gross pay to net pay. Employer tax and benefits add cost and separate liabilities.",
+    "steps": [
+      "Regular and overtime earnings form gross pay.",
+      "Employee deductions reduce gross pay to net pay.",
+      "Employer tax and benefits add cost and separate liabilities."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case06-settlement",
+    "caseNumber": 6,
+    "title": "Which obligations remain after employees receive net pay?",
+    "question": "Which obligations remain after employees receive net pay?",
+    "alt": "Payroll establishes net pay, tax, and benefit obligations. Employee payments settle individual net-pay registers. Period-wide remittances settle separate agency and provider obligations.",
+    "steps": [
+      "Payroll establishes net pay, tax, and benefit obligations.",
+      "Employee payments settle individual net-pay registers.",
+      "Period-wide remittances settle separate agency and provider obligations."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case07-statements",
+    "caseNumber": 7,
+    "title": "How do source events reach the management review?",
+    "question": "How do source events reach the management review?",
+    "alt": "Operational documents and finance journals produce ledger entries. The ledger supplies period activity and cumulative account balances. Statement definitions select and classify those amounts for interpretation.",
+    "steps": [
+      "Operational documents and finance journals produce ledger entries.",
+      "The ledger supplies period activity and cumulative account balances.",
+      "Statement definitions select and classify those amounts for interpretation."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case07-rollforward",
+    "caseNumber": 7,
+    "title": "Which history belongs in each column?",
+    "question": "Which history belongs in each column?",
+    "alt": "Opening: all postings before October 1, 2026. Movement: October 1–December 31, with close treatment stated. Closing: opening plus movement through December 31.",
+    "steps": [
+      "Opening: all postings before October 1, 2026.",
+      "Movement: October 1–December 31, with close treatment stated.",
+      "Closing: opening plus movement through December 31."
+    ],
+    "kind": "Selected released evidence and teaching explanation"
+  },
+  {
+    "id": "case07-close",
+    "caseNumber": 7,
+    "title": "What does the annual closing sequence do?",
+    "question": "What does the annual closing sequence do?",
+    "alt": "Journal 850 closes annual revenue and expense balances into income summary. Journal 851 transfers 4,503,611.24 from income summary to retained earnings. Quarterly performance remains the pre-close activity, not the transfer to equity.",
+    "steps": [
+      "Journal 850 closes annual revenue and expense balances into income summary.",
+      "Journal 851 transfers 4,503,611.24 from income summary to retained earnings.",
+      "Quarterly performance remains the pre-close activity, not the transfer to equity."
+    ],
+    "kind": "Selected released evidence and teaching explanation"
+  },
+  {
+    "id": "case07-profit-cash",
+    "caseNumber": 7,
+    "title": "How should management read the quarter?",
+    "question": "How should management read the quarter?",
+    "alt": "Pre-close profit is 1,164,257.24. Other account effects explain why cash movement is −743,539.66. Cash closes at 8,442,255.80; outstanding obligations require separate follow-up.",
+    "steps": [
+      "Pre-close profit is 1,164,257.24.",
+      "Other account effects explain why cash movement is −743,539.66.",
+      "Cash closes at 8,442,255.80; outstanding obligations require separate follow-up."
+    ],
+    "kind": "Selected released evidence and teaching explanation"
+  },
+  {
+    "id": "case07-asset",
+    "caseNumber": 7,
+    "title": "How does a financed asset affect cost and cash?",
+    "question": "How does a financed asset affect cost and cash?",
+    "alt": "Receipt 15616 records the asset; invoice 21692 creates AP. Journal 445 replaces AP with a 280,000 note. Depreciation records asset use; debt payments separate principal and interest.",
+    "steps": [
+      "Receipt 15616 records the asset; invoice 21692 creates AP.",
+      "Journal 445 replaces AP with a 280,000 note.",
+      "Depreciation records asset use; debt payments separate principal and interest."
+    ],
+    "kind": "Selected released evidence and teaching explanation"
+  },
+  {
+    "id": "case08-risk",
+    "caseNumber": 8,
+    "title": "What turns a risk into an investigation?",
+    "question": "What turns a risk into an investigation?",
+    "alt": "Define the risk and the criterion to test. Select a population with a stated denominator and date boundary. Collect source evidence before classifying a finding.",
+    "steps": [
+      "Define the risk and the criterion to test.",
+      "Select a population with a stated denominator and date boundary.",
+      "Collect source evidence before classifying a finding."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case08-ap",
+    "caseNumber": 8,
+    "title": "What evidence distinguishes a repeated reference from duplicate payment?",
+    "question": "What evidence distinguishes a repeated reference from duplicate payment?",
+    "alt": "Group invoice or check references within the same supplier. Read each flagged document, its receipt links, and payment trail. Classify what repeats and what additional evidence is required.",
+    "steps": [
+      "Group invoice or check references within the same supplier.",
+      "Read each flagged document, its receipt links, and payment trail.",
+      "Classify what repeats and what additional evidence is required."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case08-overtime",
+    "caseNumber": 8,
+    "title": "Which approval supports the overtime hours?",
+    "question": "Which approval supports the overtime hours?",
+    "alt": "Select approved time entries with positive overtime in the defined quarter. Left join the linked overtime approval so missing links remain visible. Inspect hours, identity, period, dates, and status before concluding.",
+    "steps": [
+      "Select approved time entries with positive overtime in the defined quarter.",
+      "Left join the linked overtime approval so missing links remain visible.",
+      "Inspect hours, identity, period, dates, and status before concluding."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case08-finding",
+    "caseNumber": 8,
+    "title": "How should an exception be classified?",
+    "question": "How should an exception be classified?",
+    "alt": "Flag: the query criterion identifies a record. Investigation: compare supporting documents and alternative explanations. Conclusion: supported exception, explained circumstance, unresolved evidence, or no exception under the test.",
+    "steps": [
+      "Flag: the query criterion identifies a record.",
+      "Investigation: compare supporting documents and alternative explanations.",
+      "Conclusion: supported exception, explained circumstance, unresolved evidence, or no exception under the test."
+    ],
+    "kind": "Conceptual teaching diagram"
+  },
+  {
+    "id": "case08-assessment",
+    "caseNumber": 8,
+    "title": "How can the proposed control be assessed?",
+    "question": "How can the proposed control be assessed?",
+    "alt": "Define the control owner, timing, and retained evidence. Test a stated population and trace both flagged and unflagged examples. Evaluate failures, investigate causes, and repeat the assessment without changing the denominator silently.",
+    "steps": [
+      "Define the control owner, timing, and retained evidence.",
+      "Test a stated population and trace both flagged and unflagged examples.",
+      "Evaluate failures, investigate causes, and repeat the assessment without changing the denominator silently."
+    ],
+    "kind": "Conceptual teaching diagram"
+  }
+]

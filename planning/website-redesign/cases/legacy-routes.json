@@ -1,0 +1,342 @@
+{
+  "attendance-control-audit-case": {
+    "destination": "audit-review-pack-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-test-schedule-and-punch-linkage",
+      "step-2-inspect-raw-punch-integrity",
+      "step-3-test-absence-against-worked-time-evidence",
+      "step-4-review-overtime-approval-support",
+      "step-5-close-with-post-termination-roster-control",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "audit-review-pack-case": {
+    "destination": "audit-review-pack-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-build-the-starter-exception-map",
+      "step-2-trace-the-manufacturing-audit-seed-from-summary-to-detail",
+      "step-3-triage-master-data-and-ownership-controls",
+      "step-4-triage-workforce-control-exceptions",
+      "step-5-triage-planning-support-controls",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "capex-fixed-asset-lifecycle-case": {
+    "destination": "financial-statement-bridge-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-the-fixed-asset-rollforward-by-behavior-group",
+      "step-2-trace-acquisitions-improvements-financing-choices-and-disposals",
+      "step-3-isolate-the-note-financed-lifecycle-and-debt-cash-timing",
+      "step-4-connect-manufacturing-equipment-depreciation-back-into-product-cost-interpretation",
+      "step-5-finish-with-the-real-statement-and-cash-flow-impact",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "demand-planning-and-replenishment-case": {
+    "destination": "manufacturing-labor-cost-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-the-demand-signal-and-forecast-quality",
+      "step-2-explain-what-is-driving-the-recommendation-pool",
+      "step-3-measure-projected-availability-and-stockout-risk",
+      "step-4-show-where-planning-pressure-escalates-into-urgency-and-conversion",
+      "step-5-connect-replenishment-pressure-to-rough-cut-capacity-response",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "financial-statement-bridge-case": {
+    "destination": "financial-statement-bridge-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-the-statement-scaffold-from-the-trial-balance",
+      "step-2-reconcile-key-control-accounts-back-to-operational-source-activity",
+      "step-3-separate-recurring-journals-finance-controlled-activity-and-close-cycle-volume",
+      "step-4-tie-annual-net-income-into-retained-earnings-and-test-the-close",
+      "step-5-drill-from-statement-variance-into-annual-net-revenue-and-cutoff-exceptions",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "manufacturing-labor-cost-case": {
+    "destination": "manufacturing-labor-cost-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-the-standard-cost-baseline",
+      "step-2-trace-one-work-order-through-operations-and-scheduled-hours",
+      "step-3-connect-approved-clocks-to-productive-labor-and-direct-labor-cost",
+      "step-4-move-from-completion-to-close-and-ledger-impact",
+      "step-5-extend-the-case-into-control-follow-up",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "master-data-and-workforce-audit-case": {
+    "destination": "audit-review-pack-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-establish-the-workforce-population-and-status-baseline",
+      "step-2-test-post-termination-downstream-activity",
+      "step-3-isolate-stale-current-state-ownership",
+      "step-4-test-approval-role-design-and-authority-limits",
+      "step-5-close-with-workforce-control-exception-follow-up",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "o2c-trace-case": {
+    "destination": "o2c-trace-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-the-order-population-and-document-chain",
+      "step-2-understand-fulfillment-lag-and-backorder-pressure",
+      "step-3-connect-shipment-and-invoice-events-to-accounting-impact",
+      "step-4-separate-cash-receipt-from-invoice-settlement",
+      "step-5-extend-the-trace-into-exception-follow-up",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "p2p-accrual-settlement-case": {
+    "destination": "p2p-accrual-settlement-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-the-normal-p2p-document-chain",
+      "step-2-separate-receipt-matched-invoice-lines-from-accrual-linked-service-lines",
+      "step-3-explain-the-accounting-bridge-from-accrual-estimate-to-supplier-invoice",
+      "step-4-measure-invoice-and-payment-timing-then-identify-what-remains-open",
+      "step-5-extend-the-case-into-audit-follow-up",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "pricing-and-margin-governance-case": {
+    "destination": "product-portfolio-profitability-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-realized-pricing-against-list-price",
+      "step-2-explain-the-promotion-effect-on-revenue-and-gross-margin",
+      "step-3-show-where-customer-specific-pricing-is-concentrated",
+      "step-4-measure-override-concentration-and-price-floor-pressure",
+      "step-5-extend-the-case-into-governance-follow-up",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "pricing-governance-audit-case": {
+    "destination": "audit-review-pack-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-test-price-list-validity-and-overlap",
+      "step-2-test-promotion-scope-and-date-compliance",
+      "step-3-test-customer-specific-price-list-bypass",
+      "step-4-review-below-floor-sales-without-approval",
+      "step-5-close-with-override-approval-completeness",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "product-portfolio-and-lifecycle-case": {
+    "destination": "product-portfolio-profitability-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-the-portfolio-structure-in-the-item-master",
+      "step-2-check-whether-the-item-master-is-complete-enough-to-trust",
+      "step-3-test-whether-lifecycle-labels-and-active-status-align",
+      "step-4-connect-the-catalog-to-sales-and-portfolio-mix",
+      "step-5-extend-the-case-into-lifecycle-exception-follow-up",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "product-portfolio-profitability-case": {
+    "destination": "product-portfolio-profitability-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-the-portfolio-mix-you-are-evaluating",
+      "step-2-rank-the-portfolio-on-billed-sales-and-gross-margin",
+      "step-3-test-whether-contribution-margin-changes-the-ranking",
+      "step-4-add-the-service-performance-lens",
+      "step-5-add-return-and-refund-pressure-to-finalize-the-portfolio-view",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "replenishment-support-audit-case": {
+    "destination": "audit-review-pack-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-test-forecast-approval-and-override-governance",
+      "step-2-review-inventory-policy-coverage",
+      "step-3-test-unsupported-replenishment-documents",
+      "step-4-review-late-recommendation-conversion",
+      "step-5-close-with-lifecycle-inconsistent-planning-activity",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "workforce-cost-and-org-control-case": {
+    "destination": "workforce-coverage-and-attendance-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-payroll-cost-concentration",
+      "step-2-add-work-location-labor-and-headcount-interpretation",
+      "step-3-test-executive-and-control-owner-role-uniqueness",
+      "step-4-evaluate-expected-approval-role-families",
+      "step-5-finish-with-approval-concentration-by-organization-position",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "workforce-coverage-and-attendance-case": {
+    "destination": "workforce-coverage-and-attendance-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-staffing-coverage-against-planned-load",
+      "step-2-compare-rostered-hours-to-approved-worked-hours",
+      "step-3-localize-absence-pressure",
+      "step-4-evaluate-overtime-as-the-response-mechanism",
+      "step-5-translate-attendance-drift-into-management-follow-up",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  },
+  "working-capital-and-cash-conversion-case": {
+    "destination": "financial-statement-bridge-case",
+    "anchors": [
+      "business-scenario",
+      "the-problem-to-solve",
+      "learning-objectives",
+      "key-data-sources",
+      "recommended-query-sequence",
+      "step-1-define-the-monthly-pressure-map-from-the-control-accounts",
+      "step-2-separate-customer-settlement-timing-from-customer-cash-arrival",
+      "step-3-explain-supplier-side-timing-through-ap-grni-and-payment-lag",
+      "step-4-bring-commission-payroll-and-accrued-liabilities-into-the-same-cash-pressure-story",
+      "step-5-prioritize-the-driver-that-deserves-management-follow-up-first",
+      "required-student-output",
+      "optional-excel-follow-through",
+      "wrap-up-questions",
+      "limitations-and-judgment",
+      "next-steps"
+    ]
+  }
+}

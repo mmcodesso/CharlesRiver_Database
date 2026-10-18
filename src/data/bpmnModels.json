@@ -62,7 +62,7 @@
     "alt": "BPMN collaboration with a customer and Charles River Sales, Design Team, Customer Accounting, and Treasury lanes. Approved billable hours proceed to invoice and cash application; non-billable hours retain cost support without customer billing.",
     "processPath": "/docs/processes/design-services",
     "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
-    "casePath": "/docs/analytics/cases/pricing-and-margin-governance-case",
+    "casePath": "/docs/analytics/cases/product-portfolio-profitability-case",
     "tables": ["SalesOrderLine", "ServiceEngagement", "ServiceEngagementAssignment", "ServiceTimeEntry", "ServiceBillingLine", "SalesInvoiceLine", "CashReceiptApplication", "GLEntry"],
     "steps": [
       "Sales records an hourly service order; the Design team establishes an engagement and staff assignments.",
@@ -80,7 +80,7 @@
     "alt": "BPMN process with Employee and Supervisor, Payroll Accounting, and Treasury lanes, plus external tax and benefit recipients. Approved time leads to a payroll register, then parallel employee-payment and liability-remittance streams with an eventual synchronization.",
     "processPath": "/docs/processes/payroll",
     "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
-    "casePath": "/docs/analytics/cases/attendance-control-audit-case",
+    "casePath": "/docs/analytics/cases/audit-review-pack-case",
     "tables": ["TimeClockPunch", "TimeClockEntry", "OvertimeApproval", "AttendanceException", "PayrollRegister", "PayrollRegisterLine", "PayrollPayment", "PayrollLiabilityRemittance", "GLEntry"],
     "steps": [
       "The payroll period triggers attendance capture and approval of daily time; exception records are evidence for investigation.",
@@ -116,7 +116,7 @@
     "alt": "BPMN collaboration between a customer and Warehouse, Customer Accounting, and Treasury. A return leads to credit allocation against open AR with any excess retained as customer credit. Remaining customer credit can stay open or proceed to a recorded cash refund.",
     "processPath": "/docs/processes/o2c",
     "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
-    "casePath": "/docs/analytics/cases/working-capital-and-cash-conversion-case",
+    "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
     "tables": ["SalesReturn", "SalesReturnLine", "CreditMemo", "CreditMemoLine", "SalesCommissionAdjustment", "CustomerRefund", "GLEntry"],
     "steps": [
       "The scope starts with returned goods from an already shipped and billed sale; Warehouse records the physical return.",
@@ -134,7 +134,7 @@
     "alt": "BPMN process with a customer, Treasury, and Customer Accounting. A payment is recorded as cash and unapplied money; identified allocations become invoice applications, while unmatched or remaining amounts stay unapplied after the selected review pass.",
     "processPath": "/docs/processes/o2c",
     "exercisePath": "/docs/learn-and-practice/source-to-ledger",
-    "casePath": "/docs/analytics/cases/working-capital-and-cash-conversion-case",
+    "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
     "tables": ["CashReceipt", "CashReceiptApplication", "SalesInvoice", "GLEntry"],
     "steps": [
       "Treasury records an incoming customer payment as cash and unapplied money, independently of invoice settlement.",

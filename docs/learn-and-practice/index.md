@@ -1,55 +1,95 @@
 ---
-title: Accounting Exercises and Learning Pathways
-description: Progress from foundational source-to-ledger exercises to applied SQL and Excel analysis and integrated Charles River accounting cases.
-slug: /learn-and-practice
-sidebar_label: Learn and Practice
+title: "Learn and Practice — Guided Excel and SQL Tutorials"
+description: "Follow twelve connected Charles River tutorials from customer records to accounting evidence and a supported business conclusion, using Excel or SQL."
+slug: "/learn-and-practice"
+sidebar_label: "Learn and Practice"
+pagination_prev: "processes/manual-journals-and-close"
+pagination_next: "learn-and-practice/meet-the-records"
 ---
+
+import ToolSteps from "@site/src/components/Tutorial/ToolSteps";
+import TabItem from "@theme/TabItem";
 
 # Learn and Practice
 
-Begin with a question small enough to explain from its source evidence. Once you can identify the document, its row grain, and its accounting effect, extend the same reasoning to a population, a report, or a business case.
+You have met the company and followed its processes. Now open its records and learn to support an explanation with evidence.
 
-Read [Company Story](../learn-the-business/company-story.md) and select a cycle in [Process Flows](../learn-the-business/process-flows.md) first. The [published files](../start-here/downloads.md) support SQL and Excel pathways; the [Dataset Guide](../start-here/dataset-overview.md) helps you find the relevant table families.
+Begin with one customer and one order. Follow the order through shipment, billing, settlement, and accounting. Then reuse that method for services, purchasing, manufacturing, payroll, and close. Finish by turning a monthly summary into a conclusion you can defend.
 
-## 1. Foundational Exercises
+The course assumes basic financial accounting, including debits and credits. It introduces the database and tool steps as you need them. Each lesson has a worked example, a result check, and one small variation.
 
-These focused activities introduce the three core process modules. Choose one before opening a large query pack.
+## Choose Your Tool
 
-| Exercise | Process and concept | Prerequisites and tools | Assessed deliverable |
-|---|---|---|---|
-| [Trace a goods sale from source to ledger](source-to-ledger.md) | Order-to-cash; fulfillment, recognition, and settlement | Introductory debits and credits; SQL or Excel table navigation | One document trace, a posting explanation, and a timing conclusion |
-| [Explain receipt-to-payable timing](receipt-to-payable.md) | Procure-to-pay; commitment, receipt, GRNI, AP, and payment | Basic inventory and liability concepts; SQL or Excel | One receipt-matched timeline, a liability explanation, and a follow-up question |
-| [Map manufacturing cost flow](manufacturing-cost-flow.md) | Conversion; material issue, standard-cost completion, and close | Basic inventory and cost-flow concepts; SQL or Excel | One work-order evidence map with cost-stage distinctions and a stated limitation |
+The business question and expected result are shared. Select **Excel** or **SQL** and follow that route throughout the course; the site remembers your selection. You can switch tools or compare results later.
 
-Each page specifies the source tables, evidence workflow, submission, interpretation, and boundaries of the task. No supplied scenario requires you to find an invented customer or transaction.
+<ToolSteps>
+<TabItem value="excel">
 
-## 2. Applied Analytical Exercises
+Use **Microsoft 365 desktop Excel**. You will import selected tables into a separate analysis workbook, then learn filters, lookups, merges, and PivotTables.
 
-Expand from one trace to a defined population. These pathways reuse the existing guides, query resources, and reports.
+[Set up Excel](../analytics/excel-guide.md) to import your first customer table. Allow time for the published workbook to download before opening the import window.
 
-| Pathway | Evidence workflow | Suggested submission | Interpretation requirement |
-|---|---|---|---|
-| [SQL Guide](../analytics/sql-guide.md) and [Query Library](../analytics/analysis-tracks.md) | Run an existing query, define its row grain, inspect a source sample, and change one documented date or grouping choice | Saved query or query reference, result excerpt, and source reconciliation | Explain what changed and whether the comparison is valid |
-| [Excel Guide](../analytics/excel-guide.md) | Import only the required tables, preserve keys, construct a summary, and check a source total | Working workbook with import notes, one PivotTable or chart, and a check | Explain the measure and show that joins or filters did not duplicate it |
-| [Reports and Analytics](../analytics/index.md) | Choose a business topic, read the report definition, compare periods, and drill into source evidence | One annotated report and a short decision memo | Distinguish an observed pattern from an explanation requiring more evidence |
+</TabItem>
+<TabItem value="sql">
 
-Use the [Schema Reference](../reference/schema.md) for keys and the [GLEntry Posting Reference](../reference/posting.md) for event-to-accounting rules. The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) provides deeper methods, including the [SQL essentials chapter](https://aa.accountinganalyticshub.com/chapters/09-sql-essentials/chapter.html).
+Use the released SQLite database with **DB Browser for SQLite**. You will begin with complete queries to copy and run, then learn to change a filter, follow a key, and summarize records.
 
-For an AIS extension, use the [BPMN and Controls Workshop](bpmn-controls-workshop.md) with an editable [process model](../learn-the-business/process-flows.md#model-library). Interpret responsibilities, trace an activity to actual records, build a risk and control matrix, and propose a change with a testable evidence plan. Start after one foundational trace so the control discussion rests on source evidence.
+[Set up SQL](../analytics/sql-guide.md) to open the database and run your first query.
 
-## 3. Integrated Business Cases
+</TabItem>
+</ToolSteps>
 
-The [Case Library](../analytics/cases/index.md) combines business context, related query sequences, accounting logic, and interpretation. Begin with the matching process case, then progress toward wider financial, managerial, or audit synthesis.
+**Already set up? [Begin Lesson 1: Meet the Records](meet-the-records.md).**
 
-- Continue a customer trace in the [O2C Trace Case](../analytics/cases/o2c-trace-case.md).
-- Compare receipt matching and accrual settlement in the [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md).
-- Connect approved labor, operations, and cost close in the [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md).
-- After those foundations, use the case library's difficulty and process guidance to select a more integrated investigation.
+<span id="1-foundational-exercises"></span>
 
-## A Common Evidence Standard
+## Foundations: Recognize and Connect Records
 
-For every activity, retain the dataset version, file format, reporting dates, source identifiers, and definition of one result row. Show how you checked the evidence, explain its accounting meaning, and state what the analysis cannot establish. End with a supported action or a specific request for further evidence.
+| Lesson | What you will learn |
+|---|---|
+| [1. Meet the Records](meet-the-records.md) | Find one customer and explain its identifier and descriptive fields. |
+| [2. Read an Order](read-an-order.md) | Distinguish an order header from its lines and check their total. |
+| [3. Connect the Records](connect-the-records.md) | Add customer and item descriptions using matching keys. |
 
-The data is synthetic and includes intentional exceptions. A complete trace is evidence about the selected records, not proof that every transaction or control is correct. A flagged record is a reason to investigate, not a ready-made conclusion.
+These lessons establish a habit: say what one row represents before you calculate a total.
 
-Instructors can use the [Adoption Guide](../teach-with-data/instructor-guide.md) to align these levels with course objectives and assessment. [Accounting Analytics Hub](https://accountinganalyticshub.com/) connects the dataset, current textbook, and planned future course resources.
+<span id="2-applied-analytical-exercises"></span>
+
+## Processes: Follow Events and Accounting
+
+| Lesson | Question to answer |
+|---|---|
+| [4. Follow a Goods Sale](source-to-ledger.md) | What was ordered, shipped, and invoiced? |
+| [5. Follow Customer Settlement](follow-customer-settlement.md) | When was cash received, and when did it settle this invoice? |
+| [6. Find the Accounting Entries](find-the-accounting-entries.md) | Which events changed which accounts? |
+| [7. Follow Design Time into Billing](follow-design-time-into-billing.md) | How does approved time become a customer invoice? |
+| [8. Follow a Purchase](receipt-to-payable.md) | What is owed before and after the supplier bill arrives? |
+| [9. Follow Manufacturing Costs](manufacturing-cost-flow.md) | When are goods complete, and when are their costs closed? |
+| [10. Follow Hours into Payroll](follow-hours-into-payroll.md) | Which obligations remain after an employee is paid? |
+| [11. Follow an Estimate into Settlement](follow-an-estimate-into-settlement.md) | How does later evidence replace an expense estimate? |
+
+The first sales lessons continue the same selected order. Later processes use separate verified records. Their teaching sequence does not mean that every purchase, work order, or pay record belongs to the illustrative customer project.
+
+<span id="3-integrated-business-cases"></span>
+
+## Interpretation: Explain a Result
+
+[12. Turn Records into a Conclusion](turn-records-into-a-conclusion.md) moves from individual records to a monthly invoice population. Build a checked summary, investigate a source sample, and write a short evidence memo.
+
+After Lesson 12, continue to the [Case Library](../analytics/cases/index.md). The optional [BPMN and Controls Workshop](bpmn-controls-workshop.md) builds on a trace you have already completed.
+
+<span id="a-common-evidence-standard"></span>
+
+## Keep a Small Evidence Portfolio
+
+For each lesson, retain your workbook or SQL, source release, selected identifiers, filters, result check, and short interpretation. A useful submission explains both what the evidence supports and what it leaves unresolved.
+
+Worked outputs use **release v2027.1**. The company scenes are fictional teaching situations; the named examples are actual synthetic records in that release. The file includes intentional exceptions. A discrepancy calls for investigation, and a matched example does not establish that the whole population is correct.
+
+If your assigned file differs, follow your instructor's version and explain any differences rather than altering records to reproduce a displayed number.
+
+## Next Steps
+
+[Begin with Meet the Records](meet-the-records.md), or finish the setup for your chosen tool first.
+
+Instructors can use the [Adoption Guide](../teach-with-data/instructor-guide.md) to select a shorter pathway. [Accounting Analytics Hub](https://accountinganalyticshub.com/) and the [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) provide the wider learning context.

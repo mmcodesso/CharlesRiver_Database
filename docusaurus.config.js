@@ -70,6 +70,16 @@ const config = {
       "@docusaurus/plugin-client-redirects",
       {
         redirects: [
+          { from: "/docs/analytics/cases/product-portfolio-and-lifecycle-case", to: "/docs/analytics/cases/product-portfolio-profitability-case" },
+          { from: "/docs/analytics/cases/pricing-and-margin-governance-case", to: "/docs/analytics/cases/product-portfolio-profitability-case" },
+          { from: "/docs/analytics/cases/demand-planning-and-replenishment-case", to: "/docs/analytics/cases/manufacturing-labor-cost-case" },
+          { from: "/docs/analytics/cases/workforce-cost-and-org-control-case", to: "/docs/analytics/cases/workforce-coverage-and-attendance-case" },
+          { from: "/docs/analytics/cases/working-capital-and-cash-conversion-case", to: "/docs/analytics/cases/financial-statement-bridge-case" },
+          { from: "/docs/analytics/cases/capex-fixed-asset-lifecycle-case", to: "/docs/analytics/cases/financial-statement-bridge-case" },
+          { from: "/docs/analytics/cases/master-data-and-workforce-audit-case", to: "/docs/analytics/cases/audit-review-pack-case" },
+          { from: "/docs/analytics/cases/attendance-control-audit-case", to: "/docs/analytics/cases/audit-review-pack-case" },
+          { from: "/docs/analytics/cases/replenishment-support-audit-case", to: "/docs/analytics/cases/audit-review-pack-case" },
+          { from: "/docs/analytics/cases/pricing-governance-audit-case", to: "/docs/analytics/cases/audit-review-pack-case" },
           {
             to: "/docs/analytics/analysis-tracks",
             from: ["/docs/analytics/financial", "/docs/analytics/managerial", "/docs/analytics/audit"],

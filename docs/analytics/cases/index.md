@@ -1,59 +1,39 @@
 ---
-title: Cases
-description: Find accounting cases by business process, accounting area, level, and tool, with prerequisites and assessed evidence-based deliverables.
-sidebar_label: Cases
+title: "Cases: Guided Business Investigations"
+description: "Eight substantial Charles River cases with complete Excel and SQL routes, worked evidence, and independent challenges."
+slug: /analytics/cases
+pagination_prev: learn-and-practice/turn-records-into-a-conclusion
+pagination_next: analytics/cases/o2c-trace-case
+toc_max_heading_level: 2
 ---
 
 import CaseExplorer from "@site/src/components/CaseExplorer";
 
-# Cases
+# Cases: Guided Business Investigations
 
-Follow an order, explain a cost, assess a control, or connect several processes to a financial decision. These cases use the same fictional company and published evidence, so each investigation starts with the business process and ends with a supported management or audit conclusion.
+The controller, sales coordinator, operations planner, and design lead need explanations they can act on. These eight cases take you from their question to a reproducible analysis and a supported recommendation.
 
-For a first assignment, begin with the [SQL foundation exercise](../sql-guide.md#foundation-exercise-one-order-line-and-its-evidence) or [Excel foundation exercise](../excel-guide.md#foundation-exercise-a-catalog-profile). Then choose a case whose prerequisites match your course. The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) supplies the conceptual background; these assignments supply a company, source evidence, and a question to investigate.
+Each case contains a fully worked investigation in **Excel and SQL**, several explanatory figures, session stopping points, and an independent challenge. Choose either tool; the business question and expected results are shared. Keep a record of your scope, checks, source evidence, and what remains uncertain.
 
-## Difficulty Labels
+Start with [Resolve a Customer Account Review](o2c-trace-case.md). If you are still learning to filter, join, or summarize records, complete the relevant [Learn and Practice lessons](../../learn-and-practice/index.md) first. The [Excel](../excel-guide.md) and [SQL](../sql-guide.md) setup guides remain available throughout.
 
-| Level | Starting scope | Progression |
-|---|---|---|
-| Foundation | One process, item population, or document trail | Begin with the first two steps; extend to settlement, close, or controls after the basic evidence trail is clear. |
-| Intermediate | Several measures within one business question | Compare financial and operating evidence, align populations, and support a recommendation. |
-| Advanced | Multiple periods, recognition paths, or control populations | Reconcile different grains and explain uncertainty before drawing a conclusion. |
-| Capstone | A scoped cross-process audit review | Choose one or two test families, justify priorities, and defend the evidence trail. |
+Allow **60–90 minutes per session** as a planning estimate. Basic cases have two sessions, intermediate cases three, and advanced cases four. You can study a selected case after its prerequisites; completing all eight is not required.
 
-The short guide exercises are foundational practice. Intermediate cases develop applied analysis. Advanced and Capstone cases require integrated interpretation. A Foundation label describes the starting point; the optional extensions can require more accounting and database experience.
+<span id="foundation"></span>
+<span id="choose-a-case"></span>
 
-## Case Matrix
-
-Browse all 17 cases below. Combine filters or search for a topic, prerequisite, or deliverable. Every case includes SQLite investigation and an optional Excel reconstruction; the Excel path covers the focused follow-through described on the case page.
+<span id="difficulty-labels"></span>
+<span id="case-matrix"></span>
+<span id="learning-arcs"></span>
+<span id="how-cases-fit-the-learning-path"></span>
+<span id="next-steps"></span>
 
 <CaseExplorer />
 
-## Learning Arcs
+## Keep Evidence, Then Make a Decision
 
-| Course or investigation | Suggested path |
-|---|---|
-| Accounting information systems | [O2C trace](o2c-trace-case.md) → [P2P accrual and settlement](p2p-accrual-settlement-case.md) → [manufacturing labor](manufacturing-labor-cost-case.md). Explain events, source keys, recognition, and the GL trail. |
-| Financial accounting and analytics | [CAPEX lifecycle](capex-fixed-asset-lifecycle-case.md) → [working capital](working-capital-and-cash-conversion-case.md) → [statement bridge](financial-statement-bridge-case.md). Move from recognition and cash timing to statement interpretation. |
-| Managerial accounting | [Product lifecycle](product-portfolio-and-lifecycle-case.md) → [portfolio profitability](product-portfolio-profitability-case.md) → [planning and replenishment](demand-planning-and-replenishment-case.md). Connect cost assumptions to operating decisions. |
-| Auditing | Begin with a process-tracing case, then [master-data and workforce controls](master-data-and-workforce-audit-case.md), a specialized control case, and a scoped [audit review pack](audit-review-pack-case.md). |
-| Commercial decisions | [Pricing and margin](pricing-and-margin-governance-case.md) → [pricing-control audit](pricing-governance-audit-case.md). Separate performance outcomes from authorization evidence. |
-| People and operations | [Coverage and attendance](workforce-coverage-and-attendance-case.md) → [attendance-control audit](attendance-control-audit-case.md) or [workforce cost and organization](workforce-cost-and-org-control-case.md). |
+At every stage, predict what you expect, run the analysis, compare the worked checkpoint, and investigate differences. Save the intermediate outputs before continuing. The fictional management scenario supplies the question; released records establish the findings.
 
-These are teaching pathways for current resources. The complementary AIS textbook and future tool courses are planned resources.
+A complete submission explains the population, calculation, result, source check, limitation, and proposed next action. The worked core shows this method openly. The separate challenge asks you to transfer it to a new population without a public model answer.
 
-## How Cases Fit the Learning Path
-
-1. Understand the company and read the linked process page.
-2. Read a relevant [Reports and Analytics](../index.md) to frame the business question.
-3. Define the release, period, population, and source grain before running SQL.
-4. Follow the query sequence, retain source keys, and distinguish observations from explanations.
-5. Submit the case-specific evidence schedule and decision memo. State assumptions, limitations, and the next check that could change the conclusion.
-
-The cases present instructional management requests, not predetermined findings. A valid analysis may explain ordinary timing, identify an exception, or document that no rows met the selected criteria. Query flags require source review before they become findings.
-
-## Next Steps
-
-- Prepare your tool with the [SQL Guide](../sql-guide.md) or [Excel Guide](../excel-guide.md).
-- Browse the [Reports and Analytics](../index.md) for business summaries and the [Query Library](../analysis-tracks.md) for reusable SQL.
-- For course sequencing and assessment choices, read the [Instructor Adoption Guide](../../teach-with-data/instructor-guide.md).
+After a case, use [Reports and Analytics](../index.md) and the [Query Library](../analysis-tracks.md) as extensions. Their broader measures may use different populations, dates, or definitions, so compare those before comparing totals.

@@ -1,211 +1,174 @@
-// Authored teaching metadata. Query definitions and dataset records live elsewhere.
+// Authored case metadata; worked examples are verified against release v2027.1.
 export const caseCatalog = [
   {
-    slug: "o2c-trace-case",
-    title: "O2C Trace Case",
-    summary: "Follow a customer order through shipment, billing, the ledger, and settlement.",
-    processes: ["Order-to-cash"],
-    areas: ["Financial accounting", "Accounting information systems"],
-    level: "Foundation",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Order-to-Cash Process", to: "/docs/processes/o2c" },
-    priorKnowledge: "Header and line records, debits and credits, and the difference between revenue and cash.",
-    deliverable: "Source-to-ledger evidence map and customer-settlement explanation",
+    "number": 1,
+    "slug": "o2c-trace-case",
+    "title": "Resolve a Customer Account Review",
+    "summary": "What can we tell the customer about delivery, billing, and the amount still unsettled?",
+    "level": "Basic",
+    "sessions": 2,
+    "tools": [
+      "Excel",
+      "SQL"
+    ],
+    "prerequisites": [
+      "1–6: records, goods sales, settlement, and ledger entries"
+    ],
+    "prerequisite": {
+      "label": "1–6: records, goods sales, settlement, and ledger entries",
+      "to": "/docs/learn-and-practice/source-to-ledger"
+    },
+    "deliverable": "A document timeline, two-date invoice settlement schedule, and a customer response with an action owner."
   },
   {
-    slug: "p2p-accrual-settlement-case",
-    title: "P2P Accrual Settlement Case",
-    summary: "Compare receipt-matched purchasing with accrual-linked service settlement.",
-    processes: ["Procure-to-pay", "Financial close"],
-    areas: ["Financial accounting", "Accounting information systems"],
-    level: "Foundation",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Procure-to-Pay Process", to: "/docs/processes/p2p" },
-    priorKnowledge: "Accrual accounting, accounts payable, and header-to-line relationships.",
-    deliverable: "Two purchasing evidence trails with an accrual-to-payment bridge",
+    "number": 2,
+    "slug": "design-services-performance-case",
+    "title": "Review Design Work and Billing",
+    "summary": "How does design effort become approved work, billed amounts, and recorded cost?",
+    "level": "Basic",
+    "sessions": 2,
+    "tools": [
+      "Excel",
+      "SQL"
+    ],
+    "prerequisites": [
+      "7: design time and billing",
+      "12: summarize evidence"
+    ],
+    "prerequisite": {
+      "label": "7: design time and billing; 12: summarize evidence",
+      "to": "/docs/learn-and-practice/follow-design-time-into-billing"
+    },
+    "deliverable": "An engagement-period reconciliation, an hours/billing/cost bridge, and a design review memo."
   },
   {
-    slug: "manufacturing-labor-cost-case",
-    title: "Manufacturing Labor Cost Case",
-    summary: "Connect a manufactured item's standard cost to operations, labor support, completion, and close.",
-    processes: ["Manufacturing", "Payroll and workforce"],
-    areas: ["Managerial accounting", "Accounting information systems"],
-    level: "Foundation",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Manufacturing Process", to: "/docs/processes/manufacturing" },
-    priorKnowledge: "Materials, direct labor, overhead, work in process, and basic joins. Begin with the first two steps if cost accounting is new.",
-    deliverable: "Work-order cost bridge with productive-labor support and close interpretation",
+    "number": 3,
+    "slug": "p2p-accrual-settlement-case",
+    "title": "Explain Supplier Obligations at Month End",
+    "summary": "Which selected obligations are uninvoiced receipts, supplier payables, or remaining estimates?",
+    "level": "Basic",
+    "sessions": 2,
+    "tools": [
+      "Excel",
+      "SQL"
+    ],
+    "prerequisites": [
+      "8: purchases and GRNI",
+      "11: estimates and settlement"
+    ],
+    "prerequisite": {
+      "label": "8: purchases and GRNI; 11: estimates and settlement",
+      "to": "/docs/learn-and-practice/receipt-to-payable"
+    },
+    "deliverable": "Separate goods and expense-obligation schedules, selected posting checks, and a quarter-end review note."
   },
   {
-    slug: "product-portfolio-and-lifecycle-case",
-    title: "Product Portfolio and Lifecycle Case",
-    summary: "Establish product-master quality before interpreting portfolio activity.",
-    processes: ["Product portfolio", "Order-to-cash"],
-    areas: ["Managerial accounting", "Accounting information systems"],
-    level: "Foundation",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Sales and Customers queries", to: "/docs/analytics/analysis-tracks#sales-and-customers" },
-    priorKnowledge: "An item master, grouping and counting records, and current status versus transaction dates.",
-    deliverable: "Catalog-quality profile and lifecycle evidence register",
+    "number": 4,
+    "slug": "product-portfolio-profitability-case",
+    "title": "Choose a Product and Pricing Priority",
+    "summary": "Which product group deserves a focused review, and what evidence supports that priority?",
+    "level": "Intermediate",
+    "sessions": 3,
+    "tools": [
+      "Excel",
+      "SQL"
+    ],
+    "prerequisites": [
+      "3: matching keys",
+      "9: manufacturing costs",
+      "12: summaries and conclusions"
+    ],
+    "prerequisite": {
+      "label": "3: matching keys; 9: manufacturing costs; 12: summaries and conclusions",
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion"
+    },
+    "deliverable": "A product comparison, selected pricing evidence, a simple analytical chart, and a recommendation memo."
   },
   {
-    slug: "capex-fixed-asset-lifecycle-case",
-    title: "CAPEX and Fixed Asset Lifecycle Case",
-    summary: "Trace capital additions, depreciation, financing, disposal, and cash classification.",
-    processes: ["Fixed assets and financing", "Procure-to-pay", "Financial close"],
-    areas: ["Financial accounting"],
-    level: "Intermediate",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "CAPEX query path", to: "/docs/analytics/analysis-tracks#capex-and-fixed-asset-path" },
-    priorKnowledge: "Capitalization, accumulated depreciation, debt principal and interest, and cash-flow classification.",
-    deliverable: "Asset-lifecycle rollforward with financing and cash-flow explanation",
+    "number": 5,
+    "slug": "manufacturing-labor-cost-case",
+    "title": "Explain Production Cost and Delivery Pressure",
+    "summary": "Do completion, recorded cost, and financial close tell the same production story?",
+    "level": "Intermediate",
+    "sessions": 3,
+    "tools": [
+      "Excel",
+      "SQL"
+    ],
+    "prerequisites": [
+      "9: manufacturing costs",
+      "Manufacturing process chapter"
+    ],
+    "prerequisite": {
+      "label": "9: manufacturing costs; Manufacturing process chapter",
+      "to": "/docs/learn-and-practice/manufacturing-cost-flow"
+    },
+    "deliverable": "A work-order cost bridge, completion/close comparison, capacity evidence, and a production review memo."
   },
   {
-    slug: "pricing-and-margin-governance-case",
-    title: "Pricing and Margin Governance Case",
-    summary: "Assess realized prices, promotions, customer-specific pricing, and approval follow-up.",
-    processes: ["Pricing", "Order-to-cash"],
-    areas: ["Financial accounting", "Managerial accounting"],
-    level: "Intermediate",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Sales and Customers", to: "/docs/analytics#sales-and-customers" },
-    priorKnowledge: "Gross margin, price and quantity effects, and comparable sales populations.",
-    deliverable: "Commercial-pricing comparison and prioritized governance memo",
+    "number": 6,
+    "slug": "workforce-coverage-and-attendance-case",
+    "title": "Explain Staffing, Overtime, and Payroll Cost",
+    "summary": "What do staffing plans, approved work, and paid cost actually establish?",
+    "level": "Intermediate",
+    "sessions": 3,
+    "tools": [
+      "Excel",
+      "SQL"
+    ],
+    "prerequisites": [
+      "10: hours and payroll",
+      "12: summaries and conclusions"
+    ],
+    "prerequisite": {
+      "label": "10: hours and payroll; 12: summaries and conclusions",
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll"
+    },
+    "deliverable": "A coverage comparison, employee-period pay reconciliation, settlement schedule, and staffing recommendation."
   },
   {
-    slug: "product-portfolio-profitability-case",
-    title: "Product Portfolio Profitability Case",
-    summary: "Compare portfolio rankings across margin, contribution, service, and returns.",
-    processes: ["Product portfolio", "Order-to-cash", "Manufacturing"],
-    areas: ["Managerial accounting"],
-    level: "Intermediate",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Product Portfolio and Lifecycle Case", to: "/docs/analytics/cases/product-portfolio-and-lifecycle-case" },
-    priorKnowledge: "Gross margin versus contribution margin, portfolio dimensions, and weighted versus simple averages.",
-    deliverable: "Portfolio decision matrix with comparable performance measures",
+    "number": 7,
+    "slug": "financial-statement-bridge-case",
+    "title": "Explain Profit, Cash, and the Year-End Close",
+    "summary": "How can the company report profit while cash falls, and what does the year-end close change?",
+    "level": "Advanced",
+    "sessions": 4,
+    "tools": [
+      "Excel",
+      "SQL"
+    ],
+    "prerequisites": [
+      "6: ledger entries",
+      "11: estimates and settlement",
+      "12: summaries; Cases 1 and 3 recommended"
+    ],
+    "prerequisite": {
+      "label": "6: ledger entries; 11: estimates and settlement; 12: summaries; Cases 1 and 3 recommended",
+      "to": "/docs/learn-and-practice/find-the-accounting-entries"
+    },
+    "deliverable": "A full-history balance rollforward, profit/cash bridge, selected source reconciliation, and management review memo."
   },
   {
-    slug: "workforce-coverage-and-attendance-case",
-    title: "Workforce Coverage and Attendance Case",
-    summary: "Compare planned load, rostered coverage, approved hours, absences, and overtime.",
-    processes: ["Payroll and workforce", "Manufacturing"],
-    areas: ["Managerial accounting"],
-    level: "Intermediate",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "People and Payroll", to: "/docs/analytics#people-and-payroll" },
-    priorKnowledge: "Scheduled versus worked hours, overtime, and employee-date versus work-center summaries.",
-    deliverable: "Staffing-pressure analysis with an operational follow-up recommendation",
-  },
-  {
-    slug: "demand-planning-and-replenishment-case",
-    title: "Demand Planning and Replenishment Case",
-    summary: "Connect forecast quality to replenishment drivers, projected availability, and capacity.",
-    processes: ["Planning and replenishment", "Procure-to-pay", "Manufacturing"],
-    areas: ["Managerial accounting"],
-    level: "Intermediate",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Production and Planning", to: "/docs/analytics#production-and-planning" },
-    priorKnowledge: "Forecast versus actual demand, inventory buffers, and planning versus execution records.",
-    deliverable: "Planning-pressure brief linking demand, recommendations, and capacity",
-  },
-  {
-    slug: "working-capital-and-cash-conversion-case",
-    title: "Working Capital and Cash Conversion Case",
-    summary: "Synthesize customer, supplier, commission, payroll, and accrual timing into a cash-pressure explanation.",
-    processes: ["Order-to-cash", "Procure-to-pay", "Payroll and workforce", "Financial close"],
-    areas: ["Financial accounting"],
-    level: "Advanced",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Statements and Cash", to: "/docs/analytics#statements-and-cash" },
-    priorKnowledge: "Control-account balances, receivables and payables aging, accruals, and cross-process period alignment.",
-    deliverable: "Working-capital bridge and prioritized cash-timing memo",
-  },
-  {
-    slug: "financial-statement-bridge-case",
-    title: "Financial Statement Bridge Case",
-    summary: "Move from trial balance and control accounts through close logic into source cutoff evidence.",
-    processes: ["Financial close", "Order-to-cash"],
-    areas: ["Financial accounting", "Auditing"],
-    level: "Advanced",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Statements and Cash", to: "/docs/analytics#statements-and-cash" },
-    priorKnowledge: "Trial balance, closing entries, retained earnings, source reconciliation, and cutoff.",
-    deliverable: "Statement-to-source reconciliation schedule and close-review memo",
-  },
-  {
-    slug: "master-data-and-workforce-audit-case",
-    title: "Master Data and Workforce Audit Case",
-    summary: "Evaluate employment validity, current assignments, approval roles, and authority.",
-    processes: ["Payroll and workforce", "Cross-process controls"],
-    areas: ["Auditing", "Accounting information systems"],
-    level: "Advanced",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Payroll Process", to: "/docs/processes/payroll" },
-    priorKnowledge: "Employee master data, historical employment dates, current ownership, and authorization controls.",
-    deliverable: "Employee-validity and authorization control workpaper",
-  },
-  {
-    slug: "workforce-cost-and-org-control-case",
-    title: "Workforce Cost and Org-Control Case",
-    summary: "Relate people-cost concentration and labor use to organizational control ownership.",
-    processes: ["Payroll and workforce", "Cross-process controls"],
-    areas: ["Managerial accounting", "Auditing"],
-    level: "Advanced",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "People and Payroll", to: "/docs/analytics#people-and-payroll" },
-    priorKnowledge: "Payroll burden, headcount versus hours, cost centers, and segregation of duties.",
-    deliverable: "People-cost and control-ownership review with distinct action owners",
-  },
-  {
-    slug: "attendance-control-audit-case",
-    title: "Attendance Control Audit Case",
-    summary: "Test schedule links, punch integrity, absence conflicts, and overtime support.",
-    processes: ["Payroll and workforce"],
-    areas: ["Auditing", "Accounting information systems"],
-    level: "Advanced",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Workforce Coverage and Attendance Case", to: "/docs/analytics/cases/workforce-coverage-and-attendance-case" },
-    priorKnowledge: "Roster and punch records, approved time, absence records, and overtime authorization.",
-    deliverable: "Attendance exception register and payroll-risk workpaper",
-  },
-  {
-    slug: "replenishment-support-audit-case",
-    title: "Replenishment Support Audit Case",
-    summary: "Test forecast approvals, inventory policy, document support, and conversion timing.",
-    processes: ["Planning and replenishment", "Procure-to-pay", "Manufacturing"],
-    areas: ["Auditing", "Accounting information systems"],
-    level: "Advanced",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Demand Planning and Replenishment Case", to: "/docs/analytics/cases/demand-planning-and-replenishment-case" },
-    priorKnowledge: "Planning recommendations, approved forecasts, inventory policy, and replenishment document links.",
-    deliverable: "Planning-support control matrix and source-traced exception register",
-  },
-  {
-    slug: "pricing-governance-audit-case",
-    title: "Pricing Governance Audit Case",
-    summary: "Test price-list validity, promotion scope, customer pricing, floors, and overrides.",
-    processes: ["Pricing", "Order-to-cash"],
-    areas: ["Auditing", "Accounting information systems"],
-    level: "Advanced",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Pricing and Margin Governance Case", to: "/docs/analytics/cases/pricing-and-margin-governance-case" },
-    priorKnowledge: "Effective dates, customer-specific pricing, promotion scope, and exception authorization.",
-    deliverable: "Pricing-control workpaper tracing rules, transactions, and approvals",
-  },
-  {
-    slug: "audit-review-pack-case",
-    title: "Audit Review Pack Case",
-    summary: "Triage cross-process exceptions and select defensible source-evidence follow-up.",
-    processes: ["Cross-process controls", "Order-to-cash", "Procure-to-pay", "Manufacturing", "Payroll and workforce", "Planning and replenishment"],
-    areas: ["Auditing"],
-    level: "Capstone",
-    tools: ["SQLite", "Excel companion"],
-    prerequisite: { label: "Controls and Exceptions queries", to: "/docs/analytics/analysis-tracks#controls-and-exceptions" },
-    priorKnowledge: "At least one process-tracing case, exception classification, source evidence, and scope-limited audit conclusions.",
-    deliverable: "Scoped audit-triage pack with evidence, risk ranking, and follow-up plan",
-  },
+    "number": 8,
+    "slug": "audit-review-pack-case",
+    "title": "Investigate Exceptions and Recommend Controls",
+    "summary": "Which query flags become supported findings, and what control could be assessed?",
+    "level": "Advanced",
+    "sessions": 4,
+    "tools": [
+      "Excel",
+      "SQL"
+    ],
+    "prerequisites": [
+      "One earlier process case",
+      "Controls Workshop recommended"
+    ],
+    "prerequisite": {
+      "label": "One earlier process case; Controls Workshop recommended",
+      "to": "/docs/learn-and-practice/bpmn-controls-workshop"
+    },
+    "deliverable": "An exception register, two source-supported workpapers, and prioritized control recommendations."
+  }
 ];
-
-export const caseLevels = ["Foundation", "Intermediate", "Advanced", "Capstone"];
-
+export const caseLevels = ["Basic", "Intermediate", "Advanced"];
 export default caseCatalog;

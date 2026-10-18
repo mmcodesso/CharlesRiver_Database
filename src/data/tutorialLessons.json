@@ -1,0 +1,74 @@
+[
+  {
+    "id": "meet-the-records",
+    "title": "Meet the Records",
+    "description": "Recognize one customer record, its identifier, and its descriptive fields.",
+    "number": 1
+  },
+  {
+    "id": "read-an-order",
+    "title": "Read an Order",
+    "description": "Distinguish one sales order from its two lines and check the amount without counting the header twice.",
+    "number": 2
+  },
+  {
+    "id": "connect-the-records",
+    "title": "Connect the Records",
+    "description": "Use customer and item keys to add descriptions while preserving one row per order line.",
+    "number": 3
+  },
+  {
+    "id": "source-to-ledger",
+    "title": "Follow a Goods Sale",
+    "description": "Trace a released goods line from order to shipment and invoice with Excel or simple SQL.",
+    "number": 4
+  },
+  {
+    "id": "follow-customer-settlement",
+    "title": "Follow Customer Settlement",
+    "description": "Compare cash receipts and invoice applications at two dates and explain the remaining balance.",
+    "number": 5
+  },
+  {
+    "id": "find-the-accounting-entries",
+    "title": "Find the Accounting Entries",
+    "description": "Connect selected business events to complete ledger vouchers and explain their debit and credit effects.",
+    "number": 6
+  },
+  {
+    "id": "follow-design-time-into-billing",
+    "title": "Follow Design Time into Billing",
+    "description": "Reconcile approved time to one service billing period and distinguish revenue from time-cost support.",
+    "number": 7
+  },
+  {
+    "id": "receipt-to-payable",
+    "title": "Follow a Purchase",
+    "description": "Follow a receipt-matched purchase through GRNI, supplier invoicing, and a payment after year end.",
+    "number": 8
+  },
+  {
+    "id": "manufacturing-cost-flow",
+    "title": "Follow Manufacturing Costs",
+    "description": "Separate material issue, standard-cost completion, and the later close of one work order.",
+    "number": 9
+  },
+  {
+    "id": "follow-hours-into-payroll",
+    "title": "Follow Hours into Payroll",
+    "description": "Reconcile approved hours and net pay while distinguishing employee payment from period-wide remittances.",
+    "number": 10
+  },
+  {
+    "id": "follow-an-estimate-into-settlement",
+    "title": "Follow an Estimate into Settlement",
+    "description": "Trace an expense estimate to its supplier invoice, residual adjustment, and later payment.",
+    "number": 11
+  },
+  {
+    "id": "turn-records-into-a-conclusion",
+    "title": "Turn Records into a Conclusion",
+    "description": "Build a monthly invoice summary and turn a checked result into a bounded business conclusion.",
+    "number": 12
+  }
+]
