@@ -1,52 +1,69 @@
 ---
-title: Why Teach with an Integrated Accounting Dataset
-description: Connect accounting information systems, analytics, financial accounting, managerial accounting, and auditing through one openly licensed synthetic company.
+title: Why Learn Accounting with Connected Records?
+description: Discover how following one company's orders, deliveries, invoices, and payments helps you move from accounting totals to supported explanations.
 slug: /why-this-dataset
 sidebar_label: Why This Dataset
+pagination_prev: start-here/index
+pagination_next: learn-the-business/company-story
 ---
 
 # Why This Dataset
 
-A revenue total becomes more useful when a student can explain the order, shipment, invoice, and cash application behind it. <DisplayName /> provides a shared business setting for that explanation: one fictional company whose operating records connect to posted accounting.
+A sales total tells you how much revenue was recorded. It does not tell you whether the goods were delivered on time, which invoices remain unpaid, or how the company supplied the products. Those questions require different records about related events.
 
-## A Common Business Across Accounting Courses
+<DatasetName /> gives you a common business in which to ask those questions. You can begin with a customer's need, follow what people do, and then inspect the accounting evidence they leave behind.
 
-<CompanyName /> buys merchandise, manufactures selected products, and sells hourly Design Services. The three activities create different evidence and cost questions while sharing customers, employees, organizational data, and the general ledger.
+<span id="traceable-accounting-evidence"></span>
 
-| Teaching emphasis | Question the environment makes possible |
+## Look Behind a Total
+
+Consider the furnishing project introduced in the [Company Story](../learn-the-business/company-story.md). The buyer wants goods and design help. An order records the request. Shipments show goods leaving inventory, service records show work performed, and invoices show what was billed. Cash applications identify invoice settlement.
+
+Each record adds something to the explanation. Comparing an invoice with its shipment can help establish what was billed. Comparing an invoice with its cash applications answers a different question about settlement. Combining totals without understanding those relationships can hide timing differences or count the same amount repeatedly.
+
+This is the value of a connected dataset: you can move between a business question and the evidence needed to answer it.
+
+<span id="practice-that-progresses"></span>
+
+## Build an Explanation in Stages
+
+Begin by describing the event in ordinary language. Identify who acted, what changed, and which document records that change. Then explain the accounting effect and the reporting date that matters.
+
+Once those pieces are clear, use the data to test an explanation. An open balance might reflect timing, incomplete settlement, or an issue needing follow-up. The records help you distinguish those possibilities; the first unusual result does not settle the question.
+
+Your eventual output is more than a calculation. It is a conclusion supported by identified evidence, with its scope and limitations made clear. The foundational exercises develop that habit before the integrated cases ask you to combine several processes.
+
+<span id="a-common-business-across-accounting-courses"></span>
+
+## One Business Across Your Studies
+
+You can revisit the same company as your accounting knowledge develops. Familiarity with its operations leaves more attention for the new question.
+
+<details>
+<summary>See how the company connects different accounting subjects</summary>
+
+| Subject | A question to investigate |
 |---|---|
-| Accounting information systems | Which document records an event, which approval supports it, and which stored key carries the event forward? |
-| Financial accounting | When does the event affect inventory, revenue, a receivable, a liability, or cash? |
-| Managerial accounting | How do product mix, standard cost, labor, capacity, and planning assumptions affect the interpretation of performance? |
-| Auditing | Does the source evidence support a posting, and what further work does an exception require? |
-| Accounting analytics | Can another analyst reproduce the population, joins, measures, and conclusion? |
+| Financial accounting | Which events explain the reported balances and their timing? |
+| Managerial accounting | How do product, production, and service costs inform a decision? |
+| Auditing and controls | Which evidence supports the transaction, and what still needs investigation? |
+| Accounting information systems | How do responsibilities, documents, and records connect? |
+| Analytics | How can a reproducible comparison support a business explanation? |
 
-The [Company Story](../learn-the-business/company-story.md) makes the operating model understandable before students encounter table names. [Process Flows](../learn-the-business/process-flows.md) then connects departments, documents, recognition, and analysis.
+These are teaching applications of the same records. They do not require separate companies or separate versions of the underlying transactions.
 
-## Traceable Accounting Evidence
+</details>
 
-The ledger retains `SourceDocumentType`, `SourceDocumentID`, `SourceLineID`, `VoucherType`, and `VoucherNumber`. These fields let students investigate where a posting came from, while the operational tables explain the event behind it.
+<span id="open-reuse-with-clear-limits"></span>
 
-Goods sales and Design Services offer a useful comparison. Goods follow shipment and invoice records. Services follow engagements, approved time, and `ServiceBillingLine`. Both reach customer receivables and cash application, but their fulfillment evidence differs. Manufacturing adds a separate distinction between material issue, production completion, payroll-supported labor, and work-order close.
+<span id="the-textbook-and-the-teaching-environment"></span>
 
-The [Dataset Guide](dataset-overview.md), [Schema Reference](../reference/schema.md), and [GLEntry Posting Reference](../reference/posting.md) support that work without asking students to memorize the full model first.
+## Open Materials for Practice
 
-## Practice That Progresses
+The company and records are synthetic, including intentional anomalies for investigation. You can practice with connected business evidence without handling a real company's confidential transactions.
 
-[Learn and Practice](../learn-and-practice/index.md) begins with focused evidence tasks. Existing [SQL](../analytics/sql-guide.md) and [Excel guides](../analytics/excel-guide.md), [query resources](../analytics/analysis-tracks.md), [Reports and Analytics](../analytics/index.md), and [cases](../analytics/cases/index.md) extend the work into applied analysis and integrated investigation.
+The materials use the [Creative Commons Attribution-ShareAlike 4.0 license](../technical/license.md). Charles River is part of [Accounting Analytics Hub](https://accountinganalyticshub.com/), with conceptual and analytical support in the [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/).
 
-The goal is a supported explanation. Students identify the population, preserve source references, interpret a result, state its limitations, and recommend a next action. A query result alone is not a complete accounting conclusion.
+## Next Steps
 
-## Open Reuse with Clear Limits
-
-The project uses [CC BY-SA 4.0](../technical/license.md), allowing sharing and adaptation with attribution and the same license for adaptations. Instructors can assign the published files and adapt the teaching sequence to their course.
-
-The environment is synthetic and deliberately includes anomalies. It supports practice with evidence and controls, but it does not demonstrate how a real company performed or establish that a flagged condition is fraud. Illustrated business scenarios supply context; students must derive findings from actual records in their assigned file.
-
-## The Textbook and the Teaching Environment
-
-[Accounting Analytics Hub](https://accountinganalyticshub.com/) connects this environment with the [Accounting Analytics: An Integrated Approach textbook](https://aa.accountinganalyticshub.com/). The textbook develops the conceptual and analytical methods. Charles River supplies a company, connected data, and opportunities to apply those methods.
-
-The Hub's future AIS and tool courses are planned resources. Instructors can use the current Charles River materials independently, guided by the [Instructor Adoption Guide](../teach-with-data/instructor-guide.md).
-
-Begin at [Start Here](index.md), get the [published files](downloads.md), or review the [first exercises](../learn-and-practice/index.md).
+Continue with [Company Story](../learn-the-business/company-story.md). Understanding the customer and the people doing the work will make the later records easier to interpret.

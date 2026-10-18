@@ -1,344 +1,661 @@
 ---
-title: Audit Review Pack Case
-description: Inquiry-led walkthrough for broad audit triage, exception tracing, and source-evidence review.
-sidebar_label: Audit Review Pack
+title: "8. Investigate Exceptions and Recommend Controls"
+description: "Which query flags become supported findings, and what control could be assessed?"
+sidebar_label: "8. Investigate Exceptions and Recommend Controls"
+pagination_prev: "analytics/cases/financial-statement-bridge-case"
+pagination_next: "analytics/index"
+case_number: 8
+case_level: Advanced
+case_sessions: 4
+toc_max_heading_level: 2
 ---
 
-import { QueryReference } from "@site/src/components/QueryReference";
+import ToolSteps from "@site/src/components/Tutorial/ToolSteps";
+import TabItem from "@theme/TabItem";
+import CaseFigure from "@site/src/components/Cases/Figure";
+import CaseMethods from "@site/src/components/Cases/Methods";
 import { CaseOverview } from "@site/src/components/CaseExplorer";
+import { QuerySequence } from "@site/src/components/QueryReference";
+import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
-# Audit Review Pack Case
+# 8. Investigate Exceptions and Recommend Controls
+
+<span id="business-scenario"></span>
+<span id="the-problem-to-solve"></span>
+<span id="learning-objectives"></span>
+
+The controller requests a focused controls review. A list of flags is easy to produce; the harder task is to investigate alternatives and explain what the evidence establishes. You will examine repeated supplier references and overtime approval support, then recommend controls with a clear owner, procedure, and assessment method.
 
 <CaseOverview slug="audit-review-pack-case" />
 
-## Business Scenario
+**Worked scope.** Duplicate supplier invoice and check references across the entire released history, plus approved overtime entries with positive overtime dated October 1–December 31, 2026. These populations have different denominators. The review uses source records, not instructor anomaly labels or the support workbook.
 
-**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
+The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-The internal-audit team receives the normal three-year package covering fiscal years 2024 through 2026 with a moderate set of planted anomalies. The job is not to prove every issue from scratch. The job is to use audit starter queries, source tables, and workbook evidence together so the team can explain what happened, where it happened, and what it means.
-
-This case consolidates the former exception lab into the broad review pack. Students still practice tracing flagged rows to source evidence, but the workflow now moves through the full audit triage stack: starter anomalies, manufacturing audit seeds, master data, workforce controls, and planning-support controls.
-
-## The Problem to Solve
-
-The review team needs to separate timing issues, approval failures, linkage failures, master-data issues, workforce-control failures, and planning-support exceptions without treating every flagged row as the same kind of risk.
-
-## Learning Objectives
-
-- Classify exceptions across processes before choosing detailed follow-up.
-- Trace a scoped selection from summary results to source records.
-- Distinguish teaching seeds, query criteria, and supported audit conclusions.
+**Preparation:** One earlier process case; Controls Workshop recommended. Revisit [the relevant tutorial](../../learn-and-practice/bpmn-controls-workshop.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
 
 ## Key Data Sources
 
-- Source documents: Approval, payment, payroll, manufacturing, master-data, attendance, and planning records used by the assigned query families.
-- Evidence grain: Retain each test's document, employee-date, operation, or planning grain; overlapping test counts are not additive.
-- Main tables: `Employee`, `Item`, `PurchaseInvoice`, `DisbursementPayment`, `PayrollRegister`, `PayrollPayment`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `WorkCenter`, `LaborTimeEntry`, `TimeClockEntry`
-- Related processes: [Order-to-Cash](../../processes/o2c.md), [Procure-to-Pay](../../processes/p2p.md), [Manufacturing](../../processes/manufacturing.md), [Payroll](../../processes/payroll.md)
-- Related guide: [Controls and Exceptions queries](../analysis-tracks.md#controls-and-exceptions)
-- Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
-- This case is the broad audit triage and source-tracing case. Use the specialized audit cases when you need deeper follow-through for workforce validity, attendance controls, replenishment support, or pricing governance.
+Each source below has a distinct row meaning. Import only the fields and populations requested in each stage. Working tables default to the source name plus Data unless a stage assigns a more specific name.
+
+| Source | Published Excel Table | First working name |
+|---|---|---|
+| PurchaseInvoice | T37_PurchaseInvoice | PurchaseInvoiceData |
+| PurchaseInvoiceLine | T38_PurchaseInvoiceLine | PurchaseInvoiceLineData |
+| DisbursementPayment | T39_DisbursementPayment | DisbursementPaymentData |
+| TimeClockEntry | T66_TimeClockEntry | TimeClockEntryData |
+| OvertimeApproval | T65_OvertimeApproval | OvertimeApprovalData |
+| PayrollRegister | T69_PayrollRegister | PayrollRegisterData |
+| PayrollPayment | T71_PayrollPayment | PayrollPaymentData |
+
+<CaseMethods />
+
+<span id="step-1-test-schedule-and-punch-linkage"></span>
+<span id="step-2-inspect-raw-punch-integrity"></span>
+<span id="step-1-build-the-starter-exception-map"></span>
+<span id="step-2-trace-the-manufacturing-audit-seed-from-summary-to-detail"></span>
+<span id="step-1-establish-the-workforce-population-and-status-baseline"></span>
+<span id="step-2-test-post-termination-downstream-activity"></span>
+<span id="step-1-test-price-list-validity-and-overlap"></span>
+<span id="step-2-test-promotion-scope-and-date-compliance"></span>
+<span id="step-1-test-forecast-approval-and-override-governance"></span>
+<span id="step-2-review-inventory-policy-coverage"></span>
+
+## Session 1 — Define risks, criteria, and evidence
+
+Create Case08.xlsx or Case08.sql and a Review note. Use four conclusion categories: supported exception, explained timing or valid circumstance, unresolved evidence, and no exception under the stated test. A query flag is the starting point.
+
+<CaseFigure figureId="case08-risk" />
+
+
+### 1.1. Specify two review criteria
+
+**Predict before you run:** Could the same number of flags mean different things in different populations?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import PurchaseInvoiceData without a date filter.
+
+2. Import DisbursementPaymentData without removing rows.
+
+3. Create a Reference named CheckPayments, filter CheckNumber not blank, and load that reference for the check-reference test.
+
+4. Keep the original query available for invoice payment investigations.
+
+5. Import TimeClockEntryData filtered WorkDate October 1–December 31, 2026, ClockStatus Approved, and OvertimeHours greater than zero.
+
+6. Load the last selection as Overtime.
+
+7. On Review label B2 Invoice documents, B3 Payments with a check reference, and B4 Approved overtime records.
+
+8. Enter the counts:
+
+    ~~~text title="Excel — Review!B2"
+    =ROWS(PurchaseInvoiceData[PurchaseInvoiceID])
+    ~~~
+
+    ~~~text title="Excel — Review!B3"
+    =ROWS(CheckPayments[DisbursementID])
+    ~~~
+
+    ~~~text title="Excel — Review!B4"
+    =ROWS(Overtime[TimeClockEntryID])
+    ~~~
+
+9. For the invoice test define a repeated reference as the same SupplierID and exact InvoiceNumber occurring more than once; for checks use SupplierID and nonblank CheckNumber.
+
+10. For overtime, first test missing linked approval or hours above linked ApprovedHours.
+
+11. Treat identity, status, and timing as further evidence checks.
+
+</TabItem>
+<TabItem value="sql">
+
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+```sql title="c08-populations.sql"
+SELECT 'Supplier invoices: released history' AS Population,
+       COUNT(*) AS Documents
+FROM PurchaseInvoice
+UNION ALL SELECT 'Payments with nonblank check reference: released history',
+       COUNT(*)
+FROM DisbursementPayment
+WHERE CheckNumber IS NOT NULL AND TRIM(CheckNumber)<>''
+UNION ALL SELECT 'Approved overtime entries: Q4 2026',
+       COUNT(*)
+FROM TimeClockEntry
+WHERE WorkDate>='2026-10-01' AND WorkDate<'2027-01-01' AND ClockStatus='Approved' AND OvertimeHours>0
+ORDER BY Population;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** 40,204 supplier invoices; 12,130 payments with a nonblank check reference; 1,895 approved positive-overtime entries in Q4 2026.
+
+The tests do not cover every AP or payroll risk. Exact reference matching also misses differently formatted duplicates; note that limitation before interpreting a zero or low rate.
+
+<details>
+<summary>If your result differs</summary>
+
+Do not filter AP to Q4 simply to match overtime dates. The worked duplicate-reference evidence is across released history.
+
+</details>
+
+**Keep for the next stage:** Save a scope sheet with risks, criteria, exclusions, denominators, and expected evidence.
+
+:::tip Session stopping point
+Save the scope and criteria before viewing flags. This prevents the results from silently redefining the question.
+:::
+
+<span id="step-3-test-absence-against-worked-time-evidence"></span>
+<span id="step-3-triage-master-data-and-ownership-controls"></span>
+<span id="step-3-isolate-stale-current-state-ownership"></span>
+<span id="step-3-test-customer-specific-price-list-bypass"></span>
+<span id="step-3-test-unsupported-replenishment-documents"></span>
+
+## Session 2 — Investigate repeated AP references
+
+A repeated reference may indicate a duplicate document, a reused reference, or a recording problem. Inspect the linked commercial evidence and payments before alleging duplicate payment.
+
+<CaseFigure figureId="case08-ap" />
+
+
+### 2.1. Find groups without multiplying documents
+
+**Predict before you run:** Should the denominator count duplicate groups or document rows?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. In Power Query Reference PurchaseInvoiceData as InvoiceGroups.
+
+2. Group by SupplierID and InvoiceNumber; Count Rows as Occurrences; filter Occurrences greater than 1.
+
+3. Merge those groups back to PurchaseInvoiceData on both keys using an Inner join and expand the document columns.
+
+4. Separately group nonblank-check DisbursementPaymentData by SupplierID and CheckNumber, Count Rows, retain counts greater than 1, then merge back on both keys.
+
+5. Name the outputs DuplicateInvoices and DuplicateChecks.
+
+6. Summarize payments by PurchaseInvoiceID before merging their total to DuplicateInvoices.
+
+</TabItem>
+<TabItem value="sql">
+
+groups identifies exact supplier/reference pairs occurring more than once. Joining the group back retrieves each flagged document. The payment SUM is independent, so multiple payments cannot duplicate invoice values.
+
+Blank references are excluded before grouping. The same supplier and CheckNumber must match. Keep both group counts and payment-row counts; they answer different questions.
+
+Run each complete statement separately and retain its result before continuing.
+```sql title="c08-duplicates.sql"
+WITH groups AS (SELECT SupplierID,
+       InvoiceNumber,
+       COUNT(*) AS Occurrences
+FROM PurchaseInvoice
+GROUP BY SupplierID,InvoiceNumber
+HAVING COUNT(*)>1) SELECT i.SupplierID,
+       i.InvoiceNumber,
+       i.PurchaseInvoiceID,
+       i.InvoiceDate,
+       i.GrandTotal,
+       g.Occurrences,
+       ROUND(COALESCE((SELECT SUM(p.Amount)
+FROM DisbursementPayment p
+WHERE p.PurchaseInvoiceID=i.PurchaseInvoiceID),0),2) AS Paid
+FROM PurchaseInvoice i
+JOIN groups g ON g.SupplierID=i.SupplierID AND g.InvoiceNumber=i.InvoiceNumber
+ORDER BY i.SupplierID,i.InvoiceNumber,i.PurchaseInvoiceID;
+```
+
+
+```sql title="c08-checks.sql"
+WITH groups AS (SELECT SupplierID,
+       CheckNumber,
+       COUNT(*) AS Occurrences
+FROM DisbursementPayment
+WHERE CheckNumber IS NOT NULL AND TRIM(CheckNumber)<>''
+GROUP BY SupplierID,CheckNumber
+HAVING COUNT(*)>1) SELECT p.SupplierID,
+       p.CheckNumber,
+       p.DisbursementID,
+       p.PurchaseInvoiceID,
+       p.PaymentDate,
+       p.Amount,
+       p.ClearedDate,
+       g.Occurrences
+FROM DisbursementPayment p
+JOIN groups g ON g.SupplierID=p.SupplierID AND g.CheckNumber=p.CheckNumber
+ORDER BY p.SupplierID,p.CheckNumber,p.DisbursementID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Six invoice-reference groups contain 12 invoice rows. Two check-reference groups contain four payment rows. The first invoice pair is supplier 1, reference V0001-2024-000028, invoice IDs 28 and 44.
+
+Twelve flagged invoice rows and six groups are different counts. A percentage based on groups divided by document rows would mix units. Keep the invoice and payment flag rates separate.
+
+<details>
+<summary>If your result differs</summary>
+
+Group within supplier. A reference repeated by two different suppliers is not the same test. Exclude blank check references explicitly.
+
+</details>
+
+**Keep for the next stage:** Save both group lists and all flagged document rows.
+
+### 2.2. Follow the first invoice pair to receipts and payment
+
+**Predict before you run:** Do invoices 28 and 44 represent the same goods and amount?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import PurchaseInvoiceLineData filtered PurchaseInvoiceID 28 or 44.
+
+2. Keep GoodsReceiptLineID, POLineID, ItemID, Quantity, and LineTotal.
+
+3. Import DisbursementPaymentData filtered to those same invoice IDs without the nonblank-check filter; these payments may use another method.
+
+4. Compare document dates and amounts, receipt links, and payment IDs.
+
+5. Retain a separate register row for each invoice.
+
+</TabItem>
+<TabItem value="sql">
+
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+```sql title="c08-invoice-detail.sql"
+SELECT l.PurchaseInvoiceID,
+       l.PILineID,
+       l.GoodsReceiptLineID,
+       l.POLineID,
+       l.ItemID,
+       l.Quantity,
+       l.LineTotal
+FROM PurchaseInvoiceLine l
+WHERE l.PurchaseInvoiceID IN(28,44)
+ORDER BY l.PurchaseInvoiceID,l.PILineID;
+```
+
+
+```sql title="c08-payment-detail.sql"
+SELECT DisbursementID,
+       PurchaseInvoiceID,
+       PaymentDate,
+       Amount,
+       CheckNumber,
+       ClearedDate
+FROM DisbursementPayment
+WHERE PurchaseInvoiceID IN(28,44)
+ORDER BY PaymentDate,DisbursementID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Invoice 28 is 629.94 for item 220, receipt line 48; invoice 44 is 1,504.07 for item 193, receipt line 41. Payments 127 and 51 settle the different amounts on April 1 and March 23.
+
+The repeated invoice reference is supported. The different amounts, items, and receipt links weaken the claim that these are duplicate economic transactions. The source data alone does not show the supplier’s original invoice images or a bank confirmation.
+
+<details>
+<summary>If your result differs</summary>
+
+A paid status or matching reference cannot establish duplicate payment. Do not sum the pair and label it a proven loss.
+
+</details>
+
+**Keep for the next stage:** Write Workpaper A: criterion, flagged keys, source trail, alternative explanation, conclusion, missing evidence, and next action.
+
+### 2.3. Investigate the repeated check example
+
+**Predict before you run:** Does one repeated check reference establish that the bank paid twice?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. In DuplicateChecks filter SupplierID 1 and CheckNumber CHK0006076.
+
+2. Inspect DisbursementIDs 6076 and 6107, their PurchaseInvoiceIDs, PaymentDate, Amount, and ClearedDate.
+
+3. Add InvoiceNumber to DuplicateChecks:
+
+    ~~~text title="Excel — DuplicateChecks[InvoiceNumber]"
+    =XLOOKUP([@PurchaseInvoiceID],PurchaseInvoiceData[PurchaseInvoiceID],PurchaseInvoiceData[InvoiceNumber],"No match",0)
+    ~~~
+
+4. Add InvoiceGrandTotal:
+
+    ~~~text title="Excel — DuplicateChecks[InvoiceGrandTotal]"
+    =XLOOKUP([@PurchaseInvoiceID],PurchaseInvoiceData[PurchaseInvoiceID],PurchaseInvoiceData[GrandTotal],"No match",0)
+    ~~~
+
+5. Compare with the invoice-reference workpaper, keeping the two criteria separate.
+
+</TabItem>
+<TabItem value="sql">
+
+Return to c08-checks.sql. Read the two rows with CheckNumber CHK0006076 and compare their invoice IDs, dates, amounts, and cleared dates. Keep this check-reference investigation separate from the invoice-reference workpaper.
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** The two payment rows refer to invoices 3101 and 4070, amounts 1,468.04 and 1,104.48, both dated January 1, 2025, with different cleared dates.
+
+The repeated check reference warrants treasury/AP follow-up. Distinct payment rows and clearing fields still do not replace external banking evidence. Classify the reference exception as supported and the duplicate-cash-loss claim as unresolved.
+
+<details>
+<summary>If your result differs</summary>
+
+Do not confuse CheckNumber with the unique DisbursementID.
+
+</details>
+
+**Keep for the next stage:** Retain the payment pair and specify the bank or supplier evidence needed.
+
+:::tip Session stopping point
+Save Workpaper A and both AP exception registers. Your conclusion must separate a confirmed reference problem from an unproven loss.
+:::
+
+<span id="step-4-review-overtime-approval-support"></span>
+<span id="step-4-triage-workforce-control-exceptions"></span>
+<span id="step-4-test-approval-role-design-and-authority-limits"></span>
+<span id="step-4-review-below-floor-sales-without-approval"></span>
+<span id="step-4-review-late-recommendation-conversion"></span>
+
+## Session 3 — Investigate overtime approval support
+
+Approved payroll time and a linked overtime approval are different records. A positive overtime amount can be approved for pay while its separate authorization link is missing.
+
+<CaseFigure figureId="case08-overtime" />
+
+
+### 3.1. Classify the hours test
+
+**Predict before you run:** Why would an Inner join hide the very exception you want to inspect?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import OvertimeApprovalData as Approvals.
+
+2. In Power Query Left outer merge Overtime to Approvals on OvertimeApprovalID.
+
+3. Expand the approval ID as MatchedApprovalID, ApprovedHours, ApprovedDate as OvertimeApprovedDate, and Status.
+
+4. Keep the time record’s original ApprovedDate separately.
+
+5. Load as OvertimeReview.
+
+6. Add HoursTest:
+
+    ~~~text title="Excel — OvertimeReview[HoursTest]"
+    =IF([@MatchedApprovalID]="","Missing linked approval",IF([@ApprovedHours]<[@OvertimeHours],"Hours exceed approval","Hours supported"))
+    ~~~
+
+7. Create a PivotTable with HoursTest in Rows and Count of TimeClockEntryID in Values.
+
+8. Preserve zero approved hours as a real value.
+
+</TabItem>
+<TabItem value="sql">
+
+LEFT JOIN retains missing approvals. CASE applies the hours-support criteria in order: no linked record, insufficient approved hours, then hours supported. The WHERE clause fixes the eligible quarter, approved clock status, and positive overtime denominator.
+
+Run each complete statement separately and retain its result before continuing.
+```sql title="c08-overtime.sql"
+SELECT t.TimeClockEntryID,
+       t.EmployeeID,
+       t.PayrollPeriodID,
+       t.WorkDate,
+       t.OvertimeHours,
+       t.OvertimeApprovalID,
+       a.ApprovedHours,
+       a.ApprovedDate,
+       a.Status,
+       CASE WHEN a.OvertimeApprovalID IS NULL THEN 'Missing linked approval' WHEN a.ApprovedHours<t.OvertimeHours THEN 'Hours exceed approval' ELSE 'Hours supported' END AS HoursTest
+FROM TimeClockEntry t
+LEFT JOIN OvertimeApproval a ON a.OvertimeApprovalID=t.OvertimeApprovalID
+WHERE t.WorkDate>='2026-10-01' AND t.WorkDate<'2027-01-01' AND t.ClockStatus='Approved' AND t.OvertimeHours>0
+ORDER BY t.WorkDate,t.TimeClockEntryID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** 1,895 eligible time entries: 336 missing linked approval, zero with hours exceeding a linked approval, and 1,559 with hours supported. The missing-link rate is 17.73% of eligible entries.
+
+This is a documented-link test. It does not establish that all 336 employees lacked authorization outside the file, and the 1,559 hours-supported rows still need identity, status, and date checks for a fuller authorization conclusion.
+
+<details>
+<summary>If your result differs</summary>
+
+Keep null matches. A zero-row exception list after an Inner join is not evidence of effective control.
+
+</details>
+
+**Keep for the next stage:** Save the complete classification and the flagged subset with stable IDs.
+
+### 3.2. Compare a flag with an hours-supported record
+
+**Predict before you run:** What does the comparison reveal about the limits of the first test?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Filter OvertimeReview to TimeClockEntryIDs 49436 and 49581.
+
+2. Return to the merge expansion and add EmployeeID as ApprovalEmployeeID, PayrollPeriodID as ApprovalPeriodID, and WorkDate as ApprovalWorkDate from Approvals, keeping time-record values beside them.
+
+3. Compare employee, period, work date, status, and approval date.
+
+4. For the flagged record, retain blank approval fields and request supporting evidence rather than filling them from a nearby employee or day.
+
+</TabItem>
+<TabItem value="sql">
+
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+```sql title="c08-compare.sql"
+SELECT t.TimeClockEntryID,
+       t.EmployeeID,
+       t.PayrollPeriodID,
+       t.WorkDate,
+       t.OvertimeHours,
+       t.ApprovedDate AS TimeApprovedDate,
+       t.OvertimeApprovalID,
+       a.EmployeeID AS ApprovalEmployeeID,
+       a.PayrollPeriodID AS ApprovalPeriodID,
+       a.WorkDate AS ApprovalWorkDate,
+       a.ApprovedHours,
+       a.ApprovedDate AS OvertimeApprovedDate,
+       a.Status
+FROM TimeClockEntry t
+LEFT JOIN OvertimeApproval a ON a.OvertimeApprovalID=t.OvertimeApprovalID
+WHERE t.TimeClockEntryID IN(49436,49581)
+ORDER BY t.TimeClockEntryID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Entry 49436 is employee 17’s 4.50 overtime hours on October 1, linked to approval 16587 for 4.50 hours. Entry 49581 is employee 18’s 0.34 overtime hours on October 5 with no linked overtime approval.
+
+The comparison supports a missing-link finding for 49581 under this review’s criterion. It does not prove the work was not performed, the employee was overpaid, or anyone acted dishonestly.
+
+<details>
+<summary>If your result differs</summary>
+
+Do not use an anomaly label as evidence. Compare source fields and distinguish a missing record from a contradictory record.
+
+</details>
+
+**Keep for the next stage:** Write Workpaper B with the tested criterion, both records, the evidence gap, and a proposed follow-up.
+
+:::tip Session stopping point
+Save the overtime register and Workpaper B. State the denominator and the boundaries of the test in its conclusion.
+:::
+
+<span id="step-5-close-with-post-termination-roster-control"></span>
+<span id="step-5-triage-planning-support-controls"></span>
+<span id="step-5-close-with-workforce-control-exception-follow-up"></span>
+<span id="step-5-close-with-override-approval-completeness"></span>
+<span id="step-5-close-with-lifecycle-inconsistent-planning-activity"></span>
+
+## Session 4 — Prioritize findings and design assessable controls
+
+The final task is a reasoned recommendation. Count and amount can help prioritize follow-up, but frequency alone is not a measure of proven financial loss.
+
+<CaseFigure figureId="case08-finding" />
+
+
+### 4.1. Build a prioritized exception register
+
+**Predict before you run:** Which issue warrants immediate evidence collection, and which warrants a process improvement?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Create an ExceptionRegister table with FindingID, Test, Population, SourceKeys, ObservedCondition, Evidence, AlternativeExplanation, ConclusionCategory, PotentialConsequence, Owner, and NextAction.
+
+2. Enter the worked AP pair, repeated-check pair, and overtime comparison.
+
+3. Keep potential consequences as hypotheses unless amounts are supported.
+
+4. Rank follow-ups using urgency, plausible impact, and ease of obtaining decisive evidence; explain the ranking in prose rather than inventing a numeric risk score.
+
+</TabItem>
+<TabItem value="sql">
+
+Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools.
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** The worked evidence supports repeated references and missing approval links. It leaves duplicate economic loss and off-system authorization unresolved.
+
+A reasonable priority is to obtain supplier/bank evidence for repeated payment references and restore verifiable overtime authorization links before claiming loss or misconduct. Other priorities are acceptable if they explain impact and uncertainty.
+
+<details>
+<summary>If your result differs</summary>
+
+Do not combine the 336 overtime flags and 16 AP document flags into one overall exception rate.
+
+</details>
+
+**Keep for the next stage:** Save the exception register and a brief prioritization rationale.
+
+### 4.2. Propose controls that can be tested
+
+**Predict before you run:** What would a reviewer observe to determine whether your proposed control operated?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Create a ControlReview table with Risk, ProposedControl, Owner, Frequency, RetainedEvidence, PopulationForTesting, TestProcedure, and FailureCriterion.
+
+2. For AP, propose checking supplier/reference uniqueness before posting, with documented review of legitimate repeated references.
+
+3. For overtime, propose checking employee, period, date, approved hours, and approval status before payroll release, with an explicit late-approval escalation.
+
+4. State these as proposed controls; the case has not established an existing company policy.
+
+5. Include a retrospective sample test and a repeatable population query as complementary procedures.
+
+</TabItem>
+<TabItem value="sql">
+
+Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools.
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** An assessable recommendation identifies who performs the check, when it occurs, what evidence is retained, and what constitutes failure. A lower flag count alone is not sufficient: deleted or disconnected records could also reduce it.
+
+For AP, inspect recorded review/override evidence for a sample of repeated references and verify all invoices remain in the population. For overtime, trace selected paid hours to valid approvals and inspect escalation evidence. Test both flagged and unflagged records.
+
+<details>
+<summary>If your result differs</summary>
+
+A recommendation to “improve controls” is incomplete without an owner, evidence, and a criterion a reviewer can assess.
+
+</details>
+
+**Keep for the next stage:** Write a 600–800 word controls memo with two workpapers, priorities, proposed controls, and test procedures.
+
+:::tip Session stopping point
+Save both workpapers, the register, and controls memo. Your independent challenge begins with new evidence and no public model conclusion.
+:::
+
+<CaseFigure figureId="case08-assessment" />
+
+<span id="required-student-output"></span>
+<span id="wrap-up-questions"></span>
+<span id="limitations-and-judgment"></span>
+
+## Prepare the Decision
+
+The worked review demonstrates why a flag is not a finding about fraud or financial loss. Repeated references and missing approval links are supported conditions; their economic consequences need additional evidence. Controls become useful recommendations when the owner, timing, evidence, test population, and failure criteria are explicit.
+
+**Deliverable:** An exception register, two source-supported workpapers, and prioritized control recommendations. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+
+## Independent Challenge
+
+Investigate Q3 2026 overtime using the same eligibility and hours-support criteria. For AP, define a new review of supplier invoice references within 2025 and investigate any flagged groups, or document a clean result. Keep denominators distinct and justify your follow-up priorities.
+
+<details>
+<summary>Planning hint</summary>
+
+A new population can produce fewer flags, different explanations, or no exceptions. Evaluate evidence completeness before treating a zero result as assurance. Preserve all eligible records when joining support.
+
+</details>
+
+**Assessment criteria:** Assess explicit criteria and denominators, source tracing, alternative explanations, proportionate conclusions, and controls that can be assessed without relying on anomaly labels. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+
+## Optional specialist investigations
+
+Extend the same risk-to-evidence method to pricing, planning support, or employee authority. These are separate scopes, not extra flags to append to the core denominator.
+
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. For pricing, relate SalesOrderLine to PriceOverrideApproval and effective price/promotion records.
+
+2. For planning, relate WorkOrder or PurchaseRequisition to SupplyPlanRecommendation while retaining missing links.
+
+3. For authority, compare the actor and approval date with the relevant employee-role evidence, distinguishing current assignments from historical authority.
+
+4. Define a criterion and a population before loading detail; use the optional canonical queries below as maps of the available source fields.
+
+</TabItem>
+<TabItem value="sql">
+
+Choose a specialist query from the optional sequence below. Define its criterion and population, then inspect the named source fields before interpreting any flag.
+
+</TabItem>
+</ToolSteps>
+
+**Worked check.** Retain an evidence workpaper and state where the records cannot establish historical authorization. These extensions do not supply assessment model answers.
+
+<details>
+<summary>Further queries and earlier case topics</summary>
+
+<span id="optional-excel-follow-through"></span>
 
 ## Recommended Query Sequence
 
-### Step 1. Build the starter exception map
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-Start with a cross-process scan. The goal is to separate exception families before opening detailed source evidence.
+<QuerySequence items={caseQuerySequences["audit-review-pack-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
 
-**What we are trying to achieve**
-
-Identify whether the first visible exceptions are payment, payroll, manufacturing linkage, or operation-sequence problems.
-
-**Why this step changes the diagnosis**
-
-A duplicate payment reference, a payroll control issue, a missing routing link, and a sequence failure are different control failures. The audit response depends on which pattern appears first.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="audit/05_duplicate_payment_reference_review.sql"
-  helperText="Use this to identify duplicate or reused payment reference patterns."
-/>
-
-<QueryReference
-  queryKey="audit/11_payroll_control_review.sql"
-  helperText="Use this to identify payroll control exceptions before tracing source payroll rows."
-/>
-
-<QueryReference
-  queryKey="audit/14_missing_routing_or_operation_link_review.sql"
-  helperText="Use this to find missing manufacturing routing or operation links."
-/>
-
-<QueryReference
-  queryKey="audit/15_operation_sequence_and_final_completion_review.sql"
-  helperText="Use this to review operation sequencing and final completion evidence."
-/>
-
-**What these queries do**
-
-They surface the first layer of planted exception evidence across AP, payroll, and manufacturing operations.
-
-**How they work**
-
-The queries each start from source transaction tables, retain the source document keys, and flag patterns where reference reuse, payroll support, routing links, or operation status evidence does not match the expected control path.
-
-**What to look for in the result**
-
-- the exception family with the clearest source-document keys
-- whether the issue is timing, approval, linkage, or status evidence
-- affected periods or process areas that repeat across results
-- which row should be traced first in the workbook or SQLite source tables
-
-### Step 2. Trace the manufacturing audit seed from summary to detail
-
-Next isolate the validation-only manufacturing audit-seed pattern. It is related to anomaly review, but it should be explained as a controlled teaching seed rather than a broad anomaly-log family.
-
-**What we are trying to achieve**
-
-Move from released-work-order summary evidence into detailed due-without-actual-start rows.
-
-**Why this step changes the diagnosis**
-
-The `manufacturing_audit_seeds` area teaches source tracing without implying every exception family behaves the same way. Students need to distinguish a validation seed from a broader anomaly category.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="audit/53_released_work_orders_due_without_actual_start_summary.sql"
-  helperText="Use this summary first to size the released-work-order seed pattern."
-/>
-
-<QueryReference
-  queryKey="audit/52_released_work_orders_due_without_actual_start_review.sql"
-  helperText="Use this detail query to trace the affected released work orders."
-/>
-
-**What these queries do**
-
-The summary query sizes the released-work-order pattern, while the detail query lists the work orders due without actual start evidence.
-
-**How they work**
-
-The summary aggregates the seeded manufacturing exception pattern. The detail query keeps the work-order identifiers and operational dates needed to trace the source rows.
-
-**What to look for in the result**
-
-- whether the summary count agrees with the detail rows
-- work orders that are due but lack actual start evidence
-- source keys needed for workbook tracing
-- how this validation-only seed differs from anomaly-log families
-
-### Step 3. Triage master-data and ownership controls
-
-Once starter exceptions are mapped, move to master data. This step tests whether employee and item master controls create the conditions for downstream exceptions.
-
-**What we are trying to achieve**
-
-Separate employee ownership issues, approval-authority issues, and item-master issues from transaction-processing failures.
-
-**Why this step changes the diagnosis**
-
-Some flagged rows are not caused by a bad transaction. They are caused by stale ownership, weak approval authority, incomplete item setup, or activity against an item status that should restrict use.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="audit/29_executive_role_uniqueness_and_control_assignment_review.sql"
-  helperText="Use this to review key role uniqueness and control assignments."
-/>
-
-<QueryReference
-  queryKey="audit/34_current_state_employee_assignment_review.sql"
-  helperText="Use this to find current assignments tied to inactive or terminated employees."
-/>
-
-<QueryReference
-  queryKey="audit/35_approval_authority_limit_review.sql"
-  helperText="Use this to flag approval events outside role or authority expectations."
-/>
-
-<QueryReference
-  queryKey="audit/30_item_master_completeness_review.sql"
-  helperText="Use this to review item-master completeness issues."
-/>
-
-<QueryReference
-  queryKey="audit/36_item_status_alignment_review.sql"
-  helperText="Use this to test whether item status and active flags remain aligned."
-/>
-
-<QueryReference
-  queryKey="audit/31_discontinued_or_prelaunch_item_activity_review.sql"
-  helperText="Use this to find activity against discontinued or prelaunch items."
-/>
-
-**What these queries do**
-
-They review executive role ownership, stale employee assignments, approval authority, item setup completeness, item-status alignment, and activity against items that should not be used normally.
-
-**How they work**
-
-The queries start from master-data tables and approval events, then join to employee or item attributes that define whether the row is valid for current-state ownership, approval authority, or item lifecycle status.
-
-**What to look for in the result**
-
-- master-data issues that explain multiple downstream exceptions
-- approval exceptions that are authority problems rather than timing problems
-- item setup issues that could affect sales, manufacturing, or planning
-- whether remediation belongs to master-data owners or transaction processors
-
-### Step 4. Triage workforce-control exceptions
-
-After master-data issues are separated, focus on workforce controls. This step keeps roster, punch, absence, overtime, and time-clock exceptions distinct.
-
-**What we are trying to achieve**
-
-Determine whether workforce exceptions reflect terminated activity, schedule gaps, punch gaps, absence conflicts, overtime approval failures, or supervisor/work-center concentration.
-
-**Why this step changes the diagnosis**
-
-Workforce-control exceptions often share employees and dates, but they do not have the same owner. A roster issue, punch issue, absence conflict, and overtime approval failure require different follow-up.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="audit/33_terminated_employee_activity_rollup_by_process_area.sql"
-  helperText="Use this to summarize terminated employee activity by process area."
-/>
-
-<QueryReference
-  queryKey="audit/37_scheduled_without_punch_and_punch_without_schedule_review.sql"
-  helperText="Use this to find schedule and punch mismatches."
-/>
-
-<QueryReference
-  queryKey="audit/38_overtime_without_approval_review.sql"
-  helperText="Use this to find overtime entries missing approval or exceeding approved hours."
-/>
-
-<QueryReference
-  queryKey="audit/39_absence_with_worked_time_review.sql"
-  helperText="Use this to find absence records that overlap with worked time."
-/>
-
-<QueryReference
-  queryKey="audit/40_overlapping_or_incomplete_punch_review.sql"
-  helperText="Use this to find overlapping or incomplete raw punch evidence."
-/>
-
-<QueryReference
-  queryKey="audit/41_roster_after_termination_review.sql"
-  helperText="Use this to find rostered days after termination."
-/>
-
-<QueryReference
-  queryKey="audit/19_time_clock_exceptions_by_employee_supervisor_work_center.sql"
-  helperText="Use this to summarize time-clock exception concentration by employee, supervisor, and work center."
-/>
-
-**What these queries do**
-
-They summarize terminated activity and expose schedule, punch, absence, overtime, roster, and time-clock exception patterns.
-
-**How they work**
-
-The queries join employee lifecycle, roster, punch, time-clock, absence, overtime approval, supervisor, and work-center evidence so the same employee/date can be interpreted across different control layers.
-
-**What to look for in the result**
-
-- exception types that share employee/date keys
-- supervisor or work-center concentration
-- exceptions that create payroll risk versus operational documentation risk
-- when the follow-up should move into the dedicated attendance control audit case
-
-### Step 5. Triage planning-support controls
-
-Finish with planning support. These exceptions start before execution and show whether forecasts, policies, recommendations, requisitions, and work orders have credible planning evidence.
-
-**What we are trying to achieve**
-
-Separate planning-governance failures from later replenishment or manufacturing execution failures.
-
-**Why this step changes the diagnosis**
-
-Unsupported requisitions or work orders may look like execution problems, but the root cause can be missing forecast approval, stale policy coverage, late recommendation conversion, or lifecycle-inconsistent planning activity.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="audit/42_forecast_approval_and_override_review.sql"
-  helperText="Use this to review forecast approval and override exceptions."
-/>
-
-<QueryReference
-  queryKey="audit/43_inactive_or_stale_inventory_policy_review.sql"
-  helperText="Use this to find inactive or stale inventory policy coverage."
-/>
-
-<QueryReference
-  queryKey="audit/44_requisitions_and_work_orders_without_planning_support.sql"
-  helperText="Use this to find replenishment documents without planning support."
-/>
-
-<QueryReference
-  queryKey="audit/45_recommendation_converted_after_need_by_date_review.sql"
-  helperText="Use this to identify late recommendation conversion."
-/>
-
-<QueryReference
-  queryKey="audit/46_discontinued_or_prelaunch_planning_activity_review.sql"
-  helperText="Use this to find planning activity against discontinued or prelaunch items."
-/>
-
-**What these queries do**
-
-They review planning approval, policy coverage, unsupported replenishment documents, late recommendation conversion, and lifecycle-inconsistent planning activity.
-
-**How they work**
-
-The queries connect planning master data and recommendations to requisitions, work orders, item lifecycle status, and planning dates so students can see whether execution has sufficient planning support.
-
-**What to look for in the result**
-
-- planning failures that occur before execution starts
-- unsupported documents tied to missing forecast or recommendation evidence
-- late conversions that create timing-control risk
-- whether the next review should move to the dedicated replenishment support audit case
-
-## Required Student Output
-
-Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
-
-- **Evidence summary:** Submit a triage pack for the one or two assigned exception families, with population, criterion, result, source keys, and disposition.
-- **Accounting or business interpretation:** Explain control risk and business consequence, distinguishing approval, timing, linkage, and status issues.
-- **Database explanation:** Trace summary results to source rows, identify test overlap, and record query version, release, period, and selection method.
-- **Management or audit conclusion:** Rank follow-up by supported risk and evidence quality, name process owners, and identify provisional conclusions.
-
-Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
-
-## Optional Excel Follow-Through
-
-1. Pick one AP, payroll, or manufacturing starter exception and trace it back to the source document keys.
-2. Reconcile the released-work-order summary to the detailed `manufacturing_audit_seeds` rows.
-3. Build one master-data tab for employee, approver, and item-control issues.
-4. Build one workforce-control tab for terminated activity, roster, punch, absence, overtime, and time-clock exceptions.
-5. Build one planning-support tab for forecast approval, inventory policy, recommendation conversion, and unsupported documents.
-6. Write a short escalation memo that classifies the strongest finding as timing, approval, linkage, master-data, workforce-control, or planning-governance risk.
-
-## Wrap-Up Questions
-
-- Accounting/process: Which exception family changes the business or control diagnosis most materially?
-- Database/source evidence: Which starter query gives the best source keys, and which detail query gives the strongest trace evidence?
-- Analytics judgment: Which findings are timing issues, approval failures, linkage failures, master-data issues, or validation-only seeds?
-- Escalation/next step: Which issue should stay in the broad review pack, and which should move to a specialized audit case?
-
-## Limitations and Judgment
-
-This is a teaching triage exercise, not an audit opinion. Specialized seeds may be absent from an assigned release or population; document zero results rather than inferring missing data.
+</details>
 
 ## Next Steps
 
-- Read [Controls and Exceptions queries](../analysis-tracks.md#controls-and-exceptions) when you want the broader audit query library around these anomaly families.
-- Read [Schema Reference](../../reference/schema.md) when you need the table bridges behind a flagged exception.
-- Read [Attendance Control Audit Case](attendance-control-audit-case.md), [Replenishment Support Audit Case](replenishment-support-audit-case.md), or [Pricing Governance Audit Case](pricing-governance-audit-case.md) when the broad triage points to a specialized control area.
+Continue to [Reports and Analytics](../index.md) to compare broader evidence. Keep your completed evidence and use the [Query Library](../analysis-tracks.md) for a separate extension.

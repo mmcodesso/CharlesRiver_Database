@@ -1,252 +1,521 @@
 ---
-title: P2P Accrual Settlement Case
-description: Inquiry-led walkthrough for tracing receipt-matched purchasing, accrual-linked service settlement, and AP timing in the P2P cycle.
-sidebar_label: P2P Accrual Case
+title: "3. Explain Supplier Obligations at Month End"
+description: "Which selected obligations are uninvoiced receipts, supplier payables, or remaining estimates?"
+sidebar_label: "3. Explain Supplier Obligations at Month End"
+pagination_prev: "analytics/cases/design-services-performance-case"
+pagination_next: "analytics/cases/product-portfolio-profitability-case"
+case_number: 3
+case_level: Basic
+case_sessions: 2
+toc_max_heading_level: 2
 ---
 
-import { QueryReference } from "@site/src/components/QueryReference";
+import ToolSteps from "@site/src/components/Tutorial/ToolSteps";
+import TabItem from "@theme/TabItem";
+import CaseFigure from "@site/src/components/Cases/Figure";
+import CaseMethods from "@site/src/components/Cases/Methods";
 import { CaseOverview } from "@site/src/components/CaseExplorer";
+import { QuerySequence } from "@site/src/components/QueryReference";
+import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
-# P2P Accrual Settlement Case
+# 3. Explain Supplier Obligations at Month End
+
+<span id="business-scenario"></span>
+<span id="the-problem-to-solve"></span>
+<span id="learning-objectives"></span>
+
+Accounts payable and the controller are reviewing quarter-end obligations. Receiving knows what arrived, AP knows which bills were received, and the controller has expense estimates awaiting later evidence. You will prepare two schedules and explain how each changes through June. Predict whether a later payment changes the liability that existed on March 31.
 
 <CaseOverview slug="p2p-accrual-settlement-case" />
 
-## Business Scenario
+**Worked scope.** Supplier 27’s five first-quarter 2024 goods receipts, plus the separate repairs-and-maintenance accrual journals 9, 26, and 43. Review March 31 and subsequent evidence through June 30. The accruals are a separate population, not purchases from supplier 27.
 
-**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
+The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-Month-end close is approaching at Charles River Home Furnishings. Some recent purchases followed the normal materials path: requisition, purchase order, goods receipt, supplier invoice, and later payment. At the same time, finance recorded accrued expenses for insurance, software, and professional services that had been consumed before the supplier invoices arrived.
-
-That creates a real control question for AP and finance. Some `PurchaseInvoiceLine` rows match `GoodsReceiptLineID`, which means the invoice is clearing the normal receipt-based path. Other lines point to `AccrualJournalEntryID`, which means the invoice is settling a finance-booked estimate with no goods receipt behind it.
-
-Your job is to explain both paths as one connected P2P story, then show why the difference matters for AP aging, liability completeness, expense cutoff, and audit interpretation.
-
-## The Problem to Solve
-
-You need to prove that supplier activity can be traced cleanly through the normal P2P path and the accrued-service settlement path. Confirm the support path. Confirm that the accounting effect matches the kind of purchase being settled.
-
-## Learning Objectives
-
-- Distinguish receipt-matched purchases from accrual-linked service invoices.
-- Explain original recognition, invoice clearing, and payment across liabilities and periods.
-- Trace selected source documents to GL evidence without combining incompatible line populations.
+**Preparation:** 8: purchases and GRNI; 11: estimates and settlement. Revisit [the relevant tutorial](../../learn-and-practice/receipt-to-payable.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
 
 ## Key Data Sources
 
-- Source documents: Requisition, purchase order, goods receipt, supplier invoice and lines, original accrual journal, and disbursement.
-- Evidence grain: Follow purchase-invoice lines to their receipt or accrual origin before rolling up to invoice and payment totals.
-- Main tables: `PurchaseRequisition`, `PurchaseOrder`, `PurchaseOrderLine`, `GoodsReceipt`, `GoodsReceiptLine`, `PurchaseInvoice`, `PurchaseInvoiceLine`, `DisbursementPayment`, `JournalEntry`, `GLEntry`
-- Related process pages: [Procure-to-Pay Process](../../processes/p2p.md), [Manual Journals and Close Cycle](../../processes/manual-journals-and-close.md)
-- Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
-- This case uses both starter query packs and two case-support SQL files built specifically to separate receipt-matched AP from accrual-linked AP settlement.
+Each source below has a distinct row meaning. Import only the fields and populations requested in each stage. Working tables default to the source name plus Data unless a stage assigns a more specific name.
+
+| Source | Published Excel Table | First working name |
+|---|---|---|
+| PurchaseOrder | T33_PurchaseOrder | PurchaseOrderData |
+| PurchaseOrderLine | T34_PurchaseOrderLine | PurchaseOrderLineData |
+| GoodsReceipt | T35_GoodsReceipt | GoodsReceiptData |
+| GoodsReceiptLine | T36_GoodsReceiptLine | GoodsReceiptLineData |
+| PurchaseInvoice | T37_PurchaseInvoice | PurchaseInvoiceData |
+| PurchaseInvoiceLine | T38_PurchaseInvoiceLine | PurchaseInvoiceLineData |
+| DisbursementPayment | T39_DisbursementPayment | DisbursementPaymentData |
+| JournalEntry | T2_JournalEntry | JournalEntryData |
+| GLEntry | T3_GLEntry | GLEntryData |
+| Account | T1_Account | AccountData |
+
+<CaseMethods />
+
+<span id="step-1-define-the-normal-p2p-document-chain"></span>
+<span id="step-2-separate-receipt-matched-invoice-lines-from-accrual-linked-service-lines"></span>
+<span id="step-3-explain-the-accounting-bridge-from-accrual-estimate-to-supplier-invoice"></span>
+
+## Session 1 — Follow received goods into supplier liabilities
+
+Create Case03.xlsx or Case03.sql. Label the goods schedule and accrual schedule separately. A purchase order records a commitment; a receipt establishes a different event.
+
+<CaseFigure figureId="case03-branches" />
+
+
+### 1.1. Select the receipt population
+
+**Predict before you run:** How many receipt lines might one supplier order produce?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import PurchaseOrderData, filter SupplierID 27.
+
+2. Import GoodsReceiptData and filter ReceiptDate January 1 through March 31.
+
+3. Inner merge it to the filtered orders on PurchaseOrderID.
+
+4. Merge GoodsReceiptLineData to those receipts on GoodsReceiptID and expand ReceiptDate.
+
+5. Load as Receipts.
+
+6. Preserve GoodsReceiptLineID, POLineID, QuantityReceived, and ExtendedStandardCost.
+
+</TabItem>
+<TabItem value="sql">
+
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+```sql title="c03-receipts.sql"
+SELECT r.GoodsReceiptID,
+       r.ReceiptDate,
+       l.GoodsReceiptLineID,
+       l.POLineID,
+       l.QuantityReceived,
+       l.ExtendedStandardCost
+FROM GoodsReceipt r
+JOIN GoodsReceiptLine l ON l.GoodsReceiptID=r.GoodsReceiptID
+JOIN PurchaseOrder o ON o.PurchaseOrderID=r.PurchaseOrderID
+WHERE o.SupplierID=27 AND r.ReceiptDate>='2024-01-01' AND r.ReceiptDate<'2024-04-01'
+ORDER BY r.ReceiptDate,r.GoodsReceiptID,l.GoodsReceiptLineID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Five receipts and five lines; standard receipt cost totals 7,234.30. Receipt IDs are 174, 175, 253, 396, and 340.
+
+The receipt amount is inventory at standard cost. The supplier invoice may contain a different purchase cost or tax, so receipt cost cannot simply be subtracted from invoice GrandTotal to calculate GRNI.
+
+<details>
+<summary>If your result differs</summary>
+
+Filter by receipt date, not purchase-order date. Receipt line IDs are 175, 176, 254, 397, and 341; they differ from header IDs.
+
+</details>
+
+**Keep for the next stage:** Save Receipts and a receipt-date timeline.
+
+### 1.2. Trace partial invoice matches
+
+**Predict before you run:** Will each receipt have exactly one invoice by June 30?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import PurchaseInvoiceLineData; Inner merge to Receipts on GoodsReceiptLineID.
+
+2. Merge PurchaseInvoiceData on PurchaseInvoiceID and expand InvoiceDate and GrandTotal.
+
+3. Filter InvoiceDate through June 30; load as GoodsInvoices.
+
+4. Import DisbursementPaymentData filtered to the selected PurchaseInvoiceIDs as Payments.
+
+5. Add PaidMarch to GoodsInvoices:
+
+    ~~~text title="Excel — GoodsInvoices[PaidMarch]"
+    =SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],[@PurchaseInvoiceID],Payments[PaymentDate],"<="&DATE(2024,3,31))
+    ~~~
+
+6. Add PaidJune:
+
+    ~~~text title="Excel — GoodsInvoices[PaidJune]"
+    =SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],[@PurchaseInvoiceID],Payments[PaymentDate],"<="&DATE(2024,6,30))
+    ~~~
+
+7. Keep LineTotal beside GrandTotal.
+
+8. This worked selection has one selected line per invoice; verify that before summing headers.
+
+</TabItem>
+<TabItem value="sql">
+
+One result row is one matched supplier invoice line. The two correlated payment totals are calculated independently. InvoiceDate limits subsequent evidence to June 30; it does not imply payment by that date.
+
+Run each complete statement separately and retain its result before continuing.
+```sql title="c03-matches.sql"
+SELECT l.GoodsReceiptLineID,
+       l.PILineID,
+       i.PurchaseInvoiceID,
+       i.InvoiceDate,
+       l.LineTotal,
+       i.GrandTotal,
+       ROUND(COALESCE((SELECT SUM(p.Amount)
+FROM DisbursementPayment p
+WHERE p.PurchaseInvoiceID=i.PurchaseInvoiceID AND p.PaymentDate<='2024-03-31'),0),2) AS PaidMarch,
+       ROUND(COALESCE((SELECT SUM(p.Amount)
+FROM DisbursementPayment p
+WHERE p.PurchaseInvoiceID=i.PurchaseInvoiceID AND p.PaymentDate<='2024-06-30'),0),2) AS PaidJune
+FROM PurchaseInvoiceLine l
+JOIN PurchaseInvoice i ON i.PurchaseInvoiceID=l.PurchaseInvoiceID
+WHERE l.GoodsReceiptLineID IN (SELECT gl.GoodsReceiptLineID
+FROM GoodsReceiptLine gl
+JOIN GoodsReceipt r ON r.GoodsReceiptID=gl.GoodsReceiptID
+JOIN PurchaseOrder o ON o.PurchaseOrderID=r.PurchaseOrderID
+WHERE o.SupplierID=27 AND r.ReceiptDate>='2024-01-01' AND r.ReceiptDate<'2024-04-01') AND i.InvoiceDate<='2024-06-30'
+ORDER BY l.GoodsReceiptLineID,i.PurchaseInvoiceID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Seven invoice lines through June, versus five receipts. Receipt line 176 has two invoices by June and another later in released history. None of the selected goods invoices is paid by March 31.
+
+A receipt can be invoiced in parts, and an invoice can remain unpaid. A one-result lookup would lose the later match. Keep a merge for this one-to-many relationship.
+
+<details>
+<summary>If your result differs</summary>
+
+An eighth match dated July 14 lies beyond this follow-up window. Preserve it as later evidence without including it in June totals.
+
+</details>
+
+**Keep for the next stage:** Save GoodsInvoices and date-conditioned payment columns.
+
+### 1.3. Reconstruct the selected liability accounts
+
+**Predict before you run:** Should unbilled receipt cost and unpaid supplier bills share one label?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import AccountData.
+
+2. In Power Query create three filtered GLEntry references: GoodsReceipt IDs 174,175,253,396,340; PurchaseInvoice IDs 143,278,1499,179,422,614,947; and DisbursementPayment IDs obtained from Payments.
+
+3. Append the references, merge Account on AccountID, then retain AccountNumber 2010 or 2020.
+
+4. In Power Query choose Add Column → Custom Column, name it LiabilityChange, and paste the expression below without a leading equals sign:
+
+    ~~~text title="Power Query — GoodsLiability / LiabilityChange"
+    [Credit]-[Debit]
+    ~~~
+
+5. Load as GoodsLiability.
+
+6. On Review create an Excel Table named Obligations with columns AccountNumber, AsOf, and LiabilityBalance.
+
+7. Enter four rows pairing accounts 2010 and 2020 with March 31 and June 30, 2024; ensure AsOf contains real Excel dates.
+
+8. In LiabilityBalance enter:
+
+    ~~~text title="Excel — Obligations[LiabilityBalance]"
+    =SUMIFS(GoodsLiability[LiabilityChange],GoodsLiability[AccountNumber],[@AccountNumber],GoodsLiability[PostingDate],"<="&[@AsOf])
+    ~~~
+
+</TabItem>
+<TabItem value="sql">
+
+events selects liability postings for the known receipt, invoice, and payment population. Credit minus debit gives a positive liability. Each cutoff sums only postings on or before its date. This measures posted GRNI rather than subtracting supplier price from standard receipt cost.
+
+Run each complete statement separately and retain its result before continuing.
+```sql title="c03-goods-balances.sql"
+WITH cutoffs(AsOf) AS (VALUES('2024-03-31'),('2024-06-30')), events AS (SELECT g.PostingDate,
+       a.AccountNumber,
+       g.Credit-g.Debit AS LiabilityChange
+FROM GLEntry g
+JOIN Account a ON a.AccountID=g.AccountID
+WHERE a.AccountNumber IN(2010,2020) AND ((g.SourceDocumentType='GoodsReceipt' AND g.SourceDocumentID IN(174,175,253,396,340)) OR (g.SourceDocumentType='PurchaseInvoice' AND g.SourceDocumentID IN(143,278,1499,179,422,614,947)) OR (g.SourceDocumentType='DisbursementPayment' AND g.SourceDocumentID IN(SELECT DisbursementID
+FROM DisbursementPayment
+WHERE PurchaseInvoiceID IN(143,278,1499,179,422,614,947))))) SELECT d.AsOf,
+       e.AccountNumber,
+       ROUND(SUM(e.LiabilityChange),2) AS SelectedLiability
+FROM cutoffs d
+JOIN events e ON e.PostingDate<=d.AsOf
+GROUP BY d.AsOf,e.AccountNumber
+ORDER BY d.AsOf,e.AccountNumber;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** March 31: selected AP 5,132.04 and GRNI 2,208.58. June 30: selected AP 2,096.16 and GRNI 142.79.
+
+These balances describe the selected receipt population’s posted transitions. The GRNI balance falls when matched invoices clear receipt cost, while AP falls through payment. Neither schedule represents the company-wide accounts.
+
+<details>
+<summary>If your result differs</summary>
+
+Retain document type with source ID. Account numbers are not AccountID values. Do not add all supplier 27 transactions to this selected-receipt schedule.
+
+</details>
+
+**Keep for the next stage:** Save the four-row liability schedule and stop after writing the meaning of each account.
+
+:::tip Session stopping point
+Save the receipt-to-invoice matches and two-date liability schedule. Explain the remaining June GRNI before moving to expense estimates.
+:::
+
+<span id="step-4-measure-invoice-and-payment-timing-then-identify-what-remains-open"></span>
+<span id="step-5-extend-the-case-into-audit-follow-up"></span>
+
+## Session 2 — Replace estimates with later evidence
+
+The controller’s three repairs-and-maintenance estimates follow a different path. An invoice consumes the estimate; any difference must be explained from the actual postings.
+
+<CaseFigure figureId="case03-transitions" />
+
+
+### 2.1. Read the linked estimates and invoices
+
+**Predict before you run:** What would you expect if the invoice is below the estimate? What if it is above?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import JournalEntryData filtered to IDs 9,26,43 as Estimates.
+
+2. Import PurchaseInvoiceLineData filtered to AccrualJournalEntryID 9,26,43; merge to PurchaseInvoiceData on PurchaseInvoiceID.
+
+3. Load as AccrualInvoices.
+
+4. Merge Estimates to those lines on JournalEntryID = AccrualJournalEntryID and load as EstimateReview.
+
+5. Add EstimateLessInvoice:
+
+    ~~~text title="Excel — EstimateReview[EstimateLessInvoice]"
+    =ROUND([@TotalAmount]-[@LineTotal],2)
+    ~~~
+
+6. Keep InvoiceDate visible; do not use the final invoice amount to erase the earlier estimate.
+
+</TabItem>
+<TabItem value="sql">
+
+LEFT JOIN retains an estimate even if its invoice link is missing. AccrualJournalEntryID supplies the relationship. The later invoice amount is displayed beside the original estimate rather than replacing it.
+
+Run each complete statement separately and retain its result before continuing.
+```sql title="c03-accruals.sql"
+SELECT j.JournalEntryID,
+       j.PostingDate,
+       j.TotalAmount AS Estimate,
+       l.PILineID,
+       l.LineTotal AS Consumed,
+       i.PurchaseInvoiceID,
+       i.InvoiceDate,
+       i.GrandTotal,
+       ROUND(COALESCE((SELECT SUM(p.Amount)
+FROM DisbursementPayment p
+WHERE p.PurchaseInvoiceID=i.PurchaseInvoiceID AND p.PaymentDate<='2024-06-30'),0),2) AS PaidJune
+FROM JournalEntry j
+LEFT JOIN PurchaseInvoiceLine l ON l.AccrualJournalEntryID=j.JournalEntryID
+LEFT JOIN PurchaseInvoice i ON i.PurchaseInvoiceID=l.PurchaseInvoiceID
+WHERE j.JournalEntryID IN (9,26,43)
+ORDER BY j.JournalEntryID,l.PILineID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Journal 9 estimated 10,039.33; the March 9 invoice was 10,019.59, leaving 19.74. Journal 26 estimated 9,551.39 versus an April invoice of 9,889.91; journal 43 estimated 9,721.85 versus 9,914.02.
+
+The first estimate exceeds its invoice. The other two fall short by 338.52 and 192.17. Describe the direction explicitly before deciding how the accounting resolves it.
+
+<details>
+<summary>If your result differs</summary>
+
+Use AccrualJournalEntryID, not a description search, to identify the invoice link. A missing link is not evidence that no expense occurred.
+
+</details>
+
+**Keep for the next stage:** Save the three-row estimate comparison.
+
+### 2.2. Inspect adjustment and recognition entries
+
+**Predict before you run:** Will every difference require a separate adjustment journal?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import JournalEntryData filtered to JournalEntryID 9,26,43 or ReversesJournalEntryID 9,26,43.
+
+2. Keep distinct IDs; load as Adjustments.
+
+3. Import GLEntryData with document pairs JournalEntry/9,26,43,698 and PurchaseInvoice/39851,39861,39872.
+
+4. Merge AccountData, retain all account lines, and load as AccrualLedger.
+
+5. Create a PivotTable by VoucherNumber with Debit and Credit totals.
+
+6. On Review label B8 Accrued liability at March 31 and enter:
+
+    ~~~text title="Excel — Review!B8"
+    =SUMIFS(AccrualLedger[Credit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],"<="&DATE(2024,3,31))-SUMIFS(AccrualLedger[Debit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],"<="&DATE(2024,3,31))
+    ~~~
+
+7. Label B9 Accrued liability at June 30 and enter:
+
+    ~~~text title="Excel — Review!B9"
+    =SUMIFS(AccrualLedger[Credit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],"<="&DATE(2024,6,30))-SUMIFS(AccrualLedger[Debit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],"<="&DATE(2024,6,30))
+    ~~~
+
+</TabItem>
+<TabItem value="sql">
+
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+```sql title="c03-journals.sql"
+SELECT JournalEntryID,
+       PostingDate,
+       EntryType,
+       TotalAmount,
+       ReversesJournalEntryID,
+       Description
+FROM JournalEntry
+WHERE JournalEntryID IN (9,26,43) OR ReversesJournalEntryID IN (9,26,43)
+ORDER BY PostingDate,JournalEntryID;
+```
+
+
+```sql title="c03-accrual-postings.sql"
+SELECT g.PostingDate,
+       g.SourceDocumentType,
+       g.SourceDocumentID,
+       g.VoucherNumber,
+       a.AccountNumber,
+       g.Debit,
+       g.Credit
+FROM GLEntry g
+JOIN Account a ON a.AccountID=g.AccountID
+WHERE ((g.SourceDocumentType='JournalEntry' AND g.SourceDocumentID IN(9,26,43,698)) OR (g.SourceDocumentType='PurchaseInvoice' AND g.SourceDocumentID IN(39851,39861,39872))) AND g.PostingDate<='2024-06-30'
+ORDER BY g.PostingDate,g.VoucherNumber,g.GLEntryID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Journal 698 on March 11 clears the 19.74 overestimate by debiting accrued expenses and crediting expense. The two larger invoices consume their full existing estimates and recognize the additional expense in the invoice postings. Their excesses do not require invented residual journals. March 31 selected accrued expenses are 19,273.24; by June 30 they are zero.
+
+The later evidence changes the liability’s form and, where necessary, the expense amount. Reading only journal totals would hide the underestimates recognized on the invoices.
+
+<details>
+<summary>If your result differs</summary>
+
+Keep all voucher lines for a balance check. Use only account 2040 when calculating the selected accrued-expense liability.
+
+</details>
+
+**Keep for the next stage:** Save complete voucher checks and identify the expense effect for each estimate.
+
+### 2.3. Follow payment and prepare the review
+
+**Predict before you run:** Does a June payment prove that the obligation was absent in March?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Extend Payments to goods invoice IDs 143, 278, 1499, 179, 422, 614, 947 and accrual invoice IDs 39851, 39861, 39872, filter PaymentDate through June 30, and sort by PurchaseInvoiceID and PaymentDate.
+
+2. Keep goods and accrual IDs in separate categories on Review.
+
+3. On Review label B10 Accrual invoice payments through June 30 and enter the three-invoice sum:
+
+    ~~~text title="Excel — Review!B10"
+    =SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39851)+SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39861)+SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39872)
+    ~~~
+
+4. Compare the result with the three AccrualInvoices GrandTotal values; Payments is already filtered through June 30.
+
+5. For goods, reconcile the four paid invoices to the June AP schedule.
+
+</TabItem>
+<TabItem value="sql">
+
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+```sql title="c03-payments.sql"
+SELECT PurchaseInvoiceID,
+       DisbursementID,
+       PaymentDate,
+       Amount
+FROM DisbursementPayment
+WHERE PurchaseInvoiceID IN(143,278,1499,179,422,614,947,39851,39861,39872) AND PaymentDate<='2024-06-30'
+ORDER BY PurchaseInvoiceID,PaymentDate,DisbursementID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Seven payments appear. Goods payments total 5,132.04. The three accrual-related invoices are paid May 20, June 13, and June 22, totaling 29,823.52.
+
+At March 31 the selected expenses include the two open estimates and the first invoice’s AP. Later settlement explains what happened afterward; it does not remove the March obligation.
+
+<details>
+<summary>If your result differs</summary>
+
+Keep the separate populations labeled. Do not offset a supplier receipt liability with an unrelated maintenance accrual.
+
+</details>
+
+**Keep for the next stage:** Write a 250–350 word review note: distinguish GRNI, accrued expenses, and AP; quantify the selected positions; name one June follow-up.
+
+:::tip Session stopping point
+Retain both schedules, their source links, and the review note. The note should explain recognition dates and settlement dates separately.
+:::
+
+<CaseFigure figureId="case03-timeline" />
+
+<span id="required-student-output"></span>
+<span id="wrap-up-questions"></span>
+<span id="limitations-and-judgment"></span>
+
+## Prepare the Decision
+
+The worked schedules support a bounded quarter-end explanation. Some goods remain partly uninvoiced and some bills unpaid in June. The maintenance estimates are fully consumed and their invoices paid by June. A useful next action is to ask AP and receiving to resolve the residual goods matches, while retaining the estimate comparison for improving the next close.
+
+**Deliverable:** Separate goods and expense-obligation schedules, selected posting checks, and a quarter-end review note. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+
+## Independent Challenge
+
+Select supplier 27’s April–June receipts and the second-quarter repairs-and-maintenance accruals. Review June 30 and follow subsequent evidence through September 30. Use explicit accrual links and keep the two populations separate.
+
+<details>
+<summary>Planning hint</summary>
+
+Find the second-quarter accrual journals by EntryType, PostingDate, and the repairs-and-maintenance description, then use their IDs. A new population may require several invoice lines per estimate.
+
+</details>
+
+**Assessment criteria:** Assess correct receipt and estimate populations, partial matches, date boundaries, liability signs, complete postings, and separation of recognition from payment. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+
+<details>
+<summary>Further queries and earlier case topics</summary>
+
+<span id="optional-excel-follow-through"></span>
 
 ## Recommended Query Sequence
 
-### Step 1. Define the normal P2P document chain
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-Start with the normal path. Before you analyze accrual-linked exceptions, you need a baseline view of how requisitions, purchase orders, receipts, invoices, and payments connect when P2P works as expected.
+<QuerySequence items={caseQuerySequences["p2p-accrual-settlement-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
 
-**What we are trying to achieve**
-
-Establish the requisition-level document chain and see where the normal P2P path stays complete, remains partial, or stalls before payment.
-
-If you skip the normal path, it becomes too easy to label every missing receipt as a control failure. This step gives you the control baseline for normal purchased materials and inventory activity.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="audit/02_p2p_document_chain_completeness.sql"
-  helperText="Use this first to establish which requisitions progressed through PO, receipt, invoice, and payment."
-/>
-
-**What this query does**
-
-It summarizes each purchase requisition and compares requested demand with downstream PO lines, receipt activity, supplier invoicing, and payment.
-
-**How it works**
-
-The query builds separate aggregates for PO lines, receipts, invoices, and payments, then joins them back to `PurchaseRequisition`. That keeps incomplete requisitions visible instead of hiding them inside inner joins.
-
-**What to look for in the result**
-
-- requisitions with no PO line yet
-- requisitions ordered but not received
-- received requisitions that have not been invoiced
-- invoiced requisitions that remain unpaid or only partly paid
-
-### Step 2. Separate receipt-matched invoice lines from accrual-linked service lines
-
-Once the normal chain is visible, move to the line-level distinction that makes this case worth doing. Supplier invoice lines follow two different support paths.
-
-**What we are trying to achieve**
-
-Show how `PurchaseInvoiceLine.GoodsReceiptLineID` and `PurchaseInvoiceLine.AccrualJournalEntryID` create two different invoice-settlement paths inside the same AP system.
-
-Students often assume that every supplier invoice must point to a receipt. In this dataset, some service invoices intentionally clear finance-booked accruals. That pattern can be valid.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="cases/03_p2p_invoice_line_trace_receipt_vs_accrual.sql"
-  helperText="Use this to classify invoice lines as receipt matched, accrual settled, or follow-up items that need more review."
-/>
-
-**What this query does**
-
-It lays out one row per `PurchaseInvoiceLine` and shows the supplier invoice line alongside any linked requisition, PO line, receipt line, or accrual journal.
-
-**How it works**
-
-The query starts at `PurchaseInvoiceLine`, then left joins into `PurchaseOrderLine`, `PurchaseRequisition`, `GoodsReceiptLine`, and `JournalEntry`. A `CASE` expression uses `GoodsReceiptLineID` and `AccrualJournalEntryID` to label the matched basis.
-
-**What to look for in the result**
-
-- lines labeled `Receipt matched`
-- lines labeled `Accrual settled`
-- invoice lines with neither receipt linkage nor accrual linkage
-- how requisition and PO context stays visible on the materials path and drops away on the service-accrual path
-
-### Step 3. Explain the accounting bridge from accrual estimate to supplier invoice
-
-Now move from document traceability into posting logic. At this point, the goal is to show how a finance-booked accrual becomes an AP-clearing supplier invoice rather than a receipt-matched inventory invoice.
-
-**What we are trying to achieve**
-
-Connect the original accrual estimate to the later supplier invoice and the related `GLEntry` activity.
-
-This is the core accounting distinction in the case. Receipt-based invoicing clears `2020` GRNI. Accrual-linked service invoicing clears `2040` accrued expenses up to the estimate, books any excess to expense, and leaves any shortfall to be reversed through a linked accrual adjustment.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="financial/12_accrued_expense_rollforward.sql"
-  helperText="Use this first to see the month-level roll-forward of accrual creation, invoice clearing, and adjustment activity."
-/>
-
-<QueryReference
-  queryKey="cases/04_p2p_accrual_journal_invoice_payment_gl_trace.sql"
-  helperText="Use this follow-through query to connect one accrual-linked invoice line to the accrual journal, invoice clearing entries, and payment postings."
-/>
-
-**What this query does**
-
-The first query summarizes accrued-expense activity by period and expense family. The second drills into one accrual-linked invoice line and shows the accrual amount, invoice amount, AP posting, and payment-clearing effect.
-
-**How it works**
-
-The roll-forward query groups `JournalEntry` and `GLEntry` activity at the month-and-account level. The trace query starts at `PurchaseInvoiceLine.AccrualJournalEntryID`, then joins to `JournalEntry`, `PurchaseInvoice`, `DisbursementPayment`, `GLEntry`, and `Account` to summarize the accounts hit by the invoice-clearing and payment steps.
-
-**What to look for in the result**
-
-- accrual journals that debit expense and credit `2040`
-- supplier invoices that debit `2040` up to the estimate
-- invoice amounts above the estimate that push additional expense
-- invoice amounts below the estimate that lead to a later linked accrual adjustment
-- AP created at invoice approval and cleared later by disbursement
-
-### Step 4. Measure invoice and payment timing, then identify what remains open
-
-Once the accounting bridge is clear, shift to timing. Accrual date, invoice date, and payment date answer different questions and often fall in different periods.
-
-**What we are trying to achieve**
-
-Measure lag from accrual date to invoice date to payment date and identify which supplier invoices still remain open.
-
-This is where AP aging and expense-cutoff questions become concrete. A liability can be estimated at month-end, invoiced later, and paid later still.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="financial/13_accrued_vs_invoiced_vs_paid_timing.sql"
-  helperText="Use this first to compare accrual date, invoice date, payment timing, and over-under accrual differences."
-/>
-
-<QueryReference
-  queryKey="financial/03_ap_aging_open_invoices.sql"
-  helperText="Use this follow-up to see which supplier invoices remain open after payment activity is considered."
-/>
-
-**What this query does**
-
-The timing query shows one row per accrual-linked service invoice with days-to-invoice, days-to-payment, and over-under-accrual amounts. The AP aging query shows which supplier invoices still carry open payable balances.
-
-**How it works**
-
-The timing query joins `PurchaseInvoiceLine` back to the accrual journal and payment summary. The AP aging query aggregates payments by invoice and compares cash paid with invoice grand total to calculate open amount and aging bucket.
-
-**What to look for in the result**
-
-- invoices that arrive materially after the accrual date
-- invoices that remain unpaid even after the accrual was cleared operationally
-- open AP balances tied to service invoices versus normal receipt-based invoices
-- why invoice timing and payment timing answer different analytical questions
-
-### Step 5. Extend the case into audit follow-up
-
-Finish by asking which accrual-linked service settlements are merely different and which ones are unusual enough to justify audit attention.
-
-**What we are trying to achieve**
-
-Explain what makes an accrued-service settlement look valid, suspicious, or incomplete.
-
-You have not finished the case until you explain whether the timing, amount, and settlement behavior still make sense after the invoice appears.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="audit/23_accrued_service_settlement_exception_review.sql"
-  helperText="Use this to isolate dated-before-accrual, amount-difference, and long-unpaid accrued-service invoices."
-/>
-
-**What this query does**
-
-It highlights accrual-linked supplier invoice lines with amount mismatches, invoice dates that precede the linked accrual, or invoices that remain unpaid beyond the review window.
-
-**How it works**
-
-The query starts with accrual headers, joins to `PurchaseInvoiceLine` where `AccrualJournalEntryID` is populated, then overlays supplier, item, and payment timing information to create a review-oriented result set.
-
-**What to look for in the result**
-
-- invoices dated before the linked accrual
-- invoice amounts that differ meaningfully from the estimate
-- accrued-service invoices that remain unpaid well after invoice date
-- whether the exception still has a reasonable explanation or needs deeper follow-up
-
-## Required Student Output
-
-Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
-
-- **Evidence summary:** Create two evidence trails: one receipt-matched line and one accrual-linked service line, with source keys, dates, and GL references. Report if your assigned scope contains no example of either path.
-- **Accounting or business interpretation:** Explain recognition and clearing of GRNI or accrued expense, AP recognition, and cash settlement for the selected paths.
-- **Database explanation:** Name the join keys and grain at each stage; reconcile line detail to its invoice without duplicating payment totals.
-- **Management or audit conclusion:** Identify a support or timing issue for purchasing, AP, or finance follow-up and defend the assigned owner.
-
-Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
-
-## Optional Excel Follow-Through
-
-1. Filter `PurchaseRequisition` to one month, cost center, or item group to define the normal purchasing population.
-2. Use `RequisitionID` to trace into `PurchaseOrderLine`, then into `GoodsReceiptLine`.
-3. Use `PurchaseInvoiceLine` to separate rows with `GoodsReceiptLineID` from rows with `AccrualJournalEntryID`.
-4. Use `AccrualJournalEntryID` to tie service-settlement invoice lines back to `JournalEntry`.
-5. Use `PurchaseInvoiceID` to trace into `DisbursementPayment` and open-AP analysis.
-
-## Wrap-Up Questions
-
-- Accounting/process: Which event creates AP, and which event only estimates a liability before AP exists?
-- Database/source evidence: Which receipt, invoice-line, accrual-journal, payment, or GL key distinguishes the settlement path?
-- Analytics judgment: When is a missing goods receipt valid accrual settlement evidence rather than a process break?
-- Escalation/next step: What timing or amount pattern would make an accrued-service settlement worth audit follow-up?
-
-## Limitations and Judgment
-
-Receipt-matched merchandise and accrued services follow different recognition paths. An open liability or a later payment does not by itself establish a control failure.
+</details>
 
 ## Next Steps
 
-- Use [Procure-to-Pay Process](../../processes/p2p.md) for the full business and data walkthrough of the normal receipt-matched path and the accrued-service distinction.
-- Use [Manual Journals and Close Cycle](../../processes/manual-journals-and-close.md) when you want the finance-controlled side of accruals, adjustments, and boundary entries.
-- Use [Schema Reference](../../reference/schema.md) when you need table-level join support while working through the case.
-- Use [GLEntry Posting Reference](../../reference/posting.md) when you want the exact receipt, invoice, accrual, and disbursement posting rules.
-- Use [Working Capital and Cash Conversion Case](working-capital-and-cash-conversion-case.md) when you want to extend this analysis into broader AP timing and working-capital discussion.
+Continue to [Choose a Product and Pricing Priority](product-portfolio-profitability-case.md). Keep your completed evidence and use the [Query Library](../analysis-tracks.md) for a separate extension.

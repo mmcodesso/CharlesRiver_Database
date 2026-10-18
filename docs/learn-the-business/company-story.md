@@ -1,128 +1,129 @@
 ---
-title: Charles River Home Furnishings Company Story
-description: Meet the fictional greater-Boston furnishings company and follow merchandise, selected manufacturing, and hourly Design Services into accounting decisions.
+title: The Charles River Company Story
+description: Meet Charles River's customers and staff, and follow a furnishing project through the connected work of merchandise, manufacturing, and hourly design services.
 slug: /company-story
 sidebar_label: Company Story
 hide_title: true
+pagination_prev: start-here/index
+pagination_next: learn-the-business/process-flows
 ---
 
 import CompanyStoryHero from "@site/src/components/CompanyStoryHero";
 
 <CompanyStoryHero
   title="The Company"
-  lead={
-    <>
-      <CompanyName /> is a fictional greater-Boston business with three connected
-      activities: buying merchandise, manufacturing selected products, and
-      providing hourly Design Services. Learn what moves through the business
-      before following the accounting records it leaves behind.
-    </>
-  }
+  lead={<><CompanyName /> brings furniture, lighting, textiles, accessories, and design help into one home-furnishings business. Follow the people who turn a customer's idea into goods, services, and accounting records.</>}
   anchors={[
     { label: "Place", value: "Greater Boston and the Charles River" },
     { label: "Products", value: "Furniture, lighting, textiles, and accessories" },
-    { label: "Model", value: "Purchased goods, selected manufacturing, and hourly services" },
+    { label: "Work", value: "Buy merchandise, make selected products, provide design services" },
   ]}
-  snapshotTitle="One company. Different ways to create value."
-  snapshotText="A merchandise sale depends on available goods. A manufactured product also depends on components, work centers, and labor. A service engagement depends on people and approved hours. Each creates a different evidence trail."
+  snapshotTitle="A customer sees a furnished space. The company sees connected work."
+  snapshotText="A product needs to be available, a delivery needs to be recorded, and an invoice needs to be settled. Design help also depends on people's time. Each department contributes part of the explanation."
   panels={[
-    { title: "Merchandise", text: "Purchased finished goods connect supplier commitments, inventory receipts, customer fulfillment, and cash." },
-    { title: "Manufacturing", text: "Selected products connect materials, work orders, labor support, standard cost, and production close." },
-    { title: "Design Services", text: "Customer engagements connect staffing, approved hours, monthly invoices, and labor-margin interpretation." },
+    { title: "Merchandise", text: "Purchasing and receiving bring finished goods into inventory for customer fulfillment." },
+    { title: "Manufacturing", text: "Production combines components, work-center capacity, and labor to make selected products." },
+    { title: "Design Services", text: "Design staff support customer engagements, record their time, and supply the basis for hourly billing." },
   ]}
 />
 
-:::note A fictional company with a defined evidence boundary
-The company setting makes the teaching environment understandable. The operating scenario below is illustrative: it does not identify a particular customer, order, or result. Claims about tables, processes, and accounting refer to the published dataset. Derive every numerical finding from the file assigned to you.
+:::note About this teaching story
+Charles River is fictional. The background, recurring staff roles, and customer situation on these pages provide a teaching narrative; they do not identify particular employees or transactions in the dataset. Technical explanations describe the published records. Derive numerical findings from your assigned file.
 :::
 
-## What the Company Does
+<span id="what-the-company-does"></span>
 
-A room brings together many kinds of products. Furniture, lighting, textiles, and accessories can belong to the same customer need while requiring different supply decisions. Charles River's catalog places these product families inside one business so students can study their relationships rather than treating sales, purchasing, and production as isolated exercises.
+## A Business Built Around Furnishing Needs
 
-The company buys some finished goods for resale and makes a selected subset in-house. The item master identifies the actual supply mode, product group, collection, and style family. Purchasing also supplies raw materials and packaging used in production.
+Imagine a design-trade customer helping a client furnish a space. Choosing an attractive product is only one part of the job. Pieces need to work together, goods need to be available, and someone needs to keep track of what has been ordered, delivered, and billed. The customer may also need advice while making those choices.
 
-Why combine buying and making? As a business interpretation, purchased merchandise can broaden an assortment without requiring every item to use internal production capacity. Selected manufacturing can support a particular product offering while bringing component availability, scheduling, and cost control into the decision. These are reasons to investigate the model, not claims that the dataset proves a particular sourcing strategy is optimal.
+Charles River brings those needs into the same business. Its assortment spans furniture, lighting, textiles, and accessories. Some products arrive from suppliers ready for resale. Others are selected products that Charles River manufactures. Hourly design services add a different kind of offering: the time and expertise of staff working on a customer engagement.
 
-## Who Buys and What They Need
+The customer experiences one relationship with the company. Inside Charles River, that relationship creates several kinds of work. A warehouse employee handles goods. A designer records time. Customer accounting prepares invoices. Treasury records money received. Understanding their separate contributions is the starting point for understanding the accounts.
 
-The synthetic customer master uses the segment labels `Wholesale`, `Strategic`, `Small Business`, `Design Trade`, and `Design Services`. The labels give students dimensions for comparison; they do not by themselves prove contract terms, customer behavior, or profitability.
+<span id="a-second-revenue-model-design-services"></span>
 
-In the fictional setting, imagine a design-trade buyer coordinating several furnishing needs for a client. Product choice matters, but so do availability, delivery timing, pricing, and the advice needed to combine the pieces. That context creates a practical accounting question: how do a commercial promise, delivery, billing, and payment become different records at different times?
+## How the Business Developed
 
-## A Second Revenue Model: Design Services
+In our teaching backstory, Charles River begins as a regional furnishings reseller. Buying finished goods allows it to assemble an assortment without producing every item itself. Purchasing must decide what to obtain, and receiving must establish what actually arrives.
 
-Goods create a physical fulfillment problem. Design Services creates a time-and-staffing problem. A service order line leads to an engagement, employee assignments, approved billable and non-billable hours, and monthly billing of approved billable time.
+The story then adds selected in-house manufacturing. Making part of the assortment introduces a different set of responsibilities: obtaining components, arranging production work, recording material use, and explaining product cost. The company now has to coordinate supplier deliveries with its own production capacity.
 
-The revenue model is hourly. `ServiceBillingLine` connects the billed hours to the invoice line, while `ServiceTimeEntry` supplies approved hours and a labor-cost snapshot for analysis. Customer settlement uses the same invoice and cash-application structure as goods sales.
+Hourly design services broaden the relationship again. A customer can need help bringing furnishings together as well as needing the goods themselves. The design lead has to allocate people's time, and accounting needs a basis for billing the work.
 
-Service labor remains payroll expense. Comparing billed revenue with the approved time-cost snapshot supports a labor-margin view; it does not automatically measure the full profitability of an engagement after every organizational cost. The [Design Services process](../processes/design-services.md) explains that boundary.
+These stages explain the three activities you will encounter throughout the site. They are a fictional history, not dated milestones stored in the data. The dataset represents the resulting business: purchased merchandise, selected manufacturing, and hourly design services operating together.
 
-## A Typical Operating Cycle
+<span id="who-buys-and-what-they-need"></span>
 
-**Illustrative scenario:** a regional design buyer needs a coordinated selection of furnishings and some design support. This scenario explains how the processes connect. It is not a claim that a specific matching order exists in the published files.
+## What Customers Need from Charles River
 
-1. **Sales records the promise.** Product lines describe the requested goods, and a separate service line describes hourly design work. An order records demand; it does not establish that goods shipped or revenue was posted.
-2. **Operations checks supply.** Purchased merchandise depends on available inventory and supplier replenishment. Manufactured goods also depend on components, work orders, work-center schedules, and labor support.
-3. **People carry out the work.** Warehouse staff receive and ship goods. Production issues materials and completes finished goods. Design staff record approved service hours. Payroll records wages and liabilities through its own cycle.
-4. **Accounting recognizes the events.** Shipment, invoicing, receipt, payroll, and production events have different posting effects. Approved service hours become customer revenue through monthly service invoicing in this dataset.
-5. **Cash and close follow.** Customer cash is applied against invoices. Supplier and payroll liabilities have their own settlement dates. Finance records estimates, reclasses, and close entries around those operating flows.
-6. **An analyst explains the consequences.** A delivery delay, unbilled service workload, open receivable, or manufacturing variance calls for different evidence and a different follow-up decision.
+Our recurring customer is a design-trade buyer coordinating a furnishing project. Keep this buyer's questions in mind: What can I order? When can I receive it? What design work will be billed? What do I still owe?
 
-```mermaid
-flowchart TD
-    NEED[Customer need]
-    ORDER[Goods and service order lines]
-    BUY[Purchased merchandise and components]
-    MAKE[Selected manufacturing]
-    GOODS[Goods fulfillment]
-    SERVICE[Assignments and approved service hours]
-    INVOICE[Customer invoicing]
-    CASH[Cash receipt and application]
-    GL[Posted accounting in GLEntry]
-    DECIDE[Reports, interpretation, and decisions]
+Other customers may ask similar questions for different reasons. The published customer records include wholesale, strategic, small-business, design-trade, and design-services segment labels. Those labels help organize comparisons. Actual orders, invoices, and payments establish what a particular customer did.
 
-    NEED --> ORDER
-    ORDER --> BUY
-    ORDER --> MAKE
-    BUY --> MAKE
-    BUY --> GOODS
-    MAKE --> GOODS
-    ORDER --> SERVICE
-    GOODS --> INVOICE
-    SERVICE --> INVOICE
-    INVOICE --> CASH
-    GOODS --> GL
-    INVOICE --> GL
-    CASH --> GL
-    GL --> DECIDE
-```
+Buying and making create different supply questions. Purchased merchandise depends on stock already available or replenishment from suppliers. Manufactured goods also depend on components, production steps, and staff time. A shortage can therefore require different follow-up depending on the product.
 
-The map shows business dependencies, not a set of direct database joins. Purchasing, manufacturing, and payroll also create their own accounting entries. The [Process Flows](process-flows.md) page connects those cycles in more detail.
+Design work adds a question about capacity in people rather than stock on a shelf. The design lead needs to understand the engagement and arrange staff support. Recording hours allows the company to distinguish work performed from work ready for billing.
 
-## Departments Depend on One Another
+<span id="departments-depend-on-one-another"></span>
 
-| Team or function | Operating question | Evidence to investigate |
+## Meet the Recurring Roles
+
+Four roles will help you follow the chapters. They are teaching roles; use actual employee and approval records when investigating who performed a recorded action.
+
+| Role | Responsibility in the story | Question carried into the next department |
 |---|---|---|
-| Sales and customer accounting | What was promised, priced, delivered, billed, returned, and collected? | Sales orders, pricing records, shipments, invoices, credits, and cash applications |
-| Purchasing and warehouse operations | What must be bought, when did it arrive, and what is still owed? | Planning recommendations, requisitions, purchase orders, receipts, supplier invoices, and payments |
-| Production and planning | Can selected goods be made with the available materials, capacity, and labor? | BOMs, routings, schedules, work orders, issues, completions, and close records |
-| Design Services | Who supports the engagement, which hours are billable, and what was invoiced? | Engagements, assignments, approved time, and service billing |
-| Payroll and workforce supervision | Which hours were approved, which costs were posted, and which liabilities remain? | Rosters, attendance, labor entries, payroll registers, employee payments, and remittances |
-| Finance | Do the source events support the balances and the period-end explanation? | `JournalEntry`, `GLEntry`, control-account reconciliations, asset records, and budgets |
+| Sales coordinator | Understand the customer's request and record the order | Can operations support what the customer needs? |
+| Operations planner | Connect demand with merchandise, components, and production work | What supply and work are needed, and when? |
+| Design lead | Arrange engagement staffing and review the support for service hours | Which work is approved and ready for billing? |
+| Controller | Bring the accounting consequences together at period end | Do the records explain the balances and the period? |
 
-These functions are a way to read the operating model. Use the stored employee and cost-center records when you need to establish an actual assignment or approval in the dataset.
+These roles work with receiving, warehouse, production, customer accounting, accounts payable, payroll, and treasury staff. Each handoff changes what the company knows. An order records a request; receiving records a delivery from a supplier; a shipment records goods leaving inventory. No single department's records tell the entire story.
 
-## From an Event to a Decision
+<span id="a-typical-operating-cycle"></span>
 
-A business need becomes a source document. An accounting event becomes a posting. A group of postings becomes a report. The report becomes useful when an analyst checks its source, interprets the result, and identifies a defensible action.
+## Follow the Furnishing Project
 
-For example, an apparent collection problem requires invoice and cash-application evidence, not only a sales total. An apparent production problem requires a distinction between planned capacity, recorded execution, and accounting close. An apparent service-margin problem requires a clear definition of which hours and costs were included.
+The sales coordinator starts with the customer's selection of goods and need for design help. Recording an order gives the company something to work toward. It does not establish that any goods have left the warehouse or that the customer has been billed.
 
-The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) develops the analytical methods behind those questions. This company supplies the common setting within [Accounting Analytics Hub](https://accountinganalyticshub.com/).
+The operations planner considers supply. Available purchased goods may support fulfillment, while other needs depend on replenishment. Selected manufactured products bring components and production work into the picture. Purchasing and production also serve other customers and ongoing stock needs; their activity cannot all be attributed to this one project.
+
+Meanwhile, the design lead arranges the service work. Staff record billable and non-billable time, and approved billable hours support monthly customer billing. The design team's work can overlap with goods fulfillment rather than waiting for every product to be delivered.
+
+Warehouse staff record shipments. Customer accounting bills the supported goods and services. When customer money arrives, treasury records the receipt, and accounting identifies which invoices it settles. Delivery, billing, cash arrival, and invoice settlement may have different dates.
+
+At period end, the controller needs a coherent explanation. The company may have shipped goods, performed service work, received supplier deliveries, and paid staff at different points in their respective cycles. Some work or obligations may still be open. The accounting task is to explain that position at a stated date.
+
+## Decisions Connect the Departments
+
+The story creates tensions that are useful to investigate. Holding more goods may help availability while tying up cash. Producing selected goods requires attention to components and capacity. Assigning more design time may help an engagement while using staff time that could support other work.
+
+These are questions to investigate, rather than conclusions about the company's performance. A delivery concern needs order and shipment evidence. A collection concern needs invoices and cash applications. A service-margin question needs a definition of the revenue and costs included.
+
+The same discipline applies to controls. An approval field can help you identify recorded responsibility. Establishing whether a review was independent and effective requires more than noticing that the field exists.
+
+<span id="from-an-event-to-a-decision"></span>
+
+## Your Role as a Learner
+
+You will move from the customer's need to the work inside the company, then to the evidence left by that work. Ask what happened, which record supports it, what accounting effect followed, and what remains uncertain.
+
+<details>
+<summary>Check your understanding: has recording the customer order completed the sale?</summary>
+
+The order establishes demand and the commercial terms recorded for it. Goods still need fulfillment and billing, services need their own delivery and billing support, and invoice settlement needs cash-application evidence. The order starts the investigation.
+
+</details>
+
+<details>
+<summary>Can the furnishing project explain every purchase or payroll payment?</summary>
+
+The scenario helps you understand why departments cooperate. Purchasing, production, and payroll support the wider company. Connect actual transactions only through supported relationships in the assigned data.
+
+</details>
 
 ## Next Steps
 
-1. Read [Process Flows](process-flows.md) and select one operating cycle.
-2. Begin a focused task in [Learn and Practice](../learn-and-practice/index.md).
-3. Move into the matching [case](../analytics/cases/index.md) or [Reports and Analytics](../analytics/index.md) after you can explain the evidence trail.
+Continue to [Business Processes](process-flows.md). You will follow a handoff between departments and learn how the process diagrams describe the work behind the records.
+
+For the broader learning context, Charles River belongs to [Accounting Analytics Hub](https://accountinganalyticshub.com/). The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) develops the methods you will later use to investigate this company.

@@ -1,0 +1,80 @@
+{
+  "docs/learn-and-practice/index.md": [
+    "1-foundational-exercises",
+    "2-applied-analytical-exercises",
+    "3-integrated-business-cases",
+    "a-common-evidence-standard"
+  ],
+  "docs/learn-and-practice/source-to-ledger.md": [
+    "context-and-problem",
+    "learning-objectives",
+    "before-you-start",
+    "evidence-workflow",
+    "assessed-deliverable",
+    "interpretation-and-limitations",
+    "next-steps"
+  ],
+  "docs/learn-and-practice/receipt-to-payable.md": [
+    "context-and-problem",
+    "learning-objectives",
+    "before-you-start",
+    "evidence-workflow",
+    "assessed-deliverable",
+    "interpretation-and-limitations",
+    "next-steps"
+  ],
+  "docs/learn-and-practice/manufacturing-cost-flow.md": [
+    "context-and-problem",
+    "learning-objectives",
+    "before-you-start",
+    "evidence-workflow",
+    "assessed-deliverable",
+    "interpretation-and-limitations",
+    "next-steps"
+  ],
+  "docs/learn-and-practice/bpmn-controls-workshop.md": [
+    "context-and-problem",
+    "learning-objectives",
+    "before-you-start",
+    "activity-1-interpret-responsibilities-and-handoffs",
+    "activity-2-connect-a-model-to-actual-evidence",
+    "activity-3-build-a-risk-and-control-matrix",
+    "advanced-extension-propose-and-assess-a-change",
+    "assessed-deliverable",
+    "interpretation-and-limitations",
+    "next-steps"
+  ],
+  "docs/analytics/sql-guide.md": [
+    "opening-the-dataset-in-sql",
+    "what-file-to-open",
+    "recommended-tool-db-browser-for-sqlite",
+    "how-to-open-the-dataset-in-db-browser",
+    "how-to-run-your-first-query",
+    "foundation-exercise-one-order-line-and-its-evidence",
+    "how-to-read-the-result-and-keep-going",
+    "other-tools-you-can-use",
+    "secondary-workflows",
+    "python",
+    "sqlite3-cli",
+    "next-steps"
+  ],
+  "docs/analytics/excel-guide.md": [
+    "workbook-setup",
+    "recommended-excel-setup",
+    "foundation-exercise-a-catalog-profile",
+    "recommended-workflow-pattern",
+    "power-query-import-pattern",
+    "financial-workflows",
+    "working-capital-and-cash-conversion",
+    "financial-statement-bridge",
+    "revenue-margin-and-payroll-mix",
+    "managerial-and-cost-accounting-workflows",
+    "product-portfolio-profitability",
+    "labor-and-workforce-mix",
+    "manufacturing-routing-and-capacity",
+    "audit-workflows",
+    "master-data-and-workforce-controls",
+    "using-the-workbook",
+    "next-steps"
+  ]
+}

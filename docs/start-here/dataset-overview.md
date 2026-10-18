@@ -1,37 +1,122 @@
 ---
-title: Charles River Accounting Dataset Guide
-description: Navigate the 82 published SQLite tables, connected accounting processes, key joins, and source-to-ledger evidence paths in Charles River.
+title: Dataset Guide — Reading Documents, Tables, and Relationships
+description: Learn what a record represents, how document headers and lines connect, and how Charles River's operational events lead to accounting entries.
 slug: /dataset-overview
 sidebar_label: Dataset Guide
+pagination_prev: start-here/downloads
+pagination_next: learn-and-practice/meet-the-records
+toc_max_heading_level: 2
 ---
 
 # Dataset Guide
 
+The [company story](../learn-the-business/company-story.md) introduces orders, deliveries, invoices, and payments. The dataset stores information about those familiar business events in tables. You can read this introduction before opening a file; keep it nearby when you begin your first exercise.
+
 <DatasetStructuredData
   pagePath="/docs/dataset-overview"
   sameAsPath="/"
-  description="Navigate the 82 published SQLite tables, connected accounting processes, key joins, and source-to-ledger evidence paths in Charles River."
+  description="Learn to read document records and their relationships in the 82-table Charles River teaching dataset."
 />
 
-This page gives the mental model for the dataset: what is in it, how the table families fit together, which paths matter most, and how operational activity reaches `GLEntry`.
+<span id="what-the-dataset-is"></span>
 
-Use [Schema Reference](../reference/schema.md) when you need field-level lookup. Use [Company Story](../learn-the-business/company-story.md) and [Process Flows](../learn-the-business/process-flows.md) when you need the business narrative first.
+## Start with One Record
 
-## What the Dataset Is
+A **record** is one stored row describing something. A customer record describes a customer. A sales-order record describes an order. A shipment record describes a shipment. The row's meaning determines which questions it can answer.
 
-<DatasetName /> models one integrated business: <CompanyName />.
+A **table** groups records of the same kind. The customer table therefore contains customer rows, while the sales-order table contains order rows. Columns hold the attributes of each record, such as an order date or a customer identifier.
 
-It connects:
+The technical table names are `Customer`, `SalesOrder`, and `Shipment`. Names help you locate the records, but start by saying what one row represents. Analysts call this the table's **grain**.
 
-- business processes
-- operational source documents
-- planning and support layers
-- subledger logic
-- posted GLEntry records
+## Read the Document Header and Its Lines
 
-The dataset supports a clean move from business activity to source documents and from source documents to ledger impact.
+Many business documents have information about the whole document and information about individual items on it. An order's customer, date, and overall amount belong to its **header**. The products, quantities, and line amounts belong to its **lines**.
 
-## What the Dataset Contains
+The dataset stores those two levels separately. `SalesOrder` holds one header per order, while `SalesOrderLine` holds the individual ordered lines. Each line carries the identifier of its parent order.
+
+Consider a small example verified in release **v2027.1**: order **SO-2024-000011**, with `SalesOrderID` **11**, has **two lines** and an order total of **11,397.78**. This is an actual release record, separate from the fictional furnishing project.
+
+If you display the header beside each line, the order number and total appear twice. There are still two lines belonging to one order. Summing the repeated header total would count the order twice.
+
+Before calculating, decide whether you are counting orders, lines, or another event. Use header amounts at header grain and line amounts at line grain. Keep the original level visible when combining information.
+
+## Connect Records Through Their Keys
+
+An **identifier**, often called a key, distinguishes a record. The order's `SalesOrderID` identifies its header; the same value on a line indicates which order owns that line. The identifier is a link, not a quantity to add.
+
+Other relationships connect different stages of work. A goods invoice line can identify the shipment line it bills. A cash application identifies the invoice to which received money was allocated. Those relationships let you ask specific questions about fulfillment and settlement.
+
+A relationship does not always mean one row matches one other row. An order can have several lines and shipments; an invoice can have several cash applications. Combining these records without considering their grain can repeat quantities or amounts.
+
+Business diagrams help you understand the purpose of a relationship. For exact columns, consult [Schema Reference](../reference/schema.md). An arrow between activities does not by itself specify a database join.
+
+## Follow a Small Goods-Sale Trace
+
+Begin with an order line and ask what happened to the requested goods. Find its shipment evidence, then the goods invoice line linked to that shipment. Finally, examine the invoice's cash applications.
+
+| Question | Records to inspect |
+|---|---|
+| What was ordered? | Order header and ordered line |
+| What left inventory? | Shipment header and shipped line |
+| What was billed? | Invoice header and billed line |
+| What settled the invoice? | Cash applications and their receipts |
+| What accounting was posted? | General-ledger entries for the relevant events |
+
+Keep the dates as well as the identifiers. A shipment and invoice can be related while belonging to different dates. A later cash application may explain eventual settlement without reducing the invoice balance at an earlier cutoff.
+
+You do not need the whole database for this first trace. Add records because they answer a question, rather than joining every available table.
+
+## Distinguish Plans, Events, and Accounting
+
+Some records describe expectations or setup. An item record describes a product; a forecast describes expected demand; a purchase order records a supplier commitment. These provide context without necessarily creating an accounting entry.
+
+Other records describe execution or settlement: goods arrive, products ship, payroll is posted, or an invoice is settled. Each event has its own accounting treatment in this model.
+
+The **general ledger**, stored in `GLEntry`, holds the posted debit and credit detail. Source fields identify the event behind a posting. The [Posting Reference](../reference/posting.md) explains those mappings, including cases where a source-type label differs from the table name.
+
+Start with the event, then inspect its accounting. Trying to interpret a ledger total without knowing its sources can mix ordinary activity, estimates, settlement, and annual closing entries.
+
+<span id="how-to-start-navigating-by-topic"></span>
+
+<span id="financial-accounting"></span>
+
+<span id="managerial-accounting"></span>
+
+<span id="auditing-and-controls"></span>
+
+## Find the Next Group of Records
+
+The same approach extends beyond sales:
+
+- **Purchasing:** distinguish the request, supplier commitment, receipt, invoice, and payment.
+- **Manufacturing:** follow a work order into material issues, completions, and close.
+- **Design services:** connect an engagement with approved time and monthly billing.
+- **Payroll:** separate approved time, the payroll register, employee payments, and remittances.
+- **Finance:** follow journal headers into posted detail and relevant settlement support.
+
+The optional reference below retains the full inventory and technical navigation paths. You can return to it after identifying the business question and the document you need.
+
+## Check Your Understanding
+
+<details>
+<summary>An order header appears beside each of its lines. Can you sum the repeated order total?</summary>
+
+No. The display repeats header information to provide context for each line. Aggregate at the grain appropriate to your question, keeping one header amount per order or using the relevant line amounts.
+
+</details>
+
+## Next Steps
+
+Continue to [Meet the Records](../learn-and-practice/meet-the-records.md), the first guided tutorial. You will find a customer, read an order, and then build a source-to-ledger trace one step at a time.
+
+## Optional Reference
+
+Expand the reference that answers your current question. These paths summarize related records; consult the schema for the full keys and the posting reference for accounting rules.
+
+<details>
+<summary>Look up the table inventory and document structure</summary>
+
+### What the Dataset Contains
 
 The published `v2027.1` SQLite database contains **82 user tables** across nine areas. This count describes the published file, rather than an assumed count from a local generator configuration.
 
@@ -58,7 +143,7 @@ Most classes use these ready-to-use files:
 
 Download them from [Downloads](downloads.md) or use the copies already shared for your course.
 
-## How the Data Is Organized
+### How the Data Is Organized
 
 Students usually understand the model fastest when they read it in layers:
 
@@ -83,7 +168,11 @@ Many document families also use a header-line pattern:
 | `ProductionCompletion` | `ProductionCompletionLine` | One production completion can contain one or more completion lines |
 | `PayrollRegister` | `PayrollRegisterLine` | One payroll register can contain many earnings and deduction lines |
 
-## The Most Important Keys
+</details>
+<details>
+<summary>Look up identifiers and navigation paths</summary>
+
+### The Most Important Keys
 
 You do not need every key on day one. Start with the keys that anchor document chains:
 
@@ -117,7 +206,7 @@ You do not need every key on day one. Start with the keys that anchor document c
 
 For exact field-level lookup, go to [Schema Reference](../reference/schema.md).
 
-## Core Navigation Paths
+### Core Navigation Paths
 
 These are the fastest ways to move through the model.
 
@@ -209,7 +298,11 @@ to move back to the originating event.
 
 Use the stored source type rather than assuming it always matches a table name. For example, payroll-register postings use `PayrollSummary` as their `GLEntry.SourceDocumentType`; the [Posting Reference](../reference/posting.md) explains the event-to-ledger mapping.
 
-## How Operational Activity Reaches the Ledger
+</details>
+<details>
+<summary>Look up posting categories and tracing reminders</summary>
+
+### How Operational Activity Reaches the Ledger
 
 The most important mental rule is simple: planning and setup tables usually stay outside the posting flow, while execution and finance events often reach the ledger.
 
@@ -223,57 +316,7 @@ The most important mental rule is simple: planning and setup tables usually stay
 
 Use [GLEntry Posting Reference](../reference/posting.md) when you want the exact posting rules behind one event.
 
-## How to Start Navigating by Topic
-
-### Financial accounting
-
-Start with:
-
-- `GLEntry`
-- `Account`
-- `ServiceBillingLine`
-- `SalesInvoice`
-- `CashReceiptApplication`
-- `PurchaseInvoice`
-- `DisbursementPayment`
-- `PayrollRegister`
-- `WorkOrderClose`
-
-### Managerial accounting
-
-Start with:
-
-- `Item`
-- `PriceList`
-- `PriceListLine`
-- `PromotionProgram`
-- `PriceOverrideApproval`
-- `ServiceEngagement`
-- `ServiceTimeEntry`
-- `Budget`
-- `BudgetLine`
-- `CostCenter`
-- `BillOfMaterial`
-- `WorkOrder`
-- `MaterialIssueLine`
-- `ProductionCompletionLine`
-- `LaborTimeEntry`
-- `DemandForecast`
-- `SupplyPlanRecommendation`
-
-### Auditing and controls
-
-Start with:
-
-- O2C chain tables
-- design-services tables
-- P2P chain tables
-- manufacturing chain tables
-- payroll and time chain tables
-- GLEntry
-- the transaction chains in [Process Flows](../learn-the-business/process-flows.md)
-
-## Practical Starting Tips
+### Practical Starting Tips
 
 - `CashReceiptApplication` is the authoritative invoice-settlement link in O2C.
 - `ServiceBillingLine` is the authoritative hours-to-invoice bridge for design-service billing.
@@ -283,7 +326,11 @@ Start with:
 - For payroll, start from `PayrollPeriodID` or `PayrollRegisterID` and then move back to `LaborTimeEntry` and `TimeClockEntry`.
 - For raw multi-year income-statement analysis, exclude the year-end close entry types.
 
-## Glossary
+</details>
+<details>
+<summary>Look up accounting and process terminology</summary>
+
+### Glossary
 
 | Term | Plain-language meaning |
 |---|---|
@@ -297,10 +344,4 @@ Start with:
 | Manufacturing variance | The difference between actual and standard manufacturing cost that is closed from work orders. |
 | Contribution margin | Revenue less variable product cost. In this dataset, fixed overhead is excluded from contribution-margin analysis. |
 
-## Next Steps
-
-- Read [Schema Reference](../reference/schema.md) for table-level lookup and high-value fields.
-- Read [Process Flows](../learn-the-business/process-flows.md) for the business-cycle reading path.
-- Read [GLEntry Posting Reference](../reference/posting.md) when you need event-to-ledger rules.
-- Read [Reports and Analytics](../analytics/index.md) when you are ready to move into the analysis layer.
-- Begin a focused evidence task in [Learn and Practice](../learn-and-practice/index.md) before attempting a broad case.
+</details>

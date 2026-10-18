@@ -1,251 +1,596 @@
 ---
-title: Product Portfolio Profitability Case
-description: Inquiry-led walkthrough for ranking collections and lifecycle groups across sales, margin, service, and return pressure.
-sidebar_label: Portfolio Profitability Case
+title: "4. Choose a Product and Pricing Priority"
+description: "Which product group deserves a focused review, and what evidence supports that priority?"
+sidebar_label: "4. Choose a Product and Pricing Priority"
+pagination_prev: "analytics/cases/p2p-accrual-settlement-case"
+pagination_next: "analytics/cases/manufacturing-labor-cost-case"
+case_number: 4
+case_level: Intermediate
+case_sessions: 3
+toc_max_heading_level: 2
 ---
 
-import { QueryReference } from "@site/src/components/QueryReference";
+import ToolSteps from "@site/src/components/Tutorial/ToolSteps";
+import TabItem from "@theme/TabItem";
+import CaseFigure from "@site/src/components/Cases/Figure";
+import CaseMethods from "@site/src/components/Cases/Methods";
 import { CaseOverview } from "@site/src/components/CaseExplorer";
+import { QuerySequence } from "@site/src/components/QueryReference";
+import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
-# Product Portfolio Profitability Case
+# 4. Choose a Product and Pricing Priority
+
+<span id="business-scenario"></span>
+<span id="the-problem-to-solve"></span>
+<span id="learning-objectives"></span>
+
+Commercial leadership has time for one product review. The sales coordinator proposes looking at discounts; the controller asks whether product mix, cost assumptions, or delivery performance could explain the same pattern. Your job is to compare those explanations and recommend a bounded next investigation, not to declare a product group unprofitable from one percentage.
 
 <CaseOverview slug="product-portfolio-profitability-case" />
 
-## Business Scenario
+**Worked scope.** Goods invoice lines dated January 1–March 31, 2024. Compare product groups using the same population. Credits are a separate credit-date population. Current product-master attributes and standard costs are descriptive reference data, not historical snapshots.
 
-**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
+The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-Management is comparing collections and lifecycle groups to decide which product families truly carry the business. Revenue alone does not answer that question. A collection can drive strong billed sales and still create weaker contribution, slower service, or heavier return pressure.
-
-This case asks students to judge the portfolio through several lenses at the same time. The company needs a view that compares billed sales, gross margin, contribution margin, service performance, and return pressure across the same portfolio families. That is how management decides where to invest, where to repair performance, and where to challenge the current mix.
-
-Your job is to build that portfolio ranking, test where the ranking changes under different measures, and finish with a clear management recommendation.
-
-## The Problem to Solve
-
-You need to prove which collections and lifecycle groups generate the strongest revenue and gross-margin contribution, whether contribution margin changes that ranking materially, whether service performance reinforces or contradicts the financial view, and whether return and refund pressure changes the final portfolio interpretation.
-
-## Learning Objectives
-
-- Rank comparable portfolio families using revenue, gross margin, and contribution.
-- Evaluate whether service, returns, and refunds change the financial interpretation.
-- Recommend a portfolio action with visible cost and allocation assumptions.
+**Preparation:** 3: matching keys; 9: manufacturing costs; 12: summaries and conclusions. Revisit [the relevant tutorial](../../learn-and-practice/turn-records-into-a-conclusion.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
 
 ## Key Data Sources
 
-- Related process: [Order-to-Cash Process](../../processes/o2c.md)
-- Source documents: Item master, invoice and credit lines, order and shipment lines, return lines, and customer refunds used by the queries.
-- Evidence grain: Align collection and lifecycle groupings across financial and service views; keep refund-allocation assumptions visible.
-- Main tables: `Item`, `SalesInvoiceLine`, `CreditMemoLine`, `SalesReturnLine`, `ShipmentLine`, `SalesOrderLine`, `CustomerRefund`
-- Related guides: [Sales and Customers queries](../analysis-tracks.md#sales-and-customers), [Sales and Customers](../index.md#sales-and-customers)
-- Related cases: [Product Portfolio and Lifecycle Case](product-portfolio-and-lifecycle-case.md), [Pricing and Margin Governance Case](pricing-and-margin-governance-case.md)
-- Supporting references: [Schema Reference](../../reference/schema.md), [Dataset Guide](../../start-here/dataset-overview.md)
-- This case ranks portfolio families across multiple performance lenses rather than tracing one document flow. Use the lighter portfolio case for catalog setup and the pricing case for commercial-policy interpretation.
+Each source below has a distinct row meaning. Import only the fields and populations requested in each stage. Working tables default to the source name plus Data unless a stage assigns a more specific name.
+
+| Source | Published Excel Table | First working name |
+|---|---|---|
+| Item | T44_Item | ItemData |
+| SalesInvoice | T16_SalesInvoice | SalesInvoiceData |
+| SalesInvoiceLine | T17_SalesInvoiceLine | SalesInvoiceLineData |
+| SalesOrder | T9_SalesOrder | SalesOrderData |
+| SalesOrderLine | T10_SalesOrderLine | SalesOrderLineData |
+| PriceOverrideApproval | T8_PriceOverrideApproval | PriceOverrideApprovalData |
+| PromotionProgram | T7_PromotionProgram | PromotionProgramData |
+| Shipment | T14_Shipment | ShipmentData |
+| ShipmentLine | T15_ShipmentLine | ShipmentLineData |
+| CreditMemo | T23_CreditMemo | CreditMemoData |
+| CreditMemoLine | T24_CreditMemoLine | CreditMemoLineData |
+
+<CaseMethods />
+
+<span id="step-1-define-realized-pricing-against-list-price"></span>
+<span id="step-2-explain-the-promotion-effect-on-revenue-and-gross-margin"></span>
+<span id="step-1-define-the-portfolio-structure-in-the-item-master"></span>
+<span id="step-2-check-whether-the-item-master-is-complete-enough-to-trust"></span>
+<span id="step-1-define-the-portfolio-mix-you-are-evaluating"></span>
+<span id="step-2-rank-the-portfolio-on-billed-sales-and-gross-margin"></span>
+
+## Session 1 — Define a comparable product population
+
+Create Case04.xlsx or Case04.sql. Write the measure before calculating it: invoiced line amounts before freight, tax, and credits. Keep quantities and dollars separate.
+
+<CaseFigure figureId="case04-decision" />
+
+
+### 1.1. Inspect classifications before grouping
+
+**Predict before you run:** Will every blank collection name mean the same thing across item types?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import ItemData as Items.
+
+2. Create a PivotTable by ItemType with Count of ItemID.
+
+3. Filter CollectionName blanks separately for each type.
+
+4. Inspect IsActive, LifecycleStatus, LaunchDate, and ItemGroup.
+
+5. Do not remove inactive items before selecting historical sales; current inactivity does not mean an item could not be sold in 2024.
+
+</TabItem>
+<TabItem value="sql">
+
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+```sql title="c04-master.sql"
+SELECT ItemType,
+       COUNT(*) AS Items,
+       SUM(CASE WHEN CollectionName IS NULL OR TRIM(CollectionName)='' THEN 1 ELSE 0 END) AS MissingCollection,
+       SUM(CASE WHEN IsActive=0 THEN 1 ELSE 0 END) AS CurrentlyInactive
+FROM Item
+GROUP BY ItemType
+ORDER BY ItemType;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** 219 Finished Good items, including 59 with a blank collection and 15 currently inactive. Other item types are Capex, Purchased Material, and Service.
+
+Grouping by ItemGroup avoids silently dropping blank collections. A collection-level extension must retain an explicit Unclassified category and investigate why a classification is absent.
+
+<details>
+<summary>If your result differs</summary>
+
+The exact goods label is Finished Good, including the space. A spelling mismatch can produce a plausible-looking empty analysis.
+
+</details>
+
+**Keep for the next stage:** Save the item-type counts and classification note.
+
+### 1.2. Build the invoice-line dataset
+
+**Predict before you run:** Why would summing invoice headers after joining lines overstate sales?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import SalesInvoiceData, filter InvoiceDate from January 1 through March 31.
+
+2. Inner merge SalesInvoiceLineData to those headers on SalesInvoiceID; expand InvoiceDate only.
+
+3. Merge Items on ItemID, expand ItemType, ItemGroup, and StandardCost.
+
+4. Filter ItemType = Finished Good; load as ProductLines.
+
+5. Keep SalesInvoiceLineID as the unique key.
+
+6. Add ListValue to ProductLines:
+
+    ~~~text title="Excel — ProductLines[ListValue]"
+    =[@Quantity]*[@BaseListPrice]
+    ~~~
+
+7. Add CurrentStandardCost:
+
+    ~~~text title="Excel — ProductLines[CurrentStandardCost]"
+    =[@Quantity]*[@StandardCost]
+    ~~~
+
+8. Use a PivotTable for Count of SalesInvoiceLineID and sums of Quantity and LineTotal.
+
+9. To count unique invoices, reference the query, keep SalesInvoiceID, remove duplicates, then count rows.
+
+</TabItem>
+<TabItem value="sql">
+
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+```sql title="c04-population.sql"
+SELECT COUNT(*) AS Lines,
+       COUNT(DISTINCT i.SalesInvoiceID) AS Invoices,
+       ROUND(SUM(l.Quantity),2) AS Quantity,
+       ROUND(SUM(l.LineTotal),2) AS InvoicedLines
+FROM SalesInvoiceLine l
+JOIN SalesInvoice i ON i.SalesInvoiceID=l.SalesInvoiceID
+JOIN Item p ON p.ItemID=l.ItemID
+WHERE i.InvoiceDate>='2024-01-01' AND i.InvoiceDate<'2024-04-01' AND p.ItemType='Finished Good';
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** 1,857 goods invoice lines across 1,322 invoices; quantity 15,301.69; line amounts 5,551,798.71.
+
+These totals describe billed goods. Quantity spans different products and units, so the total is a completeness check rather than a useful physical output measure.
+
+<details>
+<summary>If your result differs</summary>
+
+Do not include service lines or sum GrandTotal here. Preserve all qualifying lines even when current catalog fields are incomplete.
+
+</details>
+
+**Keep for the next stage:** Save ProductLines and the population check.
+
+:::tip Session stopping point
+Your population must reconcile before you rank product groups. Save the exact date and item-type filters.
+:::
+
+<span id="step-3-show-where-customer-specific-pricing-is-concentrated"></span>
+<span id="step-4-measure-override-concentration-and-price-floor-pressure"></span>
+<span id="step-3-test-whether-lifecycle-labels-and-active-status-align"></span>
+<span id="step-4-connect-the-catalog-to-sales-and-portfolio-mix"></span>
+<span id="step-3-test-whether-contribution-margin-changes-the-ranking"></span>
+<span id="step-4-add-the-service-performance-lens"></span>
+
+## Session 2 — Compare measures and inspect pricing
+
+Weighted realization asks how much was billed relative to the list value of the same quantities. A simple average of line percentages gives small and large lines equal influence.
+
+<CaseFigure figureId="case04-relationships" />
+
+
+### 2.1. Calculate comparable group measures
+
+**Predict before you run:** Could the largest dollar margin coexist with the lowest margin percentage?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. From ProductLines create a PivotTable: Rows = ItemGroup; Values = sums of LineTotal, ListValue, CurrentStandardCost, Quantity and Count of SalesInvoiceLineID.
+
+2. Copy the four summary rows, excluding the grand total, into a table named ProductReview.
+
+3. Name the amount columns LineTotal, ListValue, and CurrentStandardCost exactly, removing the PivotTable prefix Sum of.
+
+4. Add Realization; an undefined ratio returns N/A for investigation:
+
+    ~~~text title="Excel — ProductReview[Realization]"
+    =IF([@ListValue]=0,NA(),[@LineTotal]/[@ListValue])
+    ~~~
+
+5. Add StandardMargin:
+
+    ~~~text title="Excel — ProductReview[StandardMargin]"
+    =[@LineTotal]-[@CurrentStandardCost]
+    ~~~
+
+6. Add StandardMarginPct:
+
+    ~~~text title="Excel — ProductReview[StandardMarginPct]"
+    =IF([@LineTotal]=0,NA(),[@StandardMargin]/[@LineTotal])
+    ~~~
+
+7. Format ratios as percentages.
+
+8. Sort once by StandardMarginPct ascending, then compare a separate ranking by StandardMargin descending.
+
+9. Create a horizontal bar chart of StandardMarginPct from these four rows.
+
+</TabItem>
+<TabItem value="sql">
+
+Each group uses sums from the same invoice-line population. RealizationPct is a ratio of dollar totals, not an average of percentages. NULLIF leaves a zero-denominator ratio unavailable. CurrentStandardCost uses the current master reference explicitly.
+
+Run each complete statement separately and retain its result before continuing.
+```sql title="c04-comparison.sql"
+SELECT p.ItemGroup,
+       COUNT(*) AS Lines,
+       ROUND(SUM(l.Quantity),2) AS Quantity,
+       ROUND(SUM(l.LineTotal),2) AS InvoicedLines,
+       ROUND(SUM(l.Quantity*l.BaseListPrice),2) AS ListValue,
+       ROUND(SUM(l.Quantity*p.StandardCost),2) AS CurrentStandardCost,
+       ROUND(100.0*SUM(l.LineTotal)/NULLIF(SUM(l.Quantity*l.BaseListPrice),0),2) AS RealizationPct,
+       ROUND(SUM(l.LineTotal-l.Quantity*p.StandardCost),2) AS StandardMargin,
+       ROUND(100.0*SUM(l.LineTotal-l.Quantity*p.StandardCost)/NULLIF(SUM(l.LineTotal),0),2) AS StandardMarginPct
+FROM SalesInvoiceLine l
+JOIN SalesInvoice i ON i.SalesInvoiceID=l.SalesInvoiceID
+JOIN Item p ON p.ItemID=l.ItemID
+WHERE i.InvoiceDate>='2024-01-01' AND i.InvoiceDate<'2024-04-01' AND p.ItemType='Finished Good'
+GROUP BY p.ItemGroup
+ORDER BY StandardMarginPct,p.ItemGroup;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Furniture has 3,181,389.89 in billed lines and 1,395,078.58 of standard-cost margin, the largest dollar margin. Its 43.85% margin rate is the lowest. Realization ranges from 88.92% for Textiles to 89.29% for Lighting.
+
+The narrow realization range does not by itself explain the much wider margin-rate range. Product mix and current standard-cost assumptions deserve investigation alongside pricing. This comparison is not posted gross profit.
+
+<details>
+<summary>If your result differs</summary>
+
+Calculate the ratio of summed dollars. Do not average line percentages or mistake StandardConversionCost for a component to add again to total StandardCost.
+
+</details>
+
+**Keep for the next stage:** Save both rankings and the chart, with the current-standard-cost label visible.
+
+### 2.2. Read an override and a promotion
+
+**Predict before you run:** Does a discounted line necessarily lack commercial approval?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import PriceOverrideApprovalData as Overrides and PromotionProgramData as Promotions.
+
+2. Import SalesOrderLineData and SalesOrderData.
+
+3. In ProductLines filter nonblank PriceOverrideApprovalID, sort InvoiceDate and SalesInvoiceLineID, and inspect the first 12 lines.
+
+4. For line 69 inspect approval ID 9.
+
+5. Add ApprovedUnitPrice using the unique approval key:
+
+    ~~~text title="Excel — ProductLines[ApprovedUnitPrice]"
+    =IF([@PriceOverrideApprovalID]="","",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ApprovedUnitPrice],"No match",0))
+    ~~~
+
+6. Add OverrideApprovedDate and format as a date:
+
+    ~~~text title="Excel — ProductLines[OverrideApprovedDate]"
+    =IF([@PriceOverrideApprovalID]="","",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ApprovedDate],"No match",0))
+    ~~~
+
+7. Add OverrideReason:
+
+    ~~~text title="Excel — ProductLines[OverrideReason]"
+    =IF([@PriceOverrideApprovalID]="","",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ReasonCode],"No match",0))
+    ~~~
+
+8. Add SalesOrderID through the order-line relationship:
+
+    ~~~text title="Excel — ProductLines[SalesOrderID]"
+    =XLOOKUP([@SalesOrderLineID],SalesOrderLineData[SalesOrderLineID],SalesOrderLineData[SalesOrderID],"No match",0)
+    ~~~
+
+9. Add OrderDate and format it as a date:
+
+    ~~~text title="Excel — ProductLines[OrderDate]"
+    =XLOOKUP([@SalesOrderID],SalesOrderData[SalesOrderID],SalesOrderData[OrderDate],"No match",0)
+    ~~~
+
+10. Resolve any No match before comparing UnitPrice, approved price, approval date, and order date.
+
+11. Separately select invoice line 1548 and promotion ID 1.
+
+12. Inspect the promotion’s effective dates and scope fields; evaluate applicability at the commercial event, not simply the invoice date.
+
+</TabItem>
+<TabItem value="sql">
+
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+```sql title="c04-pricing.sql"
+SELECT l.SalesInvoiceLineID,
+       l.SalesOrderLineID,
+       i.InvoiceDate,
+       p.ItemGroup,
+       l.ItemID,
+       l.Quantity,
+       l.BaseListPrice,
+       l.UnitPrice,
+       l.Discount,
+       l.LineTotal,
+       l.PricingMethod,
+       l.PriceListLineID,
+       l.PromotionID,
+       l.PriceOverrideApprovalID
+FROM SalesInvoiceLine l
+JOIN SalesInvoice i ON i.SalesInvoiceID=l.SalesInvoiceID
+JOIN Item p ON p.ItemID=l.ItemID
+WHERE i.InvoiceDate>='2024-01-01' AND i.InvoiceDate<'2024-04-01' AND p.ItemType='Finished Good' AND (l.PromotionID IS NOT NULL OR l.PriceOverrideApprovalID IS NOT NULL)
+ORDER BY i.InvoiceDate,l.SalesInvoiceLineID LIMIT 12;
+```
+
+
+```sql title="c04-override.sql"
+SELECT PriceOverrideApprovalID,
+       SalesOrderLineID,
+       RequestDate,
+       ApprovedDate,
+       ReferenceUnitPrice,
+       RequestedUnitPrice,
+       ApprovedUnitPrice,
+       ReasonCode,
+       Status
+FROM PriceOverrideApproval
+WHERE PriceOverrideApprovalID IN (SELECT l.PriceOverrideApprovalID
+FROM SalesInvoiceLine l
+JOIN SalesInvoice i ON i.SalesInvoiceID=l.SalesInvoiceID
+WHERE i.InvoiceDate>='2024-01-01' AND i.InvoiceDate<'2024-04-01' AND l.PriceOverrideApprovalID IS NOT NULL)
+ORDER BY PriceOverrideApprovalID LIMIT 12;
+```
+
+
+```sql title="c04-promotion.sql"
+SELECT l.SalesInvoiceLineID,
+       o.OrderDate,
+       i.InvoiceDate,
+       l.PromotionID,
+       p.PromotionName,
+       p.ScopeType,
+       p.CustomerSegment,
+       p.ItemGroup,
+       p.CollectionName,
+       p.DiscountPct,
+       p.EffectiveStartDate,
+       p.EffectiveEndDate,
+       l.LineTotal
+FROM SalesInvoiceLine l
+JOIN SalesInvoice i ON i.SalesInvoiceID=l.SalesInvoiceID
+JOIN SalesOrderLine ol ON ol.SalesOrderLineID=l.SalesOrderLineID
+JOIN SalesOrder o ON o.SalesOrderID=ol.SalesOrderID
+JOIN PromotionProgram p ON p.PromotionID=l.PromotionID
+WHERE l.SalesInvoiceLineID=1548
+ORDER BY l.SalesInvoiceLineID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Line 69 carries approval 9; approved price 417.96 agrees with its unit price and approval date January 10. Line 1548 links promotion 1, whose recorded effective dates are March 1–March 1, while its order is dated March 11. That is a date-support exception requiring follow-up; the invoice is dated March 19.
+
+An approval explains authorization, not whether the discount was commercially successful. A promoted line and a non-promoted line can differ in product, customer, volume, and date. A causal promotion-effect claim needs more evidence. For promotion 1, ask for the intended effective period and supporting approval rather than assuming the recorded date range was valid.
+
+<details>
+<summary>If your result differs</summary>
+
+Use the stored pricing IDs. A text label such as Approved Override is not a substitute for reading its linked record.
+
+</details>
+
+**Keep for the next stage:** Keep two pricing evidence rows with the criterion tested and the result.
+
+:::tip Session stopping point
+Save the group comparison and two source traces. Draft one explanation the evidence supports and one alternative it does not rule out.
+:::
+
+<span id="step-5-extend-the-case-into-governance-follow-up"></span>
+<span id="step-5-extend-the-case-into-lifecycle-exception-follow-up"></span>
+<span id="step-5-add-return-and-refund-pressure-to-finalize-the-portfolio-view"></span>
+
+## Session 3 — Test competing explanations and decide
+
+Return to the commercial request. A single ranking can hide different problems. Use delivery and credit evidence as additional perspectives with their own denominators.
+
+<CaseFigure figureId="case04-measures" />
+
+
+### 3.1. Add delivery and credit evidence
+
+**Predict before you run:** Can a credit issued this quarter relate to an older invoice?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. In Power Query reference ProductLines, then Left outer merge ShipmentLineData on ShipmentLineID and ShipmentData on ShipmentID to obtain DeliveryDate.
+
+2. Merge SalesOrderLineData on SalesOrderLineID and SalesOrderData on SalesOrderID to obtain RequestedDeliveryDate.
+
+3. In Power Query use Add Column → Custom Column to add MissingDeliveryDate:
+
+    ~~~text title="Power Query — Delivery summary / MissingDeliveryDate"
+    if [DeliveryDate] = null then 1 else 0
+    ~~~
+
+4. Add DeliveredAfterRequested with the expression below; missing dates cannot establish lateness:
+
+    ~~~text title="Power Query — Delivery summary / DeliveredAfterRequested"
+    if [DeliveryDate] = null or [RequestedDeliveryDate] = null then 0 else if [DeliveryDate] > [RequestedDeliveryDate] then 1 else 0
+    ~~~
+
+5. Group by ItemGroup to count lines and sum those flags.
+
+6. Separately import CreditMemoLineData, merge CreditMemoData, filter CreditMemoDate January 1–March 31, merge Items, retain Finished Good, and group by ItemGroup with Count of CreditMemoLineID and Sum of LineTotal.
+
+7. Load as CreditReview.
+
+</TabItem>
+<TabItem value="sql">
+
+ShipmentLineID identifies the shipment supporting each billed line. The counts therefore describe invoice lines, not distinct customers or orders. A separate CASE retains the missing-delivery-date count.
+
+Run each complete statement separately and retain its result before continuing.
+```sql title="c04-service.sql"
+SELECT p.ItemGroup,
+       COUNT(*) AS InvoiceLines,
+       SUM(CASE WHEN s.DeliveryDate IS NULL THEN 1 ELSE 0 END) AS NoDeliveryDate,
+       SUM(CASE WHEN s.DeliveryDate>o.RequestedDeliveryDate THEN 1 ELSE 0 END) AS LinesDeliveredAfterRequested
+FROM SalesInvoiceLine l
+JOIN SalesInvoice i ON i.SalesInvoiceID=l.SalesInvoiceID
+JOIN Item p ON p.ItemID=l.ItemID
+JOIN SalesOrderLine ol ON ol.SalesOrderLineID=l.SalesOrderLineID
+JOIN SalesOrder o ON o.SalesOrderID=ol.SalesOrderID
+LEFT JOIN ShipmentLine sl ON sl.ShipmentLineID=l.ShipmentLineID
+LEFT JOIN Shipment s ON s.ShipmentID=sl.ShipmentID
+WHERE i.InvoiceDate>='2024-01-01' AND i.InvoiceDate<'2024-04-01' AND p.ItemType='Finished Good'
+GROUP BY p.ItemGroup
+ORDER BY p.ItemGroup;
+```
+
+
+```sql title="c04-credits.sql"
+SELECT p.ItemGroup,
+       COUNT(*) AS CreditLines,
+       ROUND(SUM(l.LineTotal),2) AS CreditedLines
+FROM CreditMemoLine l
+JOIN CreditMemo c ON c.CreditMemoID=l.CreditMemoID
+JOIN Item p ON p.ItemID=l.ItemID
+WHERE c.CreditMemoDate>='2024-01-01' AND c.CreditMemoDate<'2024-04-01' AND p.ItemType='Finished Good'
+GROUP BY p.ItemGroup
+ORDER BY p.ItemGroup;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Furniture has 340 of 646 invoice lines linked to delivery after the requested date. All four groups have populated delivery dates. Furniture credit-date line amounts total 8,926.95; Textiles total 5,878.96.
+
+The delivery denominator is invoice lines, not unique orders or customers. The credits are dated in the quarter but are not guaranteed to originate from this quarter’s invoices. Do not subtract these amounts and call the result cohort net revenue.
+
+<details>
+<summary>If your result differs</summary>
+
+Joining invoice lines through an order alone can attach every shipment on that order. Use ShipmentLineID for the actual billed shipment link.
+
+</details>
+
+**Keep for the next stage:** Save the two separately labeled comparisons.
+
+### 3.2. Recommend one bounded review
+
+**Predict before you run:** Which priority survives when you consider scale, rates, and evidence limits?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Create a Review table with four rows, one per ItemGroup.
+
+2. Link the verified billed amounts, standard margin dollars/rate, realization rate, late-delivery line count/denominator, and separately dated credits.
+
+3. Add text columns CompetingExplanation, EvidenceToRequest, ActionOwner, and NextReviewDate.
+
+4. Do not blend these measures into an arbitrary score.
+
+5. In your memo compare Furniture with one other group and state what would change your recommendation.
+
+</TabItem>
+<TabItem value="sql">
+
+Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools.
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** The worked evidence supports Furniture as a reasonable review priority because of its scale, lower standard margin rate, and delivery follow-up volume. It does not establish that discounts caused poor performance.
+
+A defensible alternative priority is acceptable when it explains the tradeoff. The decision should specify a testable next step, such as inspecting a product subset’s cost assumptions and delivery causes, rather than recommending an across-the-board price rise.
+
+<details>
+<summary>If your result differs</summary>
+
+Keep the conclusion within the measures. Current classifications, standard costs, and invoice-line delivery counts cannot establish complete historical product profitability.
+
+</details>
+
+**Keep for the next stage:** Save a 400–500 word memo and the comparison table. Include one source example and one uncertainty.
+
+:::tip Session stopping point
+A reviewer should be able to trace the priority to the table, the table to the population, and the population to the released records.
+:::
+
+<CaseFigure figureId="case04-conclusion" />
+
+<span id="required-student-output"></span>
+<span id="wrap-up-questions"></span>
+<span id="limitations-and-judgment"></span>
+
+## Prepare the Decision
+
+Furniture merits a focused review in the worked analysis, but the first action should diagnose cost assumptions, product mix, and delivery performance alongside pricing. Similar realization rates across groups weaken a simple discount-only explanation. The recommendation remains provisional because current standard costs are not a complete historical cost-of-sales measure.
+
+**Deliverable:** A product comparison, selected pricing evidence, a simple analytical chart, and a recommendation memo. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+
+## Independent Challenge
+
+Repeat for April–June 2024. Keep the measure definitions unchanged. Defend whether the priority should change, and identify one result that would reverse your recommendation after source follow-up.
+
+<details>
+<summary>Planning hint</summary>
+
+Use the same invoice-date population for the main comparison and a separately labeled credit-date population. Retain blank classifications and inspect the actual pricing links.
+
+</details>
+
+**Assessment criteria:** Assess comparable populations, weighted ratios, cost labels, source tracing, alternative explanations, and a proportionate recommendation. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+
+<details>
+<summary>Further queries and earlier case topics</summary>
+
+<span id="optional-excel-follow-through"></span>
 
 ## Recommended Query Sequence
 
-### Step 1. Define the portfolio mix you are evaluating
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-Start by defining the portfolio population. Before you rank performance, you need a clear view of collections, style families, lifecycle groups, and supply modes.
+<QuerySequence items={caseQuerySequences["product-portfolio-profitability-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
 
-**What we are trying to achieve**
-
-Establish the mix of collections, style families, lifecycle groups, and supply modes that management is evaluating.
-
-**Why this step changes the diagnosis**
-
-This step gives you the portfolio frame. A ranking means very little if the underlying mix is unclear.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="managerial/31_product_portfolio_mix_by_collection_style_lifecycle_supply_mode.sql"
-  helperText="Use this first to see how the portfolio is distributed across collection, style family, lifecycle status, and supply mode."
-/>
-
-**What this query does**
-
-It summarizes the portfolio mix across the main descriptive dimensions used later in the case.
-
-**How it works**
-
-The query groups `Item` rows by collection, style family, lifecycle status, and supply mode. That creates the portfolio frame for the rest of the walkthrough.
-
-**What to look for in the result**
-
-- the largest collections and style families
-- how much of the catalog sits in each lifecycle group
-- where manufactured and purchased items concentrate
-- which portfolio families are large enough to matter in later ranking work
-
-### Step 2. Rank the portfolio on billed sales and gross margin
-
-Once the mix is clear, move to the first economic ranking. This step establishes the top-line and gross-margin view that management usually sees first.
-
-**What we are trying to achieve**
-
-Identify which collections and lifecycle groups carry the most net sales and gross margin.
-
-**Why this step changes the diagnosis**
-
-This is the first performance ranking, not the final answer. It shows where the portfolio looks strongest before contribution, service, and return pressure change the interpretation.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="financial/21_revenue_and_gross_margin_by_collection_style_lifecycle_supply_mode.sql"
-  helperText="Use this to rank collections and lifecycle groups on billed sales, net sales, and gross margin."
-/>
-
-**What this query does**
-
-It compares billed sales, credit activity, net sales, net standard cost, and gross margin by collection, style family, lifecycle status, and supply mode.
-
-**How it works**
-
-The query starts from billed sales in `SalesInvoiceLine`, offsets them with `CreditMemoLine` and `SalesReturnLine`, and ties the billed and returned activity back to `Item` attributes.
-
-**What to look for in the result**
-
-- the collections carrying the most net sales
-- the families generating the strongest gross margin
-- lifecycle groups that look stronger or weaker than expected
-- whether supply mode already appears to matter materially
-
-### Step 3. Test whether contribution margin changes the ranking
-
-Now test the ranking under a different cost lens. Gross margin can overstate the attractiveness of some families when variable-cost logic tells a different story.
-
-**What we are trying to achieve**
-
-Show whether the portfolio ranking changes once variable-cost logic is used.
-
-**Why this step changes the diagnosis**
-
-This step changes the ranking logic. Supply mode matters here because manufactured items exclude fixed overhead in this contribution view, so some families can look better or worse than they did on gross margin alone.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="managerial/32_contribution_margin_by_collection_material_lifecycle_supply_mode.sql"
-  helperText="Use this to compare contribution margin across collections, materials, lifecycle groups, and supply modes."
-/>
-
-**What this query does**
-
-It compares net sales with variable-cost logic to produce contribution margin by collection, material, lifecycle status, and supply mode.
-
-**How it works**
-
-The query starts from `Item`, derives a variable unit cost, then compares billed and credited activity through `SalesInvoiceLine` and `CreditMemoLine` to build net sales, net variable cost, and contribution margin.
-
-**What to look for in the result**
-
-- collections whose rank changes when contribution margin replaces gross margin
-- whether manufactured and purchased families behave differently
-- lifecycle groups that look weaker once fixed-overhead logic is removed
-- which families deserve caution despite strong gross-margin performance
-
-### Step 4. Add the service-performance lens
-
-Financial performance still does not finish the portfolio story. Now test whether service performance reinforces or weakens the ranking.
-
-**What we are trying to achieve**
-
-Show where fill rate, shipment lag, and backorder pressure reinforce or weaken the profitability view.
-
-**Why this step changes the diagnosis**
-
-This step adds the operating lens. A strong collection financially can still create operational strain, and management needs both views before it makes a portfolio decision.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="managerial/33_customer_service_impact_by_collection_style.sql"
-  helperText="Use this to compare fill rate, shipment lag, and backorder pressure by collection and style family."
-/>
-
-**What this query does**
-
-It measures ordered quantity, shipped quantity, backordered quantity, fill rate, days to first shipment, and backordered-line share by collection and style family.
-
-**How it works**
-
-The query starts from `SalesOrderLine`, joins shipment activity back through `ShipmentLine`, and aggregates the service measures by collection and style family.
-
-**What to look for in the result**
-
-- collections with low fill rate or high backorder pressure
-- collections with longer shipment lag
-- whether the strongest financial families also perform well operationally
-- where service strain changes the portfolio ranking
-
-### Step 5. Add return and refund pressure to finalize the portfolio view
-
-Finish the case by testing whether returns and refunds change the final portfolio interpretation.
-
-**What we are trying to achieve**
-
-Show how credit and refund pressure changes the final interpretation of portfolio attractiveness.
-
-**Why this step changes the diagnosis**
-
-This step finishes the management view. A single metric cannot rank the portfolio reliably if return and refund pressure changes the real outcome.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="managerial/35_portfolio_return_refund_impact_by_collection_lifecycle.sql"
-  helperText="Use this to compare credit and refund pressure by collection and lifecycle status."
-/>
-
-**What this query does**
-
-It compares billed sales, credited activity, allocated refunds, credit rate, and refund rate by collection and lifecycle status.
-
-**How it works**
-
-The query starts from `SalesInvoiceLine`, offsets the billed base with `CreditMemoLine`, allocates `CustomerRefund` values back to the credited lines, and groups the result by collection and lifecycle status.
-
-**What to look for in the result**
-
-- collections with the heaviest credit or refund pressure
-- lifecycle groups that carry more after-sale correction
-- whether return pressure confirms or contradicts the earlier ranking
-- which portfolio families management should protect, repair, or reconsider first
-
-## Required Student Output
-
-Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
-
-- **Evidence summary:** Create a portfolio decision matrix with net sales, gross margin, contribution, service measures, and return or refund pressure for comparable families.
-- **Accounting or business interpretation:** Explain a ranking change, or consistent ranking, using the supplied absorption and contribution-cost treatment.
-- **Database explanation:** Document each measure's source grain, period, denominator, and refund allocation. Explain why rates cannot always be added or averaged directly.
-- **Management or audit conclusion:** Recommend a supported portfolio action and identify the operating or commercial evidence that could change it.
-
-Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
-
-## Optional Excel Follow-Through
-
-1. Start with one portfolio mix pivot by collection, lifecycle status, and supply mode.
-2. Add a second view that ranks gross margin by the same portfolio families.
-3. Add a third view that compares gross margin with contribution margin to show rank changes.
-4. Add a narrow service-and-return tab so fill rate, backorder pressure, credits, and refunds sit beside the economic ranking.
-5. Finish with a short conclusion tab that names which families to protect, invest in, repair, or reconsider.
-
-## Wrap-Up Questions
-
-- Accounting/process: Which portfolio family changes most when the view moves from gross margin to contribution and after-sale pressure?
-- Database/source evidence: Which collection, lifecycle, service, return, or refund grain supports the portfolio ranking?
-- Analytics judgment: Which family combines strong economics with weak service, or weak economics with high return pressure?
-- Escalation/next step: Which portfolio family should management protect, invest in, repair, or reconsider first?
-
-## Limitations and Judgment
-
-The contribution view follows the supplied cost assumptions; it is not a complete product-elimination analysis. Allocated refunds and current catalog groupings require interpretation.
+</details>
 
 ## Next Steps
 
-- Use [Product Portfolio and Lifecycle Case](product-portfolio-and-lifecycle-case.md) when you want the catalog and lifecycle setup behind this ranking view.
-- Use [Pricing and Margin Governance Case](pricing-and-margin-governance-case.md) when you want the commercial pricing explanation beneath realized revenue and margin.
-- Use [Sales and Customers queries](../analysis-tracks.md#sales-and-customers) and [Sales and Customers](../index.md#sales-and-customers) for the broader portfolio and performance context.
+Continue to [Explain Production Cost and Delivery Pressure](manufacturing-labor-cost-case.md). Keep your completed evidence and use the [Query Library](../analysis-tracks.md) for a separate extension.

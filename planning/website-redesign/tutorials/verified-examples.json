@@ -1,0 +1,930 @@
+{
+  "release": "v2027.1",
+  "sha256": "de861968e07412d71032b6ed6a0fb8eb9825cf6911886b1597c4a628a914474c",
+  "examples": [
+    {
+      "page": "docs/learn-and-practice/meet-the-records.md",
+      "name": "l01-customer.sql",
+      "sql": "SELECT CustomerID, CustomerName, CustomerSegment, City\nFROM Customer\nWHERE CustomerID = 130;",
+      "expected": [
+        {
+          "CustomerID": 130,
+          "CustomerName": "Jones, Richardson and Beard",
+          "CustomerSegment": "Design Trade",
+          "City": "Williamsshire"
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/meet-the-records.md",
+      "name": "l01-segment-preview.sql",
+      "sql": "SELECT CustomerID, CustomerName, CustomerSegment\nFROM Customer\nWHERE CustomerSegment = 'Design Trade'\nORDER BY CustomerName, CustomerID\nLIMIT 5;",
+      "expected": [
+        {
+          "CustomerID": 45,
+          "CustomerName": "Alvarez-Smith",
+          "CustomerSegment": "Design Trade"
+        },
+        {
+          "CustomerID": 102,
+          "CustomerName": "Atkins, Garrett and Smith",
+          "CustomerSegment": "Design Trade"
+        },
+        {
+          "CustomerID": 5,
+          "CustomerName": "Brown LLC",
+          "CustomerSegment": "Design Trade"
+        },
+        {
+          "CustomerID": 210,
+          "CustomerName": "Buck Group",
+          "CustomerSegment": "Design Trade"
+        },
+        {
+          "CustomerID": 191,
+          "CustomerName": "Campbell, Martinez and Lucero",
+          "CustomerSegment": "Design Trade"
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/read-an-order.md",
+      "name": "l02-order.sql",
+      "sql": "SELECT SalesOrderID, OrderNumber, OrderDate, CustomerID, OrderTotal\nFROM SalesOrder\nWHERE SalesOrderID = 11;",
+      "expected": [
+        {
+          "SalesOrderID": 11,
+          "OrderNumber": "SO-2024-000011",
+          "OrderDate": "2024-01-24",
+          "CustomerID": 130,
+          "OrderTotal": 11397.78
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/read-an-order.md",
+      "name": "l02-lines.sql",
+      "sql": "SELECT SalesOrderLineID, LineNumber, LineTotal\nFROM SalesOrderLine\nWHERE SalesOrderID = 11\nORDER BY LineNumber;",
+      "expected": [
+        {
+          "SalesOrderLineID": 42,
+          "LineNumber": 1,
+          "LineTotal": 3552.21
+        },
+        {
+          "SalesOrderLineID": 43,
+          "LineNumber": 2,
+          "LineTotal": 7845.57
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/read-an-order.md",
+      "name": "l02-line-check.sql",
+      "sql": "SELECT COUNT(*) AS OrderLines, ROUND(SUM(LineTotal), 2) AS LineAmount\nFROM SalesOrderLine\nWHERE SalesOrderID = 11;",
+      "expected": [
+        {
+          "OrderLines": 2,
+          "LineAmount": 11397.78
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/connect-the-records.md",
+      "name": "l03-customer-join.sql",
+      "sql": "SELECT so.SalesOrderID, so.CustomerID, c.CustomerName\nFROM SalesOrder AS so\nJOIN Customer AS c ON c.CustomerID = so.CustomerID\nWHERE so.SalesOrderID = 11;",
+      "expected": [
+        {
+          "SalesOrderID": 11,
+          "CustomerID": 130,
+          "CustomerName": "Jones, Richardson and Beard"
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/connect-the-records.md",
+      "name": "l03-item-join.sql",
+      "sql": "SELECT sol.SalesOrderLineID, sol.ItemID, i.ItemName,\n       i.SupplyMode, sol.LineTotal\nFROM SalesOrderLine AS sol\nJOIN Item AS i ON i.ItemID = sol.ItemID\nWHERE sol.SalesOrderID = 11\nORDER BY sol.LineNumber;",
+      "expected": [
+        {
+          "SalesOrderLineID": 42,
+          "ItemID": 234,
+          "ItemName": "Mason Desk Maple Natural 84 in",
+          "SupplyMode": "Manufactured",
+          "LineTotal": 3552.21
+        },
+        {
+          "SalesOrderLineID": 43,
+          "ItemID": 222,
+          "ItemName": "Brookside Dining Table Oak Whitewash 72 in",
+          "SupplyMode": "Manufactured",
+          "LineTotal": 7845.57
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/source-to-ledger.md",
+      "name": "l04-shipment-link.sql",
+      "sql": "SELECT sol.SalesOrderLineID, sol.Quantity AS OrderedQuantity,\n       sl.ShipmentLineID, sl.ShipmentID, sl.QuantityShipped\nFROM SalesOrderLine AS sol\nLEFT JOIN ShipmentLine AS sl\n    ON sl.SalesOrderLineID = sol.SalesOrderLineID\nWHERE sol.SalesOrderLineID = 43\nORDER BY sl.ShipmentLineID;",
+      "expected": [
+        {
+          "SalesOrderLineID": 43,
+          "OrderedQuantity": 9,
+          "ShipmentLineID": 347,
+          "ShipmentID": 87,
+          "QuantityShipped": 9
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/source-to-ledger.md",
+      "name": "l04-invoice-link.sql",
+      "sql": "SELECT sl.ShipmentLineID, sl.QuantityShipped,\n       sil.SalesInvoiceLineID, sil.SalesInvoiceID,\n       sil.Quantity AS InvoicedQuantity, sil.LineTotal\nFROM ShipmentLine AS sl\nLEFT JOIN SalesInvoiceLine AS sil\n    ON sil.ShipmentLineID = sl.ShipmentLineID\nWHERE sl.ShipmentLineID = 347\nORDER BY sil.SalesInvoiceLineID;",
+      "expected": [
+        {
+          "ShipmentLineID": 347,
+          "QuantityShipped": 9,
+          "SalesInvoiceLineID": 272,
+          "SalesInvoiceID": 202,
+          "InvoicedQuantity": 9,
+          "LineTotal": 7845.57
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/source-to-ledger.md",
+      "name": "l04-shipment-date.sql",
+      "sql": "SELECT ShipmentID, ShipmentDate, DeliveryDate\nFROM Shipment\nWHERE ShipmentID = 87;",
+      "expected": [
+        {
+          "ShipmentID": 87,
+          "ShipmentDate": "2024-01-31",
+          "DeliveryDate": "2024-01-31"
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/source-to-ledger.md",
+      "name": "l04-invoice-total.sql",
+      "sql": "SELECT SalesInvoiceID, InvoiceDate, SubTotal, FreightAmount,\n       TaxAmount, GrandTotal\nFROM SalesInvoice\nWHERE SalesInvoiceID = 202;",
+      "expected": [
+        {
+          "SalesInvoiceID": 202,
+          "InvoiceDate": "2024-01-31",
+          "SubTotal": 11397.78,
+          "FreightAmount": 103,
+          "TaxAmount": 747.55,
+          "GrandTotal": 12248.33
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-customer-settlement.md",
+      "name": "l05-applications.sql",
+      "sql": "SELECT a.CashReceiptApplicationID, a.CashReceiptID,\n       r.ReceiptDate, r.Amount AS ReceiptAmount,\n       a.ApplicationDate, a.AppliedAmount\nFROM CashReceiptApplication AS a\nJOIN CashReceipt AS r ON r.CashReceiptID = a.CashReceiptID\nWHERE a.SalesInvoiceID = 202\nORDER BY a.ApplicationDate, a.CashReceiptApplicationID;",
+      "expected": [
+        {
+          "CashReceiptApplicationID": 52,
+          "CashReceiptID": 48,
+          "ReceiptDate": "2024-01-20",
+          "ReceiptAmount": 238.16,
+          "ApplicationDate": "2024-01-31",
+          "AppliedAmount": 238.16
+        },
+        {
+          "CashReceiptApplicationID": 225,
+          "CashReceiptID": 173,
+          "ReceiptDate": "2024-02-22",
+          "ReceiptAmount": 952.07,
+          "ApplicationDate": "2024-02-23",
+          "AppliedAmount": 952.07
+        },
+        {
+          "CashReceiptApplicationID": 608,
+          "CashReceiptID": 337,
+          "ReceiptDate": "2024-03-16",
+          "ReceiptAmount": 7927.21,
+          "ApplicationDate": "2024-03-16",
+          "AppliedAmount": 7927.21
+        },
+        {
+          "CashReceiptApplicationID": 1194,
+          "CashReceiptID": 528,
+          "ReceiptDate": "2024-04-14",
+          "ReceiptAmount": 7092.79,
+          "ApplicationDate": "2024-04-16",
+          "AppliedAmount": 3130.89
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-customer-settlement.md",
+      "name": "l05-as-of-balance.sql",
+      "sql": "SELECT ROUND(SUM(AppliedAmount), 2) AS AppliedThroughDate,\n       ROUND(12248.33 - SUM(AppliedAmount), 2) AS InvoiceLessApplications\nFROM CashReceiptApplication\nWHERE SalesInvoiceID = 202\n  AND ApplicationDate <= '2024-01-31';",
+      "expected": [
+        {
+          "AppliedThroughDate": 238.16,
+          "InvoiceLessApplications": 12010.17
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-customer-settlement.md",
+      "name": "l05-credit-check.sql",
+      "sql": "SELECT CreditMemoID, CreditMemoDate, GrandTotal\nFROM CreditMemo\nWHERE OriginalSalesInvoiceID = 202 OR SalesOrderID = 11\nORDER BY CreditMemoDate, CreditMemoID;",
+      "expected": []
+    },
+    {
+      "page": "docs/learn-and-practice/find-the-accounting-entries.md",
+      "name": "l06-event-postings.sql",
+      "sql": "SELECT g.GLEntryID, g.PostingDate, g.SourceDocumentType,\n       g.SourceDocumentID, g.VoucherNumber, a.AccountNumber,\n       a.AccountName, g.Debit, g.Credit\nFROM GLEntry AS g\nJOIN Account AS a ON a.AccountID = g.AccountID\nWHERE (g.SourceDocumentType = 'Shipment' AND g.SourceDocumentID = 87)\n   OR (g.SourceDocumentType = 'SalesInvoice' AND g.SourceDocumentID = 202)\n   OR (g.SourceDocumentType = 'CashReceipt' AND g.SourceDocumentID = 173)\n   OR (g.SourceDocumentType = 'CashReceiptApplication' AND g.SourceDocumentID = 225)\nORDER BY g.PostingDate, g.GLEntryID;",
+      "expected": [
+        {
+          "GLEntryID": 24487,
+          "PostingDate": "2024-01-31",
+          "SourceDocumentType": "Shipment",
+          "SourceDocumentID": 87,
+          "VoucherNumber": "SH-2024-000087",
+          "AccountNumber": 5010,
+          "AccountName": "COGS - Furniture",
+          "Debit": 1715.19,
+          "Credit": 0
+        },
+        {
+          "GLEntryID": 24488,
+          "PostingDate": "2024-01-31",
+          "SourceDocumentType": "Shipment",
+          "SourceDocumentID": 87,
+          "VoucherNumber": "SH-2024-000087",
+          "AccountNumber": 1040,
+          "AccountName": "Inventory - Finished Goods",
+          "Debit": 0,
+          "Credit": 1715.19
+        },
+        {
+          "GLEntryID": 24489,
+          "PostingDate": "2024-01-31",
+          "SourceDocumentType": "Shipment",
+          "SourceDocumentID": 87,
+          "VoucherNumber": "SH-2024-000087",
+          "AccountNumber": 5010,
+          "AccountName": "COGS - Furniture",
+          "Debit": 4270.14,
+          "Credit": 0
+        },
+        {
+          "GLEntryID": 24490,
+          "PostingDate": "2024-01-31",
+          "SourceDocumentType": "Shipment",
+          "SourceDocumentID": 87,
+          "VoucherNumber": "SH-2024-000087",
+          "AccountNumber": 1040,
+          "AccountName": "Inventory - Finished Goods",
+          "Debit": 0,
+          "Credit": 4270.14
+        },
+        {
+          "GLEntryID": 24491,
+          "PostingDate": "2024-01-31",
+          "SourceDocumentType": "Shipment",
+          "SourceDocumentID": 87,
+          "VoucherNumber": "SH-2024-000087",
+          "AccountNumber": 5050,
+          "AccountName": "Freight-Out Expense",
+          "Debit": 104.01,
+          "Credit": 0
+        },
+        {
+          "GLEntryID": 24492,
+          "PostingDate": "2024-01-31",
+          "SourceDocumentType": "Shipment",
+          "SourceDocumentID": 87,
+          "VoucherNumber": "SH-2024-000087",
+          "AccountNumber": 2040,
+          "AccountName": "Accrued Expenses",
+          "Debit": 0,
+          "Credit": 104.01
+        },
+        {
+          "GLEntryID": 98755,
+          "PostingDate": "2024-01-31",
+          "SourceDocumentType": "SalesInvoice",
+          "SourceDocumentID": 202,
+          "VoucherNumber": "SI-2024-000202",
+          "AccountNumber": 1020,
+          "AccountName": "Accounts Receivable",
+          "Debit": 12248.33,
+          "Credit": 0
+        },
+        {
+          "GLEntryID": 98756,
+          "PostingDate": "2024-01-31",
+          "SourceDocumentType": "SalesInvoice",
+          "SourceDocumentID": 202,
+          "VoucherNumber": "SI-2024-000202",
+          "AccountNumber": 4010,
+          "AccountName": "Sales Revenue - Furniture",
+          "Debit": 0,
+          "Credit": 3552.21
+        },
+        {
+          "GLEntryID": 98757,
+          "PostingDate": "2024-01-31",
+          "SourceDocumentType": "SalesInvoice",
+          "SourceDocumentID": 202,
+          "VoucherNumber": "SI-2024-000202",
+          "AccountNumber": 4010,
+          "AccountName": "Sales Revenue - Furniture",
+          "Debit": 0,
+          "Credit": 7845.57
+        },
+        {
+          "GLEntryID": 98758,
+          "PostingDate": "2024-01-31",
+          "SourceDocumentType": "SalesInvoice",
+          "SourceDocumentID": 202,
+          "VoucherNumber": "SI-2024-000202",
+          "AccountNumber": 4050,
+          "AccountName": "Freight Revenue",
+          "Debit": 0,
+          "Credit": 103
+        },
+        {
+          "GLEntryID": 98759,
+          "PostingDate": "2024-01-31",
+          "SourceDocumentType": "SalesInvoice",
+          "SourceDocumentID": 202,
+          "VoucherNumber": "SI-2024-000202",
+          "AccountNumber": 2050,
+          "AccountName": "Sales Tax Payable",
+          "Debit": 0,
+          "Credit": 747.55
+        },
+        {
+          "GLEntryID": 172832,
+          "PostingDate": "2024-02-22",
+          "SourceDocumentType": "CashReceipt",
+          "SourceDocumentID": 173,
+          "VoucherNumber": "CR-2024-000173",
+          "AccountNumber": 1010,
+          "AccountName": "Cash and Cash Equivalents",
+          "Debit": 952.07,
+          "Credit": 0
+        },
+        {
+          "GLEntryID": 172833,
+          "PostingDate": "2024-02-22",
+          "SourceDocumentType": "CashReceipt",
+          "SourceDocumentID": 173,
+          "VoucherNumber": "CR-2024-000173",
+          "AccountNumber": 2060,
+          "AccountName": "Customer Deposits and Unapplied Cash",
+          "Debit": 0,
+          "Credit": 952.07
+        },
+        {
+          "GLEntryID": 187754,
+          "PostingDate": "2024-02-23",
+          "SourceDocumentType": "CashReceiptApplication",
+          "SourceDocumentID": 225,
+          "VoucherNumber": "CR-2024-000173-APP-000225",
+          "AccountNumber": 2060,
+          "AccountName": "Customer Deposits and Unapplied Cash",
+          "Debit": 952.07,
+          "Credit": 0
+        },
+        {
+          "GLEntryID": 187755,
+          "PostingDate": "2024-02-23",
+          "SourceDocumentType": "CashReceiptApplication",
+          "SourceDocumentID": 225,
+          "VoucherNumber": "CR-2024-000173-APP-000225",
+          "AccountNumber": 1020,
+          "AccountName": "Accounts Receivable",
+          "Debit": 0,
+          "Credit": 952.07
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/find-the-accounting-entries.md",
+      "name": "l06-voucher-check.sql",
+      "sql": "SELECT SourceDocumentType, SourceDocumentID, VoucherNumber,\n       COUNT(*) AS LedgerRows,\n       ROUND(SUM(Debit), 2) AS Debits,\n       ROUND(SUM(Credit), 2) AS Credits,\n       ROUND(SUM(Debit - Credit), 2) AS Difference\nFROM GLEntry\nWHERE (SourceDocumentType = 'Shipment' AND SourceDocumentID = 87)\n   OR (SourceDocumentType = 'SalesInvoice' AND SourceDocumentID = 202)\n   OR (SourceDocumentType = 'CashReceipt' AND SourceDocumentID = 173)\n   OR (SourceDocumentType = 'CashReceiptApplication' AND SourceDocumentID = 225)\nGROUP BY SourceDocumentType, SourceDocumentID, VoucherNumber\nORDER BY SourceDocumentType, SourceDocumentID, VoucherNumber;",
+      "expected": [
+        {
+          "SourceDocumentType": "CashReceipt",
+          "SourceDocumentID": 173,
+          "VoucherNumber": "CR-2024-000173",
+          "LedgerRows": 2,
+          "Debits": 952.07,
+          "Credits": 952.07,
+          "Difference": 0
+        },
+        {
+          "SourceDocumentType": "CashReceiptApplication",
+          "SourceDocumentID": 225,
+          "VoucherNumber": "CR-2024-000173-APP-000225",
+          "LedgerRows": 2,
+          "Debits": 952.07,
+          "Credits": 952.07,
+          "Difference": 0
+        },
+        {
+          "SourceDocumentType": "SalesInvoice",
+          "SourceDocumentID": 202,
+          "VoucherNumber": "SI-2024-000202",
+          "LedgerRows": 5,
+          "Debits": 12248.33,
+          "Credits": 12248.33,
+          "Difference": 0
+        },
+        {
+          "SourceDocumentType": "Shipment",
+          "SourceDocumentID": 87,
+          "VoucherNumber": "SH-2024-000087",
+          "LedgerRows": 6,
+          "Debits": 6089.34,
+          "Credits": 6089.34,
+          "Difference": 0
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-design-time-into-billing.md",
+      "name": "l07-engagement.sql",
+      "sql": "SELECT ServiceEngagementID, EngagementNumber, CustomerID, HourlyRate\nFROM ServiceEngagement\nWHERE ServiceEngagementID = 2;",
+      "expected": [
+        {
+          "ServiceEngagementID": 2,
+          "EngagementNumber": "SE-2024-000002",
+          "CustomerID": 30,
+          "HourlyRate": 210
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-design-time-into-billing.md",
+      "name": "l07-approved-time.sql",
+      "sql": "SELECT COUNT(*) AS TimeEntries,\n       ROUND(SUM(BillableHours), 2) AS BillableHours,\n       ROUND(SUM(NonBillableHours), 2) AS NonBillableHours,\n       ROUND(SUM(ExtendedCost), 2) AS TimeCost\nFROM ServiceTimeEntry\nWHERE ServiceEngagementID = 2\n  AND WorkDate >= '2024-01-01' AND WorkDate < '2024-02-01'\n  AND ApprovedDate IS NOT NULL AND ApprovedDate <= '2024-01-31';",
+      "expected": [
+        {
+          "TimeEntries": 7,
+          "BillableHours": 32.67,
+          "NonBillableHours": 1.21,
+          "TimeCost": 937.02
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-design-time-into-billing.md",
+      "name": "l07-billing-bridge.sql",
+      "sql": "SELECT b.ServiceBillingLineID, b.BillingPeriodStartDate,\n       b.BillingPeriodEndDate, b.BilledHours, b.HourlyRate,\n       b.LineAmount, sil.SalesInvoiceLineID, sil.SalesInvoiceID,\n       sil.LineTotal, sil.ShipmentLineID\nFROM ServiceBillingLine AS b\nJOIN SalesInvoiceLine AS sil\n    ON sil.SalesInvoiceLineID = b.SalesInvoiceLineID\nWHERE b.ServiceBillingLineID = 2;",
+      "expected": [
+        {
+          "ServiceBillingLineID": 2,
+          "BillingPeriodStartDate": "2024-01-12",
+          "BillingPeriodEndDate": "2024-01-30",
+          "BilledHours": 32.67,
+          "HourlyRate": 210,
+          "LineAmount": 6860.7,
+          "SalesInvoiceLineID": 387,
+          "SalesInvoiceID": 241,
+          "LineTotal": 6860.7,
+          "ShipmentLineID": null
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/receipt-to-payable.md",
+      "name": "l08-purchase-origin.sql",
+      "sql": "SELECT r.RequisitionID, r.RequestDate, pol.POLineID,\n       po.PurchaseOrderID, po.OrderDate, pol.LineTotal\nFROM PurchaseOrderLine AS pol\nJOIN PurchaseOrder AS po ON po.PurchaseOrderID = pol.PurchaseOrderID\nJOIN PurchaseRequisition AS r ON r.RequisitionID = pol.RequisitionID\nWHERE pol.POLineID = 21074;",
+      "expected": [
+        {
+          "RequisitionID": 21330,
+          "RequestDate": "2026-09-10",
+          "POLineID": 21074,
+          "PurchaseOrderID": 16253,
+          "OrderDate": "2026-09-10",
+          "LineTotal": 8.83
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/receipt-to-payable.md",
+      "name": "l08-receipt.sql",
+      "sql": "SELECT l.GoodsReceiptLineID, l.POLineID, r.GoodsReceiptID,\n       r.ReceiptDate, l.QuantityReceived, l.ExtendedStandardCost\nFROM GoodsReceiptLine AS l\nJOIN GoodsReceipt AS r ON r.GoodsReceiptID = l.GoodsReceiptID\nWHERE l.GoodsReceiptLineID = 25479;",
+      "expected": [
+        {
+          "GoodsReceiptLineID": 25479,
+          "POLineID": 21074,
+          "GoodsReceiptID": 23913,
+          "ReceiptDate": "2026-09-27",
+          "QuantityReceived": 0.34,
+          "ExtendedStandardCost": 8.83
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/receipt-to-payable.md",
+      "name": "l08-invoice.sql",
+      "sql": "SELECT l.PILineID, l.GoodsReceiptLineID, l.LineTotal,\n       p.PurchaseInvoiceID, p.InvoiceDate, p.SubTotal,\n       p.TaxAmount, p.GrandTotal\nFROM PurchaseInvoiceLine AS l\nJOIN PurchaseInvoice AS p ON p.PurchaseInvoiceID = l.PurchaseInvoiceID\nWHERE l.GoodsReceiptLineID = 25479\nORDER BY l.PILineID;",
+      "expected": [
+        {
+          "PILineID": 36861,
+          "GoodsReceiptLineID": 25479,
+          "LineTotal": 8.83,
+          "PurchaseInvoiceID": 36461,
+          "InvoiceDate": "2026-11-29",
+          "SubTotal": 8.83,
+          "TaxAmount": 0.13,
+          "GrandTotal": 8.96
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/receipt-to-payable.md",
+      "name": "l08-payment.sql",
+      "sql": "SELECT DisbursementID, PurchaseInvoiceID, PaymentDate, Amount\nFROM DisbursementPayment\nWHERE PurchaseInvoiceID = 36461\nORDER BY PaymentDate, DisbursementID;",
+      "expected": [
+        {
+          "DisbursementID": 39645,
+          "PurchaseInvoiceID": 36461,
+          "PaymentDate": "2027-01-08",
+          "Amount": 8.96
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/manufacturing-cost-flow.md",
+      "name": "l09-work-order.sql",
+      "sql": "SELECT WorkOrderID, WorkOrderNumber, ItemID, PlannedQuantity,\n       ReleasedDate, CompletedDate, ClosedDate\nFROM WorkOrder\nWHERE WorkOrderID = 1;",
+      "expected": [
+        {
+          "WorkOrderID": 1,
+          "WorkOrderNumber": "WO-2024-000001",
+          "ItemID": 231,
+          "PlannedQuantity": 7.03,
+          "ReleasedDate": "2024-01-05",
+          "CompletedDate": "2024-01-26",
+          "ClosedDate": "2024-02-01"
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/manufacturing-cost-flow.md",
+      "name": "l09-material-issue.sql",
+      "sql": "SELECT m.MaterialIssueID, m.IssueDate, COUNT(*) AS ComponentLines,\n       ROUND(SUM(l.ExtendedStandardCost), 2) AS IssuedCost\nFROM MaterialIssue AS m\nJOIN MaterialIssueLine AS l ON l.MaterialIssueID = m.MaterialIssueID\nWHERE m.WorkOrderID = 1\nGROUP BY m.MaterialIssueID, m.IssueDate\nORDER BY m.IssueDate, m.MaterialIssueID;",
+      "expected": [
+        {
+          "MaterialIssueID": 1,
+          "IssueDate": "2024-01-17",
+          "ComponentLines": 2,
+          "IssuedCost": 754.29
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/manufacturing-cost-flow.md",
+      "name": "l09-completions.sql",
+      "sql": "SELECT p.ProductionCompletionID, p.CompletionDate,\n       l.QuantityCompleted, l.ExtendedStandardMaterialCost,\n       l.ExtendedStandardConversionCost, l.ExtendedStandardTotalCost\nFROM ProductionCompletion AS p\nJOIN ProductionCompletionLine AS l\n    ON l.ProductionCompletionID = p.ProductionCompletionID\nWHERE p.WorkOrderID = 1\nORDER BY p.CompletionDate, p.ProductionCompletionID;",
+      "expected": [
+        {
+          "ProductionCompletionID": 1,
+          "CompletionDate": "2024-01-25",
+          "QuantityCompleted": 3.92,
+          "ExtendedStandardMaterialCost": 406.7,
+          "ExtendedStandardConversionCost": 161.98,
+          "ExtendedStandardTotalCost": 568.68
+        },
+        {
+          "ProductionCompletionID": 2,
+          "CompletionDate": "2024-01-26",
+          "QuantityCompleted": 3.11,
+          "ExtendedStandardMaterialCost": 322.66,
+          "ExtendedStandardConversionCost": 128.51,
+          "ExtendedStandardTotalCost": 451.17
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/manufacturing-cost-flow.md",
+      "name": "l09-close.sql",
+      "sql": "SELECT WorkOrderCloseID, CloseDate, MaterialVarianceAmount,\n       DirectLaborVarianceAmount, OverheadVarianceAmount,\n       ConversionVarianceAmount, TotalVarianceAmount\nFROM WorkOrderClose\nWHERE WorkOrderID = 1;",
+      "expected": [
+        {
+          "WorkOrderCloseID": 1,
+          "CloseDate": "2024-02-01",
+          "MaterialVarianceAmount": 24.93,
+          "DirectLaborVarianceAmount": 6.22,
+          "OverheadVarianceAmount": 712.01,
+          "ConversionVarianceAmount": 718.23,
+          "TotalVarianceAmount": 743.16
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/manufacturing-cost-flow.md",
+      "name": "l09-labor-support.sql",
+      "sql": "SELECT LaborTimeEntryID, EmployeeID, WorkDate, RegularHours,\n       OvertimeHours, ExtendedLaborCost, ApprovedDate\nFROM LaborTimeEntry\nWHERE WorkOrderID = 1\nORDER BY WorkDate, LaborTimeEntryID;",
+      "expected": [
+        {
+          "LaborTimeEntryID": 213,
+          "EmployeeID": 17,
+          "WorkDate": "2024-01-17",
+          "RegularHours": 3.74,
+          "OvertimeHours": 0,
+          "ExtendedLaborCost": 105.99,
+          "ApprovedDate": "2024-01-17"
+        },
+        {
+          "LaborTimeEntryID": 214,
+          "EmployeeID": 18,
+          "WorkDate": "2024-01-17",
+          "RegularHours": 0.78,
+          "OvertimeHours": 0,
+          "ExtendedLaborCost": 17.48,
+          "ApprovedDate": "2024-01-17"
+        },
+        {
+          "LaborTimeEntryID": 215,
+          "EmployeeID": 19,
+          "WorkDate": "2024-01-17",
+          "RegularHours": 1.58,
+          "OvertimeHours": 0,
+          "ExtendedLaborCost": 37.49,
+          "ApprovedDate": "2024-01-17"
+        },
+        {
+          "LaborTimeEntryID": 429,
+          "EmployeeID": 20,
+          "WorkDate": "2024-01-22",
+          "RegularHours": 0.78,
+          "OvertimeHours": 0,
+          "ExtendedLaborCost": 21.33,
+          "ApprovedDate": "2024-01-22"
+        },
+        {
+          "LaborTimeEntryID": 501,
+          "EmployeeID": 21,
+          "WorkDate": "2024-01-23",
+          "RegularHours": 0.43,
+          "OvertimeHours": 0,
+          "ExtendedLaborCost": 9.6,
+          "ApprovedDate": "2024-01-23"
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-hours-into-payroll.md",
+      "name": "l10-period.sql",
+      "sql": "SELECT PayrollPeriodID, PeriodStartDate, PeriodEndDate, PayDate\nFROM PayrollPeriod\nWHERE PayrollPeriodID = 1;",
+      "expected": [
+        {
+          "PayrollPeriodID": 1,
+          "PeriodStartDate": "2024-01-01",
+          "PeriodEndDate": "2024-01-14",
+          "PayDate": "2024-01-19"
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-hours-into-payroll.md",
+      "name": "l10-approved-hours.sql",
+      "sql": "SELECT COUNT(*) AS ApprovedEntries,\n       ROUND(SUM(RegularHours), 2) AS RegularHours,\n       ROUND(SUM(OvertimeHours), 2) AS OvertimeHours\nFROM TimeClockEntry\nWHERE EmployeeID = 109 AND PayrollPeriodID = 1\n  AND ClockStatus = 'Approved';",
+      "expected": [
+        {
+          "ApprovedEntries": 10,
+          "RegularHours": 79.44,
+          "OvertimeHours": 0.09
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-hours-into-payroll.md",
+      "name": "l10-register.sql",
+      "sql": "SELECT PayrollRegisterID, EmployeeID, PayrollPeriodID,\n       GrossPay, EmployeeWithholdings, NetPay,\n       EmployerPayrollTax, EmployerBenefits,\n       ROUND(GrossPay - EmployeeWithholdings - NetPay, 2) AS NetPayCheck\nFROM PayrollRegister\nWHERE EmployeeID = 109 AND PayrollPeriodID = 1;",
+      "expected": [
+        {
+          "PayrollRegisterID": 96,
+          "EmployeeID": 109,
+          "PayrollPeriodID": 1,
+          "GrossPay": 1902.64,
+          "EmployeeWithholdings": 324.3,
+          "NetPay": 1578.34,
+          "EmployerPayrollTax": 145.55,
+          "EmployerBenefits": 92.32,
+          "NetPayCheck": 0
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-hours-into-payroll.md",
+      "name": "l10-employee-payment.sql",
+      "sql": "SELECT PayrollPaymentID, PayrollRegisterID, PaymentDate, ClearedDate\nFROM PayrollPayment\nWHERE PayrollRegisterID = 96\nORDER BY PaymentDate, PayrollPaymentID;",
+      "expected": [
+        {
+          "PayrollPaymentID": 96,
+          "PayrollRegisterID": 96,
+          "PaymentDate": "2024-01-19",
+          "ClearedDate": "2024-01-22"
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-hours-into-payroll.md",
+      "name": "l10-period-remittances.sql",
+      "sql": "SELECT PayrollLiabilityRemittanceID, LiabilityType, RemittanceDate, Amount\nFROM PayrollLiabilityRemittance\nWHERE PayrollPeriodID = 1\nORDER BY RemittanceDate, PayrollLiabilityRemittanceID;",
+      "expected": [
+        {
+          "PayrollLiabilityRemittanceID": 1,
+          "LiabilityType": "Employee Tax Withholding",
+          "RemittanceDate": "2024-01-26",
+          "Amount": 16841.58
+        },
+        {
+          "PayrollLiabilityRemittanceID": 2,
+          "LiabilityType": "Employer Payroll Tax",
+          "RemittanceDate": "2024-01-29",
+          "Amount": 9603.91
+        },
+        {
+          "PayrollLiabilityRemittanceID": 3,
+          "LiabilityType": "Benefits and Other Deductions",
+          "RemittanceDate": "2024-01-31",
+          "Amount": 11852.88
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-an-estimate-into-settlement.md",
+      "name": "l11-estimate.sql",
+      "sql": "SELECT JournalEntryID, PostingDate, EntryType, Description, TotalAmount\nFROM JournalEntry\nWHERE JournalEntryID = 9;",
+      "expected": [
+        {
+          "JournalEntryID": 9,
+          "PostingDate": "2024-01-31",
+          "EntryType": "Accrual",
+          "Description": "Month-end repairs and maintenance accrued expense for 2024-01",
+          "TotalAmount": 10039.33
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-an-estimate-into-settlement.md",
+      "name": "l11-linked-invoice.sql",
+      "sql": "SELECT l.PILineID, l.AccrualJournalEntryID, l.GoodsReceiptLineID,\n       l.LineTotal, p.PurchaseInvoiceID, p.InvoiceDate, p.GrandTotal\nFROM PurchaseInvoiceLine AS l\nJOIN PurchaseInvoice AS p ON p.PurchaseInvoiceID = l.PurchaseInvoiceID\nWHERE l.AccrualJournalEntryID = 9\nORDER BY l.PILineID;",
+      "expected": [
+        {
+          "PILineID": 40295,
+          "AccrualJournalEntryID": 9,
+          "GoodsReceiptLineID": null,
+          "LineTotal": 10019.59,
+          "PurchaseInvoiceID": 39851,
+          "InvoiceDate": "2024-03-09",
+          "GrandTotal": 10019.59
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-an-estimate-into-settlement.md",
+      "name": "l11-residual.sql",
+      "sql": "SELECT JournalEntryID, PostingDate, EntryType,\n       ReversesJournalEntryID, TotalAmount\nFROM JournalEntry\nWHERE ReversesJournalEntryID = 9\nORDER BY PostingDate, JournalEntryID;",
+      "expected": [
+        {
+          "JournalEntryID": 698,
+          "PostingDate": "2024-03-11",
+          "EntryType": "Accrual Adjustment",
+          "ReversesJournalEntryID": 9,
+          "TotalAmount": 19.74
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-an-estimate-into-settlement.md",
+      "name": "l11-payment.sql",
+      "sql": "SELECT DisbursementID, PurchaseInvoiceID, PaymentDate, Amount\nFROM DisbursementPayment\nWHERE PurchaseInvoiceID = 39851\nORDER BY PaymentDate, DisbursementID;",
+      "expected": [
+        {
+          "DisbursementID": 39818,
+          "PurchaseInvoiceID": 39851,
+          "PaymentDate": "2024-05-20",
+          "Amount": 10019.59
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/follow-an-estimate-into-settlement.md",
+      "name": "l11-adjustment-posting.sql",
+      "sql": "SELECT g.GLEntryID, a.AccountNumber, a.AccountName, g.Debit, g.Credit\nFROM GLEntry AS g\nJOIN Account AS a ON a.AccountID = g.AccountID\nWHERE g.SourceDocumentType = 'JournalEntry' AND g.SourceDocumentID = 698\nORDER BY g.GLEntryID;",
+      "expected": [
+        {
+          "GLEntryID": 2392,
+          "AccountNumber": 2040,
+          "AccountName": "Accrued Expenses",
+          "Debit": 19.74,
+          "Credit": 0
+        },
+        {
+          "GLEntryID": 2393,
+          "AccountNumber": 6120,
+          "AccountName": "Repairs and Maintenance Expense",
+          "Debit": 0,
+          "Credit": 19.74
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/turn-records-into-a-conclusion.md",
+      "name": "l12-population-check.sql",
+      "sql": "SELECT COUNT(*) AS InvoiceRows,\n       COUNT(DISTINCT SalesInvoiceID) AS DistinctInvoices,\n       ROUND(SUM(SubTotal), 2) AS InvoicedAmount\nFROM SalesInvoice\nWHERE InvoiceDate >= '2024-01-01' AND InvoiceDate < '2024-04-01';",
+      "expected": [
+        {
+          "InvoiceRows": 1355,
+          "DistinctInvoices": 1355,
+          "InvoicedAmount": 5796664.16
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/turn-records-into-a-conclusion.md",
+      "name": "l12-monthly-summary.sql",
+      "sql": "SELECT strftime('%Y-%m', InvoiceDate) AS Month,\n       COUNT(*) AS InvoiceCount,\n       ROUND(SUM(SubTotal), 2) AS InvoicedAmount\nFROM SalesInvoice\nWHERE InvoiceDate >= '2024-01-01' AND InvoiceDate < '2024-04-01'\nGROUP BY strftime('%Y-%m', InvoiceDate)\nORDER BY Month;",
+      "expected": [
+        {
+          "Month": "2024-01",
+          "InvoiceCount": 279,
+          "InvoicedAmount": 1408516.5
+        },
+        {
+          "Month": "2024-02",
+          "InvoiceCount": 512,
+          "InvoicedAmount": 2170765.25
+        },
+        {
+          "Month": "2024-03",
+          "InvoiceCount": 564,
+          "InvoicedAmount": 2217382.41
+        }
+      ]
+    },
+    {
+      "page": "docs/learn-and-practice/turn-records-into-a-conclusion.md",
+      "name": "l12-february-sample.sql",
+      "sql": "SELECT SalesInvoiceID, CustomerID, InvoiceDate, SubTotal\nFROM SalesInvoice\nWHERE InvoiceDate >= '2024-02-01' AND InvoiceDate < '2024-03-01'\nORDER BY SubTotal DESC, SalesInvoiceID\nLIMIT 5;",
+      "expected": [
+        {
+          "SalesInvoiceID": 693,
+          "CustomerID": 1,
+          "InvoiceDate": "2024-02-29",
+          "SubTotal": 30053.79
+        },
+        {
+          "SalesInvoiceID": 698,
+          "CustomerID": 138,
+          "InvoiceDate": "2024-02-29",
+          "SubTotal": 28507.31
+        },
+        {
+          "SalesInvoiceID": 696,
+          "CustomerID": 51,
+          "InvoiceDate": "2024-02-29",
+          "SubTotal": 27121.59
+        },
+        {
+          "SalesInvoiceID": 690,
+          "CustomerID": 19,
+          "InvoiceDate": "2024-02-29",
+          "SubTotal": 24101.09
+        },
+        {
+          "SalesInvoiceID": 682,
+          "CustomerID": 208,
+          "InvoiceDate": "2024-02-29",
+          "SubTotal": 23276.61
+        }
+      ]
+    },
+    {
+      "page": "docs/analytics/sql-guide.md",
+      "name": "setup-customer.sql",
+      "sql": "SELECT CustomerID, CustomerName, CustomerSegment\nFROM Customer\nWHERE CustomerID = 130;",
+      "expected": [
+        {
+          "CustomerID": 130,
+          "CustomerName": "Jones, Richardson and Beard",
+          "CustomerSegment": "Design Trade"
+        }
+      ]
+    },
+    {
+      "page": "docs/analytics/sql-guide.md",
+      "name": "setup-customer-count.sql",
+      "sql": "SELECT COUNT(*) AS CustomerRows\nFROM Customer;",
+      "expected": [
+        {
+          "CustomerRows": 220
+        }
+      ]
+    }
+  ]
+}

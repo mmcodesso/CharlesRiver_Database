@@ -1,57 +1,57 @@
 ---
 title: Start Learning with Charles River
-description: Meet the fictional home-furnishings company, download the accounting dataset, and choose a first process, exercise, or teaching pathway.
+description: Begin with the company and its people, follow their accounting processes, and then explore the evidence behind a supported business explanation.
 slug: /
 sidebar_label: Start Here
+pagination_prev: null
+pagination_next: learn-the-business/company-story
 ---
 
 # Start Here
 
-<DatasetName /> is an open teaching environment built around <CompanyName />, a fictional greater-Boston home-furnishings business. It buys merchandise, manufactures selected products, and sells hourly Design Services. Its connected records let you follow a business event through source documents, accounting recognition, analysis, and a supported decision.
+Your task is to explain what happened in a business and how its records support that explanation. A total can show that sales increased or cash decreased. Understanding the people, activities, and documents behind the total helps you explain the change and decide what to investigate next.
 
-Start with the business before the joins. You do not need to learn every table or install the generator to begin.
+<CompanyName /> is a fictional greater-Boston home-furnishings company. It buys merchandise, manufactures selected products, and provides hourly design services. You will follow a customer furnishing project and the staff roles that connect those activities.
 
-## Your First Learning Path
+<span id="your-first-learning-path"></span>
 
-1. **Meet the company.** Read [Company Story](../learn-the-business/company-story.md) to understand what it sells and how its departments depend on one another.
-2. **Follow one process.** Open [Process Flows](../learn-the-business/process-flows.md), then choose order-to-cash, procure-to-pay, or manufacturing.
-3. **Get the evidence.** Download the published teaching files below. Use the [Dataset Guide](dataset-overview.md) to identify the tables for your chosen process.
-4. **Try a focused task.** Begin with a foundational exercise in [Learn and Practice](../learn-and-practice/index.md). Keep the [SQL Guide](../analytics/sql-guide.md) or [Excel Guide](../analytics/excel-guide.md) beside your work.
-5. **Interpret and decide.** Explain the accounting meaning of your evidence before moving into an [integrated case](../analytics/cases/index.md) or a [Reports and Analytics](../analytics/index.md).
+## Begin with the Company
 
-## Download the Teaching Files
+The first reading needs **no download, installation, SQL, or prior knowledge of process diagrams**. Basic financial accounting is enough to begin. The chapters introduce business terms before database identifiers, and the diagrams have reading guidance.
 
-Choose the format your assignment uses. The published SQLite, Excel, and CSV files present the same synthetic company records in different working formats.
+Follow this sequence:
 
-| Format | Direct download | Best starting use |
-|---|---|---|
-| SQLite | <ReleaseDownloadLink type="sqlite">Download the SQLite database</ReleaseDownloadLink> | Joins, document tracing, and source-to-ledger analysis |
-| Excel | <ReleaseDownloadLink type="excel">Download the Excel workbook</ReleaseDownloadLink> | Filters, PivotTables, charts, and workbook analysis |
-| CSV | <ReleaseDownloadLink type="csv">Download the CSV package</ReleaseDownloadLink> | Importing individual tables into another analysis tool |
+1. **Meet the company.** Understand its customers, offering, and recurring staff roles.
+2. **See how the work connects.** Learn how departments pass work and information between them.
+3. **Follow the customer.** Read Order-to-Cash and Design Services to distinguish delivery, billing, and settlement.
+4. **Look behind fulfillment.** Follow purchasing and manufacturing into inventory and production.
+5. **Bring people and accounting together.** Read Payroll, then Journals and Close.
+6. **Investigate actual records.** Move into Learn and Practice when you are ready to use the data.
 
-[Downloads](downloads.md) explains the package and links to setup guidance. Work from a copy and retain the published source files for comparison.
+This is a reading sequence. In the company, purchasing, production, customer service, payroll, and finance overlap rather than waiting for each chapter's activities to finish.
 
-## Choose a Starting Point
+<span id="what-to-keep-in-mind"></span>
 
-| Your goal | Begin here | What you will produce |
-|---|---|---|
-| Understand how a sale becomes accounting evidence | [Order-to-cash exercise](../learn-and-practice/source-to-ledger.md) | A document trace and an explanation of recognition and settlement |
-| Explain purchasing and liability timing | [Receipt-to-payable exercise](../learn-and-practice/receipt-to-payable.md) | A timeline separating commitment, receipt, invoice, and payment |
-| Understand conversion and manufacturing cost | [Manufacturing cost-flow exercise](../learn-and-practice/manufacturing-cost-flow.md) | A work-order evidence map separating completion from close |
-| Read business performance before writing queries | [Reports and Analytics](../analytics/index.md) | A report interpretation grounded in its source and scope |
-| Prepare a course or module | [Instructor Adoption Guide](../teach-with-data/instructor-guide.md) | A sequenced pathway with a defined student submission |
+## Read, Explain, Then Investigate
 
-## One Company in a Wider Learning Environment
+Each process chapter gives you an ordinary business situation, the accounting consequences, and a small map of supporting records. Short concept checks let you explain the distinctions in your own words. Expand the optional sections when you need detailed fields, specialized diagrams, or an investigation.
 
-Charles River belongs to [Accounting Analytics Hub](https://accountinganalyticshub.com/). The [Accounting Analytics: An Integrated Approach textbook](https://aa.accountinganalyticshub.com/) supplies conceptual explanations and tool instruction; this site supplies the shared company, data, process evidence, practice, and cases.
+The company story is illustrative. The records are synthetic and include intentional anomalies and control exceptions for teaching. A flagged row supplies a question to investigate; its source, timing, and related evidence determine what you can conclude.
 
-The Hub's AIS and tool courses are planned resources. The materials linked on this site are available now; those future courses are not prerequisites.
+<span id="download-the-teaching-files"></span>
 
-## What to Keep in Mind
+<span id="choose-a-starting-point"></span>
 
-- The company and every record are synthetic. The data is designed for teaching, including intentional anomalies and control exceptions.
-- A flagged row is a lead for investigation. Check its source, timing, and related records before reaching a conclusion.
-- A process diagram explains the business sequence. The [Schema Reference](../reference/schema.md) identifies stored relationships; arrows in a business diagram do not automatically define a join.
-- The main operating window is 2024–2026. Some supplier payments settle in early 2027, so document your date boundaries.
+<span id="one-company-in-a-wider-learning-environment"></span>
 
-Continue with [Company Story](../learn-the-business/company-story.md), or open [Learn and Practice](../learn-and-practice/index.md) if you already know the business.
+## Keep the Resources Nearby
+
+[Why This Dataset](why-this-dataset.md) explains the value of connected records. [Downloads](downloads.md) provides the teaching files, while the [Dataset Guide](dataset-overview.md) explains how to read their tables. These supporting pages remain available throughout your work.
+
+Charles River belongs to [Accounting Analytics Hub](https://accountinganalyticshub.com/). The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) develops the analytical methods behind later investigations. The Hub's AIS and tool courses are planned resources; they are not prerequisites for this reading.
+
+Teaching a class? The [Instructor Adoption Guide](../teach-with-data/instructor-guide.md) connects the material to course preparation and assignments.
+
+## Next Steps
+
+Begin with [Company Story](../learn-the-business/company-story.md): meet the customer, the staff, and the work that will connect the chapters.

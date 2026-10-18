@@ -1,0 +1,31 @@
+{
+  "retired": {
+    "product-portfolio-and-lifecycle-case": "product-portfolio-profitability-case",
+    "pricing-and-margin-governance-case": "product-portfolio-profitability-case",
+    "demand-planning-and-replenishment-case": "manufacturing-labor-cost-case",
+    "workforce-cost-and-org-control-case": "workforce-coverage-and-attendance-case",
+    "working-capital-and-cash-conversion-case": "financial-statement-bridge-case",
+    "capex-fixed-asset-lifecycle-case": "financial-statement-bridge-case",
+    "master-data-and-workforce-audit-case": "audit-review-pack-case",
+    "attendance-control-audit-case": "audit-review-pack-case",
+    "replenishment-support-audit-case": "audit-review-pack-case",
+    "pricing-governance-audit-case": "audit-review-pack-case"
+  },
+  "changedLinks": [
+    "docs/learn-and-practice/bpmn-controls-workshop.md",
+    "docs/learn-the-business/process-flows.md",
+    "docs/processes/manual-journals-and-close.md",
+    "docs/processes/manufacturing.md",
+    "docs/processes/p2p.md",
+    "docs/processes/payroll.md",
+    "docs/teach-with-data/instructor-guide.md",
+    "src/data/bpmnModels.json"
+  ],
+  "hubAnchors": [
+    "difficulty-labels",
+    "case-matrix",
+    "learning-arcs",
+    "how-cases-fit-the-learning-path",
+    "next-steps"
+  ]
+}

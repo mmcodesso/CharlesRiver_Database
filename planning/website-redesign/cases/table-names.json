@@ -1,0 +1,330 @@
+[
+  {
+    "table": "Account",
+    "exported": "T1_Account"
+  },
+  {
+    "table": "JournalEntry",
+    "exported": "T2_JournalEntry"
+  },
+  {
+    "table": "GLEntry",
+    "exported": "T3_GLEntry"
+  },
+  {
+    "table": "Customer",
+    "exported": "T4_Customer"
+  },
+  {
+    "table": "PriceList",
+    "exported": "T5_PriceList"
+  },
+  {
+    "table": "PriceListLine",
+    "exported": "T6_PriceListLine"
+  },
+  {
+    "table": "PromotionProgram",
+    "exported": "T7_PromotionProgram"
+  },
+  {
+    "table": "PriceOverrideApproval",
+    "exported": "T8_PriceOverrideApproval"
+  },
+  {
+    "table": "SalesOrder",
+    "exported": "T9_SalesOrder"
+  },
+  {
+    "table": "SalesOrderLine",
+    "exported": "T10_SalesOrderLine"
+  },
+  {
+    "table": "ServiceEngagement",
+    "exported": "T11_ServiceEngagement"
+  },
+  {
+    "table": "ServiceEngagementAssignment",
+    "exported": "T12_ServiceEngagementAssignment"
+  },
+  {
+    "table": "ServiceTimeEntry",
+    "exported": "T13_ServiceTimeEntry"
+  },
+  {
+    "table": "Shipment",
+    "exported": "T14_Shipment"
+  },
+  {
+    "table": "ShipmentLine",
+    "exported": "T15_ShipmentLine"
+  },
+  {
+    "table": "SalesInvoice",
+    "exported": "T16_SalesInvoice"
+  },
+  {
+    "table": "SalesInvoiceLine",
+    "exported": "T17_SalesInvoiceLine"
+  },
+  {
+    "table": "ServiceBillingLine",
+    "exported": "T18_ServiceBillingLine"
+  },
+  {
+    "table": "CashReceipt",
+    "exported": "T19_CashReceipt"
+  },
+  {
+    "table": "CashReceiptApplication",
+    "exported": "T20_CashReceiptApplication"
+  },
+  {
+    "table": "SalesReturn",
+    "exported": "T21_SalesReturn"
+  },
+  {
+    "table": "SalesReturnLine",
+    "exported": "T22_SalesReturnLine"
+  },
+  {
+    "table": "CreditMemo",
+    "exported": "T23_CreditMemo"
+  },
+  {
+    "table": "CreditMemoLine",
+    "exported": "T24_CreditMemoLine"
+  },
+  {
+    "table": "CustomerRefund",
+    "exported": "T25_CustomerRefund"
+  },
+  {
+    "table": "SalesCommissionRate",
+    "exported": "T26_SalesCommissionRate"
+  },
+  {
+    "table": "SalesCommissionAccrual",
+    "exported": "T27_SalesCommissionAccrual"
+  },
+  {
+    "table": "SalesCommissionAdjustment",
+    "exported": "T28_SalesCommissionAdjustment"
+  },
+  {
+    "table": "SalesCommissionPayment",
+    "exported": "T29_SalesCommissionPayment"
+  },
+  {
+    "table": "SalesCommissionPaymentLine",
+    "exported": "T30_SalesCommissionPaymentLine"
+  },
+  {
+    "table": "Supplier",
+    "exported": "T31_Supplier"
+  },
+  {
+    "table": "PurchaseRequisition",
+    "exported": "T32_PurchaseRequisition"
+  },
+  {
+    "table": "PurchaseOrder",
+    "exported": "T33_PurchaseOrder"
+  },
+  {
+    "table": "PurchaseOrderLine",
+    "exported": "T34_PurchaseOrderLine"
+  },
+  {
+    "table": "GoodsReceipt",
+    "exported": "T35_GoodsReceipt"
+  },
+  {
+    "table": "GoodsReceiptLine",
+    "exported": "T36_GoodsReceiptLine"
+  },
+  {
+    "table": "PurchaseInvoice",
+    "exported": "T37_PurchaseInvoice"
+  },
+  {
+    "table": "PurchaseInvoiceLine",
+    "exported": "T38_PurchaseInvoiceLine"
+  },
+  {
+    "table": "DisbursementPayment",
+    "exported": "T39_DisbursementPayment"
+  },
+  {
+    "table": "FixedAsset",
+    "exported": "T40_FixedAsset"
+  },
+  {
+    "table": "FixedAssetEvent",
+    "exported": "T41_FixedAssetEvent"
+  },
+  {
+    "table": "DebtAgreement",
+    "exported": "T42_DebtAgreement"
+  },
+  {
+    "table": "DebtScheduleLine",
+    "exported": "T43_DebtScheduleLine"
+  },
+  {
+    "table": "Item",
+    "exported": "T44_Item"
+  },
+  {
+    "table": "BillOfMaterial",
+    "exported": "T45_BillOfMaterial"
+  },
+  {
+    "table": "BillOfMaterialLine",
+    "exported": "T46_BillOfMaterialLine"
+  },
+  {
+    "table": "WorkCenter",
+    "exported": "T47_WorkCenter"
+  },
+  {
+    "table": "WorkCenterCalendar",
+    "exported": "T48_WorkCenterCalendar"
+  },
+  {
+    "table": "Routing",
+    "exported": "T49_Routing"
+  },
+  {
+    "table": "RoutingOperation",
+    "exported": "T50_RoutingOperation"
+  },
+  {
+    "table": "WorkOrder",
+    "exported": "T51_WorkOrder"
+  },
+  {
+    "table": "WorkOrderOperation",
+    "exported": "T52_WorkOrderOperation"
+  },
+  {
+    "table": "WorkOrderOperationSchedule",
+    "exported": "T53_WorkOrderOperationSchedule"
+  },
+  {
+    "table": "MaterialIssue",
+    "exported": "T54_MaterialIssue"
+  },
+  {
+    "table": "MaterialIssueLine",
+    "exported": "T55_MaterialIssueLine"
+  },
+  {
+    "table": "ProductionCompletion",
+    "exported": "T56_ProductionCompletion"
+  },
+  {
+    "table": "ProductionCompletionLine",
+    "exported": "T57_ProductionCompletionLine"
+  },
+  {
+    "table": "WorkOrderClose",
+    "exported": "T58_WorkOrderClose"
+  },
+  {
+    "table": "PayrollPeriod",
+    "exported": "T59_PayrollPeriod"
+  },
+  {
+    "table": "LaborTimeEntry",
+    "exported": "T60_LaborTimeEntry"
+  },
+  {
+    "table": "ShiftDefinition",
+    "exported": "T61_ShiftDefinition"
+  },
+  {
+    "table": "EmployeeShiftAssignment",
+    "exported": "T62_EmployeeShiftAssignment"
+  },
+  {
+    "table": "EmployeeShiftRoster",
+    "exported": "T63_EmployeeShiftRoster"
+  },
+  {
+    "table": "EmployeeAbsence",
+    "exported": "T64_EmployeeAbsence"
+  },
+  {
+    "table": "OvertimeApproval",
+    "exported": "T65_OvertimeApproval"
+  },
+  {
+    "table": "TimeClockEntry",
+    "exported": "T66_TimeClockEntry"
+  },
+  {
+    "table": "TimeClockPunch",
+    "exported": "T67_TimeClockPunch"
+  },
+  {
+    "table": "AttendanceException",
+    "exported": "T68_AttendanceException"
+  },
+  {
+    "table": "PayrollRegister",
+    "exported": "T69_PayrollRegister"
+  },
+  {
+    "table": "PayrollRegisterLine",
+    "exported": "T70_PayrollRegisterLine"
+  },
+  {
+    "table": "PayrollPayment",
+    "exported": "T71_PayrollPayment"
+  },
+  {
+    "table": "PayrollLiabilityRemittance",
+    "exported": "T72_PayrollLiabilityRemittance"
+  },
+  {
+    "table": "Warehouse",
+    "exported": "T73_Warehouse"
+  },
+  {
+    "table": "Employee",
+    "exported": "T74_Employee"
+  },
+  {
+    "table": "CostCenter",
+    "exported": "T75_CostCenter"
+  },
+  {
+    "table": "Budget",
+    "exported": "T76_Budget"
+  },
+  {
+    "table": "BudgetLine",
+    "exported": "T77_BudgetLine"
+  },
+  {
+    "table": "DemandForecast",
+    "exported": "T78_DemandForecast"
+  },
+  {
+    "table": "InventoryPolicy",
+    "exported": "T79_InventoryPolicy"
+  },
+  {
+    "table": "SupplyPlanRecommendation",
+    "exported": "T80_SupplyPlanRecommendation"
+  },
+  {
+    "table": "MaterialRequirementPlan",
+    "exported": "T81_MaterialRequirementPlan"
+  },
+  {
+    "table": "RoughCutCapacityPlan",
+    "exported": "T82_RoughCutCapacityPlan"
+  }
+]

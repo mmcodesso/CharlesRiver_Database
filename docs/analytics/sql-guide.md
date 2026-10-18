@@ -1,156 +1,110 @@
 ---
-title: SQL Guide
-description: Open the accounting SQLite dataset, trace one order line with existing SQL, and submit a source-evidence map before advancing to accounting cases.
-sidebar_label: SQL Guide
+title: "Set Up SQL for the Tutorials"
+description: "Open the released SQLite database in DB Browser, run a short customer query, and save your first tutorial SQL."
+sidebar_label: "Set Up SQL"
+pagination_prev: "learn-and-practice/index"
+pagination_next: "learn-and-practice/meet-the-records"
 ---
 
-import { QueryReference } from "@site/src/components/QueryReference";
+# Set Up SQL
 
-# SQL Guide
+Your first goal is to open the released database, find a customer table, and run one short query. You do not need to create a database, install a server, or know SQL syntax beforehand.
 
-## Opening the Dataset in SQL
+<span id="opening-the-dataset-in-sql"></span>
 
-Start with a business event: an order can be entered before it is shipped or billed. Your first SQL task is to recognize those events and their source keys in a result set. You can read and run the supplied query before learning to write every join yourself.
+<span id="what-file-to-open"></span>
 
-Read the [company story](../learn-the-business/company-story.md) and [Order-to-Cash Process](../processes/o2c.md), then download the SQLite file from [Downloads](../start-here/downloads.md). Keep the published file unchanged and save query results in a separate analysis folder.
+<span id="recommended-tool-db-browser-for-sqlite"></span>
 
-## What File to Open
+<span id="how-to-open-the-dataset-in-db-browser"></span>
 
-For SQL work, start with <FileName type="sqlite" />.
+## 1. Open the Released Database
 
-This file contains the dataset tables you need for joins, filters, summaries, and document tracing.
+Download <ReleaseDownloadLink type="sqlite">the SQLite database</ReleaseDownloadLink> and keep the source file unchanged. The [Downloads page](../start-here/downloads.md) explains the release and formats.
 
-## Recommended Tool: DB Browser for SQLite
+Install [DB Browser for SQLite](https://sqlitebrowser.org/dl/), using the installer appropriate for your computer. Open it and choose **Open Database**, then select <FileName type="sqlite" />. If your tool offers a read-only opening option, use it. All tutorial queries read records.
 
-The recommended starting tool is [DB Browser for SQLite](https://sqlitebrowser.org/dl/).
+DB Browser provides both a table browser and a SQL editor. Another SQLite-compatible desktop tool can run the same queries, but menu names may differ.
 
-It works well for first-time SQLite work because it gives you:
+## 2. Browse One Table
 
-- a simple install path
-- a direct file-open workflow
-- a visible table browser
-- a built-in SQL editor
-- a result grid that is easy to review and export
+Select **Browse Data** and choose **Customer** in the table selector. Look for the column headings **CustomerID**, **CustomerName**, and **CustomerSegment**.
 
-If you are new to SQLite, start here before moving to a more advanced tool.
+One customer can have several orders, but this table describes the customer itself. Its identifier will help you recognize that customer across later tables.
 
-## How to Open the Dataset in DB Browser
+The full dataset has 82 tables. You do not need to inspect them all before beginning.
 
-1. Download and install [DB Browser for SQLite](https://sqlitebrowser.org/dl/).
-2. Open DB Browser and choose `Open Database`.
-3. Select <FileName type="sqlite" /> from the files shared for your course.
-4. Open the `Browse Data` tab and inspect a few tables such as `Customer`, `SalesInvoice`, or `GLEntry`.
-5. Open the `Execute SQL` tab so you are ready to paste a starter query.
+<span id="how-to-run-your-first-query"></span>
 
-At this point, you are ready to copy SQL from the analytics pages in the docs and run it against the dataset.
+## 3. Run Your First Query
 
-## How to Run Your First Query
+1. Open the **Execute SQL** tab.
+2. Use the copy button on the code block below, or select and copy its complete text.
+3. Paste it into an empty SQL editor tab.
+4. Choose the toolbar's **Execute all** / play control. If you have highlighted text, use the control that executes the selected statement.
+5. Read the column headings and single row in the results grid.
 
-Start with this first-pass workflow:
-
-1. Open the order-line trace below.
-2. Choose `Show SQL` and read its teaching objective and output description.
-3. Copy the SQL from the code block.
-4. Paste it into the `Execute SQL` tab in DB Browser.
-5. Run the query.
-6. Review the result grid and column names before you move on.
-
-<QueryReference
-  queryKey="cases/01_o2c_line_trace_order_shipment_invoice.sql"
-  showMetadata
-  helperText="Trace order lines into shipment and invoice evidence. Run the existing SQL without changing the dataset."
-/>
-
-## Foundation Exercise: One Order Line and Its Evidence
-
-**Context and problem.** An instructor asks you to explain whether an order line has shipment and invoice support. This is an illustrative request; select the actual line from your query result. You are establishing an evidence trail before making a revenue or collection judgment.
-
-**Learning objectives.** Identify the grain of a result row, follow header and line keys, and distinguish an order, a shipment, and an invoice. Prior knowledge: the O2C process and basic debits and credits. Tool: a SQLite reader. Source records: `SalesOrder`, `SalesOrderLine`, `Shipment`, `ShipmentLine`, `SalesInvoice`, `SalesInvoiceLine`, and `Customer`.
-
-1. Run the supplied trace query and record the file or release version you used.
-2. Select one `SalesOrderLineID` from the result. Locate every result row for that same line before interpreting a quantity or amount.
-3. Record its order key, shipment-line key, invoice-line key, available event dates, and `TraceStatus`. Keep a blank downstream key visible rather than replacing it with an assumed event.
-4. Inspect the corresponding source tables in `Browse Data`. Explain why a result row is a document-link combination and why one order line may appear more than once.
-5. Describe what the evidence establishes and which further source would be needed to assess revenue recognition or cash settlement.
-
-**Assessed deliverable.** Submit an annotated evidence table for the selected line, the query filename and scope, and a paragraph explaining the events, row grain, and one unresolved question. Assessment focuses on correct source keys and event distinctions, not the size of the order or whether you found an exception.
-
-**Interpretation and limits.** An unshipped or uninvoiced line can reflect ordinary open activity. This query does not prove customer collection, GL posting, or the reason for a delay. Do not sum repeated order-line amounts across trace rows.
-
-For applied analysis, continue with the [O2C Trace Case](cases/o2c-trace-case.md), which adds completeness, fulfillment, ledger, and settlement evidence. The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) supplies deeper guidance on analytical questions and evidence interpretation.
-
-## How to Read the Result and Keep Going
-
-After your first query runs, check four things before you write another one:
-
-- the row grain: what one row represents
-- the main dimensions: month, customer, item, cost center, or document
-- the main measures: amount, quantity, hours, or count
-- the business question: what the result explains
-
-Then move to the next layer:
-
-1. choose a second query in the same business topic
-2. open the paired case in [Cases](cases/index.md)
-3. use [Schema Reference](../reference/schema.md) when you need table and key help
-4. use [GLEntry Posting Reference](../reference/posting.md) when the question reaches the ledger
-
-The [Query Library](analysis-tracks.md) uses the same six business topics as the reports:
-
-| Business topic | What it covers |
-|---|---|
-| [Statements and Cash](analysis-tracks.md#statements-and-cash) | statements, close, working capital, cash, accruals, assets, and debt |
-| [Sales and Customers](analysis-tracks.md#sales-and-customers) | revenue, pricing, margins, customer balances, services, and commissions |
-| [Purchasing and Inventory](analysis-tracks.md#purchasing-and-inventory) | supplier settlement, receipts, inventory, and supply reliability |
-| [Production and Planning](analysis-tracks.md#production-and-planning) | forecasts, capacity, work orders, material usage, and manufacturing cost |
-| [People and Payroll](analysis-tracks.md#people-and-payroll) | workforce structure, time, payroll, labor allocation, and related controls |
-| [Controls and Exceptions](analysis-tracks.md#controls-and-exceptions) | cross-process approvals, authority, segregation of duties, and broad screening |
-
-Each query is available on the main library page, so students can inspect SQL and download the original file without opening repository folders.
-
-## Other Tools You Can Use
-
-If you already use another SQL tool, the same workflow still works:
-
-- `DBeaver`
-- `SQLiteStudio`
-- `VS Code` with a SQLite extension
-
-Open <FileName type="sqlite" />, copy a starter query from the docs, run it, and review the result. DB Browser remains the recommended first tool because it is the simplest path for most students.
-
-### Secondary Workflows
-
-If you prefer code-first work, you can also run copied starter SQL through Python or the `sqlite3` command-line tool.
-
-#### Python
-
-```python
-import sqlite3
-import pandas as pd
-
-sql = """
--- paste a starter query copied from the docs here
-SELECT *
-FROM GLEntry
-LIMIT 25;
-"""
-
-with sqlite3.connect("file:downloaded_dataset.sqlite?mode=ro", uri=True) as connection:
-    df = pd.read_sql_query(sql, connection)
-
-print(df.head())
+```sql title="setup-customer.sql"
+SELECT CustomerID, CustomerName, CustomerSegment
+FROM Customer
+WHERE CustomerID = 130;
 ```
 
-#### `sqlite3` CLI
+Expect **130**, **Jones, Richardson and Beard**, and **Design Trade**. `SELECT` chooses columns, `FROM` names the table, and `WHERE` keeps matching records. The semicolon ends the statement.
 
-```bash
-sqlite3 -readonly downloaded_dataset.sqlite
+Your result is a view of existing records. Running the query does not create a customer or modify the database.
+
+## 4. Check the File and Save Your Work
+
+Run this second query separately:
+
+```sql title="setup-customer-count.sql"
+SELECT COUNT(*) AS CustomerRows
+FROM Customer;
 ```
 
-Then paste a starter query copied from the docs into the prompt and run it directly.
+Expect **220** in release **v2027.1**. This confirms the customer-table population used by the examples; it is not a complete validation of the database.
+
+Use the SQL editor's save control to save your query text as **Lesson01.sql** in your analysis folder. Save each later lesson's statements in its own file. Keep a short note of the dataset filename and release, selected identifiers, date filters, and what each result row represents.
+
+When a lesson contains several queries, run them one at a time and inspect each result. Replace the editor text or use a fresh SQL tab to avoid accidentally interpreting the output of a different statement.
+
+<span id="how-to-read-the-result-and-keep-going"></span>
+
+## Read and Adapt the Examples {#foundation-exercise-one-order-line-and-its-evidence}
+
+The first lessons introduce selecting columns, filters, sorting, and totals. Joins appear only after you understand the keys they match.
+
+Copy the complete example first. Compare the expected row count or amount. Then make the single change requested by the practice variation.
+
+The database uses SQLite. Use the supplied syntax rather than translating examples into a different SQL dialect. Tutorials do not require `CREATE`, `UPDATE`, or `DELETE`.
+
+## If Your Result Looks Different
+
+- **“No such table”:** confirm the open file is the released database and that the table name matches the query.
+- **“No such column”:** check spelling and whether you copied the full query.
+- **No rows:** check the identifier, date boundary, and dataset version. An empty result can also be the intended answer.
+- **More rows than expected:** inspect the join keys and the meaning of one row before adding totals.
+- **A total is blank:** SQL aggregates over an empty population can return `NULL`; check the filter before treating that as zero.
+- **The wrong result appears:** run only the intended statement and check its output headings.
+
+The [Schema Reference](../reference/schema.md) provides exact fields once you need them. The [Query Library](analysis-tracks.md) provides larger investigations after the tutorials.
+
+<span id="other-tools-you-can-use"></span>
+
+<span id="secondary-workflows"></span>
+
+<span id="python"></span>
+
+<span id="sqlite3-cli"></span>
+
+<details>
+<summary>Use an existing SQLite workflow</summary>
+
+SQLiteStudio, DBeaver configured for SQLite, or an existing SQLite command-line workflow can run the examples. Keep the database as a read-only source and save query text/results separately. The tutorial's business questions and result checks stay the same. The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) provides deeper SQL explanations.
+
+</details>
 
 ## Next Steps
 
-- Browse the [Query Library](analysis-tracks.md) to choose your next business question and query set.
-- Use [Cases](cases/index.md) when you want a guided business question after the first query.
-- Use [Excel Guide](excel-guide.md) when you want to recreate a SQL result in the workbook.
+Continue to [1. Meet the Records](../learn-and-practice/meet-the-records.md?tool=sql). Keep the SQL tab selected throughout the tutorials; completing the Excel steps is optional.

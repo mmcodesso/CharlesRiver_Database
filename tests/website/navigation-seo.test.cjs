@@ -46,7 +46,7 @@ test("learning sequence is shallow and every authored doc is discoverable once",
   assert.equal(new Set(ids).size, ids.length, "A doc appears more than once in the sidebar");
   assert.deepEqual([...ids].sort(), authoredIds.sort());
   const cases = docsSidebar.find((item) => item.label === "Cases");
-  assert.equal(cases.items.length, 17);
+  assert.equal(cases.items.length, 8);
   assert.ok(cases.items.every((item) => typeof item === "string"));
   const reportIndex = docsSidebar.findIndex((item) => item.label === "Reports and Analytics");
   assert.equal(docsSidebar[reportIndex + 1].label, "Query Library");

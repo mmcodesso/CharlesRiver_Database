@@ -928,526 +928,468 @@ export const caseSupportTraceQueries = [
 ];
 
 export const caseQuerySequences = {
-  "attendance-control-audit-case": [
-    {
-      "lead": "Start with schedule and punch linkage using",
-      "queryKey": "audit/37_scheduled_without_punch_and_punch_without_schedule_review.sql"
-    },
-    {
-      "lead": "Then inspect raw punch integrity through",
-      "queryKey": "audit/40_overlapping_or_incomplete_punch_review.sql"
-    },
-    {
-      "lead": "Then test absence against worked-time evidence with",
-      "queryKey": "audit/39_absence_with_worked_time_review.sql"
-    },
-    {
-      "lead": "Then review overtime approval support using",
-      "queryKey": "audit/38_overtime_without_approval_review.sql"
-    },
-    {
-      "lead": "Finish with post-termination roster control through",
-      "queryKey": "audit/41_roster_after_termination_review.sql"
-    }
-  ],
-  "audit-review-pack-case": [
-    {
-      "lead": "Start the starter exception map with",
-      "queryKey": "audit/05_duplicate_payment_reference_review.sql"
-    },
-    {
-      "lead": "Then add payroll control evidence through",
-      "queryKey": "audit/11_payroll_control_review.sql"
-    },
-    {
-      "lead": "Then test missing routing or operation links with",
-      "queryKey": "audit/14_missing_routing_or_operation_link_review.sql"
-    },
-    {
-      "lead": "Then review operation sequence and completion evidence using",
-      "queryKey": "audit/15_operation_sequence_and_final_completion_review.sql"
-    },
-    {
-      "lead": "Then size the manufacturing audit seed pattern with",
-      "queryKey": "audit/53_released_work_orders_due_without_actual_start_summary.sql"
-    },
-    {
-      "lead": "Then trace the seeded released work orders through",
-      "queryKey": "audit/52_released_work_orders_due_without_actual_start_review.sql"
-    },
-    {
-      "lead": "Then test executive role uniqueness and control assignment with",
-      "queryKey": "audit/29_executive_role_uniqueness_and_control_assignment_review.sql"
-    },
-    {
-      "lead": "Then isolate current-state employee assignment issues with",
-      "queryKey": "audit/34_current_state_employee_assignment_review.sql"
-    },
-    {
-      "lead": "Then flag approval authority limit exceptions using",
-      "queryKey": "audit/35_approval_authority_limit_review.sql"
-    },
-    {
-      "lead": "Then test item master completeness with",
-      "queryKey": "audit/30_item_master_completeness_review.sql"
-    },
-    {
-      "lead": "Then test item status alignment through",
-      "queryKey": "audit/36_item_status_alignment_review.sql"
-    },
-    {
-      "lead": "Then trace discontinued or prelaunch item activity with",
-      "queryKey": "audit/31_discontinued_or_prelaunch_item_activity_review.sql"
-    },
-    {
-      "lead": "Then compare approval role families using",
-      "queryKey": "audit/32_approval_authority_review_by_expected_role_family.sql"
-    },
-    {
-      "lead": "Then summarize terminated employee activity by process area with",
-      "queryKey": "audit/33_terminated_employee_activity_rollup_by_process_area.sql"
-    },
-    {
-      "lead": "Then test schedule and punch mismatches through",
-      "queryKey": "audit/37_scheduled_without_punch_and_punch_without_schedule_review.sql"
-    },
-    {
-      "lead": "Then test overtime approval support with",
-      "queryKey": "audit/38_overtime_without_approval_review.sql"
-    },
-    {
-      "lead": "Then identify absence records with worked time using",
-      "queryKey": "audit/39_absence_with_worked_time_review.sql"
-    },
-    {
-      "lead": "Then inspect overlapping or incomplete punches with",
-      "queryKey": "audit/40_overlapping_or_incomplete_punch_review.sql"
-    },
-    {
-      "lead": "Then test roster rows after termination through",
-      "queryKey": "audit/41_roster_after_termination_review.sql"
-    },
-    {
-      "lead": "Then summarize time-clock concentration with",
-      "queryKey": "audit/19_time_clock_exceptions_by_employee_supervisor_work_center.sql"
-    },
-    {
-      "lead": "Then review forecast approval and override controls with",
-      "queryKey": "audit/42_forecast_approval_and_override_review.sql"
-    },
-    {
-      "lead": "Then review inactive or stale inventory policy coverage using",
-      "queryKey": "audit/43_inactive_or_stale_inventory_policy_review.sql"
-    },
-    {
-      "lead": "Then test unsupported requisitions and work orders through",
-      "queryKey": "audit/44_requisitions_and_work_orders_without_planning_support.sql"
-    },
-    {
-      "lead": "Then identify recommendations converted after need-by date with",
-      "queryKey": "audit/45_recommendation_converted_after_need_by_date_review.sql"
-    },
-    {
-      "lead": "Finish with discontinued or prelaunch planning activity through",
-      "queryKey": "audit/46_discontinued_or_prelaunch_planning_activity_review.sql"
-    }
-  ],
-  "demand-planning-and-replenishment-case": [
-    {
-      "lead": "Start with forecast demand versus actual order demand using",
-      "queryKey": "financial/23_forecast_vs_actual_demand_by_week_item_group_collection_lifecycle.sql"
-    },
-    {
-      "lead": "Then isolate systematic forecast error and bias with",
-      "queryKey": "managerial/45_forecast_error_and_bias_by_collection_style_family.sql"
-    },
-    {
-      "lead": "Then explain the recommendation driver mix through",
-      "queryKey": "managerial/46_supply_plan_driver_mix_by_collection_and_supply_mode.sql"
-    },
-    {
-      "lead": "Then measure projected availability and stockout risk using",
-      "queryKey": "managerial/42_inventory_coverage_and_projected_stockout_risk.sql"
-    },
-    {
-      "lead": "Then identify where planning pressure escalates into expedites with",
-      "queryKey": "managerial/44_expedite_pressure_by_item_family_and_month.sql"
-    },
-    {
-      "lead": "Then test recommendation conversion and follow-through with",
-      "queryKey": "financial/24_recommendation_conversion_by_type_priority_planner.sql"
-    },
-    {
-      "lead": "Finish by connecting manufactured pressure to rough-cut capacity through",
-      "queryKey": "managerial/43_rough_cut_capacity_load_vs_available_hours.sql"
-    }
-  ],
-  "financial-statement-bridge-case": [
-    {
-      "lead": "Run",
-      "queryKey": "financial/04_trial_balance_by_period.sql"
-    },
-    {
-      "lead": "Then test control-account trust with",
-      "queryKey": "financial/06_control_account_reconciliation.sql"
-    },
-    {
-      "lead": "Then separate finance-controlled journals from operating history with",
-      "queryKey": "financial/05_journal_and_close_cycle_review.sql"
-    },
-    {
-      "lead": "Then isolate retained-earnings close impact with",
-      "queryKey": "financial/16_retained_earnings_and_close_entry_impact.sql"
-    },
-    {
-      "lead": "Then validate the annual close with",
-      "queryKey": "financial/39_annual_income_to_equity_bridge.sql"
-    },
-    {
-      "lead": "If balances still leak after close, run",
-      "queryKey": "financial/40_post_close_profit_and_loss_leakage_review.sql"
-    },
-    {
-      "lead": "If the statement variance narrows into revenue, run",
-      "queryKey": "financial/42_annual_net_revenue_bridge.sql"
-    },
-    {
-      "lead": "Then isolate the invoice-level cutoff population with",
-      "queryKey": "financial/43_invoice_revenue_cutoff_exception_summary.sql"
-    },
-    {
-      "lead": "Then trace the affected invoices and revenue GL rows with",
-      "queryKey": "financial/44_invoice_revenue_cutoff_exception_trace.sql"
-    }
-  ],
-  "capex-fixed-asset-lifecycle-case": [
-    {
-      "lead": "Start with the behavior-group rollforward using",
-      "queryKey": "financial/54_fixed_asset_rollforward_by_behavior_group.sql"
-    },
-    {
-      "lead": "Then trace acquisitions, financing choices, improvements, and disposals with",
-      "queryKey": "financial/55_capex_acquisitions_financing_and_disposals.sql"
-    },
-    {
-      "lead": "Then isolate the note-financed lifecycle through",
-      "queryKey": "financial/56_debt_amortization_and_cash_impact.sql"
-    },
-    {
-      "lead": "Then connect plant depreciation back into manufacturing cost with",
-      "queryKey": "financial/17_manufacturing_cost_component_bridge.sql"
-    },
-    {
-      "lead": "Finish with the real statement and cash impact through",
-      "queryKey": "financial/33_cash_flow_statement_indirect_monthly.sql"
-    }
-  ],
-  "manufacturing-labor-cost-case": [
-    {
-      "lead": "Run",
-      "queryKey": "managerial/07_bom_standard_cost_rollup.sql"
-    },
-    {
-      "lead": "Run",
-      "queryKey": "managerial/13_unit_cost_bridge_dm_dl_varoh_fixedoh.sql"
-    },
-    {
-      "lead": "Run",
-      "queryKey": "managerial/18_work_center_activity_and_operation_hours.sql"
-    },
-    {
-      "lead": "Run",
-      "queryKey": "managerial/28_paid_hours_vs_productive_labor_by_work_center.sql"
-    },
-    {
-      "lead": "Run",
-      "queryKey": "financial/17_manufacturing_cost_component_bridge.sql"
-    }
-  ],
-  "master-data-and-workforce-audit-case": [
-    {
-      "lead": "Start with the workforce population and status baseline using",
-      "queryKey": "managerial/29_headcount_by_cost_center_job_family_status.sql"
-    },
-    {
-      "lead": "Then test post-termination downstream activity with",
-      "queryKey": "audit/27_terminated_employee_activity_review.sql"
-    },
-    {
-      "lead": "Then isolate stale current-state assignments through",
-      "queryKey": "audit/34_current_state_employee_assignment_review.sql"
-    },
-    {
-      "lead": "Then summarize approval-role concentration with",
-      "queryKey": "audit/28_approval_role_review_by_org_position.sql"
-    },
-    {
-      "lead": "Then flag authority-limit exceptions using",
-      "queryKey": "audit/35_approval_authority_limit_review.sql"
-    },
-    {
-      "lead": "Then test roster-after-termination exceptions with",
-      "queryKey": "audit/41_roster_after_termination_review.sql"
-    },
-    {
-      "lead": "Finish with overtime approval exceptions through",
-      "queryKey": "audit/38_overtime_without_approval_review.sql"
-    }
-  ],
   "o2c-trace-case": [
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "audit/01_o2c_document_chain_completeness.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/01_monthly_revenue_and_gross_margin.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/02_ar_aging_open_invoices.sql"
     },
     {
-      "lead": "Then trace commission accruals, clawbacks, and payments with",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/58_sales_commission_payable_rollforward.sql"
     },
     {
-      "lead": "If you want the exception follow-up, run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "audit/07_backorder_and_return_review.sql"
+    }
+  ],
+  "design-services-performance-case": [
+    {
+      "lead": "Compare the query’s coverage and approval criteria before interpreting its result.",
+      "queryKey": "financial/57_design_service_revenue_and_billed_hours_by_customer_month.sql"
+    },
+    {
+      "lead": "Compare the query’s coverage and approval criteria before interpreting its result.",
+      "queryKey": "managerial/52_design_service_engagement_utilization_and_labor_margin.sql"
+    },
+    {
+      "lead": "Compare the query’s coverage and approval criteria before interpreting its result.",
+      "queryKey": "audit/54_design_service_approved_vs_billed_hours_review.sql"
     }
   ],
   "p2p-accrual-settlement-case": [
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "audit/02_p2p_document_chain_completeness.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/03_ap_aging_open_invoices.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/12_accrued_expense_rollforward.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/13_accrued_vs_invoiced_vs_paid_timing.sql"
     },
     {
-      "lead": "For audit follow-up, run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "audit/23_accrued_service_settlement_exception_review.sql"
-    }
-  ],
-  "pricing-and-margin-governance-case": [
-    {
-      "lead": "Run",
-      "queryKey": "financial/25_price_realization_vs_list_by_segment_customer_region_collection_style.sql"
-    },
-    {
-      "lead": "Then separate promotion strategy from the broader pricing picture with",
-      "queryKey": "financial/26_gross_margin_impact_of_promotions_vs_nonpromotion_sales.sql"
-    },
-    {
-      "lead": "Then isolate the collection-level revenue and margin effect through",
-      "queryKey": "managerial/48_collection_revenue_margin_before_after_promotions.sql"
-    },
-    {
-      "lead": "Then show where customer-specific pricing is concentrated with",
-      "queryKey": "managerial/49_customer_specific_pricing_concentration_and_dependency.sql"
-    },
-    {
-      "lead": "Then compare override concentration and discount dispersion using",
-      "queryKey": "managerial/47_sales_rep_override_rate_and_discount_dispersion.sql"
-    },
-    {
-      "lead": "Then measure monthly price-floor pressure through",
-      "queryKey": "managerial/50_monthly_price_floor_pressure_and_override_concentration.sql"
-    },
-    {
-      "lead": "If the pricing story needs governance follow-up, run",
-      "queryKey": "audit/51_override_approval_completeness_review.sql"
-    }
-  ],
-  "pricing-governance-audit-case": [
-    {
-      "lead": "Start with price-list validity and overlap using",
-      "queryKey": "audit/48_expired_or_overlapping_price_list_review.sql"
-    },
-    {
-      "lead": "Then test promotion scope and date compliance with",
-      "queryKey": "audit/49_promotion_scope_and_date_mismatch_review.sql"
-    },
-    {
-      "lead": "Then review customer-specific price-list bypass through",
-      "queryKey": "audit/50_customer_specific_price_list_bypass_review.sql"
-    },
-    {
-      "lead": "Then inspect below-floor sales without approval using",
-      "queryKey": "audit/47_sales_below_floor_without_approval.sql"
-    },
-    {
-      "lead": "Finish with override approval completeness through",
-      "queryKey": "audit/51_override_approval_completeness_review.sql"
-    }
-  ],
-  "product-portfolio-and-lifecycle-case": [
-    {
-      "lead": "Run",
-      "queryKey": "managerial/30_sales_margin_by_collection_style_material.sql"
-    },
-    {
-      "lead": "Run",
-      "queryKey": "managerial/06_basic_product_profitability.sql"
-    },
-    {
-      "lead": "Run",
-      "queryKey": "managerial/14_absorption_vs_contribution_margin.sql"
-    },
-    {
-      "lead": "Run",
-      "queryKey": "managerial/26_returns_and_refund_impact_by_customer_and_item.sql"
     }
   ],
   "product-portfolio-profitability-case": [
     {
-      "lead": "Start by defining the portfolio population with",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/25_price_realization_vs_list_by_segment_customer_region_collection_style.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/26_gross_margin_impact_of_promotions_vs_nonpromotion_sales.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/48_collection_revenue_margin_before_after_promotions.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/49_customer_specific_pricing_concentration_and_dependency.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/47_sales_rep_override_rate_and_discount_dispersion.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/50_monthly_price_floor_pressure_and_override_concentration.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/51_override_approval_completeness_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/30_sales_margin_by_collection_style_material.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/06_basic_product_profitability.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/14_absorption_vs_contribution_margin.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/26_returns_and_refund_impact_by_customer_and_item.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "managerial/31_product_portfolio_mix_by_collection_style_lifecycle_supply_mode.sql"
     },
     {
-      "lead": "Then rank billed sales and gross margin through",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/21_revenue_and_gross_margin_by_collection_style_lifecycle_supply_mode.sql"
     },
     {
-      "lead": "Then test whether contribution margin changes the ranking with",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "managerial/32_contribution_margin_by_collection_material_lifecycle_supply_mode.sql"
     },
     {
-      "lead": "Then add the service-performance lens using",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "managerial/33_customer_service_impact_by_collection_style.sql"
     },
     {
-      "lead": "Finish with return and refund pressure through",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "managerial/35_portfolio_return_refund_impact_by_collection_lifecycle.sql"
     }
   ],
-  "replenishment-support-audit-case": [
+  "manufacturing-labor-cost-case": [
     {
-      "lead": "Start with forecast approval and override controls using",
-      "queryKey": "audit/42_forecast_approval_and_override_review.sql"
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/23_forecast_vs_actual_demand_by_week_item_group_collection_lifecycle.sql"
     },
     {
-      "lead": "Then review inventory policy coverage with",
-      "queryKey": "audit/43_inactive_or_stale_inventory_policy_review.sql"
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/45_forecast_error_and_bias_by_collection_style_family.sql"
     },
     {
-      "lead": "Then test unsupported requisitions and work orders through",
-      "queryKey": "audit/44_requisitions_and_work_orders_without_planning_support.sql"
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/46_supply_plan_driver_mix_by_collection_and_supply_mode.sql"
     },
     {
-      "lead": "Then identify late recommendation conversion with",
-      "queryKey": "audit/45_recommendation_converted_after_need_by_date_review.sql"
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/42_inventory_coverage_and_projected_stockout_risk.sql"
     },
     {
-      "lead": "Finish with discontinued or prelaunch planning activity through",
-      "queryKey": "audit/46_discontinued_or_prelaunch_planning_activity_review.sql"
-    }
-  ],
-  "workforce-cost-and-org-control-case": [
-    {
-      "lead": "Start with payroll cost concentration using",
-      "queryKey": "financial/22_payroll_and_people_cost_mix_by_cost_center_job_family_level.sql"
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/44_expedite_pressure_by_item_family_and_month.sql"
     },
     {
-      "lead": "Then add work-location labor and headcount through",
-      "queryKey": "managerial/34_labor_and_headcount_by_work_location_job_family_cost_center.sql"
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/24_recommendation_conversion_by_type_priority_planner.sql"
     },
     {
-      "lead": "Then test executive role uniqueness with",
-      "queryKey": "audit/29_executive_role_uniqueness_and_control_assignment_review.sql"
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/43_rough_cut_capacity_load_vs_available_hours.sql"
     },
     {
-      "lead": "Then evaluate expected approval role families using",
-      "queryKey": "audit/32_approval_authority_review_by_expected_role_family.sql"
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/07_bom_standard_cost_rollup.sql"
     },
     {
-      "lead": "Finish with approval concentration by organization position through",
-      "queryKey": "audit/28_approval_role_review_by_org_position.sql"
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/13_unit_cost_bridge_dm_dl_varoh_fixedoh.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/18_work_center_activity_and_operation_hours.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/28_paid_hours_vs_productive_labor_by_work_center.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/17_manufacturing_cost_component_bridge.sql"
     }
   ],
   "workforce-coverage-and-attendance-case": [
     {
-      "lead": "Start with planned load versus rostered coverage using",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/22_payroll_and_people_cost_mix_by_cost_center_job_family_level.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/34_labor_and_headcount_by_work_location_job_family_cost_center.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/29_executive_role_uniqueness_and_control_assignment_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/32_approval_authority_review_by_expected_role_family.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/28_approval_role_review_by_org_position.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "managerial/36_staffing_coverage_vs_work_center_planned_load.sql"
     },
     {
-      "lead": "Then compare rostered hours with approved worked hours through",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "managerial/37_rostered_vs_worked_hours_by_work_center_shift.sql"
     },
     {
-      "lead": "Then localize absence concentration with",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "managerial/38_absence_rate_by_work_location_job_family_month.sql"
     },
     {
-      "lead": "Then evaluate overtime response and approval coverage using",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "managerial/39_overtime_approval_coverage_and_concentration.sql"
     },
     {
-      "lead": "Finish by translating attendance drift with",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "managerial/41_late_arrival_early_departure_by_shift_department.sql"
     }
   ],
-  "working-capital-and-cash-conversion-case": [
+  "financial-statement-bridge-case": [
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/04_trial_balance_by_period.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/06_control_account_reconciliation.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/05_journal_and_close_cycle_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/16_retained_earnings_and_close_entry_impact.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/39_annual_income_to_equity_bridge.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/40_post_close_profit_and_loss_leakage_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/42_annual_net_revenue_bridge.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/43_invoice_revenue_cutoff_exception_summary.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/44_invoice_revenue_cutoff_exception_trace.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/54_fixed_asset_rollforward_by_behavior_group.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/55_capex_acquisitions_financing_and_disposals.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/56_debt_amortization_and_cash_impact.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/17_manufacturing_cost_component_bridge.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "financial/33_cash_flow_statement_indirect_monthly.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/19_working_capital_bridge_by_month.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/02_ar_aging_open_invoices.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/15_customer_deposits_and_unapplied_cash_aging.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/03_ap_aging_open_invoices.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/20_cash_conversion_timing_review.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/09_payroll_liability_rollforward.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/11_payroll_cash_payments_and_remittances.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/12_accrued_expense_rollforward.sql"
     },
     {
-      "lead": "Run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/13_accrued_vs_invoiced_vs_paid_timing.sql"
     },
     {
-      "lead": "Then isolate the sales-commission liability layer with",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/58_sales_commission_payable_rollforward.sql"
     },
     {
-      "lead": "Then compare plan to actual with",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "financial/53_budget_vs_actual_working_capital_and_cash_bridge.sql"
     },
     {
-      "lead": "If customer cash timing still needs follow-up, run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "audit/24_customer_deposits_and_unapplied_cash_exception_review.sql"
     },
     {
-      "lead": "If accrual estimate accuracy still needs follow-up, run",
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
       "queryKey": "audit/13_over_under_accrual_review.sql"
+    }
+  ],
+  "audit-review-pack-case": [
+    {
+      "lead": "Detailed invoice and payment reference groups across released history.",
+      "queryKey": "audit/26_duplicate_ap_reference_detail_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/37_scheduled_without_punch_and_punch_without_schedule_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/40_overlapping_or_incomplete_punch_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/39_absence_with_worked_time_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/38_overtime_without_approval_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/41_roster_after_termination_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/05_duplicate_payment_reference_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/11_payroll_control_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/14_missing_routing_or_operation_link_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/15_operation_sequence_and_final_completion_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/53_released_work_orders_due_without_actual_start_summary.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/52_released_work_orders_due_without_actual_start_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/29_executive_role_uniqueness_and_control_assignment_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/34_current_state_employee_assignment_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/35_approval_authority_limit_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/30_item_master_completeness_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/36_item_status_alignment_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/31_discontinued_or_prelaunch_item_activity_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/32_approval_authority_review_by_expected_role_family.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/33_terminated_employee_activity_rollup_by_process_area.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/19_time_clock_exceptions_by_employee_supervisor_work_center.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/42_forecast_approval_and_override_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/43_inactive_or_stale_inventory_policy_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/44_requisitions_and_work_orders_without_planning_support.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/45_recommendation_converted_after_need_by_date_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/46_discontinued_or_prelaunch_planning_activity_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "managerial/29_headcount_by_cost_center_job_family_status.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/27_terminated_employee_activity_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/28_approval_role_review_by_org_position.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/48_expired_or_overlapping_price_list_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/49_promotion_scope_and_date_mismatch_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/50_customer_specific_price_list_bypass_review.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/47_sales_below_floor_without_approval.sql"
+    },
+    {
+      "lead": "Optional extension; compare this query’s scope with the guided case.",
+      "queryKey": "audit/51_override_approval_completeness_review.sql"
     }
   ]
 };

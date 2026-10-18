@@ -1,0 +1,818 @@
+[
+  {
+    "file": "docs/analytics/cases/audit-review-pack-case.md",
+    "destination": "Excel — Review!B2",
+    "language": "Excel",
+    "formula": "=ROWS(PurchaseInvoiceData[PurchaseInvoiceID])"
+  },
+  {
+    "file": "docs/analytics/cases/audit-review-pack-case.md",
+    "destination": "Excel — Review!B3",
+    "language": "Excel",
+    "formula": "=ROWS(CheckPayments[DisbursementID])"
+  },
+  {
+    "file": "docs/analytics/cases/audit-review-pack-case.md",
+    "destination": "Excel — Review!B4",
+    "language": "Excel",
+    "formula": "=ROWS(Overtime[TimeClockEntryID])"
+  },
+  {
+    "file": "docs/analytics/cases/audit-review-pack-case.md",
+    "destination": "Excel — DuplicateChecks[InvoiceNumber]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@PurchaseInvoiceID],PurchaseInvoiceData[PurchaseInvoiceID],PurchaseInvoiceData[InvoiceNumber],\"No match\",0)"
+  },
+  {
+    "file": "docs/analytics/cases/audit-review-pack-case.md",
+    "destination": "Excel — DuplicateChecks[InvoiceGrandTotal]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@PurchaseInvoiceID],PurchaseInvoiceData[PurchaseInvoiceID],PurchaseInvoiceData[GrandTotal],\"No match\",0)"
+  },
+  {
+    "file": "docs/analytics/cases/audit-review-pack-case.md",
+    "destination": "Excel — OvertimeReview[HoursTest]",
+    "language": "Excel",
+    "formula": "=IF([@MatchedApprovalID]=\"\",\"Missing linked approval\",IF([@ApprovedHours]<[@OvertimeHours],\"Hours exceed approval\",\"Hours supported\"))"
+  },
+  {
+    "file": "docs/analytics/cases/design-services-performance-case.md",
+    "destination": "Excel — TimeData[HourlyRate]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@ServiceEngagementID],Engagements[ServiceEngagementID],Engagements[HourlyRate],\"No match\",0)"
+  },
+  {
+    "file": "docs/analytics/cases/design-services-performance-case.md",
+    "destination": "Excel — TimeData[WorkMonth]",
+    "language": "Excel",
+    "formula": "=DATE(YEAR([@WorkDate]),MONTH([@WorkDate]),1)"
+  },
+  {
+    "file": "docs/analytics/cases/design-services-performance-case.md",
+    "destination": "Excel — TimeData[ApprovedBillable]",
+    "language": "Excel",
+    "formula": "=IF(AND(ISNUMBER([@ApprovedDate]),[@ApprovedDate]<=DATE(2024,3,31)),[@BillableHours],0)"
+  },
+  {
+    "file": "docs/analytics/cases/design-services-performance-case.md",
+    "destination": "Excel — Billing[SalesInvoiceID]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@SalesInvoiceLineID],InvoiceLines[SalesInvoiceLineID],InvoiceLines[SalesInvoiceID],\"No match\",0)"
+  },
+  {
+    "file": "docs/analytics/cases/design-services-performance-case.md",
+    "destination": "Excel — Billing[InvoiceDate]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@SalesInvoiceID],Invoices[SalesInvoiceID],Invoices[InvoiceDate],\"No match\",0)"
+  },
+  {
+    "file": "docs/analytics/cases/design-services-performance-case.md",
+    "destination": "Excel — Billing[CoveredBillable]",
+    "language": "Excel",
+    "formula": "=SUMIFS(TimeData[BillableHours],TimeData[ServiceEngagementID],[@ServiceEngagementID],TimeData[WorkDate],\">=\"&[@BillingPeriodStartDate],TimeData[WorkDate],\"<=\"&[@BillingPeriodEndDate])"
+  },
+  {
+    "file": "docs/analytics/cases/design-services-performance-case.md",
+    "destination": "Excel — Billing[HoursApprovedByInvoice]",
+    "language": "Excel",
+    "formula": "=SUMIFS(TimeData[BillableHours],TimeData[ServiceEngagementID],[@ServiceEngagementID],TimeData[WorkDate],\">=\"&[@BillingPeriodStartDate],TimeData[WorkDate],\"<=\"&[@BillingPeriodEndDate],TimeData[ApprovedDate],\">0\",TimeData[ApprovedDate],\"<=\"&[@InvoiceDate])"
+  },
+  {
+    "file": "docs/analytics/cases/design-services-performance-case.md",
+    "destination": "Excel — Billing[HoursDifference]",
+    "language": "Excel",
+    "formula": "=ROUND([@BilledHours]-[@HoursApprovedByInvoice],2)"
+  },
+  {
+    "file": "docs/analytics/cases/design-services-performance-case.md",
+    "destination": "Excel — Billing[WorkMonth]",
+    "language": "Excel",
+    "formula": "=DATE(YEAR([@BillingPeriodStartDate]),MONTH([@BillingPeriodStartDate]),1)"
+  },
+  {
+    "file": "docs/analytics/cases/design-services-performance-case.md",
+    "destination": "Excel — Review!B2",
+    "language": "Excel",
+    "formula": "=SUM(TimeData[BillableHours])/(SUM(TimeData[BillableHours])+SUM(TimeData[NonBillableHours]))"
+  },
+  {
+    "file": "docs/analytics/cases/design-services-performance-case.md",
+    "destination": "Excel — Review!B3",
+    "language": "Excel",
+    "formula": "=SUM(Billing[LineAmount])-SUM(TimeData[ExtendedCost])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Power Query — LedgerHistory / DebitNet",
+    "language": "Power Query",
+    "formula": "[Debit]-[Credit]"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Power Query — LedgerHistory / OpeningDebitNet",
+    "language": "Power Query",
+    "formula": "if [PostingDate] < #date(2026,10,1) then [DebitNet] else 0"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Power Query — LedgerHistory / QuarterDebitNet",
+    "language": "Power Query",
+    "formula": "if [PostingDate] >= #date(2026,10,1) then [DebitNet] else 0"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Rollforward[Check]",
+    "language": "Excel",
+    "formula": "=ROUND([@OpeningDebitNet]+[@QuarterDebitNet]-[@ClosingDebitNet],2)"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Review!B2",
+    "language": "Excel",
+    "formula": "=SUM(Rollforward[OpeningDebitNet])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Review!B3",
+    "language": "Excel",
+    "formula": "=SUM(Rollforward[QuarterDebitNet])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Review!B4",
+    "language": "Excel",
+    "formula": "=SUM(Rollforward[ClosingDebitNet])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Rollforward[NormalClosing]",
+    "language": "Excel",
+    "formula": "=IF([@NormalBalance]=\"Credit\",-[@ClosingDebitNet],[@ClosingDebitNet])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Power Query — ProfitDetail / JournalKey",
+    "language": "Power Query",
+    "formula": "if [SourceDocumentType] = \"JournalEntry\" then [SourceDocumentID] else null"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Power Query — ProfitDetail / ProfitAmount",
+    "language": "Power Query",
+    "formula": "[Credit]-[Debit]"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Power Query — Bridge effects / BridgeEffect",
+    "language": "Power Query",
+    "formula": "[Credit]-[Debit]"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Power Query — Bridge effects / NonzeroEffect",
+    "language": "Power Query",
+    "formula": "Number.Round(Number.Abs([BridgeEffect]),2) > 0"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Review!B8",
+    "language": "Excel",
+    "formula": "=SUM(ProfitSummary[ProfitAmount])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Review!B9",
+    "language": "Excel",
+    "formula": "=SUM(B8,BridgeEffects[BridgeEffect])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Review!B10",
+    "language": "Excel",
+    "formula": "=SUM(CashActivity[DebitNet])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Review!B11",
+    "language": "Excel",
+    "formula": "=ROUND(B9-B10,2)"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Power Query — Selected liability trace / AbsoluteAmount",
+    "language": "Power Query",
+    "formula": "Number.Abs([DebitNet])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Power Query — Closing journal detail / DebitNet",
+    "language": "Power Query",
+    "formula": "[Debit]-[Credit]"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Power Query — Full-year performance / ProfitAmount",
+    "language": "Power Query",
+    "formula": "[Credit]-[Debit]"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — FixedAssetData[MonthlyDepreciation]",
+    "language": "Excel",
+    "formula": "=ROUND(([@OriginalCost]-[@ResidualValue])/[@UsefulLifeMonths],2)"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Review!B20",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(109,DebtScheduleLineData[PrincipalAmount])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Review!B21",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(109,DebtScheduleLineData[InterestAmount])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Review!B22",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(109,DebtScheduleLineData[PaymentAmount])"
+  },
+  {
+    "file": "docs/analytics/cases/financial-statement-bridge-case.md",
+    "destination": "Excel — Review!B23",
+    "language": "Excel",
+    "formula": "=ROUND(B20+B21-B22,2)"
+  },
+  {
+    "file": "docs/analytics/cases/manufacturing-labor-cost-case.md",
+    "destination": "Excel — Review!B2",
+    "language": "Excel",
+    "formula": "=ROWS(Orders[WorkOrderID])"
+  },
+  {
+    "file": "docs/analytics/cases/manufacturing-labor-cost-case.md",
+    "destination": "Excel — Orders[CompletedByCutoff]",
+    "language": "Excel",
+    "formula": "=IF(AND(ISNUMBER([@CompletedDate]),[@CompletedDate]<=DATE(2024,2,29)),1,0)"
+  },
+  {
+    "file": "docs/analytics/cases/manufacturing-labor-cost-case.md",
+    "destination": "Excel — Orders[ClosedByCutoff]",
+    "language": "Excel",
+    "formula": "=IF(AND(ISNUMBER([@ClosedDate]),[@ClosedDate]<=DATE(2024,2,29)),1,0)"
+  },
+  {
+    "file": "docs/analytics/cases/manufacturing-labor-cost-case.md",
+    "destination": "Excel — Orders[MissingPlanLink]",
+    "language": "Excel",
+    "formula": "=IF([@SupplyPlanRecommendationID]=\"\",1,0)"
+  },
+  {
+    "file": "docs/analytics/cases/manufacturing-labor-cost-case.md",
+    "destination": "Excel — CostBridge[AbsVariance]",
+    "language": "Excel",
+    "formula": "=IF([@TotalVariance]=\"\",\"\",ABS([@TotalVariance]))"
+  },
+  {
+    "file": "docs/analytics/cases/manufacturing-labor-cost-case.md",
+    "destination": "Excel — CostBridge[VariancePerCompletedUnit]",
+    "language": "Excel",
+    "formula": "=IF(OR([@TotalVariance]=\"\",[@CompletedQty]<=0),\"\",[@TotalVariance]/[@CompletedQty])"
+  },
+  {
+    "file": "docs/analytics/cases/manufacturing-labor-cost-case.md",
+    "destination": "Power Query — Daily capacity / AboveCapacity",
+    "language": "Power Query",
+    "formula": "if [ScheduledHours] > [AvailableHours] then 1 else 0"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Fulfillment[OrderedLessShipped]",
+    "language": "Excel",
+    "formula": "=ROUND([@Quantity]-[@Shipped],2)"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Fulfillment[ShippedLessBilled]",
+    "language": "Excel",
+    "formula": "=ROUND([@Shipped]-[@Billed],2)"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Review!B4",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(103,Invoices[SalesInvoiceID])"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Review!B5",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(109,Invoices[GrandTotal])"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Applications[ReceiptDate]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@CashReceiptID],Receipts[CashReceiptID],Receipts[ReceiptDate],\"No match\",0)"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Applications[ReceiptAmount]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@CashReceiptID],Receipts[CashReceiptID],Receipts[Amount],\"No match\",0)"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Review!B2 — first cutoff",
+    "language": "Excel",
+    "formula": "=DATE(2024,3,31)"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Invoices[Applied]",
+    "language": "Excel",
+    "formula": "=SUMIFS(Applications[AppliedAmount],Applications[SalesInvoiceID],[@SalesInvoiceID],Applications[ApplicationDate],\"<=\"&Review!$B$2)"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Invoices[Credited]",
+    "language": "Excel",
+    "formula": "=SUMIFS(Credits[GrandTotal],Credits[OriginalSalesInvoiceID],[@SalesInvoiceID],Credits[CreditMemoDate],\"<=\"&Review!$B$2)"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Invoices[Remaining]",
+    "language": "Excel",
+    "formula": "=ROUND([@GrandTotal]-[@Applied]-[@Credited],2)"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Review!B6",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(109,Invoices[Remaining])"
+  },
+  {
+    "file": "docs/analytics/cases/o2c-trace-case.md",
+    "destination": "Excel — Review!B2 — second cutoff",
+    "language": "Excel",
+    "formula": "=DATE(2024,4,30)"
+  },
+  {
+    "file": "docs/analytics/cases/p2p-accrual-settlement-case.md",
+    "destination": "Excel — GoodsInvoices[PaidMarch]",
+    "language": "Excel",
+    "formula": "=SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],[@PurchaseInvoiceID],Payments[PaymentDate],\"<=\"&DATE(2024,3,31))"
+  },
+  {
+    "file": "docs/analytics/cases/p2p-accrual-settlement-case.md",
+    "destination": "Excel — GoodsInvoices[PaidJune]",
+    "language": "Excel",
+    "formula": "=SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],[@PurchaseInvoiceID],Payments[PaymentDate],\"<=\"&DATE(2024,6,30))"
+  },
+  {
+    "file": "docs/analytics/cases/p2p-accrual-settlement-case.md",
+    "destination": "Power Query — GoodsLiability / LiabilityChange",
+    "language": "Power Query",
+    "formula": "[Credit]-[Debit]"
+  },
+  {
+    "file": "docs/analytics/cases/p2p-accrual-settlement-case.md",
+    "destination": "Excel — Obligations[LiabilityBalance]",
+    "language": "Excel",
+    "formula": "=SUMIFS(GoodsLiability[LiabilityChange],GoodsLiability[AccountNumber],[@AccountNumber],GoodsLiability[PostingDate],\"<=\"&[@AsOf])"
+  },
+  {
+    "file": "docs/analytics/cases/p2p-accrual-settlement-case.md",
+    "destination": "Excel — EstimateReview[EstimateLessInvoice]",
+    "language": "Excel",
+    "formula": "=ROUND([@TotalAmount]-[@LineTotal],2)"
+  },
+  {
+    "file": "docs/analytics/cases/p2p-accrual-settlement-case.md",
+    "destination": "Excel — Review!B8",
+    "language": "Excel",
+    "formula": "=SUMIFS(AccrualLedger[Credit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,3,31))-SUMIFS(AccrualLedger[Debit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,3,31))"
+  },
+  {
+    "file": "docs/analytics/cases/p2p-accrual-settlement-case.md",
+    "destination": "Excel — Review!B9",
+    "language": "Excel",
+    "formula": "=SUMIFS(AccrualLedger[Credit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,6,30))-SUMIFS(AccrualLedger[Debit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,6,30))"
+  },
+  {
+    "file": "docs/analytics/cases/p2p-accrual-settlement-case.md",
+    "destination": "Excel — Review!B10",
+    "language": "Excel",
+    "formula": "=SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39851)+SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39861)+SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39872)"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Excel — ProductLines[ListValue]",
+    "language": "Excel",
+    "formula": "=[@Quantity]*[@BaseListPrice]"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Excel — ProductLines[CurrentStandardCost]",
+    "language": "Excel",
+    "formula": "=[@Quantity]*[@StandardCost]"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Excel — ProductReview[Realization]",
+    "language": "Excel",
+    "formula": "=IF([@ListValue]=0,NA(),[@LineTotal]/[@ListValue])"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Excel — ProductReview[StandardMargin]",
+    "language": "Excel",
+    "formula": "=[@LineTotal]-[@CurrentStandardCost]"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Excel — ProductReview[StandardMarginPct]",
+    "language": "Excel",
+    "formula": "=IF([@LineTotal]=0,NA(),[@StandardMargin]/[@LineTotal])"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Excel — ProductLines[ApprovedUnitPrice]",
+    "language": "Excel",
+    "formula": "=IF([@PriceOverrideApprovalID]=\"\",\"\",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ApprovedUnitPrice],\"No match\",0))"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Excel — ProductLines[OverrideApprovedDate]",
+    "language": "Excel",
+    "formula": "=IF([@PriceOverrideApprovalID]=\"\",\"\",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ApprovedDate],\"No match\",0))"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Excel — ProductLines[OverrideReason]",
+    "language": "Excel",
+    "formula": "=IF([@PriceOverrideApprovalID]=\"\",\"\",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ReasonCode],\"No match\",0))"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Excel — ProductLines[SalesOrderID]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@SalesOrderLineID],SalesOrderLineData[SalesOrderLineID],SalesOrderLineData[SalesOrderID],\"No match\",0)"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Excel — ProductLines[OrderDate]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@SalesOrderID],SalesOrderData[SalesOrderID],SalesOrderData[OrderDate],\"No match\",0)"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Power Query — Delivery summary / MissingDeliveryDate",
+    "language": "Power Query",
+    "formula": "if [DeliveryDate] = null then 1 else 0"
+  },
+  {
+    "file": "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "destination": "Power Query — Delivery summary / DeliveredAfterRequested",
+    "language": "Power Query",
+    "formula": "if [DeliveryDate] = null or [RequestedDeliveryDate] = null then 0 else if [DeliveryDate] > [RequestedDeliveryDate] then 1 else 0"
+  },
+  {
+    "file": "docs/analytics/cases/workforce-coverage-and-attendance-case.md",
+    "destination": "Excel — PayBridge[PayCheck]",
+    "language": "Excel",
+    "formula": "=ROUND([@GrossPay]-[@EmployeeWithholdings]-[@NetPay],2)"
+  },
+  {
+    "file": "docs/analytics/cases/workforce-coverage-and-attendance-case.md",
+    "destination": "Excel — PayBridge[RecordedEmployerCost]",
+    "language": "Excel",
+    "formula": "=[@GrossPay]+[@EmployerPayrollTax]+[@EmployerBenefits]"
+  },
+  {
+    "file": "docs/analytics/cases/workforce-coverage-and-attendance-case.md",
+    "destination": "Excel — Review!B13",
+    "language": "Excel",
+    "formula": "=SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Employee Tax Withholding\")"
+  },
+  {
+    "file": "docs/analytics/cases/workforce-coverage-and-attendance-case.md",
+    "destination": "Excel — Review!B14",
+    "language": "Excel",
+    "formula": "=SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Employer Payroll Tax\")"
+  },
+  {
+    "file": "docs/analytics/cases/workforce-coverage-and-attendance-case.md",
+    "destination": "Excel — Review!B15",
+    "language": "Excel",
+    "formula": "=SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Benefits Deduction\")+SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Employer Benefits\")"
+  },
+  {
+    "file": "docs/learn-and-practice/connect-the-records.md",
+    "destination": "Destination in adjacent instruction",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@CustomerID],CustomerData[CustomerID],CustomerData[CustomerName],\"No match\",0)"
+  },
+  {
+    "file": "docs/learn-and-practice/connect-the-records.md",
+    "destination": "Destination in adjacent instruction",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@ItemID],ItemData[ItemID],ItemData[ItemName],\"No match\",0)"
+  },
+  {
+    "file": "docs/learn-and-practice/connect-the-records.md",
+    "destination": "Excel — OrderLineData[SupplyMode]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@ItemID],ItemData[ItemID],ItemData[SupplyMode],\"No match\",0)"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Destination in adjacent instruction",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@AccountID],AccountData[AccountID],AccountData[AccountName],\"No match\",0)"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!B2",
+    "language": "Excel",
+    "formula": "=SUM(ShipmentGL[Debit])"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!C2",
+    "language": "Excel",
+    "formula": "=SUM(ShipmentGL[Credit])"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!D2",
+    "language": "Excel",
+    "formula": "=ROUND(B2-C2,2)"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!B3",
+    "language": "Excel",
+    "formula": "=SUM(InvoiceGL[Debit])"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!C3",
+    "language": "Excel",
+    "formula": "=SUM(InvoiceGL[Credit])"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!D3",
+    "language": "Excel",
+    "formula": "=ROUND(B3-C3,2)"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!B4",
+    "language": "Excel",
+    "formula": "=SUM(ReceiptGL[Debit])"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!C4",
+    "language": "Excel",
+    "formula": "=SUM(ReceiptGL[Credit])"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!D4",
+    "language": "Excel",
+    "formula": "=ROUND(B4-C4,2)"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!B5",
+    "language": "Excel",
+    "formula": "=SUM(ApplicationGL[Debit])"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!C5",
+    "language": "Excel",
+    "formula": "=SUM(ApplicationGL[Credit])"
+  },
+  {
+    "file": "docs/learn-and-practice/find-the-accounting-entries.md",
+    "destination": "Excel — Notes!D5",
+    "language": "Excel",
+    "formula": "=ROUND(B5-C5,2)"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-an-estimate-into-settlement.md",
+    "destination": "Excel — Notes!B2",
+    "language": "Excel",
+    "formula": "=XLOOKUP(9,JournalData[JournalEntryID],JournalData[TotalAmount],\"No match\",0)-SUM(PILineData[LineTotal])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-an-estimate-into-settlement.md",
+    "destination": "Excel — AdjustmentGL[AccountName]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@AccountID],AccountData[AccountID],AccountData[AccountName],\"No match\",0)"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-an-estimate-into-settlement.md",
+    "destination": "Excel — Notes!B4",
+    "language": "Excel",
+    "formula": "=SUM(AdjustmentGL[Debit])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-an-estimate-into-settlement.md",
+    "destination": "Excel — Notes!B5",
+    "language": "Excel",
+    "formula": "=SUM(AdjustmentGL[Credit])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-customer-settlement.md",
+    "destination": "Destination in adjacent instruction",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@CashReceiptID],ReceiptData[CashReceiptID],ReceiptData[ReceiptDate],\"No match\",0)"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-customer-settlement.md",
+    "destination": "Excel — ApplicationData[ReceiptAmount]",
+    "language": "Excel",
+    "formula": "=XLOOKUP([@CashReceiptID],ReceiptData[CashReceiptID],ReceiptData[Amount],\"No match\",0)"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-customer-settlement.md",
+    "destination": "Excel — Notes!A2",
+    "language": "Excel",
+    "formula": "=DATE(2024,1,31)"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-customer-settlement.md",
+    "destination": "Excel — Notes!A3",
+    "language": "Excel",
+    "formula": "=DATE(2024,2,29)"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-customer-settlement.md",
+    "destination": "Destination in adjacent instruction",
+    "language": "Excel",
+    "formula": "=SUMIFS(ApplicationData[AppliedAmount],ApplicationData[ApplicationDate],\"<=\"&A2)"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-customer-settlement.md",
+    "destination": "Excel — Notes!C2",
+    "language": "Excel",
+    "formula": "=$D$1-B2"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-design-time-into-billing.md",
+    "destination": "Excel — Notes!B2",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(103,ServiceTimeData[ServiceTimeEntryID])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-design-time-into-billing.md",
+    "destination": "Excel — Notes!B3",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(109,ServiceTimeData[BillableHours])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-design-time-into-billing.md",
+    "destination": "Excel — Notes!B4",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(109,ServiceTimeData[NonBillableHours])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-design-time-into-billing.md",
+    "destination": "Excel — Notes!B5",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(109,ServiceTimeData[ExtendedCost])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-design-time-into-billing.md",
+    "destination": "Excel — Notes!B7",
+    "language": "Excel",
+    "formula": "=SUMPRODUCT(BillingData[BilledHours],BillingData[HourlyRate])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-hours-into-payroll.md",
+    "destination": "Excel — Notes!B2",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(103,TimeData[TimeClockEntryID])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-hours-into-payroll.md",
+    "destination": "Excel — Notes!B3",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(109,TimeData[RegularHours])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-hours-into-payroll.md",
+    "destination": "Excel — Notes!B4",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(109,TimeData[OvertimeHours])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-hours-into-payroll.md",
+    "destination": "Excel — Notes!B6",
+    "language": "Excel",
+    "formula": "=SUM(RegisterData[GrossPay])-SUM(RegisterData[EmployeeWithholdings])"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-hours-into-payroll.md",
+    "destination": "Excel — Notes!B7",
+    "language": "Excel",
+    "formula": "=ROUND(B6-SUM(RegisterData[NetPay]),2)"
+  },
+  {
+    "file": "docs/learn-and-practice/follow-hours-into-payroll.md",
+    "destination": "Excel — Notes!B8",
+    "language": "Excel",
+    "formula": "=SUM(RegisterData[GrossPay])+SUM(RegisterData[EmployerPayrollTax])+SUM(RegisterData[EmployerBenefits])"
+  },
+  {
+    "file": "docs/learn-and-practice/manufacturing-cost-flow.md",
+    "destination": "Excel — Notes!B2",
+    "language": "Excel",
+    "formula": "=SUM(IssueLineData[ExtendedStandardCost])"
+  },
+  {
+    "file": "docs/learn-and-practice/manufacturing-cost-flow.md",
+    "destination": "Excel — Notes!B3",
+    "language": "Excel",
+    "formula": "=SUM(CompletionTrace[QuantityCompleted])"
+  },
+  {
+    "file": "docs/learn-and-practice/manufacturing-cost-flow.md",
+    "destination": "Excel — Notes!B4",
+    "language": "Excel",
+    "formula": "=SUM(CompletionTrace[ExtendedStandardMaterialCost])"
+  },
+  {
+    "file": "docs/learn-and-practice/manufacturing-cost-flow.md",
+    "destination": "Excel — Notes!B5",
+    "language": "Excel",
+    "formula": "=SUM(CompletionTrace[ExtendedStandardConversionCost])"
+  },
+  {
+    "file": "docs/learn-and-practice/manufacturing-cost-flow.md",
+    "destination": "Excel — Notes!B6",
+    "language": "Excel",
+    "formula": "=SUM(CompletionTrace[ExtendedStandardTotalCost])"
+  },
+  {
+    "file": "docs/learn-and-practice/manufacturing-cost-flow.md",
+    "destination": "Excel — Notes!B7",
+    "language": "Excel",
+    "formula": "=SUM(CloseData[MaterialVarianceAmount])+SUM(CloseData[ConversionVarianceAmount])"
+  },
+  {
+    "file": "docs/learn-and-practice/manufacturing-cost-flow.md",
+    "destination": "Excel — Notes!B8",
+    "language": "Excel",
+    "formula": "=SUM(CloseData[TotalVarianceAmount])"
+  },
+  {
+    "file": "docs/learn-and-practice/manufacturing-cost-flow.md",
+    "destination": "Excel — Notes!B10",
+    "language": "Excel",
+    "formula": "=SUM(LaborData[ExtendedLaborCost])"
+  },
+  {
+    "file": "docs/learn-and-practice/read-an-order.md",
+    "destination": "Excel — Notes!B2",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(103,OrderLineData[SalesOrderLineID])"
+  },
+  {
+    "file": "docs/learn-and-practice/read-an-order.md",
+    "destination": "Excel — Notes!B3",
+    "language": "Excel",
+    "formula": "=SUBTOTAL(109,OrderLineData[LineTotal])"
+  },
+  {
+    "file": "docs/learn-and-practice/turn-records-into-a-conclusion.md",
+    "destination": "Excel — Notes!B2",
+    "language": "Excel",
+    "formula": "=ROWS(InvoiceData[SalesInvoiceID])"
+  },
+  {
+    "file": "docs/learn-and-practice/turn-records-into-a-conclusion.md",
+    "destination": "Excel — Notes!B3",
+    "language": "Excel",
+    "formula": "=SUM(InvoiceData[SubTotal])"
+  },
+  {
+    "file": "docs/learn-and-practice/turn-records-into-a-conclusion.md",
+    "destination": "Excel — Notes!B4",
+    "language": "Excel",
+    "formula": "=ROWS(UNIQUE(InvoiceData[SalesInvoiceID]))"
+  },
+  {
+    "file": "docs/learn-and-practice/turn-records-into-a-conclusion.md",
+    "destination": "Excel — InvoiceData[MonthStart]",
+    "language": "Excel",
+    "formula": "=DATE(YEAR([@InvoiceDate]),MONTH([@InvoiceDate]),1)"
+  }
+]

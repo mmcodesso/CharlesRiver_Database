@@ -1,6 +1,8 @@
 ---
 title: BPMN Process and Internal Control Workshop
-description: Interpret Charles River BPMN models, trace business activities to actual database evidence, and propose testable controls without assuming a diagram proves operating effectiveness.
+description: Extend a completed tutorial trace into a process handoff, evidence map, and proposed control with a testable assessment plan.
+pagination_prev: learn-and-practice/turn-records-into-a-conclusion
+pagination_next: analytics/cases/index
 slug: /learn-and-practice/bpmn-controls-workshop
 sidebar_label: BPMN and Controls Workshop
 ---
@@ -11,9 +13,11 @@ import { QueryReference } from "@site/src/components/QueryReference";
 
 ## Context and Problem
 
-**Illustrative teaching scenario.** A process review team at <CompanyName /> needs to explain how work moves between departments and what accounting evidence supports each handoff. The team also wants recommendations for stronger controls. This request is a classroom setting; it does not identify a particular transaction, establish a control failure, or supply the review's conclusion.
+You have followed actual records through a business process. Now return to one handoff: what could prevent it from achieving its purpose, and which evidence would help you assess that risk?
 
-Begin with the company and its business need. Read a BPMN model to identify activities and responsibilities, compare the process page's Mermaid view of information, and then investigate records in your assigned release. Keep the model's teaching roles, stored transaction evidence, and your proposed controls distinct.
+This optional workshop starts from your completed [goods-sale trace](source-to-ledger.md), [purchase investigation](receipt-to-payable.md), or [manufacturing investigation](manufacturing-cost-flow.md). Bring the identifiers, dates, result checks, and limitations you already recorded. You do not need to select another transaction before beginning.
+
+Follow five steps: **identify a handoff → connect it to evidence → describe a risk → propose a control → explain how it could be assessed**. Start with one handoff before expanding to the full matrix below. The editable BPMN model helps you discuss responsibilities; it is not evidence that every depicted control operated.
 
 ## Learning Objectives
 
@@ -25,7 +29,7 @@ Begin with the company and its business need. Read a BPMN model to identify acti
 
 ## Before You Start
 
-**Prerequisites:** read [Company Story](../learn-the-business/company-story.md) and [Business Processes and Models](../learn-the-business/process-flows.md), including its BPMN reading guide. Complete one of the [foundational exercises](index.md), or review it with your instructor before attempting the evidence extension.
+**Prerequisites:** read [Company Story](../learn-the-business/company-story.md) and [Business Processes and Models](../learn-the-business/process-flows.md), including its BPMN reading guide. Complete a [process tutorial](index.md#processes-follow-events-and-accounting), including its result checks, before attempting the evidence extension.
 
 **Tools and files:** view the diagrams in a browser. For the modeling extension, download an editable `.drawio` file from the model library and open a separate working copy in diagrams.net. Use the assigned published SQLite database in read-only mode, or analyze copies of selected Excel tables in a separate workbook. Follow the [SQL Guide](../analytics/sql-guide.md) or [Excel Guide](../analytics/excel-guide.md); record your release version and reporting date.
 
@@ -114,4 +118,4 @@ The published data supports source-record investigation, with intentional anomal
 
 ## Next Steps
 
-Continue with the [O2C Trace Case](../analytics/cases/o2c-trace-case.md), [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md), [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md), or [Attendance Control Audit Case](../analytics/cases/attendance-control-audit-case.md). Reuse the matrix with the chosen case's existing query sequence. Return to the [model library](../learn-the-business/process-flows.md#model-library) for another cycle or to [Learn and Practice](index.md) for a narrower evidence exercise.
+Continue with the [Resolve a Customer Account Review](../analytics/cases/o2c-trace-case.md), [P2P Accrual Case](../analytics/cases/p2p-accrual-settlement-case.md), [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md), or [Investigate Exceptions and Recommend Controls](../analytics/cases/audit-review-pack-case.md). Reuse the matrix with the chosen case's existing query sequence. Return to the [model library](../learn-the-business/process-flows.md#model-library) for another cycle or to [Learn and Practice](index.md) for a narrower evidence exercise.

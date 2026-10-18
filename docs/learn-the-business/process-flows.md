@@ -1,61 +1,116 @@
 ---
-title: Accounting Business Processes and BPMN Models
-description: Explore Charles River's connected business cycles, BPMN model library, Mermaid information flows, notation, control evidence, and accounting learning activities in one place.
+title: Business Processes — Following the Work Between Departments
+description: Learn to follow Charles River's responsibilities, documents, and accounting events, with a guided introduction to business-process diagrams and optional editable models.
 slug: /process-flows
-sidebar_label: Process Flows
+sidebar_label: Business Processes
+pagination_prev: learn-the-business/company-story
+pagination_next: processes/o2c
+toc_max_heading_level: 2
 ---
 
 import BpmnDiagram, { BpmnModelCatalog } from "@site/src/components/BpmnDiagram";
 
 # Business Processes and Models
 
-Customer demand connects Charles River's departments. Sales needs goods to fulfill orders. Purchasing supports merchandise and components. Manufacturing uses materials and labor to make selected products. Design Services uses employee time to serve engagements. Finance records the accounting effects, settles obligations, and closes the period.
+The warehouse has recorded goods leaving inventory for the customer in our furnishing story. Customer accounting now needs to know what shipped so it can prepare the invoice. The work crosses a department boundary, and the shipment record gives the next person something to act on.
 
-Read each cycle from business activity to accounting evidence. **BPMN** shows participants, responsibilities, events, and decisions. **Mermaid** shows information relationships and postings. The linked activities ask you to investigate those views using actual records. If BPMN is new to you, start with the [reading guide](#a-short-bpmn-reading-guide).
+This handoff illustrates a **business process**: connected activities that begin with a need or event and produce an outcome. To understand it, follow the people doing the work, the information they use, and what changes after each activity.
 
-These models support the forthcoming *Accounting Information Systems: An Integrated Approach* and the current [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/). They are reusable teaching models grounded in the published synthetic dataset.
+## Follow a Handoff
 
-## Business Process Architecture
+Start with five questions. **What starts the work? Who acts? What do they do? What document records it? What outcome allows the next activity?**
+
+For goods fulfillment, the customer's order establishes demand. Warehouse staff record a shipment. Customer accounting uses shipment support for billing. The invoice then establishes an amount owed by the customer.
+
+Each document answers a different question. An order does not prove shipment; a shipment does not establish that an invoice has been settled. The sequence becomes easier to read when you identify the purpose of each handoff before looking at database names.
+
+The furnishing project is an illustrative setting. Actual records can have partial quantities, different dates, and unresolved balances. A process model helps you ask questions about those records; it does not prove that every instance followed an ideal path.
+
+<span id="the-connected-business"></span>
+
+## See the Connected Business
+
+**How do the company's activities depend on one another?** Follow customer demand into goods and design work, then look at the support supplied by purchasing, production, and payroll.
+
+```mermaid
+flowchart TD
+    NEED[Customer furnishing needs] --> SALES[Order-to-cash: goods and billing]
+    NEED --> DESIGN[Design services: staff time and billing]
+    BUY[Purchasing: merchandise and components] -->|Goods| SALES
+    BUY -->|Components| MAKE[Manufacturing: selected products]
+    MAKE -->|Finished goods| SALES
+    PAY[Payroll: employee costs and obligations] -. Labor support .-> MAKE
+    PAY -. Labor support .-> DESIGN
+    SALES --> FIN[Finance: accounting and period-end explanation]
+    DESIGN --> FIN
+    BUY --> FIN
+    MAKE --> FIN
+    PAY --> FIN
+```
+
+The map shows dependencies across the business. It is not a schedule in which all transactions occur one after another, and its arrows are not instructions for joining tables. Purchasing and payroll support the wider company as well as customer-facing work.
+
+The controller eventually brings the accounting consequences together. That explanation still depends on the separate events: inventory received or shipped, services billed, wages recorded, obligations settled, and estimates adjusted.
+
+## Read Activities and Records Differently
+
+The chapters use two complementary diagram views. A **BPMN business-process model** shows work and responsibility. A **Mermaid record-flow diagram** shows relationships among documents or accounting events.
+
+BPMN means Business Process Model and Notation. You can begin with a small set of symbols:
+
+| Symbol | First reading |
+|---|---|
+| Circle | An event starts or ends the modeled work |
+| Rounded rectangle | Someone performs an activity |
+| Lane | A role or department is responsible for activities |
+| Diamond | Follow the labeled decision or branching condition |
+| Solid arrow within a participant | Activities follow a sequence |
+| Dashed message arrow between participants | Information passes between the company and another participant |
+
+A diagram's end event marks its defined boundary. It does not necessarily mean the customer's whole relationship is complete or that all balances are zero. Read the model's explanation to understand what the endpoint represents.
+
+Click either kind of diagram to expand it. The expanded view provides the same navigation and close behavior throughout the site. You can return to the chapter without losing your place.
+
+## Read Every Process in the Same Order
+
+Begin with the ordinary business situation and follow the people doing the work. Then explain the accounting events: which activities create postings, and which simply provide context or support?
+
+Next, connect the familiar documents to their stored records. The chapter's small record map helps you recognize what to look for later; you do not need to memorize the full table inventory.
+
+Finally, consider one complication and answer the concept checks. A partial delivery or a later payment can reveal why the process distinctions matter. Optional sections provide detailed fields, additional models, control questions, and assignments when you are ready for them.
+
+Keep three questions alongside each chapter: **What happened? What evidence establishes it? What remains open at this date?** These questions prepare you to interpret an accounting total rather than simply reproduce it.
+
+## Distinguish Responsibilities from Control Evidence
+
+The recurring sales coordinator, operations planner, design lead, and controller help explain the company. Process lanes describe responsibilities. Actual employee fields help you investigate who performed a recorded task.
+
+An approval field or a balanced journal does not establish that every review was independent and effective. Later activities ask you to evaluate evidence and propose controls. Such proposals are labeled as teaching controls wherever the stored records do not establish that the procedure operated.
+
+## Next Steps
+
+Continue to [Order-to-Cash](../processes/o2c.md). Follow the customer's goods from an order through delivery, billing, and invoice settlement before moving to the design work.
+
+## Optional Reference
+
+The model library and extended notation are available for later analysis and diagram editing. The current [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) supports analytical methods; the associated AIS textbook is forthcoming.
+
+<details>
+<summary>Explore the full company architecture</summary>
+
+### Business Process Architecture
 
 <BpmnDiagram modelId="process-architecture" />
 
 The architecture groups the company's business cycles and responsibilities. Each cycle has its own trigger and boundary; the drawing does not impose a single serial schedule on all transactions. Purchasing supplies merchandise and components, manufacturing supplies selected finished goods, payroll supports factory and service staff, and finance complements the operating cycles with journals and close.
 
-The Mermaid map below connects those cycles through information and posting flows. Choose a detailed process guide and editable source in the [model library](#model-library).
+Return to [the connected business map](#see-the-connected-business) for a simpler view, or choose an editable source in the [model library](#model-library).
 
-## The Connected Business
+</details>
+<details>
+<summary>Browse the editable model library</summary>
 
-```mermaid
-flowchart TD
-    DEMAND[Customer demand]
-    O2C[Order-to-cash: goods fulfillment and billing]
-    DS[Design Services: approved hours and billing]
-    P2P[Procure-to-pay: merchandise and components]
-    MFG[Manufacturing: issues, completion, and close]
-    PAY[Payroll: approved time, pay, and liabilities]
-    FIN[Finance: journals, assets, and period-end close]
-    GL[Posted accounting in GLEntry]
-    ANALYSIS[Analyze evidence, interpret, and decide]
-
-    DEMAND --> O2C
-    DEMAND --> DS
-    O2C -->|Supply needs| P2P
-    O2C -->|Selected products| MFG
-    P2P -->|Materials| MFG
-    PAY -->|Labor support| MFG
-    PAY -->|People cost| DS
-    O2C --> GL
-    DS -->|Service invoices| GL
-    P2P --> GL
-    MFG --> GL
-    PAY --> GL
-    FIN --> GL
-    GL --> ANALYSIS
-```
-
-This is a conceptual process map. The arrows show dependencies and posting flows; they do not assert direct foreign keys. Planning, assignments, and approved time often support an accounting event without posting themselves.
-
-## Model Library
+### Model Library
 
 Begin with **Order-to-Cash**, **Procure-to-Pay**, or **Manufacturing and Conversion** for the three core AIS modules. Design Services, payroll, and finance connect those cycles to employee time, customer billing, settlement, and close. Focused detail models keep exceptions and proposed reviews separate from the main paths.
 
@@ -63,7 +118,11 @@ Each row links a model to its process guide, learning activity, case, and editab
 
 <BpmnModelCatalog />
 
-## A Short BPMN Reading Guide
+</details>
+<details>
+<summary>Read the extended notation and evidence guidance</summary>
+
+### A Short BPMN Reading Guide
 
 | Symbol or connector | Meaning in this library | Reading check |
 |---|---|---|
@@ -79,7 +138,7 @@ Each row links a model to its process guide, learning activity, case, and editab
 
 Read the [OMG BPMN 2.0.2 specification](https://www.omg.org/spec/BPMN/2.0.2/) for the formal notation and [Draw.io's BPMN library guide](https://www.drawio.com/docs/diagram-types/bpmn-2-0/) for authoring. In a notation conflict, the OMG specification is authoritative. This introduction selects the symbols used here; it does not reproduce the full standard.
 
-## Evidence and Control Boundaries
+### Evidence and Control Boundaries
 
 A stored approver, status, or posting link can support a specific test. It does not establish that every transaction was approved, that people had incompatible duties, or that an exception was automatically blocked. Compare actual source records at the correct dates and grain.
 
@@ -87,20 +146,11 @@ Reconciliations, independent review, holds, and segregation-of-duties improvemen
 
 These `.drawio` files use Draw.io's native XML format. They are **editable visual models, not standards-compliant executable BPMN XML**. Execution or interchange with a BPMN engine would require a separate BPMN export, modeling review, and schema/engine validation.
 
-## Read Every Process in the Same Order
+</details>
+<details>
+<summary>Connect a process to an investigation</summary>
 
-1. Identify the **business need and decision**: customer demand, an internal purchasing requirement, production, service delivery, or a period-end estimate.
-2. Read the **BPMN participants and activities**: follow the trigger, responsibility handoffs, labeled decision paths, and stated end boundary.
-3. Identify the **source documents and grain** in the Mermaid views: what one header, line, approval, or event represents.
-4. Distinguish **support from recognition**: a plan or approval can explain activity without creating a ledger entry.
-5. Trace **posting and settlement** separately: the event creating a receivable or liability may precede the cash event.
-6. Choose an **analysis and conclusion**: state the population, dates, evidence, limitations, and next action.
-
-The [Dataset Guide](../start-here/dataset-overview.md) provides table-family navigation. The [Schema Reference](../reference/schema.md) provides stored keys. The [GLEntry Posting Reference](../reference/posting.md) provides event-specific accounting rules.
-
-Each major process page includes an optional AIS activity that moves from model interpretation to a supported risk/control evaluation. The [BPMN and controls workshop](../learn-and-practice/bpmn-controls-workshop.md) provides a common evidence workflow and reusable matrix. These activities support current classroom work and the forthcoming AIS textbook; they do not imply that a future Hub course is already available.
-
-## Process to Analysis Bridges
+### Process to Analysis Bridges
 
 The model library supplies the focused activities and cases. These report topics extend a trace into a wider population.
 
@@ -113,8 +163,6 @@ The model library supplies the focused activities and cases. These report topics
 | [Payroll](../processes/payroll.md) | [People and Payroll](../analytics/index.md#people-and-payroll) |
 | [Manual Journals and Close](../processes/manual-journals-and-close.md) | [Statements and Cash](../analytics/index.md#statements-and-cash), [Controls and Exceptions](../analytics/index.md#controls-and-exceptions) |
 
-For a broader comparison of payroll responsibilities and employee costs, continue to the [Workforce Cost and Org-Control Case](../analytics/cases/workforce-cost-and-org-control-case.md).
+For a broader comparison of payroll responsibilities and employee costs, continue to the [Explain Staffing, Overtime, and Payroll Cost](../analytics/cases/workforce-coverage-and-attendance-case.md).
 
-## Next Steps
-
-Choose one core module, then complete its first task in [Learn and Practice](../learn-and-practice/index.md). Browse [Reports and Analytics](../analytics/index.md) once the evidence chain is clear. The [instructor guide](../teach-with-data/instructor-guide.md) proposes a 14-week AIS sequence and ways to adapt these modules for a course.
+</details>

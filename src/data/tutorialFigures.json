@@ -1,0 +1,305 @@
+[
+  {
+    "id": "meet-the-records",
+    "title": "Meet the Records",
+    "question": "Which parts of a customer row identify and describe it?",
+    "alt": "Which parts of a customer row identify and describe it? A key identifies the record: CustomerID: 130; Used to link customer records. A name describes the customer: Jones, Richardson and Beard; CustomerName. A segment classifies it: Design Trade; CustomerSegment",
+    "steps": [
+      "A key identifies the record: CustomerID: 130; Used to link customer records",
+      "A name describes the customer: Jones, Richardson and Beard; CustomerName",
+      "A segment classifies it: Design Trade; CustomerSegment"
+    ],
+    "nodes": [
+      "A key identifies the record|CustomerID: 130\nUsed to link customer records",
+      "A name describes the customer|Jones, Richardson and Beard\nCustomerName",
+      "A segment classifies it|Design Trade\nCustomerSegment"
+    ],
+    "edges": []
+  },
+  {
+    "id": "read-an-order",
+    "title": "Read an Order",
+    "question": "How can one order have two lines?",
+    "alt": "How can one order have two lines? One order header: SalesOrderID: 11; OrderTotal: 11,397.78. First order line: SalesOrderLineID: 42; SalesOrderID: 11; LineTotal: 3,552.21. Second order line: SalesOrderLineID: 43; SalesOrderID: 11; LineTotal: 7,845.57",
+    "steps": [
+      "One order header: SalesOrderID: 11; OrderTotal: 11,397.78",
+      "First order line: SalesOrderLineID: 42; SalesOrderID: 11; LineTotal: 3,552.21",
+      "Second order line: SalesOrderLineID: 43; SalesOrderID: 11; LineTotal: 7,845.57"
+    ],
+    "nodes": [
+      "One order header|SalesOrderID: 11\nOrderTotal: 11,397.78",
+      "First order line|SalesOrderLineID: 42\nSalesOrderID: 11\nLineTotal: 3,552.21",
+      "Second order line|SalesOrderLineID: 43\nSalesOrderID: 11\nLineTotal: 7,845.57"
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ]
+    ]
+  },
+  {
+    "id": "connect-the-records",
+    "title": "Connect the Records",
+    "question": "Which keys bring descriptions into the order?",
+    "alt": "Which keys bring descriptions into the order? Customer table: CustomerID: 130; Jones, Richardson and Beard. Order and its line: Order 11: CustomerID 130; Line 43: ItemID 222. Item table: ItemID: 222; Brookside Dining Table; SupplyMode: Manufactured",
+    "steps": [
+      "Customer table: CustomerID: 130; Jones, Richardson and Beard",
+      "Order and its line: Order 11: CustomerID 130; Line 43: ItemID 222",
+      "Item table: ItemID: 222; Brookside Dining Table; SupplyMode: Manufactured"
+    ],
+    "nodes": [
+      "Customer table|CustomerID: 130\nJones, Richardson and Beard",
+      "Order and its line|Order 11: CustomerID 130\nLine 43: ItemID 222",
+      "Item table|ItemID: 222\nBrookside Dining Table\nSupplyMode: Manufactured"
+    ],
+    "edges": [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  {
+    "id": "source-to-ledger",
+    "title": "Follow a Goods Sale",
+    "question": "What connects this ordered line to its invoice?",
+    "alt": "What connects this ordered line to its invoice? Order line 43: Ordered quantity: 9; SalesOrderID: 11. Shipment line 347: SalesOrderLineID: 43; Quantity shipped: 9; ShipmentID: 87. Invoice line 272: ShipmentLineID: 347; Quantity invoiced: 9; SalesInvoiceID: 202",
+    "steps": [
+      "Order line 43: Ordered quantity: 9; SalesOrderID: 11",
+      "Shipment line 347: SalesOrderLineID: 43; Quantity shipped: 9; ShipmentID: 87",
+      "Invoice line 272: ShipmentLineID: 347; Quantity invoiced: 9; SalesInvoiceID: 202"
+    ],
+    "nodes": [
+      "Order line 43|Ordered quantity: 9\nSalesOrderID: 11",
+      "Shipment line 347|SalesOrderLineID: 43\nQuantity shipped: 9\nShipmentID: 87",
+      "Invoice line 272|ShipmentLineID: 347\nQuantity invoiced: 9\nSalesInvoiceID: 202"
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  {
+    "id": "follow-customer-settlement",
+    "title": "Follow Customer Settlement",
+    "question": "When does this receipt reduce the invoice balance?",
+    "alt": "When does this receipt reduce the invoice balance? Receipt 173: 22 February 2024; Cash received: 952.07. Application 225: 23 February 2024; Applied amount: 952.07. Invoice 202: One of four applications; Each allocation has a date; Read the balance as of a date",
+    "steps": [
+      "Receipt 173: 22 February 2024; Cash received: 952.07",
+      "Application 225: 23 February 2024; Applied amount: 952.07",
+      "Invoice 202: One of four applications; Each allocation has a date; Read the balance as of a date"
+    ],
+    "nodes": [
+      "Receipt 173|22 February 2024\nCash received: 952.07",
+      "Application 225|23 February 2024\nApplied amount: 952.07",
+      "Invoice 202|One of four applications\nEach allocation has a date\nRead the balance as of a date"
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  {
+    "id": "find-the-accounting-entries",
+    "title": "Find the Accounting Entries",
+    "question": "How do separate events change separate accounts?",
+    "alt": "How do separate events change separate accounts? Invoice 202: 31 January 2024; Receivable increases; Billing is recognized. Receipt 173: 22 February 2024; Debit cash 952.07; Credit deposits 952.07. Application 225: 23 February 2024; Debit deposits 952.07; Credit receivables 952.07",
+    "steps": [
+      "Invoice 202: 31 January 2024; Receivable increases; Billing is recognized",
+      "Receipt 173: 22 February 2024; Debit cash 952.07; Credit deposits 952.07",
+      "Application 225: 23 February 2024; Debit deposits 952.07; Credit receivables 952.07"
+    ],
+    "nodes": [
+      "Invoice 202|31 January 2024\nReceivable increases\nBilling is recognized",
+      "Receipt 173|22 February 2024\nDebit cash 952.07\nCredit deposits 952.07",
+      "Application 225|23 February 2024\nDebit deposits 952.07\nCredit receivables 952.07"
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  {
+    "id": "follow-design-time-into-billing",
+    "title": "Follow Design Time into Billing",
+    "question": "How does approved time become billed revenue?",
+    "alt": "How does approved time become billed revenue? Engagement 2: January: Billable: 32.67 hours; Non-billable: 1.21 hours; Time-cost support: 937.02. Billing line 2: 32.67 hours × 210.00; LineAmount: 6,860.70; Match engagement and period. Invoice line 387: Service billing link; Recognize invoiced revenue; Collection follows O2C",
+    "steps": [
+      "Engagement 2: January: Billable: 32.67 hours; Non-billable: 1.21 hours; Time-cost support: 937.02",
+      "Billing line 2: 32.67 hours × 210.00; LineAmount: 6,860.70; Match engagement and period",
+      "Invoice line 387: Service billing link; Recognize invoiced revenue; Collection follows O2C"
+    ],
+    "nodes": [
+      "Engagement 2: January|Billable: 32.67 hours\nNon-billable: 1.21 hours\nTime-cost support: 937.02",
+      "Billing line 2|32.67 hours × 210.00\nLineAmount: 6,860.70\nMatch engagement and period",
+      "Invoice line 387|Service billing link\nRecognize invoiced revenue\nCollection follows O2C"
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  {
+    "id": "receipt-to-payable",
+    "title": "Follow a Purchase",
+    "question": "How do receipt, billing, and payment change the liability?",
+    "alt": "How do receipt, billing, and payment change the liability? Receipt line 25479: 27 September 2026; Standard cost: 8.83; Inventory / GRNI. Supplier invoice 36461: 29 November 2026; Goods 8.83 + tax 0.13; Accounts payable: 8.96. Payment 39645: 8 January 2027; Paid: 8.96; Still payable at 2026 year end",
+    "steps": [
+      "Receipt line 25479: 27 September 2026; Standard cost: 8.83; Inventory / GRNI",
+      "Supplier invoice 36461: 29 November 2026; Goods 8.83 + tax 0.13; Accounts payable: 8.96",
+      "Payment 39645: 8 January 2027; Paid: 8.96; Still payable at 2026 year end"
+    ],
+    "nodes": [
+      "Receipt line 25479|27 September 2026\nStandard cost: 8.83\nInventory / GRNI",
+      "Supplier invoice 36461|29 November 2026\nGoods 8.83 + tax 0.13\nAccounts payable: 8.96",
+      "Payment 39645|8 January 2027\nPaid: 8.96\nStill payable at 2026 year end"
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  {
+    "id": "manufacturing-cost-flow",
+    "title": "Follow Manufacturing Costs",
+    "question": "When are the goods complete and the work order closed?",
+    "alt": "When are the goods complete and the work order closed? Work order 1: issue: 17 January 2024; Material issue cost: 754.29; Materials move into WIP. Two completions: 25–26 January 2024; Standard total cost: 1,019.85; Finished goods available. Work-order close 1: 1 February 2024; Total variance: 743.16; Close is a later event",
+    "steps": [
+      "Work order 1: issue: 17 January 2024; Material issue cost: 754.29; Materials move into WIP",
+      "Two completions: 25–26 January 2024; Standard total cost: 1,019.85; Finished goods available",
+      "Work-order close 1: 1 February 2024; Total variance: 743.16; Close is a later event"
+    ],
+    "nodes": [
+      "Work order 1: issue|17 January 2024\nMaterial issue cost: 754.29\nMaterials move into WIP",
+      "Two completions|25–26 January 2024\nStandard total cost: 1,019.85\nFinished goods available",
+      "Work-order close 1|1 February 2024\nTotal variance: 743.16\nClose is a later event"
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  {
+    "id": "follow-hours-into-payroll",
+    "title": "Follow Hours into Payroll",
+    "question": "Which payroll obligations are settled separately?",
+    "alt": "Which payroll obligations are settled separately? Employee 109 / period 1: 10 approved time rows; Regular: 79.44 hours; Overtime: 0.09 hours. Payroll register 96: Gross pay: 1,902.64; Withholdings: 324.30; Net pay: 1,578.34. Separate settlements: Employee paid: 19 January; Period 1: three remittances; 26, 29 and 31 January",
+    "steps": [
+      "Employee 109 / period 1: 10 approved time rows; Regular: 79.44 hours; Overtime: 0.09 hours",
+      "Payroll register 96: Gross pay: 1,902.64; Withholdings: 324.30; Net pay: 1,578.34",
+      "Separate settlements: Employee paid: 19 January; Period 1: three remittances; 26, 29 and 31 January"
+    ],
+    "nodes": [
+      "Employee 109 / period 1|10 approved time rows\nRegular: 79.44 hours\nOvertime: 0.09 hours",
+      "Payroll register 96|Gross pay: 1,902.64\nWithholdings: 324.30\nNet pay: 1,578.34",
+      "Separate settlements|Employee paid: 19 January\nPeriod 1: three remittances\n26, 29 and 31 January"
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  {
+    "id": "follow-an-estimate-into-settlement",
+    "title": "Follow an Estimate into Settlement",
+    "question": "What remains after the supplier invoice uses the estimate?",
+    "alt": "What remains after the supplier invoice uses the estimate? Accrual journal 9: 31 January 2024; Estimated expense: 10,039.33; Accrued liability recognized. Supplier invoice 39851: 9 March 2024; Amount: 10,019.59; Accrual moves into AP. Adjustment journal 698: 11 March 2024; Unused estimate: 19.74; Supplier paid on 20 May",
+    "steps": [
+      "Accrual journal 9: 31 January 2024; Estimated expense: 10,039.33; Accrued liability recognized",
+      "Supplier invoice 39851: 9 March 2024; Amount: 10,019.59; Accrual moves into AP",
+      "Adjustment journal 698: 11 March 2024; Unused estimate: 19.74; Supplier paid on 20 May"
+    ],
+    "nodes": [
+      "Accrual journal 9|31 January 2024\nEstimated expense: 10,039.33\nAccrued liability recognized",
+      "Supplier invoice 39851|9 March 2024\nAmount: 10,019.59\nAccrual moves into AP",
+      "Adjustment journal 698|11 March 2024\nUnused estimate: 19.74\nSupplier paid on 20 May"
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  {
+    "id": "turn-records-into-a-conclusion",
+    "title": "Turn Records into a Conclusion",
+    "question": "How does a checked population support a conclusion?",
+    "alt": "How does a checked population support a conclusion? Invoice headers: January–March 2024; One row per invoice; SubTotal before freight / tax. Monthly summary: Count invoices; Sum SubTotal by month; Credits are outside this measure. Evidence memo: Describe the observed change; Check scope and totals; Ask what explains the change",
+    "steps": [
+      "Invoice headers: January–March 2024; One row per invoice; SubTotal before freight / tax",
+      "Monthly summary: Count invoices; Sum SubTotal by month; Credits are outside this measure",
+      "Evidence memo: Describe the observed change; Check scope and totals; Ask what explains the change"
+    ],
+    "nodes": [
+      "Invoice headers|January–March 2024\nOne row per invoice\nSubTotal before freight / tax",
+      "Monthly summary|Count invoices\nSum SubTotal by month\nCredits are outside this measure",
+      "Evidence memo|Describe the observed change\nCheck scope and totals\nAsk what explains the change"
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  }
+]

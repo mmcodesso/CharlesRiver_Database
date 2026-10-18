@@ -1,266 +1,615 @@
 ---
-title: Manufacturing Labor Cost Case
-description: Inquiry-led walkthrough for tracing one manufactured item from standard cost through work-order labor support, completion, and close.
-sidebar_label: Manufacturing Labor Case
+title: "5. Explain Production Cost and Delivery Pressure"
+description: "Do completion, recorded cost, and financial close tell the same production story?"
+sidebar_label: "5. Explain Production Cost and Delivery Pressure"
+pagination_prev: "analytics/cases/product-portfolio-profitability-case"
+pagination_next: "analytics/cases/workforce-coverage-and-attendance-case"
+case_number: 5
+case_level: Intermediate
+case_sessions: 3
+toc_max_heading_level: 2
 ---
 
-import { QueryReference } from "@site/src/components/QueryReference";
+import ToolSteps from "@site/src/components/Tutorial/ToolSteps";
+import TabItem from "@theme/TabItem";
+import CaseFigure from "@site/src/components/Cases/Figure";
+import CaseMethods from "@site/src/components/Cases/Methods";
 import { CaseOverview } from "@site/src/components/CaseExplorer";
+import { QuerySequence } from "@site/src/components/QueryReference";
+import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 
-# Manufacturing Labor Cost Case
+# 5. Explain Production Cost and Delivery Pressure
+
+<span id="business-scenario"></span>
+<span id="the-problem-to-solve"></span>
+<span id="learning-objectives"></span>
+
+The operations planner wants to change a schedule after a difficult production period. The controller asks whether late completion, material usage, labor support, and cost variance point to the same cause. You will examine the January release cohort, trace two work orders, and identify the operational evidence needed before recommending a change.
 
 <CaseOverview slug="manufacturing-labor-cost-case" />
 
-## Business Scenario
+**Worked scope.** 336 work orders released January 1–31, 2024, with events assessed through February 29. Begin with work order 1 and compare work order 67. Capacity comparisons cover all scheduled work in the selected work centers and dates, not only the January cohort.
 
-**Illustrative teaching scenario.** Select actual records from your assigned release to investigate this request; the scenario does not identify a particular published transaction or prescribe a finding.
+The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-Charles River Home Furnishings needs to replenish a manufactured finished good under delivery pressure. Planning has already released the work order. The order now moves through scheduled operations, work centers, approved factory time, labor allocation, production completion, and close.
-
-This case focuses on labor cost inside that full production path. Standard cost sets the baseline. Approved factory time supports the work. `LaborTimeEntry` allocates direct labor into the work order. `ProductionCompletion` returns finished goods to inventory. `WorkOrderClose` resolves the remaining material, labor, and overhead variance.
-
-Your job is to explain that chain as one manufacturing story and one cost story.
-
-## The Problem to Solve
-
-You need to prove that labor cost on a manufactured item can be explained from standard cost baseline through work-order execution and close. Confirm the operation path. Confirm that approved time and direct labor support align with the work order. Confirm that completion and close create the expected accounting effect.
-
-## Learning Objectives
-
-- Explain standard materials, labor, and overhead components for a manufactured item.
-- Trace operations, approved time, productive labor, completion, and close for a work order.
-- Distinguish cost interpretation from labor-support and timing exceptions.
+**Preparation:** 9: manufacturing costs; Manufacturing process chapter. Revisit [the relevant tutorial](../../learn-and-practice/manufacturing-cost-flow.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
 
 ## Key Data Sources
 
-- Source documents: Bill of material, routing, work order, operation schedule, approved clock entry, labor allocation, production completion, and work-order close.
-- Evidence grain: Separate item, work-order, operation, and employee-time grains before reconciling work-order totals.
-- Main tables: `Item`, `BillOfMaterial`, `Routing`, `WorkCenter`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `TimeClockEntry`, `LaborTimeEntry`, `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose`, `GLEntry`
-- Related process pages: [Manufacturing Process](../../processes/manufacturing.md), [Payroll Process](../../processes/payroll.md)
-- Supporting references: [Schema Reference](../../reference/schema.md), [GLEntry Posting Reference](../../reference/posting.md), [Dataset Guide](../../start-here/dataset-overview.md)
-- This case uses both starter query packs and two case-support SQL files built specifically for one-work-order tracing.
+Each source below has a distinct row meaning. Import only the fields and populations requested in each stage. Working tables default to the source name plus Data unless a stage assigns a more specific name.
+
+| Source | Published Excel Table | First working name |
+|---|---|---|
+| WorkOrder | T51_WorkOrder | WorkOrderData |
+| WorkOrderOperation | T52_WorkOrderOperation | WorkOrderOperationData |
+| WorkOrderOperationSchedule | T53_WorkOrderOperationSchedule | WorkOrderOperationScheduleData |
+| MaterialIssue | T54_MaterialIssue | MaterialIssueData |
+| MaterialIssueLine | T55_MaterialIssueLine | MaterialIssueLineData |
+| LaborTimeEntry | T60_LaborTimeEntry | LaborTimeEntryData |
+| ProductionCompletion | T56_ProductionCompletion | ProductionCompletionData |
+| ProductionCompletionLine | T57_ProductionCompletionLine | ProductionCompletionLineData |
+| WorkOrderClose | T58_WorkOrderClose | WorkOrderCloseData |
+| WorkCenter | T47_WorkCenter | WorkCenterData |
+| WorkCenterCalendar | T48_WorkCenterCalendar | WorkCenterCalendarData |
+| SupplyPlanRecommendation | T80_SupplyPlanRecommendation | SupplyPlanRecommendationData |
+| DemandForecast | T78_DemandForecast | DemandForecastData |
+
+<CaseMethods />
+
+<span id="step-1-define-the-demand-signal-and-forecast-quality"></span>
+<span id="step-2-explain-what-is-driving-the-recommendation-pool"></span>
+<span id="step-1-define-the-standard-cost-baseline"></span>
+<span id="step-2-trace-one-work-order-through-operations-and-scheduled-hours"></span>
+
+## Session 1 — Define the cohort and read the plan
+
+Create Case05.xlsx or Case05.sql. A release-date cohort stays fixed even when completion or close occurs in a later month. Keep actual event dates visible.
+
+<CaseFigure figureId="case05-planning" />
+
+
+### 1.1. Keep the release cohort fixed
+
+**Predict before you run:** Would filtering by completion month answer the same question as filtering by release month?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import WorkOrderData and filter ReleasedDate January 1–31.
+
+2. Load as Orders, keeping IDs and all date fields.
+
+3. Label Review!B2 Release cohort and enter:
+
+    ~~~text title="Excel — Review!B2"
+    =ROWS(Orders[WorkOrderID])
+    ~~~
+
+4. Add CompletedByCutoff to Orders:
+
+    ~~~text title="Excel — Orders[CompletedByCutoff]"
+    =IF(AND(ISNUMBER([@CompletedDate]),[@CompletedDate]<=DATE(2024,2,29)),1,0)
+    ~~~
+
+5. Add ClosedByCutoff:
+
+    ~~~text title="Excel — Orders[ClosedByCutoff]"
+    =IF(AND(ISNUMBER([@ClosedDate]),[@ClosedDate]<=DATE(2024,2,29)),1,0)
+    ~~~
+
+6. Add MissingPlanLink:
+
+    ~~~text title="Excel — Orders[MissingPlanLink]"
+    =IF([@SupplyPlanRecommendationID]="",1,0)
+    ~~~
+
+7. Do not filter away missing dates or links.
+
+</TabItem>
+<TabItem value="sql">
+
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+```sql title="c05-cohort.sql"
+SELECT WorkOrderID,
+       ItemID,
+       PlannedQuantity,
+       ReleasedDate,
+       DueDate,
+       CompletedDate,
+       ClosedDate,
+       SupplyPlanRecommendationID
+FROM WorkOrder
+WHERE ReleasedDate>='2024-01-01' AND ReleasedDate<'2024-02-01'
+ORDER BY WorkOrderID;
+```
+
+
+```sql title="c05-timing.sql"
+SELECT COUNT(*) AS Orders,
+       SUM(CASE WHEN CompletedDate<='2024-02-29' THEN 1 ELSE 0 END) AS CompletedByCutoff,
+       SUM(CASE WHEN ClosedDate<='2024-02-29' THEN 1 ELSE 0 END) AS ClosedByCutoff,
+       SUM(CASE WHEN CompletedDate<='2024-02-29' AND CompletedDate>DueDate THEN 1 ELSE 0 END) AS CompletedAfterDueDate,
+       SUM(CASE WHEN SupplyPlanRecommendationID IS NULL THEN 1 ELSE 0 END) AS MissingPlanLink,
+       SUM(CASE WHEN CompletedDate<ReleasedDate THEN 1 ELSE 0 END) AS CompletionBeforeRelease
+FROM WorkOrder
+WHERE ReleasedDate>='2024-01-01' AND ReleasedDate<'2024-02-01';
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** 336 released orders; 336 completed by February 29 but only 290 closed. 136 completed after their due date. One lacks a planning link; one has completion before release.
+
+Completion and close measure different responsibilities. A chronology anomaly also means these dates require source follow-up before a scheduling recommendation relies on them.
+
+<details>
+<summary>If your result differs</summary>
+
+Current Status is not an as-of measure. Test the actual dates against the cutoff and retain missing links.
+
+</details>
+
+**Keep for the next stage:** Save Orders and the timing counts, including the exceptions.
+
+### 1.2. Trace the two operation paths
+
+**Predict before you run:** Can a work order be completed in the file even when its operation support is missing?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import WorkOrderOperationData filtered to WorkOrderID 1 or 67.
+
+2. Import WorkOrderOperationScheduleData, filter ScheduleDate through February 29, and group by WorkOrderOperationID summing ScheduledHours.
+
+3. Left merge this summary to the operations and sort by WorkOrderID then OperationSequence.
+
+4. Keep PlannedLoadHours and actual start/end dates beside the schedule total.
+
+</TabItem>
+<TabItem value="sql">
+
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+```sql title="c05-operations.sql"
+SELECT o.WorkOrderID,
+       o.WorkOrderOperationID,
+       o.OperationSequence,
+       o.WorkCenterID,
+       o.PlannedLoadHours,
+       o.PlannedStartDate,
+       o.PlannedEndDate,
+       o.ActualStartDate,
+       o.ActualEndDate,
+       ROUND(COALESCE(SUM(CASE WHEN s.ScheduleDate<='2024-02-29' THEN s.ScheduledHours ELSE 0 END),0),2) AS ScheduledThroughCutoff
+FROM WorkOrderOperation o
+LEFT JOIN WorkOrderOperationSchedule s ON s.WorkOrderOperationID=o.WorkOrderOperationID
+WHERE o.WorkOrderID IN (1,67)
+GROUP BY o.WorkOrderOperationID
+ORDER BY o.WorkOrderID,o.OperationSequence,o.WorkOrderOperationID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Four operation rows for work order 67, progressing through work centers 1–4. No operation rows are returned for work order 1. WO67’s scheduled hours are 9.47, 19.28, 11.45, and 4.44 by operation sequence.
+
+The absence of operation detail for WO1 is an evidence limitation, not proof that no work happened. Other documents still record its material issue and completion. Compare support completeness before inferring efficiency.
+
+<details>
+<summary>If your result differs</summary>
+
+Do not use an Inner join from Orders to Operations for the cohort summary; it would hide WO1.
+
+</details>
+
+**Keep for the next stage:** Save the operation trace and a note about WO1’s missing support.
+
+:::tip Session stopping point
+Retain the 336-order cohort and the four-row comparison trace. State what the planning records can establish and what actual-event evidence is still needed.
+:::
+
+<span id="step-3-measure-projected-availability-and-stockout-risk"></span>
+<span id="step-4-show-where-planning-pressure-escalates-into-urgency-and-conversion"></span>
+<span id="step-3-connect-approved-clocks-to-productive-labor-and-direct-labor-cost"></span>
+<span id="step-4-move-from-completion-to-close-and-ledger-impact"></span>
+
+## Session 2 — Build costs at one row per work order
+
+Materials, labor support, completions, and close records each have their own grain. Summarize them separately before merging to the cohort.
+
+<CaseFigure figureId="case05-costs" />
+
+
+### 2.1. Prepare the four event summaries
+
+**Predict before you run:** How would joining raw issue lines to raw labor entries change the totals?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Create four Power Query summaries before loading.
+
+2. Issues: merge MaterialIssueLineData to MaterialIssueData on MaterialIssueID, filter IssueDate through February 29, group by WorkOrderID and sum ExtendedStandardCost as Issued.
+
+3. Labor: filter LaborTimeEntryData WorkDate through February 29, group by WorkOrderID and sum ExtendedLaborCost as LaborSupport.
+
+4. Completions: merge ProductionCompletionLineData to ProductionCompletionData, filter CompletionDate through February 29, group by WorkOrderID and sum QuantityCompleted as CompletedQty, ExtendedStandardMaterialCost as CompletedMaterials, ExtendedStandardConversionCost as CompletedConversion, and ExtendedStandardTotalCost as CompletedTotal.
+
+5. Closes: filter WorkOrderCloseData CloseDate through February 29, group by WorkOrderID and sum MaterialVarianceAmount as MaterialVariance, ConversionVarianceAmount as ConversionVariance, and TotalVarianceAmount as TotalVariance.
+
+6. Left merge these four unique-key summaries to Orders; load as CostBridge.
+
+7. Replace missing issue/labor/completion totals with zero only after checking event absence.
+
+8. Leave missing close variances blank, meaning no close by cutoff.
+
+</TabItem>
+<TabItem value="sql">
+
+Four named results summarize issues, labor, completions, and closes separately by WorkOrderID. LEFT JOIN adds these totals to the fixed release cohort. Missing close totals stay null, distinguishing an unclosed order from a zero variance.
+
+Run each complete statement separately and retain its result before continuing.
+```sql title="c05-costs.sql"
+WITH issues AS (SELECT h.WorkOrderID,
+       SUM(l.ExtendedStandardCost) AS Issued
+FROM MaterialIssue h
+JOIN MaterialIssueLine l ON l.MaterialIssueID=h.MaterialIssueID
+WHERE h.IssueDate<='2024-02-29'
+GROUP BY h.WorkOrderID), labor AS (SELECT WorkOrderID,
+       SUM(ExtendedLaborCost) AS LaborSupport
+FROM LaborTimeEntry
+WHERE WorkDate<='2024-02-29'
+GROUP BY WorkOrderID), completions AS (SELECT h.WorkOrderID,
+       SUM(l.QuantityCompleted) AS CompletedQty,
+       SUM(l.ExtendedStandardMaterialCost) AS CompletedMaterials,
+       SUM(l.ExtendedStandardConversionCost) AS CompletedConversion,
+       SUM(l.ExtendedStandardTotalCost) AS CompletedTotal
+FROM ProductionCompletion h
+JOIN ProductionCompletionLine l ON l.ProductionCompletionID=h.ProductionCompletionID
+WHERE h.CompletionDate<='2024-02-29'
+GROUP BY h.WorkOrderID), closes AS (SELECT WorkOrderID,
+       SUM(MaterialVarianceAmount) AS MaterialVariance,
+       SUM(ConversionVarianceAmount) AS ConversionVariance,
+       SUM(TotalVarianceAmount) AS TotalVariance
+FROM WorkOrderClose
+WHERE CloseDate<='2024-02-29'
+GROUP BY WorkOrderID) SELECT w.WorkOrderID,
+       ROUND(COALESCE(i.Issued,0),2) AS Issued,
+       ROUND(COALESCE(l.LaborSupport,0),2) AS LaborSupport,
+       ROUND(COALESCE(c.CompletedQty,0),2) AS CompletedQty,
+       ROUND(COALESCE(c.CompletedMaterials,0),2) AS CompletedMaterials,
+       ROUND(COALESCE(c.CompletedConversion,0),2) AS CompletedConversion,
+       ROUND(COALESCE(c.CompletedTotal,0),2) AS CompletedTotal,
+       x.MaterialVariance,
+       x.ConversionVariance,
+       x.TotalVariance
+FROM WorkOrder w
+LEFT JOIN issues i ON i.WorkOrderID=w.WorkOrderID
+LEFT JOIN labor l ON l.WorkOrderID=w.WorkOrderID
+LEFT JOIN completions c ON c.WorkOrderID=w.WorkOrderID
+LEFT JOIN closes x ON x.WorkOrderID=w.WorkOrderID
+WHERE w.ReleasedDate>='2024-01-01' AND w.ReleasedDate<'2024-02-01'
+ORDER BY w.WorkOrderID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** 336 rows remain. WO1: issue 754.29, labor support 191.89, completion materials 729.36, conversion 290.49, completed total 1,019.85. Its material variance is 24.93 and conversion variance 718.23, totaling 743.16.
+
+Material issue less standard material completion equals the material variance for this closed example. Labor support is only one cost input; it is not the whole actual conversion cost. Do not force it to equal completion conversion plus close variance.
+
+<details>
+<summary>If your result differs</summary>
+
+Do not add direct labor and overhead variance again after using ConversionVarianceAmount; that amount already combines them.
+
+</details>
+
+**Keep for the next stage:** Save CostBridge and a WO1 bridge with units and cost basis labeled.
+
+### 2.2. Compare a contrasting cost result
+
+**Predict before you run:** Is the largest absolute variance also the largest variance relative to output?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. In CostBridge add AbsVariance; leave unclosed orders blank:
+
+    ~~~text title="Excel — CostBridge[AbsVariance]"
+    =IF([@TotalVariance]="","",ABS([@TotalVariance]))
+    ~~~
+
+2. Filter TotalVariance nonblank and sort AbsVariance descending.
+
+3. Inspect WO67.
+
+4. Retain the ReleasedDate, DueDate, CompletedDate, and ClosedDate columns carried from Orders in the previous merges.
+
+5. Compare WO1 and WO67 on completed quantity, total completion cost, material variance, and conversion variance.
+
+6. Add VariancePerCompletedUnit only where a close exists and completed quantity is positive:
+
+    ~~~text title="Excel — CostBridge[VariancePerCompletedUnit]"
+    =IF(OR([@TotalVariance]="",[@CompletedQty]<=0),"",[@TotalVariance]/[@CompletedQty])
+    ~~~
+
+7. Keep LaborSupport in a separate column.
+
+</TabItem>
+<TabItem value="sql">
+
+This repeats the same independently aggregated cost method for WO1 and WO67. It is executable by itself; it does not depend on a temporary table created in another step.
+
+Run each complete statement separately and retain its result before continuing.
+```sql title="c05-contrast.sql"
+WITH issues AS (SELECT h.WorkOrderID,
+       SUM(l.ExtendedStandardCost) AS Issued
+FROM MaterialIssue h
+JOIN MaterialIssueLine l ON l.MaterialIssueID=h.MaterialIssueID
+WHERE h.IssueDate<='2024-02-29'
+GROUP BY h.WorkOrderID), labor AS (SELECT WorkOrderID,
+       SUM(ExtendedLaborCost) AS LaborSupport
+FROM LaborTimeEntry
+WHERE WorkDate<='2024-02-29'
+GROUP BY WorkOrderID), completions AS (SELECT h.WorkOrderID,
+       SUM(l.QuantityCompleted) AS CompletedQty,
+       SUM(l.ExtendedStandardMaterialCost) AS CompletedMaterials,
+       SUM(l.ExtendedStandardConversionCost) AS CompletedConversion,
+       SUM(l.ExtendedStandardTotalCost) AS CompletedTotal
+FROM ProductionCompletion h
+JOIN ProductionCompletionLine l ON l.ProductionCompletionID=h.ProductionCompletionID
+WHERE h.CompletionDate<='2024-02-29'
+GROUP BY h.WorkOrderID), closes AS (SELECT WorkOrderID,
+       SUM(MaterialVarianceAmount) AS MaterialVariance,
+       SUM(ConversionVarianceAmount) AS ConversionVariance,
+       SUM(TotalVarianceAmount) AS TotalVariance
+FROM WorkOrderClose
+WHERE CloseDate<='2024-02-29'
+GROUP BY WorkOrderID) SELECT w.WorkOrderID,
+       ROUND(COALESCE(i.Issued,0),2) AS Issued,
+       ROUND(COALESCE(l.LaborSupport,0),2) AS LaborSupport,
+       ROUND(COALESCE(c.CompletedQty,0),2) AS CompletedQty,
+       ROUND(COALESCE(c.CompletedMaterials,0),2) AS CompletedMaterials,
+       ROUND(COALESCE(c.CompletedConversion,0),2) AS CompletedConversion,
+       ROUND(COALESCE(c.CompletedTotal,0),2) AS CompletedTotal,
+       x.MaterialVariance,
+       x.ConversionVariance,
+       x.TotalVariance
+FROM WorkOrder w
+LEFT JOIN issues i ON i.WorkOrderID=w.WorkOrderID
+LEFT JOIN labor l ON l.WorkOrderID=w.WorkOrderID
+LEFT JOIN completions c ON c.WorkOrderID=w.WorkOrderID
+LEFT JOIN closes x ON x.WorkOrderID=w.WorkOrderID
+WHERE w.ReleasedDate>='2024-01-01' AND w.ReleasedDate<'2024-02-01' AND w.WorkOrderID IN(1,67)
+ORDER BY w.WorkOrderID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** WO67 has the largest absolute closed variance in this cohort: 5,463.38, including 647.23 material and 4,816.15 conversion. It completed 32.99 units at 20,387.82 standard total cost. It completed February 7 against a February 4 due date and closed February 13.
+
+The larger absolute variance partly reflects scale. It also has operation support that WO1 lacks. Inspect the dates and cost components before attributing the difference to worker productivity or a particular work center.
+
+<details>
+<summary>If your result differs</summary>
+
+A blank variance is not a zero variance. Rank closed orders only and show the 46 orders not yet closed separately.
+
+</details>
+
+**Keep for the next stage:** Save the two-order comparison and two competing explanations.
+
+:::tip Session stopping point
+Your cost bridge should preserve 336 orders and separate missing close evidence from zero variances. Save the two-order comparison before examining capacity.
+:::
+
+<span id="step-5-connect-replenishment-pressure-to-rough-cut-capacity-response"></span>
+<span id="step-5-extend-the-case-into-control-follow-up"></span>
+
+## Session 3 — Relate timing to capacity and recommend a follow-up
+
+A cohort’s late completion can coincide with capacity pressure without proving causation. Compare dates and work centers, then identify the evidence needed to test the explanation.
+
+<CaseFigure figureId="case05-grains" />
+
+
+### 3.1. Look beneath the period capacity total
+
+**Predict before you run:** Could total scheduled hours be below capacity while individual days are over capacity?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import WorkOrderOperationScheduleData filtered January 1–February 29, group by WorkCenterID and ScheduleDate, sum ScheduledHours.
+
+2. Import WorkCenterCalendarData for the same dates.
+
+3. Left merge calendar to the load summary on WorkCenterID and CalendarDate = ScheduleDate, selecting keys in that order.
+
+4. Replace unmatched scheduled totals with zero after checking for schedule dates absent from the calendar using a Left anti merge in the reverse direction.
+
+5. In Power Query add a Custom Column named AboveCapacity:
+
+    ~~~text title="Power Query — Daily capacity / AboveCapacity"
+    if [ScheduledHours] > [AvailableHours] then 1 else 0
+    ~~~
+
+6. Group by WorkCenterID to sum available hours, scheduled hours, and AboveCapacity.
+
+7. For WO67’s centers inspect daily rows around January 30–February 5.
+
+</TabItem>
+<TabItem value="sql">
+
+Daily schedule totals are joined to the calendar before work-center aggregation. DaysAboveCapacity counts daily peaks; comparing only two period totals would lose them.
+
+Run each complete statement separately and retain its result before continuing.
+```sql title="c05-capacity.sql"
+WITH load AS (SELECT WorkCenterID,
+       ScheduleDate,
+       SUM(ScheduledHours) AS Hours
+FROM WorkOrderOperationSchedule
+WHERE ScheduleDate>='2024-01-01' AND ScheduleDate<='2024-02-29'
+GROUP BY WorkCenterID,ScheduleDate) SELECT c.WorkCenterID,
+       ROUND(SUM(c.AvailableHours),2) AS AvailableHours,
+       ROUND(SUM(COALESCE(l.Hours,0)),2) AS ScheduledHours,
+       SUM(CASE WHEN COALESCE(l.Hours,0)>c.AvailableHours THEN 1 ELSE 0 END) AS DaysAboveCapacity
+FROM WorkCenterCalendar c
+LEFT JOIN load l ON l.WorkCenterID=c.WorkCenterID AND l.ScheduleDate=c.CalendarDate
+WHERE c.CalendarDate>='2024-01-01' AND c.CalendarDate<='2024-02-29'
+GROUP BY c.WorkCenterID
+ORDER BY c.WorkCenterID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** Assembly: 9,230.89 available hours, 5,316.59 scheduled, but two days above capacity. Finishing and Test has seven days above capacity. Period totals alone conceal daily peaks.
+
+This capacity comparison covers all scheduled work, so it provides context for the cohort rather than allocating all capacity pressure to it. Available work-center hours are not interchangeable with employee paid hours.
+
+<details>
+<summary>If your result differs</summary>
+
+Keep calendar dates with no load. Check calendar coverage before concluding there are no overloaded days.
+
+</details>
+
+**Keep for the next stage:** Save the center summary and one daily detail view supporting or weakening your explanation.
+
+### 3.2. Prepare the production review
+
+**Predict before you run:** What can you recommend now, and what still needs an operational explanation?
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Build Review with three sections: cohort timing, two-order cost comparison, and capacity context.
+
+2. Link their verified results.
+
+3. Create a column chart for the five centers’ counts of days above capacity.
+
+4. Write a recommendation that names the planner or production role, identifies a specific date/center or missing record to inspect, and explains how that inspection would affect the proposed schedule change.
+
+</TabItem>
+<TabItem value="sql">
+
+Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools.
+
+</TabItem>
+</ToolSteps>
+
+**Checkpoint.** The worked evidence shows 46 completed but unclosed orders, missing operation support for WO1, and daily capacity peaks despite spare period totals. These are distinct follow-ups.
+
+Recommend checking daily scheduling and missing support before changing staffing or treating variance as inefficiency. A cost variance, a late completion, and a documentation gap need not share one cause.
+
+<details>
+<summary>If your result differs</summary>
+
+Do not claim that spare aggregate hours prove enough capacity on every day, or that standard-cost variance measures cash overspending.
+
+</details>
+
+**Keep for the next stage:** Save a 400–500 word memo with one prioritized action and a stated alternative explanation.
+
+:::tip Session stopping point
+Save a reproducible cost bridge and a bounded recommendation. Keep unresolved evidence visible.
+:::
+
+<CaseFigure figureId="case05-timeline" />
+
+<span id="required-student-output"></span>
+<span id="wrap-up-questions"></span>
+<span id="limitations-and-judgment"></span>
+
+## Prepare the Decision
+
+The production review should separate cost accounting from operational timing. The data supports specific investigations into documentation, daily capacity peaks, and the 46 orders awaiting close at the cutoff. It does not support a blanket conclusion that employees were inefficient or that every late order arose from inadequate capacity.
+
+**Deliverable:** A work-order cost bridge, completion/close comparison, capacity evidence, and a production review memo. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+
+## Independent Challenge
+
+Use work orders released in February 2024 and assess events through March 31. Rebuild all four cost summaries, select a contrasting order by an explicit rule, and defend one operational follow-up.
+
+<details>
+<summary>Planning hint</summary>
+
+Keep the release cohort fixed while changing event cutoffs. Do not select only orders that eventually close; that would remove the unfinished population you need to explain.
+
+</details>
+
+**Assessment criteria:** Assess cohort integrity, separate aggregation, standard versus actual support, completion versus close, capacity scope, and a recommendation that acknowledges uncertainty. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+
+## Optional worked extension — Read the replenishment support
+
+Follow WO67’s recommendation 777 into its item, warehouse, and planning week. This is one planning trace, not a reconstruction of the whole planning system.
+
+
+<ToolSteps>
+<TabItem value="excel">
+
+1. Import SupplyPlanRecommendationData filtered to ID 777.
+
+2. Import DemandForecastData and filter IsCurrent = 1.
+
+3. Left merge on ItemID, WarehouseID, and BucketWeekStartDate = ForecastWeekStartDate in that order.
+
+4. Keep forecast approval and recommended quantity separate; a gross requirement can include more than forecast demand.
+
+</TabItem>
+<TabItem value="sql">
+
+Use the following source trace for this optional extension.
+```sql title="c05-planning.sql"
+SELECT s.SupplyPlanRecommendationID,
+       s.ItemID,
+       s.WarehouseID,
+       s.BucketWeekStartDate,
+       s.BucketWeekEndDate,
+       s.DriverType,
+       s.GrossRequirementQuantity,
+       s.ProjectedAvailableQuantity,
+       s.RecommendedOrderQuantity,
+       s.NeedByDate,
+       s.ReleaseByDate,
+       f.DemandForecastID,
+       f.ForecastQuantity,
+       f.ApprovedDate
+FROM SupplyPlanRecommendation s
+LEFT JOIN DemandForecast f ON f.ItemID=s.ItemID AND f.WarehouseID=s.WarehouseID AND f.ForecastWeekStartDate=s.BucketWeekStartDate AND f.IsCurrent=1
+WHERE s.SupplyPlanRecommendationID=777
+ORDER BY f.DemandForecastID;
+```
+
+
+</TabItem>
+</ToolSteps>
+
+**Worked check.** Recommendation 777 has Sales Backlog as its driver, gross requirement 36.25, recommended quantity 32.99, and need-by date February 4. The matching current forecast is 10.96, approved January 19. Forecast alone therefore does not explain the recommendation quantity; keep backlog, availability, and the recommendation calculation distinct.
+
+<details>
+<summary>Further queries and earlier case topics</summary>
+
+<span id="optional-excel-follow-through"></span>
 
 ## Recommended Query Sequence
 
-### Step 1. Define the standard cost baseline
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-Start with the cost baseline before you look at any actual labor support. Students need to know what the item should cost before they interpret what the work order actually consumed.
+<QuerySequence items={caseQuerySequences["manufacturing-labor-cost-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
 
-**What we are trying to achieve**
-
-Establish the standard material and conversion structure for the manufactured item.
-
-Standard cost drives completion value and sets the benchmark for later variance analysis. Without that baseline, actual labor support and close amounts have no clear point of reference.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="managerial/07_bom_standard_cost_rollup.sql"
-  helperText="Use this first to compare BOM-driven rolled cost with item-master standard cost."
-/>
-
-<QueryReference
-  queryKey="managerial/13_unit_cost_bridge_dm_dl_varoh_fixedoh.sql"
-  helperText="Use this follow-through query to break standard cost into direct material, direct labor, and overhead layers."
-/>
-
-**What this query does**
-
-The first query compares BOM material rollup to the item master standard cost. The second decomposes standard cost into direct material, direct labor, variable overhead, and fixed overhead.
-
-**How it works**
-
-The BOM rollup query aggregates component standard cost from `BillOfMaterialLine` and combines it with item-level conversion cost. The unit-cost bridge reads the manufactured item master directly and surfaces the standard cost layers already stored on the finished good.
-
-**What to look for in the result**
-
-- manufactured items where rolled cost and item master standard cost align cleanly
-- the size of the standard conversion layer relative to direct material
-- the direct labor share inside standard conversion cost
-- the item you want to carry through the rest of the case
-
-### Step 2. Trace one work order through operations and scheduled hours
-
-After you define the cost baseline, move into execution. The work order is the operational anchor for the labor-cost story.
-
-**What we are trying to achieve**
-
-Trace one released work order through operation sequence, schedule dates, work centers, and planned load.
-
-Labor cost sits inside a real execution path. Students need to see where the work was scheduled and which operation consumed the labor support.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="cases/05_manufacturing_work_order_operation_trace.sql"
-  helperText="Use this to trace one work order across operations, scheduled hours, approved clocks, and direct labor support."
-/>
-
-<QueryReference
-  queryKey="managerial/18_work_center_activity_and_operation_hours.sql"
-  helperText="Use this follow-through query to place the selected work order inside broader work-center and operation activity."
-/>
-
-**What this query does**
-
-The case-support query shows one row per `WorkOrderOperation` with planned dates, actual dates, scheduled hours, approved clock hours, and direct labor support. The managerial query summarizes operation activity by work center and month.
-
-**How it works**
-
-The trace query starts at `WorkOrderOperation`, then joins `WorkOrder`, `Item`, `RoutingOperation`, `WorkCenter`, `WorkOrderOperationSchedule`, `TimeClockEntry`, and `LaborTimeEntry`. The work-center summary query aggregates the same execution layer at a higher level for comparison.
-
-**What to look for in the result**
-
-- the operation sequence for the selected work order
-- scheduled hours versus planned load hours
-- which work center carried the work
-- where approved clock support and direct labor support first appear
-
-### Step 3. Connect approved clocks to productive labor and direct labor cost
-
-Now move from execution shape into labor support. This step shows how approved time becomes direct manufacturing labor on the work order.
-
-**What we are trying to achieve**
-
-Connect approved time-clock support to direct labor allocation and labor cost on the work order.
-
-Approved clocks, labor allocation, and direct labor cost answer different questions. Students need to separate attendance support from productive allocation and from cost.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="managerial/24_approved_clock_hours_vs_labor_allocation.sql"
-  helperText="Use this first to compare approved direct clock hours with allocated direct labor hours."
-/>
-
-<QueryReference
-  queryKey="managerial/12_direct_labor_by_work_order_and_employee_class.sql"
-  helperText="Use this follow-through query to summarize direct labor hours and cost by work order and employee class."
-/>
-
-**What this query does**
-
-The first query compares approved direct clock hours with allocated labor hours and cost by work center and operation. The second summarizes direct labor hours and cost by work order and employee grouping.
-
-**How it works**
-
-The clock-versus-allocation query starts with approved `TimeClockEntry` rows tied to `WorkOrderOperationID`, then joins them to direct-manufacturing `LaborTimeEntry`. The direct-labor summary aggregates `LaborTimeEntry` by work order, payroll period, employee title, and pay class.
-
-**What to look for in the result**
-
-- approved clock hours that support direct manufacturing work
-- direct labor hours and labor cost on the selected work order
-- differences between approved hours and allocated hours
-- the employee mix behind the direct labor cost
-
-### Step 4. Move from completion to close and ledger impact
-
-Labor support becomes financially meaningful only when you connect it to completion and close. This is where the operational work order reaches inventory and later resolves residual variance.
-
-**What we are trying to achieve**
-
-Connect material issue, completion, close variance, and the posted manufacturing accounts for one work order.
-
-Completion moves finished goods into inventory. Close resolves the remaining WIP, clearing, and variance balances. Students need to explain both events clearly.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="financial/17_manufacturing_cost_component_bridge.sql"
-  helperText="Use this first to see monthly material, completion, variance, and ledger movement across manufacturing."
-/>
-
-<QueryReference
-  queryKey="cases/06_manufacturing_work_order_close_gl_trace.sql"
-  helperText="Use this follow-through query to tie one work order to issue cost, completion standard cost, close variance, and GL posting support."
-/>
-
-**What this query does**
-
-The financial bridge summarizes manufacturing cost movement by month. The case-support query drills into one work order and shows material issue cost, completion standard cost components, close variance, and related `GLEntry` support.
-
-**How it works**
-
-The monthly bridge aggregates operational manufacturing tables and ledger postings by period. The work-order trace aggregates `MaterialIssue`, `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose`, and `GLEntry` back to one work-order row.
-
-**What to look for in the result**
-
-- material issued into WIP before completion
-- standard direct labor and overhead embedded in completion cost
-- total variance recognized at close
-- the posting support behind `1046`, `1090`, and `5080`
-
-### Step 5. Extend the case into control follow-up
-
-Finish with control interpretation. Once the core labor-cost story is clear, test whether the timing and close behavior still make sense.
-
-**What we are trying to achieve**
-
-Identify labor-support or close-timing patterns that deserve follow-up.
-
-This case ends with judgment. Students should know when labor support aligns with the operation path and when the pattern becomes unusual enough for audit review.
-
-**Suggested query**
-
-<QueryReference
-  queryKey="audit/20_labor_outside_scheduled_operation_window_review.sql"
-  helperText="Use this first to isolate direct labor booked outside the scheduled or actual operation window."
-/>
-
-<QueryReference
-  queryKey="audit/12_labor_time_after_close_and_paid_without_time.sql"
-  helperText="Use this follow-through query to identify labor posted after close or hourly payroll without time support."
-/>
-
-**What this query does**
-
-The first query flags direct labor outside the operation window. The second flags labor recorded after work-order close and hourly payroll without time-entry support.
-
-**How it works**
-
-The labor-window review compares `LaborTimeEntry.WorkDate` to the scheduled or actual operation dates on `WorkOrderOperation`. The second review combines `LaborTimeEntry`, `WorkOrder`, and payroll-period support to surface timing and ghost-payroll style issues.
-
-**What to look for in the result**
-
-- direct labor booked before an operation starts or after it ends
-- labor posted after the work order was closed
-- hourly payroll that lacks time support
-- which issues reflect process timing and which issues require control follow-up
-
-## Required Student Output
-
-Submit a reproducible analysis file and a short decision memo. Include your release or file version, reporting period, filters, and query filenames. The assessed submission contains:
-
-- **Evidence summary:** Prepare a cost bridge for one manufactured item and related work order, with standard components, operation and labor support, completion, and close evidence.
-- **Accounting or business interpretation:** Explain how materials, labor, variable overhead, and fixed overhead connect to WIP, completion, and close in this model.
-- **Database explanation:** Show keys connecting clock time, productive allocation, operation, and work order. Explain why approved and allocated hours need not be identical.
-- **Management or audit conclusion:** Recommend whether the next review concerns cost composition, operation timing, labor support, or close evidence.
-
-Assessment focuses on a defensible evidence trail, accurate accounting, reproducible comparisons, and a recommendation supported by the evidence. A result with no flagged rows is valid when its scope and criteria are documented.
-
-## Optional Excel Follow-Through
-
-1. Filter `Item` to one manufactured finished good and review its standard cost structure.
-2. Use `WorkOrder` and `WorkOrderOperation` to trace the selected order through operation sequence and dates.
-3. Use `WorkOrderOperationID` to tie `WorkOrderOperationSchedule`, `TimeClockEntry`, and `LaborTimeEntry` together.
-4. Use `WorkOrderID` to trace into `ProductionCompletion`, `ProductionCompletionLine`, and `WorkOrderClose`.
-5. Use `SourceDocumentType` and `SourceDocumentID` in `GLEntry` to compare the material issue, completion, and close postings for the same work order.
-
-## Wrap-Up Questions
-
-- Accounting/process: Which event moves finished goods into inventory, and which event resolves residual variance?
-- Database/source evidence: Which work-order, operation, clock, labor-allocation, or GL key proves the labor-cost path?
-- Analytics judgment: Where do standard cost, approved time, direct labor allocation, and close variance diverge?
-- Escalation/next step: What timing or support pattern would make labor cost or work-order close worth audit follow-up?
-
-## Limitations and Judgment
-
-This is a standard-cost teaching model. The trace does not establish actual-cost inventory valuation or prove that every difference in hours is a payroll error.
+</details>
 
 ## Next Steps
 
-- Use [Manufacturing Process](../../processes/manufacturing.md) for the full planning, execution, and close walkthrough behind this case.
-- Use [Payroll Process](../../processes/payroll.md) when you need the approved-hours and payroll-side support behind factory labor.
-- Use [Schema Reference](../../reference/schema.md) when you need table-level join support while tracing the work order.
-- Use [GLEntry Posting Reference](../../reference/posting.md) when you want the exact posting rules for material issue, completion, close, and manufacturing reclass support.
-- Use [Financial Statement Bridge Case](financial-statement-bridge-case.md) when you want to extend this work-order analysis into broader ledger interpretation.
+Continue to [Explain Staffing, Overtime, and Payroll Cost](workforce-coverage-and-attendance-case.md). Keep your completed evidence and use the [Query Library](../analysis-tracks.md) for a separate extension.

@@ -6,6 +6,7 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 import { ReportPreviewOverlay } from "@site/src/components/ReportPreviewOverlay";
 import reportManifest from "@site/src/generated/reportManifest";
 import reportPackManifest from "@site/src/generated/reportPackManifest";
+import resolveCaseLink from "@site/src/components/Cases/resolveCaseLink";
 import styles from "./styles.module.css";
 
 function getReportEntry(reportKey) {
@@ -23,8 +24,9 @@ Object.values(reportPackManifest).forEach((pack) => {
     const guidance = guidanceByReport[item.reportSlug] ?? { questions: [], analysis: [], links: [] };
     guidance.questions = Array.from(new Set([...guidance.questions, ...item.discussionQuestions]));
     guidance.analysis = Array.from(new Set([...guidance.analysis, ...item.suggestedAnalysis]));
-    if (item.relatedLink && !guidance.links.some((link) => link.href === item.relatedLink.href)) {
-      guidance.links.push(item.relatedLink);
+    const relatedLink = resolveCaseLink(item.relatedLink);
+    if (relatedLink && !guidance.links.some((link) => link.href === relatedLink.href)) {
+      guidance.links.push(relatedLink);
     }
     guidanceByReport[item.reportSlug] = guidance;
   });
