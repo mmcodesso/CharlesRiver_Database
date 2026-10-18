@@ -32,7 +32,7 @@ Use **Microsoft 365 desktop Excel**. You will import selected tables into a sepa
 </TabItem>
 <TabItem value="sql">
 
-Use the released SQLite database with **DB Browser for SQLite**. You will begin with complete queries to copy and run, then learn to change a filter, follow a key, and summarize records.
+Use the SQLite database with **DB Browser for SQLite**. You will begin with complete queries to copy and run, then learn to change a filter, follow a key, and summarize records.
 
 [Set up SQL](../analytics/sql-guide.md) to open the database and run your first query.
 
@@ -68,7 +68,7 @@ These lessons establish a habit: say what one row represents before you calculat
 | [10. Follow Hours into Payroll](follow-hours-into-payroll.md) | Which obligations remain after an employee is paid? |
 | [11. Follow an Estimate into Settlement](follow-an-estimate-into-settlement.md) | How does later evidence replace an expense estimate? |
 
-The first sales lessons continue the same selected order. Later processes use separate verified records. Their teaching sequence does not mean that every purchase, work order, or pay record belongs to the illustrative customer project.
+The first sales lessons continue the same selected order. Later processes introduce separate records, each with its own scope and identifiers. Follow the document links within each lesson and keep its selected population clear when moving to a new process.
 
 <span id="3-integrated-business-cases"></span>
 
@@ -110,11 +110,11 @@ Keep the header total once per invoice, or independently summarize lines at invo
 
 ## Keep a Small Evidence Portfolio
 
-For each lesson, retain your workbook or SQL, source release, selected identifiers, filters, result check, and short interpretation. Download the [blank evidence template](pathname:///teaching/evidence-template.md) and the [public method rubric](pathname:///teaching/method-rubric.md); both describe the method without supplying private challenge solutions. A useful submission explains both what the evidence supports and what it leaves unresolved.
+For each lesson, retain your workbook or SQL, source file, selected identifiers, filters, result check, and short interpretation. Download the [blank evidence template](pathname:///teaching/evidence-template.md) and the [public method rubric](pathname:///teaching/method-rubric.md); both describe the method without supplying private challenge solutions. A useful submission explains both what the evidence supports and what it leaves unresolved.
 
-Worked outputs use **release v2027.1**. The company scenes are fictional teaching situations; the named examples are actual synthetic records in that release. The file includes intentional exceptions. A discrepancy calls for investigation, and a matched example does not establish that the whole population is correct.
+The records include intentional exceptions. When a result differs from your expectation, check the selected records, dates, and relationships before drawing a conclusion. A matched example supports that comparison; it does not establish that the whole population is correct.
 
-If your assigned file differs, follow your instructor's version and explain any differences rather than altering records to reproduce a displayed number.
+Explain differences from a checkpoint rather than altering source records to reproduce a displayed number.
 
 ## Plan the Workload
 

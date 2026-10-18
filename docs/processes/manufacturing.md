@@ -19,7 +19,7 @@ import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
 The operations planner in our furnishing story has another supply question. Charles River buys finished merchandise, but it also manufactures selected products. Supplying those goods means arranging components, production work, and employee time.
 
-The question is **how materials become finished goods, and how accounting explains the cost of that change**. Continue the fictional company situation here; actual work orders must be selected from the dataset rather than assumed to belong to the customer's project.
+The question is **how materials become finished goods, and how accounting explains the cost of that change**. Follow the work from planning to completion and close. When you investigate a work order, use its own material, production, and accounting records to build the explanation.
 
 The purchasing chapter established how components arrive in inventory. Manufacturing begins with a plan for using those resources. It then records production activity and distinguishes physical completion from the accounting work needed to close the order.
 
@@ -84,7 +84,7 @@ This is also where the controller's company-wide view matters. Payroll support, 
 <details>
 <summary>Compare the events with their accounting evidence</summary>
 
-These actual synthetic records belong to **v2027.1**, separately from the illustrative furnishing project.
+Keep the event dates separate as you explain what was complete at January 31 and what remained to be closed.
 
 | Event and date | Evidence | Debit and credit effect | Remaining question |
 |---|---|---|---|
@@ -332,7 +332,7 @@ flowchart LR
 - `WorkOrderOperationSchedule.WorkOrderOperationID -> WorkOrderOperation.WorkOrderOperationID`
 - Match `WorkOrderOperationSchedule.WorkCenterID = WorkCenterCalendar.WorkCenterID` **and** `WorkOrderOperationSchedule.ScheduleDate = WorkCenterCalendar.CalendarDate` together.
 
-Work center alone is not a daily key. In **v2027.1**, schedule **5** is center **4** on **January 19, 2024**, with **0.42 scheduled hours**. A center-only calendar join produces **1,180 matches**; adding the date produces **one**:
+Work center alone is not a daily key. Schedule **5** is center **4** on **January 19, 2024**, with **0.42 scheduled hours**. A center-only calendar join produces **1,180 matches**; adding the date produces **one**:
 
 ```sql
 SELECT s.WorkOrderOperationScheduleID, s.WorkCenterID, s.ScheduleDate,
@@ -540,7 +540,7 @@ Read completion, cost support, and `WorkOrderClose` as distinct evidence. A reco
 
 **Prerequisites, tools, and sources:** complete the manufacturing cost-flow exercise linked above and review WIP, manufacturing clearing, and variance. Use a SQL tool with the published SQLite file, or Excel with filters and lookups, plus a copy of the editable Draw.io model. Sources are `SupplyPlanRecommendation`, `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule`, `MaterialIssueLine`, `MaterialIssue`, `LaborTimeEntry`, `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose`, and `GLEntry`.
 
-1. Record the release, chosen work order, scope, and reporting date. Mark its planning, execution, completion, and close evidence on the model.
+1. Record the source file, chosen work order, scope, and reporting date. Mark its planning, execution, completion, and close evidence on the model.
 2. Compare the event dates and distinguish an open work order from completed goods awaiting accounting close. Retain document grain and state the cost basis of every amount.
 3. Propose one review of consumption, labor support, or close. Label it a **proposed teaching control** and specify its risk, objective, owner, evidence, test, and limitation using the [workshop matrix](../learn-and-practice/bpmn-controls-workshop.md).
 

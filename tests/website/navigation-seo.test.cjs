@@ -6,7 +6,7 @@ const yaml = require("js-yaml");
 const config = require("../../docusaurus.config.js");
 const { docsSidebar } = require("../../sidebars.js");
 const { loadSiteBranding } = require("../../config/loadSiteBranding.cjs");
-const { TEACHING_RELEASE, getTeachingDownloadBaseUrl } = require("../../src/data/teachingRelease.cjs");
+const { getTeachingDownloadBaseUrl } = require("../../src/data/teachingRelease.cjs");
 const {
   buildDatasetStructuredData,
   buildLearningResourceStructuredData,
@@ -83,13 +83,13 @@ test("established public routes and redirects remain stable", () => {
   assert.equal(redirects.find((redirect) => redirect.from.includes("/docs/process-models")).to, "/docs/process-flows");
 });
 
-test("navigation retains direct downloads, Hub, textbook, and verified release", () => {
+test("navigation retains Downloads, Hub and textbook while release links stay on Downloads", () => {
   const items = config.themeConfig.navbar.items;
   assert.ok(items.some((item) => item.to === "/docs/downloads"));
   const links = JSON.stringify({ navbar: items, footer: config.themeConfig.footer.links });
   assert.ok(links.includes("https://accountinganalyticshub.com/"));
   assert.ok(links.includes("https://aa.accountinganalyticshub.com/"));
-  assert.ok(links.includes("/releases/tag/v2027.1"));
+  assert.ok(!links.includes("/releases"));
   for (const [type, suffix] of [["sqlite", ".sqlite"], ["excel", ".xlsx"], ["csv", "_csv.zip"]]) {
     assert.equal(getReleaseDownloadUrl(branding, type), `${getTeachingDownloadBaseUrl(branding.repositoryUrl)}/${branding.shortName}${suffix}`);
   }
@@ -166,11 +166,16 @@ test("dataset schema shares one identity with verified creator and only publishe
   assert.equal(home["@id"], downloads["@id"]);
   assert.equal(home.creator["@type"], "Person");
   assert.equal(home.creator.name, "Mauricio Mello Codesso");
-  assert.equal(home.version, TEACHING_RELEASE.version);
+  assert.equal(home.version, undefined);
+  assert.equal(downloads.version, undefined);
   assert.equal(home.license, "https://creativecommons.org/licenses/by-sa/4.0/");
-  assert.equal(home.distribution.length, 3);
-  assert.ok(home.distribution.every((item) => item.contentUrl.includes("/releases/download/v2027.1/")));
-  assert.ok(home.distribution.every((item) => !item.contentUrl.includes("_support")));
+  assert.equal(home.distribution, undefined);
+  assert.equal(home.sameAs, undefined);
+  assert.equal(home.citation, undefined);
+  assert.equal(downloads.distribution.length, 3);
+  assert.ok(downloads.distribution.every((item) => item.contentUrl.includes("/releases/latest/download/")));
+  assert.ok(downloads.distribution.every((item) => !item.contentUrl.includes("_support")));
+  assert.equal(downloads.sameAs, `${branding.repositoryUrl}/releases/latest`);
   assert.equal(downloads.description, "Download the published teaching files.");
   assert.equal(downloads.mainEntityOfPage, `${branding.baseUrl}/docs/downloads`);
   assert.equal(home.identifier, undefined);

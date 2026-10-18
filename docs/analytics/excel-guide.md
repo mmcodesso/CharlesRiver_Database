@@ -18,7 +18,7 @@ Use **Microsoft 365 desktop Excel**. The instructions below give the Windows men
 
 ## 1. Obtain the Source and Create Your Analysis File
 
-Get the <ReleaseDownloadLink type="excel">published Excel workbook</ReleaseDownloadLink> from [Downloads](../start-here/downloads.md). Wait for the download to finish, and retain the original filename and release information.
+Get the [Excel workbook from Downloads](../start-here/downloads.md). Wait for the download to finish, and retain the original source file.
 
 Open Excel and create a **blank workbook**. Save it as **Lesson01.xlsx** in your own analysis folder. Keep the downloaded <FileName type="excel" /> as a separate source file. The lesson calculations and notes belong in Lesson01.
 
@@ -45,9 +45,9 @@ Create a sheet named **Notes**. In A1, type `Customer rows`. In B1, enter:
 =ROWS(CustomerData[CustomerID])
 ~~~
 
-Expect **220** customer rows in release **v2027.1**. The header is not a customer row. In the loaded table, open the CustomerID filter and find **130**. Its name should be **Jones, Richardson and Beard**, with segment **Design Trade**. Clear the filter after checking.
+Expect **220** customer rows. The header is not a customer row. In the loaded table, open the CustomerID filter and find **130**. Its name should be **Jones, Richardson and Beard**, with segment **Design Trade**. Clear the filter after checking.
 
-Record the source filename, release **v2027.1**, imported table **T4_Customer**, working table **CustomerData**, and row count on Notes. Save Lesson01.xlsx.
+Record the source filename, imported table **T4_Customer**, working table **CustomerData**, and row count on Notes. Save Lesson01.xlsx.
 
 **Ready check:** you can locate a named table, filter a key, read a row, and save your own working file. These are the prerequisites for [Meet the Records](../learn-and-practice/meet-the-records.md).
 
@@ -89,7 +89,7 @@ To edit an import, on Windows open **Data → Queries & Connections**, then doub
 - **Formula shows a name error:** check the working table and column names. The formulas use English function names; localized Excel may use translated names and semicolons instead of commas.
 - **Date filters behave like text filters:** set the column type to Date in Power Query. For typed cutoff cells, use `DATE(year,month,day)`.
 - **A lookup says “No match”:** compare the stored keys and their types. Do not replace missing matches with a guessed name or zero.
-- **An amount differs:** check release, source filters, worksheet filters, and whether a merge repeated rows.
+- **An amount differs:** check the source table, source filters, worksheet filters, and whether a merge repeated rows.
 - **The source moved:** use **Data Source Settings** to select its new location, then refresh.
 - **Power Query menus are absent:** confirm you are using a current Microsoft 365 desktop installation. The browser version is outside this tutorial's documented route.
 

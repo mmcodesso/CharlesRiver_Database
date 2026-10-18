@@ -92,7 +92,7 @@
             "queries": [
               "c01-invoices"
             ],
-            "check": "20 related invoices in released history; 17 are dated through March 31. Do not add freight and tax again: GrandTotal already includes them.",
+            "check": "20 related invoices in recorded history; 17 are dated through March 31. Do not add freight and tax again: GrandTotal already includes them.",
             "meaning": "An order can be invoiced in parts. The April invoices belong in the later review, even though the orders were placed in the first quarter.",
             "keep": "Save Invoices and pause. Write one sentence distinguishing cohort selection from event cutoff.",
             "mismatch": "Ordinary SUM includes hidden rows. Use SUBTOTAL for filtered totals or a date-conditioned SUMIFS.",
@@ -129,7 +129,7 @@
               "c01-applications",
               "c01-credits"
             ],
-            "check": "24 applications across released history. Credit memo 30 is dated April 26 and credits invoice 1086 by 612.38. Receipt 165 appears on several application rows; its 18,938.14 must be counted only once when describing the receipt.",
+            "check": "24 applications across recorded history. Credit memo 30 is dated April 26 and credits invoice 1086 by 612.38. Receipt 165 appears on several application rows; its 18,938.14 must be counted only once when describing the receipt.",
             "meaning": "This credit changes the April explanation. It is subsequent evidence, not a reduction that was already recorded on March 31.",
             "keep": "Save Applications, Credits, and the dates of the receipt/application handoffs.",
             "mismatch": "A credit found by order only needs further allocation evidence. Do not force it onto the first invoice. This worked credit has an explicit invoice link.",
@@ -488,7 +488,7 @@
             "queries": [
               "c03-matches"
             ],
-            "check": "Seven invoice lines through June, versus five receipts. Receipt line 176 has two invoices by June and another later in released history. None of the selected goods invoices is paid by March 31.",
+            "check": "Seven invoice lines through June, versus five receipts. Receipt line 176 has two invoices by June and another later in recorded history. None of the selected goods invoices is paid by March 31.",
             "meaning": "A receipt can be invoiced in parts, and an invoice can remain unpaid. A one-result lookup would lose the later match. Keep a merge for this one-to-many relationship.",
             "keep": "Save GoodsInvoices and date-conditioned payment columns.",
             "mismatch": "An eighth match dated July 14 lies beyond this follow-up window. Preserve it as later evidence without including it in June totals.",
@@ -854,7 +854,7 @@
             ]
           }
         ],
-        "stop": "A reviewer should be able to trace the priority to the table, the table to the population, and the population to the released records."
+        "stop": "A reviewer should be able to trace the priority to the table, the table to the population, and the population to the source records."
       }
     ],
     "finalFigure": [
@@ -1261,7 +1261,7 @@
               "c06-pay-summary"
             ],
             "check": "209 registers: 104 in period 1 and 105 in period 2. Period 1 gross pay is 125,541.19 and net pay 104,320.59. Period 2 gross pay is 265,084.43 and net pay 220,069.69. Each header’s gross less withholdings equals net.",
-            "meaning": "The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly. WorkCenters counts identified centers only. A zero means approved time with no identified center; a null after the payroll join means no approved hourly support in this scope. Neither is a fictional location.",
+            "meaning": "The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly. WorkCenters counts identified centers only. A zero means approved time with no identified center; a null after the payroll join means no approved hourly support in this scope. Keep both categories separate from identified work centers.",
             "keep": "Save PayBridge and the two period totals.",
             "mismatch": "Do not join payroll headers to raw clock rows. A register repeated ten times would make pay appear ten times too large.",
             "sqlText": "hours groups by EmployeeID and PayrollPeriodID before joining payroll. A null hours result is retained for a register without approved hourly support. COUNT(DISTINCT WorkCenterID) excludes null centers and records identified location variety without repeating pay across locations. It returns zero for an approved-time employee-period with only null centers; the outer payroll join retains null when there is no approved-time employee-period at all. The Excel route retains missing-center evidence in a separate branch.\n\nRun each complete statement separately and retain its result before continuing.",
@@ -1327,7 +1327,7 @@
             "meaning": "The missing payment link is a follow-up item, not proof of nonpayment outside the dataset. One period-1 payment is dated January 18, which also deserves comparison with its approval evidence if the review extends to payment authorization.",
             "keep": "Save the payment schedule and one unresolved-payment workpaper.",
             "mismatch": "Compare distinct register IDs as well as money. Zero-pay registers can have payment records and should not be silently removed.",
-            "sqlText": "LEFT JOIN keeps the payroll registers; a null PayrollPaymentID identifies unmatched payment evidence. This is a test of records in the release, not proof of what happened outside it.\n\nRun each complete statement separately and retain its result before continuing.",
+            "sqlText": "LEFT JOIN keeps the payroll registers; a null PayrollPaymentID identifies unmatched payment evidence. This is a test of records in the file, not proof of what happened outside it.\n\nRun each complete statement separately and retain its result before continuing.",
             "excelInputs": [
               "SelectedPayroll (Session 2.1)",
               "PayrollPaymentData ← PayrollPayment (import here)"
@@ -1437,7 +1437,7 @@
     "prep": "find-the-accounting-entries",
     "question": "How can the company report profit while cash falls, and what does the year-end close change?",
     "scenario": "The controller is preparing the year-end management review. Management wants an explanation of performance, cash movement, and obligations. A collection of reports is not enough: you must reconcile the periods, trace selected source evidence, and decide which unresolved matters deserve attention first. Predict why closing revenue and expense accounts should not itself create or consume cash.",
-    "scope": "Fourth-quarter 2026 activity and December 31 balances. Opening balances include all released history before October 1, including the opening journal and earlier years. The fixed-asset extension follows asset 18 across its 2026 lifecycle. The working file includes later supplier payments; exclude 2027 events from year-end balances.",
+    "scope": "Fourth-quarter 2026 activity and December 31 balances. Opening balances include all recorded history before October 1, including the opening journal and earlier years. The fixed-asset extension follows asset 18 across its 2026 lifecycle. The working file includes later supplier payments; exclude 2027 events from year-end balances.",
     "sources": [
       "GLEntry",
       "Account",
@@ -1760,7 +1760,7 @@
     "prep": "bpmn-controls-workshop",
     "question": "Which query flags become supported findings, and what control could be assessed?",
     "scenario": "The controller requests a focused controls review. A list of flags is easy to produce; the harder task is to investigate alternatives and explain what the evidence establishes. You will examine repeated supplier references and overtime approval support, then recommend controls with a clear owner, procedure, and assessment method.",
-    "scope": "Duplicate supplier invoice and check references across the entire released history, plus approved overtime entries with positive overtime dated October 1–December 31, 2026. These populations have different denominators. The review uses source records, not instructor anomaly labels or the support workbook.",
+    "scope": "Duplicate supplier invoice and check references across the entire recorded history, plus approved overtime entries with positive overtime dated October 1–December 31, 2026. These populations have different denominators. The review uses source records, not instructor anomaly labels or the support workbook.",
     "sources": [
       "PurchaseInvoice",
       "PurchaseInvoiceLine",
@@ -1795,7 +1795,7 @@
             "check": "40,204 supplier invoices; 12,130 payments with a nonblank check reference; 1,895 approved positive-overtime entries in Q4 2026.",
             "meaning": "The tests do not cover every AP or payroll risk. Exact reference matching also misses differently formatted duplicates; note that limitation before interpreting a zero or low rate.",
             "keep": "Save a scope sheet with risks, criteria, exclusions, denominators, and expected evidence.",
-            "mismatch": "Do not filter AP to Q4 simply to match overtime dates. The worked duplicate-reference evidence is across released history.",
+            "mismatch": "Do not filter AP to Q4 simply to match overtime dates. The worked duplicate-reference evidence is across recorded history.",
             "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
             "excelInputs": [
               "PurchaseInvoiceData ← PurchaseInvoice and DisbursementPaymentData ← DisbursementPayment (import here; full populations retained)",

@@ -28,9 +28,9 @@ The controller is preparing the year-end management review. Management wants an 
 
 <CaseOverview slug="financial-statement-bridge-case" />
 
-**Worked scope.** Fourth-quarter 2026 activity and December 31 balances. Opening balances include all released history before October 1, including the opening journal and earlier years. The fixed-asset extension follows asset 18 across its 2026 lifecycle. The working file includes later supplier payments; exclude 2027 events from year-end balances.
+**Worked scope.** Fourth-quarter 2026 activity and December 31 balances. Opening balances include all recorded history before October 1, including the opening journal and earlier years. The fixed-asset extension follows asset 18 across its 2026 lifecycle. The working file includes later supplier payments; exclude 2027 events from year-end balances.
 
-The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
+Choose Excel or SQL; your selection carries between lessons and cases.
 
 **Preparation:** [6. Find the Accounting Entries](/docs/learn-and-practice/find-the-accounting-entries); [11. Follow an Estimate into Settlement](/docs/learn-and-practice/follow-an-estimate-into-settlement); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion); [Case 1: customer account review](/docs/analytics/cases/o2c-trace-case) (recommended); [Case 3: supplier obligations](/docs/analytics/cases/p2p-accrual-settlement-case) (recommended). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
@@ -721,7 +721,7 @@ The completed review should stand on its own: definitions, reproducible schedule
 
 The quarter produces positive pre-close profit while cash falls. The complete ledger bridge explains that difference and the selected receipt/invoice trace illustrates a liability transition. The annual closing entries transfer full-year profit to retained earnings without creating cash. Management can now discuss inventory and obligation timing using reconciled evidence, while recognizing that an arithmetic tie-out alone does not establish transaction validity.
 
-**Deliverable:** A full-history balance rollforward, profit/cash bridge, selected source reconciliation, and management review memo. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** A full-history balance rollforward, profit/cash bridge, selected source reconciliation, and management review memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
 
 ## Independent Challenge
 

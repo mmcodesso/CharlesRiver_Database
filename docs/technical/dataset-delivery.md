@@ -15,13 +15,13 @@ If you want to customize <DisplayName /> locally, use the repository workflow de
 
 ## Default Teaching Package
 
-For most courses, start with the three public formats in release <TeachingRelease />:
+For most courses, start with the three public formats:
 
 - <FileName type="sqlite" />
 - <FileName type="excel" />
 - <FileName type="csv" />
 
-Get these files from [Downloads](../start-here/downloads.md). A <FileName type="support" /> companion can be created by a local instructor run or supplied separately for a course; it is not an asset in this public teaching release. Do not ask students to find a fourth public download.
+Get these files from [Downloads](../start-here/downloads.md). A <FileName type="support" /> companion can be created by a local instructor run or supplied separately for a course; it is not part of the public download package. Do not ask students to find a fourth public download.
 
 Then point students to:
 
@@ -40,7 +40,7 @@ Customize the dataset when you want to:
 - produce a local validation or performance-focused run
 - change anomaly behavior for instructor preparation or internal testing
 
-The published release remains the default classroom package. Local settings files are optional tools for instructor customization and validation.
+The published files remain the default classroom package. Local settings files are optional tools for instructor customization and validation.
 
 ## How to Generate the Dataset Locally
 
@@ -55,7 +55,7 @@ python3 generate_dataset.py
 
 Generated files are written to `outputs/`.
 
-The data depend on the versions of a few packages: Faker supplies names and addresses, and pandas' handling of missing values reaches some anomalies. To reproduce a published release exactly, install `requirements-lock.txt` instead of `requirements.txt`. Each build records its Python and package versions in the generation log.
+Faker supplies names and addresses, and pandas' handling of missing values reaches some anomalies. For reproducible local generation, install `requirements-lock.txt` instead of `requirements.txt` and retain the generation log with your source files.
 
 By default, `generate_dataset.py` reads `config/settings.yaml`. You can also pass a settings file and validation scope explicitly:
 

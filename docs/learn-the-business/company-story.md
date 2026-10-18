@@ -27,8 +27,8 @@ import CompanyStoryHero from "@site/src/components/CompanyStoryHero";
   ]}
 />
 
-:::note About this teaching story
-Charles River is fictional. The background, recurring staff roles, and customer situation on these pages provide a teaching narrative; they do not identify particular employees or transactions in the dataset. Technical explanations describe the published records. Derive numerical findings from your assigned file.
+:::note About this learning environment
+<DisplayName /> is a fictional home-furnishings company with synthetic records, created for accounting education. The company history, staff roles, and furnishing project provide context rather than identifying particular employees or transactions. Each activity specifies the records used for analysis.
 :::
 
 <span id="what-the-company-does"></span>
@@ -45,13 +45,13 @@ The customer experiences one relationship with the company. Inside Charles River
 
 ## How the Business Developed
 
-In our teaching backstory, Charles River begins as a regional furnishings reseller. Buying finished goods allows it to assemble an assortment without producing every item itself. Purchasing must decide what to obtain, and receiving must establish what actually arrives.
+Charles River begins as a regional furnishings reseller. Buying finished goods allows it to assemble an assortment without producing every item itself. Purchasing must decide what to obtain, and receiving must establish what actually arrives.
 
-The story then adds selected in-house manufacturing. Making part of the assortment introduces a different set of responsibilities: obtaining components, arranging production work, recording material use, and explaining product cost. The company now has to coordinate supplier deliveries with its own production capacity.
+Selected in-house manufacturing expands the assortment and introduces new responsibilities: obtaining components, arranging production work, recording material use, and explaining product cost. The company now has to coordinate supplier deliveries with its own production capacity.
 
 Hourly design services broaden the relationship again. A customer can need help bringing furnishings together as well as needing the goods themselves. The design lead has to allocate people's time, and accounting needs a basis for billing the work.
 
-These stages explain the three activities you will encounter throughout the site. They are a fictional history, not dated milestones stored in the data. The dataset represents the resulting business: purchased merchandise, selected manufacturing, and hourly design services operating together.
+Together, these three activities shape the business you will investigate: purchased merchandise, selected manufacturing, and hourly design services operating alongside one another.
 
 <span id="who-buys-and-what-they-need"></span>
 
@@ -69,9 +69,9 @@ Design work adds a question about capacity in people rather than stock on a shel
 
 ## Meet the Recurring Roles
 
-Four roles will help you follow the chapters. They are teaching roles; use actual employee and approval records when investigating who performed a recorded action.
+Four roles connect the chapters. Follow the question each person passes to the next department, then consider which document would help answer it.
 
-| Role | Responsibility in the story | Question carried into the next department |
+| Role | Responsibility | Question carried into the next department |
 |---|---|---|
 | Sales coordinator | Understand the customer's request and record the order | Can operations support what the customer needs? |
 | Operations planner | Connect demand with merchandise, components, and production work | What supply and work are needed, and when? |
@@ -96,9 +96,9 @@ At period end, the controller needs a coherent explanation. The company may have
 
 ## Decisions Connect the Departments
 
-The story creates tensions that are useful to investigate. Holding more goods may help availability while tying up cash. Producing selected goods requires attention to components and capacity. Assigning more design time may help an engagement while using staff time that could support other work.
+Each department faces choices that affect the others. Holding more goods may help availability while tying up cash. Producing selected goods requires attention to components and capacity. Assigning more design time may help an engagement while using staff time that could support other work.
 
-These are questions to investigate, rather than conclusions about the company's performance. A delivery concern needs order and shipment evidence. A collection concern needs invoices and cash applications. A service-margin question needs a definition of the revenue and costs included.
+To evaluate these choices, start with the question and identify the evidence it needs. A delivery concern needs orders and shipments. A collection concern needs invoices and cash applications. A service-margin question needs a definition of the revenue and costs included.
 
 The same discipline applies to controls. An approval field can help you identify recorded responsibility. Establishing whether a review was independent and effective requires more than noticing that the field exists.
 

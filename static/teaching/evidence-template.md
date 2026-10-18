@@ -6,9 +6,9 @@ Copy one template for each trace or investigation. Leave unsupported fields expl
 
 - Business question:
 - Activity, lesson, or assigned case:
-- Dataset release and file checksum:
-- Website content commit or assigned page version:
-- Tool and version/build:
+- Source filename and table:
+- Lesson or case page:
+- Tool used:
 - Reporting cutoff and date basis (document, approval, posting, payment, or clearing):
 - Included population and explicit exclusions:
 - What one source row represents:

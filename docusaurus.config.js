@@ -1,6 +1,5 @@
 const { themes } = require("prism-react-renderer");
 const { loadSiteBranding } = require("./config/loadSiteBranding.cjs");
-const { TEACHING_RELEASE, getTeachingReleaseUrl } = require("./src/data/teachingRelease.cjs");
 
 const branding = loadSiteBranding();
 
@@ -250,10 +249,6 @@ const config = {
             {
               label: "GitHub Repository",
               href: branding.repositoryUrl,
-            },
-            {
-              label: `Teaching Release ${TEACHING_RELEASE.tag}`,
-              href: getTeachingReleaseUrl(branding.repositoryUrl),
             },
             {
               label: "Contributing",

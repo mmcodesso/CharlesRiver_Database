@@ -9,9 +9,9 @@ pagination_next: start-here/dataset-overview
 
 # Downloads
 
-Choose the format your assignment uses. The published teaching files contain the same synthetic company records in different working formats; you do not need to install or run the dataset generator.
+Choose the format your assignment uses. The published teaching files contain the same company records in different working formats. Download your source file, keep it unchanged, and create a separate analysis file; no generator setup is needed.
 
-**Teaching baseline: <TeachingReleaseLink />.** The classroom links below stay on that release so they match the worked examples. Keep the release label with your source file and analysis notes.
+The links below always download the **latest published version**. <TeachingReleaseLink /> for its version number, file details, and checksums. [Previous versions](https://github.com/mmcodesso/CharlesRiver_Database/releases) remain available in the release history.
 
 If you are still reading the company and process chapters, you can return here later. Those chapters do not require an open file.
 
@@ -41,7 +41,7 @@ The asset filenames are <FileName type="sqlite" />, <FileName type="excel" />, a
 
 <TeachingReleaseIntegrity />
 
-For an initial workbook or CSV population check, locate `Customer` and confirm **220 customer records**, excluding the header. This checks the imported population, while the SQLite hash above verifies the complete SQLite file. A readable file or a matching row count alone does not verify every value.
+For an initial workbook or CSV population check, locate `Customer` and confirm **220 customer records**, excluding the header. This checks the imported population; comparing the SQLite checksum checks the complete file. A readable file or a matching row count alone does not verify every value.
 
 <span id="open-your-first-file"></span>
 
@@ -61,7 +61,7 @@ If the tool reports an incomplete or unreadable file, check that the download fi
 
 ## Know the Package You Are Using
 
-The verified <TeachingRelease /> release contains **82 user tables**. You will usually need only a small group for one investigation. The [Dataset Guide](dataset-overview.md) explains how a document header, its lines, and related records fit together.
+The database contains **82 user tables**. You will usually need only a small group for one investigation. The [Dataset Guide](dataset-overview.md) explains how a document header, its lines, and related records fit together.
 
 The main operating window is **2024–2026**. Some supplier payments settle in early 2027. A later payment can explain eventual settlement while the payable was still open at an earlier reporting date.
 

@@ -19,7 +19,7 @@ import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
 The manufacturing chapter introduced employees' work as part of production. The design-services chapter introduced staff time supporting customers. Payroll now asks **how the company supports employee earnings, records the cost, and settles the obligations that follow**.
 
-Continue our fictional company situation by considering an hourly production employee over a pay period. This is a teaching example, not an identified employee in the file. Payroll also serves the wider workforce, so the customer's furnishing project cannot explain every payroll record.
+Consider an hourly production employee over a pay period. Follow the approved hours into earnings, employee payment, and the settlement of payroll liabilities. Payroll serves the wider workforce, so keep each investigation's employee and period in view.
 
 The ordinary path begins with expected work and attendance evidence. It then moves into approved hours, a payroll calculation, employee payment, and later remittances. Each stage supplies a different part of the explanation.
 
@@ -440,7 +440,7 @@ flowchart LR
 
 **Prerequisites, tools, and sources:** review gross-to-net payroll and the time-source distinctions on this page. Use a SQL tool with the published SQLite file, or Excel filters and lookups, plus a copy of the editable Draw.io model. Sources are `Employee`, `PayrollPeriod`, `EmployeeShiftRoster`, `TimeClockPunch`, `TimeClockEntry`, `AttendanceException`, `PayrollRegister`, `PayrollRegisterLine`, `PayrollPayment`, `PayrollLiabilityRemittance`, and `GLEntry`. Add absence, overtime, or labor records when relevant.
 
-1. State the release, employee, pay period, reporting date, and source keys. Annotate the approved-time, register, and settlement activities.
+1. State the source file, employee, pay period, reporting date, and source keys. Annotate the approved-time, register, and settlement activities.
 2. Compare selected hourly support with earnings, then inspect employee payment and period-level remittances separately. Do not duplicate a period-level remittance across employee register rows.
 3. Propose one independent review and label it a **proposed teaching control**. State its risk, objective, owner, evidence, test, and unresolved follow-up in the [workshop matrix](../learn-and-practice/bpmn-controls-workshop.md).
 

@@ -6,7 +6,7 @@ sidebar_label: Schema Reference
 
 # Schema Reference
 
-This reference is the table map for the published dataset: which tables belong together, how the main relationships work, which keys matter most, and where the bridges between groups live. The `v2027.1` SQLite release contains 82 user tables, including five sales-commission tables and four fixed-asset and financing tables.
+This reference is the table map for the dataset: which tables belong together, how the main relationships work, which keys matter most, and where the bridges between groups live. The database contains 82 user tables, including five sales-commission tables and four fixed-asset and financing tables.
 
 If you need the big-picture business story first, start with [Dataset Guide](../start-here/dataset-overview.md) and [Process Flows](../learn-the-business/process-flows.md).
 

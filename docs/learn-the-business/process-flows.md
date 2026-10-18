@@ -24,7 +24,7 @@ For goods fulfillment, the customer's order establishes demand. Warehouse staff 
 
 Each document answers a different question. An order does not prove shipment; a shipment does not establish that an invoice has been settled. The sequence becomes easier to read when you identify the purpose of each handoff before looking at database names.
 
-The furnishing project is an illustrative setting. Actual records can have partial quantities, different dates, and unresolved balances. A process model helps you ask questions about those records; it does not prove that every instance followed an ideal path.
+When you examine the records, look for partial quantities, different dates, and unresolved balances. Use the process model to identify the next document to inspect, then establish how far the selected transaction has progressed.
 
 <span id="the-connected-business"></span>
 

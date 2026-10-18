@@ -60,7 +60,7 @@ These are teaching applications of the same records. They do not require separat
 
 ## Open Materials for Practice
 
-The company and records are synthetic, including intentional anomalies for investigation. You can practice with connected business evidence without handling a real company's confidential transactions.
+The published files let you revisit the same evidence as your skills develop. Intentional anomalies give you opportunities to investigate exceptions, test an explanation, and identify what additional support a conclusion would need.
 
 The materials use the [Creative Commons Attribution-ShareAlike 4.0 license](../technical/license.md). Charles River is part of [Accounting Analytics Hub](https://accountinganalyticshub.com/), with conceptual and analytical support in the [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/).
 

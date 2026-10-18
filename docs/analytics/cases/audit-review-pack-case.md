@@ -28,9 +28,9 @@ The controller requests a focused controls review. A list of flags is easy to pr
 
 <CaseOverview slug="audit-review-pack-case" />
 
-**Worked scope.** Duplicate supplier invoice and check references across the entire released history, plus approved overtime entries with positive overtime dated October 1–December 31, 2026. These populations have different denominators. The review uses source records, not instructor anomaly labels or the support workbook.
+**Worked scope.** Duplicate supplier invoice and check references across the entire recorded history, plus approved overtime entries with positive overtime dated October 1–December 31, 2026. These populations have different denominators. The review uses source records, not instructor anomaly labels or the support workbook.
 
-The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
+Choose Excel or SQL; your selection carries between lessons and cases.
 
 **Preparation:** [Complete one earlier process case](/docs/analytics/cases); [BPMN Process and Internal Control Workshop](/docs/learn-and-practice/bpmn-controls-workshop) (recommended). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
@@ -149,7 +149,7 @@ The tests do not cover every AP or payroll risk. Exact reference matching also m
 <details>
 <summary>If your result differs</summary>
 
-Do not filter AP to Q4 simply to match overtime dates. The worked duplicate-reference evidence is across released history.
+Do not filter AP to Q4 simply to match overtime dates. The worked duplicate-reference evidence is across recorded history.
 
 </details>
 
@@ -642,7 +642,7 @@ Save both workpapers, the register, and controls memo. Your independent challeng
 
 The worked review demonstrates why a flag is not a finding about fraud or financial loss. Repeated references and missing approval links are supported conditions; their economic consequences need additional evidence. Controls become useful recommendations when the owner, timing, evidence, test population, and failure criteria are explicit.
 
-**Deliverable:** An exception register, two source-supported workpapers, and prioritized control recommendations. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** An exception register, two source-supported workpapers, and prioritized control recommendations. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
 
 ## Independent Challenge
 

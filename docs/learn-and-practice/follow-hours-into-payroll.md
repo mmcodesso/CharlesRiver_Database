@@ -36,13 +36,11 @@ In `Lesson10.xlsx`, import `T59_PayrollPeriod` as `PeriodData` filtered to ID 1;
 </TabItem>
 <TabItem value="sql">
 
-Open the released SQLite database in your SQL tool. Save this lesson's statements as **Lesson10.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson10.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
 
-
-These are actual synthetic records from release **v2027.1**, separate from the illustrative customer project in the company story. Use your assigned release when an instructor specifies another file; its results may differ.
 
 <span id="evidence-workflow"></span>
 
@@ -186,7 +184,7 @@ Employee payment **96** is dated **January 19**. Period-wide remittances occur o
 
 ## Keep Your Evidence
 
-Save the approved-hours check, gross-to-net reconciliation, employee-payment date, and separately labeled period-remittance schedule. Record the release, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+Save the approved-hours check, gross-to-net reconciliation, employee-payment date, and separately labeled period-remittance schedule. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
 
 <span id="interpretation-and-limitations"></span>
 

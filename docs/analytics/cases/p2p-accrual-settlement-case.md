@@ -30,7 +30,7 @@ Accounts payable and the controller are reviewing quarter-end obligations. Recei
 
 **Worked scope.** Supplier 27’s five first-quarter 2024 goods receipts, plus the separate repairs-and-maintenance accrual journals 9, 26, and 43. Review March 31 and subsequent evidence through June 30. The accruals are a separate population, not purchases from supplier 27.
 
-The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
+Choose Excel or SQL; your selection carries between lessons and cases.
 
 **Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [8. Follow a Purchase](/docs/learn-and-practice/receipt-to-payable); [11. Follow an Estimate into Settlement](/docs/learn-and-practice/follow-an-estimate-into-settlement). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
@@ -202,7 +202,7 @@ ORDER BY l.GoodsReceiptLineID,i.PurchaseInvoiceID;
 </TabItem>
 </ToolSteps>
 
-**Checkpoint.** Seven invoice lines through June, versus five receipts. Receipt line 176 has two invoices by June and another later in released history. None of the selected goods invoices is paid by March 31.
+**Checkpoint.** Seven invoice lines through June, versus five receipts. Receipt line 176 has two invoices by June and another later in recorded history. None of the selected goods invoices is paid by March 31.
 
 A receipt can be invoiced in parts, and an invoice can remain unpaid. A one-result lookup would lose the later match. Keep a merge for this one-to-many relationship.
 
@@ -526,7 +526,7 @@ Retain both schedules, their source links, and the review note. The note should 
 
 The worked schedules support a bounded quarter-end explanation. Some goods remain partly uninvoiced and some bills unpaid in June. The maintenance estimates are fully consumed and their invoices paid by June. A useful next action is to ask AP and receiving to resolve the residual goods matches, while retaining the estimate comparison for improving the next close.
 
-**Deliverable:** Separate goods and expense-obligation schedules, selected posting checks, and a quarter-end review note. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** Separate goods and expense-obligation schedules, selected posting checks, and a quarter-end review note. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
 
 ## Independent Challenge
 

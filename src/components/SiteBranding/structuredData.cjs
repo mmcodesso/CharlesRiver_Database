@@ -1,7 +1,6 @@
 const LICENSE_URL = "https://creativecommons.org/licenses/by-sa/4.0/";
 const HUB_URL = "https://accountinganalyticshub.com/";
 const {
-  TEACHING_RELEASE,
   getTeachingReleaseUrl,
   getTeachingDownloadBaseUrl,
 } = require("../../data/teachingRelease.cjs");
@@ -36,6 +35,7 @@ function buildDatasetStructuredData(branding, { pagePath = "/", description } = 
   const datasetName = branding.datasetName ?? "Accounting Dataset";
   const datasetUrl = toAbsoluteUrl(branding.baseUrl);
   const releaseUrl = getTeachingReleaseUrl(branding.repositoryUrl);
+  const isDownloadsPage = pagePath.replace(/\/+$/, "") === "/docs/downloads";
 
   return {
     "@context": "https://schema.org",
@@ -43,30 +43,31 @@ function buildDatasetStructuredData(branding, { pagePath = "/", description } = 
     "@id": `${datasetUrl}#dataset`,
     name: datasetName,
     alternateName: branding.displayName,
-    description: description ?? `${datasetName} is a synthetic teaching environment connecting business processes, source documents, accounting records, SQL, Excel, and guided cases.`,
+    description: description ?? `${datasetName} is an accounting learning environment connecting business processes, source documents, accounting records, SQL, Excel, and guided cases.`,
     url: datasetUrl,
     mainEntityOfPage: toAbsoluteUrl(branding.baseUrl, pagePath),
-    sameAs: releaseUrl,
-    version: TEACHING_RELEASE.version,
     isAccessibleForFree: true,
     license: LICENSE_URL,
     creator: { "@type": "Person", name: "Mauricio Mello Codesso" },
     publisher: publisher(),
-    citation: {
-      "@type": "CreativeWork",
-      name: `${datasetName}, release ${TEACHING_RELEASE.tag}`,
-      url: releaseUrl,
-    },
-    distribution: [
-      ["sqlite", "SQLite Database", "application/vnd.sqlite3"],
-      ["excel", "Excel Workbook", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
-      ["csv", "CSV Zip Package", "application/zip"],
-    ].map(([type, label, encodingFormat]) => ({
-      "@type": "DataDownload",
-      name: `${datasetName} ${label}`,
-      encodingFormat,
-      contentUrl: getReleaseDownloadUrl(branding, type),
-    })),
+    ...(isDownloadsPage ? {
+      sameAs: releaseUrl,
+      citation: {
+        "@type": "CreativeWork",
+        name: datasetName,
+        url: releaseUrl,
+      },
+      distribution: [
+        ["sqlite", "SQLite Database", "application/vnd.sqlite3"],
+        ["excel", "Excel Workbook", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
+        ["csv", "CSV Zip Package", "application/zip"],
+      ].map(([type, label, encodingFormat]) => ({
+        "@type": "DataDownload",
+        name: `${datasetName} ${label}`,
+        encodingFormat,
+        contentUrl: getReleaseDownloadUrl(branding, type),
+      })),
+    } : {}),
   };
 }
 

@@ -4,7 +4,7 @@ const path = require("node:path");
 const test = require("node:test");
 const yaml = require("js-yaml");
 const { loadSiteBranding } = require("../../config/loadSiteBranding.cjs");
-const { TEACHING_RELEASE, getTeachingDownloadBaseUrl } = require("../../src/data/teachingRelease.cjs");
+const { getTeachingDownloadBaseUrl } = require("../../src/data/teachingRelease.cjs");
 
 const root = path.resolve(__dirname, "../..");
 const build = path.join(root, "build");
@@ -93,11 +93,18 @@ test("dataset metadata and direct release links are present before JavaScript ru
     const dataset = structuredData(html).find((entry) => entry["@type"] === "Dataset");
     assert.ok(dataset, `Dataset schema: ${route}`);
     assert.equal(dataset.creator.name, "Mauricio Mello Codesso");
-    assert.equal(dataset.version, TEACHING_RELEASE.version);
-    assert.equal(dataset.distribution.length, 3);
+    assert.equal(dataset.version, undefined);
+    assert.equal(dataset.distribution?.length, route === "/docs/downloads" ? 3 : undefined);
     identities.push(dataset["@id"]);
   }
   assert.equal(new Set(identities).size, 1);
+  for (const { route } of [{ route: "/" }, ...docs]) {
+    const html = fs.readFileSync(builtFile(route), "utf8");
+    assert.doesNotMatch(html, /\bv\d{4}\.\d+\b/, `Numbered dataset version on ${route}`);
+    if (route !== "/docs/downloads") {
+      assert.ok(!html.includes(`${branding.repositoryUrl}/releases`), `Release link outside Downloads: ${route}`);
+    }
+  }
   const downloads = fs.readFileSync(builtFile("/docs/downloads"), "utf8");
   for (const suffix of [".sqlite", ".xlsx", "_csv.zip"]) {
     assert.ok(downloads.includes(`${getTeachingDownloadBaseUrl(branding.repositoryUrl)}/${branding.shortName}${suffix}`));

@@ -19,7 +19,7 @@ import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
 Return to the furnishing project in our [company story](../learn-the-business/company-story.md). The design-trade customer has selected goods, and the sales coordinator records the request. The immediate question is practical: **what has the company promised, and what still needs to happen before the invoice is settled?**
 
-This is an illustrative customer situation, not a transaction to search for. You can understand the process here without opening the dataset. Later, you will select actual records for a tracing exercise.
+Begin by following the work from department to department; no download is needed for this reading. Later, trace a selected order and use its documents to explain what was delivered, billed, and settled.
 
 Order-to-cash, or O2C, connects the customer's order with fulfillment, billing, and settlement. Sales, the warehouse, customer accounting, and treasury each contribute evidence. Their activities answer different questions about the same commercial relationship.
 
@@ -113,7 +113,7 @@ An open invoice is therefore a starting point for investigation. Check its due d
 
 ## Bridge an Event to an Entry
 
-These are the existing [Lessons 4–6 sale records](../learn-and-practice/find-the-accounting-entries.md#3-tell-the-event-to-entry-story), not the illustrative furnishing project. The table widens the selected order-line trace to **complete event vouchers**; the shipment and invoice contain two goods lines.
+Continue with the [Lessons 4–6 sale records](../learn-and-practice/find-the-accounting-entries.md#3-tell-the-event-to-entry-story). The table widens the selected order-line trace to **complete event vouchers**; the shipment and invoice contain two goods lines.
 
 | Event and date | Supporting evidence | Why the accounts change | Cutoff question |
 |---|---|---|---|
@@ -488,7 +488,7 @@ This local lineage view distinguishes AR correction from customer credit. Its la
 
 **Prerequisites, tools, and sources:** complete the goods-sale tracing exercise linked above. Use the published SQLite file with a SQL tool, or the Excel workbook with filters and lookups, plus the editable Draw.io model. Work from `SalesOrderLine`, `ShipmentLine`, `SalesInvoiceLine`, their headers, `CashReceiptApplication`, `CashReceipt`, and `GLEntry`. Add `PriceOverrideApproval`, `CreditMemo`, or `CustomerRefund` only if your selected issue needs that evidence.
 
-1. Record the release, scope, reporting date, and actual document and line keys. Mark the corresponding activities and responsibilities on a copy of the model.
+1. Record the source file, scope, reporting date, and actual document and line keys. Mark the corresponding activities and responsibilities on a copy of the model.
 2. Compare demand, fulfillment, billing, and application dates without duplicating header totals. Identify an observed gap or timing difference; do not assume a violation.
 3. Write one risk/control-matrix row naming the risk, objective, proposed owner, evidence, test, and limitation. Label any added independent review or hold as a **proposed teaching control**.
 

@@ -7,7 +7,7 @@ sidebar_label: Roadmap
 
 # Roadmap
 
-This page separates current release scope from planned future expansion. The rest of the documentation describes the current dataset release and teaching workflow.
+This page separates the available data and teaching resources from planned future expansion. The rest of the documentation explains how to work with those resources.
 
 ## Implemented in the Current Release
 
@@ -21,7 +21,7 @@ This page separates current release scope from planned future expansion. The res
 ### Workforce, payroll, and time tracking
 
 - approved daily time clocks, attendance exceptions, overtime approvals, and payroll periods
-- raw punch-event evidence beneath approved daily time: `TimeClockPunch` contains **165,137 rows** in published release <TeachingRelease />
+- raw punch-event evidence beneath approved daily time: `TimeClockPunch` contains **165,137 rows**
 - labor allocation that connects payroll support to manufacturing activity
 - richer employee master data with role, lifecycle, work location, and current-state assignment coverage
 - audit coverage for employee validity, approvals, roster controls, punch controls, and overtime controls

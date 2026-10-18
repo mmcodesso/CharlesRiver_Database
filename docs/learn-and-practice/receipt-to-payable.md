@@ -37,13 +37,11 @@ In `Lesson08.xlsx`, import the source tables named in each step using [the impor
 </TabItem>
 <TabItem value="sql">
 
-Open the released SQLite database in your SQL tool. Save this lesson's statements as **Lesson08.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson08.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
 
-
-These are actual synthetic records from release **v2027.1**, separate from the illustrative customer project in the company story. Use your assigned release when an instructor specifies another file; its results may differ.
 
 <span id="evidence-workflow"></span>
 
@@ -127,7 +125,7 @@ The invoice is dated **2026-11-29**: **8.83** goods + **0.13** tax = **8.96** pa
 
 ## Keep Your Evidence
 
-Save the five-event timeline from request to payment, the stored line keys, and the 8.83 + 0.13 = 8.96 check. State the liability at September 30 and December 31. Record the release, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+Save the five-event timeline from request to payment, the stored line keys, and the 8.83 + 0.13 = 8.96 check. State the liability at September 30 and December 31. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
 
 <span id="interpretation-and-limitations"></span>
 

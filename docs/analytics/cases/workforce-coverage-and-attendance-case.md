@@ -30,7 +30,7 @@ The operations planner is considering an overtime response. Payroll asks whether
 
 **Worked scope.** January 1–28, 2024, using complete payroll periods 1 and 2. Begin with Assembly work center 2, then compare centers and the company-wide period payroll. Payment and remittance dates extend beyond the work window.
 
-The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
+Choose Excel or SQL; your selection carries between lessons and cases.
 
 **Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [10. Follow Hours into Payroll](/docs/learn-and-practice/follow-hours-into-payroll); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
@@ -318,7 +318,7 @@ ORDER BY PayrollPeriodID;
 
 **Checkpoint.** 209 registers: 104 in period 1 and 105 in period 2. Period 1 gross pay is 125,541.19 and net pay 104,320.59. Period 2 gross pay is 265,084.43 and net pay 220,069.69. Each header’s gross less withholdings equals net.
 
-The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly. WorkCenters counts identified centers only. A zero means approved time with no identified center; a null after the payroll join means no approved hourly support in this scope. Neither is a fictional location.
+The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly. WorkCenters counts identified centers only. A zero means approved time with no identified center; a null after the payroll join means no approved hourly support in this scope. Keep both categories separate from identified work centers.
 
 <details>
 <summary>If your result differs</summary>
@@ -425,7 +425,7 @@ Paying employees leaves obligations to tax agencies and benefit providers. Exami
 </TabItem>
 <TabItem value="sql">
 
-LEFT JOIN keeps the payroll registers; a null PayrollPaymentID identifies unmatched payment evidence. This is a test of records in the release, not proof of what happened outside it.
+LEFT JOIN keeps the payroll registers; a null PayrollPaymentID identifies unmatched payment evidence. This is a test of records in the file, not proof of what happened outside it.
 
 Run each complete statement separately and retain its result before continuing.
 ```sql title="c06-payments.sql"
@@ -607,7 +607,7 @@ Save the coverage analysis, pay bridge, employee example, and two settlement sch
 
 The worked investigation supports a targeted staffing review and a separate payment-evidence follow-up. It does not establish a direct conversion from operation hours to required headcount. The pay and remittance reconciliations show why employee deductions, employer costs, employee cash, and provider cash must remain separate.
 
-**Deliverable:** A coverage comparison, employee-period pay reconciliation, settlement schedule, and staffing recommendation. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** A coverage comparison, employee-period pay reconciliation, settlement schedule, and staffing recommendation. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
 
 ## Independent Challenge
 

@@ -11,7 +11,8 @@ const lessons = require("../../src/data/tutorialLessons.json");
 const figures = require("../../src/data/tutorialFigures.json");
 const verified = require("../../planning/website-redesign/tutorials/verified-examples.json");
 const originalAnchors = require("../../planning/website-redesign/TUTORIAL_ORIGINAL_ANCHORS.json");
-const source = (p) => fs.readFileSync(path.join(root, p), "utf8");
+// Compare canonical text across LF and Windows CRLF checkouts.
+const source = (p) => fs.readFileSync(path.join(root, p), "utf8").replace(/\r\n/g, "\n");
 const built = (route) => {
   const candidates = ["build" + route + ".html", "build" + route + "/index.html"];
   const file = candidates.find((p) => fs.existsSync(path.join(root, p)));
@@ -88,7 +89,8 @@ test("tutorial diagrams preserve editable Draw.io sources and matching accessibl
     assert.match(svg, /content="/);
     assert.match(svg, /<title id="tutorial-title">/);
     assert.match(svg, /<desc id="tutorial-description">/);
-    const digest = crypto.createHash("sha256").update(fs.readFileSync(path.join(root, stem + ".drawio"))).digest("hex");
+    // The export's source hash uses LF; Git may check out the editable XML as CRLF.
+    const digest = crypto.createHash("sha256").update(xml).digest("hex");
     assert.ok(svg.includes('data-source-sha256="' + digest + '"'), figure.id);
     assert.equal(source("build/diagrams/tutorials/" + figure.id + ".svg"), svg);
   }

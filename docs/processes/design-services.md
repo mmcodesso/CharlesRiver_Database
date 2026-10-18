@@ -19,7 +19,7 @@ import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
 The customer in our furnishing story needs advice as well as products. The sales coordinator passes the service need to the design lead, who must arrange the people and work behind the engagement. The central question changes: **how does staff time become a supported customer invoice?**
 
-The situation continues our fictional story. It does not identify a customer engagement in the file. Read the ordinary process first; the optional sections provide the records for a later investigation.
+Follow the design lead's handoffs from staffing to approved time and monthly billing. As you read, ask what accounting would need to see before charging the customer. The optional sections identify records for a later investigation.
 
 In [Order-to-Cash](o2c.md), goods left inventory before they were billed. Design services rely on an engagement, staff assignments, and approved hours. Customer invoicing and cash settlement eventually use the same receivable structure, but the evidence of delivery is different.
 
@@ -264,7 +264,7 @@ Service employees also pass through normal payroll. Billing and receivables belo
 
 **Prerequisites, tools, and sources:** read the O2C cash-application discussion and this page's billing bridge. Use a SQL tool with the published SQLite file, or Excel filters and lookups, plus a copy of the editable Draw.io model. Sources are `SalesOrderLine`, `ServiceEngagement`, `ServiceEngagementAssignment`, `ServiceTimeEntry`, `ServiceBillingLine`, `SalesInvoiceLine`, `SalesInvoice`, and `GLEntry`; add payroll records only when explaining the separately defined employee-cost scope.
 
-1. Record the release, engagement, billing period, and reporting date. Mark the relevant activities and responsible roles on the model.
+1. Record the source file, engagement, billing period, and reporting date. Mark the relevant activities and responsible roles on the model.
 2. Compare approved billable hours, non-billable hours, and billed hours for the period. Preserve the monthly rollup grain and explain date or scope differences before calling them missing revenue.
 3. Add one **proposed teaching control** for time approval or billing completeness. State the risk, objective, owner, source evidence, reproducible test, and limitation using the [workshop matrix](../learn-and-practice/bpmn-controls-workshop.md).
 

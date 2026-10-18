@@ -1,6 +1,6 @@
 ---
 title: "Set Up SQL for the Tutorials"
-description: "Open the released SQLite database in DB Browser, run a short customer query, and save your first tutorial SQL."
+description: "Open the Charles River SQLite database in DB Browser, run a short customer query, and save your first tutorial SQL."
 sidebar_label: "Set Up SQL"
 pagination_prev: "learn-and-practice/index"
 pagination_next: "learn-and-practice/meet-the-records"
@@ -8,7 +8,7 @@ pagination_next: "learn-and-practice/meet-the-records"
 
 # Set Up SQL
 
-Your first goal is to open the released database, find a customer table, and run one short query. You do not need to create a database, install a server, or know SQL syntax beforehand.
+Your first goal is to open the database, find a customer table, and run one short query. You do not need to create a database, install a server, or know SQL syntax beforehand.
 
 <span id="opening-the-dataset-in-sql"></span>
 
@@ -20,7 +20,7 @@ Your first goal is to open the released database, find a customer table, and run
 
 ## 1. Open the Released Database
 
-Download <ReleaseDownloadLink type="sqlite">the SQLite database</ReleaseDownloadLink> and keep the source file unchanged. The [Downloads page](../start-here/downloads.md) explains the release and formats.
+Get the [SQLite database from Downloads](../start-here/downloads.md) and keep the source file unchanged.
 
 Install [DB Browser for SQLite](https://sqlitebrowser.org/dl/), using the installer appropriate for your computer. Open it and choose **Open Database**, then select <FileName type="sqlite" />. If your tool offers a read-only opening option, use it. All tutorial queries read records.
 
@@ -63,9 +63,9 @@ SELECT COUNT(*) AS CustomerRows
 FROM Customer;
 ```
 
-Expect **220** in release **v2027.1**. This confirms the customer-table population used by the examples; it is not a complete validation of the database.
+Expect **220** customer records. This confirms the population used by the examples; it is not a complete validation of the database.
 
-Use the SQL editor's save control to save your query text as **Lesson01.sql** in your analysis folder. Save each later lesson's statements in its own file. Keep a short note of the dataset filename and release, selected identifiers, date filters, and what each result row represents.
+Use the SQL editor's save control to save your query text as **Lesson01.sql** in your analysis folder. Save each later lesson's statements in its own file. Keep a short note of the source filename, selected identifiers, date filters, and what each result row represents.
 
 When a lesson contains several queries, run them one at a time and inspect each result. Replace the editor text or use a fresh SQL tab to avoid accidentally interpreting the output of a different statement.
 
@@ -83,7 +83,7 @@ The database uses SQLite. Use the supplied syntax rather than translating exampl
 
 - **“No such table”:** confirm the open file is the released database and that the table name matches the query.
 - **“No such column”:** check spelling and whether you copied the full query.
-- **No rows:** check the identifier, date boundary, and dataset version. An empty result can also be the intended answer.
+- **No rows:** check the identifier, date boundary, and source table. An empty result can also be the intended answer.
 - **More rows than expected:** inspect the join keys and the meaning of one row before adding totals.
 - **A total is blank:** SQL aggregates over an empty population can return `NULL`; check the filter before treating that as zero.
 - **The wrong result appears:** run only the intended statement and check its output headings.

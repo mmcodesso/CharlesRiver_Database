@@ -1,0 +1,237 @@
+{
+  "date": "2026-10-18",
+  "sourceBaseline": "7bb7887e4098b70f1deb4bd43291c642782ec88f",
+  "disclosure": {
+    "route": "/docs/company-story",
+    "source": [
+      {
+        "file": "docs/learn-the-business/company-story.md",
+        "fictional": 1,
+        "synthetic": 1
+      }
+    ],
+    "built": [
+      {
+        "file": "build/docs/company-story.html",
+        "matches": [
+          "fictional",
+          "synthetic"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "AGENTS.md",
+    "docs/analytics/cases/audit-review-pack-case.md",
+    "docs/analytics/cases/design-services-performance-case.md",
+    "docs/analytics/cases/financial-statement-bridge-case.md",
+    "docs/analytics/cases/index.md",
+    "docs/analytics/cases/manufacturing-labor-cost-case.md",
+    "docs/analytics/cases/o2c-trace-case.md",
+    "docs/analytics/cases/p2p-accrual-settlement-case.md",
+    "docs/analytics/cases/product-portfolio-profitability-case.md",
+    "docs/analytics/cases/workforce-coverage-and-attendance-case.md",
+    "docs/learn-and-practice/bpmn-controls-workshop.md",
+    "docs/learn-and-practice/connect-the-records.md",
+    "docs/learn-and-practice/find-the-accounting-entries.md",
+    "docs/learn-and-practice/follow-an-estimate-into-settlement.md",
+    "docs/learn-and-practice/follow-customer-settlement.md",
+    "docs/learn-and-practice/follow-design-time-into-billing.md",
+    "docs/learn-and-practice/follow-hours-into-payroll.md",
+    "docs/learn-and-practice/index.md",
+    "docs/learn-and-practice/manufacturing-cost-flow.md",
+    "docs/learn-and-practice/meet-the-records.md",
+    "docs/learn-and-practice/read-an-order.md",
+    "docs/learn-and-practice/receipt-to-payable.md",
+    "docs/learn-and-practice/source-to-ledger.md",
+    "docs/learn-and-practice/turn-records-into-a-conclusion.md",
+    "docs/learn-the-business/company-story.md",
+    "docs/learn-the-business/process-flows.md",
+    "docs/processes/design-services.md",
+    "docs/processes/manual-journals-and-close.md",
+    "docs/processes/manufacturing.md",
+    "docs/processes/o2c.md",
+    "docs/processes/p2p.md",
+    "docs/processes/payroll.md",
+    "docs/reference/posting.md",
+    "docs/start-here/dataset-overview.md",
+    "docs/start-here/downloads.md",
+    "docs/start-here/index.md",
+    "docs/start-here/why-this-dataset.md",
+    "docs/teach-with-data/instructor-guide.md",
+    "docs/technical/technical-guide.md",
+    "planning/website-redesign/cases/build-case-content.cjs",
+    "planning/website-redesign/cases/case-drafts.json",
+    "src/components/SiteBranding/structuredData.cjs",
+    "src/pages/index.jsx",
+    "tests/website/tutorials.test.cjs"
+  ],
+  "authoredDocCount": 47,
+  "changedDocCount": 38,
+  "routesChanged": [],
+  "routesPreserved": [
+    "/docs/analytics/analysis-tracks",
+    "/docs/analytics/cases/audit-review-pack-case",
+    "/docs/analytics/cases/design-services-performance-case",
+    "/docs/analytics/cases/financial-statement-bridge-case",
+    "/docs/analytics/cases",
+    "/docs/analytics/cases/manufacturing-labor-cost-case",
+    "/docs/analytics/cases/o2c-trace-case",
+    "/docs/analytics/cases/p2p-accrual-settlement-case",
+    "/docs/analytics/cases/product-portfolio-profitability-case",
+    "/docs/analytics/cases/workforce-coverage-and-attendance-case",
+    "/docs/analytics/excel-guide",
+    "/docs/analytics",
+    "/docs/analytics/sql-guide",
+    "/docs/learn-and-practice/bpmn-controls-workshop",
+    "/docs/learn-and-practice/connect-the-records",
+    "/docs/learn-and-practice/find-the-accounting-entries",
+    "/docs/learn-and-practice/follow-an-estimate-into-settlement",
+    "/docs/learn-and-practice/follow-customer-settlement",
+    "/docs/learn-and-practice/follow-design-time-into-billing",
+    "/docs/learn-and-practice/follow-hours-into-payroll",
+    "/docs/learn-and-practice",
+    "/docs/learn-and-practice/manufacturing-cost-flow",
+    "/docs/learn-and-practice/meet-the-records",
+    "/docs/learn-and-practice/read-an-order",
+    "/docs/learn-and-practice/receipt-to-payable",
+    "/docs/learn-and-practice/source-to-ledger",
+    "/docs/learn-and-practice/turn-records-into-a-conclusion",
+    "/docs/company-story",
+    "/docs/process-flows",
+    "/docs/processes/design-services",
+    "/docs/processes/manual-journals-and-close",
+    "/docs/processes/manufacturing",
+    "/docs/processes/o2c",
+    "/docs/processes/p2p",
+    "/docs/processes/payroll",
+    "/docs/reference/posting",
+    "/docs/reference/schema",
+    "/docs/dataset-overview",
+    "/docs/downloads",
+    "/docs/",
+    "/docs/why-this-dataset",
+    "/docs/teach-with-data/instructor-adoption",
+    "/docs/technical/contributing",
+    "/docs/technical/dataset-delivery",
+    "/docs/technical/license",
+    "/docs/roadmap",
+    "/docs/technical-guide"
+  ],
+  "commands": [
+    {
+      "command": "node planning/website-redesign/cases/build-case-content.cjs --content-only",
+      "result": "8 case pages and identical case catalog emitted; 62 SQL blocks, verified results and figures retained"
+    },
+    {
+      "command": "npm run build",
+      "result": "passed; all 144 report assets reused without generation; existing branding/manifest hooks completed"
+    },
+    {
+      "command": ".venv/Scripts/python.exe -m pytest -q tests/test_docs_onboarding_flow.py tests/website/test_teaching_refinement.py -k \"not restored_report_binaries\"",
+      "result": "not started: the venv points to missing C:/Users/mauri/AppData/Local/Programs/Python/Python312/python.exe",
+      "timeoutMs": 3600000
+    },
+    {
+      "command": "node --test tests/website/cases.test.cjs tests/website/navigation-seo.test.cjs tests/website/rendered-site.test.cjs tests/website/teaching-refinement.test.cjs tests/website/tutorials.test.cjs",
+      "initialResult": "31 passed, 2 failed because tutorial extraction and source-hash checks assumed LF in a CRLF checkout; confirmed on unchanged baseline content",
+      "finalResult": "33 passed, 0 failed after canonical text normalization in website-only test helper",
+      "timeoutMs": 3600000
+    },
+    {
+      "command": "node node_modules/@docusaurus/core/bin/docusaurus.mjs serve --host 127.0.0.1 --port 3000 --no-open",
+      "result": "port in use; no existing server stopped"
+    },
+    {
+      "command": "node node_modules/@docusaurus/core/bin/docusaurus.mjs serve --host 127.0.0.1 --port 3107 --no-open",
+      "result": "running local production preview on port 3107"
+    }
+  ],
+  "preservation": {
+    "artifactFiles": 250,
+    "artifactsUnchanged": true,
+    "reportAssets": 144,
+    "sourceInventoryFiles": 381,
+    "sourceFilesUnchanged": 380,
+    "intentionalWebsiteTestChange": [
+      "tests/website/tutorials.test.cjs"
+    ],
+    "frozenCoreDiff": "empty",
+    "priorPresentationDifferencesFromFrozen": "unchanged from session start",
+    "datasetSha256": "de861968e07412d71032b6ed6a0fb8eb9825cf6911886b1597c4a628a914474c",
+    "workedSqlStatementsExecutedReadOnly": 105,
+    "workedResultsChanged": false,
+    "diagramsChanged": false,
+    "generatedManifestGitDiff": "empty"
+  },
+  "browser": {
+    "browser": "Microsoft Edge",
+    "url": "http://127.0.0.1:3107",
+    "samples": [
+      {
+        "page": "/",
+        "width": 1440,
+        "height": 1000,
+        "theme": "light",
+        "result": "visually reviewed; no horizontal overflow; no company-origin disclosure"
+      },
+      {
+        "page": "/docs/company-story",
+        "width": 1440,
+        "height": 1000,
+        "theme": "light",
+        "result": "keyboard homepage link entered the story; one readable disclosure note below the introduction"
+      },
+      {
+        "page": "/docs/processes/payroll",
+        "width": 768,
+        "height": 1024,
+        "theme": "light",
+        "result": "visually reviewed; no horizontal overflow; concept check opens with Enter and retains focus"
+      },
+      {
+        "page": "/",
+        "width": 390,
+        "height": 844,
+        "theme": "light",
+        "result": "visually reviewed; no horizontal overflow; revised introduction and both main actions fit"
+      },
+      {
+        "page": "/docs/learn-and-practice/read-an-order",
+        "width": 390,
+        "height": 844,
+        "theme": "dark",
+        "result": "visually reviewed; no horizontal overflow; keyboard tool tabs expose a visible focus outline"
+      },
+      {
+        "page": "/docs/analytics/cases/o2c-trace-case",
+        "width": 390,
+        "height": 844,
+        "theme": "dark",
+        "result": "visually reviewed; no horizontal overflow; SQL selection by Enter persists into the lesson"
+      }
+    ],
+    "preferencesRestored": {
+      "theme": "light",
+      "tool": "Excel",
+      "viewportOverride": "reset"
+    },
+    "screenshots": "inspected in tool output; no screenshot artifacts saved"
+  },
+  "limitations": [
+    "Python checks unavailable because the repo-local venv base interpreter is missing",
+    "Native Excel, screen reader, native zoom, and learner pilot were not run",
+    "Browser review sampled pages and widths; no full accessibility-conformance claim"
+  ],
+  "publication": {
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  },
+  "finalDiffCheck": "passed",
+  "handoffFiles": [
+    "planning/website-redesign/content-refinement/HANDOFF.md",
+    "planning/website-redesign/content-refinement/preservation-baseline.json",
+    "planning/website-redesign/content-refinement/validation.json"
+  ]
+}

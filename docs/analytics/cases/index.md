@@ -38,7 +38,7 @@ Use the [blank evidence template](pathname:///teaching/evidence-template.md) and
 
 ## Keep Evidence, Then Make a Decision
 
-At every stage, predict what you expect, run the analysis, compare the worked checkpoint, and investigate differences. Save the intermediate outputs before continuing. The fictional management scenario supplies the question; released records establish the findings.
+At every stage, predict what you expect, run the analysis, compare the worked checkpoint, and investigate differences. Save the intermediate outputs before continuing. Return to the management request: what can you now explain, which evidence supports it, and what should the team do next?
 
 A complete submission explains the population, calculation, result, source check, limitation, and proposed next action. The worked core shows this method openly. The separate challenge asks you to transfer it to a new population without a public model answer.
 

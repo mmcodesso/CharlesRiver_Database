@@ -1,4 +1,4 @@
-// Authored case metadata; worked examples are verified against release v2027.1.
+// Authored case metadata; worked examples use verified company records.
 export const caseCatalog = [
   {
     "number": 1,

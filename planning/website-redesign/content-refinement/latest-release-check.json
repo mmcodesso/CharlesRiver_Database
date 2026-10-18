@@ -1,0 +1,25 @@
+{
+  "tag": "v2027.1",
+  "url": "https://github.com/mmcodesso/CharlesRiver_Database/releases/tag/v2027.1",
+  "latestUrl": "https://github.com/mmcodesso/CharlesRiver_Database/releases/latest",
+  "assets": [
+    {
+      "name": "CharlesRiver.sqlite",
+      "size": 335650816,
+      "digest": "sha256:de861968e07412d71032b6ed6a0fb8eb9825cf6911886b1597c4a628a914474c",
+      "url": "https://github.com/mmcodesso/CharlesRiver_Database/releases/download/v2027.1/CharlesRiver.sqlite"
+    },
+    {
+      "name": "CharlesRiver.xlsx",
+      "size": 128963313,
+      "digest": "sha256:185d42bd069fad177fae23c5e30df93edc7cf2669f687236c8a9f29435388e09",
+      "url": "https://github.com/mmcodesso/CharlesRiver_Database/releases/download/v2027.1/CharlesRiver.xlsx"
+    },
+    {
+      "name": "CharlesRiver_csv.zip",
+      "size": 33341957,
+      "digest": "sha256:5f2821ee81f86c2da60702a9feaa51fa18f72687e5d0807c44a7d5489fecffb6",
+      "url": "https://github.com/mmcodesso/CharlesRiver_Database/releases/download/v2027.1/CharlesRiver_csv.zip"
+    }
+  ]
+}

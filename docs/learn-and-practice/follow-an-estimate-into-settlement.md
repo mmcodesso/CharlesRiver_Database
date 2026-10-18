@@ -36,13 +36,11 @@ In `Lesson11.xlsx`, import `T2_JournalEntry` as `JournalData` filtered to Journa
 </TabItem>
 <TabItem value="sql">
 
-Open the released SQLite database in your SQL tool. Save this lesson's statements as **Lesson11.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson11.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
 
-
-These are actual synthetic records from release **v2027.1**, separate from the illustrative customer project in the company story. Use your assigned release when an instructor specifies another file; its results may differ.
 
 <span id="evidence-workflow"></span>
 
@@ -174,7 +172,7 @@ The adjustment debits the accrued-expense liability and credits repairs and main
 
 ## Keep Your Evidence
 
-Save the four-event timeline, 19.74 residual calculation, and adjustment posting explanation. Record the release, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+Save the four-event timeline, 19.74 residual calculation, and adjustment posting explanation. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
 
 <span id="interpretation-and-limitations"></span>
 

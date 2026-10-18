@@ -11,7 +11,7 @@ pagination_next: learn-the-business/company-story
 
 Your task is to explain what happened in a business and how its records support that explanation. A total can show that sales increased or cash decreased. Understanding the people, activities, and documents behind the total helps you explain the change and decide what to investigate next.
 
-<CompanyName /> is a fictional greater-Boston home-furnishings company. It buys merchandise, manufactures selected products, and provides hourly design services. You will follow a customer furnishing project and the staff roles that connect those activities.
+<CompanyName /> is a home-furnishings business in Greater Boston. It buys merchandise, manufactures selected products, and provides hourly design services. Follow a customer furnishing project and the people who connect those activities, then examine the documents their work produces.
 
 <span id="your-first-learning-path"></span>
 
@@ -36,7 +36,7 @@ This is a reading sequence. In the company, purchasing, production, customer ser
 
 Each process chapter gives you an ordinary business situation, the accounting consequences, and a small map of supporting records. Short concept checks let you explain the distinctions in your own words. Expand the optional sections when you need detailed fields, specialized diagrams, or an investigation.
 
-The company story is illustrative. The records are synthetic and include intentional anomalies and control exceptions for teaching. A flagged row supplies a question to investigate; its source, timing, and related evidence determine what you can conclude.
+As you investigate, you will encounter intentional anomalies and control exceptions. Treat a flagged row as a starting question: check its source, timing, and related evidence before deciding what it means and what follow-up is needed.
 
 <span id="download-the-teaching-files"></span>
 

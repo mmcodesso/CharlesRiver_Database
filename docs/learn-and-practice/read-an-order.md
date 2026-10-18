@@ -36,13 +36,11 @@ Create a fresh Excel analysis workbook, `Lesson02.xlsx`. Import `T9_SalesOrder` 
 </TabItem>
 <TabItem value="sql">
 
-Open the released SQLite database in your SQL tool. Save this lesson's statements as **Lesson02.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson02.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
 
-
-These are actual synthetic records from release **v2027.1**, separate from the illustrative customer project in the company story. Use your assigned release when an instructor specifies another file; its results may differ.
 
 <span id="evidence-workflow"></span>
 
@@ -134,7 +132,7 @@ Your check should return **2 lines** and **11,397.78**, agreeing with the header
 
 ## Keep Your Evidence
 
-Save the single header, two line identifiers, visible-line count, and line-total check. Explain why two lines do not mean two orders. Record the release, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+Save the single header, two line identifiers, visible-line count, and line-total check. Explain why two lines do not mean two orders. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
 
 <span id="interpretation-and-limitations"></span>
 

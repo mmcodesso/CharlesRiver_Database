@@ -37,13 +37,11 @@ In `Lesson04.xlsx`, import `T10_SalesOrderLine` as `OrderLineData` filtered to `
 </TabItem>
 <TabItem value="sql">
 
-Open the released SQLite database in your SQL tool. Save this lesson's statements as **Lesson04.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson04.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
 
-
-These are actual synthetic records from release **v2027.1**, separate from the illustrative customer project in the company story. Use your assigned release when an instructor specifies another file; its results may differ.
 
 <span id="evidence-workflow"></span>
 
@@ -150,7 +148,7 @@ Shipment and invoice are dated **2024-01-31**. Invoice 202 includes **both** ord
 
 ## Keep Your Evidence
 
-Save the trace 43 → 347 → 272, its document IDs and dates, and the separate invoice-total check. Explain the purpose of each document. Record the release, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+Save the trace 43 → 347 → 272, its document IDs and dates, and the separate invoice-total check. Explain the purpose of each document. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
 
 <span id="interpretation-and-limitations"></span>
 

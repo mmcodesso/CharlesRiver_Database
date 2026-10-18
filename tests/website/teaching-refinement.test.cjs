@@ -4,7 +4,7 @@ const path = require('node:path');
 const test = require('node:test');
 const yaml = require('js-yaml');
 const { loadSiteBranding } = require('../../config/loadSiteBranding.cjs');
-const { TEACHING_RELEASE } = require('../../src/data/teachingRelease.cjs');
+const verificationBaseline = require('../../planning/website-redesign/tutorials/verified-examples.json');
 const { getReleaseDownloadUrl, buildDatasetStructuredData } = require('../../src/components/SiteBranding/structuredData.cjs');
 
 const root = path.resolve(__dirname, '../..');
@@ -97,21 +97,21 @@ test('F08/E03 catalog, authored cases, sidebar, homepage and rendered index have
   assert.equal(require('../../src/data/queryTopics.json').flatMap(topic => topic.queries).length, 170);
 });
 
-test('F11 classroom downloads and Dataset metadata remain pinned when latest changes', () => {
+test('F11 public downloads follow latest while verified examples retain their private baseline', () => {
   const branding = { ...loadSiteBranding(), releaseBaseUrl: 'https://example.invalid/releases/latest/download', latestReleaseUrl: 'https://example.invalid/releases/tag/v9999.1' };
-  assert.equal(TEACHING_RELEASE.tag, 'v2027.1');
-  assert.equal(TEACHING_RELEASE.version, '2027.1');
-  assert.equal(TEACHING_RELEASE.sqliteSha256, 'de861968e07412d71032b6ed6a0fb8eb9825cf6911886b1597c4a628a914474c');
-  const dataset = buildDatasetStructuredData(branding);
-  assert.equal(dataset.version, TEACHING_RELEASE.version);
+  assert.equal(verificationBaseline.release, 'v2027.1');
+  assert.equal(verificationBaseline.sha256, 'de861968e07412d71032b6ed6a0fb8eb9825cf6911886b1597c4a628a914474c');
+  const dataset = buildDatasetStructuredData(branding, { pagePath: '/docs/downloads' });
+  assert.equal(dataset.version, undefined);
   for (const [type, suffix] of [['sqlite', '.sqlite'], ['excel', '.xlsx'], ['csv', '_csv.zip']]) {
-    const url = `${branding.repositoryUrl}/releases/download/v2027.1/${branding.shortName}${suffix}`;
+    const url = `${branding.repositoryUrl}/releases/latest/download/${branding.shortName}${suffix}`;
     assert.equal(getReleaseDownloadUrl(branding, type), url);
     assert.ok(dataset.distribution.some(item => item.contentUrl === url));
   }
   const downloads = built('/docs/downloads');
-  assert.ok(downloads.includes(TEACHING_RELEASE.sqliteSha256));
-  assert.ok(downloads.includes('/releases/tag/v2027.1'));
+  assert.ok(!downloads.includes(verificationBaseline.sha256), 'Do not present a fixed checksum as the latest file');
+  assert.ok(downloads.includes(`${branding.repositoryUrl}/releases/latest`));
+  assert.ok(downloads.includes('latest published version'));
 });
 
 test('E03 every prerequisite is individually reachable and matches its authored source', async () => {

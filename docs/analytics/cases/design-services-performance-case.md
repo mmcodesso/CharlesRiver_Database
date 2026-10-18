@@ -28,7 +28,7 @@ The design lead is preparing a quarterly review with the controller. Several eng
 
 **Worked scope.** Service work dated January 1–March 31, 2024: 204 time entries across 21 engagements. Begin with engagement 2, then use the whole defined population. Billing periods are selected by their work coverage; invoice dates remain visible.
 
-The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
+Choose Excel or SQL; your selection carries between lessons and cases.
 
 **Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [7. Follow Design Time into Billing](/docs/learn-and-practice/follow-design-time-into-billing); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
@@ -410,7 +410,7 @@ Your memo should explain that the worked hours reconcile, state the cost boundar
 
 The reconciliation does not reveal unapproved quarter-end time or a billed-hours mismatch in this population. A useful management response is to discuss where non-billable effort occurred and whether it was planned, while preserving the distinction between billing rates and staff-cost snapshots. The evidence supports a focused operational conversation, not a claim that all engagements are equally profitable.
 
-**Deliverable:** An engagement-period reconciliation, an hours/billing/cost bridge, and a design review memo. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** An engagement-period reconciliation, an hours/billing/cost bridge, and a design review memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
 
 ## Independent Challenge
 

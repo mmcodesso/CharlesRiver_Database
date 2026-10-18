@@ -19,7 +19,7 @@ import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
 The customer has placed orders, goods and services have been supplied, materials have moved through production, and employees have earned pay. At period end, the controller in our company story needs to explain **which events belong in the period and what remains outstanding**.
 
-This is the final chapter in the introductory reading. The situation is illustrative; actual journal and settlement records supply the evidence for a later investigation.
+Bring the earlier chapters together by asking what each process leaves open at the reporting date. Then follow an expense estimate through the later supplier invoice and settlement to see how new evidence changes the accounts.
 
 The operational cycles already create many accounting entries. Finance also records recurring expenses, estimates, reclassifications, and closing entries. Understanding their purpose helps you connect the operating story to the reported balances.
 
@@ -367,7 +367,7 @@ The original estimate, a later direct service invoice, any linked residual adjus
 
 **Prerequisites, tools, and sources:** review accrual recognition, liabilities, and closing entries. Use a SQL tool with the published SQLite file, or Excel filters and lookups, plus a copy of the editable Draw.io model. Sources are `JournalEntry`, `GLEntry`, `Account`, and, for an accrued service, `PurchaseInvoiceLine`, `PurchaseInvoice`, and `DisbursementPayment`. Use fixed-asset and debt records only when the chosen journal family requires them.
 
-1. Record the release, journal type, reporting date, and actual keys. Mark the entry's purpose, preparation, approval, and posting on the model.
+1. Record the source file, journal type, reporting date, and actual keys. Mark the entry's purpose, preparation, approval, and posting on the model.
 2. Trace the entry to ledger detail and retain the relevant date boundaries. For an accrual, inspect linked invoices and adjustments without assuming blanket reversal; for close, distinguish operating activity from the annual transfer.
 3. Add one **proposed teaching control** for approval, accrual review, or close reconciliation. Specify the risk, objective, owner, evidence, test, and limitation in the [workshop matrix](../learn-and-practice/bpmn-controls-workshop.md).
 

@@ -30,7 +30,7 @@ The sales coordinator is preparing a response to a design-trade customer. The wa
 
 **Worked scope.** Customer 120, Hubbard Inc: the six orders placed from January 1 through March 31, 2024. Compare March 31 and April 30. This selection excludes other orders and is not the customer’s complete account history.
 
-The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
+Choose Excel or SQL; your selection carries between lessons and cases.
 
 **Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [4. Follow a Goods Sale](/docs/learn-and-practice/source-to-ledger); [5. Follow Customer Settlement](/docs/learn-and-practice/follow-customer-settlement); [6. Find the Accounting Entries](/docs/learn-and-practice/find-the-accounting-entries). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
@@ -280,7 +280,7 @@ ORDER BY InvoiceDate,SalesInvoiceID;
 </TabItem>
 </ToolSteps>
 
-**Checkpoint.** 20 related invoices in released history; 17 are dated through March 31. Do not add freight and tax again: GrandTotal already includes them.
+**Checkpoint.** 20 related invoices in recorded history; 17 are dated through March 31. Do not add freight and tax again: GrandTotal already includes them.
 
 An order can be invoiced in parts. The April invoices belong in the later review, even though the orders were placed in the first quarter.
 
@@ -394,7 +394,7 @@ ORDER BY CreditMemoDate,CreditMemoID;
 </TabItem>
 </ToolSteps>
 
-**Checkpoint.** 24 applications across released history. Credit memo 30 is dated April 26 and credits invoice 1086 by 612.38. Receipt 165 appears on several application rows; its 18,938.14 must be counted only once when describing the receipt.
+**Checkpoint.** 24 applications across recorded history. Credit memo 30 is dated April 26 and credits invoice 1086 by 612.38. Receipt 165 appears on several application rows; its 18,938.14 must be counted only once when describing the receipt.
 
 This credit changes the April explanation. It is subsequent evidence, not a reduction that was already recorded on March 31.
 
@@ -587,7 +587,7 @@ Save the two cutoff schedules, the event-to-accounting check, and your response.
 
 The worked result supports a focused customer-account response, not an assertion about every balance Hubbard Inc has ever held. Operations owns the quantity question; customer accounting owns allocation and credit confirmation; treasury supplies receipt evidence. A plausible next action is to confirm the later fulfillment position and contact the customer about the remaining selected invoices with the two-date schedule attached.
 
-**Deliverable:** A document timeline, two-date invoice settlement schedule, and a customer response with an action owner. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** A document timeline, two-date invoice settlement schedule, and a customer response with an action owner. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
 
 ## Independent Challenge
 

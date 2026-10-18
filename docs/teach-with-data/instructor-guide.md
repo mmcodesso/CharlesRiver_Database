@@ -7,7 +7,7 @@ sidebar_label: For Instructors
 
 # Instructor Adoption Guide
 
-Start with an accounting question students should be able to explain. <DisplayName /> supplies one fictional company, connected business processes, published teaching files, reports, query resources, and cases. You can assign a focused document trace or build a wider investigation without requiring students to run the dataset generator.
+Start with an accounting question students should be able to explain. <DisplayName /> connects one company's business processes, records, reports, query resources, and cases. Assign a focused document trace or build a wider investigation, then ask students to explain what their evidence supports and which action should follow. Students can use the published files without running the dataset generator.
 
 Charles River is part of [Accounting Analytics Hub](https://accountinganalyticshub.com/). The [Accounting Analytics: An Integrated Approach textbook](https://aa.accountinganalyticshub.com/) supplies conceptual depth and tool instruction; this site supplies the company, records, and applied work. The textbook's [instructor preface](https://aa.accountinganalyticshub.com/front-matter/preface.html#to-the-instructor) provides additional adoption context. The Hub's future AIS and tool courses are planned resources, rather than available courses required for this material.
 
@@ -15,11 +15,11 @@ Charles River is part of [Accounting Analytics Hub](https://accountinganalyticsh
 
 Choose the published format that matches the intended evidence workflow:
 
-- <ReleaseDownloadLink type="sqlite">SQLite database</ReleaseDownloadLink> for joins, document tracing, and query-based analysis.
-- <ReleaseDownloadLink type="excel">Excel workbook</ReleaseDownloadLink> for filters, Power Query imports, PivotTables, and visual interpretation.
-- <ReleaseDownloadLink type="csv">CSV package</ReleaseDownloadLink> for table imports into a course-selected tool.
+- [SQLite database](../start-here/downloads.md) for joins, document tracing, and query-based analysis.
+- [Excel workbook](../start-here/downloads.md) for filters, Power Query imports, PivotTables, and visual interpretation.
+- [CSV package](../start-here/downloads.md) for table imports into a course-selected tool.
 
-Record the release version, retain the source files, and give students a common reporting period. The published database contains 82 user tables. Its main operating window covers 2024–2026; supplier disbursements can settle in early 2027. Assign a clear reporting date so subsequent settlements do not silently change a period-end conclusion.
+Retain the source files and give students a common reporting period. The database contains 82 user tables. Its main operating window covers 2024–2026; supplier disbursements can settle in early 2027. Assign a clear reporting date so subsequent settlements do not silently change a period-end conclusion.
 
 Review the chosen activity with the actual class file before assigning it. The default teaching data deliberately includes anomalies; an exception result is a lead for evidence work, not a supplied diagnosis.
 
@@ -62,11 +62,11 @@ For a financial emphasis, select [Lesson 4](../learn-and-practice/source-to-ledg
 
 The following is an **adaptable teaching proposal** for using Charles River alongside the forthcoming *Accounting Information Systems: An Integrated Approach*. It is not a verified chapter map or a published syllabus for that planned textbook. Review its eventual contents and your course objectives before adopting the sequence. The existing [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) remains the available companion for analytics concepts and tools.
 
-Keep the same company, assigned release, and evidence standards throughout the term. The early weeks establish business context and modeling; order-to-cash, procure-to-pay, and conversion receive the largest share of process work before students integrate controls, accounting, and analytics.
+Keep the same company, source files, and evidence standards throughout the term. The early weeks establish business context and modeling; order-to-cash, procure-to-pay, and conversion receive the largest share of process work before students integrate controls, accounting, and analytics.
 
 | Week | Process or AIS focus | Charles River preparation and practice | Assessable artifact |
 |---|---|---|---|
-| 1 | Company, value creation, and evidence boundaries | [Company Story](../learn-the-business/company-story.md) and [Dataset Guide](../start-here/dataset-overview.md) | Company explanation, selected release, and scope statement |
+| 1 | Company, value creation, and evidence boundaries | [Company Story](../learn-the-business/company-story.md) and [Dataset Guide](../start-here/dataset-overview.md) | Company explanation, source files, and scope statement |
 | 2 | Process architecture and BPMN responsibilities | [model library](../learn-the-business/process-flows.md#model-library); workshop Activity 1 | Annotated normal path with participants, handoffs, and a decision |
 | 3 | Documents, relational records, and posting lineage | [Schema Reference](../reference/schema.md), [Posting Reference](../reference/posting.md), and a course-selected SQL or Excel introduction | Activity-to-document-to-table map with grain and keys |
 | 4 | Order-to-cash: demand, fulfillment, and billing | [Order-to-Cash](../processes/o2c.md) and [Goods Sale Trace](../learn-and-practice/source-to-ledger.md) | Reproducible goods-line trace with accounting explanation |
@@ -89,7 +89,7 @@ Require students to label **observed records**, **documented process interpretat
 
 The workshop matrix is reusable with existing cases and their query sequences. Assess the business risk, control objective, accountable role, timing, exception response, evidence population, proposed procedure, and limitations. Require authorization, completeness, segregation of duties, and reconciliation to be considered before accepting a proposed improvement. Students should identify the relevant procedures themselves, without being graded against an undisclosed finding.
 
-The public tutorial and case cores include worked records, reproducible Excel and SQL steps, expected results, and explanatory feedback. Each case then presents a separate independent challenge. Keep challenge model answers, completed assessment workpapers, grading notes, and alternative assessment datasets in private course materials; do not place them in public pages, hidden tabs, downloads, or this repository. If you choose a specific transaction or provide a supplemental approval policy, distribute it explicitly and identify which evidence comes from the release and which comes from the instructor. A proposed system log or approval workflow must remain labeled as a design proposal rather than an existing dataset capability.
+The public tutorial and case cores include worked records, reproducible Excel and SQL steps, expected results, and explanatory feedback. Each case then presents a separate independent challenge. Keep challenge model answers, completed assessment workpapers, grading notes, and alternative assessment datasets in private course materials; do not place them in public pages, hidden tabs, downloads, or this repository. If you choose a specific transaction or provide a supplemental approval policy, distribute it explicitly and identify which evidence comes from the source files and which comes from the instructor. A proposed system log or approval workflow must remain labeled as a design proposal rather than an existing dataset capability.
 
 ## Pathways Across the Curriculum
 
@@ -112,7 +112,7 @@ A useful assessed submission has four parts:
 | Criterion | Evidence of learning |
 |---|---|
 | Business and accounting explanation | Correctly distinguishes events, recognition, settlement, and the relevant process |
-| Reproducible evidence | Retains version, dates, identifiers, query or workbook steps, and the meaning of one result row |
+| Reproducible evidence | Retains source files, dates, identifiers, query or workbook steps, and the meaning of one result row |
 | Analytical checking | Tests source totals, join multiplicity, filters, and the basis of compared measures |
 | Interpretation and judgment | Separates findings from hypotheses, states limitations, and proposes a supported next action |
 
@@ -122,9 +122,9 @@ Set the required length and weighting for your course. Assess the explanation as
 
 Students should first explain the normal process, then investigate where source evidence or timing departs from that expectation. Require them to distinguish a business condition, a model limitation, an analytical error, and a potential control issue before recommending action.
 
-If you supply <FileName type="support" />, use it as companion context for anomaly families and validation review. The workbook is available in local instructor materials but is not included among the public release downloads. Confirm version compatibility and provide it explicitly when an activity depends on it. Support summaries guide investigation; the underlying source records remain necessary evidence.
+If you supply <FileName type="support" />, use it as companion context for anomaly families and validation review. The workbook is available in local instructor materials but is not included among the public downloads. Confirm that it matches the class files and provide it explicitly when an activity depends on it. Support summaries guide investigation; the underlying source records remain necessary evidence.
 
-For broad capstone work, limit the initial assignment to selected exception families unless students already know the related document chains. Avoid grading students against an undisclosed fictional event or an assumed numerical outcome.
+For broad capstone work, limit the initial assignment to selected exception families unless students already know the related document chains. Assess the evidence and reasoning within the assigned scope. State any additional assumptions in the prompt rather than expecting students to infer an unstated event or numerical outcome.
 
 ## Adoption Checklist
 
@@ -150,7 +150,7 @@ Use the worked core for instruction and feedback. Assess the independent challen
 
 ## Separate Reproducibility from a Learner Pilot
 
-Record the **website content commit**, **dataset release v2027.1**, checksum, tool version/build, and actual check date with every class validation. SQL execution, a static formula inspection, native workbook execution, and learner success establish different things. Native Microsoft 365 Excel and Power Query were unavailable in the cloud refinement environment; the workflows below remain **not run natively in this pass**. Do not treat a SQL match or historical formula result as an Excel pass.
+Before class, record the source filename, tool, check date, and results from the workflow students will follow. SQL execution, a static formula inspection, native workbook execution, and learner success establish different things. Check each route independently and distinguish a recorded result from a workflow that still needs testing.
 
 | Native validation route | Work to record | Status for this refinement pass |
 |---|---|---|

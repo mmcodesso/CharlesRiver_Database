@@ -31,7 +31,7 @@ Follow five steps: **identify a handoff → connect it to evidence → describe 
 
 **Prerequisites:** read [Company Story](../learn-the-business/company-story.md) and [Business Processes and Models](../learn-the-business/process-flows.md), including its BPMN reading guide. Complete a [process tutorial](index.md#processes-follow-events-and-accounting), including its result checks, before attempting the evidence extension.
 
-**Tools and files:** view the diagrams in a browser. For the modeling extension, download an editable `.drawio` file from the model library and open a separate working copy in diagrams.net. Use the assigned published SQLite database in read-only mode, or analyze copies of selected Excel tables in a separate workbook. Follow the [SQL Guide](../analytics/sql-guide.md) or [Excel Guide](../analytics/excel-guide.md); record your release version and reporting date.
+**Tools and files:** view the diagrams in a browser. For the modeling extension, download an editable `.drawio` file from the model library and open a separate working copy in diagrams.net. Use the assigned published SQLite database in read-only mode, or analyze copies of selected Excel tables in a separate workbook. Follow the [SQL Guide](../analytics/sql-guide.md) or [Excel Guide](../analytics/excel-guide.md); record your source filename and reporting date.
 
 **Sources:** choose a process from the table below. Read its full process page and use the [Schema Reference](../reference/schema.md) and [Posting Reference](../reference/posting.md) to confirm the actual columns and accounting sources before joining. Listed tables are starting evidence, rather than a claim that one join connects every row.
 
@@ -106,13 +106,13 @@ Provide a matching evidence plan. State which existing records could help assess
 
 ## Assessed Deliverable
 
-Submit an annotated process interpretation, an activity-to-evidence map with real identifiers and reproducible query or workbook steps, the completed risk and control matrix, and a short recommendation. Include the release version, reporting date, population definition, source checks, alternative explanations, and evidence still needed. For the advanced extension, also submit the editable `.drawio` copy, an SVG, and a readable text explanation of the change.
+Submit an annotated process interpretation, an activity-to-evidence map with real identifiers and reproducible query or workbook steps, the completed risk and control matrix, and a short recommendation. Include the source filename, reporting date, population definition, source checks, alternative explanations, and evidence still needed. For the advanced extension, also submit the editable `.drawio` copy, an SVG, and a readable text explanation of the change.
 
 Assessment considers business understanding, notation, traceability, control reasoning, reproducibility, and judgment. A well-supported conclusion can be that more evidence is needed. Instructors choose the scope and weighting; this public workshop does not provide an answer key or an expected numerical finding.
 
 ## Interpretation and Limitations
 
-BPMN expresses a process model; it is not an execution log or proof that the fictional company has implemented every depicted control. Lane assignments explain teaching responsibilities and do not establish actual system access. Mermaid explains selected information relationships and accounting effects; confirm exact cardinality and fields before analysis.
+BPMN expresses a process model. To evaluate a depicted control, inspect the relevant approval, timing, and transaction evidence; the diagram itself is not an execution log. Lane assignments describe responsibilities and do not establish actual system access. Mermaid explains selected information relationships and accounting effects; confirm exact cardinality and fields before analysis.
 
 The published data supports source-record investigation, with intentional anomalies and documented model boundaries. Transaction rows alone cannot provide complete assurance about employee conduct, external documents, management review, or control effectiveness. A `.drawio` document is an editable diagram, not validated executable BPMN 2.0 XML.
 

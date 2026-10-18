@@ -36,13 +36,11 @@ In `Lesson05.xlsx`, import `T16_SalesInvoice` as `InvoiceData` filtered to ID 20
 </TabItem>
 <TabItem value="sql">
 
-Open the released SQLite database in your SQL tool. Save this lesson's statements as **Lesson05.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson05.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
 
-
-These are actual synthetic records from release **v2027.1**, separate from the illustrative customer project in the company story. Use your assigned release when an instructor specifies another file; its results may differ.
 
 <span id="evidence-workflow"></span>
 
@@ -163,7 +161,7 @@ The credit checks return **no rows** for this example. For an invoice with credi
 
 ## Keep Your Evidence
 
-Save the four application rows, two reporting-date calculations, and the empty credit check. Explain the different purposes of receipt date and application date. Record the release, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+Save the four application rows, two reporting-date calculations, and the empty credit check. Explain the different purposes of receipt date and application date. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
 
 <span id="interpretation-and-limitations"></span>
 

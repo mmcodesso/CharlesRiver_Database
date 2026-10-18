@@ -22,4 +22,4 @@ Search and topic selections are kept in the URL for classroom links and Back/For
 
 Start with the [SQL Guide](sql-guide.md) for a first query or [Learn and Practice](../learn-and-practice/index.md) for a focused evidence trace. The [cases](cases/index.md) provide structured investigations and assessed outputs.
 
-Before comparing results, define the fiscal period, source population, row grain, sign convention, and filters. Keep the assigned release unchanged. Align dates and populations, retain document keys, and distinguish an exception flag from a supported accounting or control conclusion. The [Schema Reference](../reference/schema.md) and [Posting Reference](../reference/posting.md) support the final source-to-ledger check.
+Before comparing results, define the fiscal period, source population, row grain, sign convention, and filters. Keep the source records unchanged. Align dates and populations, retain document keys, and distinguish an exception flag from a supported accounting or control conclusion. The [Schema Reference](../reference/schema.md) and [Posting Reference](../reference/posting.md) support the final source-to-ledger check.

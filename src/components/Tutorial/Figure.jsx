@@ -7,7 +7,7 @@ export default function TutorialFigure({ figureId }) {
   return <section aria-label={model.question}>
     <p><strong>{model.question}</strong></p>
     <StaticDiagram model={model} assetRoot="/diagrams/tutorials/">
-      <details><summary>Read the figure in words</summary><ol>{model.steps.map((step) => <li key={step}>{step}</li>)}</ol><p>Teaching diagram using selected records or measures from release v2027.1. Arrows guide this investigation; they do not assert that every relationship is one-to-one.</p></details>
+      <details><summary>Read the figure in words</summary><ol>{model.steps.map((step) => <li key={step}>{step}</li>)}</ol><p>Follow the selected records and measures through the investigation. The arrows show the analytical steps; check the document keys before deciding how many records can match.</p></details>
     </StaticDiagram>
   </section>;
 }

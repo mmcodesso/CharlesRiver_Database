@@ -19,7 +19,7 @@ import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
 The operations planner in our company story considers how to support customer demand. Some goods can come from available inventory; other needs require merchandise or components from suppliers. The question becomes **what should the company obtain, what actually arrived, and what does it owe?**
 
-This chapter follows an ordinary inventory purchase in the fictional setting. Purchasing also supports the wider company. Do not assume that a supplier order in the dataset belongs to the illustrative furnishing project.
+Follow an inventory purchase from the planner's request to supplier payment. Purchasing supports customer demand and ongoing stock needs across the company. When investigating a particular purchase, use its document links to establish which request, receipt, and invoice belong together.
 
 Procure-to-pay, or P2P, connects an internal request with a supplier commitment, receipt, invoice, and payment. Its documents let receiving, accounts payable, and treasury answer different questions about the same purchase.
 

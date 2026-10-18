@@ -5,7 +5,6 @@ import { DatasetStructuredData } from "@site/src/components/SiteBranding";
 import { caseCatalog } from "@site/src/data/caseCatalog";
 import reportTopics from "@site/src/data/reportTopics.json";
 import queryTopics from "@site/src/data/queryTopics.json";
-import { TEACHING_RELEASE } from "@site/src/data/teachingRelease.cjs";
 import ProcessEvidenceMap, { EvidenceExplorer } from "@site/src/components/ProcessEvidenceMap";
 import styles from "./index.module.css";
 
@@ -25,19 +24,19 @@ export default function Home() {
   const { siteConfig } = useDocusaurusContext();
   const branding = siteConfig.customFields?.branding ?? {};
   const displayName = branding.displayName ?? "Charles River";
-  const description = `${branding.datasetName ?? "Charles River Accounting Dataset"}: a synthetic company with connected accounting processes, 82 published tables, SQL and Excel exercises, and ${caseCatalog.length} guided teaching cases.`;
+  const description = `${branding.datasetName ?? "Charles River Accounting Dataset"}: learn connected accounting processes through 82 published tables, SQL and Excel exercises, and ${caseCatalog.length} guided teaching cases.`;
   const reportCount = reportTopics.reduce((count, topic) => count + topic.reports.length, 0);
   const queryCount = queryTopics.reduce((count, topic) => count + topic.queries.length, 0);
   return (
-    <Layout title="Synthetic Accounting Dataset, Business Processes & Teaching Cases" description={description}>
+    <Layout title="Accounting Processes, Data & Teaching Cases" description={description}>
       <DatasetStructuredData pagePath="/" description={description} />
       <main className={styles.page}>
         <section className={styles.hero} aria-labelledby="home-title">
           <div className={styles.heroCopy}>
             <p className={styles.eyebrow}>Accounting Analytics Hub / {displayName}</p>
-            <p className={styles.environment}>A synthetic accounting learning environment</p>
+            <p className={styles.environment}>Learn accounting through one connected business</p>
             <h1 id="home-title">One company.<br />A connected<br /><em>accounting story.</em></h1>
-            <p className={styles.lede}>Meet a fictional Boston-area home-furnishings business. Follow its sales, purchases, production, and people through source documents to the general ledger. Then use SQL, Excel, and guided cases to investigate the evidence.</p>
+            <p className={styles.lede}>Meet {displayName}, a home-furnishings business in Greater Boston. Follow its sales, purchases, production, and people through source documents to the general ledger. Use SQL, Excel, and guided cases to explain what happened and support a decision.</p>
             <p className={styles.principle}>Learn the business before the joins.</p>
             <div className={styles.actions}>
               <Link className="button button--primary" to="/docs/company-story">Meet the company <span aria-hidden="true">→</span></Link>
@@ -51,11 +50,11 @@ export default function Home() {
           <ProcessEvidenceMap />
         </section>
         <div className={styles.factsBand}><div className={styles.facts} aria-label="Verified published dataset specifications">
-          <p><strong>82</strong><span>tables in release {TEACHING_RELEASE.tag}</span></p><p><strong>2024–2026</strong><span>main operating years</span></p><p><strong>SQLite · Excel · CSV</strong><span>three published formats</span></p><p><strong>Open educational resource</strong><span>CC BY-SA 4.0</span></p>
+          <p><strong>82</strong><span>connected accounting tables</span></p><p><strong>2024–2026</strong><span>main operating years</span></p><p><strong>SQLite · Excel · CSV</strong><span>three published formats</span></p><p><strong>Open educational resource</strong><span>CC BY-SA 4.0</span></p>
         </div></div>
         <section className={styles.section} aria-labelledby="company-heading"><div className={styles.companyGrid}>
           <div><p className={styles.eyebrow}>The business behind the data</p><h2 id="company-heading">Furniture, materials,<br />and a different kind<br />of revenue: time.</h2></div>
-          <div className={styles.companyCopy}><p>{branding.companyName ?? "Charles River Home Furnishings, Inc."} combines purchased merchandise, selected in-house manufacturing, and hourly Design Services. These operating choices connect demand to inventory, labor, receivables, payables, and financial close.</p><p>Students work with synthetic records from one shared business. The Company Story and process guides explain the setting; the published data supplies the accounting evidence.</p><Link className={styles.textLink} to="/docs/company-story">Read the Company Story <span aria-hidden="true">→</span></Link></div>
+          <div className={styles.companyCopy}><p>{branding.companyName ?? "Charles River Home Furnishings, Inc."} combines purchased merchandise, selected in-house manufacturing, and hourly Design Services. These operating choices connect demand to inventory, labor, receivables, payables, and financial close.</p><p>Start with the customer and the people doing the work. Follow their documents through the process guides, then examine the records to explain a balance, investigate a difference, or recommend a next step.</p><Link className={styles.textLink} to="/docs/company-story">Read the Company Story <span aria-hidden="true">→</span></Link></div>
         </div></section>
         <section className={styles.tintedSection} aria-labelledby="pathways-heading"><div className={styles.sectionInner}>
           <div className={styles.sectionHeader}><div><p className={styles.eyebrow}>A clear way into the work</p><h2 id="pathways-heading">Start with a question.<br />Build toward a decision.</h2></div><p>Keep the company familiar while the accounting questions become more demanding.</p></div>
@@ -63,7 +62,7 @@ export default function Home() {
         </div></section>
         <section className={styles.section} aria-labelledby="evidence-heading"><div className={styles.sectionHeader}><div><p className={styles.eyebrow}>From operations to interpretation</p><h2 id="evidence-heading">Follow the evidence.</h2></div><p>An operational event, an accounting entry, and a useful conclusion are different steps. Explore how they connect.</p></div><EvidenceExplorer /></section>
         <section className={styles.darkSection} aria-labelledby="cases-heading"><div className={styles.sectionInner}>
-          <div className={styles.sectionHeader}><div><p className={styles.eyebrow}>Three starting investigations</p><h2 id="cases-heading">Real accounting questions.<br />Synthetic company records.</h2></div><Link className={styles.textLink} to="/docs/analytics/cases">Explore all {caseCatalog.length} cases <span aria-hidden="true">→</span></Link></div>
+          <div className={styles.sectionHeader}><div><p className={styles.eyebrow}>Three starting investigations</p><h2 id="cases-heading">Build an explanation.<br />Recommend a next step.</h2></div><Link className={styles.textLink} to="/docs/analytics/cases">Explore all {caseCatalog.length} cases <span aria-hidden="true">→</span></Link></div>
           <div className={styles.caseGrid}>{cases.map((item) => <article className={styles.case} key={item.href}><p className={styles.pathLabel}>{item.tag}</p><h3><Link to={item.href}>{item.title}</Link></h3><p>{item.text}</p><Link className={styles.textLink} to={item.href}>Open the guided case <span aria-hidden="true">→</span></Link></article>)}</div>
         </div></section>
         <section className={styles.section} aria-labelledby="resources-heading"><div className={styles.resourceGrid}>
@@ -75,7 +74,7 @@ export default function Home() {
             <a href="https://accountinganalyticshub.com/"><strong>Accounting Analytics Hub</strong><span>Open textbooks and planned learning pathways.</span><span aria-hidden="true">↗</span></a>
           </div>
         </div></section>
-        <section className={styles.downloadSection} aria-labelledby="download-heading"><div className={styles.sectionInner}><div><p className={styles.eyebrow}>Ready to explore</p><h2 id="download-heading">The files are ready.<br />Bring an accounting question.</h2><p>Use the published {TEACHING_RELEASE.tag} files for a shared classroom baseline. No generator setup is required.</p><p className={styles.small}>The <Link to="/docs/dataset-overview">Dataset Guide</Link> explains the verified table count and settlement postings beyond the main operating years.</p></div><Link className="button button--primary" to="/docs/downloads">Get the dataset <span aria-hidden="true">↓</span></Link></div></section>
+        <section className={styles.downloadSection} aria-labelledby="download-heading"><div className={styles.sectionInner}><div><p className={styles.eyebrow}>Ready to explore</p><h2 id="download-heading">The files are ready.<br />Bring an accounting question.</h2><p>Download the company records and begin with a focused investigation.</p><p className={styles.small}>The <Link to="/docs/dataset-overview">Dataset Guide</Link> explains the tables and settlement postings beyond the main operating years.</p></div><Link className="button button--primary" to="/docs/downloads">Get the dataset <span aria-hidden="true">↓</span></Link></div></section>
       </main>
     </Layout>
   );

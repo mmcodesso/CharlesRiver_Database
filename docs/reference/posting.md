@@ -47,7 +47,7 @@ These documents are generated for process analysis but do **not** create `GLEntr
 
 | Event | Source tables | Posting date used | Debit | Credit |
 |---|---|---|---|---|
-| Opening balance journal | `JournalEntry` plus seeded GL rows | `2024-01-01` in published v2027.1 | Asset accounts and selected opening balances | Liability, equity, contra-asset balances, and retained earnings plug |
+| Opening balance journal | `JournalEntry` plus seeded GL rows | `2024-01-01` | Asset accounts and selected opening balances | Liability, equity, contra-asset balances, and retained earnings plug |
 | Rent | `JournalEntry` plus seeded GL rows | First business day of month | `6070` Warehouse Rent or `6080` Office Rent | `1010` Cash and Cash Equivalents |
 | Utilities | `JournalEntry` plus seeded GL rows | Last business day of month | `6090` Utilities Expense | `1010` Cash and Cash Equivalents |
 | Factory overhead | `JournalEntry` plus seeded GL rows | Last business day of month | `1090` Manufacturing Cost Clearing, or `5080` Manufacturing Variance when the month has no capitalizable direct labor | `1010` Cash and Cash Equivalents |
@@ -135,11 +135,11 @@ Sales commissions are a separate O2C payable, not payroll. `SalesCommissionAccru
 
 ## PayrollSummary Register Summaries
 
-`PayrollSummary` is a ledger source label, **not a table**. In release **v2027.1**, payroll-register postings summarize employee register facts by **payroll period, cost center, and account**. A summary ledger line therefore represents several employee records; its `SourceDocumentID` is not a `PayrollRegisterID` foreign key.
+`PayrollSummary` is a ledger source label, **not a table**. Payroll-register postings summarize employee register facts by **payroll period, cost center, and account**. A summary ledger line therefore represents several employee records; its `SourceDocumentID` is not a `PayrollRegisterID` foreign key.
 
 | Released posting | `VoucherType` / `SourceDocumentType` | Source identifier and grain |
 |---|---|---|
-| Register recognition, such as `PRS-0001-001` | `PayrollSummary` / `PayrollSummary` | Synthetic register-summary ID; ledger amounts grouped by period, cost center, and account |
+| Register recognition, such as `PRS-0001-001` | `PayrollSummary` / `PayrollSummary` | Constructed register-summary ID; ledger amounts grouped by period, cost center, and account |
 | Employee payment, such as `PRPAY-2024-000002` | `PayrollPayment` / `PayrollPayment` | `SourceDocumentID = PayrollPayment.PayrollPaymentID`; follow its `PayrollRegisterID` to the employee register |
 
 For a register summary, this release uses:
@@ -149,7 +149,7 @@ SourceDocumentID = 1,000,000 + PayrollPeriodID × 1,000 + CostCenterID
 VoucherNumber = PRS-<four-digit period>-<three-digit cost center>
 ```
 
-Thus `PRS-0001-001` means period **1**, cost center **1**, and synthetic source ID **1001001**. This encoding is an implementation convention of the teaching release, not a universal accounting identifier. Never join it directly to `PayrollRegister.PayrollRegisterID`. `SourceLineID` is null because no single employee register line represents the summary; null does not establish missing payroll support.
+Thus `PRS-0001-001` means period **1**, cost center **1**, and constructed source ID **1001001**. This encoding identifies a period/cost-center summary. Never join it directly to `PayrollRegister.PayrollRegisterID`. `SourceLineID` is null because no single employee register line represents the summary; null does not establish missing payroll support.
 
 Aggregate the employee facts first, aggregate the relevant ledger account separately, then compare the two results at period/cost-center grain. Joining each register row to every voucher line before summing would repeat net pay.
 
@@ -182,7 +182,7 @@ JOIN ledger_totals AS l
 
 The result has **three register rows**, net pay **23,489.30**, a `2030` credit of **23,489.30**, and difference **0.00**. This compares net pay only. The complete six-line voucher also recognizes gross-pay expense, employer expense, and the other payroll liabilities; its debits and credits each total **31,560.24**.
 
-Payments in this release retain detailed `PayrollPayment` source IDs and null `SourceLineID`. Do not apply the register-summary formula to them. A ledger source label does not guarantee that its referenced record exists: this teaching release includes missing-payment evidence, so test the relationship before concluding that the source trail is complete. Optional payment-summary logic in generator source does not describe the released payment pattern. Continue with [Follow Hours into Payroll](../learn-and-practice/follow-hours-into-payroll.md) to distinguish recognition, employee payment, and liability remittance.
+Payments retain detailed `PayrollPayment` source IDs and null `SourceLineID`. Do not apply the register-summary formula to them. A ledger source label does not guarantee that its referenced record exists: some payment evidence is missing, so test the relationship before concluding that the source trail is complete. Continue with [Follow Hours into Payroll](../learn-and-practice/follow-hours-into-payroll.md) to distinguish recognition, employee payment, and liability remittance.
 
 ## Annual Closing Directions
 

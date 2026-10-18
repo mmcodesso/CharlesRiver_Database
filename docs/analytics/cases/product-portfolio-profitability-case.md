@@ -30,7 +30,7 @@ Commercial leadership has time for one product review. The sales coordinator pro
 
 **Worked scope.** Goods invoice lines dated January 1–March 31, 2024. Compare product groups using the same population. Credits are a separate credit-date population. Current product-master attributes and standard costs are descriptive reference data, not historical snapshots.
 
-The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
+Choose Excel or SQL; your selection carries between lessons and cases.
 
 **Preparation:** [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [9. Follow Manufacturing Costs](/docs/learn-and-practice/manufacturing-cost-flow); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
@@ -584,7 +584,7 @@ Keep the conclusion within the measures. Current classifications, standard costs
 **Keep for the next stage:** Save a 400–500 word memo and the comparison table. Include one source example and one uncertainty.
 
 :::tip Session stopping point
-A reviewer should be able to trace the priority to the table, the table to the population, and the population to the released records.
+A reviewer should be able to trace the priority to the table, the table to the population, and the population to the source records.
 :::
 
 <CaseFigure figureId="case04-conclusion" />
@@ -597,7 +597,7 @@ A reviewer should be able to trace the priority to the table, the table to the p
 
 Furniture merits a focused review in the worked analysis, but the first action should diagnose cost assumptions, product mix, and delivery performance alongside pricing. Similar realization rates across groups weaken a simple discount-only explanation. The recommendation remains provisional because current standard costs are not a complete historical cost-of-sales measure.
 
-**Deliverable:** A product comparison, selected pricing evidence, a simple analytical chart, and a recommendation memo. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** A product comparison, selected pricing evidence, a simple analytical chart, and a recommendation memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
 
 ## Independent Challenge
 

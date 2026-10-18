@@ -37,13 +37,11 @@ In `Lesson09.xlsx`, import `T51_WorkOrder` as `WorkOrderData` filtered to ID 1; 
 </TabItem>
 <TabItem value="sql">
 
-Open the released SQLite database in your SQL tool. Save this lesson's statements as **Lesson09.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson09.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
 
-
-These are actual synthetic records from release **v2027.1**, separate from the illustrative customer project in the company story. Use your assigned release when an instructor specifies another file; its results may differ.
 
 <span id="evidence-workflow"></span>
 
@@ -89,7 +87,7 @@ ORDER BY m.IssueDate, m.MaterialIssueID;
 </TabItem>
 </ToolSteps>
 
-Work order **WO-2024-000001** plans **7.03** units of item **231**. Material issue **1**, dated **2024-01-17**, has **two component lines** costing **754.29**. These are recorded synthetic quantities and costs; retain the supplied precision.
+Work order **WO-2024-000001** plans **7.03** units of item **231**. Material issue **1**, dated **2024-01-17**, has **two component lines** costing **754.29**. Retain the recorded precision when checking quantities and costs.
 
 ## 2. Separate Completion from Close
 
@@ -207,7 +205,7 @@ Expect **five labor entries**, IDs **213, 214, 215, 429, and 501**, with recorde
 
 ## Keep Your Evidence
 
-Save separate issue, completion, close, and labor-support sections. Explain what had occurred by January 31 and what was recorded on February 1. Record the release, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+Save separate issue, completion, close, and labor-support sections. Explain what had occurred by January 31 and what was recorded on February 1. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
 
 <span id="interpretation-and-limitations"></span>
 
@@ -235,7 +233,7 @@ Keep the introductory lesson above intact. This extension asks a narrower accoun
 
 ### 1. Define the Selected Population
 
-Use release **v2027.1**, `WorkOrderID = 1`, and its material issue **1**, completions **1 and 2**, and close **1**. The following query pairs source **type and ID**, retains each complete event voucher, and groups its lines by account. It does not join a ledger amount to every operational line.
+Use `WorkOrderID = 1` and its material issue **1**, completions **1 and 2**, and close **1**. The following query pairs source **type and ID**, retains each complete event voucher, and groups its lines by account. It does not join a ledger amount to every operational line.
 
 ```sql
 WITH selected_sources AS (

@@ -1,7 +1,7 @@
 import Head from "@docusaurus/Head";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import { TEACHING_RELEASE, getTeachingReleaseUrl } from "@site/src/data/teachingRelease.cjs";
+import { getTeachingReleaseUrl } from "@site/src/data/teachingRelease.cjs";
 import {
   buildDatasetStructuredData,
   getFileName,
@@ -47,13 +47,9 @@ export function ReleaseDownloadLink({ type, children }) {
   return <Link href={href}>{children ?? fileName}</Link>;
 }
 
-export function TeachingRelease() {
-  return TEACHING_RELEASE.tag;
-}
-
 export function TeachingReleaseLink({ children }) {
   const branding = useSiteBranding();
-  return <Link href={getTeachingReleaseUrl(branding.repositoryUrl)}>{children ?? TEACHING_RELEASE.tag}</Link>;
+  return <Link href={getTeachingReleaseUrl(branding.repositoryUrl)}>{children ?? "View the latest release"}</Link>;
 }
 
 export function TeachingReleaseIntegrity() {
@@ -61,16 +57,14 @@ export function TeachingReleaseIntegrity() {
   const fileName = getFileName(branding.shortName ?? "dataset", "sqlite");
   return (
     <>
-      <p>The expected SHA-256 for <code>{fileName}</code> in release <TeachingRelease /> is:</p>
-      <pre><code>{TEACHING_RELEASE.sqliteSha256}</code></pre>
-      <p>Run one command from the folder containing the downloaded SQLite file:</p>
+      <p>The <TeachingReleaseLink>latest release page</TeachingReleaseLink> provides file details and checksums. To check <code>{fileName}</code>, run one command from the folder containing your download:</p>
       <p><strong>Linux:</strong></p>
       <pre><code>{`sha256sum ${fileName}`}</code></pre>
       <p><strong>macOS:</strong></p>
       <pre><code>{`shasum -a 256 ${fileName}`}</code></pre>
       <p><strong>Windows PowerShell:</strong></p>
       <pre><code>{`Get-FileHash .\\${fileName} -Algorithm SHA256`}</code></pre>
-      <p>Compare all 64 hexadecimal characters; letter case does not matter. A match identifies the SQLite file used for the worked examples. If the hash differs, download the pinned release again before relying on those results. This checksum applies to the SQLite file; it does not verify the Excel workbook or CSV archive.</p>
+      <p>Compare all 64 hexadecimal characters with the SHA-256 listed for that file on the release page; letter case does not matter. If the values differ, download the file again before beginning the analysis. Each format has its own checksum, so compare the SQLite result with the SQLite entry.</p>
     </>
   );
 }

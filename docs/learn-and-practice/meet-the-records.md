@@ -36,13 +36,11 @@ Use the `CustomerData` table imported during setup.
 </TabItem>
 <TabItem value="sql">
 
-Open the released SQLite database in your SQL tool. Save this lesson's statements as **Lesson01.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson01.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
 
-
-These are actual synthetic records from release **v2027.1**, separate from the illustrative customer project in the company story. Use your assigned release when an instructor specifies another file; its results may differ.
 
 <span id="evidence-workflow"></span>
 
@@ -110,7 +108,7 @@ The first five names should be **Alvarez-Smith (45)**, **Atkins, Garrett and Smi
 
 ## Keep Your Evidence
 
-Save the selected customer's identifier, name, and segment, plus one sentence describing the row. Add the first five sorted design-trade customers as a preview. Record the release, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+Save the selected customer's identifier, name, and segment, plus one sentence describing the row. Add the first five sorted design-trade customers as a preview. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
 
 <span id="interpretation-and-limitations"></span>
 

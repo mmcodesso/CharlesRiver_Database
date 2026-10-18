@@ -34,7 +34,7 @@ Many business documents have information about the whole document and informatio
 
 The dataset stores those two levels separately. `SalesOrder` holds one header per order, while `SalesOrderLine` holds the individual ordered lines. Each line carries the identifier of its parent order.
 
-Consider a small example verified in release **v2027.1**: order **SO-2024-000011**, with `SalesOrderID` **11**, has **two lines** and an order total of **11,397.78**. This is an actual release record, separate from the fictional furnishing project.
+Begin with order **SO-2024-000011**: `SalesOrderID` **11** has **two lines** and an order total of **11,397.78**. Read the header and its lines together to distinguish the whole order from the products it contains.
 
 If you display the header beside each line, the order number and total appear twice. There are still two lines belonging to one order. Summing the repeated header total would count the order twice.
 
@@ -118,7 +118,7 @@ Expand the reference that answers your current question. These paths summarize r
 
 ### What the Dataset Contains
 
-The published `v2027.1` SQLite database contains **82 user tables** across nine areas. This count describes the published file, rather than an assumed count from a local generator configuration.
+The database contains **82 user tables** across nine areas. Use the groups below to locate the records needed for your question.
 
 The main operating window is 2024–2026. Supplier disbursements continue into early 2027 to settle prior obligations. State the reporting date and whether subsequent settlement is included when interpreting balances or payment timing.
 
@@ -296,7 +296,7 @@ Then use:
 
 to move back to the originating event.
 
-Use the stored source type rather than assuming it always matches a table name. For example, payroll-register postings use `PayrollSummary` as their `GLEntry.SourceDocumentType`; the [PayrollSummary register mapping](../reference/posting.md#payrollsummary-register-summaries) explains its period/cost-center summary grain, synthetic source identifier, and aggregate tie-out. Do not join that identifier directly to `PayrollRegisterID`.
+Use the stored source type rather than assuming it always matches a table name. For example, payroll-register postings use `PayrollSummary` as their `GLEntry.SourceDocumentType`; the [PayrollSummary register mapping](../reference/posting.md#payrollsummary-register-summaries) explains its period/cost-center summary grain, constructed source identifier, and aggregate tie-out. Do not join that identifier directly to `PayrollRegisterID`.
 
 </details>
 <details>

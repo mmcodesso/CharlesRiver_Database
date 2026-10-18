@@ -30,7 +30,7 @@ The operations planner wants to change a schedule after a difficult production p
 
 **Worked scope.** 336 work orders released January 1–31, 2024, with events assessed through February 29. Begin with work order 1 and compare work order 67. Capacity comparisons cover all scheduled work in the selected work centers and dates, not only the January cohort.
 
-The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
+Choose Excel or SQL; your selection carries between lessons and cases.
 
 **Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [9. Follow Manufacturing Costs](/docs/learn-and-practice/manufacturing-cost-flow); [Manufacturing process chapter](/docs/processes/manufacturing). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
@@ -575,7 +575,7 @@ Save a reproducible cost bridge and a bounded recommendation. Keep unresolved ev
 
 The production review should separate cost accounting from operational timing. The data supports specific investigations into documentation, daily capacity peaks, and the 46 orders awaiting close at the cutoff. It does not support a blanket conclusion that employees were inefficient or that every late order arose from inadequate capacity.
 
-**Deliverable:** A work-order cost bridge, completion/close comparison, capacity evidence, and a production review memo. Include the release, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** A work-order cost bridge, completion/close comparison, capacity evidence, and a production review memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
 
 ## Independent Challenge
 

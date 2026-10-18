@@ -38,13 +38,11 @@ Start a **new** `Lesson12.xlsx` so earlier single-invoice filters cannot carry o
 </TabItem>
 <TabItem value="sql">
 
-Open the released SQLite database in your SQL tool. Save this lesson's statements as **Lesson12.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson12.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
 
-
-These are actual synthetic records from release **v2027.1**, separate from the illustrative customer project in the company story. Use your assigned release when an instructor specifies another file; its results may differ.
 
 <span id="evidence-workflow"></span>
 
@@ -177,7 +175,7 @@ The five invoice IDs, in descending amount order, are **693, 698, 696, 690, and 
 
 ## Keep Your Evidence
 
-Write a short memo with four parts: **Finding**, **Evidence and check**, **Limit**, and **Next action**. Attach the monthly table, one source example, and your reproducible workbook or SQL. State the measure in the finding itself. Record the release, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+Write a short memo with four parts: **Finding**, **Evidence and check**, **Limit**, and **Next action**. Attach the monthly table, one source example, and your reproducible workbook or SQL. State the measure in the finding itself. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
 
 <span id="interpretation-and-limitations"></span>
 
