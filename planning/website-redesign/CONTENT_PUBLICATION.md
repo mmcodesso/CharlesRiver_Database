@@ -16,3 +16,7 @@ The user authorized commit, merge, and Cloudflare deployment of the reviewed com
 Windows Excel evaluated 819 formula/result comparisons for the Design Services case with no mismatches. Native Power Query successfully imported and loaded all five source tables (52,397 rows), matching SQLite. Editor focus problems prevented completing native filtering, merging, grouping, and custom-column walkthroughs. Mac desktop checks were unavailable. These limits are detailed in `EXCEL_FORMULA_REVIEW.md` and `POWER_QUERY_WALKTHROUGH_REVIEW.md`; spreadsheet-equivalent checks are not represented as complete native walkthroughs.
 
 No dataset generation or generator regression suite was needed for this website-only publication. Released downloads, schema, canonical queries, accounting calculations, and report assets remain frozen. The production commit and deployment result are recorded by the pull request and Cloudflare build history.
+
+## Deployment configuration correction
+
+The first Cloudflare branch build compiled successfully, then failed at `npx wrangler versions upload` because the repository had no Worker entry point or assets directory configuration. Added root `wrangler.jsonc` for the existing `greenfield` Worker, serving only the Docusaurus `build` directory and its generated 404 page. This makes the asset directory explicit for both preview uploads and production deployment. Existing Git integration, custom domain, dataset release, and build commands remain in place.
