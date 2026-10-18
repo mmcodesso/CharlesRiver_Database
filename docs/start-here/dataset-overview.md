@@ -296,7 +296,7 @@ Then use:
 
 to move back to the originating event.
 
-Use the stored source type rather than assuming it always matches a table name. For example, payroll-register postings use `PayrollSummary` as their `GLEntry.SourceDocumentType`; the [Posting Reference](../reference/posting.md) explains the event-to-ledger mapping.
+Use the stored source type rather than assuming it always matches a table name. For example, payroll-register postings use `PayrollSummary` as their `GLEntry.SourceDocumentType`; the [PayrollSummary register mapping](../reference/posting.md#payrollsummary-register-summaries) explains its period/cost-center summary grain, synthetic source identifier, and aggregate tie-out. Do not join that identifier directly to `PayrollRegisterID`.
 
 </details>
 <details>

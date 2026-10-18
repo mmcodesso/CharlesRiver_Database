@@ -32,7 +32,13 @@ The operations planner wants to change a schedule after a difficult production p
 
 The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-**Preparation:** 9: manufacturing costs; Manufacturing process chapter. Revisit [the relevant tutorial](../../learn-and-practice/manufacturing-cost-flow.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
+**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [9. Follow Manufacturing Costs](/docs/learn-and-practice/manufacturing-cost-flow); [Manufacturing process chapter](/docs/processes/manufacturing). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+
+**Ready to begin:**
+
+- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
+- Aggregate issue, labor, completion, and close independently by work order; compare capacity at one row per center/day.
 
 ## Key Data Sources
 
@@ -75,35 +81,41 @@ Create Case05.xlsx or Case05.sql. A release-date cohort stays fixed even when co
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import WorkOrderData and filter ReleasedDate January 1–31.
+**Named inputs:** `WorkOrderData ← WorkOrder (import here)`.
 
-2. Load as Orders, keeping IDs and all date fields.
+**Produced outputs:** `Orders: fixed January 2024 release cohort; 336 rows, missing dates retained`.
 
-3. Label Review!B2 Release cohort and enter:
+1. Import WorkOrder as WorkOrderData.
+
+2. Reference it as Orders and filter ReleasedDate January 1–31, 2024, preserving the raw query.
+
+3. Load as Orders, keeping IDs and all date fields.
+
+4. Label Review!B2 Release cohort and enter:
 
     ~~~text title="Excel — Review!B2"
     =ROWS(Orders[WorkOrderID])
     ~~~
 
-4. Add CompletedByCutoff to Orders:
+5. Add CompletedByCutoff to Orders:
 
     ~~~text title="Excel — Orders[CompletedByCutoff]"
     =IF(AND(ISNUMBER([@CompletedDate]),[@CompletedDate]<=DATE(2024,2,29)),1,0)
     ~~~
 
-5. Add ClosedByCutoff:
+6. Add ClosedByCutoff:
 
     ~~~text title="Excel — Orders[ClosedByCutoff]"
     =IF(AND(ISNUMBER([@ClosedDate]),[@ClosedDate]<=DATE(2024,2,29)),1,0)
     ~~~
 
-6. Add MissingPlanLink:
+7. Add MissingPlanLink:
 
     ~~~text title="Excel — Orders[MissingPlanLink]"
     =IF([@SupplyPlanRecommendationID]="",1,0)
     ~~~
 
-7. Do not filter away missing dates or links.
+8. Do not filter away missing dates or links.
 
 </TabItem>
 <TabItem value="sql">
@@ -159,13 +171,19 @@ Current Status is not an as-of measure. Test the actual dates against the cutoff
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import WorkOrderOperationData filtered to WorkOrderID 1 or 67.
+**Named inputs:** `WorkOrderOperationData ← WorkOrderOperation and WorkOrderOperationScheduleData ← WorkOrderOperationSchedule (import here)`.
 
-2. Import WorkOrderOperationScheduleData, filter ScheduleDate through February 29, and group by WorkOrderOperationID summing ScheduledHours.
+**Produced outputs:** `SelectedOperations: operations for WO1/WO67`; `ScheduleByOperation: dated schedule summary`; `OperationTrace: selected operations with schedule support`.
 
-3. Left merge this summary to the operations and sort by WorkOrderID then OperationSequence.
+1. Import WorkOrderOperation as WorkOrderOperationData and WorkOrderOperationSchedule as WorkOrderOperationScheduleData; preserve the raw queries.
 
-4. Keep PlannedLoadHours and actual start/end dates beside the schedule total.
+2. Reference WorkOrderOperationData as SelectedOperations and filter WorkOrderID 1 or 67.
+
+3. Reference WorkOrderOperationScheduleData as ScheduleByOperation, filter ScheduleDate through February 29, 2024, and group by WorkOrderOperationID, Sum ScheduledHours as ScheduledHours.
+
+4. Reference SelectedOperations as OperationTrace, Left merge ScheduleByOperation on WorkOrderOperationID, and sort by WorkOrderID then OperationSequence.
+
+5. Keep PlannedLoadHours and actual start/end dates beside the schedule total.
 
 </TabItem>
 <TabItem value="sql">
@@ -229,21 +247,29 @@ Materials, labor support, completions, and close records each have their own gra
 <ToolSteps>
 <TabItem value="excel">
 
-1. Create four Power Query summaries before loading.
+**Named inputs:** `Orders (Session 1.1)`; `MaterialIssueLineData ← MaterialIssueLine and MaterialIssueData ← MaterialIssue (import here)`; `LaborTimeEntryData ← LaborTimeEntry (import here)`; `ProductionCompletionLineData ← ProductionCompletionLine and ProductionCompletionData ← ProductionCompletion (import here)`; `WorkOrderCloseData ← WorkOrderClose (import here)`.
 
-2. Issues: merge MaterialIssueLineData to MaterialIssueData on MaterialIssueID, filter IssueDate through February 29, group by WorkOrderID and sum ExtendedStandardCost as Issued.
+**Produced outputs:** `IssuesByWorkOrder, LaborByWorkOrder, CompletionsByWorkOrder, ClosesByWorkOrder: separate one-row-per-work-order summaries`; `CostBridge: all 336 cohort orders; unclosed variance remains null`.
 
-3. Labor: filter LaborTimeEntryData WorkDate through February 29, group by WorkOrderID and sum ExtendedLaborCost as LaborSupport.
+1. Import MaterialIssueLine as MaterialIssueLineData, MaterialIssue as MaterialIssueData, LaborTimeEntry as LaborTimeEntryData, ProductionCompletionLine as ProductionCompletionLineData, ProductionCompletion as ProductionCompletionData, and WorkOrderClose as WorkOrderCloseData.
 
-4. Completions: merge ProductionCompletionLineData to ProductionCompletionData, filter CompletionDate through February 29, group by WorkOrderID and sum QuantityCompleted as CompletedQty, ExtendedStandardMaterialCost as CompletedMaterials, ExtendedStandardConversionCost as CompletedConversion, and ExtendedStandardTotalCost as CompletedTotal.
+2. Keep those raw queries unchanged.
 
-5. Closes: filter WorkOrderCloseData CloseDate through February 29, group by WorkOrderID and sum MaterialVarianceAmount as MaterialVariance, ConversionVarianceAmount as ConversionVariance, and TotalVarianceAmount as TotalVariance.
+3. Create four references and summarize before merging.
 
-6. Left merge these four unique-key summaries to Orders; load as CostBridge.
+4. IssuesByWorkOrder: merge MaterialIssueLineData to MaterialIssueData on MaterialIssueID, filter IssueDate through February 29, group by WorkOrderID and sum ExtendedStandardCost as Issued.
 
-7. Replace missing issue/labor/completion totals with zero only after checking event absence.
+5. LaborByWorkOrder: filter LaborTimeEntryData WorkDate through February 29, group by WorkOrderID and sum ExtendedLaborCost as LaborSupport.
 
-8. Leave missing close variances blank, meaning no close by cutoff.
+6. CompletionsByWorkOrder: merge ProductionCompletionLineData to ProductionCompletionData on ProductionCompletionID, filter CompletionDate through February 29, group by WorkOrderID and sum QuantityCompleted as CompletedQty, ExtendedStandardMaterialCost as CompletedMaterials, ExtendedStandardConversionCost as CompletedConversion, and ExtendedStandardTotalCost as CompletedTotal.
+
+7. ClosesByWorkOrder: filter WorkOrderCloseData CloseDate through February 29, group by WorkOrderID and sum MaterialVarianceAmount as MaterialVariance, ConversionVarianceAmount as ConversionVariance, and TotalVarianceAmount as TotalVariance.
+
+8. Reference Orders as CostBridge and Left merge these four unique-key summaries on WorkOrderID; load as CostBridge.
+
+9. Replace missing issue/labor/completion totals with zero only after checking event absence.
+
+10. Leave missing close variances blank, meaning no close by cutoff.
 
 </TabItem>
 <TabItem value="sql">
@@ -317,6 +343,10 @@ Do not add direct labor and overhead variance again after using ConversionVarian
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `CostBridge (Session 2.1)`.
+
+**Produced outputs:** `CostBridge: AbsVariance and VariancePerCompletedUnit columns`; `Review: separate WO1/WO67 cost and timing comparison`.
 
 1. In CostBridge add AbsVariance; leave unclosed orders blank:
 
@@ -427,23 +457,29 @@ A cohort’s late completion can coincide with capacity pressure without proving
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import WorkOrderOperationScheduleData filtered January 1–February 29, group by WorkCenterID and ScheduleDate, sum ScheduledHours.
+**Named inputs:** `WorkOrderOperationScheduleData (raw query from Session 1.2)`; `WorkCenterCalendarData ← WorkCenterCalendar (import here)`.
 
-2. Import WorkCenterCalendarData for the same dates.
+**Produced outputs:** `LoadByCenterDay: one schedule total per center/day`; `DailyCapacity: one calendar capacity row per center/day; retained for inspection`; `UnmatchedScheduleDates: reverse Left anti merge`; `CapacityByCenter: independently summed daily capacity/load`.
 
-3. Left merge calendar to the load summary on WorkCenterID and CalendarDate = ScheduleDate, selecting keys in that order.
+1. Reference the raw WorkOrderOperationScheduleData as LoadByCenterDay, filter ScheduleDate January 1–February 29, 2024, group by WorkCenterID and ScheduleDate, and sum ScheduledHours.
 
-4. Replace unmatched scheduled totals with zero after checking for schedule dates absent from the calendar using a Left anti merge in the reverse direction.
+2. Import WorkCenterCalendar as WorkCenterCalendarData.
 
-5. In Power Query add a Custom Column named AboveCapacity:
+3. Reference it as DailyCapacity and filter CalendarDate to the same dates.
+
+4. Left merge DailyCapacity to LoadByCenterDay on WorkCenterID and CalendarDate = ScheduleDate, selecting keys in that order.
+
+5. Replace unmatched scheduled totals with zero after checking for schedule dates absent from the calendar: reference LoadByCenterDay as UnmatchedScheduleDates and Left anti merge to DailyCapacity on the same two keys, in the same order.
+
+6. In Power Query add a Custom Column named AboveCapacity:
 
     ~~~text title="Power Query — Daily capacity / AboveCapacity"
     if [ScheduledHours] > [AvailableHours] then 1 else 0
     ~~~
 
-6. Group by WorkCenterID to sum available hours, scheduled hours, and AboveCapacity.
+7. Preserve DailyCapacity; reference it as CapacityByCenter and group by WorkCenterID to sum available hours, scheduled hours, and AboveCapacity.
 
-7. For WO67’s centers inspect daily rows around January 30–February 5.
+8. For WO67’s centers inspect daily rows around January 30–February 5.
 
 </TabItem>
 <TabItem value="sql">
@@ -491,6 +527,10 @@ Keep calendar dates with no load. Check calendar coverage before concluding ther
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `Orders, CostBridge, DailyCapacity, and CapacityByCenter (earlier stages)`.
+
+**Produced outputs:** `Review: timing, cost, and capacity sections; recommendation and chart`.
 
 1. Build Review with three sections: cohort timing, two-order cost comparison, and capacity context.
 
@@ -558,11 +598,15 @@ Follow WO67’s recommendation 777 into its item, warehouse, and planning week. 
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import SupplyPlanRecommendationData filtered to ID 777.
+**Named inputs:** `SupplyPlanRecommendationData ← SupplyPlanRecommendation and DemandForecastData ← DemandForecast (import here)`.
 
-2. Import DemandForecastData and filter IsCurrent = 1.
+**Produced outputs:** `PlanningSupport: recommendation 777 matched to current forecast by item/warehouse/week`.
 
-3. Left merge on ItemID, WarehouseID, and BucketWeekStartDate = ForecastWeekStartDate in that order.
+1. Import SupplyPlanRecommendation as SupplyPlanRecommendationData and reference it to filter ID 777.
+
+2. Import DemandForecast as DemandForecastData and filter IsCurrent = 1.
+
+3. Reference the selected recommendation as PlanningSupport and Left merge on ItemID, WarehouseID, and BucketWeekStartDate = ForecastWeekStartDate in that order.
 
 4. Keep forecast approval and recommended quantity separate; a gross requirement can include more than forecast demand.
 

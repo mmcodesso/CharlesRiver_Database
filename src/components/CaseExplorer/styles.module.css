@@ -102,3 +102,14 @@
     margin-top: 0.5rem;
   }
 }
+
+.preparationLinks,
+.readiness {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.preparationLinks li,
+.readiness li { margin-bottom: 0.3rem; }
+
+.preparationLinks a { display: inline-block; padding: 0.15rem 0; }

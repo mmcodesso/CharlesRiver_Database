@@ -30,7 +30,13 @@ The design lead is preparing a quarterly review with the controller. Several eng
 
 The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-**Preparation:** 7: design time and billing; 12: summarize evidence. Revisit [the relevant tutorial](../../learn-and-practice/follow-design-time-into-billing.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
+**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [7. Follow Design Time into Billing](/docs/learn-and-practice/follow-design-time-into-billing); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+
+**Ready to begin:**
+
+- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
+- Distinguish work dates, approval dates, billing coverage, and invoice dates; summarize hours and costs at engagement/month grain.
 
 ## Key Data Sources
 
@@ -62,11 +68,15 @@ Create Case02.xlsx or Case02.sql. Your Review note should distinguish work perfo
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import ServiceTimeEntryData and filter WorkDate from January 1 through March 31.
+**Named inputs:** `ServiceTimeEntryData ← ServiceTimeEntry (import here; filter Q1 2024 into TimeData)`; `Engagements ← ServiceEngagement (import here)`.
+
+**Produced outputs:** `TimeData: 204 time-entry rows with HourlyRate formula`; `SelectedEngagements: unique selected engagements`.
+
+1. Import ServiceTimeEntry as ServiceTimeEntryData; reference it as TimeData and filter WorkDate from January 1 through March 31, 2024.
 
 2. Load as TimeData.
 
-3. Import ServiceEngagementData as Engagements.
+3. Import ServiceEngagement as Engagements.
 
 4. Filter TimeData to ServiceEngagementID 2 and inspect its dates before clearing the filter.
 
@@ -80,7 +90,9 @@ Create Case02.xlsx or Case02.sql. Your Review note should distinguish work perfo
 
 7. Investigate No match rather than treating it as a zero rate.
 
-8. In Power Query create a Reference of TimeData, keep ServiceEngagementID, remove duplicates, and merge with Engagements; load as SelectedEngagements.
+8. In Power Query create a Reference of the filtered time query as SelectedEngagements, keep ServiceEngagementID, remove duplicates, and merge with Engagements; load as SelectedEngagements.
+
+9. The reference reads the imported query, so worksheet formula columns are not required for this selection.
 
 </TabItem>
 <TabItem value="sql">
@@ -123,6 +135,10 @@ A lookup is appropriate here because ServiceEngagementID is unique in the terms 
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `TimeData and its HourlyRate column (Session 1.1)`.
+
+**Produced outputs:** `TimeData: WorkMonth and ApprovedBillable columns`; `TimeByEngagementMonth: time/approval/cost PivotTable`.
 
 1. In TimeData add WorkMonth:
 
@@ -213,11 +229,15 @@ A time row is not a billing row. Aggregate within the billing period before comp
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import ServiceBillingLineData; filter BillingPeriodStartDate on or after January 1 and BillingPeriodEndDate before April 1.
+**Named inputs:** `ServiceBillingLineData ← ServiceBillingLine (import here; filter Q1 2024 into Billing)`; `InvoiceLines ← SalesInvoiceLine and Invoices ← SalesInvoice (import here)`; `TimeData (Session 1)`.
+
+**Produced outputs:** `Billing: billing-line detail with invoice date, covered hours, and approval comparison`.
+
+1. Import ServiceBillingLine as ServiceBillingLineData; reference it as Billing and filter BillingPeriodStartDate on or after January 1, 2024 and BillingPeriodEndDate before April 1, 2024.
 
 2. Load as Billing.
 
-3. Import SalesInvoiceLineData as InvoiceLines and SalesInvoiceData as Invoices.
+3. Import SalesInvoiceLine as InvoiceLines and SalesInvoice as Invoices.
 
 4. Keep ServiceBillingLineID as the unique row key.
 
@@ -301,6 +321,10 @@ If totals multiply, check whether you merged raw time rows into Billing. SUMIFS 
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `TimeData and Billing (earlier stages)`.
+
+**Produced outputs:** `EffortByEngagementMonth and BillingByEngagementMonth: separate PivotTables`; `Review: billable share and limited cost comparison; chart`.
 
 1. Create a PivotTable from TimeData with ServiceEngagementID and WorkMonth in Rows and sums of BillableHours, NonBillableHours, and ExtendedCost in Values.
 

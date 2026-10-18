@@ -1,0 +1,289 @@
+{
+  "base": "local production server",
+  "sitemapRoutes": 49,
+  "representativeAssets": 6,
+  "results": [
+    {
+      "path": "/search",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/analysis-tracks",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/cases",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/cases/audit-review-pack-case",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/cases/design-services-performance-case",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/cases/financial-statement-bridge-case",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/cases/manufacturing-labor-cost-case",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/cases/o2c-trace-case",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/cases/p2p-accrual-settlement-case",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/cases/product-portfolio-profitability-case",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/cases/workforce-coverage-and-attendance-case",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/excel-guide",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/analytics/sql-guide",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/company-story",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/dataset-overview",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/downloads",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/bpmn-controls-workshop",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/connect-the-records",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/find-the-accounting-entries",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/follow-an-estimate-into-settlement",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/follow-customer-settlement",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/follow-design-time-into-billing",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/manufacturing-cost-flow",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/meet-the-records",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/read-an-order",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/receipt-to-payable",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/source-to-ledger",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/process-flows",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/processes/design-services",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/processes/manual-journals-and-close",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/processes/manufacturing",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/processes/o2c",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/processes/p2p",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/processes/payroll",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/reference/posting",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/reference/schema",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/roadmap",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/teach-with-data/instructor-adoption",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/technical-guide",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/technical/contributing",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/technical/dataset-delivery",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/technical/license",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/docs/why-this-dataset",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "html": true
+    },
+    {
+      "path": "/financial/27_income_statement_monthly.sql",
+      "status": 200,
+      "exactFileContent": true,
+      "sha256": "8d93b921a158efdd3e0f458e9b2adf9d242a658fec92d56ad55f6db025eca902"
+    },
+    {
+      "path": "/reports/financial/monthly-close-and-statements/monthly-income-statement/preview.json",
+      "status": 200,
+      "exactFileContent": true,
+      "sha256": "87cb54d7d1950f0241746273ecd15d965622b06dd59e63dfec98f26e251a680c"
+    },
+    {
+      "path": "/reports/financial/monthly-close-and-statements/monthly-income-statement/monthly-income-statement.csv",
+      "status": 200,
+      "exactFileContent": true,
+      "sha256": "6760805c509047313def7164334acb9e387f64e2ef39f4fab2959d9a980710c3"
+    },
+    {
+      "path": "/reports/financial/monthly-close-and-statements/monthly-income-statement/monthly-income-statement.xlsx",
+      "status": 200,
+      "exactFileContent": true,
+      "sha256": "4600a01cb4aa2ba2013e5c0dfa6f52ee89ef4792791db40b245df1e42eecae4d"
+    },
+    {
+      "path": "/teaching/evidence-template.md",
+      "status": 200,
+      "exactFileContent": true,
+      "sha256": "fdd0c3e196ec93f3969b8e07836edd70c383ed12d485738381b224f460ce16dc"
+    },
+    {
+      "path": "/teaching/method-rubric.md",
+      "status": 200,
+      "exactFileContent": true,
+      "sha256": "c54968ae6289be618df96c75354cc4deae4960e9b2b63d7e47c6928c06eab86d"
+    }
+  ],
+  "finalBuildVerified": true
+}

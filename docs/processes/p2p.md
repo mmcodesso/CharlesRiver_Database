@@ -89,6 +89,8 @@ This map answers **how the ordinary inventory purchase can be followed from requ
 
 ```mermaid
 flowchart LR
+    accTitle: Receipt-matched purchase evidence
+    accDescr: Requisition connects to a purchase-order line, goods-receipt line, supplier-invoice line and header, then disbursement.
     REQ[PurchaseRequisition] --> PO[PurchaseOrderLine]
     PO --> REC[GoodsReceiptLine]
     REC --> BILL[PurchaseInvoiceLine]
@@ -115,6 +117,28 @@ Start with what arrived and when. Then inspect the related invoice evidence with
 
 The same reasoning applies to a partially received order. The supplier commitment and the actual receipt tell different parts of the story. The remaining quantity needs its own explanation.
 
+## Bridge an Event to an Entry
+
+Reuse [Lesson 8’s receipt-matched purchase](../learn-and-practice/receipt-to-payable.md); keep the separate [accrued-service trace in Lesson 11](../learn-and-practice/follow-an-estimate-into-settlement.md) available for purchases without goods receipts.
+
+| Event and date | Supporting evidence | Why the accounts change | Cutoff question |
+|---|---|---|---|
+| Request and order, 2026-09-10 | Requisition 21330; PO line 21074 | No posting: a commitment does not establish goods received | What is ordered but has not arrived? |
+| Receipt, 2026-09-27 | GoodsReceipt 23913; receipt line 25479 | Debit materials inventory / credit GRNI, 8.83 each | At September 30, is there a posted supplier invoice? |
+| Supplier document November 29; GL posting November 30 | PurchaseInvoice 36461; invoice line 36861 | Debit GRNI 8.83 and purchase price variance 0.13 / credit AP 8.96 | Which date governs the source analysis, and which governs the ledger balance? |
+| Payment, 2027-01-08 | DisbursementPayment 39645 | Debit AP / credit cash, 8.96 each | Was that payment recorded by December 31? |
+
+The invoice’s 0.13 tax contributes to the 8.96 bill; the released **ledger** places the 0.13 difference in purchase price variance. The 2-row receipt, 3-row invoice, and 2-row payment vouchers each balance. Do not describe the invoice date as the ledger posting date.
+
+**Predict before revealing:** Which liability belongs at September 30 and December 31, 2026? Does a payment visible in the file settle the earlier cutoff?
+
+<details>
+<summary>Reveal the two reporting-date positions</summary>
+
+For this selected line, September 30 has 8.83 GRNI. By December 31 the November posting has replaced it with 8.96 AP. January’s payment is subsequent settlement and is excluded from December’s balance. A receipt-matched inventory trace does not establish the accounting for an accrued service or financed asset.
+
+</details>
+
 ## Check Your Understanding
 
 <details>
@@ -133,9 +157,9 @@ No. Establish the balance using events up to the reporting date. The later disbu
 
 ## Next Steps
 
-Purchased components now connect the supply story to production. Continue to [Manufacturing](manufacturing.md) to see how materials and labor support selected finished goods.
+**Continue the company story.** Purchased components connect the supply story to production. Continue to [Manufacturing](manufacturing.md) to see how materials and labor support selected finished goods.
 
-For a first data task, the [receipt-to-payable exercise](../learn-and-practice/receipt-to-payable.md) stays within the ordinary receipt-matched path.
+**Investigate this process.** Finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Then follow [Lesson 8: Follow a Purchase](../learn-and-practice/receipt-to-payable.md); use [Lesson 11: Follow an Estimate into Settlement](../learn-and-practice/follow-an-estimate-into-settlement.md) for the accrued-service branch. Check the selected lesson’s further prerequisites before beginning.
 
 ## Optional Reference
 
@@ -186,6 +210,8 @@ What supported the decision to replenish? Follow weekly forecast, policy, and pr
 
 ```mermaid
 flowchart LR
+    accTitle: Forecast and policy support a purchase request
+    accDescr: Demand forecast and inventory policy feed a supply-plan recommendation that supports a purchase requisition.
     DF[Demand Forecast]
     IP[Inventory Policy]
     SPR[Supply Plan Recommendation]
@@ -218,6 +244,8 @@ What was ordered, and how much arrived? Follow the requisition into the supplier
 
 ```mermaid
 flowchart LR
+    accTitle: Purchase request order and receipt
+    accDescr: Purchase requisition connects to purchase order and goods receipt.
     PR[Purchase Requisition]
     PO[Purchase Order]
     GR[GoodsReceipt]
@@ -251,6 +279,8 @@ Which receipt supports the supplier's billed line? Follow `GoodsReceiptLine` int
 
 ```mermaid
 flowchart LR
+    accTitle: Receipt invoice and ledger evidence
+    accDescr: Goods-receipt evidence connects to a purchase invoice and its ledger detail.
     GRL[Goods Receipt]
     PI[Purchase Invoice]
     GL[GLEntry]
@@ -280,6 +310,8 @@ What remained payable at the reporting date? Follow the supplier invoice into it
 
 ```mermaid
 flowchart LR
+    accTitle: Supplier invoice payable and disbursement
+    accDescr: A purchase invoice establishes accounts payable, followed by disbursement and ledger detail.
     PI[Purchase Invoice]
     AP[Accounts Payable]
     DP[Disbursement Payment]

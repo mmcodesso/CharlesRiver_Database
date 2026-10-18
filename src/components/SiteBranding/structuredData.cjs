@@ -1,6 +1,10 @@
 const LICENSE_URL = "https://creativecommons.org/licenses/by-sa/4.0/";
 const HUB_URL = "https://accountinganalyticshub.com/";
-const RELEASE_VERSION = "2027.1";
+const {
+  TEACHING_RELEASE,
+  getTeachingReleaseUrl,
+  getTeachingDownloadBaseUrl,
+} = require("../../data/teachingRelease.cjs");
 
 function toAbsoluteUrl(baseUrl, path = "/") {
   return new URL(path, `${String(baseUrl || "").replace(/\/+$/, "")}/`).toString();
@@ -21,7 +25,7 @@ function getFileName(shortName, type) {
 }
 
 function getReleaseDownloadUrl(branding, type) {
-  return `${branding.releaseBaseUrl}/${getFileName(branding.shortName ?? "dataset", type)}`;
+  return `${getTeachingDownloadBaseUrl(branding.repositoryUrl)}/${getFileName(branding.shortName ?? "dataset", type)}`;
 }
 
 function publisher() {
@@ -31,10 +35,7 @@ function publisher() {
 function buildDatasetStructuredData(branding, { pagePath = "/", description } = {}) {
   const datasetName = branding.datasetName ?? "Accounting Dataset";
   const datasetUrl = toAbsoluteUrl(branding.baseUrl);
-  const repositoryUrl = branding.repositoryUrl.replace(/\/+$/, "");
-  const releaseUrl = `${repositoryUrl}/releases/tag/v${RELEASE_VERSION}`;
-  const downloadBaseUrl = `${repositoryUrl}/releases/download/v${RELEASE_VERSION}`;
-  const shortName = branding.shortName ?? "dataset";
+  const releaseUrl = getTeachingReleaseUrl(branding.repositoryUrl);
 
   return {
     "@context": "https://schema.org",
@@ -46,14 +47,14 @@ function buildDatasetStructuredData(branding, { pagePath = "/", description } = 
     url: datasetUrl,
     mainEntityOfPage: toAbsoluteUrl(branding.baseUrl, pagePath),
     sameAs: releaseUrl,
-    version: RELEASE_VERSION,
+    version: TEACHING_RELEASE.version,
     isAccessibleForFree: true,
     license: LICENSE_URL,
     creator: { "@type": "Person", name: "Mauricio Mello Codesso" },
     publisher: publisher(),
     citation: {
       "@type": "CreativeWork",
-      name: `${datasetName}, release v${RELEASE_VERSION}`,
+      name: `${datasetName}, release ${TEACHING_RELEASE.tag}`,
       url: releaseUrl,
     },
     distribution: [
@@ -64,7 +65,7 @@ function buildDatasetStructuredData(branding, { pagePath = "/", description } = 
       "@type": "DataDownload",
       name: `${datasetName} ${label}`,
       encodingFormat,
-      contentUrl: `${downloadBaseUrl}/${getFileName(shortName, type)}`,
+      contentUrl: getReleaseDownloadUrl(branding, type),
     })),
   };
 }

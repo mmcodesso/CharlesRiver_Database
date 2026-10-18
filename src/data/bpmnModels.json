@@ -61,8 +61,8 @@
     "description": "Trace an hourly service engagement through approved time, billable classification, monthly invoicing, and customer cash.",
     "alt": "BPMN collaboration with a customer and Charles River Sales, Design Team, Customer Accounting, and Treasury lanes. Approved billable hours proceed to invoice and cash application; non-billable hours retain cost support without customer billing.",
     "processPath": "/docs/processes/design-services",
-    "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
-    "casePath": "/docs/analytics/cases/product-portfolio-profitability-case",
+    "exercisePath": "/docs/learn-and-practice/follow-design-time-into-billing",
+    "casePath": "/docs/analytics/cases/design-services-performance-case",
     "tables": ["SalesOrderLine", "ServiceEngagement", "ServiceEngagementAssignment", "ServiceTimeEntry", "ServiceBillingLine", "SalesInvoiceLine", "CashReceiptApplication", "GLEntry"],
     "steps": [
       "Sales records an hourly service order; the Design team establishes an engagement and staff assignments.",
@@ -70,7 +70,14 @@
       "Approved billable hours roll into monthly billing and an invoice, without a goods shipment.",
       "Customer payment leads to the separate receipt/allocation review subprocess. Cash may be applied or remain unapplied; the end means this review pass is complete. Payroll remains a separate expense cycle."
     ],
-    "boundary": "The gateway represents a selected time classification, not a claim that all engagement hours take the same path. Assignment-to-approval-to-billing reconciliation is a proposed teaching control; labor margin is not full engagement profit."
+    "boundary": "The gateway represents a selected time classification, not a claim that all engagement hours take the same path. Assignment-to-approval-to-billing reconciliation is a proposed teaching control; labor margin is not full engagement profit.",
+    "exerciseLabel": "Lesson 7: Follow Design Time into Billing",
+    "extensions": [
+      {
+        "label": "Optional BPMN and Controls Workshop after a verified trace",
+        "to": "/docs/learn-and-practice/bpmn-controls-workshop"
+      }
+    ]
   },
   {
     "id": "payroll",
@@ -79,7 +86,7 @@
     "description": "Distinguish attendance and approved time from the payroll register, employee net pay, and liability remittance.",
     "alt": "BPMN process with Employee and Supervisor, Payroll Accounting, and Treasury lanes, plus external tax and benefit recipients. Approved time leads to a payroll register, then parallel employee-payment and liability-remittance streams with an eventual synchronization.",
     "processPath": "/docs/processes/payroll",
-    "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
+    "exercisePath": "/docs/learn-and-practice/follow-hours-into-payroll",
     "casePath": "/docs/analytics/cases/audit-review-pack-case",
     "tables": ["TimeClockPunch", "TimeClockEntry", "OvertimeApproval", "AttendanceException", "PayrollRegister", "PayrollRegisterLine", "PayrollPayment", "PayrollLiabilityRemittance", "GLEntry"],
     "steps": [
@@ -88,7 +95,14 @@
       "A parallel split creates two required settlement streams: employee net pay and payroll liability remittance.",
       "The join defines eventual completion of both streams, not same-day payment. Either obligation can remain open at a reporting cutoff."
     ],
-    "boundary": "An attendance flag does not prove an automatic payroll block. The parallel join is a chosen end-state scope, not a reporting prerequisite. Independent time-to-register-to-ledger review is a proposed teaching control."
+    "boundary": "An attendance flag does not prove an automatic payroll block. The parallel join is a chosen end-state scope, not a reporting prerequisite. Independent time-to-register-to-ledger review is a proposed teaching control.",
+    "exerciseLabel": "Lesson 10: Follow Hours into Payroll",
+    "extensions": [
+      {
+        "label": "Optional BPMN and Controls Workshop after a verified trace",
+        "to": "/docs/learn-and-practice/bpmn-controls-workshop"
+      }
+    ]
   },
   {
     "id": "manual-journals-close",
@@ -97,7 +111,7 @@
     "description": "Follow journal preparation, recorded approval, posted detail, and the separate year-end closing branch.",
     "alt": "BPMN process across Journal Preparer, Journal Approver, and Finance or Controller lanes. Reporting-period activity leads to journal preparation, approval, and posting; an exclusive year-end decision either ends the period activity or records annual closing entries.",
     "processPath": "/docs/processes/manual-journals-and-close",
-    "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
+    "exercisePath": "/docs/learn-and-practice/follow-an-estimate-into-settlement",
     "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
     "tables": ["JournalEntry", "GLEntry", "Account"],
     "steps": [
@@ -106,7 +120,18 @@
       "Ordinary period activity ends after posting. The year-end branch closes profit and loss through income summary and retained earnings.",
       "Accrued-service invoices and later accrual adjustments have separate timing and reversal links, explained in the related detailed model."
     ],
-    "boundary": "The dataset does not provide a separate journal-line table, a period-lock system, or a full close checklist. Role lanes do not establish access independence. Reconciliation and segregation-of-duties review are proposed controls."
+    "boundary": "The dataset does not provide a separate journal-line table, a period-lock system, or a full close checklist. Role lanes do not establish access independence. Reconciliation and segregation-of-duties review are proposed controls.",
+    "exerciseLabel": "Lesson 11: Follow an Estimate into Settlement",
+    "extensions": [
+      {
+        "label": "Extension: profit, cash, and year-end close case",
+        "to": "/docs/analytics/cases/financial-statement-bridge-case"
+      },
+      {
+        "label": "Optional BPMN and Controls Workshop after a verified trace",
+        "to": "/docs/learn-and-practice/bpmn-controls-workshop"
+      }
+    ]
   },
   {
     "id": "returns-credit-refunds",
@@ -133,7 +158,7 @@
     "description": "Explain why cash arrival, invoice allocation, and residual unapplied money require separate evidence.",
     "alt": "BPMN process with a customer, Treasury, and Customer Accounting. A payment is recorded as cash and unapplied money; identified allocations become invoice applications, while unmatched or remaining amounts stay unapplied after the selected review pass.",
     "processPath": "/docs/processes/o2c",
-    "exercisePath": "/docs/learn-and-practice/source-to-ledger",
+    "exercisePath": "/docs/learn-and-practice/follow-customer-settlement",
     "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
     "tables": ["CashReceipt", "CashReceiptApplication", "SalesInvoice", "GLEntry"],
     "steps": [
@@ -142,7 +167,14 @@
       "After the selected applications, any remaining receipt amount stays unapplied; a fully allocated receipt ends this pass without a residual.",
       "Use CashReceiptApplication as the invoice-settlement bridge. CashReceipt.SalesInvoiceID is not an authoritative application link."
     ],
-    "boundary": "The model describes one selected receipt/application review pass, not an implemented matching queue. Reconciliation of dated receipts, applications, residual cash, and invoice balances is a proposed teaching control."
+    "boundary": "The model describes one selected receipt/application review pass, not an implemented matching queue. Reconciliation of dated receipts, applications, residual cash, and invoice balances is a proposed teaching control.",
+    "exerciseLabel": "Lesson 5: Follow Customer Settlement",
+    "extensions": [
+      {
+        "label": "Optional BPMN and Controls Workshop after a verified trace",
+        "to": "/docs/learn-and-practice/bpmn-controls-workshop"
+      }
+    ]
   },
   {
     "id": "accrual-settlement",
@@ -151,7 +183,7 @@
     "description": "Follow an expense estimate into a linked supplier service invoice and AP payment without inventing a goods receipt.",
     "alt": "BPMN collaboration between a service supplier and Finance, Accounts Payable, and Treasury. A service expense estimate creates an accrual; a later supplier invoice links to it, establishes payable and any excess expense, and proceeds to AP payment.",
     "processPath": "/docs/processes/p2p",
-    "exercisePath": "/docs/learn-and-practice/receipt-to-payable",
+    "exercisePath": "/docs/learn-and-practice/follow-an-estimate-into-settlement",
     "casePath": "/docs/analytics/cases/p2p-accrual-settlement-case",
     "tables": ["JournalEntry", "PurchaseInvoice", "PurchaseInvoiceLine", "DisbursementPayment", "GLEntry"],
     "steps": [
@@ -160,7 +192,14 @@
       "The invoice establishes accounts payable and records any amount above the estimate. Treasury later pays that payable.",
       "An invoice below the estimate may leave a residual accrual. Later adjustment journals use reversal links and need not wait for cash payment."
     ],
-    "boundary": "Payment is settlement of AP, not proof that every original accrual has cleared. Residual-accrual aging and independent reconciliation are proposed teaching controls, not stored workflow queues."
+    "boundary": "Payment is settlement of AP, not proof that every original accrual has cleared. Residual-accrual aging and independent reconciliation are proposed teaching controls, not stored workflow queues.",
+    "exerciseLabel": "Lesson 11: Follow an Estimate into Settlement",
+    "extensions": [
+      {
+        "label": "Optional BPMN and Controls Workshop after a verified trace",
+        "to": "/docs/learn-and-practice/bpmn-controls-workshop"
+      }
+    ]
   },
   {
     "id": "manufacturing-variances",

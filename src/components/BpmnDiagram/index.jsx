@@ -11,8 +11,8 @@ export function BpmnModelCatalog() {
     <tbody>{models.map((model) => <tr key={model.id}>
       <td><strong>{model.title}</strong><br /><small>{model.kind}</small></td>
       <td>{model.description}</td>
-      <td><Link to={model.processPath}>Process guide</Link><br /><Link to={model.exercisePath}>Learning activity</Link><br /><Link to={model.casePath}>Related case</Link></td>
-      <td><a href={`${assetRoot}${model.id}.drawio`} download>Editable Draw.io</a></td>
+      <td><Link to={model.processPath}>Process guide</Link><br /><Link to={model.exercisePath}>{model.exerciseLabel ?? "Learning activity"}</Link><br /><Link to={model.casePath}>Related case</Link>{model.extensions?.map((extension) => <span key={extension.to}><br /><Link to={extension.to}>{extension.label}</Link></span>)}</td>
+      <td><a href={`${assetRoot}${model.id}.drawio`} download aria-label={`Download editable ${model.title} Draw.io source`}>Editable Draw.io</a></td>
     </tr>)}</tbody>
   </table></div>;
 }

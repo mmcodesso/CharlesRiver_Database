@@ -1,5 +1,6 @@
 const { themes } = require("prism-react-renderer");
 const { loadSiteBranding } = require("./config/loadSiteBranding.cjs");
+const { TEACHING_RELEASE, getTeachingReleaseUrl } = require("./src/data/teachingRelease.cjs");
 
 const branding = loadSiteBranding();
 
@@ -179,7 +180,7 @@ const config = {
           position: "left",
           items: [
             { to: "/docs/", label: "Getting Started" },
-            { to: "/docs/company-story", label: "The Company" },
+            { to: "/docs/company-story", label: "Company Story" },
             { to: "/docs/process-flows", label: "Business Processes" },
             { to: "/docs/learn-and-practice", label: "Learn and Practice" },
             { to: "/docs/analytics/cases", label: "Cases" },
@@ -218,7 +219,7 @@ const config = {
           title: "Learn",
           items: [
             { label: "Getting Started", to: "/docs/" },
-            { label: "The Company", to: "/docs/company-story" },
+            { label: "Company Story", to: "/docs/company-story" },
             { label: "Learn and Practice", to: "/docs/learn-and-practice" },
             { label: "Downloads", to: "/docs/downloads" },
           ],
@@ -251,8 +252,8 @@ const config = {
               href: branding.repositoryUrl,
             },
             {
-              label: "Published Dataset Release",
-              href: `${branding.repositoryUrl}/releases/tag/v2027.1`,
+              label: `Teaching Release ${TEACHING_RELEASE.tag}`,
+              href: getTeachingReleaseUrl(branding.repositoryUrl),
             },
             {
               label: "Contributing",

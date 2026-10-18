@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import ErrorBoundary from "@docusaurus/ErrorBoundary";
 import { ErrorBoundaryErrorMessageFallback } from "@docusaurus/theme-common";
 import {
@@ -120,6 +120,9 @@ function MermaidMarkup({ renderResult, containerRef, className, as: Element = "d
 
 function MermaidRenderer({ value }) {
   const renderResult = useMermaidRenderResult({ text: value });
+  const diagramTitle = /^\s*accTitle\s*:\s*(.+)$/m.exec(value)?.[1] ?? "Record relationship diagram";
+  const diagramDescription = /^\s*accDescr\s*:\s*(.+)$/m.exec(value)?.[1] ?? "Read the accompanying explanation for the records, relationship keys, and scope limitations.";
+  const descriptionId = useId();
   const inlineRef = useRef(null);
   const modalRef = useRef(null);
   const viewportRef = useRef(null);
@@ -137,6 +140,8 @@ function MermaidRenderer({ value }) {
 
     const previousOverflow = document.body.style.overflow;
     const previousFocus = openerRef.current ?? document.activeElement;
+    const dialog = dialogRef.current;
+    dialog.showModal();
     const focusFrame = requestAnimationFrame(() => closeButtonRef.current?.focus());
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
@@ -163,12 +168,13 @@ function MermaidRenderer({ value }) {
     };
 
     document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", handleKeyDown);
+    dialog.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.style.overflow = previousOverflow;
       cancelAnimationFrame(focusFrame);
-      document.removeEventListener("keydown", handleKeyDown);
+      dialog.removeEventListener("keydown", handleKeyDown);
+      dialog.close();
       if (previousFocus?.isConnected) {
         previousFocus.focus({ preventScroll: true });
       }
@@ -238,6 +244,14 @@ function MermaidRenderer({ value }) {
       }
 
       svgRef.current = svg;
+      // Mermaid can include unrelated whitespace in its declared viewBox. Fit
+      // the actual rendered content, with room for strokes and arrowheads.
+      // This changes only the viewer DOM, not the authored diagram or export.
+      const contentBounds = svg.getBBox?.();
+      if (contentBounds && hasUsableSize(contentBounds)) {
+        const padding = 12;
+        svg.setAttribute("viewBox", `${contentBounds.x - padding} ${contentBounds.y - padding} ${contentBounds.width + padding * 2} ${contentBounds.height + padding * 2}`);
+      }
       const dimensions = getSvgDimensions(svg);
       svg.style.maxWidth = "none";
       // Panzoom coordinates must match the SVG viewBox rather than its percentage width.
@@ -340,7 +354,7 @@ function MermaidRenderer({ value }) {
 
   return (
     <>
-      <figure className={styles.figure}>
+      <figure className={styles.figure} aria-label={diagramTitle}>
         <div className={styles.inlineToolbar}>
           <figcaption className={styles.inlineHint}>
             Click the diagram or use Expand diagram for a larger view with zoom and pan controls.
@@ -350,6 +364,7 @@ function MermaidRenderer({ value }) {
             className={styles.expandButton}
             onClick={openViewer}
             aria-haspopup="dialog"
+            aria-label={`Expand ${diagramTitle} diagram`}
           >
             Expand diagram
           </button>
@@ -359,7 +374,7 @@ function MermaidRenderer({ value }) {
           type="button"
           onClick={openViewer}
           aria-haspopup="dialog"
-          aria-label="View Mermaid diagram in diagram viewer"
+          aria-label={`View ${diagramTitle} in diagram viewer`}
           // Keep the opener mounted for focus restoration, with SVG IDs in only one view.
           renderResult={isOpen ? null : renderResult}
           containerRef={inlineRef}
@@ -368,26 +383,25 @@ function MermaidRenderer({ value }) {
       </figure>
 
       {isOpen ? (
-        <div
-          className={styles.backdrop}
-          role="presentation"
+        <dialog
+          ref={dialogRef}
+          className={styles.modal}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${diagramTitle} diagram viewer`}
+          aria-describedby={descriptionId}
+          onCancel={(event) => { event.preventDefault(); setIsOpen(false); }}
           onClick={(event) => {
             if (event.target === event.currentTarget) {
-              setIsOpen(false);
+              const bounds = event.currentTarget.getBoundingClientRect();
+              if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) setIsOpen(false);
             }
           }}
         >
-          <div
-            ref={dialogRef}
-            className={styles.modal}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Expanded Mermaid diagram"
-            onClick={(event) => event.stopPropagation()}
-          >
+            <p className={styles.accessibleDescription} id={descriptionId}>{diagramDescription}</p>
             <div className={styles.modalToolbar}>
               <div>
-                <p className={styles.modalTitle}>Diagram viewer</p>
+                <p className={styles.modalTitle}>{diagramTitle}</p>
                 <p className={styles.modalHint}>
                   Drag to pan or focus the diagram and use arrow keys. Use + and - to zoom; 0 resets the view.
                 </p>
@@ -422,7 +436,7 @@ function MermaidRenderer({ value }) {
               className={styles.viewport}
               tabIndex={0}
               role="region"
-              aria-label="Diagram. Arrow keys pan; plus and minus zoom; zero resets the view."
+                  aria-label={`${diagramTitle}. Arrow keys pan; plus and minus zoom; zero resets the view.`}
               onKeyDown={handleViewportKeyDown}
             >
               <MermaidMarkup
@@ -431,8 +445,7 @@ function MermaidRenderer({ value }) {
                 className={clsx(styles.modalDiagram, styles.zoomSurface)}
               />
             </div>
-          </div>
-        </div>
+        </dialog>
       ) : null}
     </>
   );

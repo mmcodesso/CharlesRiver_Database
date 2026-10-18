@@ -71,6 +71,8 @@ This group provides the posting anchor for every process. `JournalEntry` is the 
 
 ```mermaid
 erDiagram
+    accTitle: Accounting core account-to-ledger relationship
+    accDescr: Account classifies posted GLEntry detail. Journal source trace fields are explained separately below.
     Account ||--o{ GLEntry : classifies
 ```
 
@@ -93,6 +95,8 @@ This group holds the fixed-asset subledger: the asset register itself, the lifec
 
 ```mermaid
 erDiagram
+    accTitle: Fixed assets, lifecycle events, financing and repayment schedules
+    accDescr: A fixed asset links to lifecycle events and debt agreements; each agreement links to its amortization schedule lines.
     FixedAsset ||--o{ FixedAssetEvent : tracks
     FixedAsset ||--o{ DebtAgreement : financed_by
     DebtAgreement ||--o{ DebtScheduleLine : amortizes
@@ -120,6 +124,8 @@ This group holds the full customer-side relationship map: pricing setup, goods a
 
 ```mermaid
 erDiagram
+    accTitle: Customer orders, fulfillment, billing and settlement relationships
+    accDescr: Customer-side records connect goods and service order lines to their own fulfillment and billing evidence; receipt applications connect received cash to invoices, with separate return and credit branches.
     Customer ||--o{ PriceList : scoped_to
     Customer ||--o{ SalesOrder : places
     Customer ||--o{ SalesInvoice : billed_to
@@ -216,6 +222,8 @@ This group holds the supplier-side relationship map: requisition, PO, receipt, i
 
 ```mermaid
 erDiagram
+    accTitle: Supplier purchasing, receipts, invoices and payments
+    accDescr: Purchase order lines connect requisitions, receipts and invoice lines; supplier invoices connect separately to their disbursement payments.
     Supplier ||--o{ PurchaseOrder : receives
     Supplier ||--o{ PurchaseInvoice : bills
     Supplier ||--o{ DisbursementPayment : paid_by
@@ -257,6 +265,8 @@ This group covers the local manufacturing structure: recipe, routing, work cente
 
 ```mermaid
 erDiagram
+    accTitle: Manufacturing work-order evidence branches
+    accDescr: Bills of material, routing and work centers support work-order operations and schedules. Material issues, production completions and work-order close are separate work-order branches.
     BillOfMaterial ||--|{ BillOfMaterialLine : contains
     Routing ||--|{ RoutingOperation : contains
     WorkCenter ||--o{ WorkCenterCalendar : schedules
@@ -309,6 +319,8 @@ This group holds the workforce-side relationship map: shifts, rosters, raw punch
 
 ```mermaid
 erDiagram
+    accTitle: Workforce attendance, approved time, payroll and settlement
+    accDescr: Shift rosters connect attendance observations and approvals to time entries; payroll periods group time and registers, with separate employee payments and liability remittances.
     ShiftDefinition ||--o{ EmployeeShiftAssignment : assigns
     ShiftDefinition ||--o{ EmployeeShiftRoster : schedules
     EmployeeShiftRoster ||--o{ EmployeeAbsence : records
@@ -365,6 +377,8 @@ This group holds the anchor entities reused across the rest of the model. These 
 
 ```mermaid
 erDiagram
+    accTitle: Shared item, warehouse and employee master records
+    accDescr: Three anchor entities show their primary identifiers and selected descriptive fields; cross-process uses of those identifiers are explained in the text below.
     Item {
         int ItemID PK
         string SupplyMode
@@ -397,6 +411,8 @@ This group is small, but it gives the model its reporting structure. `CostCenter
 
 ```mermaid
 erDiagram
+    accTitle: Cost-center budget summary and planning detail
+    accDescr: CostCenter connects separately to the summarized Budget and driver-based BudgetLine records. Read the listed account, item and warehouse keys before joining detail.
     CostCenter ||--o{ Budget : summarizes
     CostCenter ||--o{ BudgetLine : plans
 ```
@@ -422,6 +438,8 @@ This group covers the planning layer that sits ahead of later purchasing and man
 
 ```mermaid
 erDiagram
+    accTitle: Supply recommendations, component requirements and capacity plans
+    accDescr: SupplyPlanRecommendation connects separately to MaterialRequirementPlan and RoughCutCapacityPlan; forecast and inventory-policy evidence is linked by the shared fields described below.
     SupplyPlanRecommendation ||--o{ MaterialRequirementPlan : explodes_to
     SupplyPlanRecommendation ||--o{ RoughCutCapacityPlan : loads
 ```

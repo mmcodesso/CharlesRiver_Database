@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Heading from "@theme/Heading";
 import useBrokenLinks from "@docusaurus/useBrokenLinks";
 import { QueryReference, humanizeQueryFilename } from "@site/src/components/QueryReference";
@@ -8,14 +8,24 @@ import queryTopics from "@site/src/data/queryTopics.json";
 import topicGuidance from "@site/src/data/queryTopicGuidance.json";
 import learningPaths from "@site/src/data/queryLearningPaths.json";
 import styles from "@site/src/components/ReportCatalog/styles.module.css";
+import { queryAnchor } from "@site/src/components/CatalogNavigation/queryLinks";
+import useCatalogFilters, { matchesSearch } from "@site/src/components/CatalogNavigation/useCatalogFilters";
 
-const queryAnchor = (key) => `query-${key.replace(/\.sql$/, "").replace(/[\/_]/g, "-")}`;
 const coverageByQuery = Object.fromEntries(auditAnomalyCoverage.map((item) => [item.queryKey, item]));
 const queries = queryTopics.flatMap((topic) => topic.queries.map((queryKey) => {
   const entry = queryManifest[queryKey];
   if (!entry) throw new Error(`Unknown query key: ${queryKey}`);
   return { ...entry, queryKey, topicId: topic.id, topicTitle: topic.title, label: humanizeQueryFilename(entry.filename) };
 }));
+
+function querySearchText(entry) {
+  return `${entry.label} ${entry.teachingObjective} ${entry.outputShape} ${entry.mainTables} ${entry.topicTitle}`;
+}
+
+const anchorTargets = [
+  ...queries.map((entry) => ({ id: queryAnchor(entry.queryKey), topicId: entry.topicId, text: querySearchText(entry) })),
+  ...queryTopics.map((topic) => ({ id: topic.id, topicId: topic.id, text: "" })),
+];
 
 function Note({ text }) {
   return text.split(/(`[^`]+`)/g).map((part, index) => part.startsWith("`")
@@ -24,19 +34,30 @@ function Note({ text }) {
 }
 
 export default function QueryLibrary() {
-  const [query, setQuery] = useState("");
-  const [topicId, setTopicId] = useState("all");
+  const { query, topicId, setQuery, setTopicId, reset } = useCatalogFilters("cr_queries", queryTopics.map((topic) => topic.id), anchorTargets);
   const brokenLinks = useBrokenLinks();
   learningPaths.forEach((path) => brokenLinks.collectAnchor(path.id));
-  const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const visible = queries.filter((entry) => {
-    const text = `${entry.label} ${entry.teachingObjective} ${entry.outputShape} ${entry.mainTables} ${entry.topicTitle}`.toLowerCase();
-    return (topicId === "all" || topicId === entry.topicId) && words.every((word) => text.includes(word));
+    return (topicId === "all" || topicId === entry.topicId) && matchesSearch(querySearchText(entry), query);
   });
-  const reset = () => { setQuery(""); setTopicId("all"); };
 
   return (
     <section className={styles.section} aria-label="Browse SQL queries">
+      <section className={styles.group} aria-label="Guided query paths">
+        <Heading as="h3" id="guided-query-paths">Guided Query Paths</Heading>
+        <p>Follow these sequences when the question requires several linked queries. Each step links to its query in the catalog below.</p>
+        {learningPaths.map((path) => <details key={path.id} id={path.id} className={styles.guidance}>
+          <summary>{path.title}</summary>
+          <div className={styles.guidanceBody}>
+            <p>{path.description}</p>
+            <ol>{path.items.map((item) => <li key={item.queryKey}>
+              <a href={`#${queryAnchor(item.queryKey)}`} onClick={reset}>{humanizeQueryFilename(queryManifest[item.queryKey].filename)}</a>
+              <p><Note text={item.lead} /></p>
+            </li>)}</ol>
+          </div>
+        </details>)}
+      </section>
+      <Heading as="h3" id="all-queries">All Queries</Heading>
       <nav className={styles.topicLinks} aria-label="Query topics">
         {queryTopics.map((topic) => (
           <a key={topic.id} href={`#${topic.id}`} onClick={reset}>
@@ -66,7 +87,7 @@ export default function QueryLibrary() {
               <Heading as="h3" id={topic.id} className={styles.groupTitle}>{topic.title}</Heading>
               <p>{topic.description}</p>
               <details className={styles.guidance}>
-                <summary>Interpret these results</summary>
+                <summary aria-label={`Interpret these results for ${topic.title}`}>Interpret these results</summary>
                 <div className={styles.guidanceBody}>
                   <ul>{topicGuidance[topic.id].map((note) => <li key={note}><Note text={note} /></li>)}</ul>
                 </div>
@@ -78,7 +99,7 @@ export default function QueryLibrary() {
                 return <article key={entry.queryKey} className={styles.queryItem} aria-label={entry.label}>
                   <QueryReference queryKey={entry.queryKey} label={entry.label} anchorId={queryAnchor(entry.queryKey)} showMetadata showDownload>
                     {coverage ? <details className={styles.guidance}>
-                      <summary>Anomaly coverage</summary>
+                      <summary aria-label={`Anomaly coverage for ${entry.label}`}>Anomaly coverage</summary>
                       <div className={styles.guidanceBody}>
                         <p><strong>Review focus:</strong> {coverage.recommendedUse}</p>
                         <p><strong>Expected anomaly types:</strong> <Note text={coverage.expectedAnomalyTypes} /></p>
@@ -92,20 +113,6 @@ export default function QueryLibrary() {
           </section>
         ) : null;
       })}
-      <section className={styles.group} aria-label="Guided query paths">
-        <Heading as="h3" id="guided-query-paths">Guided Query Paths</Heading>
-        <p>Follow these sequences when the question requires several linked queries. Each step links to its query above.</p>
-        {learningPaths.map((path) => <details key={path.id} id={path.id} className={styles.guidance}>
-          <summary>{path.title}</summary>
-          <div className={styles.guidanceBody}>
-            <p>{path.description}</p>
-            <ol>{path.items.map((item) => <li key={item.queryKey}>
-              <a href={`#${queryAnchor(item.queryKey)}`} onClick={reset}>{humanizeQueryFilename(queryManifest[item.queryKey].filename)}</a>
-              <p><Note text={item.lead} /></p>
-            </li>)}</ol>
-          </div>
-        </details>)}
-      </section>
     </section>
   );
 }

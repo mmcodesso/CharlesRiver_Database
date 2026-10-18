@@ -131,7 +131,7 @@ export default function StaticDiagram({ model, assetRoot, kind = "diagram", chil
     <button className={styles.preview} type="button" onClick={open} aria-haspopup="dialog" aria-label={`View ${model.title} in diagram viewer`}>
       <img src={svgUrl} alt={model.alt} loading="lazy" />
     </button>
-    <p className={styles.resources}><a href={sourceUrl} download>Download editable Draw.io</a></p>
+    <p className={styles.resources}><a href={sourceUrl} download aria-label={`Download editable ${model.title} Draw.io source`}>Download editable Draw.io</a></p>
     {children}
     {isOpen ? <dialog ref={dialogRef} className={`${diagramStyles.modal} ${styles.dialog}`} aria-label={`${model.title} ${kind === "model" ? "BPMN" : "diagram"} viewer`} onKeyDown={handleDialogKey} onCancel={(event) => { event.preventDefault(); setIsOpen(false); }}>
       <div className={diagramStyles.modalToolbar}><div><p className={diagramStyles.modalTitle}>Diagram viewer</p><p className={diagramStyles.modalHint}>Drag to pan or focus the diagram and use arrow keys. Use + and - to zoom; 0 resets the view.</p></div>

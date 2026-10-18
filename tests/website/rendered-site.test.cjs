@@ -4,6 +4,7 @@ const path = require("node:path");
 const test = require("node:test");
 const yaml = require("js-yaml");
 const { loadSiteBranding } = require("../../config/loadSiteBranding.cjs");
+const { TEACHING_RELEASE, getTeachingDownloadBaseUrl } = require("../../src/data/teachingRelease.cjs");
 
 const root = path.resolve(__dirname, "../..");
 const build = path.join(root, "build");
@@ -92,14 +93,14 @@ test("dataset metadata and direct release links are present before JavaScript ru
     const dataset = structuredData(html).find((entry) => entry["@type"] === "Dataset");
     assert.ok(dataset, `Dataset schema: ${route}`);
     assert.equal(dataset.creator.name, "Mauricio Mello Codesso");
-    assert.equal(dataset.version, "2027.1");
+    assert.equal(dataset.version, TEACHING_RELEASE.version);
     assert.equal(dataset.distribution.length, 3);
     identities.push(dataset["@id"]);
   }
   assert.equal(new Set(identities).size, 1);
   const downloads = fs.readFileSync(builtFile("/docs/downloads"), "utf8");
   for (const suffix of [".sqlite", ".xlsx", "_csv.zip"]) {
-    assert.ok(downloads.includes(`${branding.releaseBaseUrl}/${branding.shortName}${suffix}`));
+    assert.ok(downloads.includes(`${getTeachingDownloadBaseUrl(branding.repositoryUrl)}/${branding.shortName}${suffix}`));
   }
   assert.ok(fs.readFileSync(path.join(build, "robots.txt"), "utf8").includes(`${branding.baseUrl}/sitemap.xml`));
 });
@@ -119,7 +120,7 @@ test("unified report catalog renders every report, topic, learning prompt, and u
   const packs = yaml.load(fs.readFileSync(path.join(root, "config/report_pack_catalog.yaml"), "utf8"));
   // All reports with prior teaching guidance retain an expandable interpretation section.
   const guidedIds = new Set(packs.packs.flatMap((pack) => pack.reports.map((item) => item.report_slug)));
-  assert.equal((html.match(/<summary>Interpret this report<\/summary>/g) ?? []).length, guidedIds.size);
+  assert.equal((html.match(/<summary\b[^>]*>Interpret this report<\/summary>/g) ?? []).length, guidedIds.size);
   const sitemap = fs.readFileSync(path.join(build, "sitemap.xml"), "utf8");
   assert.ok(!sitemap.includes(`${branding.baseUrl}/docs/analytics/reports`));
   for (const name of ["", "/lens-packs", "/financial", "/managerial", "/audit", "/executive-overview", "/commercial-and-working-capital", "/payroll-perspective", "/operations-and-risk"]) {
@@ -158,14 +159,25 @@ test("top-level query library renders every SQL file with shared browsing contro
 });
 
 test("rendered internal links and static downloads point to existing build files", () => {
+  assert.equal(docs.length, 47, "Update the reviewed authored-page inventory if intentionally changed");
+  const sitemap = fs.readFileSync(path.join(build, "sitemap.xml"), "utf8");
+  assert.equal((sitemap.match(/<loc>/g) ?? []).length, 49);
+  const anchorCache = new Map();
   for (const route of ["/", ...docs.map((doc) => doc.route)]) {
     const file = builtFile(route);
     const html = fs.readFileSync(file, "utf8");
     const links = [...html.matchAll(/<a\b[^>]*href="([^"]*)"/g)].map((match) => match[1]);
     for (const href of links) {
-      if (!href.startsWith("/") || href.startsWith("//")) continue;
-      const url = new URL(href.replaceAll("&amp;", "&"), branding.baseUrl);
-      assert.ok(builtFile(url.pathname), `Missing target ${href} from ${route}`);
+      if ((!href.startsWith("/") && !href.startsWith("#")) || href.startsWith("//")) continue;
+      const url = new URL(href.replaceAll("&amp;", "&"), `${branding.baseUrl}${route}`);
+      const target = builtFile(url.pathname);
+      assert.ok(target, `Missing target ${href} from ${route}`);
+      if (url.hash && target.endsWith(".html")) {
+        if (!anchorCache.has(target)) {
+          anchorCache.set(target, new Set([...fs.readFileSync(target, "utf8").matchAll(/\bid="([^"]+)"/g)].map((match) => match[1])));
+        }
+        assert.ok(anchorCache.get(target).has(decodeURIComponent(url.hash.slice(1))), `Missing fragment ${href} from ${route}`);
+      }
     }
   }
 });

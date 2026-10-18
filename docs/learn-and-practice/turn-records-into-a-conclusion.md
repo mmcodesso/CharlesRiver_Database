@@ -26,7 +26,9 @@ The controller asks how invoiced activity changed across the first three months 
 
 ## Before You Start
 
-Finish the process investigations.
+The recommended full route completes Lessons 1–11 in order. For a focused module, the minimum preparation is [Lesson 1](meet-the-records.md), [Lesson 2](read-an-order.md), [Lesson 3](connect-the-records.md), and [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). You must also be able to distinguish order, shipment, invoice, receipt, and application; [Lesson 4](source-to-ledger.md), [Lesson 5](follow-customer-settlement.md), and [Lesson 6](find-the-accounting-entries.md) teach those distinctions.
+
+**Summary readiness:** Before proceeding, show that you can keep one row per invoice, compare row count with distinct-key count, set inclusive-start/exclusive-end date bounds, group without repeating header amounts, and trace a summary back to a source example. State one conclusion that an invoice subtotal cannot support. If these skills are missing, complete the linked sales lessons first.
 
 <ToolSteps>
 <TabItem value="excel">
@@ -191,6 +193,10 @@ Change the population to **January through March 2025**. Rebuild the population 
 Change both boundaries to 2025-01-01 and 2025-04-01, including the Power Query source filter in Excel. Refresh the data and PivotTable. Keep the measure unchanged and report any difference as an observation until additional evidence supports an explanation. A familiar year label alone is not evidence of comparable scope.
 
 </details>
+
+## Readiness Check: Before an Advanced Case
+
+Use your saved memo to demonstrate the [public method rubric](pathname:///teaching/method-rubric.md): define grain and cutoff, justify the key and match counts, tie a summary to an independent source check, distinguish recognition from settlement, and state a bounded conclusion. A correct total with duplicated headers or an unsupported causal explanation needs repair before a wider population. Confirm the chosen case’s individually linked prerequisites and keep its separate challenge work independent.
 
 ## Next Steps
 

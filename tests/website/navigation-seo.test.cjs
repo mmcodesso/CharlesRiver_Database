@@ -6,6 +6,7 @@ const yaml = require("js-yaml");
 const config = require("../../docusaurus.config.js");
 const { docsSidebar } = require("../../sidebars.js");
 const { loadSiteBranding } = require("../../config/loadSiteBranding.cjs");
+const { TEACHING_RELEASE, getTeachingDownloadBaseUrl } = require("../../src/data/teachingRelease.cjs");
 const {
   buildDatasetStructuredData,
   buildLearningResourceStructuredData,
@@ -37,7 +38,7 @@ function sidebarIds(items, depth = 0) {
 
 test("learning sequence is shallow and every authored doc is discoverable once", () => {
   assert.deepEqual(docsSidebar.map((item) => item.label), [
-    "Getting Started", "The Company", "Business Processes", "Learn and Practice",
+    "Getting Started", "Company Story", "Business Processes", "Learn and Practice",
     "Cases", "Reports and Analytics", "Query Library", "Dataset Reference", "For Instructors", "Technical",
   ]);
   const ids = sidebarIds(docsSidebar);
@@ -90,7 +91,7 @@ test("navigation retains direct downloads, Hub, textbook, and verified release",
   assert.ok(links.includes("https://aa.accountinganalyticshub.com/"));
   assert.ok(links.includes("/releases/tag/v2027.1"));
   for (const [type, suffix] of [["sqlite", ".sqlite"], ["excel", ".xlsx"], ["csv", "_csv.zip"]]) {
-    assert.equal(getReleaseDownloadUrl(branding, type), `${branding.releaseBaseUrl}/${branding.shortName}${suffix}`);
+    assert.equal(getReleaseDownloadUrl(branding, type), `${getTeachingDownloadBaseUrl(branding.repositoryUrl)}/${branding.shortName}${suffix}`);
   }
 });
 
@@ -165,7 +166,7 @@ test("dataset schema shares one identity with verified creator and only publishe
   assert.equal(home["@id"], downloads["@id"]);
   assert.equal(home.creator["@type"], "Person");
   assert.equal(home.creator.name, "Mauricio Mello Codesso");
-  assert.equal(home.version, "2027.1");
+  assert.equal(home.version, TEACHING_RELEASE.version);
   assert.equal(home.license, "https://creativecommons.org/licenses/by-sa/4.0/");
   assert.equal(home.distribution.length, 3);
   assert.ok(home.distribution.every((item) => item.contentUrl.includes("/releases/download/v2027.1/")));

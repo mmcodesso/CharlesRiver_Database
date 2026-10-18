@@ -34,6 +34,8 @@ The furnishing project is an illustrative setting. Actual records can have parti
 
 ```mermaid
 flowchart TD
+    accTitle: Connections across six Charles River processes
+    accDescr: Customer demand supports goods sales and design services. Purchasing supplies goods and manufacturing components, manufacturing supplies finished goods, payroll supports labor, and each process contributes to finance and period-end explanation.
     NEED[Customer furnishing needs] --> SALES[Order-to-cash: goods and billing]
     NEED --> DESIGN[Design services: staff time and billing]
     BUY[Purchasing: merchandise and components] -->|Goods| SALES
@@ -114,7 +116,17 @@ Return to [the connected business map](#see-the-connected-business) for a simple
 
 Begin with **Order-to-Cash**, **Procure-to-Pay**, or **Manufacturing and Conversion** for the three core AIS modules. Design Services, payroll, and finance connect those cycles to employee time, customer billing, settlement, and close. Focused detail models keep exceptions and proposed reviews separate from the main paths.
 
-Each row links a model to its process guide, learning activity, case, and editable `.drawio` source. Click a diagram or its Expand model button to open the viewer. Download the source to adapt it in [diagrams.net](https://app.diagrams.net/) or Draw.io Desktop; keep proposed changes explicitly labeled. Viewing the published diagrams requires only a browser.
+Before a data activity, finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). The first activity follows the event in that model; check any further lesson prerequisites on its page.
+
+| Model | First accounting trace |
+|---|---|
+| Cash Application | [Lesson 5: Follow Customer Settlement](../learn-and-practice/follow-customer-settlement.md) |
+| Accrued-Service Settlement | [Lesson 11: Follow an Estimate into Settlement](../learn-and-practice/follow-an-estimate-into-settlement.md) |
+| Design Services | [Lesson 7: Follow Design Time into Billing](../learn-and-practice/follow-design-time-into-billing.md) |
+| Payroll | [Lesson 10: Follow Hours into Payroll](../learn-and-practice/follow-hours-into-payroll.md) |
+| Manual Journals and Close | [Lesson 11: Follow an Estimate into Settlement](../learn-and-practice/follow-an-estimate-into-settlement.md); then the [statement and close case](../analytics/cases/financial-statement-bridge-case.md) |
+
+The [BPMN and Controls Workshop](../learn-and-practice/bpmn-controls-workshop.md) remains an optional extension after one verified trace. Each row below links a model to its process guide, learning activity, case, and editable `.drawio` source. Click a diagram or its Expand model button to open the viewer. Download the source to adapt it in [diagrams.net](https://app.diagrams.net/) or Draw.io Desktop; keep proposed changes explicitly labeled. Viewing the published diagrams requires only a browser.
 
 <BpmnModelCatalog />
 

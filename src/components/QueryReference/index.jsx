@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useId, useRef, useState } from "react";
 import clsx from "clsx";
 import CodeBlock from "@theme/CodeBlock";
 import Heading from "@theme/Heading";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import queryManifest from "@site/src/generated/queryManifest";
+import { queryAnchor } from "@site/src/components/CatalogNavigation/queryLinks";
 import styles from "./styles.module.css";
 
 function getQueryEntry(queryKey) {
@@ -84,17 +85,22 @@ export function QueryReference({
   const entry = getQueryEntry(queryKey);
   const queryUrl = useBaseUrl(entry.publicPath);
   const displayLabel = label ?? humanizeQueryFilename(entry.filename);
-  const Label = anchorId ? Heading : showDownload ? "h4" : "div";
+  const resolvedAnchorId = anchorId ?? (showDownload ? queryAnchor(queryKey) : undefined);
+  const Label = resolvedAnchorId ? Heading : showDownload ? "h4" : "div";
+  const panelId = useId();
+  const panelRef = useRef(null);
+  const requestInFlight = useRef(false);
   const [expanded, setExpanded] = useState(false);
   const [sql, setSql] = useState("");
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
 
   async function loadSql() {
-    if (status !== "idle" || sql) {
+    if (requestInFlight.current || status === "ready") {
       return;
     }
 
+    requestInFlight.current = true;
     setStatus("loading");
     setError("");
 
@@ -109,7 +115,15 @@ export function QueryReference({
     } catch (fetchError) {
       setStatus("error");
       setError(fetchError instanceof Error ? fetchError.message : "Unknown error");
+    } finally {
+      requestInFlight.current = false;
     }
+  }
+
+  function handleRetry() {
+    // Keep focus on a persistent element while the retry button is replaced.
+    panelRef.current?.focus({ preventScroll: true });
+    void loadSql();
   }
 
   function handleToggle() {
@@ -126,7 +140,7 @@ export function QueryReference({
     <div className={clsx(styles.reference, styles[variant])}>
       <div className={styles.referenceHeader}>
         <div className={styles.referenceText}>
-          <Label as={anchorId ? "h4" : undefined} id={anchorId} className={clsx(styles.referenceLabel, showDownload && styles.libraryLabel)}>{displayLabel}</Label>
+          <Label as={resolvedAnchorId ? "h4" : undefined} id={resolvedAnchorId} className={clsx(styles.referenceLabel, showDownload && styles.libraryLabel)}>{displayLabel}</Label>
           {helperText ? <p className={styles.referenceHelper}>{helperText}</p> : null}
           {showMetadata ? (
             <div className={styles.metadata}>
@@ -158,30 +172,34 @@ export function QueryReference({
             type="button"
             onClick={handleToggle}
             aria-expanded={expanded}
+            aria-controls={panelId}
+            aria-label={`${expanded ? "Hide" : "Show"} SQL for ${displayLabel}`}
           >
             {expanded ? "Hide SQL" : "Show SQL"}
           </button>
-          {showDownload ? <a className={styles.download} href={queryUrl} download>Download SQL</a> : null}
+          {showDownload ? <a className={styles.download} href={queryUrl} download aria-label={`Download SQL for ${displayLabel}`}>Download SQL</a> : null}
         </div>
       </div>
       {children}
-      {expanded ? (
-        <div className={styles.codePanel}>
-          {status === "loading" ? (
-            <p className={styles.message}>Loading SQL...</p>
-          ) : null}
-          {status === "error" ? (
-            <p className={clsx(styles.message, styles.error)}>
-              Could not load this query. {error}
-            </p>
-          ) : null}
-          {status === "ready" ? (
-            <CodeBlock language="sql" title={entry.filename}>
-              {sql}
-            </CodeBlock>
-          ) : null}
-        </div>
-      ) : null}
+      <p className={styles.statusMessage} role="status" aria-live="polite">
+        {status === "loading" ? `Loading SQL for ${displayLabel}.` : status === "ready" ? `SQL loaded for ${displayLabel}.` : status === "error" ? `Could not load SQL for ${displayLabel}. Retry is available.` : ""}
+      </p>
+      <div ref={panelRef} id={panelId} className={styles.codePanel} hidden={!expanded} tabIndex={-1} role="region" aria-label={`SQL for ${displayLabel}`} aria-busy={status === "loading"}>
+        {status === "loading" ? (
+          <p className={styles.message}>Loading SQL...</p>
+        ) : null}
+        {status === "error" ? (
+          <>
+            <p className={clsx(styles.message, styles.error)}>Could not load this query. {error}</p>
+            <button className={styles.toggle} type="button" onClick={handleRetry} aria-label={`Retry SQL for ${displayLabel}`}>Retry SQL</button>
+          </>
+        ) : null}
+        {status === "ready" ? (
+          <CodeBlock language="sql" title={entry.filename}>
+            {sql}
+          </CodeBlock>
+        ) : null}
+      </div>
     </div>
   );
 }

@@ -268,3 +268,20 @@
     grid-template-columns: 1fr;
   }
 }
+
+.teachingMetadata {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.35rem 0.75rem;
+  margin: 0.85rem 0 0;
+  font-size: 0.87rem;
+  line-height: 1.5;
+}
+
+.teachingMetadata dt { font-weight: 700; }
+.teachingMetadata dd { margin: 0; overflow-wrap: anywhere; }
+
+@media (max-width: 540px) {
+  .teachingMetadata { grid-template-columns: 1fr; gap: 0.15rem; }
+  .teachingMetadata dt:not(:first-child) { margin-top: 0.35rem; }
+}

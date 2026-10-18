@@ -190,7 +190,7 @@ Save the approved-hours check, gross-to-net reconciliation, employee-payment dat
 
 <span id="interpretation-and-limitations"></span>
 
-Approved attendance, production labor allocation, and service time have different purposes. Do not add them as if they were independent payroll hours. In ledger tracing, `PayrollSummary` is a source-type label for payroll postings; it is not a table to import. The [Posting Reference](../reference/posting.md) explains that mapping.
+Approved attendance, production labor allocation, and service time have different purposes. Do not add them as if they were independent payroll hours. In ledger tracing, `PayrollSummary` is a source-type label for period/cost-center register summaries; it is not a table to import, and its source identifier is not `PayrollRegisterID`. The [PayrollSummary register mapping](../reference/posting.md#payrollsummary-register-summaries) explains the aggregate tie-out and distinguishes register summaries from detailed `PayrollPayment` postings.
 
 ## Try One Change
 

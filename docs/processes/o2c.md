@@ -81,6 +81,8 @@ The following map answers a narrower question: **which records help explain the 
 
 ```mermaid
 flowchart LR
+    accTitle: Goods sale and customer settlement records
+    accDescr: An order leads to shipment and invoice records. A separate cash receipt passes through an application to the invoice.
     SO[SalesOrder and SalesOrderLine] --> SH[Shipment and ShipmentLine]
     SH --> SI[SalesInvoice and SalesInvoiceLine]
     CR[CashReceipt] --> APP[CashReceiptApplication]
@@ -109,6 +111,27 @@ The receipt establishes that money was recorded. Applications establish how much
 
 An open invoice is therefore a starting point for investigation. Check its due date, applications, credits, and reporting date before describing a collection failure. The ordinary cash path also has a returns branch: a credit memo can affect what remains owed, and a refund is a separate cash event.
 
+## Bridge an Event to an Entry
+
+These are the existing [Lessons 4–6 sale records](../learn-and-practice/find-the-accounting-entries.md#3-tell-the-event-to-entry-story), not the illustrative furnishing project. The table widens the selected order-line trace to **complete event vouchers**; the shipment and invoice contain two goods lines.
+
+| Event and date | Supporting evidence | Why the accounts change | Cutoff question |
+|---|---|---|---|
+| Order, 2024-01-24 | SalesOrder 11 and its lines | No posting: a commercial promise is not delivered goods or recognized revenue | What quantity is still unfulfilled? |
+| Shipment, 2024-01-31 | Shipment 87 and its ledger voucher | Debit COGS 5,985.33 / credit finished goods 5,985.33; debit freight-out expense 104.01 / credit accrued expenses 104.01 | What inventory left, and what freight liability remains? |
+| Invoice, 2024-01-31 | SalesInvoice 202 and its ledger voucher | Debit AR 12,248.33; credit goods revenue 11,397.78, freight revenue 103.00, and tax payable 747.55 | Which applications or credits exist by the chosen cutoff? |
+| Receipt, 2024-02-22 | CashReceipt 173 | Debit cash / credit customer deposits and unapplied cash, 952.07 each | Has this receipt been allocated by this date? |
+| Application, 2024-02-23 | CashReceiptApplication 225 | Debit customer deposits and unapplied cash / credit AR, 952.07 each | What remains after **all** relevant dated settlement records? |
+
+**Predict before revealing:** On February 22, does receipt 173 itself reduce invoice 202’s AR? What changes the next day?
+
+<details>
+<summary>Reveal the event distinction</summary>
+
+The receipt increases cash and unapplied customer money. Application 225 reduces AR on February 23 without a second cash inflow. Exclude that application from a February 22 cutoff. These two records alone do not establish the invoice’s full balance; inspect its other applications and relevant credits. [Lesson 6](../learn-and-practice/find-the-accounting-entries.md#3-tell-the-event-to-entry-story) checks all 15 ledger rows and separates complete vouchers from one selected goods line.
+
+</details>
+
 ## Check Your Understanding
 
 <details>
@@ -127,9 +150,9 @@ Inspect the applications to that invoice and their dates, alongside any relevant
 
 ## Next Steps
 
-The customer also needs design help. Continue to [Design Services](design-services.md) to follow work that is delivered through staff time rather than goods leaving a warehouse.
+**Continue the company story.** The customer also needs design help. Continue to [Design Services](design-services.md) to follow work delivered through staff time.
 
-When you are ready to work with actual records, the [goods-sale tracing exercise](../learn-and-practice/source-to-ledger.md) follows the document sequence introduced here.
+**Investigate this process.** Finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Then follow [Lesson 4: Follow a Goods Sale](../learn-and-practice/source-to-ledger.md), followed by [Lesson 5: Follow Customer Settlement](../learn-and-practice/follow-customer-settlement.md) and [Lesson 6: Find the Accounting Entries](../learn-and-practice/find-the-accounting-entries.md). Check the selected lesson’s further prerequisites before beginning.
 
 ## Optional Reference
 
@@ -191,6 +214,8 @@ What explains the price on an order line? Follow the base price, promotion, and 
 
 ```mermaid
 flowchart LR
+    accTitle: Pricing support for the sales order
+    accDescr: Customer and item context connects through price lists, promotions, and override approval to a sales order.
     CTX[Customer and Item Context]
     PL[Price List]
     PROMO[Promotion Program]
@@ -225,6 +250,8 @@ Commission accounting starts from posted customer invoice lines. The routine app
 
 ```mermaid
 flowchart LR
+    accTitle: Sales commission accrual adjustment and payment
+    accDescr: An invoice line and rate support commission accrual. Accrual, adjustment, and payment connect to ledger detail, and adjustments affect payment.
     SI[Sales Invoice Line]
     RATE[Sales Commission Rate]
     ACC[Sales Commission Accrual]
@@ -262,6 +289,8 @@ Which shipped goods support the billed revenue? Follow the shipment line into th
 
 ```mermaid
 flowchart LR
+    accTitle: Customer order shipment invoice and ledger
+    accDescr: A customer connects to the sales order, shipment, sales invoice, and ledger detail in sequence.
     C[Customer]
     SO[Sales Order]
     SH[Shipment]
@@ -298,6 +327,8 @@ Which invoice did the money settle? Follow a receipt into its applications, then
 
 ```mermaid
 flowchart LR
+    accTitle: Receipt to unapplied money and invoice application
+    accDescr: Cash receipt increases unapplied customer money, which an application allocates to a sales invoice and ledger detail.
     CR[Cash Receipt]
     DEP[Customer Deposits and Unapplied Cash]
     CRA[Cash Receipt Application]
@@ -336,6 +367,8 @@ Where did time pass between the order, shipment, and invoice? Compare their date
 
 ```mermaid
 flowchart LR
+    accTitle: Available inventory and backordered quantity
+    accDescr: A sales order reaches available finished goods. Enough stock proceeds to shipment and invoice; short stock leads through backordered quantity to a later shipment.
     SOL[Sales Order]
     FG[Available Finished Goods]
     BO[Backordered Quantity]
@@ -382,6 +415,8 @@ Some sales do not end with the original invoice. In this dataset, returns are th
 
 ```mermaid
 flowchart LR
+    accTitle: Return credit and refund accounting evidence
+    accDescr: Shipment and invoice lead to return and credit memo records, then an optional refund. Dashed links describe inventory restoration, credit accounting, and customer-credit cash settlement.
     SHL[Shipment]
     SIL[Sales Invoice]
     SR[Sales Return]
@@ -419,6 +454,8 @@ flowchart LR
 
 ```mermaid
 flowchart LR
+    accTitle: Credit memo and remaining customer credit
+    accDescr: An original invoice connects to return and credit memo records. The memo can reduce an open invoice, or an already-paid invoice can leave customer credit that proceeds to refund.
     INV[Original Sales Invoice]
     RET[Sales Return]
     CM[Credit Memo]

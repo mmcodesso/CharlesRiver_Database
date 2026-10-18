@@ -66,10 +66,19 @@ Repeat the same **Get Data → workbook → table → Transform Data** procedure
 1. Give the query the working-table name specified by the lesson.
 2. Set identifier columns to Whole Number, amounts/hours to Decimal Number, and date columns to Date.
 3. Apply any required source filters with the column arrows. Two filters on different columns act together. For alternative IDs in one column, select both values, or use **Number Filters → Equals → Or → Equals**.
-4. For dates, use **Date Filters → Custom Filter** and set both boundaries explicitly. To include all of March, use “on or after January 1” **and** “before April 1” when requested.
+4. For dates, use **Date Filters → Custom Filter** and set both boundaries explicitly. For **March 2024**, use “on or after March 1, 2024” **and** “before April 1, 2024.” For **Q1 2024**, use “on or after January 1, 2024” **and** “before April 1, 2024.” Choose the period named in the lesson.
 5. Close & Load, then confirm the loaded Excel Table name. Use that name in formulas.
 
 For example, `T9_SalesOrder` is the exported table, `SalesOrder` is its source worksheet/database-table name, and `SalesOrderData` can be your local imported table. A formula referring to SalesOrderData works only after that table has been named accordingly.
+
+The same date bounds apply in both tools:
+
+| Named period | Power Query filter on a Date column | Equivalent SQL condition | Boundary check |
+|---|---|---|---|
+| March 2024 | On or after March 1, 2024 **and** before April 1, 2024 | `OrderDate >= '2024-03-01' AND OrderDate < '2024-04-01'` | March 1 is included; February 29 and April 1 are excluded. |
+| Q1 2024 | On or after January 1, 2024 **and** before April 1, 2024 | `OrderDate >= '2024-01-01' AND OrderDate < '2024-04-01'` | January 1 is included; December 31, 2023 and April 1 are excluded. |
+
+These are alternative filters: Q1 also includes January and February. Neither filter changes the source file. A date boundary describes which records qualify; it does not promise that the source contains a record on every included date.
 
 A **Power Query filter** limits which rows are loaded. A **worksheet filter** only hides rows already loaded. `SUM` includes hidden rows; `SUBTOTAL(109,...)` sums visible rows. Lessons specify which kind of filter and calculation they need.
 

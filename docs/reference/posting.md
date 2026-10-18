@@ -79,7 +79,7 @@ These documents are generated for process analysis but do **not** create `GLEntr
 | Payroll liability remittance | `PayrollLiabilityRemittance` | `RemittanceDate` | `2031`, `2032`, or `2033` | Cash |
 | Purchase invoice | `PurchaseInvoice`, `PurchaseInvoiceLine` | `ApprovedDate` | For receipt-matched inventory lines: GRNI cleared at matched receipt-line basis, purchase variance when needed, and nonrecoverable tax to variance. For capitalized CAPEX lines: the linked fixed-asset gross account such as `1110`, `1120`, `1130`, or `1185`. For accrued-service lines: `2040` up to the linked accrued amount and expense for any excess above the estimate; any invoice shortfall is reversed later through a linked accrual adjustment. | Accounts payable and purchase variance when needed |
 | Disbursement | `DisbursementPayment` | `PaymentDate` | Accounts payable | Cash |
-| Year-end close: P&L to income summary | `JournalEntry` plus seeded GL rows | `YYYY-12-31` | Revenue or expense balances needed to close annual P&L accounts | `8010` Income Summary |
+| Year-end close: P&L to income summary | `JournalEntry` plus seeded GL rows | `YYYY-12-31` | Credit-balance P&L accounts; `8010` Income Summary for the balancing amount when there is a net loss | Debit-balance P&L accounts, including expenses and contra-revenue; `8010` Income Summary for the balancing amount when there is net income |
 | Year-end close: income summary to retained earnings | `JournalEntry` plus seeded GL rows | `YYYY-12-31` | `8010` Income Summary or `3030` Retained Earnings depending on sign | offset retained earnings or income summary |
 
 ## Core Control Accounts
@@ -132,3 +132,81 @@ Each operational posting written to `GLEntry` includes:
 For design services, `SourceDocumentType = 'SalesInvoice'` and `SourceLineID = SalesInvoiceLineID` still hold the revenue trace. `ServiceBillingLine` is the extra bridge that explains which approved hours created that invoice line.
 
 Sales commissions are a separate O2C payable, not payroll. `SalesCommissionAccrual` rows use `SalesInvoiceLine.LineTotal` as the commission base, credit-memo clawbacks use `SalesCommissionAdjustment`, and monthly settlements use `SalesCommissionPayment`.
+
+## PayrollSummary Register Summaries
+
+`PayrollSummary` is a ledger source label, **not a table**. In release **v2027.1**, payroll-register postings summarize employee register facts by **payroll period, cost center, and account**. A summary ledger line therefore represents several employee records; its `SourceDocumentID` is not a `PayrollRegisterID` foreign key.
+
+| Released posting | `VoucherType` / `SourceDocumentType` | Source identifier and grain |
+|---|---|---|
+| Register recognition, such as `PRS-0001-001` | `PayrollSummary` / `PayrollSummary` | Synthetic register-summary ID; ledger amounts grouped by period, cost center, and account |
+| Employee payment, such as `PRPAY-2024-000002` | `PayrollPayment` / `PayrollPayment` | `SourceDocumentID = PayrollPayment.PayrollPaymentID`; follow its `PayrollRegisterID` to the employee register |
+
+For a register summary, this release uses:
+
+```text
+SourceDocumentID = 1,000,000 + PayrollPeriodID × 1,000 + CostCenterID
+VoucherNumber = PRS-<four-digit period>-<three-digit cost center>
+```
+
+Thus `PRS-0001-001` means period **1**, cost center **1**, and synthetic source ID **1001001**. This encoding is an implementation convention of the teaching release, not a universal accounting identifier. Never join it directly to `PayrollRegister.PayrollRegisterID`. `SourceLineID` is null because no single employee register line represents the summary; null does not establish missing payroll support.
+
+Aggregate the employee facts first, aggregate the relevant ledger account separately, then compare the two results at period/cost-center grain. Joining each register row to every voucher line before summing would repeat net pay.
+
+```sql
+WITH register_totals AS (
+    SELECT PayrollPeriodID, CostCenterID, COUNT(*) AS RegisterRows,
+           ROUND(SUM(NetPay), 2) AS RegisterNetPay
+    FROM PayrollRegister
+    WHERE PayrollPeriodID = 1 AND CostCenterID = 1
+    GROUP BY PayrollPeriodID, CostCenterID
+), ledger_totals AS (
+    SELECT g.SourceDocumentID, g.CostCenterID,
+           ROUND(SUM(g.Credit - g.Debit), 2) AS AccruedPayrollCredit
+    FROM GLEntry AS g
+    JOIN Account AS a ON a.AccountID = g.AccountID
+    WHERE g.VoucherType = 'PayrollSummary'
+      AND g.SourceDocumentType = 'PayrollSummary'
+      AND g.VoucherNumber = 'PRS-0001-001'
+      AND a.AccountNumber = 2030
+    GROUP BY g.SourceDocumentID, g.CostCenterID
+)
+SELECT r.PayrollPeriodID, r.CostCenterID, r.RegisterRows,
+       r.RegisterNetPay, l.AccruedPayrollCredit,
+       ROUND(r.RegisterNetPay - l.AccruedPayrollCredit, 2) AS Difference
+FROM register_totals AS r
+JOIN ledger_totals AS l
+  ON l.SourceDocumentID = 1000000 + r.PayrollPeriodID * 1000 + r.CostCenterID
+ AND l.CostCenterID = r.CostCenterID;
+```
+
+The result has **three register rows**, net pay **23,489.30**, a `2030` credit of **23,489.30**, and difference **0.00**. This compares net pay only. The complete six-line voucher also recognizes gross-pay expense, employer expense, and the other payroll liabilities; its debits and credits each total **31,560.24**.
+
+Payments in this release retain detailed `PayrollPayment` source IDs and null `SourceLineID`. Do not apply the register-summary formula to them. A ledger source label does not guarantee that its referenced record exists: this teaching release includes missing-payment evidence, so test the relationship before concluding that the source trail is complete. Optional payment-summary logic in generator source does not describe the released payment pattern. Continue with [Follow Hours into Payroll](../learn-and-practice/follow-hours-into-payroll.md) to distinguish recognition, employee payment, and liability remittance.
+
+## Annual Closing Directions
+
+Closing reverses each P&L account's annual balance. **Debit a credit-balance account and credit a debit-balance account.** A debit-balance contra-revenue account such as `4060` Sales Returns and Allowances therefore receives a closing credit, as does a debit-balance expense. The balancing amount goes to `8010` Income Summary: a credit for net income or a debit for net loss. The released journal combines these P&L closing lines and the net Income Summary line in one voucher; it does not create a separate Income Summary line for every account.
+
+For example, `JournalEntryID = 846`, voucher **JE-2024-000265**, is dated **December 31, 2024**. These are **four selected evidence rows, not the complete voucher**:
+
+| Account | Debit | Credit | Closing explanation |
+|---|---:|---:|---|
+| `4010` Sales Revenue - Furniture | 15,673,061.54 | 0.00 | Reverse a credit-balance revenue account |
+| `4060` Sales Returns and Allowances | 0.00 | 145,655.35 | Reverse a debit-balance contra-revenue account |
+| `6070` Rent Expense - Warehouse | 0.00 | 268,131.51 | Reverse a debit-balance expense account |
+| `8010` Income Summary | 0.00 | 5,110,308.27 | Record the net income transferred by the combined close |
+
+The excerpt does not balance by itself. Check the **complete** source-type-and-ID population:
+
+```sql
+SELECT VoucherNumber, COUNT(*) AS LedgerRows,
+       ROUND(SUM(Debit), 2) AS TotalDebit,
+       ROUND(SUM(Credit), 2) AS TotalCredit,
+       ROUND(SUM(Debit - Credit), 2) AS Difference
+FROM GLEntry
+WHERE SourceDocumentType = 'JournalEntry' AND SourceDocumentID = 846
+GROUP BY VoucherNumber;
+```
+
+All **42 ledger rows** balance: total debits and credits are each **27,503,887.96**, with difference **0.00**. Balance establishes arithmetic equality at this scope; it does not independently prove every account or amount is appropriate. The later Income Summary-to-retained-earnings entry is a separate closing event, as shown in the matrix.

@@ -2,6 +2,12 @@
 
 ## Website Redesign Mission and Frozen Baseline
 
+### Current teaching-refinement publication scope (18 October 2026)
+
+The website-only refinement on `codex/charles-river-teaching-refinement` was reviewed from `37d17fd5ca288a5c386481ce7059cfda14563aee` and teaching release v2027.1. After reviewing the implementation handoff, the user explicitly authorized committing these changes, merging them into main, and deploying on Cloudflare on 18 October 2026. This supersedes the review-only rollout restriction for this publication. Use the existing `greenfield` Worker and main-branch Git integration; preserve the dataset/report freeze and existing release/account/hosting configuration.
+
+Preserve the dataset/report freeze. The site-only `planning/website-redesign/cases/build-case-content.cjs` authoring process is distinct from the protected dataset generator; case corrections must stay synchronized with `case-drafts.json`. Use its content-only mode when updating case text and presentation metadata, preserving worked-result registers and diagram assets. See `planning/website-redesign/teaching-refinement/IMPLEMENTATION.md` for finding ownership and acceptance checks.
+
 Charles River is an open teaching environment within Accounting Analytics Hub. The fictional greater-Boston home-furnishings company connects merchandise, selected manufacturing, and hourly Design Services to accounting evidence. Teach in this order: understand the company → understand the process → explore evidence → analyze → interpret → decide. The Accounting Analytics textbook supplies conceptual depth; this site supplies the shared company, data, practice, and cases. Future AIS and tool courses are planned resources, not currently available courses.
 
 The website redesign is based on frozen commit `7c21218dce19201013f7a71eb7263e12a85af09a`. On 17 October 2026, the user approved merging the reviewed redesign into main and deploying the website on Cloudflare. This approval supersedes the initial local-review restriction on merging, pushing main, and deploying. Use the existing `greenfield` Cloudflare Worker and its Git integration for `charlesriver.accountinganalyticshub.com`; preserve the dataset/report freeze below. Do not publish a dataset version or change GitHub Releases. Initial consolidation found main and book-roll-feasibility already identical after fetch; no merge was necessary at that stage.

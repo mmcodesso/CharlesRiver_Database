@@ -17,7 +17,7 @@ Each case contains a fully worked investigation in **Excel and SQL**, several ex
 
 Start with [Resolve a Customer Account Review](o2c-trace-case.md). If you are still learning to filter, join, or summarize records, complete the relevant [Learn and Practice lessons](../../learn-and-practice/index.md) first. The [Excel](../excel-guide.md) and [SQL](../sql-guide.md) setup guides remain available throughout.
 
-Allow **60–90 minutes per session** as a planning estimate. Basic cases have two sessions, intermediate cases three, and advanced cases four. You can study a selected case after its prerequisites; completing all eight is not required.
+Allow **60–90 minutes per session** as a planning estimate. Basic cases have two sessions, intermediate cases three, and advanced cases four. The eight cases total **23 sessions**, or **23–34.5 estimated hours** at that rate, excluding setup, tutorials, and reading. These are planning estimates, not observed completion times. You can study a selected case after its prerequisites; completing all eight is not required.
 
 <span id="foundation"></span>
 <span id="choose-a-case"></span>
@@ -29,6 +29,12 @@ Allow **60–90 minutes per session** as a planning estimate. Basic cases have t
 <span id="next-steps"></span>
 
 <CaseExplorer />
+
+## Check Readiness for the Chosen Module
+
+Start with the [focused module routes](../../learn-and-practice/index.md#choose-a-focused-module). Prerequisites remain individually linked on each case; a short module does not waive the skills its investigation requires. Before a case, show one source trace with an explicit grain, valid key and match-count check, reporting cutoff, independently checked amount, and bounded conclusion. Use the [Lesson 3](../../learn-and-practice/connect-the-records.md#readiness-check-after-lesson-3), [Lesson 6](../../learn-and-practice/find-the-accounting-entries.md#readiness-check-after-lesson-6), and [advanced-case](../../learn-and-practice/turn-records-into-a-conclusion.md#readiness-check-before-an-advanced-case) gates as appropriate to the route.
+
+Use the [blank evidence template](pathname:///teaching/evidence-template.md) and [public method rubric](pathname:///teaching/method-rubric.md) to retain this evidence. The [public method-repair exercise](../../learn-and-practice/index.md#repair-the-method-before-a-challenge) provides feedback before assessment; it does not supply answers to a case’s independent challenge.
 
 ## Keep Evidence, Then Make a Decision
 

@@ -32,7 +32,13 @@ The controller requests a focused controls review. A list of flags is easy to pr
 
 The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-**Preparation:** One earlier process case; Controls Workshop recommended. Revisit [the relevant tutorial](../../learn-and-practice/bpmn-controls-workshop.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
+**Preparation:** [Complete one earlier process case](/docs/analytics/cases); [BPMN Process and Internal Control Workshop](/docs/learn-and-practice/bpmn-controls-workshop) (recommended). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+
+**Ready to begin:**
+
+- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
+- Define an explicit criterion and denominator; distinguish time entries from people and an exception flag from a proven control failure.
 
 ## Key Data Sources
 
@@ -75,15 +81,19 @@ Create Case08.xlsx or Case08.sql and a Review note. Use four conclusion categori
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import PurchaseInvoiceData without a date filter.
+**Named inputs:** `PurchaseInvoiceData ← PurchaseInvoice and DisbursementPaymentData ← DisbursementPayment (import here; full populations retained)`; `TimeClockEntryData ← TimeClockEntry (import here; raw query retained)`.
 
-2. Import DisbursementPaymentData without removing rows.
+**Produced outputs:** `CheckPayments: nonblank check references only`; `Overtime: Q4 2026 approved entries with positive overtime`; `Review: separate population counts and criteria`.
+
+1. Import PurchaseInvoice as PurchaseInvoiceData without a date filter.
+
+2. Import DisbursementPayment as DisbursementPaymentData without removing rows; retain both complete raw queries.
 
 3. Create a Reference named CheckPayments, filter CheckNumber not blank, and load that reference for the check-reference test.
 
 4. Keep the original query available for invoice payment investigations.
 
-5. Import TimeClockEntryData filtered WorkDate October 1–December 31, 2026, ClockStatus Approved, and OvertimeHours greater than zero.
+5. Import TimeClockEntry as TimeClockEntryData; preserve the raw query and reference it as Overtime, filtered WorkDate October 1–December 31, 2026, ClockStatus Approved, and OvertimeHours greater than zero.
 
 6. Load the last selection as Overtime.
 
@@ -169,17 +179,23 @@ A repeated reference may indicate a duplicate document, a reused reference, or a
 <ToolSteps>
 <TabItem value="excel">
 
+**Named inputs:** `PurchaseInvoiceData, DisbursementPaymentData, and CheckPayments (Session 1.1)`.
+
+**Produced outputs:** `InvoiceGroups and CheckGroups: repeated-reference keys`; `PaymentsByInvoice: independently summed payments`; `DuplicateInvoices and DuplicateChecks: document-level exception evidence`.
+
 1. In Power Query Reference PurchaseInvoiceData as InvoiceGroups.
 
 2. Group by SupplierID and InvoiceNumber; Count Rows as Occurrences; filter Occurrences greater than 1.
 
-3. Merge those groups back to PurchaseInvoiceData on both keys using an Inner join and expand the document columns.
+3. Reference InvoiceGroups as DuplicateInvoices and Inner merge to PurchaseInvoiceData on both keys; expand the document columns.
 
-4. Separately group nonblank-check DisbursementPaymentData by SupplierID and CheckNumber, Count Rows, retain counts greater than 1, then merge back on both keys.
+4. Separately reference CheckPayments as CheckGroups, group by SupplierID and CheckNumber, Count Rows as Occurrences, and retain counts greater than 1.
 
-5. Name the outputs DuplicateInvoices and DuplicateChecks.
+5. Reference CheckGroups as DuplicateChecks and Inner merge to CheckPayments on both keys; expand the document columns.
 
-6. Summarize payments by PurchaseInvoiceID before merging their total to DuplicateInvoices.
+6. Reference DisbursementPaymentData as PaymentsByInvoice, group by PurchaseInvoiceID and Sum Amount as PaidAmount, then Left merge that unique-key summary to DuplicateInvoices.
+
+7. Keep the grouped-key queries and full source queries available; load DuplicateInvoices and DuplicateChecks for inspection.
 
 </TabItem>
 <TabItem value="sql">
@@ -254,11 +270,15 @@ Group within supplier. A reference repeated by two different suppliers is not th
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import PurchaseInvoiceLineData filtered PurchaseInvoiceID 28 or 44.
+**Named inputs:** `PurchaseInvoiceLineData ← PurchaseInvoiceLine (import here)`; `DisbursementPaymentData (complete raw query from Session 1.1)`.
+
+**Produced outputs:** `InvoicePairLines: invoices 28/44 line evidence`; `InvoicePairPayments: all-method payments for invoices 28/44`; `Review: separate invoice register rows`.
+
+1. Import PurchaseInvoiceLine as PurchaseInvoiceLineData; reference it as InvoicePairLines and filter PurchaseInvoiceID 28 or 44.
 
 2. Keep GoodsReceiptLineID, POLineID, ItemID, Quantity, and LineTotal.
 
-3. Import DisbursementPaymentData filtered to those same invoice IDs without the nonblank-check filter; these payments may use another method.
+3. Reference the original DisbursementPaymentData as InvoicePairPayments and filter to those same invoice IDs without the nonblank-check filter; these payments may use another method.
 
 4. Compare document dates and amounts, receipt links, and payment IDs.
 
@@ -317,6 +337,10 @@ A paid status or matching reference cannot establish duplicate payment. Do not s
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `DuplicateChecks and PurchaseInvoiceData (earlier stages)`.
+
+**Produced outputs:** `DuplicateChecks: invoice lookup columns`; `Review: SupplierID 1 / CHK0006076 evidence, separate from repeated-invoice criterion`.
 
 1. In DuplicateChecks filter SupplierID 1 and CheckNumber CHK0006076.
 
@@ -381,7 +405,11 @@ Approved payroll time and a linked overtime approval are different records. A po
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import OvertimeApprovalData as Approvals.
+**Named inputs:** `Overtime (Session 1.1)`; `Approvals ← OvertimeApproval (import here)`.
+
+**Produced outputs:** `OvertimeReview: time-entry detail and approval match; HoursTest classification`; `HoursTestCounts: entry-count PivotTable`.
+
+1. Import OvertimeApproval as Approvals.
 
 2. In Power Query Left outer merge Overtime to Approvals on OvertimeApprovalID.
 
@@ -430,7 +458,7 @@ ORDER BY t.WorkDate,t.TimeClockEntryID;
 
 **Checkpoint.** 1,895 eligible time entries: 336 missing linked approval, zero with hours exceeding a linked approval, and 1,559 with hours supported. The missing-link rate is 17.73% of eligible entries.
 
-This is a documented-link test. It does not establish that all 336 employees lacked authorization outside the file, and the 1,559 hours-supported rows still need identity, status, and date checks for a fuller authorization conclusion.
+These 336 time entries lack a linked approval record under this test; this does not establish that the associated employees lacked authorization outside the file. The 1,559 hours-supported rows still need identity, status, and date checks for a fuller authorization conclusion.
 
 <details>
 <summary>If your result differs</summary>
@@ -447,6 +475,10 @@ Keep null matches. A zero-row exception list after an Inner join is not evidence
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `OvertimeReview and Approvals (Session 3.1)`.
+
+**Produced outputs:** `OvertimeReview: additional approval-identity/date fields`; `Review: selected missing-link and hours-supported evidence`.
 
 1. Filter OvertimeReview to TimeClockEntryIDs 49436 and 49581.
 
@@ -521,6 +553,10 @@ The final task is a reasoned recommendation. Count and amount can help prioritiz
 <ToolSteps>
 <TabItem value="excel">
 
+**Named inputs:** `Earlier AP/check/overtime workpapers with their separate populations`.
+
+**Produced outputs:** `ExceptionRegister: bounded findings and follow-up priorities`.
+
 1. Create an ExceptionRegister table with FindingID, Test, Population, SourceKeys, ObservedCondition, Evidence, AlternativeExplanation, ConclusionCategory, PotentialConsequence, Owner, and NextAction.
 
 2. Enter the worked AP pair, repeated-check pair, and overtime comparison.
@@ -556,6 +592,10 @@ Do not combine the 336 overtime flags and 16 AP document flags into one overall 
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `ExceptionRegister (Session 4.1)`.
+
+**Produced outputs:** `ControlReview: proposed controls, test populations, procedures, and failure criteria`.
 
 1. Create a ControlReview table with Risk, ProposedControl, Owner, Frequency, RetainedEvidence, PopulationForTesting, TestProcedure, and FailureCriterion.
 
@@ -624,6 +664,10 @@ Extend the same risk-to-evidence method to pricing, planning support, or employe
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `Choose only one optional investigation and import its named source tables before use`; `Read the selected canonical query for exact source keys, dates, and population`.
+
+**Produced outputs:** `SpecialistWorkpaper: chosen criterion, separate source detail, valid joins, and bounded conclusion`.
 
 1. For pricing, relate SalesOrderLine to PriceOverrideApproval and effective price/promotion records.
 

@@ -3,13 +3,27 @@ import Heading from "@theme/Heading";
 import { caseCatalog, caseLevels } from "@site/src/data/caseCatalog";
 import styles from "./styles.module.css";
 
+function PrerequisiteLinks({ item }) {
+  const links = item.prerequisiteLinks ?? [item.prerequisite];
+  return <ul className={styles.preparationLinks}>
+    {links.map((link) => <li key={link.to}><Link to={link.to}>{link.label}</Link>{link.recommended ? " (recommended)" : ""}</li>)}
+  </ul>;
+}
+
+function Readiness({ item }) {
+  return item.readiness?.length ? <ul className={styles.readiness}>
+    {item.readiness.map((requirement) => <li key={requirement}>{requirement}</li>)}
+  </ul> : null;
+}
+
 export function CaseOverview({ slug }) {
   const item = caseCatalog.find((entry) => entry.slug === slug);
   if (!item) throw new Error('Unknown case: ' + slug);
   return <aside className={styles.overview} aria-label="Case preparation and output">
     <p className={styles.eyebrow}>{item.level} · {item.sessions} sessions of 60–90 minutes</p>
     <dl className={styles.overviewList}>
-      <dt>Prepare</dt><dd><Link to={item.prerequisite.to}>{item.prerequisite.label}</Link></dd>
+      <dt>Prepare</dt><dd><PrerequisiteLinks item={item} /></dd>
+      {item.readiness?.length ? <><dt>Readiness</dt><dd><Readiness item={item} /></dd></> : null}
       <dt>Tools</dt><dd>Complete either Excel or SQL. Both routes include worked checks.</dd>
       <dt>Produce</dt><dd>{item.deliverable}</dd>
     </dl>
@@ -27,7 +41,8 @@ export default function CaseExplorer() {
         <h3><Link to={'/docs/analytics/cases/' + item.slug}>{item.title}</Link></h3>
         <p>{item.summary}</p>
         <dl className={styles.cardDetails}>
-          <dt>Preparation</dt><dd><Link to={item.prerequisite.to}>{item.prerequisite.label}</Link></dd>
+          <dt>Preparation</dt><dd><PrerequisiteLinks item={item} /></dd>
+          {item.readiness?.length ? <><dt>Ready when you can</dt><dd><Readiness item={item} /></dd></> : null}
           <dt>Deliverable</dt><dd>{item.deliverable}</dd>
         </dl>
       </li>)}</ul>

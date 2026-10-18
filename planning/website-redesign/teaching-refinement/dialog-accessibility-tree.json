@@ -1,0 +1,22 @@
+{
+  "browser": "Chromium154 on Linux",
+  "status": "passed",
+  "checks": [
+    {
+      "dialog": "Monthly Income Statement preview",
+      "unignoredBackgroundNavigations": 0,
+      "nativeAccessibilityTree": true
+    },
+    {
+      "dialog": "Goods sale and customer settlement records diagram viewer",
+      "unignoredBackgroundNavigations": 0,
+      "nativeAccessibilityTree": true
+    },
+    {
+      "dialog": "Order-to-Cash BPMN viewer",
+      "unignoredBackgroundNavigations": 0,
+      "nativeAccessibilityTree": true
+    }
+  ],
+  "limitation": "Browser accessibility-tree inspection, not native screen-reader execution."
+}

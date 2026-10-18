@@ -15,7 +15,7 @@ const sidebars = {
     {
       type: "doc",
       id: "learn-the-business/company-story",
-      label: "The Company",
+      label: "Company Story",
     },
     {
       type: "category",

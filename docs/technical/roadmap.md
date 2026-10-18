@@ -21,6 +21,7 @@ This page separates current release scope from planned future expansion. The res
 ### Workforce, payroll, and time tracking
 
 - approved daily time clocks, attendance exceptions, overtime approvals, and payroll periods
+- raw punch-event evidence beneath approved daily time: `TimeClockPunch` contains **165,137 rows** in published release <TeachingRelease />
 - labor allocation that connects payroll support to manufacturing activity
 - richer employee master data with role, lifecycle, work location, and current-state assignment coverage
 - audit coverage for employee validity, approvals, roster controls, punch controls, and overtime controls
@@ -47,14 +48,13 @@ This page separates current release scope from planned future expansion. The res
 
 ### Technical delivery and validation
 
-- SQLite, Excel, CSV zip, and generation log outputs
+- public SQLite, Excel, and CSV zip formats; separate local/instructor support-workbook and generation-log outputs
 - validation scopes for `core`, `operational`, and `full` checks
 - anomaly logging and validation exception reporting
 - local generation settings for full release, fast validation, and performance profiling
 
 ## Future Implementations and Improvements
 
-- deeper workforce detail, including raw punch-event tables beneath approved daily time rows
 - richer schedule modeling, including rotating shift rosters and shift-level capacity calendars
 - deeper manufacturing structure, including subassemblies and multi-level BOM support
 - continued growth in analytics cases, teaching notes, and adoption materials as the classroom library expands

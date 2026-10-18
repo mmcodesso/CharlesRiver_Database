@@ -32,7 +32,13 @@ The controller is preparing the year-end management review. Management wants an 
 
 The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-**Preparation:** 6: ledger entries; 11: estimates and settlement; 12: summaries; Cases 1 and 3 recommended. Revisit [the relevant tutorial](../../learn-and-practice/find-the-accounting-entries.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
+**Preparation:** [6. Find the Accounting Entries](/docs/learn-and-practice/find-the-accounting-entries); [11. Follow an Estimate into Settlement](/docs/learn-and-practice/follow-an-estimate-into-settlement); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion); [Case 1: customer account review](/docs/analytics/cases/o2c-trace-case) (recommended); [Case 3: supplier obligations](/docs/analytics/cases/p2p-accrual-settlement-case) (recommended). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+
+**Ready to begin:**
+
+- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
+- Retain full ledger history for openings; distinguish pre-close performance, cash movements, balance snapshots, and complete closing vouchers.
 
 ## Key Data Sources
 
@@ -75,9 +81,13 @@ Create Case07.xlsx or Case07.sql. This case begins with the complete ledger, the
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import T3_GLEntry into Power Query as LedgerHistory.
+**Named inputs:** `LedgerHistory ← T3_GLEntry and AccountData ← Account (import here)`.
 
-2. Keep PostingDate, AccountID, Debit, Credit, SourceDocumentType, SourceDocumentID, VoucherNumber, and GLEntryID.
+**Produced outputs:** `LedgerHistory: full history through December 31, 2026; retained ungrouped in Power Query`; `Rollforward: one row per account; only summary loaded`.
+
+1. Import T3_GLEntry into Power Query as LedgerHistory and import Account as AccountData.
+
+2. Keep PostingDate, AccountID, Debit, Credit, SourceDocumentType, SourceDocumentID, VoucherNumber, GLEntryID, and Description; the optional asset trace needs Description.
 
 3. Set PostingDate to Date and monetary columns to Decimal Number.
 
@@ -157,6 +167,10 @@ Check the Applied Steps list for an accidental lower-date filter. Numeric source
 <ToolSteps>
 <TabItem value="excel">
 
+**Named inputs:** `Rollforward (Session 1.1)`.
+
+**Produced outputs:** `Rollforward: arithmetic Check and NormalClosing display columns`; `Review: three ledger balance checks`.
+
 1. In Rollforward add Check:
 
     ~~~text title="Excel — Rollforward[Check]"
@@ -232,33 +246,45 @@ Calculate profit before closing entries, then reconcile it to the cash movement 
 <ToolSteps>
 <TabItem value="excel">
 
-1. Reference LedgerHistory twice.
+**Named inputs:** `LedgerHistory and AccountData (Session 1.1)`; `JournalEntryData ← JournalEntry (import here; full history retained)`.
 
-2. For ProfitDetail, merge AccountData and expand AccountType and AccountSubType.
+**Produced outputs:** `LedgerPrepared: full-history detail with account and conditional journal fields`; `QuarterLedger: all account types in Q4, excluding close; retained ungrouped`; `ProfitDetail: pre-close P&L detail`; `ProfitSummary: three monthly rows`; `CashActivity: Q4 cash by source type`.
 
-3. In Power Query add JournalKey with Add Column → Custom Column:
+1. Import JournalEntry as JournalEntryData and retain its full history.
+
+2. Reference LedgerHistory as LedgerPrepared; merge AccountData and expand AccountNumber, AccountName, AccountType, and AccountSubType.
+
+3. Keep this full-history detail ungrouped.
+
+4. In Power Query add JournalKey with Add Column → Custom Column:
 
     ~~~text title="Power Query — ProfitDetail / JournalKey"
     if [SourceDocumentType] = "JournalEntry" then [SourceDocumentID] else null
     ~~~
 
-4. Left merge JournalEntryData on JournalKey = JournalEntryID and expand EntryType; do not merge every source ID to journals.
+5. Left merge JournalEntryData on JournalKey = JournalEntryID and expand EntryType; do not merge every source ID to journals.
 
-5. Filter PostingDate October 1–December 31, AccountType Revenue or Expense, AccountSubType not Header, and exclude EntryType beginning Year-End Close while keeping null EntryType.
+6. Reference LedgerPrepared as QuarterLedger; filter PostingDate October 1–December 31, 2026, and exclude EntryType beginning Year-End Close while keeping null EntryType.
 
-6. Add a Custom Column named ProfitAmount:
+7. Preserve QuarterLedger ungrouped, with all account types.
+
+8. Reference QuarterLedger as ProfitDetail and filter AccountType Revenue or Expense and AccountSubType not Header.
+
+9. Add a Custom Column named ProfitAmount:
 
     ~~~text title="Power Query — ProfitDetail / ProfitAmount"
     [Credit]-[Debit]
     ~~~
 
-7. Derive Month using Transform → Date → Month → Start of Month and group by Month summing ProfitAmount into a column named ProfitAmount.
+10. Reference ProfitDetail as ProfitSummary.
 
-8. Load the three-row summary as ProfitSummary.
+11. Derive Month using Transform → Date → Month → Start of Month and group by Month summing ProfitAmount into a column named ProfitAmount.
 
-9. For CashActivity, filter the AccountID linked to AccountNumber 1010 and quarter dates, group by SourceDocumentType summing Debit, Credit, and DebitNet into columns with those same names.
+12. Load the three-row summary as ProfitSummary.
 
-10. Load as CashActivity.
+13. For CashActivity, reference QuarterLedger, filter AccountNumber 1010, group by SourceDocumentType summing Debit, Credit, and DebitNet into columns with those same names.
+
+14. Load as CashActivity.
 
 </TabItem>
 <TabItem value="sql">
@@ -314,7 +340,11 @@ Preserve null journal matches for operational events. Filtering null EntryType o
 <ToolSteps>
 <TabItem value="excel">
 
-1. Reference the same quarter ledger with the conditional journal join and close exclusion.
+**Named inputs:** `QuarterLedger, ProfitSummary, and CashActivity (Session 2.1)`.
+
+**Produced outputs:** `BridgeEffects: nonzero Q4 noncash/non-P&L effects`; `Review: profit-to-cash reconciliation and chart`.
+
+1. Reference the retained QuarterLedger as BridgeEffects; it already has the conditional journal join and close exclusion, with all account types still present.
 
 2. Keep AccountNumber not 1010 and AccountType other than Revenue or Expense.
 
@@ -405,7 +435,11 @@ Do not use post-close retained-earnings movement as an additional profit effect:
 <ToolSteps>
 <TabItem value="excel">
 
-1. Reference quarter LedgerHistory; merge AccountData and filter AccountNumber 2020, December dates.
+**Named inputs:** `LedgerPrepared (full-history detail from Session 2.1)`; `PurchaseInvoiceData ← PurchaseInvoice and PurchaseInvoiceLineData ← PurchaseInvoiceLine (import here)`; `GoodsReceiptData ← GoodsReceipt and GoodsReceiptLineData ← GoodsReceiptLine (import here)`.
+
+**Produced outputs:** `LiabilityTrace: selected December 2026 2020 ledger rows`; `ReceiptInvoiceTrace: invoice 39692 / receipt support`.
+
+1. Reference LedgerPrepared as LiabilityTrace and filter AccountNumber 2020 and December 1–31, 2026.
 
 2. In Power Query add a Custom Column named AbsoluteAmount:
 
@@ -415,9 +449,11 @@ Do not use post-close retained-earnings movement as an additional profit effect:
 
 3. Sort AbsoluteAmount descending then GLEntryID and keep the first five rows.
 
-4. Follow GoodsReceipt 27267 and PurchaseInvoice 39692 into their headers and lines.
+4. Import PurchaseInvoice as PurchaseInvoiceData, PurchaseInvoiceLine as PurchaseInvoiceLineData, GoodsReceipt as GoodsReceiptData, and GoodsReceiptLine as GoodsReceiptLineData.
 
-5. Merge PurchaseInvoiceLineData filtered to invoice 39692 with GoodsReceiptLineData on GoodsReceiptLineID, then GoodsReceiptData on GoodsReceiptID.
+5. Follow GoodsReceipt 27267 and PurchaseInvoice 39692 into these headers and lines.
+
+6. Reference PurchaseInvoiceLineData as ReceiptInvoiceTrace, filter PurchaseInvoiceID 39692, merge GoodsReceiptLineData on GoodsReceiptLineID, then GoodsReceiptData on GoodsReceiptID.
 
 </TabItem>
 <TabItem value="sql">
@@ -493,29 +529,37 @@ The close transfers a year’s profit into equity. Its scope is the entire year,
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import JournalEntryData filtered to PostingDate December 31, 2026 and EntryType beginning Year-End Close.
+**Named inputs:** `JournalEntryData and LedgerPrepared (full-history queries from Session 2.1)`.
 
-2. Inner merge GLEntryData using SourceDocumentType JournalEntry and SourceDocumentID = JournalEntryID.
+**Produced outputs:** `ClosingJournals: two December 31, 2026 close headers`; `ClosingJournalDetail: retained full selected vouchers`; `ClosingJournalSummary: journal/account amounts`; `FullYearPerformance: retained 2026 P&L detail; AnnualPreClose and AnnualPostClose: separate annual-profit summaries`.
 
-3. Merge AccountData.
+1. Reference the raw JournalEntryData as ClosingJournals and filter PostingDate December 31, 2026 and EntryType beginning Year-End Close.
 
-4. In Power Query add a Custom Column named DebitNet:
+2. Reference LedgerPrepared as ClosingJournalDetail, filter SourceDocumentType JournalEntry, and Inner merge ClosingJournals on SourceDocumentID = JournalEntryID.
 
-    ~~~text title="Power Query — Closing journal detail / DebitNet"
-    [Debit]-[Credit]
-    ~~~
+3. Keep all account lines; AccountNumber and DebitNet are already present from LedgerPrepared.
 
-5. Group by JournalEntryID, EntryType, AccountNumber, summing DebitNet.
+4. Expand JournalEntryID from ClosingJournals and keep the existing EntryType; retain SourceDocumentType and SourceDocumentID as the source pair.
 
-6. Separately reference the full-year 2026 ledger.
+5. Reference ClosingJournalDetail as ClosingJournalSummary and group by JournalEntryID, EntryType, AccountNumber, summing DebitNet.
 
-7. Add ProfitAmount using the expression below, then group all selected rows and sum ProfitAmount twice: once excluding closing entries, once including them:
+6. Separately reference LedgerPrepared as FullYearPerformance and filter PostingDate January 1–December 31, 2026, without a quarter restriction.
+
+7. Add ProfitAmount using the expression below:
 
     ~~~text title="Power Query — Full-year performance / ProfitAmount"
     [Credit]-[Debit]
     ~~~
 
-8. Keep the same account-type and Header exclusions used for Profit.
+8. Filter AccountType Revenue or Expense and AccountSubType not Header.
+
+9. Add a custom column ReviewYear with the constant 2026.
+
+10. Preserve FullYearPerformance and create two references: AnnualPreClose excludes EntryType beginning Year-End Close while keeping null EntryType; AnnualPostClose keeps closing entries.
+
+11. In each reference Group By ReviewYear and sum ProfitAmount as AnnualProfit.
+
+12. Keep both one-row results for comparison.
 
 </TabItem>
 <TabItem value="sql">
@@ -583,6 +627,10 @@ Use published reports as an independent presentation check after building the an
 <ToolSteps>
 <TabItem value="excel">
 
+**Named inputs:** `Existing Monthly Income Statement report download`; `Existing Monthly Indirect Cash Flow report download`.
+
+**Produced outputs:** `StatementComparison: Q4 2026 income/cash movements and October/December cash endpoints`.
+
 1. From Reports and Analytics open Monthly Income Statement and Monthly Indirect Cash Flow in the Statements and Cash group.
 
 2. Download their existing Excel or CSV files.
@@ -626,6 +674,10 @@ Choose actual reports, not the pro forma reports. Do not add both subtotal and d
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `Review rollforward, profit/cash bridge, close checks, and StatementComparison (earlier stages)`.
+
+**Produced outputs:** `Review: management explanation and unresolved-items table`.
 
 1. Create a one-page Review with quarter profit, cash movement, opening/closing cash, and the largest bridge effects.
 
@@ -693,40 +745,46 @@ Asset 18 is the Finishing Booth Upgrade and Air Handling Retrofit. Its 280,000 c
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import FixedAssetData filtered to ID 18 and FixedAssetEventData for that ID.
+**Named inputs:** `FixedAssetData ← FixedAsset and FixedAssetEventData ← FixedAssetEvent (import here; use selected references)`; `DebtScheduleLineData ← DebtScheduleLine (import here; raw query retained)`; `LedgerHistory (full-history query from Session 1.1)`.
 
-2. Import DebtScheduleLineData filtered DebtAgreementID 2 and PaymentDate through December 31, 2026.
+**Produced outputs:** `AssetReview: asset 18 and depreciation formula`; `AssetLedgerExcerpt: selected source rows, with partial voucher labeled`; `DebtReview: agreement 2 payment schedule and Q4 principal/interest check`.
 
-3. Load the asset as FixedAssetData and add MonthlyDepreciation:
+1. Import FixedAsset as FixedAssetData, FixedAssetEvent as FixedAssetEventData, and DebtScheduleLine as DebtScheduleLineData; preserve the raw queries.
 
-    ~~~text title="Excel — FixedAssetData[MonthlyDepreciation]"
+2. Reference FixedAssetData and filter FixedAssetID 18; filter a separate FixedAssetEventData reference to that same ID.
+
+3. Reference DebtScheduleLineData and filter DebtAgreementID 2 and PaymentDate through December 31, 2026.
+
+4. Load the selected asset as AssetReview and add MonthlyDepreciation:
+
+    ~~~text title="Excel — AssetReview[MonthlyDepreciation]"
     =ROUND(([@OriginalCost]-[@ResidualValue])/[@UsefulLifeMonths],2)
     ~~~
 
-4. This asset begins depreciation in the month after its January in-service date.
+5. This asset begins depreciation in the month after its January in-service date.
 
-5. Import GLEntryData for GoodsReceipt/15616, PurchaseInvoice/21692, JournalEntry/445, and the two JournalEntry/685 rows whose Description names this asset.
+6. Reference LedgerHistory as AssetLedgerExcerpt and filter document pairs GoodsReceipt/15616, PurchaseInvoice/21692, JournalEntry/445, and the two JournalEntry/685 rows whose Description names this asset.
 
-6. Keep the last two as an excerpt of the larger depreciation voucher.
+7. Keep the last two as an excerpt of the larger depreciation voucher.
 
-7. Load the debt schedule as DebtScheduleLineData.
+8. Reference the selected debt schedule as DebtReview and load it.
 
-8. Filter PaymentDate to October–December 2026.
+9. Filter PaymentDate to October–December 2026.
 
-9. On Review label B20 Principal, B21 Interest, B22 Payment, and B23 Payment difference.
+10. On Review label B20 Principal, B21 Interest, B22 Payment, and B23 Payment difference.
 
-10. Enter each formula:
+11. Enter each formula:
 
     ~~~text title="Excel — Review!B20"
-    =SUBTOTAL(109,DebtScheduleLineData[PrincipalAmount])
+    =SUBTOTAL(109,DebtReview[PrincipalAmount])
     ~~~
 
     ~~~text title="Excel — Review!B21"
-    =SUBTOTAL(109,DebtScheduleLineData[InterestAmount])
+    =SUBTOTAL(109,DebtReview[InterestAmount])
     ~~~
 
     ~~~text title="Excel — Review!B22"
-    =SUBTOTAL(109,DebtScheduleLineData[PaymentAmount])
+    =SUBTOTAL(109,DebtReview[PaymentAmount])
     ~~~
 
     ~~~text title="Excel — Review!B23"

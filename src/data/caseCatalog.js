@@ -14,10 +14,37 @@ export const caseCatalog = [
     "prerequisites": [
       "1–6: records, goods sales, settlement, and ledger entries"
     ],
-    "prerequisite": {
-      "label": "1–6: records, goods sales, settlement, and ledger entries",
-      "to": "/docs/learn-and-practice/source-to-ledger"
-    },
+    "prerequisiteLinks": [
+      {
+        "label": "1. Meet the Records",
+        "to": "/docs/learn-and-practice/meet-the-records"
+      },
+      {
+        "label": "2. Read an Order",
+        "to": "/docs/learn-and-practice/read-an-order"
+      },
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "4. Follow a Goods Sale",
+        "to": "/docs/learn-and-practice/source-to-ledger"
+      },
+      {
+        "label": "5. Follow Customer Settlement",
+        "to": "/docs/learn-and-practice/follow-customer-settlement"
+      },
+      {
+        "label": "6. Find the Accounting Entries",
+        "to": "/docs/learn-and-practice/find-the-accounting-entries"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Keep the order cohort fixed while changing event cutoffs; distinguish receipt from application and balance each complete voucher."
+    ],
     "deliverable": "A document timeline, two-date invoice settlement schedule, and a customer response with an action owner."
   },
   {
@@ -35,10 +62,33 @@ export const caseCatalog = [
       "7: design time and billing",
       "12: summarize evidence"
     ],
-    "prerequisite": {
-      "label": "7: design time and billing; 12: summarize evidence",
-      "to": "/docs/learn-and-practice/follow-design-time-into-billing"
-    },
+    "prerequisiteLinks": [
+      {
+        "label": "1. Meet the Records",
+        "to": "/docs/learn-and-practice/meet-the-records"
+      },
+      {
+        "label": "2. Read an Order",
+        "to": "/docs/learn-and-practice/read-an-order"
+      },
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "7. Follow Design Time into Billing",
+        "to": "/docs/learn-and-practice/follow-design-time-into-billing"
+      },
+      {
+        "label": "12. Turn Records into a Conclusion",
+        "to": "/docs/learn-and-practice/turn-records-into-a-conclusion"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Distinguish work dates, approval dates, billing coverage, and invoice dates; summarize hours and costs at engagement/month grain."
+    ],
     "deliverable": "An engagement-period reconciliation, an hours/billing/cost bridge, and a design review memo."
   },
   {
@@ -56,10 +106,33 @@ export const caseCatalog = [
       "8: purchases and GRNI",
       "11: estimates and settlement"
     ],
-    "prerequisite": {
-      "label": "8: purchases and GRNI; 11: estimates and settlement",
-      "to": "/docs/learn-and-practice/receipt-to-payable"
-    },
+    "prerequisiteLinks": [
+      {
+        "label": "1. Meet the Records",
+        "to": "/docs/learn-and-practice/meet-the-records"
+      },
+      {
+        "label": "2. Read an Order",
+        "to": "/docs/learn-and-practice/read-an-order"
+      },
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "8. Follow a Purchase",
+        "to": "/docs/learn-and-practice/receipt-to-payable"
+      },
+      {
+        "label": "11. Follow an Estimate into Settlement",
+        "to": "/docs/learn-and-practice/follow-an-estimate-into-settlement"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Aggregate receipt, invoice, payment, and estimate evidence separately; explain GRNI, AP, and accrued-service obligations at each cutoff."
+    ],
     "deliverable": "Separate goods and expense-obligation schedules, selected posting checks, and a quarter-end review note."
   },
   {
@@ -78,10 +151,25 @@ export const caseCatalog = [
       "9: manufacturing costs",
       "12: summaries and conclusions"
     ],
-    "prerequisite": {
-      "label": "3: matching keys; 9: manufacturing costs; 12: summaries and conclusions",
-      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion"
-    },
+    "prerequisiteLinks": [
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "9. Follow Manufacturing Costs",
+        "to": "/docs/learn-and-practice/manufacturing-cost-flow"
+      },
+      {
+        "label": "12. Turn Records into a Conclusion",
+        "to": "/docs/learn-and-practice/turn-records-into-a-conclusion"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Preserve invoice-line grain; state the limits of current standard costs and separately dated credits in historical comparisons."
+    ],
     "deliverable": "A product comparison, selected pricing evidence, a simple analytical chart, and a recommendation memo."
   },
   {
@@ -99,10 +187,33 @@ export const caseCatalog = [
       "9: manufacturing costs",
       "Manufacturing process chapter"
     ],
-    "prerequisite": {
-      "label": "9: manufacturing costs; Manufacturing process chapter",
-      "to": "/docs/learn-and-practice/manufacturing-cost-flow"
-    },
+    "prerequisiteLinks": [
+      {
+        "label": "1. Meet the Records",
+        "to": "/docs/learn-and-practice/meet-the-records"
+      },
+      {
+        "label": "2. Read an Order",
+        "to": "/docs/learn-and-practice/read-an-order"
+      },
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "9. Follow Manufacturing Costs",
+        "to": "/docs/learn-and-practice/manufacturing-cost-flow"
+      },
+      {
+        "label": "Manufacturing process chapter",
+        "to": "/docs/processes/manufacturing"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Aggregate issue, labor, completion, and close independently by work order; compare capacity at one row per center/day."
+    ],
     "deliverable": "A work-order cost bridge, completion/close comparison, capacity evidence, and a production review memo."
   },
   {
@@ -120,10 +231,33 @@ export const caseCatalog = [
       "10: hours and payroll",
       "12: summaries and conclusions"
     ],
-    "prerequisite": {
-      "label": "10: hours and payroll; 12: summaries and conclusions",
-      "to": "/docs/learn-and-practice/follow-hours-into-payroll"
-    },
+    "prerequisiteLinks": [
+      {
+        "label": "1. Meet the Records",
+        "to": "/docs/learn-and-practice/meet-the-records"
+      },
+      {
+        "label": "2. Read an Order",
+        "to": "/docs/learn-and-practice/read-an-order"
+      },
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "10. Follow Hours into Payroll",
+        "to": "/docs/learn-and-practice/follow-hours-into-payroll"
+      },
+      {
+        "label": "12. Turn Records into a Conclusion",
+        "to": "/docs/learn-and-practice/turn-records-into-a-conclusion"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Preserve approved-time detail; distinguish identified from unassigned centers and employee-period pay from center workload."
+    ],
     "deliverable": "A coverage comparison, employee-period pay reconciliation, settlement schedule, and staffing recommendation."
   },
   {
@@ -142,10 +276,35 @@ export const caseCatalog = [
       "11: estimates and settlement",
       "12: summaries; Cases 1 and 3 recommended"
     ],
-    "prerequisite": {
-      "label": "6: ledger entries; 11: estimates and settlement; 12: summaries; Cases 1 and 3 recommended",
-      "to": "/docs/learn-and-practice/find-the-accounting-entries"
-    },
+    "prerequisiteLinks": [
+      {
+        "label": "6. Find the Accounting Entries",
+        "to": "/docs/learn-and-practice/find-the-accounting-entries"
+      },
+      {
+        "label": "11. Follow an Estimate into Settlement",
+        "to": "/docs/learn-and-practice/follow-an-estimate-into-settlement"
+      },
+      {
+        "label": "12. Turn Records into a Conclusion",
+        "to": "/docs/learn-and-practice/turn-records-into-a-conclusion"
+      },
+      {
+        "label": "Case 1: customer account review",
+        "to": "/docs/analytics/cases/o2c-trace-case",
+        "recommended": true
+      },
+      {
+        "label": "Case 3: supplier obligations",
+        "to": "/docs/analytics/cases/p2p-accrual-settlement-case",
+        "recommended": true
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Retain full ledger history for openings; distinguish pre-close performance, cash movements, balance snapshots, and complete closing vouchers."
+    ],
     "deliverable": "A full-history balance rollforward, profit/cash bridge, selected source reconciliation, and management review memo."
   },
   {
@@ -163,10 +322,22 @@ export const caseCatalog = [
       "One earlier process case",
       "Controls Workshop recommended"
     ],
-    "prerequisite": {
-      "label": "One earlier process case; Controls Workshop recommended",
-      "to": "/docs/learn-and-practice/bpmn-controls-workshop"
-    },
+    "prerequisiteLinks": [
+      {
+        "label": "Complete one earlier process case",
+        "to": "/docs/analytics/cases"
+      },
+      {
+        "label": "BPMN Process and Internal Control Workshop",
+        "to": "/docs/learn-and-practice/bpmn-controls-workshop",
+        "recommended": true
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Define an explicit criterion and denominator; distinguish time entries from people and an exception flag from a proven control failure."
+    ],
     "deliverable": "An exception register, two source-supported workpapers, and prioritized control recommendations."
   }
 ];

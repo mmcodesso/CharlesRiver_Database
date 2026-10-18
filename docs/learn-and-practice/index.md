@@ -78,15 +78,47 @@ The first sales lessons continue the same selected order. Later processes use se
 
 After Lesson 12, continue to the [Case Library](../analytics/cases/index.md). The optional [BPMN and Controls Workshop](bpmn-controls-workshop.md) builds on a trace you have already completed.
 
+## Choose a Focused Module
+
+The twelve lessons above remain the full route in their existing order. A module selects from that route after the same foundations; it does not require every case or every catalog query.
+
+All modules begin with [Lesson 1](meet-the-records.md), [Lesson 2](read-an-order.md), and [Lesson 3](connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Pass the [Lesson 3 readiness check](connect-the-records.md#readiness-check-after-lesson-3) before adding event relationships.
+
+| Module | Lessons after foundations | Continuation and readiness |
+|---|---|---|
+| First O2C module | [4. Goods sale](source-to-ledger.md), [5. Customer settlement](follow-customer-settlement.md), [6. Accounting entries](find-the-accounting-entries.md) | Pass the [Lesson 6 check](find-the-accounting-entries.md#readiness-check-after-lesson-6), then [Case 1: customer account review](../analytics/cases/o2c-trace-case.md). |
+| Focused P2P module | [8. Purchase](receipt-to-payable.md), [11. Estimate and settlement](follow-an-estimate-into-settlement.md) | Explain receipt-matched and accrued-service links separately; pass [summary readiness](turn-records-into-a-conclusion.md#before-you-start), then [Case 3: supplier obligations](../analytics/cases/p2p-accrual-settlement-case.md). |
+| Focused manufacturing module | [9. Manufacturing costs](manufacturing-cost-flow.md) | Separate completion from close, reconcile without multiplying work-order totals, then pass [summary readiness](turn-records-into-a-conclusion.md#before-you-start) before the [manufacturing case](../analytics/cases/manufacturing-labor-cost-case.md). |
+| Focused payroll module | [10. Hours and payroll](follow-hours-into-payroll.md) | Separate employee/period facts from period-wide remittances, then pass [summary readiness](turn-records-into-a-conclusion.md#before-you-start) before the [workforce case](../analytics/cases/workforce-coverage-and-attendance-case.md). |
+| Financial emphasis | [4. Goods sale](source-to-ledger.md), [5. Settlement](follow-customer-settlement.md), [6. Entries](find-the-accounting-entries.md), [8. Purchase](receipt-to-payable.md), [11. Estimates](follow-an-estimate-into-settlement.md), [12. Conclusions](turn-records-into-a-conclusion.md) | Check the [statement case](../analytics/cases/financial-statement-bridge-case.md) prerequisites and the [advanced-case gate](turn-records-into-a-conclusion.md#readiness-check-before-an-advanced-case). |
+| Managerial emphasis | [7. Design time](follow-design-time-into-billing.md), [8. Inputs](receipt-to-payable.md), [9. Manufacturing](manufacturing-cost-flow.md), [10. Payroll](follow-hours-into-payroll.md), [12. Conclusions](turn-records-into-a-conclusion.md) | Complete each lesson’s linked preparation; choose the [design-services](../analytics/cases/design-services-performance-case.md), [manufacturing](../analytics/cases/manufacturing-labor-cost-case.md), or [portfolio](../analytics/cases/product-portfolio-profitability-case.md) case after its prerequisites. |
+
+Take [Lesson 12](turn-records-into-a-conclusion.md) when its explicit minimum skills are met; the recommended full route still completes all earlier lessons. The [BPMN and Controls Workshop](bpmn-controls-workshop.md) follows at least one verified event trace. Model viewing itself needs no file download.
+
+## Repair the Method Before a Challenge
+
+This **public practice exercise** is separate from every case’s independent challenge. A classmate joins an invoice header to its two invoice lines, then sums the repeated header total and calls the result cash collected. Diagnose the grain and measure errors before writing any calculation. Propose a repair and a before/after check; no new dataset record is implied.
+
+<details>
+<summary>Compare the method repair</summary>
+
+Keep the header total once per invoice, or independently summarize lines at invoice grain before comparing them with the header. Check row counts, unique invoice IDs, and amounts before and after the join. Invoice totals are billed amounts; cash collection needs dated receipt/application evidence and a defined cutoff. A plausible number from repeated headers does not support the conclusion.
+
+</details>
+
 <span id="a-common-evidence-standard"></span>
 
 ## Keep a Small Evidence Portfolio
 
-For each lesson, retain your workbook or SQL, source release, selected identifiers, filters, result check, and short interpretation. A useful submission explains both what the evidence supports and what it leaves unresolved.
+For each lesson, retain your workbook or SQL, source release, selected identifiers, filters, result check, and short interpretation. Download the [blank evidence template](pathname:///teaching/evidence-template.md) and the [public method rubric](pathname:///teaching/method-rubric.md); both describe the method without supplying private challenge solutions. A useful submission explains both what the evidence supports and what it leaves unresolved.
 
 Worked outputs use **release v2027.1**. The company scenes are fictional teaching situations; the named examples are actual synthetic records in that release. The file includes intentional exceptions. A discrepancy calls for investigation, and a matched example does not establish that the whole population is correct.
 
 If your assigned file differs, follow your instructor's version and explain any differences rather than altering records to reproduce a displayed number.
+
+## Plan the Workload
+
+The eight cases contain **23 sessions**. At the published estimate of **60–90 minutes per session**, all cases imply **23–34.5 hours**, excluding setup, tutorials, and reading. This is a planning estimate, not measured learner completion time. Choose one module and its case first. Tutorial time estimates await a learner pilot; none are claimed here.
 
 ## Next Steps
 

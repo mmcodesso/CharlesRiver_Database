@@ -79,6 +79,8 @@ This map answers **which records support approved work and which establish the a
 
 ```mermaid
 flowchart LR
+    accTitle: Approved time employee payroll and period remittances
+    accDescr: Roster and raw punches support approved time. Labor support leads to register lines and register, then employee payment. The payroll period separately connects to register and period remittances.
     ROSTER[EmployeeShiftRoster] --> TIME[TimeClockEntry: approved hours]
     PUNCH[TimeClockPunch: raw evidence] -. Supports review .-> TIME
     TIME --> LABOR[LaborTimeEntry: support and allocation]
@@ -98,7 +100,7 @@ Follow approved hourly support into earnings detail. Then distinguish employee-l
 | Employee payment | Reduces accrued payroll and cash |
 | Liability remittance | Reduces the relevant payroll liabilities and cash |
 
-The dataset's ledger source label for register postings is `PayrollSummary`. The [Posting Reference](../reference/posting.md) explains that mapping; source labels should not be assumed to match table names.
+The dataset's ledger source label for register postings is `PayrollSummary`. The [Posting Reference](../reference/posting.md#payrollsummary-register-summaries) explains that mapping; source labels should not be assumed to match table names.
 
 ## Connect Payroll Back to Production and Design
 
@@ -118,6 +120,28 @@ A later remittance may explain subsequent clearance. It does not erase the earli
 
 Preserving the grain of each record helps keep these explanations reliable: daily attendance, employee payroll, and period-level remittances are related evidence at different levels.
 
+## Bridge an Event to an Entry
+
+Reuse [Lesson 10’s employee 109, period 1](../learn-and-practice/follow-hours-into-payroll.md). Keep the selected employee result separate from period-wide remittances and period/cost-center ledger summaries.
+
+| Event and date basis | Supporting evidence | Why the accounts change | Cutoff question |
+|---|---|---|---|
+| January 1–14 approved attendance | TimeClockEntry; PayrollPeriod 1 | No posting: approved time supports hourly payroll rather than independently recording wages | Are hours approved and in the selected period? |
+| January 19 register approval/posting | PayrollRegister 96; period/cost-center PayrollSummary voucher | Debit wage and employer-cost expense; credit accrued net pay and other payroll liabilities | What register population is summarized in the complete voucher? |
+| Employee payment, January 19 | PayrollPayment 96 | Debit accrued payroll / credit cash, 1,578.34 each | Is employee net pay settled by the cutoff, and has bank clearance occurred? |
+| Period-wide remittances, January 26, 29, and 31 | PayrollLiabilityRemittance for period 1 | Debit the respective withholding, tax, or deduction liability / credit cash | Which liability categories remain at the chosen cutoff? |
+
+The selected employee’s gross-to-net check is 1,902.64 − 324.30 = 1,578.34. Payment 96 is a complete two-row balanced voucher. **Register 96 is not a complete PayrollSummary voucher**: that ledger source groups register facts by period and cost center. Follow the [source mapping](../reference/posting.md) before comparing independently aggregated payroll and ledger amounts.
+
+**Predict before revealing:** On January 20, does the recorded employee payment establish that period 1’s tax and benefit obligations have also been settled?
+
+<details>
+<summary>Reveal the settlement boundary</summary>
+
+No. Employee payment is recorded January 19 and clears the bank January 22. None of the three period-wide remittances is recorded by January 20. Do not allocate those whole-period amounts to this employee merely because the records share a period key.
+
+</details>
+
 ## Check Your Understanding
 
 <details>
@@ -136,7 +160,9 @@ Not necessarily. Employee payment clears net pay, while withholding, tax, and de
 
 ## Next Steps
 
-The controller must now explain the period across customer, supplier, production, and workforce activity. Continue to [Manual Journals and Close](manual-journals-and-close.md) to see how finance records estimates and adjustments around those operating cycles.
+**Continue the company story.** The controller brings customer, supplier, production, and workforce activity together. Continue to [Manual Journals and Close](manual-journals-and-close.md) to see finance record estimates and reporting adjustments.
+
+**Investigate this process.** Finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Then follow [Lesson 10: Follow Hours into Payroll](../learn-and-practice/follow-hours-into-payroll.md). Check the selected lesson’s further prerequisites before beginning.
 
 ## Optional Reference
 
@@ -191,6 +217,8 @@ Which hours were expected, recorded, and approved? Follow shifts and rosters int
 
 ```mermaid
 flowchart LR
+    accTitle: Roster punch and approval support for daily time
+    accDescr: Shift definitions and assignments lead to roster evidence. Roster links to absence, overtime approval, and raw punches; approval and punches support daily time.
     SD[Shift Definition]
     ESA[Employee Shift Assignment]
     ESR[Employee Shift Roster]
@@ -233,6 +261,8 @@ Once daily time is approved, payroll turns that support into gross pay. Hourly e
 
 ```mermaid
 flowchart LR
+    accTitle: Approved time and payroll-period support for the register
+    accDescr: Time-clock entries connect directly and through labor allocations to the payroll register. The payroll period also identifies the register population.
     TCE[Time Clock Entry]
     LTE[Labor Time Entry]
     PP[Payroll Period]
@@ -272,6 +302,8 @@ Which payroll obligations were created and settled? Follow the register into emp
 
 ```mermaid
 flowchart LR
+    accTitle: Employee net pay and other payroll-liability settlement
+    accDescr: A register creates accrued net pay and other payroll liabilities. Employee payment and liability remittance settle separate branches; register and settlement records connect to the ledger.
     PR[Payroll Register]
     NET[Accrued Payroll]
     TAX[Payroll Liabilities]
@@ -309,6 +341,8 @@ Payroll also feeds manufacturing. When approved time and labor support are tied 
 
 ```mermaid
 flowchart LR
+    accTitle: Labor allocation and payroll reclassification evidence
+    accDescr: Approved time leads to labor allocation and work-order operation evidence. Labor and payroll support a reclassification journal and ledger detail.
     TCE[Time Clock Entry]
     LTE[Labor Time Entry]
     WOO[Work Order Operation]
@@ -355,6 +389,8 @@ Which attendance concerns need follow-up? Use `AttendanceException` to connect a
 
 ```mermaid
 flowchart LR
+    accTitle: Attendance evidence exceptions and payroll
+    accDescr: Roster, raw punches, and approved time feed attendance-exception evidence. Approved time also connects to payroll; an exception link does not establish a payment block.
     ESR[Employee Shift Roster]
     TCP[Time Clock Punch]
     TCE[Time Clock Entry]

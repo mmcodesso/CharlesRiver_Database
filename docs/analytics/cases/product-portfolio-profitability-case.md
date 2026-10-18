@@ -32,7 +32,13 @@ Commercial leadership has time for one product review. The sales coordinator pro
 
 The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-**Preparation:** 3: matching keys; 9: manufacturing costs; 12: summaries and conclusions. Revisit [the relevant tutorial](../../learn-and-practice/turn-records-into-a-conclusion.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
+**Preparation:** [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [9. Follow Manufacturing Costs](/docs/learn-and-practice/manufacturing-cost-flow); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+
+**Ready to begin:**
+
+- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
+- Preserve invoice-line grain; state the limits of current standard costs and separately dated credits in historical comparisons.
 
 ## Key Data Sources
 
@@ -75,7 +81,11 @@ Create Case04.xlsx or Case04.sql. Write the measure before calculating it: invoi
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import ItemData as Items.
+**Named inputs:** `Items ← Item (import here)`.
+
+**Produced outputs:** `Items: unique item lookup`; `ItemClassification: ItemType PivotTable`.
+
+1. Import Item as Items.
 
 2. Create a PivotTable by ItemType with Count of ItemID.
 
@@ -123,31 +133,37 @@ The exact goods label is Finished Good, including the space. A spelling mismatch
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import SalesInvoiceData, filter InvoiceDate from January 1 through March 31.
+**Named inputs:** `Items (Session 1.1)`; `SalesInvoiceData ← SalesInvoice and SalesInvoiceLineData ← SalesInvoiceLine (import here)`.
 
-2. Inner merge SalesInvoiceLineData to those headers on SalesInvoiceID; expand InvoiceDate only.
+**Produced outputs:** `QuarterInvoices: Q1 2024 invoice headers`; `ProductLines: finished-good invoice-line detail`; `InvoiceCounts: distinct SalesInvoiceID reference`.
 
-3. Merge Items on ItemID, expand ItemType, ItemGroup, and StandardCost.
+1. Import SalesInvoice as SalesInvoiceData and SalesInvoiceLine as SalesInvoiceLineData; preserve both raw queries.
 
-4. Filter ItemType = Finished Good; load as ProductLines.
+2. Reference SalesInvoiceData as QuarterInvoices and filter InvoiceDate from January 1 through March 31, 2024.
 
-5. Keep SalesInvoiceLineID as the unique key.
+3. Reference SalesInvoiceLineData as ProductLines and Inner merge to QuarterInvoices on SalesInvoiceID; expand InvoiceDate only.
 
-6. Add ListValue to ProductLines:
+4. Merge Items on ItemID, expand ItemType, ItemGroup, and StandardCost.
+
+5. Filter ItemType = Finished Good; load as ProductLines.
+
+6. Keep SalesInvoiceLineID as the unique key.
+
+7. Add ListValue to ProductLines:
 
     ~~~text title="Excel — ProductLines[ListValue]"
     =[@Quantity]*[@BaseListPrice]
     ~~~
 
-7. Add CurrentStandardCost:
+8. Add CurrentStandardCost:
 
     ~~~text title="Excel — ProductLines[CurrentStandardCost]"
     =[@Quantity]*[@StandardCost]
     ~~~
 
-8. Use a PivotTable for Count of SalesInvoiceLineID and sums of Quantity and LineTotal.
+9. Use a PivotTable for Count of SalesInvoiceLineID and sums of Quantity and LineTotal.
 
-9. To count unique invoices, reference the query, keep SalesInvoiceID, remove duplicates, then count rows.
+10. To count unique invoices, reference ProductLines as InvoiceCounts, keep SalesInvoiceID, remove duplicates, then count rows.
 
 </TabItem>
 <TabItem value="sql">
@@ -205,6 +221,10 @@ Weighted realization asks how much was billed relative to the list value of the 
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `ProductLines with ListValue and CurrentStandardCost (Session 1.2)`.
+
+**Produced outputs:** `ProductReview: four ItemGroup rows with realization and standard-margin measures`; `StandardMarginChart`.
 
 1. From ProductLines create a PivotTable: Rows = ItemGroup; Values = sums of LineTotal, ListValue, CurrentStandardCost, Quantity and Count of SalesInvoiceLineID.
 
@@ -284,49 +304,51 @@ Calculate the ratio of summed dollars. Do not average line percentages or mistak
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import PriceOverrideApprovalData as Overrides and PromotionProgramData as Promotions.
+**Named inputs:** `ProductLines (Session 1.2)`; `Overrides ← PriceOverrideApproval and Promotions ← PromotionProgram (import here)`; `SalesOrderLineData ← SalesOrderLine and SalesOrderData ← SalesOrder (import here)`.
 
-2. Import SalesOrderLineData and SalesOrderData.
+**Produced outputs:** `ProductLines: approval and order-date lookup columns`; `Review: separately scoped override and promotion evidence`.
 
-3. In ProductLines filter nonblank PriceOverrideApprovalID, sort InvoiceDate and SalesInvoiceLineID, and inspect the first 12 lines.
+1. Import PriceOverrideApproval as Overrides, PromotionProgram as Promotions, SalesOrderLine as SalesOrderLineData, and SalesOrder as SalesOrderData.
 
-4. For line 69 inspect approval ID 9.
+2. In ProductLines filter nonblank PriceOverrideApprovalID, sort InvoiceDate and SalesInvoiceLineID, and inspect the first 12 lines.
 
-5. Add ApprovedUnitPrice using the unique approval key:
+3. For line 69 inspect approval ID 9.
+
+4. Add ApprovedUnitPrice using the unique approval key:
 
     ~~~text title="Excel — ProductLines[ApprovedUnitPrice]"
     =IF([@PriceOverrideApprovalID]="","",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ApprovedUnitPrice],"No match",0))
     ~~~
 
-6. Add OverrideApprovedDate and format as a date:
+5. Add OverrideApprovedDate and format as a date:
 
     ~~~text title="Excel — ProductLines[OverrideApprovedDate]"
     =IF([@PriceOverrideApprovalID]="","",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ApprovedDate],"No match",0))
     ~~~
 
-7. Add OverrideReason:
+6. Add OverrideReason:
 
     ~~~text title="Excel — ProductLines[OverrideReason]"
     =IF([@PriceOverrideApprovalID]="","",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ReasonCode],"No match",0))
     ~~~
 
-8. Add SalesOrderID through the order-line relationship:
+7. Add SalesOrderID through the order-line relationship:
 
     ~~~text title="Excel — ProductLines[SalesOrderID]"
     =XLOOKUP([@SalesOrderLineID],SalesOrderLineData[SalesOrderLineID],SalesOrderLineData[SalesOrderID],"No match",0)
     ~~~
 
-9. Add OrderDate and format it as a date:
+8. Add OrderDate and format it as a date:
 
     ~~~text title="Excel — ProductLines[OrderDate]"
     =XLOOKUP([@SalesOrderID],SalesOrderData[SalesOrderID],SalesOrderData[OrderDate],"No match",0)
     ~~~
 
-10. Resolve any No match before comparing UnitPrice, approved price, approval date, and order date.
+9. Resolve any No match before comparing UnitPrice, approved price, approval date, and order date.
 
-11. Separately select invoice line 1548 and promotion ID 1.
+10. Separately select invoice line 1548 and promotion ID 1.
 
-12. Inspect the promotion’s effective dates and scope fields; evaluate applicability at the commercial event, not simply the invoice date.
+11. Inspect the promotion’s effective dates and scope fields; evaluate applicability at the commercial event, not simply the invoice date.
 
 </TabItem>
 <TabItem value="sql">
@@ -436,27 +458,35 @@ Return to the commercial request. A single ranking can hide different problems. 
 <ToolSteps>
 <TabItem value="excel">
 
-1. In Power Query reference ProductLines, then Left outer merge ShipmentLineData on ShipmentLineID and ShipmentData on ShipmentID to obtain DeliveryDate.
+**Named inputs:** `ProductLines, SalesOrderLineData, SalesOrderData, and Items (earlier stages)`; `ShipmentLineData ← ShipmentLine and ShipmentData ← Shipment (import here)`; `CreditMemoLineData ← CreditMemoLine and CreditMemoData ← CreditMemo (import here)`.
 
-2. Merge SalesOrderLineData on SalesOrderLineID and SalesOrderData on SalesOrderID to obtain RequestedDeliveryDate.
+**Produced outputs:** `DeliveryDetail: retained invoice-line delivery comparisons`; `DeliveryReview: ItemGroup summary`; `CreditReview: separately dated credit summary`.
 
-3. In Power Query use Add Column → Custom Column to add MissingDeliveryDate:
+1. Import ShipmentLine as ShipmentLineData and Shipment as ShipmentData.
+
+2. In Power Query reference ProductLines as DeliveryDetail, then Left outer merge ShipmentLineData on ShipmentLineID and ShipmentData on ShipmentID to obtain DeliveryDate.
+
+3. Merge SalesOrderLineData on SalesOrderLineID and SalesOrderData on SalesOrderID to obtain RequestedDeliveryDate.
+
+4. In Power Query use Add Column → Custom Column to add MissingDeliveryDate:
 
     ~~~text title="Power Query — Delivery summary / MissingDeliveryDate"
     if [DeliveryDate] = null then 1 else 0
     ~~~
 
-4. Add DeliveredAfterRequested with the expression below; missing dates cannot establish lateness:
+5. Add DeliveredAfterRequested with the expression below; missing dates cannot establish lateness:
 
     ~~~text title="Power Query — Delivery summary / DeliveredAfterRequested"
     if [DeliveryDate] = null or [RequestedDeliveryDate] = null then 0 else if [DeliveryDate] > [RequestedDeliveryDate] then 1 else 0
     ~~~
 
-5. Group by ItemGroup to count lines and sum those flags.
+6. Reference DeliveryDetail as DeliveryReview and group by ItemGroup to count lines and sum those flags; load DeliveryReview.
 
-6. Separately import CreditMemoLineData, merge CreditMemoData, filter CreditMemoDate January 1–March 31, merge Items, retain Finished Good, and group by ItemGroup with Count of CreditMemoLineID and Sum of LineTotal.
+7. Separately import CreditMemoLine as CreditMemoLineData and CreditMemo as CreditMemoData.
 
-7. Load as CreditReview.
+8. Reference CreditMemoLineData as CreditReview, merge CreditMemoData, filter CreditMemoDate January 1–March 31, 2024, merge Items, retain Finished Good, and group by ItemGroup with Count of CreditMemoLineID and Sum of LineTotal.
+
+9. Load as CreditReview.
 
 </TabItem>
 <TabItem value="sql">
@@ -517,6 +547,10 @@ Joining invoice lines through an order alone can attach every shipment on that o
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `ProductReview, DeliveryReview, and CreditReview (earlier stages)`.
+
+**Produced outputs:** `Review: four group comparisons and bounded recommendation`.
 
 1. Create a Review table with four rows, one per ItemGroup.
 

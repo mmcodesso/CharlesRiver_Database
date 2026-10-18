@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "@docusaurus/Link";
 import Heading from "@theme/Heading";
 import useBaseUrl from "@docusaurus/useBaseUrl";
+import useBrokenLinks from "@docusaurus/useBrokenLinks";
 
 import { ReportPreviewOverlay } from "@site/src/components/ReportPreviewOverlay";
 import reportManifest from "@site/src/generated/reportManifest";
 import reportPackManifest from "@site/src/generated/reportPackManifest";
+import reportTeachingMetadata from "@site/src/data/reportTeachingMetadata.json";
+import { queryLibraryLink } from "@site/src/components/CatalogNavigation/queryLinks";
+import useCatalogFilters, { matchesSearch } from "@site/src/components/CatalogNavigation/useCatalogFilters";
 import resolveCaseLink from "@site/src/components/Cases/resolveCaseLink";
 import styles from "./styles.module.css";
 
@@ -35,6 +39,7 @@ Object.values(reportPackManifest).forEach((pack) => {
 function ReportCard({ reportKey }) {
   const entry = getReportEntry(reportKey);
   const guidance = guidanceByReport[reportKey];
+  const teaching = reportTeachingMetadata[reportKey];
   const previewUrl = useBaseUrl(entry.previewPath);
   const excelUrl = useBaseUrl(entry.excelPath);
   const csvUrl = useBaseUrl(entry.csvPath);
@@ -46,6 +51,12 @@ function ReportCard({ reportKey }) {
         <div className={styles.cardText}>
           <h4 className={styles.cardTitle} id={`title-${reportKey}`}>{entry.title}</h4>
           <p className={styles.cardDescription}>{entry.description}</p>
+          <dl className={styles.teachingMetadata}>
+            <dt>Row grain</dt><dd>{teaching.grain}</dd>
+            <dt>Period basis</dt><dd>{teaching.periodBasis}</dd>
+            <dt>Process</dt><dd><Link to={teaching.process.to}>{teaching.process.label}</Link></dd>
+            <dt>Practice</dt><dd><Link to={teaching.lesson.to}>{teaching.lesson.label}</Link></dd>
+          </dl>
           <div className={styles.chipRow}>
             <span className={styles.chip}>{entry.cadence}</span>
           </div>
@@ -56,24 +67,26 @@ function ReportCard({ reportKey }) {
             type="button"
             onClick={() => setIsPreviewOpen(true)}
             aria-haspopup="dialog"
+            aria-label={`Preview ${entry.title}`}
           >
             Preview
           </button>
           {entry.excelEnabled ? (
-            <a className={styles.secondaryAction} href={excelUrl}>
+            <a className={styles.secondaryAction} href={excelUrl} aria-label={`Download Excel for ${entry.title}`}>
               Download Excel
             </a>
           ) : null}
           {entry.csvEnabled ? (
-            <a className={styles.secondaryAction} href={csvUrl}>
+            <a className={styles.secondaryAction} href={csvUrl} aria-label={`Download CSV for ${entry.title}`}>
               Download CSV
             </a>
           ) : null}
+          <Link className={styles.secondaryAction} to={queryLibraryLink(entry.queryPath)} aria-label={`View source SQL for ${entry.title}`}>View source SQL</Link>
         </div>
       </div>
       {guidance ? (
         <details className={styles.guidance}>
-          <summary>Interpret this report</summary>
+          <summary aria-label={`Interpret this report: ${entry.title}`}>Interpret this report</summary>
           <div className={styles.guidanceBody}>
             <h5>Discussion questions</h5>
             <ul>{guidance.questions.map((question) => <li key={question}>{question}</li>)}</ul>
@@ -93,24 +106,31 @@ function ReportCard({ reportKey }) {
   );
 }
 
+function reportSearchText(key, topic) {
+  const report = getReportEntry(key);
+  const teaching = reportTeachingMetadata[key];
+  return `${report.title} ${report.description} ${topic.title} ${teaching.grain} ${teaching.periodBasis} ${teaching.process.label} ${teaching.lesson.label}`;
+}
+
 export function ReportCatalog({ topics }) {
-  const [query, setQuery] = useState("");
-  const [topicId, setTopicId] = useState("all");
+  const brokenLinks = useBrokenLinks();
+  topics.forEach((topic) => topic.reports.forEach((key) => brokenLinks.collectAnchor(`report-${key}`)));
+  const targets = useMemo(() => topics.flatMap((topic) => [
+    { id: topic.id, topicId: topic.id, text: "" },
+    ...topic.reports.map((key) => ({ id: `report-${key}`, topicId: topic.id, text: reportSearchText(key, topic) })),
+  ]), [topics]);
+  const { query, topicId, setQuery, setTopicId, reset } = useCatalogFilters("cr_reports", topics.map((topic) => topic.id), targets);
   const total = topics.reduce((count, topic) => count + topic.reports.length, 0);
-  const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const visibleTopics = topics
     .filter((topic) => topicId === "all" || topic.id === topicId)
     .map((topic) => ({
       ...topic,
       reports: topic.reports.filter((key) => {
-        const report = getReportEntry(key);
-        const text = `${report.title} ${report.description} ${topic.title}`.toLowerCase();
-        return words.every((word) => text.includes(word));
+        return matchesSearch(reportSearchText(key, topic), query);
       }),
     }))
     .filter((topic) => topic.reports.length);
   const count = visibleTopics.reduce((sum, topic) => sum + topic.reports.length, 0);
-  const reset = () => { setQuery(""); setTopicId("all"); };
 
   return (
     <section className={styles.section} aria-label="Browse business reports">

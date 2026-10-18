@@ -10,11 +10,13 @@ import QueryLibrary from "@site/src/components/QueryLibrary";
 
 Choose a question from a [business process](../learn-the-business/process-flows.md), then browse the same business topics used in [Reports and Analytics](index.md). Each query appears once, with its objective, output grain, source tables, expandable SQL, and original-file download together.
 
-Search by question or table, or select a business topic. Expand **Interpret these results** for topic-specific accounting guidance and **Anomaly coverage** where available. The [guided query paths](#guided-query-paths) connect statement reconciliation and CAPEX steps without duplicating query cards.
+Start with the guided paths below for a connected investigation, or search by question or table and select a business topic. Expand **Interpret these results** for topic-specific accounting guidance and **Anomaly coverage** where available. The [guided query paths](#guided-query-paths) connect statement reconciliation and CAPEX steps without duplicating query cards.
 
-## Browse Queries
+## Guided Paths and Query Catalog
 
 <QueryLibrary />
+
+Search and topic selections are kept in the URL for classroom links and Back/Forward recovery. A direct query link reveals the destination even if the current filters would hide it. If SQL cannot load, use **Retry SQL** or download its original file.
 
 ## Build Your Analysis
 

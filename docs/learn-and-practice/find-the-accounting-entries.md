@@ -209,6 +209,39 @@ ORDER BY SourceDocumentType, SourceDocumentID, VoucherNumber;
 
 Each difference is **0.00**. The two 952.07 vouchers describe different events; adding them does not mean the customer sent 1,904.14.
 
+## 3. Tell the Event-to-Entry Story
+
+**Predict first:** Why can January 31 goods revenue and February 22 cash both be correct? Would recording application 225 on February 23 mean receiving more cash?
+
+<details>
+<summary>Reveal the complete-voucher bridge</summary>
+
+| Event and posting date | Complete debit side | Complete credit side | Evidence scope |
+|---|---|---|---|
+| Shipment 87, January 31, 2024 | 5010 COGS 1,715.19 + 4,270.14; 5050 freight-out expense 104.01 | 1040 finished goods 1,715.19 + 4,270.14; 2040 accrued expenses 104.01 | All 6 ledger rows; each side 6,089.34 |
+| Invoice 202, January 31, 2024 | 1020 AR 12,248.33 | 4010 goods revenue 3,552.21 + 7,845.57; 4050 freight revenue 103.00; 2050 sales tax payable 747.55 | All 5 ledger rows; each side 12,248.33 |
+| Receipt 173, February 22, 2024 | 1010 cash 952.07 | 2060 customer deposits and unapplied cash 952.07 | All 2 ledger rows; each side 952.07 |
+| Application 225, February 23, 2024 | 2060 customer deposits and unapplied cash 952.07 | 1020 AR 952.07 | All 2 ledger rows; each side 952.07 |
+
+These are **all 15 rows** returned in Step 1, grouped for explanation rather than reduced to a selected sales line. Earlier lessons followed order line 42; this shipment and invoice also include the other goods line. The shipment’s total goods cost is 5,985.33, while the invoice’s total goods revenue is 11,397.78. Freight-out expense 104.01 and freight revenue 103.00 are different accounts and amounts. Tax payable is a liability, not revenue.
+
+The order established demand without a posting. Shipment records cost and inventory movement; invoice records this dataset’s goods revenue and receivable. Receipt records cash arrival, and application allocates it to AR without another inflow. The January events do not wait for February’s cash.
+
+At January 31, exclude both later cash events. At February 22, exclude application 225; receipt 173 itself has not reduced invoice 202’s receivable. These observations describe the **selected events**, not the invoice’s entire open balance. Retrieve all its dated applications and relevant credits before calculating that balance; one 952.07 application cannot establish full settlement.
+
+</details>
+
+## Readiness Check: After Lesson 6
+
+Before widening the investigation, show that you can:
+
+- Pair a source type with its identifier, retrieve all 15 rows, and balance each complete voucher before selecting accounts.
+- Explain why a selected order-line amount differs from a complete shipment or invoice voucher.
+- Separate receipt from application and state which events fall inside a specified cutoff.
+- Write a conclusion limited to the selected evidence, naming the other settlement records needed for an invoice balance.
+
+If a total differs, check the paired filters, retained source lines, date types, and join multiplicity before adjusting your interpretation. If the number matches but the grain or cutoff explanation fails, revisit [Lesson 3](connect-the-records.md), [Lesson 4](source-to-ledger.md), or [Lesson 5](follow-customer-settlement.md). A matching answer alone does not pass this checkpoint.
+
 <span id="assessed-deliverable"></span>
 
 ## Keep Your Evidence

@@ -45,9 +45,18 @@ function PreviewTable({ preview }) {
 
 export function ReportPreviewOverlay({ isOpen, onClose, previewUrl, title }) {
   const dialogRef = useRef(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const [preview, setPreview] = useState(null);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+    setPreview(null);
+    setStatus("idle");
+    setError("");
+  }, [previewUrl]);
 
   useEffect(() => {
     if (!isOpen || preview) {
@@ -84,7 +93,7 @@ export function ReportPreviewOverlay({ isOpen, onClose, previewUrl, title }) {
     return () => {
       ignore = true;
     };
-  }, [isOpen, preview, previewUrl]);
+  }, [isOpen, preview, previewUrl, attempt]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -93,11 +102,13 @@ export function ReportPreviewOverlay({ isOpen, onClose, previewUrl, title }) {
 
     const previousOverflow = document.body.style.overflow;
     const opener = document.activeElement;
+    const dialog = dialogRef.current;
+    dialog.showModal();
     dialogRef.current?.querySelector("button")?.focus();
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        onCloseRef.current();
       }
       if (event.key === "Tab") {
         const controls = dialogRef.current?.querySelectorAll('button, a[href], [tabindex="0"]');
@@ -114,58 +125,59 @@ export function ReportPreviewOverlay({ isOpen, onClose, previewUrl, title }) {
     };
 
     document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", handleKeyDown);
+    dialog.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", handleKeyDown);
+      dialog.removeEventListener("keydown", handleKeyDown);
+      dialog.close();
       if (opener instanceof HTMLElement && opener.isConnected) {
         opener.focus();
       }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) {
     return null;
   }
 
   return (
-    <div
-      className={styles.backdrop}
-      role="presentation"
+    <dialog
+      ref={dialogRef}
+      className={styles.modal}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${title} preview`}
+      onCancel={(event) => { event.preventDefault(); onClose(); }}
       onClick={(event) => {
         if (event.target === event.currentTarget) {
-          onClose();
+          const bounds = event.currentTarget.getBoundingClientRect();
+          if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) onClose();
         }
       }}
     >
-      <div
-        ref={dialogRef}
-        className={styles.modal}
-        role="dialog"
-        aria-modal="true"
-        aria-label={`${title} preview`}
-        onClick={(event) => event.stopPropagation()}
-      >
         <div className={styles.modalToolbar}>
           <div>
             <p className={styles.modalTitle}>{title}</p>
             <p className={styles.modalHint}>Preview sample from the generated report.</p>
           </div>
-          <button type="button" className={styles.closeButton} onClick={onClose}>
+          <button type="button" className={styles.closeButton} onClick={onClose} aria-label={`Close ${title} preview`}>
             Close
           </button>
         </div>
-        <div className={styles.viewport} tabIndex={0} role="region" aria-label="Report preview content">
-          {status === "loading" ? <p className={styles.message}>Loading preview...</p> : null}
+        <div className={styles.viewport} tabIndex={0} role="region" aria-label={`${title} preview content`}>
+          {status === "loading" ? <p className={styles.message} role="status">Loading preview...</p> : null}
           {status === "error" ? (
-            <p className={clsx(styles.message, styles.error)}>
+            <div role="alert" className={clsx(styles.message, styles.error)}>
               Could not load this preview. {error}
-            </p>
+              <button type="button" className={styles.closeButton} onClick={() => {
+                dialogRef.current?.querySelector('[role="region"]')?.focus();
+                setAttempt((value) => value + 1);
+              }} aria-label={`Retry ${title} preview`}>Retry preview</button>
+            </div>
           ) : null}
           {status === "ready" && preview ? <PreviewTable preview={preview} /> : null}
         </div>
-      </div>
-    </div>
+    </dialog>
   );
 }

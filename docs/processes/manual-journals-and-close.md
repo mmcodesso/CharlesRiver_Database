@@ -81,6 +81,8 @@ The record map asks **how a finance estimate connects to a later supplier bill a
 
 ```mermaid
 flowchart LR
+    accTitle: Accrual invoice adjustment and payment evidence
+    accDescr: An accrual journal links to supplier-invoice lines through AccrualJournalEntryID. Invoice leads to payment, and adjustment points back through ReversesJournalEntryID. These posting events connect separately to ledger detail.
     EST[JournalEntry: accrual] -->|AccrualJournalEntryID| LINE[PurchaseInvoiceLine]
     LINE --> BILL[PurchaseInvoice]
     BILL --> PAY[DisbursementPayment]
@@ -122,6 +124,29 @@ Likewise, an unused accrual balance needs to be understood in relation to the in
 
 The company-wide review now connects all the chapters. Orders, receipts, shipments, service hours, payroll, completions, and journals explain different parts of the accounting. Each conclusion should identify its event, support, date, and remaining uncertainty.
 
+## Bridge an Event to an Entry
+
+Begin with [Lesson 11’s accrual journal 9](../learn-and-practice/follow-an-estimate-into-settlement.md), then extend to the [statement and annual-close case](../analytics/cases/financial-statement-bridge-case.md). They answer different accounting questions.
+
+| Event and date | Supporting evidence | Why the accounts change | Cutoff question |
+|---|---|---|---|
+| Prepare or approve a journal | JournalEntry preparation and approval fields | No separate posting from an approval field alone; inspect the posted detail | Is there ledger evidence at the selected posting date? |
+| Estimate, January 31, 2024 | JournalEntry 9 and its two ledger rows | Debit repairs expense / credit accrued expenses, 10,039.33 each | What later evidence was available at January 31? |
+| Linked invoice, March 9 | PurchaseInvoiceLine.AccrualJournalEntryID → journal 9; invoice 39851 | Debit accrued expenses / credit AP, 10,019.59 each | What estimate residual and supplier payable remain? |
+| Residual adjustment, March 11 | JournalEntry 698; ReversesJournalEntryID 9 | Debit accrued expenses / credit repairs expense, 19.74 each | Has the excess estimate been reversed by cutoff? |
+| Supplier payment, May 20 | DisbursementPayment 39818 | Debit AP / credit cash, 10,019.59 each | Has the supplier payable actually been paid by cutoff? |
+
+Each numerical row summarizes its **complete two-row balanced voucher**. The estimate, invoice, residual adjustment, and cash settlement are separate events. Annual close instead transfers credit-balance P&L accounts with debits and debit-balance P&L accounts, including contra-revenue, with credits; the balancing income-summary direction depends on net income or loss. Follow the [Posting Reference](../reference/posting.md) for that distinct purpose.
+
+**Predict before revealing:** What remains on March 10? Does removing the unused estimate also pay the supplier?
+
+<details>
+<summary>Reveal the liability and timing distinction</summary>
+
+The selected accrual has a 19.74 residual until March 11, while 10,019.59 is AP after the March 9 invoice. The adjustment removes the unused accrued liability and reduces expense; it does not pay AP. At March 31 the selected accrual is cleared but the supplier payable remains until May 20. Later events cannot replace the January 31 cutoff position.
+
+</details>
+
 ## Check Your Understanding
 
 <details>
@@ -140,9 +165,9 @@ No. Monthly entries recognize or adjust activity for their purpose and period. A
 
 ## Next Steps
 
-You can now explain the company before opening its records. Continue to [Learn and Practice](../learn-and-practice/index.md), where the first exercises turn these process distinctions into a reproducible evidence trace.
+**Continue the company story.** You can now explain the company before opening its records. Continue to [Learn and Practice](../learn-and-practice/index.md) to follow the company story into reproducible evidence.
 
-If you need the files, follow [Downloads](../start-here/downloads.md) and the [Dataset Guide](../start-here/dataset-overview.md) before beginning the source-to-ledger exercise.
+**Investigate this process.** Finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Then follow [Lesson 11: Follow an Estimate into Settlement](../learn-and-practice/follow-an-estimate-into-settlement.md), then the [statement and close case](../analytics/cases/financial-statement-bridge-case.md). The [BPMN and Controls Workshop](../learn-and-practice/bpmn-controls-workshop.md) is an optional extension after a verified trace. Check the selected lesson’s further prerequisites before beginning.
 
 <span id="opening-balance-and-year-end-close"></span>
 
@@ -203,6 +228,8 @@ Which recurring entries explain the month's finance-controlled expenses and esti
 
 ```mermaid
 flowchart LR
+    accTitle: Recurring journal category and ledger accounts
+    accDescr: A recurring category connects to its journal entry, ledger detail, and account.
     RC[Recurring category]
     JE[JournalEntry]
     GL[GLEntry]
@@ -234,6 +261,8 @@ How does finance-controlled activity support manufacturing cost? Follow factory-
 
 ```mermaid
 flowchart LR
+    accTitle: Factory overhead journals and manufacturing cost support
+    accDescr: Factory overhead connects through journal entry and ledger detail to manufacturing costing support.
     FO[Factory Overhead]
     JE[JournalEntry]
     GL[GLEntry]
@@ -266,6 +295,8 @@ How was the finance estimate cleared? Follow the original accrual into the direc
 
 ```mermaid
 flowchart LR
+    accTitle: Accrual settlement and adjustment branches
+    accDescr: An accrual journal connects through a linked supplier invoice to payment, while a separate branch leads to adjustment. Each accounting event connects separately to ledger detail.
     AC[Accrual JournalEntry]
     PIL[Purchase Invoice AccrualJournalEntryID]
     PI[Purchase Invoice]

@@ -15,12 +15,13 @@ If you want to customize <DisplayName /> locally, use the repository workflow de
 
 ## Default Teaching Package
 
-For most courses, start with the published teaching package:
+For most courses, start with the three public formats in release <TeachingRelease />:
 
 - <FileName type="sqlite" />
 - <FileName type="excel" />
 - <FileName type="csv" />
-- <FileName type="support" />
+
+Get these files from [Downloads](../start-here/downloads.md). A <FileName type="support" /> companion can be created by a local instructor run or supplied separately for a course; it is not an asset in this public teaching release. Do not ask students to find a fourth public download.
 
 Then point students to:
 
@@ -153,13 +154,14 @@ The generator writes:
 - `outputs/reports/`
 - `outputs/generation.log`
 
-The main SQLite database and main Excel workbook are the core student-facing dataset files. Share the support workbook when the course uses exception review or validation context. Share the CSV zip when flat-file delivery is useful.
+The main SQLite database and main Excel workbook are the core student-facing dataset files. The support workbook is an optional instructor/local output for exception review or validation context. Supply it separately only when the course needs it. Share the CSV zip when flat-file delivery is useful.
 
 ## How to Share a Customized Package
 
 - Share the SQLite database for SQL work.
 - Share the Excel workbook for pivot and chart-based analysis.
-- Local full runs write the report files to `outputs/reports/`; the GitHub Pages workflow generates the website copy in `static/reports/` during deploy.
+- Local full runs can write report files to `outputs/reports/`. Website report assets are served from `static/reports/`; the current public documentation site is hosted through the Cloudflare `greenfield` Worker and its Git integration.
+- `.github/workflows/deploy-docs.yml` retains a legacy GitHub Pages workflow. Its report-preparation and deployment steps describe that workflow, not the current Cloudflare hosting path. Classroom adoption does not require a hosting change or a new report build.
 - Share the support workbook when classes need anomaly and validation companion material.
 - Share the CSV zip when students or analysts need one CSV per table.
 - Publish the student files through GitHub Releases or your course LMS.

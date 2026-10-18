@@ -32,7 +32,13 @@ The sales coordinator is preparing a response to a design-trade customer. The wa
 
 The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-**Preparation:** 1–6: records, goods sales, settlement, and ledger entries. Revisit [the relevant tutorial](../../learn-and-practice/source-to-ledger.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
+**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [4. Follow a Goods Sale](/docs/learn-and-practice/source-to-ledger); [5. Follow Customer Settlement](/docs/learn-and-practice/follow-customer-settlement); [6. Find the Accounting Entries](/docs/learn-and-practice/find-the-accounting-entries). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+
+**Ready to begin:**
+
+- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
+- Keep the order cohort fixed while changing event cutoffs; distinguish receipt from application and balance each complete voucher.
 
 ## Key Data Sources
 
@@ -73,19 +79,25 @@ Save a separate Case01.xlsx or Case01.sql. Keep a Review sheet or text note for 
 <ToolSteps>
 <TabItem value="excel">
 
+**Named inputs:** `SalesOrderData ← SalesOrder (import here)`; `SalesOrderLineData ← SalesOrderLine (import here)`.
+
+**Produced outputs:** `SelectedOrders: six order headers`; `OrderLines: 22 selected order lines`; `OrderSummary: six-row PivotTable`.
+
 1. Import `T9_SalesOrder` → `SalesOrderData`, `T10_SalesOrderLine` → `SalesOrderLineData`.
 
-2. In Power Query filter SalesOrderData to CustomerID 120 and OrderDate on or after January 1 and before April 1, 2024.
+2. In Power Query keep both imported queries unchanged.
 
-3. Keep the six IDs.
+3. Reference SalesOrderData as SelectedOrders; filter SelectedOrders to CustomerID 120 and OrderDate on or after January 1 and before April 1, 2024.
 
-4. Merge SalesOrderLineData with that filtered query on SalesOrderID using an Inner join; expand OrderDate only.
+4. Retain the six selected rows, including SalesOrderID and OrderDate.
 
-5. Name the result OrderLines and load it.
+5. Reference SalesOrderLineData and merge with SelectedOrders on SalesOrderID using an Inner join; expand OrderDate only.
 
-6. Insert a PivotTable: Rows = SalesOrderID and OrderDate; Values = Count of SalesOrderLineID and Sum of LineTotal.
+6. Name the result OrderLines and load it.
 
-7. Set Count explicitly; the default sum of an identifier is meaningless.
+7. Insert a PivotTable: Rows = SalesOrderID and OrderDate; Values = Count of SalesOrderLineID and Sum of LineTotal.
+
+8. Set Count explicitly; the default sum of an identifier is meaningless.
 
 </TabItem>
 <TabItem value="sql">
@@ -131,29 +143,35 @@ If the count is larger, check the customer and order-date filter before changing
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import Shipment and ShipmentLine.
+**Named inputs:** `OrderLines (Session 1.1)`; `ShipmentData ← Shipment and ShipmentLineData ← ShipmentLine (import here)`; `SalesInvoiceData ← SalesInvoice and SalesInvoiceLineData ← SalesInvoiceLine (import here)`.
 
-2. Merge ShipmentLineData to ShipmentData on ShipmentID; expand ShipmentDate.
+**Produced outputs:** `ShippedByOrderLine and BilledByOrderLine: one row per order line with a dated event`; `Fulfillment: all 22 selected order lines`.
 
-3. Filter ShipmentDate through March 31.
+1. Import Shipment as ShipmentData, ShipmentLine as ShipmentLineData, SalesInvoice as SalesInvoiceData, and SalesInvoiceLine as SalesInvoiceLineData before merging.
 
-4. Group by SalesOrderLineID, Sum QuantityShipped into a column named Shipped, name the query Shipped.
+2. Keep these raw queries unchanged.
 
-5. Separately merge SalesInvoiceLineData to SalesInvoiceData on SalesInvoiceID, expand InvoiceDate, filter through March 31, then group by SalesOrderLineID, Sum Quantity into a column named Billed, name the query Billed.
+3. Reference ShipmentLineData as ShippedByOrderLine and merge to ShipmentData on ShipmentID; expand ShipmentDate.
 
-6. Merge each summary to OrderLines using a Left outer join on SalesOrderLineID.
+4. Filter ShipmentDate through March 31, 2024.
 
-7. Expand the two totals and replace unmatched numeric nulls with 0 after checking that they mean no event.
+5. Group by SalesOrderLineID, Sum QuantityShipped into a column named Shipped.
 
-8. Load as Fulfillment.
+6. Separately reference SalesInvoiceLineData as BilledByOrderLine; merge to SalesInvoiceData on SalesInvoiceID, expand InvoiceDate, filter through March 31, 2024, then group by SalesOrderLineID, Sum Quantity into a column named Billed.
 
-9. Add OrderedLessShipped to Fulfillment and enter:
+7. Reference OrderLines as Fulfillment and merge ShippedByOrderLine and BilledByOrderLine to it using Left outer joins on SalesOrderLineID.
+
+8. Expand the two totals and replace unmatched numeric nulls with 0 after checking that they mean no event.
+
+9. Load as Fulfillment.
+
+10. Add OrderedLessShipped to Fulfillment and enter:
 
     ~~~text title="Excel — Fulfillment[OrderedLessShipped]"
     =ROUND([@Quantity]-[@Shipped],2)
     ~~~
 
-10. Add ShippedLessBilled and enter:
+11. Add ShippedLessBilled and enter:
 
     ~~~text title="Excel — Fulfillment[ShippedLessBilled]"
     =ROUND([@Shipped]-[@Billed],2)
@@ -214,21 +232,27 @@ More than 22 rows means a detail table was joined before summarizing. A tiny flo
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import SalesInvoiceData and Inner merge to the six-order query on SalesOrderID.
+**Named inputs:** `SalesInvoiceData (raw query from Session 1.2)`; `SelectedOrders (Session 1.1)`.
 
-2. Keep SalesInvoiceID, SalesOrderID, InvoiceDate, and GrandTotal.
+**Produced outputs:** `Invoices: 20 selected invoice headers, including later dates`.
 
-3. Sort by InvoiceDate and SalesInvoiceID; load as Invoices.
+1. Reference the raw SalesInvoiceData imported in Session 1.2 as Invoices and Inner merge to SelectedOrders on SalesOrderID.
 
-4. Keep all related invoice dates for now so the second session can reconstruct both cutoffs.
+2. Preserve SalesInvoiceData for other references.
 
-5. On Review, label B4 Visible invoices and enter:
+3. Keep SalesInvoiceID, SalesOrderID, InvoiceDate, and GrandTotal.
+
+4. Sort by InvoiceDate and SalesInvoiceID; load as Invoices.
+
+5. Keep all related invoice dates for now so the second session can reconstruct both cutoffs.
+
+6. On Review, label B4 Visible invoices and enter:
 
     ~~~text title="Excel — Review!B4"
     =SUBTOTAL(103,Invoices[SalesInvoiceID])
     ~~~
 
-6. Label B5 Visible invoice amount and enter:
+7. Label B5 Visible invoice amount and enter:
 
     ~~~text title="Excel — Review!B5"
     =SUBTOTAL(109,Invoices[GrandTotal])
@@ -290,31 +314,39 @@ Receiving money and applying it to an invoice are separate events. Start from th
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import CashReceiptApplicationData and Inner merge with Invoices on SalesInvoiceID; load as Applications.
+**Named inputs:** `Invoices and SelectedOrders (Session 1)`; `CashReceiptApplicationData ← CashReceiptApplication and CashReceiptData ← CashReceipt (import here)`; `CreditMemoData ← CreditMemo (import here)`.
 
-2. Import CashReceiptData as Receipts and add ReceiptDate to Applications:
+**Produced outputs:** `Applications: selected application detail`; `Receipts: unique receipt headers`; `CreditsByOrder and CreditsByInvoice: separate selections`; `Credits: deduplicated union by CreditMemoID`.
+
+1. Import CashReceiptApplication as CashReceiptApplicationData and CashReceipt as CashReceiptData.
+
+2. Reference CashReceiptApplicationData and Inner merge with Invoices on SalesInvoiceID; load as Applications.
+
+3. Reference CashReceiptData and load as Receipts.
+
+4. In Applications add ReceiptDate:
 
     ~~~text title="Excel — Applications[ReceiptDate]"
     =XLOOKUP([@CashReceiptID],Receipts[CashReceiptID],Receipts[ReceiptDate],"No match",0)
     ~~~
 
-3. Format ReceiptDate as a date and investigate any No match result.
+5. Format ReceiptDate as a date and investigate any No match result.
 
-4. Add ReceiptAmount:
+6. Add ReceiptAmount:
 
     ~~~text title="Excel — Applications[ReceiptAmount]"
     =XLOOKUP([@CashReceiptID],Receipts[CashReceiptID],Receipts[Amount],"No match",0)
     ~~~
 
-5. Do not total that repeated receipt amount.
+7. Do not total that repeated receipt amount.
 
-6. Import CreditMemoData.
+8. Import CreditMemo as CreditMemoData.
 
-7. Filter the six SalesOrderIDs and, separately, the 20 OriginalSalesInvoiceIDs; union the selections and remove duplicates by CreditMemoID in Power Query.
+9. Create two references, CreditsByOrder filtered to the six SalesOrderIDs and CreditsByInvoice filtered to the 20 OriginalSalesInvoiceIDs; Append as new, then remove duplicates by CreditMemoID in Power Query.
 
-8. Load as Credits.
+10. Load as Credits.
 
-9. Inspect OriginalSalesInvoiceID before allocating a credit.
+11. Inspect OriginalSalesInvoiceID before allocating a credit.
 
 </TabItem>
 <TabItem value="sql">
@@ -381,6 +413,10 @@ A credit found by order only needs further allocation evidence. Do not force it 
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `Invoices, Applications, and Credits (earlier stages)`; `Review!B2: reporting date`.
+
+**Produced outputs:** `Invoices: cutoff-dependent Applied, Credited, and Remaining columns`; `Two dated values-only settlement snapshots`.
 
 1. Set the table names to Invoices, Applications, and Credits exactly.
 
@@ -481,17 +517,23 @@ Check application dates, not just receipt dates. A final Paid status cannot reco
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import GLEntryData with filters in Power Query before loading: SourceDocumentType/SourceDocumentID pairs SalesInvoice/68, CashReceipt/43, CashReceiptApplication/47, CreditMemo/30.
+**Named inputs:** `GLEntryData ← GLEntry and AccountData ← Account (import here)`; `Earlier settlement and fulfillment checks`.
 
-2. Use four filtered references and Append as new; do not filter all four IDs without their document types.
+**Produced outputs:** `SelectedLedger: 10 rows, four complete vouchers`; `VoucherChecks: debit/credit PivotTable`; `Review: customer response`.
 
-3. Merge AccountData on AccountID.
+1. Import GLEntry as GLEntryData and Account as AccountData.
 
-4. Load the 10 rows as SelectedLedger.
+2. Keep GLEntryData in Power Query and filter references before loading: SourceDocumentType/SourceDocumentID pairs SalesInvoice/68, CashReceipt/43, CashReceiptApplication/47, CreditMemo/30.
 
-5. Insert a PivotTable with VoucherNumber in Rows and sums of Debit and Credit in Values.
+3. Use four filtered references and Append as new; do not filter all four IDs without their document types.
 
-6. Check each complete voucher balances.
+4. Merge AccountData on AccountID.
+
+5. Load the 10 rows as SelectedLedger.
+
+6. Insert a PivotTable with VoucherNumber in Rows and sums of Debit and Credit in Values.
+
+7. Check each complete voucher balances.
 
 </TabItem>
 <TabItem value="sql">

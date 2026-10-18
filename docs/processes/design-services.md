@@ -71,6 +71,8 @@ The record map asks **how work and billing are related without using shipment ev
 
 ```mermaid
 flowchart LR
+    accTitle: Design work approved time and invoice evidence
+    accDescr: A service order line leads to an engagement, staff assignments, approved time, monthly billing support, and an invoice line.
     ORDER[Service order line] --> ENG[ServiceEngagement]
     ENG --> STAFF[ServiceEngagementAssignment]
     STAFF --> TIME[ServiceTimeEntry: approved hours]
@@ -94,6 +96,26 @@ At period end, the controller may ask why approved work and invoiced revenue do 
 
 Approved time can establish supported work without establishing that it has already reached a posted invoice. Non-billable time can represent employee effort without contributing billable hours. These distinctions give you specific explanations to test before describing a billing failure or weak service performance.
 
+## Bridge an Event to an Entry
+
+Reuse [Lesson 7’s engagement 2](../learn-and-practice/follow-design-time-into-billing.md). This is a separate verified example; it is not an extension of the selected goods sale.
+
+| Event and date basis | Supporting evidence | Why the accounts change | Cutoff question |
+|---|---|---|---|
+| Engagement setup and assignment dates | ServiceEngagement and ServiceEngagementAssignment | No posting: staffing a promise does not create customer revenue | Which work is supported, and for which period? |
+| January 2024 work, approved by January 31 | Seven selected ServiceTimeEntry rows | No posting: approved hours and time-cost snapshots support billing and analysis | Is the time approved and within the billed work period? |
+| January 31 invoice | ServiceBillingLine 2 → invoice line 387 → SalesInvoice 241 | Debit AR; credit design-service revenue and applicable sales tax payable | Is the invoice posted by cutoff, and how much remains unsettled? |
+| Receipt date, then application date | CashReceipt and CashReceiptApplication | Receipt: debit cash / credit unapplied money. Application: debit unapplied money / credit AR | Which event has actually occurred by cutoff? |
+
+**Predict before revealing:** Can you call the selected 937.02 time-cost snapshot a payroll posting or subtract it from revenue and report full engagement profit?
+
+<details>
+<summary>Reveal the recognition and cost boundaries</summary>
+
+No. Lesson 7 verifies 32.67 billed hours × 210.00 = 6,860.70 on invoice line 387. The **complete invoice** debits AR 7,306.65 and credits service revenue 6,860.70 plus tax payable 445.95; its three ledger rows balance. The 937.02 is time-cost support including selected non-billable work, rather than a payroll reconciliation or all engagement costs. This release recognizes service revenue at invoicing; use that dataset convention when interpreting the trace.
+
+</details>
+
 ## Check Your Understanding
 
 <details>
@@ -112,7 +134,9 @@ It establishes only the margin defined by the revenue and costs included. State 
 
 ## Next Steps
 
-The customer-facing work depends on resources available inside the company. Continue to [Procure-to-Pay](p2p.md) to follow how the operations planner's merchandise and material needs become supplier commitments, receipts, and payments.
+**Continue the company story.** The customer-facing work depends on resources available inside the company. Continue to [Procure-to-Pay](p2p.md) to follow merchandise and material needs into supplier commitments, receipts, and payments.
+
+**Investigate this process.** Finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Then follow [Lesson 7: Follow Design Time into Billing](../learn-and-practice/follow-design-time-into-billing.md). Check the selected lesson’s further prerequisites before beginning.
 
 ## Optional Reference
 
@@ -165,6 +189,8 @@ The process begins on the customer side. A service line is created on the sales 
 
 ```mermaid
 flowchart LR
+    accTitle: Customer demand and the service engagement
+    accDescr: Customer and sales order connect through a service order line to its engagement.
     C[Customer]
     SO[Sales Order]
     SOL[Service Order Line]
@@ -181,6 +207,8 @@ Once the engagement is active, the company assigns one or more employees to it. 
 
 ```mermaid
 flowchart LR
+    accTitle: Service engagement staff and time evidence
+    accDescr: An engagement leads to assignments and time entries. Employee records support both assignments and time.
     ENG[Service Engagement]
     ASG[Assignments]
     TIME[Service Time Entry]
@@ -199,6 +227,8 @@ Billing does not happen every time an employee works. The dataset bills approved
 
 ```mermaid
 flowchart LR
+    accTitle: Approved service time billing and settlement
+    accDescr: Approved service time supports a service billing line and invoice line, followed by cash application.
     TIME[Approved Service Time]
     BILL[Service Billing Line]
     INV[Sales Invoice Line]

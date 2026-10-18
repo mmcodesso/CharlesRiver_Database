@@ -143,6 +143,12 @@ Both selected items have unit of measure Each. Adding this column should preserv
 
 </details>
 
+## Readiness Check: After Lesson 3
+
+Show a partner or instructor your result **before** opening the next lesson. Explain what one row represents, why the item key is unique in the lookup table, and why the selected order still has two lines totaling 11,397.78. Point to the saved before/after counts. Explain why a first-match lookup would lose evidence if several shipments matched one line.
+
+If the row count or amount changes, inspect the joined table’s key and match count, then rerun the check. If your result matches but you cannot explain its grain, return to [Lesson 2](read-an-order.md) before continuing. Keep the check in the [blank evidence template](pathname:///teaching/evidence-template.md).
+
 ## Next Steps
 
 Next, follow one line into records that describe events rather than master-data descriptions. Continue to [Follow a Goods Sale](source-to-ledger.md).

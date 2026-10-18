@@ -1,11 +1,4 @@
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
+.modal::backdrop {
   background: rgba(12, 25, 20, 0.78);
   backdrop-filter: blur(8px);
 }
@@ -20,7 +13,14 @@
   background: var(--ifm-background-surface-color);
   box-shadow: 0 1.4rem 4rem rgba(0, 0, 0, 0.32);
   overflow: hidden;
+  max-width: calc(100vw - 3rem);
+  max-height: calc(100dvh - 3rem);
+  margin: auto;
+  padding: 0;
+  color: var(--ifm-font-color-base);
 }
+
+.modal:not([open]) { display: none; }
 
 .modalToolbar {
   display: flex;
@@ -79,6 +79,7 @@
 
 .viewport {
   flex: 1;
+  min-height: 0;
   overflow: auto;
   padding: 1rem;
 }
@@ -173,8 +174,9 @@
 }
 
 @media (max-width: 640px) {
-  .backdrop {
-    padding: 0.75rem;
+  .modal {
+    max-width: calc(100vw - 1.5rem);
+    max-height: calc(100dvh - 1.5rem);
   }
 
   .viewport {

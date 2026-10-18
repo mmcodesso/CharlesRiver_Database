@@ -32,7 +32,13 @@ The operations planner is considering an overtime response. Payroll asks whether
 
 The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-**Preparation:** 10: hours and payroll; 12: summaries and conclusions. Revisit [the relevant tutorial](../../learn-and-practice/follow-hours-into-payroll.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
+**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [10. Follow Hours into Payroll](/docs/learn-and-practice/follow-hours-into-payroll); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+
+**Ready to begin:**
+
+- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
+- Preserve approved-time detail; distinguish identified from unassigned centers and employee-period pay from center workload.
 
 ## Key Data Sources
 
@@ -72,19 +78,29 @@ Create Case06.xlsx or Case06.sql. State the grain of each source before joining 
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import WorkCenterData.
+**Named inputs:** `WorkCenterData ← WorkCenter (import here)`; `EmployeeShiftRosterData ← EmployeeShiftRoster and WorkOrderOperationScheduleData ← WorkOrderOperationSchedule (import here)`; `TimeClockEntryData ← TimeClockEntry (import here)`.
 
-2. Create three separate Power Query summaries.
+**Produced outputs:** `ApprovedTime: retained approved TimeClockEntryID detail for January 1–28, 2024 / periods 1 and 2`; `RosterByCenter, OperationLoadByCenter, and WorkedByCenter: separate summaries`; `Coverage: identified-center comparisons; null-center summaries retained separately`.
 
-3. Roster: filter EmployeeShiftRosterData RosterDate January 1–28 and RosterStatus Scheduled or Reassigned; group by WorkCenterID, Sum ScheduledHours as RosteredHours.
+1. Import WorkCenter as WorkCenterData, EmployeeShiftRoster as EmployeeShiftRosterData, WorkOrderOperationSchedule as WorkOrderOperationScheduleData, and TimeClockEntry as TimeClockEntryData.
 
-4. Load: filter WorkOrderOperationScheduleData ScheduleDate to the same dates; group by WorkCenterID, Sum ScheduledHours as OperationHours.
+2. Keep these raw queries unchanged.
 
-5. Worked: filter TimeClockEntryData to the same WorkDate window, PayrollPeriodID 1 or 2, ClockStatus Approved; group by WorkCenterID, summing RegularHours and OvertimeHours.
+3. Reference EmployeeShiftRosterData as RosterByCenter; filter RosterDate January 1–28, 2024 and RosterStatus Scheduled or Reassigned, then group by WorkCenterID, Sum ScheduledHours as RosteredHours.
 
-6. Left merge each summary to WorkCenterData on WorkCenterID and load as Coverage.
+4. Reference WorkOrderOperationScheduleData as OperationLoadByCenter; filter ScheduleDate to the same dates, then group by WorkCenterID, Sum ScheduledHours as OperationHours.
 
-7. Review any null-center rows separately before treating the center list as a complete company population.
+5. Reference TimeClockEntryData as ApprovedTime; filter WorkDate January 1–28, 2024, PayrollPeriodID 1 or 2, and ClockStatus Approved.
+
+6. Keep ApprovedTime at TimeClockEntryID detail, including EmployeeID, PayrollPeriodID, WorkCenterID, RegularHours, and OvertimeHours for Session 2.
+
+7. Reference ApprovedTime as WorkedByCenter and group by WorkCenterID, Sum RegularHours as RegularHours and Sum OvertimeHours as OvertimeHours.
+
+8. Reference WorkCenterData as Coverage and Left merge RosterByCenter, OperationLoadByCenter, and WorkedByCenter on WorkCenterID; load Coverage.
+
+9. Retain each summary’s null-center row separately for review: the master-center merge cannot display an unassigned location.
+
+10. Keep ApprovedTime available in Power Query; do not group or replace this detail query.
 
 </TabItem>
 <TabItem value="sql">
@@ -143,11 +159,15 @@ Do not compute a staffing deficit by subtracting unlike hour measures without a 
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import EmployeeAbsenceData filtered AbsenceDate January 1–28.
+**Named inputs:** `EmployeeAbsenceData ← EmployeeAbsence (import here)`; `EmployeeShiftRosterData (raw query from Session 1.1)`.
 
-2. Merge EmployeeShiftRosterData on EmployeeShiftRosterID to obtain WorkCenterID.
+**Produced outputs:** `AbsenceDetail: absence rows with roster center evidence`; `AbsenceByCenter: including an Unassigned displayed group`.
 
-3. Group by WorkCenterID, count EmployeeAbsenceID and sum HoursAbsent.
+1. Import EmployeeAbsence as EmployeeAbsenceData.
+
+2. Reference it as AbsenceDetail, filter AbsenceDate January 1–28, 2024, and merge the raw EmployeeShiftRosterData on EmployeeShiftRosterID to obtain WorkCenterID.
+
+3. Reference AbsenceDetail as AbsenceByCenter; group by WorkCenterID, count EmployeeAbsenceID and sum HoursAbsent.
 
 4. Keep a blank work center as Unassigned in the displayed summary.
 
@@ -210,21 +230,37 @@ Move from a location view to an employee-period view. One employee’s entire pa
 <ToolSteps>
 <TabItem value="excel">
 
-1. Reference the approved TimeClockEntry query from Session 1.
+**Named inputs:** `ApprovedTime (retained detail from Session 1.1)`; `PayrollRegisterData ← PayrollRegister (import here)`.
 
-2. Group by EmployeeID and PayrollPeriodID, summing RegularHours and OvertimeHours.
+**Produced outputs:** `HoursByEmployeePeriod: all approved hours, with identified WorkCenters count`; `CentersByEmployeePeriod: distinct nonnull center count`; `UnassignedCenterByEmployeePeriod: separate null-center count and hours`; `SelectedPayroll: periods 1 and 2`; `PayBridge: 209 registers; missing hourly support stays null`.
 
-3. For a center-count check, reference its distinct EmployeeID/PayrollPeriodID/WorkCenterID combinations, remove duplicate combinations, then group by employee-period and count rows.
+1. Reference the retained ApprovedTime detail as HoursByEmployeePeriod.
 
-4. Import PayrollRegisterData filtered to periods 1 and 2.
+2. Group by EmployeeID and PayrollPeriodID, Sum RegularHours as RegularHours and Sum OvertimeHours as OvertimeHours.
 
-5. Left merge these summaries on EmployeeID and PayrollPeriodID, selecting the two keys in the same order.
+3. Create a separate reference of ApprovedTime named CentersByEmployeePeriod.
 
-6. Load as PayBridge.
+4. In this identified-center branch only, filter WorkCenterID to exclude null; keep EmployeeID, PayrollPeriodID, and WorkCenterID, remove duplicate combinations, then group by EmployeeID and PayrollPeriodID and Count Rows as WorkCenters.
 
-7. Preserve blank hour values for registers without matching hourly evidence; do not invent hours for salaried staff.
+5. In another reference of ApprovedTime named UnassignedCenterByEmployeePeriod, retain only null WorkCenterID; group by EmployeeID and PayrollPeriodID, Count Rows as UnassignedTimeEntries, Sum RegularHours as UnassignedRegularHours, and Sum OvertimeHours as UnassignedOvertimeHours.
 
-8. Add PayCheck:
+6. Keep this missing-location evidence separate; do not allocate its hours to identified centers.
+
+7. Left merge CentersByEmployeePeriod into HoursByEmployeePeriod on EmployeeID and PayrollPeriodID and expand WorkCenters.
+
+8. Only in this hours summary, replace a missing WorkCenters count with 0: approved time exists but identifies no center.
+
+9. Import PayrollRegister as PayrollRegisterData and preserve the raw query; reference it as SelectedPayroll and filter periods 1 and 2.
+
+10. Reference SelectedPayroll as PayBridge and Left merge HoursByEmployeePeriod on EmployeeID and PayrollPeriodID, selecting the two keys in that order in both queries.
+
+11. Expand the two hour totals and WorkCenters; load as PayBridge.
+
+12. Keep the 209 register rows and preserve null hours and WorkCenters for registers with no ApprovedTime match; do not invent hours for salaried staff.
+
+13. Load UnassignedCenterByEmployeePeriod separately for review and retain ApprovedTime detail for tracing.
+
+14. Add PayCheck:
 
     ~~~text title="Excel — PayBridge[PayCheck]"
     =ROUND([@GrossPay]-[@EmployeeWithholdings]-[@NetPay],2)
@@ -233,7 +269,7 @@ Move from a location view to an employee-period view. One employee’s entire pa
 </TabItem>
 <TabItem value="sql">
 
-hours groups by EmployeeID and PayrollPeriodID before joining payroll. A null hours result is retained for a register without approved hourly support. COUNT(DISTINCT WorkCenterID) records location variety without repeating pay across locations.
+hours groups by EmployeeID and PayrollPeriodID before joining payroll. A null hours result is retained for a register without approved hourly support. COUNT(DISTINCT WorkCenterID) excludes null centers and records identified location variety without repeating pay across locations. It returns zero for an approved-time employee-period with only null centers; the outer payroll join retains null when there is no approved-time employee-period at all. The Excel route retains missing-center evidence in a separate branch.
 
 Run each complete statement separately and retain its result before continuing.
 ```sql title="c06-pay.sql"
@@ -282,7 +318,7 @@ ORDER BY PayrollPeriodID;
 
 **Checkpoint.** 209 registers: 104 in period 1 and 105 in period 2. Period 1 gross pay is 125,541.19 and net pay 104,320.59. Period 2 gross pay is 265,084.43 and net pay 220,069.69. Each header’s gross less withholdings equals net.
 
-The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly.
+The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly. WorkCenters counts identified centers only. A zero means approved time with no identified center; a null after the payroll join means no approved hourly support in this scope. Neither is a fictional location.
 
 <details>
 <summary>If your result differs</summary>
@@ -300,21 +336,27 @@ Do not join payroll headers to raw clock rows. A register repeated ten times wou
 <ToolSteps>
 <TabItem value="excel">
 
+**Named inputs:** `PayBridge (Session 2.1)`; `PayrollRegisterLineData ← PayrollRegisterLine (import here; raw query retained)`.
+
+**Produced outputs:** `EmployeePayLines: register 121 only`; `EmployeePayCalculation: LineType PivotTable`; `PayBridge: RecordedEmployerCost column`.
+
 1. Filter PayBridge to EmployeeID 17, period 2, register 121.
 
-2. Import PayrollRegisterLineData filtered to PayrollRegisterID 121.
+2. Import PayrollRegisterLine as PayrollRegisterLineData and preserve the raw query.
 
-3. Insert a PivotTable with LineType in Rows and sums of Hours and Amount in Values.
+3. Reference it as EmployeePayLines and filter PayrollRegisterID 121; load EmployeePayLines.
 
-4. Compare regular and overtime earnings to GrossPay and tax/benefit deductions to EmployeeWithholdings.
+4. Insert a PivotTable with LineType in Rows and sums of Hours and Amount in Values.
 
-5. Add RecordedEmployerCost to PayBridge:
+5. Compare regular and overtime earnings to GrossPay and tax/benefit deductions to EmployeeWithholdings.
+
+6. Add RecordedEmployerCost to PayBridge:
 
     ~~~text title="Excel — PayBridge[RecordedEmployerCost]"
     =[@GrossPay]+[@EmployerPayrollTax]+[@EmployerBenefits]
     ~~~
 
-6. Keep deductions and employer costs separate.
+7. Keep deductions and employer costs separate.
 
 </TabItem>
 <TabItem value="sql">
@@ -368,11 +410,15 @@ Paying employees leaves obligations to tax agencies and benefit providers. Exami
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import PayrollPaymentData.
+**Named inputs:** `SelectedPayroll (Session 2.1)`; `PayrollPaymentData ← PayrollPayment (import here)`.
 
-2. Merge it to the selected PayrollRegisterData on PayrollRegisterID, expand PayrollPeriodID and NetPay, then group by PayrollPeriodID and PaymentDate with count and sum NetPay.
+**Produced outputs:** `PaymentSchedule: payment-date / period totals`; `UnpaidRegisters: unmatched register evidence`.
 
-3. Separately Left outer merge selected registers to PayrollPaymentData and filter the expanded PayrollPaymentID to null; retain the unmatched register.
+1. Import PayrollPayment as PayrollPaymentData and preserve the raw query.
+
+2. Reference it as PaymentSchedule and merge to SelectedPayroll on PayrollRegisterID, expand PayrollPeriodID and NetPay, then group by PayrollPeriodID and PaymentDate with count and sum NetPay.
+
+3. Separately reference SelectedPayroll as UnpaidRegisters, Left outer merge to PayrollPaymentData, and filter the expanded PayrollPaymentID to null; retain the unmatched register.
 
 4. Do not replace a missing payment with a cleared date from another register.
 
@@ -430,19 +476,25 @@ Compare distinct register IDs as well as money. Zero-pay registers can have paym
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import PayrollRegisterLineData and merge the selected payroll headers to restrict periods 1 and 2.
+**Named inputs:** `PayrollRegisterLineData (raw query retained in Session 2.2)`; `SelectedPayroll (Session 2.1)`; `PayrollLiabilityRemittanceData ← PayrollLiabilityRemittance (import here)`.
+
+**Produced outputs:** `LiabilityTotals: period / LineType amounts`; `Remittances: two-period liability settlement records`; `Review: matched liability-type reconciliations`.
+
+1. Reference the raw PayrollRegisterLineData as LiabilityTotals and merge SelectedPayroll to restrict periods 1 and 2.
 
 2. Filter LineType to Employee Tax Withholding, Benefits Deduction, Employer Payroll Tax, and Employer Benefits.
 
 3. Group by PayrollPeriodID and LineType, summing Amount into a column named Amount; load as LiabilityTotals.
 
-4. Import PayrollLiabilityRemittanceData filtered to the two periods and keep RemittanceDate.
+4. Import PayrollLiabilityRemittance as PayrollLiabilityRemittanceData.
 
-5. On Review enter payroll period 1 in B12.
+5. Reference it as Remittances, filter the two periods, and keep RemittanceDate.
 
-6. Label B13 Employee tax, B14 Employer tax, and B15 Combined benefits.
+6. On Review enter payroll period 1 in B12.
 
-7. Enter the following formula in each labeled cell:
+7. Label B13 Employee tax, B14 Employer tax, and B15 Combined benefits.
+
+8. Enter the following formula in each labeled cell:
 
     ~~~text title="Excel — Review!B13"
     =SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],"Employee Tax Withholding")
@@ -456,9 +508,9 @@ Compare distinct register IDs as well as money. Zero-pay registers can have paym
     =SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],"Benefits Deduction")+SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],"Employer Benefits")
     ~~~
 
-8. Compare each result with the corresponding remittance.
+9. Compare each result with the corresponding remittance.
 
-9. Retain the period 1 results, change B12 to 2, and repeat.
+10. Retain the period 1 results, change B12 to 2, and repeat.
 
 </TabItem>
 <TabItem value="sql">
@@ -509,6 +561,10 @@ Total EmployeeWithholdings includes more than tax. Match liability categories be
 
 <ToolSteps>
 <TabItem value="excel">
+
+**Named inputs:** `Coverage, PayBridge, PaymentSchedule, UnpaidRegisters, and Remittances (earlier stages)`.
+
+**Produced outputs:** `Review: separate operating/payroll follow-ups and chart`.
 
 1. Create Review with separate columns for coverage evidence, employee-period cost, payment exceptions, and liability settlement.
 

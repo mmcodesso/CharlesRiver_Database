@@ -32,7 +32,13 @@ Accounts payable and the controller are reviewing quarter-end obligations. Recei
 
 The management request is an illustrative company scenario. The worked records are actual synthetic records from release **v2027.1**, separate from the fictional furnishing project. Your assigned release may differ. Complete either tool route; your Excel/SQL choice follows you between lessons and cases.
 
-**Preparation:** 8: purchases and GRNI; 11: estimates and settlement. Revisit [the relevant tutorial](../../learn-and-practice/receipt-to-payable.md) and the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) if needed.
+**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [8. Follow a Purchase](/docs/learn-and-practice/receipt-to-payable); [11. Follow an Estimate into Settlement](/docs/learn-and-practice/follow-an-estimate-into-settlement). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+
+**Ready to begin:**
+
+- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
+- Aggregate receipt, invoice, payment, and estimate evidence separately; explain GRNI, AP, and accrued-service obligations at each cutoff.
 
 ## Key Data Sources
 
@@ -71,17 +77,23 @@ Create Case03.xlsx or Case03.sql. Label the goods schedule and accrual schedule 
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import PurchaseOrderData, filter SupplierID 27.
+**Named inputs:** `PurchaseOrderData ← PurchaseOrder (import here)`; `GoodsReceiptData ← GoodsReceipt and GoodsReceiptLineData ← GoodsReceiptLine (import here)`.
 
-2. Import GoodsReceiptData and filter ReceiptDate January 1 through March 31.
+**Produced outputs:** `SupplierOrders: supplier 27 order headers`; `SelectedGoodsReceipts: Q1 2024 receipt headers`; `Receipts: selected receipt-line detail`.
 
-3. Inner merge it to the filtered orders on PurchaseOrderID.
+1. Import PurchaseOrder as PurchaseOrderData, GoodsReceipt as GoodsReceiptData, and GoodsReceiptLine as GoodsReceiptLineData.
 
-4. Merge GoodsReceiptLineData to those receipts on GoodsReceiptID and expand ReceiptDate.
+2. Preserve all three raw queries.
 
-5. Load as Receipts.
+3. Reference PurchaseOrderData as SupplierOrders and filter SupplierID 27.
 
-6. Preserve GoodsReceiptLineID, POLineID, QuantityReceived, and ExtendedStandardCost.
+4. Reference GoodsReceiptData as SelectedGoodsReceipts and filter ReceiptDate January 1 through March 31, 2024; Inner merge to SupplierOrders on PurchaseOrderID.
+
+5. Reference GoodsReceiptLineData, merge to SelectedGoodsReceipts on GoodsReceiptID, and expand ReceiptDate.
+
+6. Load as Receipts.
+
+7. Preserve GoodsReceiptLineID, POLineID, QuantityReceived, and ExtendedStandardCost.
 
 </TabItem>
 <TabItem value="sql">
@@ -125,29 +137,37 @@ Filter by receipt date, not purchase-order date. Receipt line IDs are 175, 176, 
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import PurchaseInvoiceLineData; Inner merge to Receipts on GoodsReceiptLineID.
+**Named inputs:** `Receipts (Session 1.1)`; `PurchaseInvoiceLineData ← PurchaseInvoiceLine and PurchaseInvoiceData ← PurchaseInvoice (import here)`; `DisbursementPaymentData ← DisbursementPayment (import here)`.
 
-2. Merge PurchaseInvoiceData on PurchaseInvoiceID and expand InvoiceDate and GrandTotal.
+**Produced outputs:** `GoodsInvoices: matched goods-invoice lines through June 30, 2024`; `Payments: selected goods-invoice payments; raw payment query preserved`.
 
-3. Filter InvoiceDate through June 30; load as GoodsInvoices.
+1. Import PurchaseInvoiceLine as PurchaseInvoiceLineData, PurchaseInvoice as PurchaseInvoiceData, and DisbursementPayment as DisbursementPaymentData.
 
-4. Import DisbursementPaymentData filtered to the selected PurchaseInvoiceIDs as Payments.
+2. Preserve the raw queries.
 
-5. Add PaidMarch to GoodsInvoices:
+3. Reference PurchaseInvoiceLineData as GoodsInvoices; Inner merge to Receipts on GoodsReceiptLineID.
+
+4. Merge PurchaseInvoiceData on PurchaseInvoiceID and expand InvoiceDate and GrandTotal.
+
+5. Filter InvoiceDate through June 30, 2024; load as GoodsInvoices.
+
+6. Reference DisbursementPaymentData, filter to the selected PurchaseInvoiceIDs, and load as Payments.
+
+7. Add PaidMarch to GoodsInvoices:
 
     ~~~text title="Excel — GoodsInvoices[PaidMarch]"
     =SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],[@PurchaseInvoiceID],Payments[PaymentDate],"<="&DATE(2024,3,31))
     ~~~
 
-6. Add PaidJune:
+8. Add PaidJune:
 
     ~~~text title="Excel — GoodsInvoices[PaidJune]"
     =SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],[@PurchaseInvoiceID],Payments[PaymentDate],"<="&DATE(2024,6,30))
     ~~~
 
-7. Keep LineTotal beside GrandTotal.
+9. Keep LineTotal beside GrandTotal.
 
-8. This worked selection has one selected line per invoice; verify that before summing headers.
+10. This worked selection has one selected line per invoice; verify that before summing headers.
 
 </TabItem>
 <TabItem value="sql">
@@ -202,11 +222,15 @@ An eighth match dated July 14 lies beyond this follow-up window. Preserve it as 
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import AccountData.
+**Named inputs:** `AccountData ← Account and GLEntryData ← GLEntry (import here)`; `Payments (Session 1.2)`.
 
-2. In Power Query create three filtered GLEntry references: GoodsReceipt IDs 174,175,253,396,340; PurchaseInvoice IDs 143,278,1499,179,422,614,947; and DisbursementPayment IDs obtained from Payments.
+**Produced outputs:** `GoodsLiability: selected 2010/2020 ledger detail`; `Obligations: four account/cutoff rows`.
 
-3. Append the references, merge Account on AccountID, then retain AccountNumber 2010 or 2020.
+1. Import Account as AccountData and GLEntry as GLEntryData; retain the raw ledger in Power Query.
+
+2. Create three filtered GLEntryData references, keeping SourceDocumentType with SourceDocumentID: GoodsReceipt IDs 174,175,253,396,340; PurchaseInvoice IDs 143,278,1499,179,422,614,947; and DisbursementPayment IDs obtained from Payments.
+
+3. Append the references, merge AccountData on AccountID, then retain AccountNumber 2010 or 2020.
 
 4. In Power Query choose Add Column → Custom Column, name it LiabilityChange, and paste the expression below without a leading equals sign:
 
@@ -287,21 +311,27 @@ The controller’s three repairs-and-maintenance estimates follow a different pa
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import JournalEntryData filtered to IDs 9,26,43 as Estimates.
+**Named inputs:** `JournalEntryData ← JournalEntry (import here)`; `PurchaseInvoiceLineData and PurchaseInvoiceData (raw queries from Session 1.2)`.
 
-2. Import PurchaseInvoiceLineData filtered to AccrualJournalEntryID 9,26,43; merge to PurchaseInvoiceData on PurchaseInvoiceID.
+**Produced outputs:** `Estimates: three journal headers`; `AccrualInvoices: linked invoice-line detail`; `EstimateReview: estimate/invoice comparison`.
 
-3. Load as AccrualInvoices.
+1. Import JournalEntry as JournalEntryData and preserve the raw query.
 
-4. Merge Estimates to those lines on JournalEntryID = AccrualJournalEntryID and load as EstimateReview.
+2. Reference JournalEntryData, filter IDs 9,26,43, and load as Estimates.
 
-5. Add EstimateLessInvoice:
+3. Reference the raw PurchaseInvoiceLineData from Session 1.2 as AccrualInvoices, filter AccrualJournalEntryID 9,26,43, and merge to the raw PurchaseInvoiceData on PurchaseInvoiceID.
+
+4. Load as AccrualInvoices.
+
+5. Reference Estimates as EstimateReview, merge to AccrualInvoices on JournalEntryID = AccrualJournalEntryID, and load as EstimateReview.
+
+6. Add EstimateLessInvoice:
 
     ~~~text title="Excel — EstimateReview[EstimateLessInvoice]"
     =ROUND([@TotalAmount]-[@LineTotal],2)
     ~~~
 
-6. Keep InvoiceDate visible; do not use the final invoice amount to erase the earlier estimate.
+7. Keep InvoiceDate visible; do not use the final invoice amount to erase the earlier estimate.
 
 </TabItem>
 <TabItem value="sql">
@@ -352,11 +382,15 @@ Use AccrualJournalEntryID, not a description search, to identify the invoice lin
 <ToolSteps>
 <TabItem value="excel">
 
-1. Import JournalEntryData filtered to JournalEntryID 9,26,43 or ReversesJournalEntryID 9,26,43.
+**Named inputs:** `JournalEntryData (raw query from Session 2.1)`; `GLEntryData and AccountData (raw queries from Session 1.3)`.
+
+**Produced outputs:** `Adjustments: selected estimate/reversal headers`; `AccrualLedger: complete selected journal/invoice vouchers`; `VoucherChecks: debit/credit PivotTable; two accrued-liability totals`.
+
+1. Reference the raw JournalEntryData as Adjustments; filter JournalEntryID 9,26,43 or ReversesJournalEntryID 9,26,43.
 
 2. Keep distinct IDs; load as Adjustments.
 
-3. Import GLEntryData with document pairs JournalEntry/9,26,43,698 and PurchaseInvoice/39851,39861,39872.
+3. Create filtered references of the raw GLEntryData and Append as new using document pairs JournalEntry/9,26,43,698 and PurchaseInvoice/39851,39861,39872.
 
 4. Merge AccountData, retain all account lines, and load as AccrualLedger.
 
@@ -429,7 +463,11 @@ Keep all voucher lines for a balance check. Use only account 2040 when calculati
 <ToolSteps>
 <TabItem value="excel">
 
-1. Extend Payments to goods invoice IDs 143, 278, 1499, 179, 422, 614, 947 and accrual invoice IDs 39851, 39861, 39872, filter PaymentDate through June 30, and sort by PurchaseInvoiceID and PaymentDate.
+**Named inputs:** `DisbursementPaymentData (raw query from Session 1.2)`; `Payments, AccrualInvoices, and Obligations (earlier stages)`.
+
+**Produced outputs:** `Payments: expanded goods/accrual selection through June 30, 2024`; `Review: separate goods and accrual settlement schedules`.
+
+1. Edit the Payments reference selection on the raw DisbursementPaymentData to include goods invoice IDs 143, 278, 1499, 179, 422, 614, 947 and accrual invoice IDs 39851, 39861, 39872, filter PaymentDate through June 30, and sort by PurchaseInvoiceID and PaymentDate.
 
 2. Keep goods and accrual IDs in separate categories on Review.
 

@@ -1,0 +1,578 @@
+{
+  "monthly-income-statement": {
+    "grain": "One fiscal month and income-statement line.",
+    "periodBasis": "Posted fiscal-month activity; excludes year-end closing journals.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "monthly-balance-sheet": {
+    "grain": "One fiscal month and balance-sheet line.",
+    "periodBasis": "Cumulative ending balances by fiscal month; interim equity includes current-year earnings.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "monthly-indirect-cash-flow": {
+    "grain": "One fiscal month and cash-flow statement line.",
+    "periodBasis": "Fiscal-month movement; opening journals establish beginning cash rather than operating cash flow.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "pro-forma-monthly-income-statement": {
+    "grain": "One budget fiscal month and income-statement line.",
+    "periodBasis": "BudgetLine fiscal year and month; planned activity, not posted results.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "pro-forma-monthly-balance-sheet": {
+    "grain": "One budget fiscal month and balance-sheet line.",
+    "periodBasis": "Planned month-end balances with derived current-year earnings.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "pro-forma-monthly-indirect-cash-flow": {
+    "grain": "One budget fiscal month and cash-flow statement line.",
+    "periodBasis": "Budget-month movement; the first period starts from opening-journal balances.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "budget-vs-actual-statement-bridge-monthly": {
+    "grain": "One fiscal month, statement, and bridged statement line.",
+    "periodBasis": "Budget horizon against posted fiscal months; future budget-only months show zero actuals.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "monthly-revenue-and-gross-margin": {
+    "grain": "One fiscal year and fiscal period.",
+    "periodBasis": "Posted SalesInvoice and Shipment activity grouped by ledger fiscal month.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/find-the-accounting-entries",
+      "label": "Lesson 6: Find the Accounting Entries"
+    }
+  },
+  "design-service-revenue-and-billed-hours": {
+    "grain": "One invoice month and customer grouping (name, region, segment).",
+    "periodBasis": "Invoice-date month; billed hours and invoice-line service revenue are aggregated before comparison.",
+    "process": {
+      "to": "/docs/processes/design-services",
+      "label": "Design Services"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-design-time-into-billing",
+      "label": "Lesson 7: Follow Design Time into Billing"
+    }
+  },
+  "ar-aging": {
+    "grain": "One open sales invoice.",
+    "periodBasis": "Latest invoice, application, or credit-memo date in the file; not today's date.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-customer-settlement",
+      "label": "Lesson 5: Follow Customer Settlement"
+    }
+  },
+  "ap-aging": {
+    "grain": "One open supplier invoice.",
+    "periodBasis": "Latest supplier-invoice or disbursement date in the file; not today's date.",
+    "process": {
+      "to": "/docs/processes/p2p",
+      "label": "Procure-to-Pay"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/receipt-to-payable",
+      "label": "Lesson 8: Follow a Purchase"
+    }
+  },
+  "monthly-ar-aging-detail": {
+    "grain": "One open sales invoice at each month-end.",
+    "periodBasis": "Calendar month-end; includes invoices, applications, and credits dated on or before the cutoff.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-customer-settlement",
+      "label": "Lesson 5: Follow Customer Settlement"
+    }
+  },
+  "monthly-ar-aging-summary": {
+    "grain": "One month-end and customer grouping (name, region, segment).",
+    "periodBasis": "Calendar month-end open receivables, with settlement and credits limited to that cutoff.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-customer-settlement",
+      "label": "Lesson 5: Follow Customer Settlement"
+    }
+  },
+  "monthly-ap-aging-detail": {
+    "grain": "One open supplier invoice at each month-end.",
+    "periodBasis": "Calendar month-end; invoices and payments are limited to that cutoff.",
+    "process": {
+      "to": "/docs/processes/p2p",
+      "label": "Procure-to-Pay"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/receipt-to-payable",
+      "label": "Lesson 8: Follow a Purchase"
+    }
+  },
+  "monthly-ap-aging-summary": {
+    "grain": "One month-end and supplier grouping (name, category, risk rating).",
+    "periodBasis": "Calendar month-end open payables, with payments limited to that cutoff.",
+    "process": {
+      "to": "/docs/processes/p2p",
+      "label": "Procure-to-Pay"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/receipt-to-payable",
+      "label": "Lesson 8: Follow a Purchase"
+    }
+  },
+  "working-capital-bridge-by-month": {
+    "grain": "One fiscal year and fiscal period.",
+    "periodBasis": "Running ledger ending balances by fiscal month, rather than monthly expense or cash flow.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "budget-vs-actual-working-capital-and-cash-bridge": {
+    "grain": "One fiscal month and working-capital or cash metric.",
+    "periodBasis": "Budgeted and actual month-end balances; future budget-only months show zero actuals.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "sales-commission-payable-rollforward": {
+    "grain": "One fiscal year and fiscal period.",
+    "periodBasis": "Posted accruals, clawbacks, and payments by fiscal month with a running payable balance.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/find-the-accounting-entries",
+      "label": "Lesson 6: Find the Accounting Entries"
+    }
+  },
+  "customer-credit-and-refunds": {
+    "grain": "One credit memo that creates customer credit.",
+    "periodBasis": "Whole-file cash applications and refunds; the credit-memo date labels the row, not an as-of cutoff.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-customer-settlement",
+      "label": "Lesson 5: Follow Customer Settlement"
+    }
+  },
+  "customer-deposits-and-unapplied-cash-aging": {
+    "grain": "One cash receipt, including fully applied receipts.",
+    "periodBasis": "Age uses the latest receipt date; application totals use the whole file, not a historical cutoff.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-customer-settlement",
+      "label": "Lesson 5: Follow Customer Settlement"
+    }
+  },
+  "cash-conversion-timing-review": {
+    "grain": "One source month and timing metric family.",
+    "periodBasis": "Invoice or goods-receipt month; elapsed days end at the first linked settlement in the file.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-customer-settlement",
+      "label": "Lesson 5: Follow Customer Settlement"
+    }
+  },
+  "price-realization-vs-list-by-customer-and-portfolio": {
+    "grain": "One invoice month, region, segment, customer, collection, and style family.",
+    "periodBasis": "Invoice-date month; billed price is compared with line-level base list price.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/source-to-ledger",
+      "label": "Lesson 4: Follow a Goods Sale"
+    }
+  },
+  "payroll-expense-mix-by-cost-center-and-pay-class": {
+    "grain": "One pay month, cost center, and pay class.",
+    "periodBasis": "PayrollPeriod PayDate month; payroll-subledger totals, not ledger posting month.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "payroll-and-people-cost-mix-by-cost-center-job-family-level": {
+    "grain": "One cost center, job family, job level, and pay class.",
+    "periodBasis": "Whole-file payroll totals alongside end-state Employee attributes and headcount; no monthly filter.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "gross-to-net-payroll-review": {
+    "grain": "One employee payroll register.",
+    "periodBasis": "Each register's payroll period and scheduled PayDate; actual payment is a separate event.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "hourly-payroll-hours-to-paid-earnings-bridge": {
+    "grain": "One hourly employee payroll register.",
+    "periodBasis": "Payroll-period approved hours and earnings, with scheduled PayDate and first actual payment date.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "payroll-cash-payments-and-remittances": {
+    "grain": "One fiscal year and fiscal period.",
+    "periodBasis": "Actual employee-payment and liability-remittance date months, aggregated separately.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "payroll-liability-rollforward": {
+    "grain": "One fiscal period and payroll-liability account.",
+    "periodBasis": "Posted fiscal-month movement with a running credit-minus-debit liability balance.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "budget-vs-actual-by-cost-center": {
+    "grain": "One fiscal year, month, cost center, and budgeted operating-expense account.",
+    "periodBasis": "Budget month against posted expense month; actuals exclude year-end closing entries.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "sales-commission-expense-by-rep-segment": {
+    "grain": "One accrual month, sales rep, revenue type, and customer segment.",
+    "periodBasis": "Accrual-date month with all linked clawbacks attributed to the original accrual; not clawback-month activity.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/find-the-accounting-entries",
+      "label": "Lesson 6: Find the Accounting Entries"
+    }
+  },
+  "budget-vs-actual-revenue-price-volume-cost-bridge": {
+    "grain": "One fiscal month, collection, and style family.",
+    "periodBasis": "Budget month against invoice-date month; actual cost uses current item standard cost for comparability.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "sales-and-margin-by-collection-and-style": {
+    "grain": "One item group, collection, style family, material, and lifecycle status.",
+    "periodBasis": "Whole-file billed sales less credited returns and their standard costs; no monthly cutoff.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "monthly-work-center-utilization": {
+    "grain": "One calendar month and work center.",
+    "periodBasis": "Calendar-date month; operations aggregate to center/day before joining daily available capacity.",
+    "process": {
+      "to": "/docs/processes/manufacturing",
+      "label": "Manufacturing"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/manufacturing-cost-flow",
+      "label": "Lesson 9: Follow Manufacturing Costs"
+    }
+  },
+  "headcount-by-cost-center-and-job-family": {
+    "grain": "One cost center, job family, job level, and employment status.",
+    "periodBasis": "End-state Employee attributes, not historical month-end headcount. Tenure uses termination date or the query's fixed 2030-12-31 fallback.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "customer-sales-mix-by-region-and-item-group": {
+    "grain": "One invoice month, region, segment, item group, and item.",
+    "periodBasis": "Invoice-date month; billed sales timing rather than shipment timing.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/source-to-ledger",
+      "label": "Lesson 4: Follow a Goods Sale"
+    }
+  },
+  "supplier-purchasing-activity-by-category": {
+    "grain": "One order month, supplier grouping, and item group.",
+    "periodBasis": "Purchase-order date month; commitments, not receipt or invoice recognition.",
+    "process": {
+      "to": "/docs/processes/p2p",
+      "label": "Procure-to-Pay"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/receipt-to-payable",
+      "label": "Lesson 8: Follow a Purchase"
+    }
+  },
+  "supplier-lead-time-and-receipt-reliability": {
+    "grain": "One order month and supplier grouping.",
+    "periodBasis": "Purchase-order date month; first and latest observed receipt dates use the whole file. Latest receipt need not mean fully received.",
+    "process": {
+      "to": "/docs/processes/p2p",
+      "label": "Procure-to-Pay"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/receipt-to-payable",
+      "label": "Lesson 8: Follow a Purchase"
+    }
+  },
+  "inventory-coverage-and-projected-stockout-risk": {
+    "grain": "One item and warehouse at the latest planning week.",
+    "periodBasis": "Latest supply-plan bucket; average weekly forecast spans 21 days before through 35 days after that bucket.",
+    "process": {
+      "to": "/docs/processes/manufacturing",
+      "label": "Manufacturing"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/manufacturing-cost-flow",
+      "label": "Lesson 9: Follow Manufacturing Costs"
+    }
+  },
+  "rough-cut-capacity-load-vs-available-hours": {
+    "grain": "One work center and weekly planning bucket.",
+    "periodBasis": "Bucket start and end dates; sums planned load and uses one available-hours value per center/week.",
+    "process": {
+      "to": "/docs/processes/manufacturing",
+      "label": "Manufacturing"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/manufacturing-cost-flow",
+      "label": "Lesson 9: Follow Manufacturing Costs"
+    }
+  },
+  "forecast-error-and-bias-by-collection-and-style-family": {
+    "grain": "One collection and style family.",
+    "periodBasis": "Whole-file forecast quantities compared with whole-file order quantities; no aligned weekly or monthly cutoff.",
+    "process": {
+      "to": "/docs/processes/manufacturing",
+      "label": "Manufacturing"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/manufacturing-cost-flow",
+      "label": "Lesson 9: Follow Manufacturing Costs"
+    }
+  },
+  "labor-and-headcount-by-work-location-job-family-cost-center": {
+    "grain": "One work location, cost center, and job family.",
+    "periodBasis": "Whole-file payroll, approved time, and labor totals alongside end-state Employee attributes; not a monthly trend.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "absence-rate-by-work-location-job-family-month": {
+    "grain": "One month, work location, and job family present in rostered hours.",
+    "periodBasis": "RosterDate and AbsenceDate calendar months; absence hours are compared with scheduled, reassigned, or absent roster hours.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "overtime-approval-coverage-and-concentration": {
+    "grain": "One work-date month and work center, including a missing-center group.",
+    "periodBasis": "TimeClockEntry WorkDate month with positive total overtime; linked approval coverage is not proof of authorization outside the file.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "punch-to-pay-bridge-for-hourly-workers": {
+    "grain": "One hourly employee and payroll period.",
+    "periodBasis": "Payroll-period start and end dates; independently aggregated punches, approved time, labor, and pay.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "approval-and-sod-review": {
+    "grain": "One flagged document and review condition.",
+    "periodBasis": "Whole-file screening using each document's request, approval, or posting date; no as-of cutoff.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/bpmn-controls-workshop",
+      "label": "BPMN Process and Internal Control Workshop (extension after a verified trace)"
+    }
+  },
+  "potential-anomaly-review": {
+    "grain": "One flagged document and potential-issue type.",
+    "periodBasis": "Whole-file heuristic screening; event date depends on the document type, without a common cutoff.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/bpmn-controls-workshop",
+      "label": "BPMN Process and Internal Control Workshop (extension after a verified trace)"
+    }
+  },
+  "payroll-control-review": {
+    "grain": "One payroll register and potential-control issue.",
+    "periodBasis": "Whole-file register review; EventDate follows the relevant approval date, scheduled pay date, or first payment date.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  },
+  "paid-without-clock-and-clock-without-pay-review": {
+    "grain": "One unmatched hourly pay line or approved clock entry.",
+    "periodBasis": "Whole-file support comparison; EventDate is the scheduled pay date for pay rows or work date for clock rows.",
+    "process": {
+      "to": "/docs/processes/payroll",
+      "label": "Payroll"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/follow-hours-into-payroll",
+      "label": "Lesson 10: Follow Hours into Payroll"
+    }
+  }
+}

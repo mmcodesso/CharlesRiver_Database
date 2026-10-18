@@ -77,6 +77,26 @@ A variance is a result to explain. It does not prove waste, misconduct, or an ap
 
 This is also where the controller's company-wide view matters. Payroll support, factory overhead, and equipment depreciation may contribute to manufacturing accounting without being another physical production step. Their detailed treatments remain in the reference below.
 
+## Bridge an Event to an Entry
+
+**Predict first:** for Lesson 9's work order **1**, which event makes finished goods available, and which event clears the remaining material difference? Explain why releasing the order alone does not move inventory value.
+
+<details>
+<summary>Compare the events with their accounting evidence</summary>
+
+These actual synthetic records belong to **v2027.1**, separately from the illustrative furnishing project.
+
+| Event and date | Evidence | Debit and credit effect | Remaining question |
+|---|---|---|---|
+| Release, January 5, 2024 | `WorkOrderID = 1` | No direct ledger entry from the work-order record | Have components actually been issued? |
+| Material issue, January 17 | `MaterialIssueID = 1`, two lines | Debit `1046` WIP and credit `1045` materials, **754.29** each | How much issued material has standard-cost completion relieved? |
+| Completion, January 25–26 | `ProductionCompletionID = 1` and `2` | Debit `1040` finished goods **1,019.85**; credit `1046` WIP **729.36** and `1090` manufacturing clearing **290.49** | At January 31 the goods are completed; **24.93** selected WIP remains until close |
+| Close, February 1 | `WorkOrderCloseID = 1` | Debit `5080` manufacturing variance **743.16**; credit `1046` **24.93** and `1090` **718.23** | What supports the variance, and which conversion support is pooled rather than traceable to this order? |
+
+The issue, both completions, and close are complete event-voucher populations; the completion row combines the two completion vouchers. Follow the [existing Lesson 9 evidence](../learn-and-practice/manufacturing-cost-flow.md), then its [optional reconciliation](../learn-and-practice/manufacturing-cost-flow.md#optional-account-reconciliation), to reproduce the amounts. Manufacturing clearing is not a work-order-specific actual-cost account: the selected credits alone do not establish its company-wide balance or one order's actual overhead.
+
+</details>
+
 <span id="participants-and-responsibilities"></span>
 
 <span id="bpmn-business-process"></span>
@@ -103,6 +123,8 @@ This map asks **which records show that materials were used, goods were complete
 
 ```mermaid
 flowchart LR
+    accTitle: Manufacturing records around one work order
+    accDescr: Planning supports a work order with separate material issue, operation, completion, and close branches. Labor entries support operations.
     PLAN[SupplyPlanRecommendation] --> WO[WorkOrder]
     WO --> ISSUE[MaterialIssue and lines]
     WO --> OPS[WorkOrderOperation]
@@ -147,9 +169,9 @@ No. Actual labor support helps explain production and payroll-supported costing,
 
 ## Next Steps
 
-The production story depends on people's work. Continue to [Payroll](payroll.md) to follow that work from attendance and approval into employee pay and later liability settlement.
+**Continue the company story:** the production story depends on people's work. Continue to [Payroll](payroll.md) to follow that work from attendance and approval into employee pay and later liability settlement.
 
-For an initial data investigation, the [manufacturing cost-flow exercise](../learn-and-practice/manufacturing-cost-flow.md) follows one work order through its accounting events.
+**Investigate this process:** complete [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus the [Excel](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md), before the [manufacturing cost-flow exercise](../learn-and-practice/manufacturing-cost-flow.md). It follows one work order through its accounting events; the optional account reconciliation then extends that same example.
 
 ## Optional Reference
 
@@ -203,6 +225,8 @@ Why was manufacture recommended? Follow weekly planning into component requireme
 
 ```mermaid
 flowchart LR
+    accTitle: Weekly planning and manufacturing requirements
+    accDescr: Demand forecasts and inventory policies support supply recommendations, which feed material requirements and rough-cut capacity planning.
     DF[Demand Forecast]
     IP[Inventory Policy]
     SPR[Supply Plan Recommendation]
@@ -243,6 +267,8 @@ What recipe and production steps define the item? Follow its bill of material in
 
 ```mermaid
 flowchart LR
+    accTitle: Manufacturing recipe and routing records
+    accDescr: An item links to its bill of material and routing. Routing operations identify work centers, whose calendars provide daily capacity.
     ITEM[Item]
     BOM[Bill of Material]
     RT[Routing]
@@ -277,6 +303,8 @@ How was the recommendation put into production? Follow the released work order i
 
 ```mermaid
 flowchart LR
+    accTitle: Work-order release and daily operation schedules
+    accDescr: A supply recommendation supports a work order and its operations. Daily schedules match work-center calendar records on both center and date.
     SPR[Supply Plan Recommendation]
     WO[Work Order]
     WOO[Work Order Operation]
@@ -302,7 +330,39 @@ flowchart LR
 - `WorkOrder.SupplyPlanRecommendationID -> SupplyPlanRecommendation.SupplyPlanRecommendationID`
 - `WorkOrderOperation.WorkOrderID -> WorkOrder.WorkOrderID`
 - `WorkOrderOperationSchedule.WorkOrderOperationID -> WorkOrderOperation.WorkOrderOperationID`
-- `WorkOrderOperationSchedule.WorkCenterID -> WorkCenterCalendar.WorkCenterID`
+- Match `WorkOrderOperationSchedule.WorkCenterID = WorkCenterCalendar.WorkCenterID` **and** `WorkOrderOperationSchedule.ScheduleDate = WorkCenterCalendar.CalendarDate` together.
+
+Work center alone is not a daily key. In **v2027.1**, schedule **5** is center **4** on **January 19, 2024**, with **0.42 scheduled hours**. A center-only calendar join produces **1,180 matches**; adding the date produces **one**:
+
+```sql
+SELECT s.WorkOrderOperationScheduleID, s.WorkCenterID, s.ScheduleDate,
+       s.ScheduledHours, c.AvailableHours
+FROM WorkOrderOperationSchedule AS s
+JOIN WorkCenterCalendar AS c
+  ON c.WorkCenterID = s.WorkCenterID
+ AND c.CalendarDate = s.ScheduleDate
+WHERE s.WorkOrderOperationScheduleID = 5;
+```
+
+Even the correct two-column join repeats capacity if several operations share a center/day. **Aggregate scheduled hours independently to center/day before comparing with the one daily calendar row.** The existing [daily load query](../analytics/analysis-tracks.md#query-managerial-19-daily-load-vs-capacity) uses this pattern:
+
+```sql
+WITH scheduled_load AS (
+    SELECT WorkCenterID, ScheduleDate, COUNT(*) AS ScheduleRows,
+           ROUND(SUM(ScheduledHours), 2) AS ScheduledHours
+    FROM WorkOrderOperationSchedule
+    GROUP BY WorkCenterID, ScheduleDate
+)
+SELECT c.WorkCenterID, c.CalendarDate, s.ScheduleRows,
+       s.ScheduledHours, c.AvailableHours
+FROM WorkCenterCalendar AS c
+JOIN scheduled_load AS s
+  ON s.WorkCenterID = c.WorkCenterID
+ AND s.ScheduleDate = c.CalendarDate
+WHERE c.WorkCenterID = 1 AND c.CalendarDate = '2024-01-22';
+```
+
+For this center/day, **four schedule rows** total **6.45 hours** against **101.76 available hours**. Summing calendar capacity after joining all four operation rows would incorrectly report **407.04**. For a month, sum the resulting daily rows once each, retaining dates without scheduled work when measuring the full month's available capacity.
 
 **Analytical plan**
 
@@ -316,6 +376,8 @@ How did purchased components support production? Inspect the purchasing and rece
 
 ```mermaid
 flowchart LR
+    accTitle: Purchased component support and subsequent material issue
+    accDescr: Purchasing and receiving support component availability. A separate work-order material issue records components moving into production.
     SPR[Supply Plan Recommendation]
     PR[Purchase Requisition]
     PO[Purchase Order]
@@ -350,6 +412,8 @@ Which approved work supports the operation's labor explanation? Follow `TimeCloc
 
 ```mermaid
 flowchart LR
+    accTitle: Operational labor evidence and payroll cost support
+    accDescr: Shift rosters and time-clock entries support labor records linked to work-order operations. Payroll and journals supply separate accounting support.
     ESR[Employee Shift Roster]
     TCE[Time Clock Entry]
     LTE[Labor Time Entry]
@@ -385,14 +449,21 @@ When were goods available, and when was their order closed? Compare `ProductionC
 
 ```mermaid
 flowchart LR
+    accTitle: Separate completion and close branches of a work order
+    accDescr: A work order links separately to material issues, labor, production completion lines, and accounting close. Completion makes finished goods available before close.
+    WO[Work Order]
     MI[Material Issue]
     LTE[Labor Time Entry]
     PC[Production Completion]
+    PCL[Production Completion Line]
     WOC[WorkOrderClose]
     FG[Finished goods available to O2C]
 
-    MI --> PC  --> WOC --> FG
-    LTE --> WOC
+    WO --> MI
+    WO --> LTE
+    WO --> PC --> PCL
+    PC --> FG
+    WO --> WOC
 ```
 
 **Tables involved**
@@ -409,8 +480,37 @@ flowchart LR
 **Analytical plan**
 
 - Objective: Separate physical completion from accounting close and finished-goods availability.
-- Evidence path: WorkOrder -> ProductionCompletion -> ProductionCompletionLine -> WorkOrderClose.
+- Evidence paths: WorkOrder -> ProductionCompletion -> ProductionCompletionLine, and separately WorkOrder -> WorkOrderClose. `WorkOrderClose.WorkOrderID` connects close to the order; there is no `ProductionCompletionLineID` foreign key to close.
 - Comparison: Compare completion date, close date, quantity completed, and variance amount by month.
+
+Aggregate each branch before joining at `WorkOrderID`. Otherwise, two completion lines can repeat the same close amount. This worked comparison retains the two different event dates:
+
+```sql
+WITH completion_totals AS (
+    SELECT p.WorkOrderID, COUNT(*) AS CompletionLines,
+           MAX(p.CompletionDate) AS LastCompletionDate,
+           ROUND(SUM(l.QuantityCompleted), 2) AS CompletedQuantity,
+           ROUND(SUM(l.ExtendedStandardTotalCost), 2) AS StandardCompletedCost
+    FROM ProductionCompletion AS p
+    JOIN ProductionCompletionLine AS l
+      ON l.ProductionCompletionID = p.ProductionCompletionID
+    GROUP BY p.WorkOrderID
+), close_totals AS (
+    SELECT WorkOrderID, COUNT(*) AS CloseRows, MAX(CloseDate) AS LastCloseDate,
+           ROUND(SUM(TotalVarianceAmount), 2) AS TotalVariance
+    FROM WorkOrderClose
+    GROUP BY WorkOrderID
+)
+SELECT w.WorkOrderID, p.CompletionLines, p.LastCompletionDate,
+       p.CompletedQuantity, p.StandardCompletedCost,
+       c.CloseRows, c.LastCloseDate, c.TotalVariance
+FROM WorkOrder AS w
+LEFT JOIN completion_totals AS p ON p.WorkOrderID = w.WorkOrderID
+LEFT JOIN close_totals AS c ON c.WorkOrderID = w.WorkOrderID
+WHERE w.WorkOrderID = 1;
+```
+
+Work order **1** has **two completion lines**, last completed **January 26, 2024**, totaling **7.03 units** and **1,019.85** standard cost. Its **one close** is dated **February 1**, with **743.16** total variance. A missing close stays null in this comparison; it is not a zero recorded variance.
 
 </details>
 

@@ -44,7 +44,7 @@
           {
             "title": "Define the order population",
             "question": "Predict the number of rows when six orders have several lines.",
-            "excel": "Import `T9_SalesOrder` → `SalesOrderData`, `T10_SalesOrderLine` → `SalesOrderLineData`. In Power Query filter SalesOrderData to CustomerID 120 and OrderDate on or after January 1 and before April 1, 2024. Keep the six IDs. Merge SalesOrderLineData with that filtered query on SalesOrderID using an Inner join; expand OrderDate only. Name the result OrderLines and load it. Insert a PivotTable: Rows = SalesOrderID and OrderDate; Values = Count of SalesOrderLineID and Sum of LineTotal. Set Count explicitly; the default sum of an identifier is meaningless.",
+            "excel": "Import `T9_SalesOrder` → `SalesOrderData`, `T10_SalesOrderLine` → `SalesOrderLineData`. In Power Query keep both imported queries unchanged. Reference SalesOrderData as SelectedOrders; filter SelectedOrders to CustomerID 120 and OrderDate on or after January 1 and before April 1, 2024. Retain the six selected rows, including SalesOrderID and OrderDate. Reference SalesOrderLineData and merge with SelectedOrders on SalesOrderID using an Inner join; expand OrderDate only. Name the result OrderLines and load it. Insert a PivotTable: Rows = SalesOrderID and OrderDate; Values = Count of SalesOrderLineID and Sum of LineTotal. Set Count explicitly; the default sum of an identifier is meaningless.",
             "queries": [
               "c01-orders"
             ],
@@ -52,12 +52,21 @@
             "meaning": "An order header answers who and when; its lines describe separate goods. Keep the order total out of a line-level sum.",
             "keep": "Save OrderLines and the six-row order summary.",
             "mismatch": "If the count is larger, check the customer and order-date filter before changing any join.",
-            "sqlText": "GROUP BY produces one result per order and date. COUNT counts line identifiers; SUM totals their amounts. The inner SELECT defines the fixed order population. ORDER BY makes the result repeatable.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "GROUP BY produces one result per order and date. COUNT counts line identifiers; SUM totals their amounts. The inner SELECT defines the fixed order population. ORDER BY makes the result repeatable.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "SalesOrderData ← SalesOrder (import here)",
+              "SalesOrderLineData ← SalesOrderLine (import here)"
+            ],
+            "excelOutputs": [
+              "SelectedOrders: six order headers",
+              "OrderLines: 22 selected order lines",
+              "OrderSummary: six-row PivotTable"
+            ]
           },
           {
             "title": "Compare ordered, shipped, and billed quantities",
             "question": "Which difference would require operations to act, and which would require billing to act?",
-            "excel": "Import Shipment and ShipmentLine. Merge ShipmentLineData to ShipmentData on ShipmentID; expand ShipmentDate. Filter ShipmentDate through March 31. Group by SalesOrderLineID, Sum QuantityShipped into a column named Shipped, name the query Shipped. Separately merge SalesInvoiceLineData to SalesInvoiceData on SalesInvoiceID, expand InvoiceDate, filter through March 31, then group by SalesOrderLineID, Sum Quantity into a column named Billed, name the query Billed. Merge each summary to OrderLines using a Left outer join on SalesOrderLineID. Expand the two totals and replace unmatched numeric nulls with 0 after checking that they mean no event. Load as Fulfillment. Add OrderedLessShipped to Fulfillment and enter:\n\n~~~text title=\"Excel — Fulfillment[OrderedLessShipped]\"\n=ROUND([@Quantity]-[@Shipped],2)\n~~~\n\nAdd ShippedLessBilled and enter:\n\n~~~text title=\"Excel — Fulfillment[ShippedLessBilled]\"\n=ROUND([@Shipped]-[@Billed],2)\n~~~\n\n",
+            "excel": "Import Shipment as ShipmentData, ShipmentLine as ShipmentLineData, SalesInvoice as SalesInvoiceData, and SalesInvoiceLine as SalesInvoiceLineData before merging. Keep these raw queries unchanged. Reference ShipmentLineData as ShippedByOrderLine and merge to ShipmentData on ShipmentID; expand ShipmentDate. Filter ShipmentDate through March 31, 2024. Group by SalesOrderLineID, Sum QuantityShipped into a column named Shipped. Separately reference SalesInvoiceLineData as BilledByOrderLine; merge to SalesInvoiceData on SalesInvoiceID, expand InvoiceDate, filter through March 31, 2024, then group by SalesOrderLineID, Sum Quantity into a column named Billed. Reference OrderLines as Fulfillment and merge ShippedByOrderLine and BilledByOrderLine to it using Left outer joins on SalesOrderLineID. Expand the two totals and replace unmatched numeric nulls with 0 after checking that they mean no event. Load as Fulfillment. Add OrderedLessShipped to Fulfillment and enter:\n\n~~~text title=\"Excel — Fulfillment[OrderedLessShipped]\"\n=ROUND([@Quantity]-[@Shipped],2)\n~~~\n\nAdd ShippedLessBilled and enter:\n\n~~~text title=\"Excel — Fulfillment[ShippedLessBilled]\"\n=ROUND([@Shipped]-[@Billed],2)\n~~~\n\n",
             "queries": [
               "c01-fulfillment"
             ],
@@ -65,12 +74,21 @@
             "meaning": "The selected evidence points to incomplete fulfillment on three lines. It does not establish missing billing for goods already shipped. Those are different conclusions.",
             "keep": "Save Fulfillment and identify the three lines for an operations follow-up.",
             "mismatch": "More than 22 rows means a detail table was joined before summarizing. A tiny floating-point difference is not an unbilled quantity.",
-            "sqlText": "WITH names two temporary results inside this statement: shipped and billed. Each is first summed by SalesOrderLineID. The final LEFT JOIN retains every selected order line, and COALESCE shows zero when no dated event exists. This avoids multiplying shipment and invoice detail against each other.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "WITH names two temporary results inside this statement: shipped and billed. Each is first summed by SalesOrderLineID. The final LEFT JOIN retains every selected order line, and COALESCE shows zero when no dated event exists. This avoids multiplying shipment and invoice detail against each other.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "OrderLines (Session 1.1)",
+              "ShipmentData ← Shipment and ShipmentLineData ← ShipmentLine (import here)",
+              "SalesInvoiceData ← SalesInvoice and SalesInvoiceLineData ← SalesInvoiceLine (import here)"
+            ],
+            "excelOutputs": [
+              "ShippedByOrderLine and BilledByOrderLine: one row per order line with a dated event",
+              "Fulfillment: all 22 selected order lines"
+            ]
           },
           {
             "title": "Keep invoices at their own grain",
             "question": "Will the number of invoices equal the number of orders?",
-            "excel": "Import SalesInvoiceData and Inner merge to the six-order query on SalesOrderID. Keep SalesInvoiceID, SalesOrderID, InvoiceDate, and GrandTotal. Sort by InvoiceDate and SalesInvoiceID; load as Invoices. Keep all related invoice dates for now so the second session can reconstruct both cutoffs. On Review, label B4 Visible invoices and enter:\n\n~~~text title=\"Excel — Review!B4\"\n=SUBTOTAL(103,Invoices[SalesInvoiceID])\n~~~\n\nLabel B5 Visible invoice amount and enter:\n\n~~~text title=\"Excel — Review!B5\"\n=SUBTOTAL(109,Invoices[GrandTotal])\n~~~\n\n",
+            "excel": "Reference the raw SalesInvoiceData imported in Session 1.2 as Invoices and Inner merge to SelectedOrders on SalesOrderID. Preserve SalesInvoiceData for other references. Keep SalesInvoiceID, SalesOrderID, InvoiceDate, and GrandTotal. Sort by InvoiceDate and SalesInvoiceID; load as Invoices. Keep all related invoice dates for now so the second session can reconstruct both cutoffs. On Review, label B4 Visible invoices and enter:\n\n~~~text title=\"Excel — Review!B4\"\n=SUBTOTAL(103,Invoices[SalesInvoiceID])\n~~~\n\nLabel B5 Visible invoice amount and enter:\n\n~~~text title=\"Excel — Review!B5\"\n=SUBTOTAL(109,Invoices[GrandTotal])\n~~~\n\n",
             "queries": [
               "c01-invoices"
             ],
@@ -78,7 +96,14 @@
             "meaning": "An order can be invoiced in parts. The April invoices belong in the later review, even though the orders were placed in the first quarter.",
             "keep": "Save Invoices and pause. Write one sentence distinguishing cohort selection from event cutoff.",
             "mismatch": "Ordinary SUM includes hidden rows. Use SUBTOTAL for filtered totals or a date-conditioned SUMIFS.",
-            "sqlText": "This result has one invoice header per row. The order subquery selects the cohort, but invoice dates remain unrestricted so both reporting cutoffs can be reconstructed later.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "This result has one invoice header per row. The order subquery selects the cohort, but invoice dates remain unrestricted so both reporting cutoffs can be reconstructed later.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "SalesInvoiceData (raw query from Session 1.2)",
+              "SelectedOrders (Session 1.1)"
+            ],
+            "excelOutputs": [
+              "Invoices: 20 selected invoice headers, including later dates"
+            ]
           }
         ],
         "stop": "You should have six orders, 22 line comparisons, and 20 invoice headers. Keep the three incomplete-fulfillment lines separate from the receivables question."
@@ -99,7 +124,7 @@
           {
             "title": "Read cash and credit evidence",
             "question": "Predict whether adding receipt amounts down the application table would overstate this population’s settlement.",
-            "excel": "Import CashReceiptApplicationData and Inner merge with Invoices on SalesInvoiceID; load as Applications. Import CashReceiptData as Receipts and add ReceiptDate to Applications:\n\n~~~text title=\"Excel — Applications[ReceiptDate]\"\n=XLOOKUP([@CashReceiptID],Receipts[CashReceiptID],Receipts[ReceiptDate],\"No match\",0)\n~~~\n\nFormat ReceiptDate as a date and investigate any No match result. Add ReceiptAmount:\n\n~~~text title=\"Excel — Applications[ReceiptAmount]\"\n=XLOOKUP([@CashReceiptID],Receipts[CashReceiptID],Receipts[Amount],\"No match\",0)\n~~~\n\n Do not total that repeated receipt amount. Import CreditMemoData. Filter the six SalesOrderIDs and, separately, the 20 OriginalSalesInvoiceIDs; union the selections and remove duplicates by CreditMemoID in Power Query. Load as Credits. Inspect OriginalSalesInvoiceID before allocating a credit.",
+            "excel": "Import CashReceiptApplication as CashReceiptApplicationData and CashReceipt as CashReceiptData. Reference CashReceiptApplicationData and Inner merge with Invoices on SalesInvoiceID; load as Applications. Reference CashReceiptData and load as Receipts. In Applications add ReceiptDate:\n\n~~~text title=\"Excel — Applications[ReceiptDate]\"\n=XLOOKUP([@CashReceiptID],Receipts[CashReceiptID],Receipts[ReceiptDate],\"No match\",0)\n~~~\n\nFormat ReceiptDate as a date and investigate any No match result. Add ReceiptAmount:\n\n~~~text title=\"Excel — Applications[ReceiptAmount]\"\n=XLOOKUP([@CashReceiptID],Receipts[CashReceiptID],Receipts[Amount],\"No match\",0)\n~~~\n\n Do not total that repeated receipt amount. Import CreditMemo as CreditMemoData. Create two references, CreditsByOrder filtered to the six SalesOrderIDs and CreditsByInvoice filtered to the 20 OriginalSalesInvoiceIDs; Append as new, then remove duplicates by CreditMemoID in Power Query. Load as Credits. Inspect OriginalSalesInvoiceID before allocating a credit.",
             "queries": [
               "c01-applications",
               "c01-credits"
@@ -108,7 +133,18 @@
             "meaning": "This credit changes the April explanation. It is subsequent evidence, not a reduction that was already recorded on March 31.",
             "keep": "Save Applications, Credits, and the dates of the receipt/application handoffs.",
             "mismatch": "A credit found by order only needs further allocation evidence. Do not force it onto the first invoice. This worked credit has an explicit invoice link.",
-            "sqlText": "Each result is one application. ReceiptAmount repeats when one receipt funds several applications. Sum AppliedAmount for invoice settlement; use distinct receipt IDs when describing received cash.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "Each result is one application. ReceiptAmount repeats when one receipt funds several applications. Sum AppliedAmount for invoice settlement; use distinct receipt IDs when describing received cash.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "Invoices and SelectedOrders (Session 1)",
+              "CashReceiptApplicationData ← CashReceiptApplication and CashReceiptData ← CashReceipt (import here)",
+              "CreditMemoData ← CreditMemo (import here)"
+            ],
+            "excelOutputs": [
+              "Applications: selected application detail",
+              "Receipts: unique receipt headers",
+              "CreditsByOrder and CreditsByInvoice: separate selections",
+              "Credits: deduplicated union by CreditMemoID"
+            ]
           },
           {
             "title": "Build the two-date settlement schedule",
@@ -121,12 +157,20 @@
             "meaning": "The balance fell by 21,315.54 while new invoices added 3,066.36. A statement that “cash collected equals the fall in receivables” would miss both new billing and the credit.",
             "keep": "Save the two schedules and a change bridge: new invoices less additional applications less new credits.",
             "mismatch": "Check application dates, not just receipt dates. A final Paid status cannot reconstruct an earlier balance.",
-            "sqlText": "The cutoffs result contains the two review dates. CROSS JOIN pairs each date with each selected invoice, and the invoice-date condition excludes bills not yet issued. Each correlated SUM reads only applications or credits for that invoice through that date. Summarize the resulting rows separately by AsOf.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "The cutoffs result contains the two review dates. CROSS JOIN pairs each date with each selected invoice, and the invoice-date condition excludes bills not yet issued. Each correlated SUM reads only applications or credits for that invoice through that date. Summarize the resulting rows separately by AsOf.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "Invoices, Applications, and Credits (earlier stages)",
+              "Review!B2: reporting date"
+            ],
+            "excelOutputs": [
+              "Invoices: cutoff-dependent Applied, Credited, and Remaining columns",
+              "Two dated values-only settlement snapshots"
+            ]
           },
           {
             "title": "Check accounting and assign the response",
             "question": "Which event reduces receivables: cash receipt or cash application?",
-            "excel": "Import GLEntryData with filters in Power Query before loading: SourceDocumentType/SourceDocumentID pairs SalesInvoice/68, CashReceipt/43, CashReceiptApplication/47, CreditMemo/30. Use four filtered references and Append as new; do not filter all four IDs without their document types. Merge AccountData on AccountID. Load the 10 rows as SelectedLedger. Insert a PivotTable with VoucherNumber in Rows and sums of Debit and Credit in Values. Check each complete voucher balances.",
+            "excel": "Import GLEntry as GLEntryData and Account as AccountData. Keep GLEntryData in Power Query and filter references before loading: SourceDocumentType/SourceDocumentID pairs SalesInvoice/68, CashReceipt/43, CashReceiptApplication/47, CreditMemo/30. Use four filtered references and Append as new; do not filter all four IDs without their document types. Merge AccountData on AccountID. Load the 10 rows as SelectedLedger. Insert a PivotTable with VoucherNumber in Rows and sums of Debit and Credit in Values. Check each complete voucher balances.",
             "queries": [
               "c01-ledger"
             ],
@@ -134,7 +178,16 @@
             "meaning": "A supported response distinguishes operations follow-up from accounting follow-up. Explain the 7,293.32 selected balance at April 30, acknowledge credit 30, and ask operations to confirm the three earlier fulfillment gaps against later shipments before promising delivery.",
             "keep": "Retain the voucher check and write a 200–300 word customer response with one named role responsible for each next action.",
             "mismatch": "Filtering to the AR account alone makes a voucher appear unbalanced. Restore all lines of each selected event.",
-            "sqlText": "Keep each SourceDocumentType/SourceDocumentID pair together. The same numeric ID can occur in unrelated source tables. Joining Account adds names without changing the posting grain.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "Keep each SourceDocumentType/SourceDocumentID pair together. The same numeric ID can occur in unrelated source tables. Joining Account adds names without changing the posting grain.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "GLEntryData ← GLEntry and AccountData ← Account (import here)",
+              "Earlier settlement and fulfillment checks"
+            ],
+            "excelOutputs": [
+              "SelectedLedger: 10 rows, four complete vouchers",
+              "VoucherChecks: debit/credit PivotTable",
+              "Review: customer response"
+            ]
           }
         ],
         "stop": "Save the two cutoff schedules, the event-to-accounting check, and your response. Another reader should be able to reproduce every amount from the six-order scope."
@@ -152,7 +205,38 @@
     "interpretation": "The worked result supports a focused customer-account response, not an assertion about every balance Hubbard Inc has ever held. Operations owns the quantity question; customer accounting owns allocation and credit confirmation; treasury supplies receipt evidence. A plausible next action is to confirm the later fulfillment position and contact the customer about the remaining selected invoices with the two-date schedule attached.",
     "challenge": "Select customer 120’s orders dated April 1–June 30, 2024. Reconstruct June 30 and July 31. Retain the cohort, invoice schedule, applications, credits, and one complete voucher. Explain whether the same action priorities still make sense.",
     "hint": "Change the order-cohort dates separately from the event cutoffs. Rebuild the invoice list rather than reusing the worked case’s 20 IDs. A valid result can have no credits or no remaining balance.",
-    "criteria": "Assess correct population, separate event dates, no repeated receipt totals, complete voucher checks, and an action justified by the observed evidence."
+    "criteria": "Assess correct population, separate event dates, no repeated receipt totals, complete voucher checks, and an action justified by the observed evidence.",
+    "prerequisiteLinks": [
+      {
+        "label": "1. Meet the Records",
+        "to": "/docs/learn-and-practice/meet-the-records"
+      },
+      {
+        "label": "2. Read an Order",
+        "to": "/docs/learn-and-practice/read-an-order"
+      },
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "4. Follow a Goods Sale",
+        "to": "/docs/learn-and-practice/source-to-ledger"
+      },
+      {
+        "label": "5. Follow Customer Settlement",
+        "to": "/docs/learn-and-practice/follow-customer-settlement"
+      },
+      {
+        "label": "6. Find the Accounting Entries",
+        "to": "/docs/learn-and-practice/find-the-accounting-entries"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Keep the order cohort fixed while changing event cutoffs; distinguish receipt from application and balance each complete voucher."
+    ]
   },
   {
     "number": 2,
@@ -193,7 +277,7 @@
           {
             "title": "Read engagement terms",
             "question": "Does a planned-hours figure establish how much work actually occurred?",
-            "excel": "Import ServiceTimeEntryData and filter WorkDate from January 1 through March 31. Load as TimeData. Import ServiceEngagementData as Engagements. Filter TimeData to ServiceEngagementID 2 and inspect its dates before clearing the filter. Add a column named HourlyRate to TimeData and paste this formula into its first data row; copy it down through the table column if Excel does not fill it automatically:\n\n~~~text title=\"Excel — TimeData[HourlyRate]\"\n=XLOOKUP([@ServiceEngagementID],Engagements[ServiceEngagementID],Engagements[HourlyRate],\"No match\",0)\n~~~\n\nThe final 0 requires an exact match. Investigate No match rather than treating it as a zero rate. In Power Query create a Reference of TimeData, keep ServiceEngagementID, remove duplicates, and merge with Engagements; load as SelectedEngagements.",
+            "excel": "Import ServiceTimeEntry as ServiceTimeEntryData; reference it as TimeData and filter WorkDate from January 1 through March 31, 2024. Load as TimeData. Import ServiceEngagement as Engagements. Filter TimeData to ServiceEngagementID 2 and inspect its dates before clearing the filter. Add a column named HourlyRate to TimeData and paste this formula into its first data row; copy it down through the table column if Excel does not fill it automatically:\n\n~~~text title=\"Excel — TimeData[HourlyRate]\"\n=XLOOKUP([@ServiceEngagementID],Engagements[ServiceEngagementID],Engagements[HourlyRate],\"No match\",0)\n~~~\n\nThe final 0 requires an exact match. Investigate No match rather than treating it as a zero rate. In Power Query create a Reference of the filtered time query as SelectedEngagements, keep ServiceEngagementID, remove duplicates, and merge with Engagements; load as SelectedEngagements. The reference reads the imported query, so worksheet formula columns are not required for this selection.",
             "queries": [
               "c02-terms"
             ],
@@ -201,7 +285,15 @@
             "meaning": "The terms provide a rate and planning context. They do not replace recorded hours or establish whether time was approved.",
             "keep": "Save the selected engagement list and engagement 2’s terms.",
             "mismatch": "A lookup is appropriate here because ServiceEngagementID is unique in the terms table. Confirm 21 distinct keys before merging.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "ServiceTimeEntryData ← ServiceTimeEntry (import here; filter Q1 2024 into TimeData)",
+              "Engagements ← ServiceEngagement (import here)"
+            ],
+            "excelOutputs": [
+              "TimeData: 204 time-entry rows with HourlyRate formula",
+              "SelectedEngagements: unique selected engagements"
+            ]
           },
           {
             "title": "Separate time, approval, and cost",
@@ -215,7 +307,14 @@
             "meaning": "An empty exception list is a finding about this criterion and scope. It does not justify inventing an approval problem. Non-billable time still consumes staff capacity and contributes to the recorded cost measure.",
             "keep": "Save the 33-row summary and the approval cutoff check.",
             "mismatch": "Use actual date types. A text date or an empty date treated as zero can distort the approval test.",
-            "sqlText": "substr(WorkDate,1,7) creates a month key from the stored ISO date. GROUP BY engagement and month keeps different engagements separate. CASE includes billable hours only when approval occurred by the cutoff.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "substr(WorkDate,1,7) creates a month key from the stored ISO date. GROUP BY engagement and month keeps different engagements separate. CASE includes billable hours only when approval occurred by the cutoff.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "TimeData and its HourlyRate column (Session 1.1)"
+            ],
+            "excelOutputs": [
+              "TimeData: WorkMonth and ApprovedBillable columns",
+              "TimeByEngagementMonth: time/approval/cost PivotTable"
+            ]
           }
         ],
         "stop": "Save terms, the 204-row source selection, and the engagement-month summary. Write what each total includes before adding invoice data."
@@ -236,7 +335,7 @@
           {
             "title": "Build the period reconciliation",
             "question": "What happens if you join all engagement time directly to every billing line?",
-            "excel": "Import ServiceBillingLineData; filter BillingPeriodStartDate on or after January 1 and BillingPeriodEndDate before April 1. Load as Billing. Import SalesInvoiceLineData as InvoiceLines and SalesInvoiceData as Invoices. Keep ServiceBillingLineID as the unique row key. In Billing add SalesInvoiceID using the unique invoice-line key:\n\n~~~text title=\"Excel — Billing[SalesInvoiceID]\"\n=XLOOKUP([@SalesInvoiceLineID],InvoiceLines[SalesInvoiceLineID],InvoiceLines[SalesInvoiceID],\"No match\",0)\n~~~\n\nAdd InvoiceDate using the unique invoice header key, then format it as a date:\n\n~~~text title=\"Excel — Billing[InvoiceDate]\"\n=XLOOKUP([@SalesInvoiceID],Invoices[SalesInvoiceID],Invoices[InvoiceDate],\"No match\",0)\n~~~\n\nResolve any No match before calculating the approval comparison. Add CoveredBillable:\n\n~~~text title=\"Excel — Billing[CoveredBillable]\"\n=SUMIFS(TimeData[BillableHours],TimeData[ServiceEngagementID],[@ServiceEngagementID],TimeData[WorkDate],\">=\"&[@BillingPeriodStartDate],TimeData[WorkDate],\"<=\"&[@BillingPeriodEndDate])\n~~~\n\nAdd HoursApprovedByInvoice; approval must be present and no later than the invoice date:\n\n~~~text title=\"Excel — Billing[HoursApprovedByInvoice]\"\n=SUMIFS(TimeData[BillableHours],TimeData[ServiceEngagementID],[@ServiceEngagementID],TimeData[WorkDate],\">=\"&[@BillingPeriodStartDate],TimeData[WorkDate],\"<=\"&[@BillingPeriodEndDate],TimeData[ApprovedDate],\">0\",TimeData[ApprovedDate],\"<=\"&[@InvoiceDate])\n~~~\n\nAdd HoursDifference:\n\n~~~text title=\"Excel — Billing[HoursDifference]\"\n=ROUND([@BilledHours]-[@HoursApprovedByInvoice],2)\n~~~",
+            "excel": "Import ServiceBillingLine as ServiceBillingLineData; reference it as Billing and filter BillingPeriodStartDate on or after January 1, 2024 and BillingPeriodEndDate before April 1, 2024. Load as Billing. Import SalesInvoiceLine as InvoiceLines and SalesInvoice as Invoices. Keep ServiceBillingLineID as the unique row key. In Billing add SalesInvoiceID using the unique invoice-line key:\n\n~~~text title=\"Excel — Billing[SalesInvoiceID]\"\n=XLOOKUP([@SalesInvoiceLineID],InvoiceLines[SalesInvoiceLineID],InvoiceLines[SalesInvoiceID],\"No match\",0)\n~~~\n\nAdd InvoiceDate using the unique invoice header key, then format it as a date:\n\n~~~text title=\"Excel — Billing[InvoiceDate]\"\n=XLOOKUP([@SalesInvoiceID],Invoices[SalesInvoiceID],Invoices[InvoiceDate],\"No match\",0)\n~~~\n\nResolve any No match before calculating the approval comparison. Add CoveredBillable:\n\n~~~text title=\"Excel — Billing[CoveredBillable]\"\n=SUMIFS(TimeData[BillableHours],TimeData[ServiceEngagementID],[@ServiceEngagementID],TimeData[WorkDate],\">=\"&[@BillingPeriodStartDate],TimeData[WorkDate],\"<=\"&[@BillingPeriodEndDate])\n~~~\n\nAdd HoursApprovedByInvoice; approval must be present and no later than the invoice date:\n\n~~~text title=\"Excel — Billing[HoursApprovedByInvoice]\"\n=SUMIFS(TimeData[BillableHours],TimeData[ServiceEngagementID],[@ServiceEngagementID],TimeData[WorkDate],\">=\"&[@BillingPeriodStartDate],TimeData[WorkDate],\"<=\"&[@BillingPeriodEndDate],TimeData[ApprovedDate],\">0\",TimeData[ApprovedDate],\"<=\"&[@InvoiceDate])\n~~~\n\nAdd HoursDifference:\n\n~~~text title=\"Excel — Billing[HoursDifference]\"\n=ROUND([@BilledHours]-[@HoursApprovedByInvoice],2)\n~~~",
             "queries": [
               "c02-billing"
             ],
@@ -244,7 +343,15 @@
             "meaning": "Coverage dates explain which work is billed. Invoice date explains when it is invoiced. A future population may have uncovered time, overlapping periods, or approval after invoicing; retain those as exceptions rather than filling in a match.",
             "keep": "Save Billing and a zero/nonzero HoursDifference check.",
             "mismatch": "If totals multiply, check whether you merged raw time rows into Billing. SUMIFS keeps the billing row unique. Compare period boundaries inclusively.",
-            "sqlText": "The correlated SUM uses the billing line’s engagement and inclusive coverage dates, plus approval by InvoiceDate. It returns one hours total per billing row without expanding that row once for every time entry.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "The correlated SUM uses the billing line’s engagement and inclusive coverage dates, plus approval by InvoiceDate. It returns one hours total per billing row without expanding that row once for every time entry.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "ServiceBillingLineData ← ServiceBillingLine (import here; filter Q1 2024 into Billing)",
+              "InvoiceLines ← SalesInvoiceLine and Invoices ← SalesInvoice (import here)",
+              "TimeData (Session 1)"
+            ],
+            "excelOutputs": [
+              "Billing: billing-line detail with invoice date, covered hours, and approval comparison"
+            ]
           },
           {
             "title": "Compare effort, price, and limited cost",
@@ -257,7 +364,14 @@
             "meaning": "The release supports an hours-to-billing reconciliation and a limited time-cost comparison. It does not allocate every overhead, selling, support, or financing cost to each engagement. Also, an invoice is not evidence of cash collection; use Case 1 for settlement.",
             "keep": "Retain the matched summaries, chart, and a 250-word memo explaining one follow-up and one limitation.",
             "mismatch": "Do not subtract a full employee’s payroll from each engagement. Work-date cost and invoice-date revenue need aligned coverage before comparison.",
-            "sqlText": "effort and billing each return one aggregate row before they are combined. The ratio uses all selected hours; the difference uses billed line amounts and recorded time cost with the stated boundary.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "effort and billing each return one aggregate row before they are combined. The ratio uses all selected hours; the difference uses billed line amounts and recorded time cost with the stated boundary.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "TimeData and Billing (earlier stages)"
+            ],
+            "excelOutputs": [
+              "EffortByEngagementMonth and BillingByEngagementMonth: separate PivotTables",
+              "Review: billable share and limited cost comparison; chart"
+            ]
           }
         ],
         "stop": "Your memo should explain that the worked hours reconcile, state the cost boundary, and recommend a targeted review of non-billable effort or engagement terms without alleging missing billing."
@@ -275,7 +389,34 @@
     "interpretation": "The reconciliation does not reveal unapproved quarter-end time or a billed-hours mismatch in this population. A useful management response is to discuss where non-billable effort occurred and whether it was planned, while preserving the distinction between billing rates and staff-cost snapshots. The evidence supports a focused operational conversation, not a claim that all engagements are equally profitable.",
     "challenge": "Repeat the investigation for April–June 2024 work. Rebuild the engagement and billing-period populations. Identify one changed result, inspect its source rows, and explain whether it reflects mix, timing, price, non-billable effort, or unresolved evidence.",
     "hint": "Begin with the new work-date population. Check whether each billing period stays inside the selected quarter before comparing its entire amount with quarter-only time.",
-    "criteria": "Assess population completeness, approval-date handling, unique billing rows, aligned coverage, precise cost labels, and a conclusion supported by source evidence."
+    "criteria": "Assess population completeness, approval-date handling, unique billing rows, aligned coverage, precise cost labels, and a conclusion supported by source evidence.",
+    "prerequisiteLinks": [
+      {
+        "label": "1. Meet the Records",
+        "to": "/docs/learn-and-practice/meet-the-records"
+      },
+      {
+        "label": "2. Read an Order",
+        "to": "/docs/learn-and-practice/read-an-order"
+      },
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "7. Follow Design Time into Billing",
+        "to": "/docs/learn-and-practice/follow-design-time-into-billing"
+      },
+      {
+        "label": "12. Turn Records into a Conclusion",
+        "to": "/docs/learn-and-practice/turn-records-into-a-conclusion"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Distinguish work dates, approval dates, billing coverage, and invoice dates; summarize hours and costs at engagement/month grain."
+    ]
   },
   {
     "number": 3,
@@ -321,7 +462,7 @@
           {
             "title": "Select the receipt population",
             "question": "How many receipt lines might one supplier order produce?",
-            "excel": "Import PurchaseOrderData, filter SupplierID 27. Import GoodsReceiptData and filter ReceiptDate January 1 through March 31. Inner merge it to the filtered orders on PurchaseOrderID. Merge GoodsReceiptLineData to those receipts on GoodsReceiptID and expand ReceiptDate. Load as Receipts. Preserve GoodsReceiptLineID, POLineID, QuantityReceived, and ExtendedStandardCost.",
+            "excel": "Import PurchaseOrder as PurchaseOrderData, GoodsReceipt as GoodsReceiptData, and GoodsReceiptLine as GoodsReceiptLineData. Preserve all three raw queries. Reference PurchaseOrderData as SupplierOrders and filter SupplierID 27. Reference GoodsReceiptData as SelectedGoodsReceipts and filter ReceiptDate January 1 through March 31, 2024; Inner merge to SupplierOrders on PurchaseOrderID. Reference GoodsReceiptLineData, merge to SelectedGoodsReceipts on GoodsReceiptID, and expand ReceiptDate. Load as Receipts. Preserve GoodsReceiptLineID, POLineID, QuantityReceived, and ExtendedStandardCost.",
             "queries": [
               "c03-receipts"
             ],
@@ -329,12 +470,21 @@
             "meaning": "The receipt amount is inventory at standard cost. The supplier invoice may contain a different purchase cost or tax, so receipt cost cannot simply be subtracted from invoice GrandTotal to calculate GRNI.",
             "keep": "Save Receipts and a receipt-date timeline.",
             "mismatch": "Filter by receipt date, not purchase-order date. Receipt line IDs are 175, 176, 254, 397, and 341; they differ from header IDs.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "PurchaseOrderData ← PurchaseOrder (import here)",
+              "GoodsReceiptData ← GoodsReceipt and GoodsReceiptLineData ← GoodsReceiptLine (import here)"
+            ],
+            "excelOutputs": [
+              "SupplierOrders: supplier 27 order headers",
+              "SelectedGoodsReceipts: Q1 2024 receipt headers",
+              "Receipts: selected receipt-line detail"
+            ]
           },
           {
             "title": "Trace partial invoice matches",
             "question": "Will each receipt have exactly one invoice by June 30?",
-            "excel": "Import PurchaseInvoiceLineData; Inner merge to Receipts on GoodsReceiptLineID. Merge PurchaseInvoiceData on PurchaseInvoiceID and expand InvoiceDate and GrandTotal. Filter InvoiceDate through June 30; load as GoodsInvoices. Import DisbursementPaymentData filtered to the selected PurchaseInvoiceIDs as Payments. Add PaidMarch to GoodsInvoices:\n\n~~~text title=\"Excel — GoodsInvoices[PaidMarch]\"\n=SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],[@PurchaseInvoiceID],Payments[PaymentDate],\"<=\"&DATE(2024,3,31))\n~~~\n\nAdd PaidJune:\n\n~~~text title=\"Excel — GoodsInvoices[PaidJune]\"\n=SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],[@PurchaseInvoiceID],Payments[PaymentDate],\"<=\"&DATE(2024,6,30))\n~~~\n\nKeep LineTotal beside GrandTotal. This worked selection has one selected line per invoice; verify that before summing headers.",
+            "excel": "Import PurchaseInvoiceLine as PurchaseInvoiceLineData, PurchaseInvoice as PurchaseInvoiceData, and DisbursementPayment as DisbursementPaymentData. Preserve the raw queries. Reference PurchaseInvoiceLineData as GoodsInvoices; Inner merge to Receipts on GoodsReceiptLineID. Merge PurchaseInvoiceData on PurchaseInvoiceID and expand InvoiceDate and GrandTotal. Filter InvoiceDate through June 30, 2024; load as GoodsInvoices. Reference DisbursementPaymentData, filter to the selected PurchaseInvoiceIDs, and load as Payments. Add PaidMarch to GoodsInvoices:\n\n~~~text title=\"Excel — GoodsInvoices[PaidMarch]\"\n=SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],[@PurchaseInvoiceID],Payments[PaymentDate],\"<=\"&DATE(2024,3,31))\n~~~\n\nAdd PaidJune:\n\n~~~text title=\"Excel — GoodsInvoices[PaidJune]\"\n=SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],[@PurchaseInvoiceID],Payments[PaymentDate],\"<=\"&DATE(2024,6,30))\n~~~\n\nKeep LineTotal beside GrandTotal. This worked selection has one selected line per invoice; verify that before summing headers.",
             "queries": [
               "c03-matches"
             ],
@@ -342,12 +492,21 @@
             "meaning": "A receipt can be invoiced in parts, and an invoice can remain unpaid. A one-result lookup would lose the later match. Keep a merge for this one-to-many relationship.",
             "keep": "Save GoodsInvoices and date-conditioned payment columns.",
             "mismatch": "An eighth match dated July 14 lies beyond this follow-up window. Preserve it as later evidence without including it in June totals.",
-            "sqlText": "One result row is one matched supplier invoice line. The two correlated payment totals are calculated independently. InvoiceDate limits subsequent evidence to June 30; it does not imply payment by that date.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "One result row is one matched supplier invoice line. The two correlated payment totals are calculated independently. InvoiceDate limits subsequent evidence to June 30; it does not imply payment by that date.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "Receipts (Session 1.1)",
+              "PurchaseInvoiceLineData ← PurchaseInvoiceLine and PurchaseInvoiceData ← PurchaseInvoice (import here)",
+              "DisbursementPaymentData ← DisbursementPayment (import here)"
+            ],
+            "excelOutputs": [
+              "GoodsInvoices: matched goods-invoice lines through June 30, 2024",
+              "Payments: selected goods-invoice payments; raw payment query preserved"
+            ]
           },
           {
             "title": "Reconstruct the selected liability accounts",
             "question": "Should unbilled receipt cost and unpaid supplier bills share one label?",
-            "excel": "Import AccountData. In Power Query create three filtered GLEntry references: GoodsReceipt IDs 174,175,253,396,340; PurchaseInvoice IDs 143,278,1499,179,422,614,947; and DisbursementPayment IDs obtained from Payments. Append the references, merge Account on AccountID, then retain AccountNumber 2010 or 2020. In Power Query choose Add Column → Custom Column, name it LiabilityChange, and paste the expression below without a leading equals sign:\n\n~~~text title=\"Power Query — GoodsLiability / LiabilityChange\"\n[Credit]-[Debit]\n~~~\n\nLoad as GoodsLiability. On Review create an Excel Table named Obligations with columns AccountNumber, AsOf, and LiabilityBalance. Enter four rows pairing accounts 2010 and 2020 with March 31 and June 30, 2024; ensure AsOf contains real Excel dates. In LiabilityBalance enter:\n\n~~~text title=\"Excel — Obligations[LiabilityBalance]\"\n=SUMIFS(GoodsLiability[LiabilityChange],GoodsLiability[AccountNumber],[@AccountNumber],GoodsLiability[PostingDate],\"<=\"&[@AsOf])\n~~~\n\n",
+            "excel": "Import Account as AccountData and GLEntry as GLEntryData; retain the raw ledger in Power Query. Create three filtered GLEntryData references, keeping SourceDocumentType with SourceDocumentID: GoodsReceipt IDs 174,175,253,396,340; PurchaseInvoice IDs 143,278,1499,179,422,614,947; and DisbursementPayment IDs obtained from Payments. Append the references, merge AccountData on AccountID, then retain AccountNumber 2010 or 2020. In Power Query choose Add Column → Custom Column, name it LiabilityChange, and paste the expression below without a leading equals sign:\n\n~~~text title=\"Power Query — GoodsLiability / LiabilityChange\"\n[Credit]-[Debit]\n~~~\n\nLoad as GoodsLiability. On Review create an Excel Table named Obligations with columns AccountNumber, AsOf, and LiabilityBalance. Enter four rows pairing accounts 2010 and 2020 with March 31 and June 30, 2024; ensure AsOf contains real Excel dates. In LiabilityBalance enter:\n\n~~~text title=\"Excel — Obligations[LiabilityBalance]\"\n=SUMIFS(GoodsLiability[LiabilityChange],GoodsLiability[AccountNumber],[@AccountNumber],GoodsLiability[PostingDate],\"<=\"&[@AsOf])\n~~~\n\n",
             "queries": [
               "c03-goods-balances"
             ],
@@ -355,7 +514,15 @@
             "meaning": "These balances describe the selected receipt population’s posted transitions. The GRNI balance falls when matched invoices clear receipt cost, while AP falls through payment. Neither schedule represents the company-wide accounts.",
             "keep": "Save the four-row liability schedule and stop after writing the meaning of each account.",
             "mismatch": "Retain document type with source ID. Account numbers are not AccountID values. Do not add all supplier 27 transactions to this selected-receipt schedule.",
-            "sqlText": "events selects liability postings for the known receipt, invoice, and payment population. Credit minus debit gives a positive liability. Each cutoff sums only postings on or before its date. This measures posted GRNI rather than subtracting supplier price from standard receipt cost.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "events selects liability postings for the known receipt, invoice, and payment population. Credit minus debit gives a positive liability. Each cutoff sums only postings on or before its date. This measures posted GRNI rather than subtracting supplier price from standard receipt cost.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "AccountData ← Account and GLEntryData ← GLEntry (import here)",
+              "Payments (Session 1.2)"
+            ],
+            "excelOutputs": [
+              "GoodsLiability: selected 2010/2020 ledger detail",
+              "Obligations: four account/cutoff rows"
+            ]
           }
         ],
         "stop": "Save the receipt-to-invoice matches and two-date liability schedule. Explain the remaining June GRNI before moving to expense estimates."
@@ -376,7 +543,7 @@
           {
             "title": "Read the linked estimates and invoices",
             "question": "What would you expect if the invoice is below the estimate? What if it is above?",
-            "excel": "Import JournalEntryData filtered to IDs 9,26,43 as Estimates. Import PurchaseInvoiceLineData filtered to AccrualJournalEntryID 9,26,43; merge to PurchaseInvoiceData on PurchaseInvoiceID. Load as AccrualInvoices. Merge Estimates to those lines on JournalEntryID = AccrualJournalEntryID and load as EstimateReview. Add EstimateLessInvoice:\n\n~~~text title=\"Excel — EstimateReview[EstimateLessInvoice]\"\n=ROUND([@TotalAmount]-[@LineTotal],2)\n~~~\n\n Keep InvoiceDate visible; do not use the final invoice amount to erase the earlier estimate.",
+            "excel": "Import JournalEntry as JournalEntryData and preserve the raw query. Reference JournalEntryData, filter IDs 9,26,43, and load as Estimates. Reference the raw PurchaseInvoiceLineData from Session 1.2 as AccrualInvoices, filter AccrualJournalEntryID 9,26,43, and merge to the raw PurchaseInvoiceData on PurchaseInvoiceID. Load as AccrualInvoices. Reference Estimates as EstimateReview, merge to AccrualInvoices on JournalEntryID = AccrualJournalEntryID, and load as EstimateReview. Add EstimateLessInvoice:\n\n~~~text title=\"Excel — EstimateReview[EstimateLessInvoice]\"\n=ROUND([@TotalAmount]-[@LineTotal],2)\n~~~\n\n Keep InvoiceDate visible; do not use the final invoice amount to erase the earlier estimate.",
             "queries": [
               "c03-accruals"
             ],
@@ -384,12 +551,21 @@
             "meaning": "The first estimate exceeds its invoice. The other two fall short by 338.52 and 192.17. Describe the direction explicitly before deciding how the accounting resolves it.",
             "keep": "Save the three-row estimate comparison.",
             "mismatch": "Use AccrualJournalEntryID, not a description search, to identify the invoice link. A missing link is not evidence that no expense occurred.",
-            "sqlText": "LEFT JOIN retains an estimate even if its invoice link is missing. AccrualJournalEntryID supplies the relationship. The later invoice amount is displayed beside the original estimate rather than replacing it.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "LEFT JOIN retains an estimate even if its invoice link is missing. AccrualJournalEntryID supplies the relationship. The later invoice amount is displayed beside the original estimate rather than replacing it.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "JournalEntryData ← JournalEntry (import here)",
+              "PurchaseInvoiceLineData and PurchaseInvoiceData (raw queries from Session 1.2)"
+            ],
+            "excelOutputs": [
+              "Estimates: three journal headers",
+              "AccrualInvoices: linked invoice-line detail",
+              "EstimateReview: estimate/invoice comparison"
+            ]
           },
           {
             "title": "Inspect adjustment and recognition entries",
             "question": "Will every difference require a separate adjustment journal?",
-            "excel": "Import JournalEntryData filtered to JournalEntryID 9,26,43 or ReversesJournalEntryID 9,26,43. Keep distinct IDs; load as Adjustments. Import GLEntryData with document pairs JournalEntry/9,26,43,698 and PurchaseInvoice/39851,39861,39872. Merge AccountData, retain all account lines, and load as AccrualLedger. Create a PivotTable by VoucherNumber with Debit and Credit totals. On Review label B8 Accrued liability at March 31 and enter:\n\n~~~text title=\"Excel — Review!B8\"\n=SUMIFS(AccrualLedger[Credit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,3,31))-SUMIFS(AccrualLedger[Debit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,3,31))\n~~~\n\nLabel B9 Accrued liability at June 30 and enter:\n\n~~~text title=\"Excel — Review!B9\"\n=SUMIFS(AccrualLedger[Credit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,6,30))-SUMIFS(AccrualLedger[Debit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,6,30))\n~~~\n\n",
+            "excel": "Reference the raw JournalEntryData as Adjustments; filter JournalEntryID 9,26,43 or ReversesJournalEntryID 9,26,43. Keep distinct IDs; load as Adjustments. Create filtered references of the raw GLEntryData and Append as new using document pairs JournalEntry/9,26,43,698 and PurchaseInvoice/39851,39861,39872. Merge AccountData, retain all account lines, and load as AccrualLedger. Create a PivotTable by VoucherNumber with Debit and Credit totals. On Review label B8 Accrued liability at March 31 and enter:\n\n~~~text title=\"Excel — Review!B8\"\n=SUMIFS(AccrualLedger[Credit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,3,31))-SUMIFS(AccrualLedger[Debit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,3,31))\n~~~\n\nLabel B9 Accrued liability at June 30 and enter:\n\n~~~text title=\"Excel — Review!B9\"\n=SUMIFS(AccrualLedger[Credit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,6,30))-SUMIFS(AccrualLedger[Debit],AccrualLedger[AccountNumber],2040,AccrualLedger[PostingDate],\"<=\"&DATE(2024,6,30))\n~~~\n\n",
             "queries": [
               "c03-journals",
               "c03-accrual-postings"
@@ -398,12 +574,21 @@
             "meaning": "The later evidence changes the liability’s form and, where necessary, the expense amount. Reading only journal totals would hide the underestimates recognized on the invoices.",
             "keep": "Save complete voucher checks and identify the expense effect for each estimate.",
             "mismatch": "Keep all voucher lines for a balance check. Use only account 2040 when calculating the selected accrued-expense liability.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "JournalEntryData (raw query from Session 2.1)",
+              "GLEntryData and AccountData (raw queries from Session 1.3)"
+            ],
+            "excelOutputs": [
+              "Adjustments: selected estimate/reversal headers",
+              "AccrualLedger: complete selected journal/invoice vouchers",
+              "VoucherChecks: debit/credit PivotTable; two accrued-liability totals"
+            ]
           },
           {
             "title": "Follow payment and prepare the review",
             "question": "Does a June payment prove that the obligation was absent in March?",
-            "excel": "Extend Payments to goods invoice IDs 143, 278, 1499, 179, 422, 614, 947 and accrual invoice IDs 39851, 39861, 39872, filter PaymentDate through June 30, and sort by PurchaseInvoiceID and PaymentDate. Keep goods and accrual IDs in separate categories on Review. On Review label B10 Accrual invoice payments through June 30 and enter the three-invoice sum:\n\n~~~text title=\"Excel — Review!B10\"\n=SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39851)+SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39861)+SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39872)\n~~~\n\nCompare the result with the three AccrualInvoices GrandTotal values; Payments is already filtered through June 30. For goods, reconcile the four paid invoices to the June AP schedule.",
+            "excel": "Edit the Payments reference selection on the raw DisbursementPaymentData to include goods invoice IDs 143, 278, 1499, 179, 422, 614, 947 and accrual invoice IDs 39851, 39861, 39872, filter PaymentDate through June 30, and sort by PurchaseInvoiceID and PaymentDate. Keep goods and accrual IDs in separate categories on Review. On Review label B10 Accrual invoice payments through June 30 and enter the three-invoice sum:\n\n~~~text title=\"Excel — Review!B10\"\n=SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39851)+SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39861)+SUMIFS(Payments[Amount],Payments[PurchaseInvoiceID],39872)\n~~~\n\nCompare the result with the three AccrualInvoices GrandTotal values; Payments is already filtered through June 30. For goods, reconcile the four paid invoices to the June AP schedule.",
             "queries": [
               "c03-payments"
             ],
@@ -411,7 +596,15 @@
             "meaning": "At March 31 the selected expenses include the two open estimates and the first invoice’s AP. Later settlement explains what happened afterward; it does not remove the March obligation.",
             "keep": "Write a 250–350 word review note: distinguish GRNI, accrued expenses, and AP; quantify the selected positions; name one June follow-up.",
             "mismatch": "Keep the separate populations labeled. Do not offset a supplier receipt liability with an unrelated maintenance accrual.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "DisbursementPaymentData (raw query from Session 1.2)",
+              "Payments, AccrualInvoices, and Obligations (earlier stages)"
+            ],
+            "excelOutputs": [
+              "Payments: expanded goods/accrual selection through June 30, 2024",
+              "Review: separate goods and accrual settlement schedules"
+            ]
           }
         ],
         "stop": "Retain both schedules, their source links, and the review note. The note should explain recognition dates and settlement dates separately."
@@ -429,7 +622,34 @@
     "interpretation": "The worked schedules support a bounded quarter-end explanation. Some goods remain partly uninvoiced and some bills unpaid in June. The maintenance estimates are fully consumed and their invoices paid by June. A useful next action is to ask AP and receiving to resolve the residual goods matches, while retaining the estimate comparison for improving the next close.",
     "challenge": "Select supplier 27’s April–June receipts and the second-quarter repairs-and-maintenance accruals. Review June 30 and follow subsequent evidence through September 30. Use explicit accrual links and keep the two populations separate.",
     "hint": "Find the second-quarter accrual journals by EntryType, PostingDate, and the repairs-and-maintenance description, then use their IDs. A new population may require several invoice lines per estimate.",
-    "criteria": "Assess correct receipt and estimate populations, partial matches, date boundaries, liability signs, complete postings, and separation of recognition from payment."
+    "criteria": "Assess correct receipt and estimate populations, partial matches, date boundaries, liability signs, complete postings, and separation of recognition from payment.",
+    "prerequisiteLinks": [
+      {
+        "label": "1. Meet the Records",
+        "to": "/docs/learn-and-practice/meet-the-records"
+      },
+      {
+        "label": "2. Read an Order",
+        "to": "/docs/learn-and-practice/read-an-order"
+      },
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "8. Follow a Purchase",
+        "to": "/docs/learn-and-practice/receipt-to-payable"
+      },
+      {
+        "label": "11. Follow an Estimate into Settlement",
+        "to": "/docs/learn-and-practice/follow-an-estimate-into-settlement"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Aggregate receipt, invoice, payment, and estimate evidence separately; explain GRNI, AP, and accrued-service obligations at each cutoff."
+    ]
   },
   {
     "number": 4,
@@ -477,7 +697,7 @@
           {
             "title": "Inspect classifications before grouping",
             "question": "Will every blank collection name mean the same thing across item types?",
-            "excel": "Import ItemData as Items. Create a PivotTable by ItemType with Count of ItemID. Filter CollectionName blanks separately for each type. Inspect IsActive, LifecycleStatus, LaunchDate, and ItemGroup. Do not remove inactive items before selecting historical sales; current inactivity does not mean an item could not be sold in 2024.",
+            "excel": "Import Item as Items. Create a PivotTable by ItemType with Count of ItemID. Filter CollectionName blanks separately for each type. Inspect IsActive, LifecycleStatus, LaunchDate, and ItemGroup. Do not remove inactive items before selecting historical sales; current inactivity does not mean an item could not be sold in 2024.",
             "queries": [
               "c04-master"
             ],
@@ -485,12 +705,19 @@
             "meaning": "Grouping by ItemGroup avoids silently dropping blank collections. A collection-level extension must retain an explicit Unclassified category and investigate why a classification is absent.",
             "keep": "Save the item-type counts and classification note.",
             "mismatch": "The exact goods label is Finished Good, including the space. A spelling mismatch can produce a plausible-looking empty analysis.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "Items ← Item (import here)"
+            ],
+            "excelOutputs": [
+              "Items: unique item lookup",
+              "ItemClassification: ItemType PivotTable"
+            ]
           },
           {
             "title": "Build the invoice-line dataset",
             "question": "Why would summing invoice headers after joining lines overstate sales?",
-            "excel": "Import SalesInvoiceData, filter InvoiceDate from January 1 through March 31. Inner merge SalesInvoiceLineData to those headers on SalesInvoiceID; expand InvoiceDate only. Merge Items on ItemID, expand ItemType, ItemGroup, and StandardCost. Filter ItemType = Finished Good; load as ProductLines. Keep SalesInvoiceLineID as the unique key. Add ListValue to ProductLines:\n\n~~~text title=\"Excel — ProductLines[ListValue]\"\n=[@Quantity]*[@BaseListPrice]\n~~~\n\nAdd CurrentStandardCost:\n\n~~~text title=\"Excel — ProductLines[CurrentStandardCost]\"\n=[@Quantity]*[@StandardCost]\n~~~\n\n Use a PivotTable for Count of SalesInvoiceLineID and sums of Quantity and LineTotal. To count unique invoices, reference the query, keep SalesInvoiceID, remove duplicates, then count rows.",
+            "excel": "Import SalesInvoice as SalesInvoiceData and SalesInvoiceLine as SalesInvoiceLineData; preserve both raw queries. Reference SalesInvoiceData as QuarterInvoices and filter InvoiceDate from January 1 through March 31, 2024. Reference SalesInvoiceLineData as ProductLines and Inner merge to QuarterInvoices on SalesInvoiceID; expand InvoiceDate only. Merge Items on ItemID, expand ItemType, ItemGroup, and StandardCost. Filter ItemType = Finished Good; load as ProductLines. Keep SalesInvoiceLineID as the unique key. Add ListValue to ProductLines:\n\n~~~text title=\"Excel — ProductLines[ListValue]\"\n=[@Quantity]*[@BaseListPrice]\n~~~\n\nAdd CurrentStandardCost:\n\n~~~text title=\"Excel — ProductLines[CurrentStandardCost]\"\n=[@Quantity]*[@StandardCost]\n~~~\n\n Use a PivotTable for Count of SalesInvoiceLineID and sums of Quantity and LineTotal. To count unique invoices, reference ProductLines as InvoiceCounts, keep SalesInvoiceID, remove duplicates, then count rows.",
             "queries": [
               "c04-population"
             ],
@@ -498,7 +725,16 @@
             "meaning": "These totals describe billed goods. Quantity spans different products and units, so the total is a completeness check rather than a useful physical output measure.",
             "keep": "Save ProductLines and the population check.",
             "mismatch": "Do not include service lines or sum GrandTotal here. Preserve all qualifying lines even when current catalog fields are incomplete.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "Items (Session 1.1)",
+              "SalesInvoiceData ← SalesInvoice and SalesInvoiceLineData ← SalesInvoiceLine (import here)"
+            ],
+            "excelOutputs": [
+              "QuarterInvoices: Q1 2024 invoice headers",
+              "ProductLines: finished-good invoice-line detail",
+              "InvoiceCounts: distinct SalesInvoiceID reference"
+            ]
           }
         ],
         "stop": "Your population must reconcile before you rank product groups. Save the exact date and item-type filters."
@@ -527,12 +763,19 @@
             "meaning": "The narrow realization range does not by itself explain the much wider margin-rate range. Product mix and current standard-cost assumptions deserve investigation alongside pricing. This comparison is not posted gross profit.",
             "keep": "Save both rankings and the chart, with the current-standard-cost label visible.",
             "mismatch": "Calculate the ratio of summed dollars. Do not average line percentages or mistake StandardConversionCost for a component to add again to total StandardCost.",
-            "sqlText": "Each group uses sums from the same invoice-line population. RealizationPct is a ratio of dollar totals, not an average of percentages. NULLIF leaves a zero-denominator ratio unavailable. CurrentStandardCost uses the current master reference explicitly.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "Each group uses sums from the same invoice-line population. RealizationPct is a ratio of dollar totals, not an average of percentages. NULLIF leaves a zero-denominator ratio unavailable. CurrentStandardCost uses the current master reference explicitly.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "ProductLines with ListValue and CurrentStandardCost (Session 1.2)"
+            ],
+            "excelOutputs": [
+              "ProductReview: four ItemGroup rows with realization and standard-margin measures",
+              "StandardMarginChart"
+            ]
           },
           {
             "title": "Read an override and a promotion",
             "question": "Does a discounted line necessarily lack commercial approval?",
-            "excel": "Import PriceOverrideApprovalData as Overrides and PromotionProgramData as Promotions. Import SalesOrderLineData and SalesOrderData. In ProductLines filter nonblank PriceOverrideApprovalID, sort InvoiceDate and SalesInvoiceLineID, and inspect the first 12 lines. For line 69 inspect approval ID 9. Add ApprovedUnitPrice using the unique approval key:\n\n~~~text title=\"Excel — ProductLines[ApprovedUnitPrice]\"\n=IF([@PriceOverrideApprovalID]=\"\",\"\",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ApprovedUnitPrice],\"No match\",0))\n~~~\n\nAdd OverrideApprovedDate and format as a date:\n\n~~~text title=\"Excel — ProductLines[OverrideApprovedDate]\"\n=IF([@PriceOverrideApprovalID]=\"\",\"\",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ApprovedDate],\"No match\",0))\n~~~\n\nAdd OverrideReason:\n\n~~~text title=\"Excel — ProductLines[OverrideReason]\"\n=IF([@PriceOverrideApprovalID]=\"\",\"\",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ReasonCode],\"No match\",0))\n~~~\n\nAdd SalesOrderID through the order-line relationship:\n\n~~~text title=\"Excel — ProductLines[SalesOrderID]\"\n=XLOOKUP([@SalesOrderLineID],SalesOrderLineData[SalesOrderLineID],SalesOrderLineData[SalesOrderID],\"No match\",0)\n~~~\n\nAdd OrderDate and format it as a date:\n\n~~~text title=\"Excel — ProductLines[OrderDate]\"\n=XLOOKUP([@SalesOrderID],SalesOrderData[SalesOrderID],SalesOrderData[OrderDate],\"No match\",0)\n~~~\n\nResolve any No match before comparing UnitPrice, approved price, approval date, and order date. Separately select invoice line 1548 and promotion ID 1. Inspect the promotion’s effective dates and scope fields; evaluate applicability at the commercial event, not simply the invoice date.",
+            "excel": "Import PriceOverrideApproval as Overrides, PromotionProgram as Promotions, SalesOrderLine as SalesOrderLineData, and SalesOrder as SalesOrderData. In ProductLines filter nonblank PriceOverrideApprovalID, sort InvoiceDate and SalesInvoiceLineID, and inspect the first 12 lines. For line 69 inspect approval ID 9. Add ApprovedUnitPrice using the unique approval key:\n\n~~~text title=\"Excel — ProductLines[ApprovedUnitPrice]\"\n=IF([@PriceOverrideApprovalID]=\"\",\"\",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ApprovedUnitPrice],\"No match\",0))\n~~~\n\nAdd OverrideApprovedDate and format as a date:\n\n~~~text title=\"Excel — ProductLines[OverrideApprovedDate]\"\n=IF([@PriceOverrideApprovalID]=\"\",\"\",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ApprovedDate],\"No match\",0))\n~~~\n\nAdd OverrideReason:\n\n~~~text title=\"Excel — ProductLines[OverrideReason]\"\n=IF([@PriceOverrideApprovalID]=\"\",\"\",XLOOKUP([@PriceOverrideApprovalID],Overrides[PriceOverrideApprovalID],Overrides[ReasonCode],\"No match\",0))\n~~~\n\nAdd SalesOrderID through the order-line relationship:\n\n~~~text title=\"Excel — ProductLines[SalesOrderID]\"\n=XLOOKUP([@SalesOrderLineID],SalesOrderLineData[SalesOrderLineID],SalesOrderLineData[SalesOrderID],\"No match\",0)\n~~~\n\nAdd OrderDate and format it as a date:\n\n~~~text title=\"Excel — ProductLines[OrderDate]\"\n=XLOOKUP([@SalesOrderID],SalesOrderData[SalesOrderID],SalesOrderData[OrderDate],\"No match\",0)\n~~~\n\nResolve any No match before comparing UnitPrice, approved price, approval date, and order date. Separately select invoice line 1548 and promotion ID 1. Inspect the promotion’s effective dates and scope fields; evaluate applicability at the commercial event, not simply the invoice date.",
             "queries": [
               "c04-pricing",
               "c04-override",
@@ -542,7 +785,16 @@
             "meaning": "An approval explains authorization, not whether the discount was commercially successful. A promoted line and a non-promoted line can differ in product, customer, volume, and date. A causal promotion-effect claim needs more evidence. For promotion 1, ask for the intended effective period and supporting approval rather than assuming the recorded date range was valid.",
             "keep": "Keep two pricing evidence rows with the criterion tested and the result.",
             "mismatch": "Use the stored pricing IDs. A text label such as Approved Override is not a substitute for reading its linked record.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "ProductLines (Session 1.2)",
+              "Overrides ← PriceOverrideApproval and Promotions ← PromotionProgram (import here)",
+              "SalesOrderLineData ← SalesOrderLine and SalesOrderData ← SalesOrder (import here)"
+            ],
+            "excelOutputs": [
+              "ProductLines: approval and order-date lookup columns",
+              "Review: separately scoped override and promotion evidence"
+            ]
           }
         ],
         "stop": "Save the group comparison and two source traces. Draft one explanation the evidence supports and one alternative it does not rule out."
@@ -563,7 +815,7 @@
           {
             "title": "Add delivery and credit evidence",
             "question": "Can a credit issued this quarter relate to an older invoice?",
-            "excel": "In Power Query reference ProductLines, then Left outer merge ShipmentLineData on ShipmentLineID and ShipmentData on ShipmentID to obtain DeliveryDate. Merge SalesOrderLineData on SalesOrderLineID and SalesOrderData on SalesOrderID to obtain RequestedDeliveryDate. In Power Query use Add Column → Custom Column to add MissingDeliveryDate:\n\n~~~text title=\"Power Query — Delivery summary / MissingDeliveryDate\"\nif [DeliveryDate] = null then 1 else 0\n~~~\n\nAdd DeliveredAfterRequested with the expression below; missing dates cannot establish lateness:\n\n~~~text title=\"Power Query — Delivery summary / DeliveredAfterRequested\"\nif [DeliveryDate] = null or [RequestedDeliveryDate] = null then 0 else if [DeliveryDate] > [RequestedDeliveryDate] then 1 else 0\n~~~\n\n Group by ItemGroup to count lines and sum those flags. Separately import CreditMemoLineData, merge CreditMemoData, filter CreditMemoDate January 1–March 31, merge Items, retain Finished Good, and group by ItemGroup with Count of CreditMemoLineID and Sum of LineTotal. Load as CreditReview.",
+            "excel": "Import ShipmentLine as ShipmentLineData and Shipment as ShipmentData. In Power Query reference ProductLines as DeliveryDetail, then Left outer merge ShipmentLineData on ShipmentLineID and ShipmentData on ShipmentID to obtain DeliveryDate. Merge SalesOrderLineData on SalesOrderLineID and SalesOrderData on SalesOrderID to obtain RequestedDeliveryDate. In Power Query use Add Column → Custom Column to add MissingDeliveryDate:\n\n~~~text title=\"Power Query — Delivery summary / MissingDeliveryDate\"\nif [DeliveryDate] = null then 1 else 0\n~~~\n\nAdd DeliveredAfterRequested with the expression below; missing dates cannot establish lateness:\n\n~~~text title=\"Power Query — Delivery summary / DeliveredAfterRequested\"\nif [DeliveryDate] = null or [RequestedDeliveryDate] = null then 0 else if [DeliveryDate] > [RequestedDeliveryDate] then 1 else 0\n~~~\n\n Reference DeliveryDetail as DeliveryReview and group by ItemGroup to count lines and sum those flags; load DeliveryReview. Separately import CreditMemoLine as CreditMemoLineData and CreditMemo as CreditMemoData. Reference CreditMemoLineData as CreditReview, merge CreditMemoData, filter CreditMemoDate January 1–March 31, 2024, merge Items, retain Finished Good, and group by ItemGroup with Count of CreditMemoLineID and Sum of LineTotal. Load as CreditReview.",
             "queries": [
               "c04-service",
               "c04-credits"
@@ -572,7 +824,17 @@
             "meaning": "The delivery denominator is invoice lines, not unique orders or customers. The credits are dated in the quarter but are not guaranteed to originate from this quarter’s invoices. Do not subtract these amounts and call the result cohort net revenue.",
             "keep": "Save the two separately labeled comparisons.",
             "mismatch": "Joining invoice lines through an order alone can attach every shipment on that order. Use ShipmentLineID for the actual billed shipment link.",
-            "sqlText": "ShipmentLineID identifies the shipment supporting each billed line. The counts therefore describe invoice lines, not distinct customers or orders. A separate CASE retains the missing-delivery-date count.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "ShipmentLineID identifies the shipment supporting each billed line. The counts therefore describe invoice lines, not distinct customers or orders. A separate CASE retains the missing-delivery-date count.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "ProductLines, SalesOrderLineData, SalesOrderData, and Items (earlier stages)",
+              "ShipmentLineData ← ShipmentLine and ShipmentData ← Shipment (import here)",
+              "CreditMemoLineData ← CreditMemoLine and CreditMemoData ← CreditMemo (import here)"
+            ],
+            "excelOutputs": [
+              "DeliveryDetail: retained invoice-line delivery comparisons",
+              "DeliveryReview: ItemGroup summary",
+              "CreditReview: separately dated credit summary"
+            ]
           },
           {
             "title": "Recommend one bounded review",
@@ -583,7 +845,13 @@
             "meaning": "A defensible alternative priority is acceptable when it explains the tradeoff. The decision should specify a testable next step, such as inspecting a product subset’s cost assumptions and delivery causes, rather than recommending an across-the-board price rise.",
             "keep": "Save a 400–500 word memo and the comparison table. Include one source example and one uncertainty.",
             "mismatch": "Keep the conclusion within the measures. Current classifications, standard costs, and invoice-line delivery counts cannot establish complete historical product profitability.",
-            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools."
+            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools.",
+            "excelInputs": [
+              "ProductReview, DeliveryReview, and CreditReview (earlier stages)"
+            ],
+            "excelOutputs": [
+              "Review: four group comparisons and bounded recommendation"
+            ]
           }
         ],
         "stop": "A reviewer should be able to trace the priority to the table, the table to the population, and the population to the released records."
@@ -601,7 +869,26 @@
     "interpretation": "Furniture merits a focused review in the worked analysis, but the first action should diagnose cost assumptions, product mix, and delivery performance alongside pricing. Similar realization rates across groups weaken a simple discount-only explanation. The recommendation remains provisional because current standard costs are not a complete historical cost-of-sales measure.",
     "challenge": "Repeat for April–June 2024. Keep the measure definitions unchanged. Defend whether the priority should change, and identify one result that would reverse your recommendation after source follow-up.",
     "hint": "Use the same invoice-date population for the main comparison and a separately labeled credit-date population. Retain blank classifications and inspect the actual pricing links.",
-    "criteria": "Assess comparable populations, weighted ratios, cost labels, source tracing, alternative explanations, and a proportionate recommendation."
+    "criteria": "Assess comparable populations, weighted ratios, cost labels, source tracing, alternative explanations, and a proportionate recommendation.",
+    "prerequisiteLinks": [
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "9. Follow Manufacturing Costs",
+        "to": "/docs/learn-and-practice/manufacturing-cost-flow"
+      },
+      {
+        "label": "12. Turn Records into a Conclusion",
+        "to": "/docs/learn-and-practice/turn-records-into-a-conclusion"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Preserve invoice-line grain; state the limits of current standard costs and separately dated credits in historical comparisons."
+    ]
   },
   {
     "number": 5,
@@ -650,7 +937,7 @@
           {
             "title": "Keep the release cohort fixed",
             "question": "Would filtering by completion month answer the same question as filtering by release month?",
-            "excel": "Import WorkOrderData and filter ReleasedDate January 1–31. Load as Orders, keeping IDs and all date fields. Label Review!B2 Release cohort and enter:\n\n~~~text title=\"Excel — Review!B2\"\n=ROWS(Orders[WorkOrderID])\n~~~\n\nAdd CompletedByCutoff to Orders:\n\n~~~text title=\"Excel — Orders[CompletedByCutoff]\"\n=IF(AND(ISNUMBER([@CompletedDate]),[@CompletedDate]<=DATE(2024,2,29)),1,0)\n~~~\n\nAdd ClosedByCutoff:\n\n~~~text title=\"Excel — Orders[ClosedByCutoff]\"\n=IF(AND(ISNUMBER([@ClosedDate]),[@ClosedDate]<=DATE(2024,2,29)),1,0)\n~~~\n\nAdd MissingPlanLink:\n\n~~~text title=\"Excel — Orders[MissingPlanLink]\"\n=IF([@SupplyPlanRecommendationID]=\"\",1,0)\n~~~\n\nDo not filter away missing dates or links.",
+            "excel": "Import WorkOrder as WorkOrderData. Reference it as Orders and filter ReleasedDate January 1–31, 2024, preserving the raw query. Load as Orders, keeping IDs and all date fields. Label Review!B2 Release cohort and enter:\n\n~~~text title=\"Excel — Review!B2\"\n=ROWS(Orders[WorkOrderID])\n~~~\n\nAdd CompletedByCutoff to Orders:\n\n~~~text title=\"Excel — Orders[CompletedByCutoff]\"\n=IF(AND(ISNUMBER([@CompletedDate]),[@CompletedDate]<=DATE(2024,2,29)),1,0)\n~~~\n\nAdd ClosedByCutoff:\n\n~~~text title=\"Excel — Orders[ClosedByCutoff]\"\n=IF(AND(ISNUMBER([@ClosedDate]),[@ClosedDate]<=DATE(2024,2,29)),1,0)\n~~~\n\nAdd MissingPlanLink:\n\n~~~text title=\"Excel — Orders[MissingPlanLink]\"\n=IF([@SupplyPlanRecommendationID]=\"\",1,0)\n~~~\n\nDo not filter away missing dates or links.",
             "queries": [
               "c05-cohort",
               "c05-timing"
@@ -659,12 +946,18 @@
             "meaning": "Completion and close measure different responsibilities. A chronology anomaly also means these dates require source follow-up before a scheduling recommendation relies on them.",
             "keep": "Save Orders and the timing counts, including the exceptions.",
             "mismatch": "Current Status is not an as-of measure. Test the actual dates against the cutoff and retain missing links.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "WorkOrderData ← WorkOrder (import here)"
+            ],
+            "excelOutputs": [
+              "Orders: fixed January 2024 release cohort; 336 rows, missing dates retained"
+            ]
           },
           {
             "title": "Trace the two operation paths",
             "question": "Can a work order be completed in the file even when its operation support is missing?",
-            "excel": "Import WorkOrderOperationData filtered to WorkOrderID 1 or 67. Import WorkOrderOperationScheduleData, filter ScheduleDate through February 29, and group by WorkOrderOperationID summing ScheduledHours. Left merge this summary to the operations and sort by WorkOrderID then OperationSequence. Keep PlannedLoadHours and actual start/end dates beside the schedule total.",
+            "excel": "Import WorkOrderOperation as WorkOrderOperationData and WorkOrderOperationSchedule as WorkOrderOperationScheduleData; preserve the raw queries. Reference WorkOrderOperationData as SelectedOperations and filter WorkOrderID 1 or 67. Reference WorkOrderOperationScheduleData as ScheduleByOperation, filter ScheduleDate through February 29, 2024, and group by WorkOrderOperationID, Sum ScheduledHours as ScheduledHours. Reference SelectedOperations as OperationTrace, Left merge ScheduleByOperation on WorkOrderOperationID, and sort by WorkOrderID then OperationSequence. Keep PlannedLoadHours and actual start/end dates beside the schedule total.",
             "queries": [
               "c05-operations"
             ],
@@ -672,7 +965,15 @@
             "meaning": "The absence of operation detail for WO1 is an evidence limitation, not proof that no work happened. Other documents still record its material issue and completion. Compare support completeness before inferring efficiency.",
             "keep": "Save the operation trace and a note about WO1’s missing support.",
             "mismatch": "Do not use an Inner join from Orders to Operations for the cohort summary; it would hide WO1.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "WorkOrderOperationData ← WorkOrderOperation and WorkOrderOperationScheduleData ← WorkOrderOperationSchedule (import here)"
+            ],
+            "excelOutputs": [
+              "SelectedOperations: operations for WO1/WO67",
+              "ScheduleByOperation: dated schedule summary",
+              "OperationTrace: selected operations with schedule support"
+            ]
           }
         ],
         "stop": "Retain the 336-order cohort and the four-row comparison trace. State what the planning records can establish and what actual-event evidence is still needed."
@@ -693,7 +994,7 @@
           {
             "title": "Prepare the four event summaries",
             "question": "How would joining raw issue lines to raw labor entries change the totals?",
-            "excel": "Create four Power Query summaries before loading. Issues: merge MaterialIssueLineData to MaterialIssueData on MaterialIssueID, filter IssueDate through February 29, group by WorkOrderID and sum ExtendedStandardCost as Issued. Labor: filter LaborTimeEntryData WorkDate through February 29, group by WorkOrderID and sum ExtendedLaborCost as LaborSupport. Completions: merge ProductionCompletionLineData to ProductionCompletionData, filter CompletionDate through February 29, group by WorkOrderID and sum QuantityCompleted as CompletedQty, ExtendedStandardMaterialCost as CompletedMaterials, ExtendedStandardConversionCost as CompletedConversion, and ExtendedStandardTotalCost as CompletedTotal. Closes: filter WorkOrderCloseData CloseDate through February 29, group by WorkOrderID and sum MaterialVarianceAmount as MaterialVariance, ConversionVarianceAmount as ConversionVariance, and TotalVarianceAmount as TotalVariance. Left merge these four unique-key summaries to Orders; load as CostBridge. Replace missing issue/labor/completion totals with zero only after checking event absence. Leave missing close variances blank, meaning no close by cutoff.",
+            "excel": "Import MaterialIssueLine as MaterialIssueLineData, MaterialIssue as MaterialIssueData, LaborTimeEntry as LaborTimeEntryData, ProductionCompletionLine as ProductionCompletionLineData, ProductionCompletion as ProductionCompletionData, and WorkOrderClose as WorkOrderCloseData. Keep those raw queries unchanged. Create four references and summarize before merging. IssuesByWorkOrder: merge MaterialIssueLineData to MaterialIssueData on MaterialIssueID, filter IssueDate through February 29, group by WorkOrderID and sum ExtendedStandardCost as Issued. LaborByWorkOrder: filter LaborTimeEntryData WorkDate through February 29, group by WorkOrderID and sum ExtendedLaborCost as LaborSupport. CompletionsByWorkOrder: merge ProductionCompletionLineData to ProductionCompletionData on ProductionCompletionID, filter CompletionDate through February 29, group by WorkOrderID and sum QuantityCompleted as CompletedQty, ExtendedStandardMaterialCost as CompletedMaterials, ExtendedStandardConversionCost as CompletedConversion, and ExtendedStandardTotalCost as CompletedTotal. ClosesByWorkOrder: filter WorkOrderCloseData CloseDate through February 29, group by WorkOrderID and sum MaterialVarianceAmount as MaterialVariance, ConversionVarianceAmount as ConversionVariance, and TotalVarianceAmount as TotalVariance. Reference Orders as CostBridge and Left merge these four unique-key summaries on WorkOrderID; load as CostBridge. Replace missing issue/labor/completion totals with zero only after checking event absence. Leave missing close variances blank, meaning no close by cutoff.",
             "queries": [
               "c05-costs"
             ],
@@ -701,7 +1002,18 @@
             "meaning": "Material issue less standard material completion equals the material variance for this closed example. Labor support is only one cost input; it is not the whole actual conversion cost. Do not force it to equal completion conversion plus close variance.",
             "keep": "Save CostBridge and a WO1 bridge with units and cost basis labeled.",
             "mismatch": "Do not add direct labor and overhead variance again after using ConversionVarianceAmount; that amount already combines them.",
-            "sqlText": "Four named results summarize issues, labor, completions, and closes separately by WorkOrderID. LEFT JOIN adds these totals to the fixed release cohort. Missing close totals stay null, distinguishing an unclosed order from a zero variance.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "Four named results summarize issues, labor, completions, and closes separately by WorkOrderID. LEFT JOIN adds these totals to the fixed release cohort. Missing close totals stay null, distinguishing an unclosed order from a zero variance.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "Orders (Session 1.1)",
+              "MaterialIssueLineData ← MaterialIssueLine and MaterialIssueData ← MaterialIssue (import here)",
+              "LaborTimeEntryData ← LaborTimeEntry (import here)",
+              "ProductionCompletionLineData ← ProductionCompletionLine and ProductionCompletionData ← ProductionCompletion (import here)",
+              "WorkOrderCloseData ← WorkOrderClose (import here)"
+            ],
+            "excelOutputs": [
+              "IssuesByWorkOrder, LaborByWorkOrder, CompletionsByWorkOrder, ClosesByWorkOrder: separate one-row-per-work-order summaries",
+              "CostBridge: all 336 cohort orders; unclosed variance remains null"
+            ]
           },
           {
             "title": "Compare a contrasting cost result",
@@ -714,7 +1026,14 @@
             "meaning": "The larger absolute variance partly reflects scale. It also has operation support that WO1 lacks. Inspect the dates and cost components before attributing the difference to worker productivity or a particular work center.",
             "keep": "Save the two-order comparison and two competing explanations.",
             "mismatch": "A blank variance is not a zero variance. Rank closed orders only and show the 46 orders not yet closed separately.",
-            "sqlText": "This repeats the same independently aggregated cost method for WO1 and WO67. It is executable by itself; it does not depend on a temporary table created in another step.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "This repeats the same independently aggregated cost method for WO1 and WO67. It is executable by itself; it does not depend on a temporary table created in another step.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "CostBridge (Session 2.1)"
+            ],
+            "excelOutputs": [
+              "CostBridge: AbsVariance and VariancePerCompletedUnit columns",
+              "Review: separate WO1/WO67 cost and timing comparison"
+            ]
           }
         ],
         "stop": "Your cost bridge should preserve 336 orders and separate missing close evidence from zero variances. Save the two-order comparison before examining capacity."
@@ -735,7 +1054,7 @@
           {
             "title": "Look beneath the period capacity total",
             "question": "Could total scheduled hours be below capacity while individual days are over capacity?",
-            "excel": "Import WorkOrderOperationScheduleData filtered January 1–February 29, group by WorkCenterID and ScheduleDate, sum ScheduledHours. Import WorkCenterCalendarData for the same dates. Left merge calendar to the load summary on WorkCenterID and CalendarDate = ScheduleDate, selecting keys in that order. Replace unmatched scheduled totals with zero after checking for schedule dates absent from the calendar using a Left anti merge in the reverse direction. In Power Query add a Custom Column named AboveCapacity:\n\n~~~text title=\"Power Query — Daily capacity / AboveCapacity\"\nif [ScheduledHours] > [AvailableHours] then 1 else 0\n~~~\n\n Group by WorkCenterID to sum available hours, scheduled hours, and AboveCapacity. For WO67’s centers inspect daily rows around January 30–February 5.",
+            "excel": "Reference the raw WorkOrderOperationScheduleData as LoadByCenterDay, filter ScheduleDate January 1–February 29, 2024, group by WorkCenterID and ScheduleDate, and sum ScheduledHours. Import WorkCenterCalendar as WorkCenterCalendarData. Reference it as DailyCapacity and filter CalendarDate to the same dates. Left merge DailyCapacity to LoadByCenterDay on WorkCenterID and CalendarDate = ScheduleDate, selecting keys in that order. Replace unmatched scheduled totals with zero after checking for schedule dates absent from the calendar: reference LoadByCenterDay as UnmatchedScheduleDates and Left anti merge to DailyCapacity on the same two keys, in the same order. In Power Query add a Custom Column named AboveCapacity:\n\n~~~text title=\"Power Query — Daily capacity / AboveCapacity\"\nif [ScheduledHours] > [AvailableHours] then 1 else 0\n~~~\n\n Preserve DailyCapacity; reference it as CapacityByCenter and group by WorkCenterID to sum available hours, scheduled hours, and AboveCapacity. For WO67’s centers inspect daily rows around January 30–February 5.",
             "queries": [
               "c05-capacity"
             ],
@@ -743,7 +1062,17 @@
             "meaning": "This capacity comparison covers all scheduled work, so it provides context for the cohort rather than allocating all capacity pressure to it. Available work-center hours are not interchangeable with employee paid hours.",
             "keep": "Save the center summary and one daily detail view supporting or weakening your explanation.",
             "mismatch": "Keep calendar dates with no load. Check calendar coverage before concluding there are no overloaded days.",
-            "sqlText": "Daily schedule totals are joined to the calendar before work-center aggregation. DaysAboveCapacity counts daily peaks; comparing only two period totals would lose them.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "Daily schedule totals are joined to the calendar before work-center aggregation. DaysAboveCapacity counts daily peaks; comparing only two period totals would lose them.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "WorkOrderOperationScheduleData (raw query from Session 1.2)",
+              "WorkCenterCalendarData ← WorkCenterCalendar (import here)"
+            ],
+            "excelOutputs": [
+              "LoadByCenterDay: one schedule total per center/day",
+              "DailyCapacity: one calendar capacity row per center/day; retained for inspection",
+              "UnmatchedScheduleDates: reverse Left anti merge",
+              "CapacityByCenter: independently summed daily capacity/load"
+            ]
           },
           {
             "title": "Prepare the production review",
@@ -754,7 +1083,13 @@
             "meaning": "Recommend checking daily scheduling and missing support before changing staffing or treating variance as inefficiency. A cost variance, a late completion, and a documentation gap need not share one cause.",
             "keep": "Save a 400–500 word memo with one prioritized action and a stated alternative explanation.",
             "mismatch": "Do not claim that spare aggregate hours prove enough capacity on every day, or that standard-cost variance measures cash overspending.",
-            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools."
+            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools.",
+            "excelInputs": [
+              "Orders, CostBridge, DailyCapacity, and CapacityByCenter (earlier stages)"
+            ],
+            "excelOutputs": [
+              "Review: timing, cost, and capacity sections; recommendation and chart"
+            ]
           }
         ],
         "stop": "Save a reproducible cost bridge and a bounded recommendation. Keep unresolved evidence visible."
@@ -772,16 +1107,49 @@
     "extension": {
       "title": "Optional worked extension — Read the replenishment support",
       "intro": "Follow WO67’s recommendation 777 into its item, warehouse, and planning week. This is one planning trace, not a reconstruction of the whole planning system.",
-      "excel": "Import SupplyPlanRecommendationData filtered to ID 777. Import DemandForecastData and filter IsCurrent = 1. Left merge on ItemID, WarehouseID, and BucketWeekStartDate = ForecastWeekStartDate in that order. Keep forecast approval and recommended quantity separate; a gross requirement can include more than forecast demand.",
+      "excel": "Import SupplyPlanRecommendation as SupplyPlanRecommendationData and reference it to filter ID 777. Import DemandForecast as DemandForecastData and filter IsCurrent = 1. Reference the selected recommendation as PlanningSupport and Left merge on ItemID, WarehouseID, and BucketWeekStartDate = ForecastWeekStartDate in that order. Keep forecast approval and recommended quantity separate; a gross requirement can include more than forecast demand.",
       "queries": [
         "c05-planning"
       ],
-      "check": "Recommendation 777 has Sales Backlog as its driver, gross requirement 36.25, recommended quantity 32.99, and need-by date February 4. The matching current forecast is 10.96, approved January 19. Forecast alone therefore does not explain the recommendation quantity; keep backlog, availability, and the recommendation calculation distinct."
+      "check": "Recommendation 777 has Sales Backlog as its driver, gross requirement 36.25, recommended quantity 32.99, and need-by date February 4. The matching current forecast is 10.96, approved January 19. Forecast alone therefore does not explain the recommendation quantity; keep backlog, availability, and the recommendation calculation distinct.",
+      "excelInputs": [
+        "SupplyPlanRecommendationData ← SupplyPlanRecommendation and DemandForecastData ← DemandForecast (import here)"
+      ],
+      "excelOutputs": [
+        "PlanningSupport: recommendation 777 matched to current forecast by item/warehouse/week"
+      ]
     },
     "interpretation": "The production review should separate cost accounting from operational timing. The data supports specific investigations into documentation, daily capacity peaks, and the 46 orders awaiting close at the cutoff. It does not support a blanket conclusion that employees were inefficient or that every late order arose from inadequate capacity.",
     "challenge": "Use work orders released in February 2024 and assess events through March 31. Rebuild all four cost summaries, select a contrasting order by an explicit rule, and defend one operational follow-up.",
     "hint": "Keep the release cohort fixed while changing event cutoffs. Do not select only orders that eventually close; that would remove the unfinished population you need to explain.",
-    "criteria": "Assess cohort integrity, separate aggregation, standard versus actual support, completion versus close, capacity scope, and a recommendation that acknowledges uncertainty."
+    "criteria": "Assess cohort integrity, separate aggregation, standard versus actual support, completion versus close, capacity scope, and a recommendation that acknowledges uncertainty.",
+    "prerequisiteLinks": [
+      {
+        "label": "1. Meet the Records",
+        "to": "/docs/learn-and-practice/meet-the-records"
+      },
+      {
+        "label": "2. Read an Order",
+        "to": "/docs/learn-and-practice/read-an-order"
+      },
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "9. Follow Manufacturing Costs",
+        "to": "/docs/learn-and-practice/manufacturing-cost-flow"
+      },
+      {
+        "label": "Manufacturing process chapter",
+        "to": "/docs/processes/manufacturing"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Aggregate issue, labor, completion, and close independently by work order; compare capacity at one row per center/day."
+    ]
   },
   {
     "number": 6,
@@ -827,7 +1195,7 @@
           {
             "title": "Build compatible center summaries",
             "question": "Would joining every roster row to every production schedule row give a valid total?",
-            "excel": "Import WorkCenterData. Create three separate Power Query summaries. Roster: filter EmployeeShiftRosterData RosterDate January 1–28 and RosterStatus Scheduled or Reassigned; group by WorkCenterID, Sum ScheduledHours as RosteredHours. Load: filter WorkOrderOperationScheduleData ScheduleDate to the same dates; group by WorkCenterID, Sum ScheduledHours as OperationHours. Worked: filter TimeClockEntryData to the same WorkDate window, PayrollPeriodID 1 or 2, ClockStatus Approved; group by WorkCenterID, summing RegularHours and OvertimeHours. Left merge each summary to WorkCenterData on WorkCenterID and load as Coverage. Review any null-center rows separately before treating the center list as a complete company population.",
+            "excel": "Import WorkCenter as WorkCenterData, EmployeeShiftRoster as EmployeeShiftRosterData, WorkOrderOperationSchedule as WorkOrderOperationScheduleData, and TimeClockEntry as TimeClockEntryData. Keep these raw queries unchanged. Reference EmployeeShiftRosterData as RosterByCenter; filter RosterDate January 1–28, 2024 and RosterStatus Scheduled or Reassigned, then group by WorkCenterID, Sum ScheduledHours as RosteredHours. Reference WorkOrderOperationScheduleData as OperationLoadByCenter; filter ScheduleDate to the same dates, then group by WorkCenterID, Sum ScheduledHours as OperationHours. Reference TimeClockEntryData as ApprovedTime; filter WorkDate January 1–28, 2024, PayrollPeriodID 1 or 2, and ClockStatus Approved. Keep ApprovedTime at TimeClockEntryID detail, including EmployeeID, PayrollPeriodID, WorkCenterID, RegularHours, and OvertimeHours for Session 2. Reference ApprovedTime as WorkedByCenter and group by WorkCenterID, Sum RegularHours as RegularHours and Sum OvertimeHours as OvertimeHours. Reference WorkCenterData as Coverage and Left merge RosterByCenter, OperationLoadByCenter, and WorkedByCenter on WorkCenterID; load Coverage. Retain each summary’s null-center row separately for review: the master-center merge cannot display an unassigned location. Keep ApprovedTime available in Power Query; do not group or replace this detail query.",
             "queries": [
               "c06-coverage"
             ],
@@ -835,12 +1203,22 @@
             "meaning": "Scheduled operation hours describe production activity; rostered hours describe people’s planned presence. Their difference is not automatically idle time. Employees may perform support work outside the operation schedule.",
             "keep": "Save Coverage and a short explanation of each denominator.",
             "mismatch": "Do not compute a staffing deficit by subtracting unlike hour measures without a documented labor requirement per operation.",
-            "sqlText": "Roster, load, and worked are separate work-center summaries. Their units and inclusion rules remain visible even though they share a center key. The center master retains centers with no activity.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "Roster, load, and worked are separate work-center summaries. Their units and inclusion rules remain visible even though they share a center key. The center master retains centers with no activity.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "WorkCenterData ← WorkCenter (import here)",
+              "EmployeeShiftRosterData ← EmployeeShiftRoster and WorkOrderOperationScheduleData ← WorkOrderOperationSchedule (import here)",
+              "TimeClockEntryData ← TimeClockEntry (import here)"
+            ],
+            "excelOutputs": [
+              "ApprovedTime: retained approved TimeClockEntryID detail for January 1–28, 2024 / periods 1 and 2",
+              "RosterByCenter, OperationLoadByCenter, and WorkedByCenter: separate summaries",
+              "Coverage: identified-center comparisons; null-center summaries retained separately"
+            ]
           },
           {
             "title": "Inspect absence evidence without forcing a location",
             "question": "Does an absence record always identify a production work center?",
-            "excel": "Import EmployeeAbsenceData filtered AbsenceDate January 1–28. Merge EmployeeShiftRosterData on EmployeeShiftRosterID to obtain WorkCenterID. Group by WorkCenterID, count EmployeeAbsenceID and sum HoursAbsent. Keep a blank work center as Unassigned in the displayed summary. Do not allocate it across centers. Compare the source roster and approval fields before interpreting the absence.",
+            "excel": "Import EmployeeAbsence as EmployeeAbsenceData. Reference it as AbsenceDetail, filter AbsenceDate January 1–28, 2024, and merge the raw EmployeeShiftRosterData on EmployeeShiftRosterID to obtain WorkCenterID. Reference AbsenceDetail as AbsenceByCenter; group by WorkCenterID, count EmployeeAbsenceID and sum HoursAbsent. Keep a blank work center as Unassigned in the displayed summary. Do not allocate it across centers. Compare the source roster and approval fields before interpreting the absence.",
             "queries": [
               "c06-absence"
             ],
@@ -848,7 +1226,15 @@
             "meaning": "This evidence cannot establish an Assembly absence problem. A useful next step is to understand the unassigned record and the coverage definition rather than spreading the absence across centers.",
             "keep": "Save the absence scope note alongside Coverage.",
             "mismatch": "Dropping the blank center makes the absence disappear. Keep missing classification visible.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "EmployeeAbsenceData ← EmployeeAbsence (import here)",
+              "EmployeeShiftRosterData (raw query from Session 1.1)"
+            ],
+            "excelOutputs": [
+              "AbsenceDetail: absence rows with roster center evidence",
+              "AbsenceByCenter: including an Unassigned displayed group"
+            ]
           }
         ],
         "stop": "Save the coverage and absence summaries. Explain why the hours do not form a simple staffing surplus/deficit equation."
@@ -869,21 +1255,32 @@
           {
             "title": "Build the pay bridge",
             "question": "Will every payroll register have hourly time-clock support?",
-            "excel": "Reference the approved TimeClockEntry query from Session 1. Group by EmployeeID and PayrollPeriodID, summing RegularHours and OvertimeHours. For a center-count check, reference its distinct EmployeeID/PayrollPeriodID/WorkCenterID combinations, remove duplicate combinations, then group by employee-period and count rows. Import PayrollRegisterData filtered to periods 1 and 2. Left merge these summaries on EmployeeID and PayrollPeriodID, selecting the two keys in the same order. Load as PayBridge. Preserve blank hour values for registers without matching hourly evidence; do not invent hours for salaried staff. Add PayCheck:\n\n~~~text title=\"Excel — PayBridge[PayCheck]\"\n=ROUND([@GrossPay]-[@EmployeeWithholdings]-[@NetPay],2)\n~~~\n\n",
+            "excel": "Reference the retained ApprovedTime detail as HoursByEmployeePeriod. Group by EmployeeID and PayrollPeriodID, Sum RegularHours as RegularHours and Sum OvertimeHours as OvertimeHours. Create a separate reference of ApprovedTime named CentersByEmployeePeriod. In this identified-center branch only, filter WorkCenterID to exclude null; keep EmployeeID, PayrollPeriodID, and WorkCenterID, remove duplicate combinations, then group by EmployeeID and PayrollPeriodID and Count Rows as WorkCenters. In another reference of ApprovedTime named UnassignedCenterByEmployeePeriod, retain only null WorkCenterID; group by EmployeeID and PayrollPeriodID, Count Rows as UnassignedTimeEntries, Sum RegularHours as UnassignedRegularHours, and Sum OvertimeHours as UnassignedOvertimeHours. Keep this missing-location evidence separate; do not allocate its hours to identified centers. Left merge CentersByEmployeePeriod into HoursByEmployeePeriod on EmployeeID and PayrollPeriodID and expand WorkCenters. Only in this hours summary, replace a missing WorkCenters count with 0: approved time exists but identifies no center. Import PayrollRegister as PayrollRegisterData and preserve the raw query; reference it as SelectedPayroll and filter periods 1 and 2. Reference SelectedPayroll as PayBridge and Left merge HoursByEmployeePeriod on EmployeeID and PayrollPeriodID, selecting the two keys in that order in both queries. Expand the two hour totals and WorkCenters; load as PayBridge. Keep the 209 register rows and preserve null hours and WorkCenters for registers with no ApprovedTime match; do not invent hours for salaried staff. Load UnassignedCenterByEmployeePeriod separately for review and retain ApprovedTime detail for tracing. Add PayCheck:\n\n~~~text title=\"Excel — PayBridge[PayCheck]\"\n=ROUND([@GrossPay]-[@EmployeeWithholdings]-[@NetPay],2)\n~~~\n\n",
             "queries": [
               "c06-pay",
               "c06-pay-summary"
             ],
             "check": "209 registers: 104 in period 1 and 105 in period 2. Period 1 gross pay is 125,541.19 and net pay 104,320.59. Period 2 gross pay is 265,084.43 and net pay 220,069.69. Each header’s gross less withholdings equals net.",
-            "meaning": "The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly.",
+            "meaning": "The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly. WorkCenters counts identified centers only. A zero means approved time with no identified center; a null after the payroll join means no approved hourly support in this scope. Neither is a fictional location.",
             "keep": "Save PayBridge and the two period totals.",
             "mismatch": "Do not join payroll headers to raw clock rows. A register repeated ten times would make pay appear ten times too large.",
-            "sqlText": "hours groups by EmployeeID and PayrollPeriodID before joining payroll. A null hours result is retained for a register without approved hourly support. COUNT(DISTINCT WorkCenterID) records location variety without repeating pay across locations.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "hours groups by EmployeeID and PayrollPeriodID before joining payroll. A null hours result is retained for a register without approved hourly support. COUNT(DISTINCT WorkCenterID) excludes null centers and records identified location variety without repeating pay across locations. It returns zero for an approved-time employee-period with only null centers; the outer payroll join retains null when there is no approved-time employee-period at all. The Excel route retains missing-center evidence in a separate branch.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "ApprovedTime (retained detail from Session 1.1)",
+              "PayrollRegisterData ← PayrollRegister (import here)"
+            ],
+            "excelOutputs": [
+              "HoursByEmployeePeriod: all approved hours, with identified WorkCenters count",
+              "CentersByEmployeePeriod: distinct nonnull center count",
+              "UnassignedCenterByEmployeePeriod: separate null-center count and hours",
+              "SelectedPayroll: periods 1 and 2",
+              "PayBridge: 209 registers; missing hourly support stays null"
+            ]
           },
           {
             "title": "Inspect one Assembly employee’s calculation",
             "question": "Can you explain gross pay before discussing employer cost?",
-            "excel": "Filter PayBridge to EmployeeID 17, period 2, register 121. Import PayrollRegisterLineData filtered to PayrollRegisterID 121. Insert a PivotTable with LineType in Rows and sums of Hours and Amount in Values. Compare regular and overtime earnings to GrossPay and tax/benefit deductions to EmployeeWithholdings. Add RecordedEmployerCost to PayBridge:\n\n~~~text title=\"Excel — PayBridge[RecordedEmployerCost]\"\n=[@GrossPay]+[@EmployerPayrollTax]+[@EmployerBenefits]\n~~~\n\n Keep deductions and employer costs separate.",
+            "excel": "Filter PayBridge to EmployeeID 17, period 2, register 121. Import PayrollRegisterLine as PayrollRegisterLineData and preserve the raw query. Reference it as EmployeePayLines and filter PayrollRegisterID 121; load EmployeePayLines. Insert a PivotTable with LineType in Rows and sums of Hours and Amount in Values. Compare regular and overtime earnings to GrossPay and tax/benefit deductions to EmployeeWithholdings. Add RecordedEmployerCost to PayBridge:\n\n~~~text title=\"Excel — PayBridge[RecordedEmployerCost]\"\n=[@GrossPay]+[@EmployerPayrollTax]+[@EmployerBenefits]\n~~~\n\n Keep deductions and employer costs separate.",
             "queries": [
               "c06-employee-lines"
             ],
@@ -891,7 +1288,16 @@
             "meaning": "Employee deductions reduce the employee’s cash payment; employer costs add to the company’s expense. Neither should be confused with a manufacturing labor allocation or a design time-cost snapshot.",
             "keep": "Save the employee reconciliation and a definition of the selected employer-cost measure.",
             "mismatch": "Pay is rounded at the earning-line level. Use recorded line amounts before assuming a tiny difference from hours times a displayed rate is an error.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "PayBridge (Session 2.1)",
+              "PayrollRegisterLineData ← PayrollRegisterLine (import here; raw query retained)"
+            ],
+            "excelOutputs": [
+              "EmployeePayLines: register 121 only",
+              "EmployeePayCalculation: LineType PivotTable",
+              "PayBridge: RecordedEmployerCost column"
+            ]
           }
         ],
         "stop": "Retain the employee example and full period summary. State why neither assigns all employee cost to every center where the person worked."
@@ -912,7 +1318,7 @@
           {
             "title": "Check employee payment completeness",
             "question": "Does an approved register prove the employee was paid?",
-            "excel": "Import PayrollPaymentData. Merge it to the selected PayrollRegisterData on PayrollRegisterID, expand PayrollPeriodID and NetPay, then group by PayrollPeriodID and PaymentDate with count and sum NetPay. Separately Left outer merge selected registers to PayrollPaymentData and filter the expanded PayrollPaymentID to null; retain the unmatched register. Do not replace a missing payment with a cleared date from another register.",
+            "excel": "Import PayrollPayment as PayrollPaymentData and preserve the raw query. Reference it as PaymentSchedule and merge to SelectedPayroll on PayrollRegisterID, expand PayrollPeriodID and NetPay, then group by PayrollPeriodID and PaymentDate with count and sum NetPay. Separately reference SelectedPayroll as UnpaidRegisters, Left outer merge to PayrollPaymentData, and filter the expanded PayrollPaymentID to null; retain the unmatched register. Do not replace a missing payment with a cleared date from another register.",
             "queries": [
               "c06-payments",
               "c06-unpaid"
@@ -921,12 +1327,20 @@
             "meaning": "The missing payment link is a follow-up item, not proof of nonpayment outside the dataset. One period-1 payment is dated January 18, which also deserves comparison with its approval evidence if the review extends to payment authorization.",
             "keep": "Save the payment schedule and one unresolved-payment workpaper.",
             "mismatch": "Compare distinct register IDs as well as money. Zero-pay registers can have payment records and should not be silently removed.",
-            "sqlText": "LEFT JOIN keeps the payroll registers; a null PayrollPaymentID identifies unmatched payment evidence. This is a test of records in the release, not proof of what happened outside it.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "LEFT JOIN keeps the payroll registers; a null PayrollPaymentID identifies unmatched payment evidence. This is a test of records in the release, not proof of what happened outside it.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "SelectedPayroll (Session 2.1)",
+              "PayrollPaymentData ← PayrollPayment (import here)"
+            ],
+            "excelOutputs": [
+              "PaymentSchedule: payment-date / period totals",
+              "UnpaidRegisters: unmatched register evidence"
+            ]
           },
           {
             "title": "Reconcile remittances by liability type",
             "question": "Why does the tax remittance differ from total employee withholdings?",
-            "excel": "Import PayrollRegisterLineData and merge the selected payroll headers to restrict periods 1 and 2. Filter LineType to Employee Tax Withholding, Benefits Deduction, Employer Payroll Tax, and Employer Benefits. Group by PayrollPeriodID and LineType, summing Amount into a column named Amount; load as LiabilityTotals. Import PayrollLiabilityRemittanceData filtered to the two periods and keep RemittanceDate. On Review enter payroll period 1 in B12. Label B13 Employee tax, B14 Employer tax, and B15 Combined benefits. Enter the following formula in each labeled cell:\n\n~~~text title=\"Excel — Review!B13\"\n=SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Employee Tax Withholding\")\n~~~\n\n\n\n~~~text title=\"Excel — Review!B14\"\n=SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Employer Payroll Tax\")\n~~~\n\n\n\n~~~text title=\"Excel — Review!B15\"\n=SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Benefits Deduction\")+SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Employer Benefits\")\n~~~\n\nCompare each result with the corresponding remittance. Retain the period 1 results, change B12 to 2, and repeat.",
+            "excel": "Reference the raw PayrollRegisterLineData as LiabilityTotals and merge SelectedPayroll to restrict periods 1 and 2. Filter LineType to Employee Tax Withholding, Benefits Deduction, Employer Payroll Tax, and Employer Benefits. Group by PayrollPeriodID and LineType, summing Amount into a column named Amount; load as LiabilityTotals. Import PayrollLiabilityRemittance as PayrollLiabilityRemittanceData. Reference it as Remittances, filter the two periods, and keep RemittanceDate. On Review enter payroll period 1 in B12. Label B13 Employee tax, B14 Employer tax, and B15 Combined benefits. Enter the following formula in each labeled cell:\n\n~~~text title=\"Excel — Review!B13\"\n=SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Employee Tax Withholding\")\n~~~\n\n\n\n~~~text title=\"Excel — Review!B14\"\n=SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Employer Payroll Tax\")\n~~~\n\n\n\n~~~text title=\"Excel — Review!B15\"\n=SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Benefits Deduction\")+SUMIFS(LiabilityTotals[Amount],LiabilityTotals[PayrollPeriodID],$B$12,LiabilityTotals[LineType],\"Employer Benefits\")\n~~~\n\nCompare each result with the corresponding remittance. Retain the period 1 results, change B12 to 2, and repeat.",
             "queries": [
               "c06-deductions",
               "c06-remittances"
@@ -935,7 +1349,17 @@
             "meaning": "These are period-wide obligations. Do not assign the whole remittance to employee 17 or to Assembly. Payment date and remittance date answer different settlement questions.",
             "keep": "Save the two-period liability reconciliation.",
             "mismatch": "Total EmployeeWithholdings includes more than tax. Match liability categories before declaring a difference.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "PayrollRegisterLineData (raw query retained in Session 2.2)",
+              "SelectedPayroll (Session 2.1)",
+              "PayrollLiabilityRemittanceData ← PayrollLiabilityRemittance (import here)"
+            ],
+            "excelOutputs": [
+              "LiabilityTotals: period / LineType amounts",
+              "Remittances: two-period liability settlement records",
+              "Review: matched liability-type reconciliations"
+            ]
           },
           {
             "title": "Recommend a staffing follow-up",
@@ -946,7 +1370,13 @@
             "meaning": "A proportionate recommendation is to inspect Assembly’s daily demand and support work before changing roster levels, while payroll verifies register 1’s payment evidence. Keep the two decisions separate.",
             "keep": "Save a 400–500 word recommendation and the chart.",
             "mismatch": "Avoid explaining all company payroll growth through one center’s overtime.",
-            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools."
+            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools.",
+            "excelInputs": [
+              "Coverage, PayBridge, PaymentSchedule, UnpaidRegisters, and Remittances (earlier stages)"
+            ],
+            "excelOutputs": [
+              "Review: separate operating/payroll follow-ups and chart"
+            ]
           }
         ],
         "stop": "Save the coverage analysis, pay bridge, employee example, and two settlement schedules. The recommendation should keep operational and accounting responsibilities distinct."
@@ -964,7 +1394,34 @@
     "interpretation": "The worked investigation supports a targeted staffing review and a separate payment-evidence follow-up. It does not establish a direct conversion from operation hours to required headcount. The pay and remittance reconciliations show why employee deductions, employer costs, employee cash, and provider cash must remain separate.",
     "challenge": "Repeat for payroll periods 3 and 4 using their complete work-date windows. Compare Assembly with another center, reconcile one employee-period, and identify the strongest supported action.",
     "hint": "Read the period start/end dates first. Rebuild employee-period summaries and examine unmatched payment rows; do not assume the first case’s exceptions recur.",
-    "criteria": "Assess compatible grains, approved-hour filters, unique payroll headers, deduction classification, separate settlement branches, and evidence limits in the recommendation."
+    "criteria": "Assess compatible grains, approved-hour filters, unique payroll headers, deduction classification, separate settlement branches, and evidence limits in the recommendation.",
+    "prerequisiteLinks": [
+      {
+        "label": "1. Meet the Records",
+        "to": "/docs/learn-and-practice/meet-the-records"
+      },
+      {
+        "label": "2. Read an Order",
+        "to": "/docs/learn-and-practice/read-an-order"
+      },
+      {
+        "label": "3. Connect the Records",
+        "to": "/docs/learn-and-practice/connect-the-records"
+      },
+      {
+        "label": "10. Follow Hours into Payroll",
+        "to": "/docs/learn-and-practice/follow-hours-into-payroll"
+      },
+      {
+        "label": "12. Turn Records into a Conclusion",
+        "to": "/docs/learn-and-practice/turn-records-into-a-conclusion"
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Preserve approved-time detail; distinguish identified from unassigned centers and employee-period pay from center workload."
+    ]
   },
   {
     "number": 7,
@@ -1012,7 +1469,7 @@
           {
             "title": "Build openings from the full history",
             "question": "What would be missing if you imported only October–December?",
-            "excel": "Import T3_GLEntry into Power Query as LedgerHistory. Keep PostingDate, AccountID, Debit, Credit, SourceDocumentType, SourceDocumentID, VoucherNumber, and GLEntryID. Set PostingDate to Date and monetary columns to Decimal Number. Filter only the upper boundary: PostingDate on or before December 31, 2026. Do not add an October lower boundary. In Power Query choose Add Column → Custom Column and add DebitNet using the expression below; Power Query expressions do not start with an equals sign:\n\n~~~text title=\"Power Query — LedgerHistory / DebitNet\"\n[Debit]-[Credit]\n~~~\n\nAdd OpeningDebitNet:\n\n~~~text title=\"Power Query — LedgerHistory / OpeningDebitNet\"\nif [PostingDate] < #date(2026,10,1) then [DebitNet] else 0\n~~~\n\nAdd QuarterDebitNet:\n\n~~~text title=\"Power Query — LedgerHistory / QuarterDebitNet\"\nif [PostingDate] >= #date(2026,10,1) then [DebitNet] else 0\n~~~\n\n Reference this query as Rollforward. Group by AccountID, summing OpeningDebitNet, QuarterDebitNet, and DebitNet (name the last ClosingDebitNet). Merge AccountData on AccountID and expand AccountNumber, AccountName, NormalBalance. Sort AccountNumber and load only this summary as Rollforward. Keep LedgerHistory as connection-only on Windows; on Mac retain it in the editor and load the grouped result, without loading raw ledger rows to a sheet.",
+            "excel": "Import T3_GLEntry into Power Query as LedgerHistory and import Account as AccountData. Keep PostingDate, AccountID, Debit, Credit, SourceDocumentType, SourceDocumentID, VoucherNumber, GLEntryID, and Description; the optional asset trace needs Description. Set PostingDate to Date and monetary columns to Decimal Number. Filter only the upper boundary: PostingDate on or before December 31, 2026. Do not add an October lower boundary. In Power Query choose Add Column → Custom Column and add DebitNet using the expression below; Power Query expressions do not start with an equals sign:\n\n~~~text title=\"Power Query — LedgerHistory / DebitNet\"\n[Debit]-[Credit]\n~~~\n\nAdd OpeningDebitNet:\n\n~~~text title=\"Power Query — LedgerHistory / OpeningDebitNet\"\nif [PostingDate] < #date(2026,10,1) then [DebitNet] else 0\n~~~\n\nAdd QuarterDebitNet:\n\n~~~text title=\"Power Query — LedgerHistory / QuarterDebitNet\"\nif [PostingDate] >= #date(2026,10,1) then [DebitNet] else 0\n~~~\n\n Reference this query as Rollforward. Group by AccountID, summing OpeningDebitNet, QuarterDebitNet, and DebitNet (name the last ClosingDebitNet). Merge AccountData on AccountID and expand AccountNumber, AccountName, NormalBalance. Sort AccountNumber and load only this summary as Rollforward. Keep LedgerHistory as connection-only on Windows; on Mac retain it in the editor and load the grouped result, without loading raw ledger rows to a sheet.",
             "queries": [
               "c07-rollforward"
             ],
@@ -1020,7 +1477,14 @@
             "meaning": "A cumulative balance needs prior history. Filtering the source to the quarter would make the opening balance zero and turn the quarter’s movement into a false ending balance.",
             "keep": "Save Rollforward, source date boundaries, and row-count evidence.",
             "mismatch": "Check the Applied Steps list for an accidental lower-date filter. Numeric source dates must be converted to Date before comparison.",
-            "sqlText": "The WHERE clause has only an upper date boundary. CASE separates all earlier history from quarter activity. All amounts use debit minus credit, so opening plus movement equals closing on one consistent sign basis.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "The WHERE clause has only an upper date boundary. CASE separates all earlier history from quarter activity. All amounts use debit minus credit, so opening plus movement equals closing on one consistent sign basis.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "LedgerHistory ← T3_GLEntry and AccountData ← Account (import here)"
+            ],
+            "excelOutputs": [
+              "LedgerHistory: full history through December 31, 2026; retained ungrouped in Power Query",
+              "Rollforward: one row per account; only summary loaded"
+            ]
           },
           {
             "title": "Check the rollforward and signs",
@@ -1031,7 +1495,14 @@
             "meaning": "A negative debit-net AP balance is the expected credit balance. Changing signs selectively inside the underlying rollforward would destroy the accounting identity.",
             "keep": "Retain the sign definition and selected control-account display.",
             "mismatch": "Do not compare a credit-normal report balance to the raw debit-net schedule without reversing its sign.",
-            "sqlText": "Use the 71 rows returned by c07-rollforward.sql. For each row, OpeningDebitNet plus QuarterDebitNet must equal ClosingDebitNet to cents. Read accounts 1020, 2010, 2020, 2040, and 2060 and reverse the sign only when presenting a credit-normal liability to management. Keep the original debit-net schedule as the reconciliation basis."
+            "sqlText": "Use the 71 rows returned by c07-rollforward.sql. For each row, OpeningDebitNet plus QuarterDebitNet must equal ClosingDebitNet to cents. Read accounts 1020, 2010, 2020, 2040, and 2060 and reverse the sign only when presenting a credit-normal liability to management. Keep the original debit-net schedule as the reconciliation basis.",
+            "excelInputs": [
+              "Rollforward (Session 1.1)"
+            ],
+            "excelOutputs": [
+              "Rollforward: arithmetic Check and NormalClosing display columns",
+              "Review: three ledger balance checks"
+            ]
           }
         ],
         "stop": "Save the 71-account schedule and its checks. You now have a reliable period boundary for the remaining sessions."
@@ -1052,7 +1523,7 @@
           {
             "title": "Calculate pre-close performance and cash activity",
             "question": "Would including the annual closing entry make December’s operating result meaningful?",
-            "excel": "Reference LedgerHistory twice. For ProfitDetail, merge AccountData and expand AccountType and AccountSubType. In Power Query add JournalKey with Add Column → Custom Column:\n\n~~~text title=\"Power Query — ProfitDetail / JournalKey\"\nif [SourceDocumentType] = \"JournalEntry\" then [SourceDocumentID] else null\n~~~\n\n Left merge JournalEntryData on JournalKey = JournalEntryID and expand EntryType; do not merge every source ID to journals. Filter PostingDate October 1–December 31, AccountType Revenue or Expense, AccountSubType not Header, and exclude EntryType beginning Year-End Close while keeping null EntryType. Add a Custom Column named ProfitAmount:\n\n~~~text title=\"Power Query — ProfitDetail / ProfitAmount\"\n[Credit]-[Debit]\n~~~\n\nDerive Month using Transform → Date → Month → Start of Month and group by Month summing ProfitAmount into a column named ProfitAmount. Load the three-row summary as ProfitSummary. For CashActivity, filter the AccountID linked to AccountNumber 1010 and quarter dates, group by SourceDocumentType summing Debit, Credit, and DebitNet into columns with those same names. Load as CashActivity.",
+            "excel": "Import JournalEntry as JournalEntryData and retain its full history. Reference LedgerHistory as LedgerPrepared; merge AccountData and expand AccountNumber, AccountName, AccountType, and AccountSubType. Keep this full-history detail ungrouped. In Power Query add JournalKey with Add Column → Custom Column:\n\n~~~text title=\"Power Query — ProfitDetail / JournalKey\"\nif [SourceDocumentType] = \"JournalEntry\" then [SourceDocumentID] else null\n~~~\n\n Left merge JournalEntryData on JournalKey = JournalEntryID and expand EntryType; do not merge every source ID to journals. Reference LedgerPrepared as QuarterLedger; filter PostingDate October 1–December 31, 2026, and exclude EntryType beginning Year-End Close while keeping null EntryType. Preserve QuarterLedger ungrouped, with all account types. Reference QuarterLedger as ProfitDetail and filter AccountType Revenue or Expense and AccountSubType not Header. Add a Custom Column named ProfitAmount:\n\n~~~text title=\"Power Query — ProfitDetail / ProfitAmount\"\n[Credit]-[Debit]\n~~~\n\nReference ProfitDetail as ProfitSummary. Derive Month using Transform → Date → Month → Start of Month and group by Month summing ProfitAmount into a column named ProfitAmount. Load the three-row summary as ProfitSummary. For CashActivity, reference QuarterLedger, filter AccountNumber 1010, group by SourceDocumentType summing Debit, Credit, and DebitNet into columns with those same names. Load as CashActivity.",
             "queries": [
               "c07-profit",
               "c07-cash"
@@ -1061,12 +1532,23 @@
             "meaning": "Profit and cash are different measures of the same business period. A customer receipt may settle an earlier invoice; a supplier payment may settle an earlier obligation. The annual close must not erase the quarter’s performance measure.",
             "keep": "Save monthly Profit and CashActivity with the close exclusion documented.",
             "mismatch": "Preserve null journal matches for operational events. Filtering null EntryType out would remove much of the ledger.",
-            "sqlText": "The journal join applies only when the source type is JournalEntry. COALESCE preserves operational entries with no journal match, while NOT LIKE excludes the annual close. Profit uses credit minus debit for revenue and expense accounts.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "The journal join applies only when the source type is JournalEntry. COALESCE preserves operational entries with no journal match, while NOT LIKE excludes the annual close. Profit uses credit minus debit for revenue and expense accounts.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "LedgerHistory and AccountData (Session 1.1)",
+              "JournalEntryData ← JournalEntry (import here; full history retained)"
+            ],
+            "excelOutputs": [
+              "LedgerPrepared: full-history detail with account and conditional journal fields",
+              "QuarterLedger: all account types in Q4, excluding close; retained ungrouped",
+              "ProfitDetail: pre-close P&L detail",
+              "ProfitSummary: three monthly rows",
+              "CashActivity: Q4 cash by source type"
+            ]
           },
           {
             "title": "Construct the complete arithmetic bridge",
             "question": "Which other account changes explain the difference?",
-            "excel": "Reference the same quarter ledger with the conditional journal join and close exclusion. Keep AccountNumber not 1010 and AccountType other than Revenue or Expense. In Power Query add BridgeEffect with Add Column → Custom Column:\n\n~~~text title=\"Power Query — Bridge effects / BridgeEffect\"\n[Credit]-[Debit]\n~~~\n\nGroup by AccountNumber and AccountName, summing BridgeEffect into a column with the same name. Add NonzeroEffect with the expression below and filter it to true:\n\n~~~text title=\"Power Query — Bridge effects / NonzeroEffect\"\nNumber.Round(Number.Abs([BridgeEffect]),2) > 0\n~~~\n\nLoad as BridgeEffects. On Review label B8 Quarter pre-close profit and enter:\n\n~~~text title=\"Excel — Review!B8\"\n=SUM(ProfitSummary[ProfitAmount])\n~~~\n\nPlace the 19 effect rows beneath the profit explanation. Label B9 Calculated cash movement and enter:\n\n~~~text title=\"Excel — Review!B9\"\n=SUM(B8,BridgeEffects[BridgeEffect])\n~~~\n\nLabel B10 Ledger cash movement and enter:\n\n~~~text title=\"Excel — Review!B10\"\n=SUM(CashActivity[DebitNet])\n~~~\n\nLabel B11 Bridge difference and enter:\n\n~~~text title=\"Excel — Review!B11\"\n=ROUND(B9-B10,2)\n~~~\n\nChart the signed effects using a column chart, clearly separating starting profit and calculated cash movement from individual effects.",
+            "excel": "Reference the retained QuarterLedger as BridgeEffects; it already has the conditional journal join and close exclusion, with all account types still present. Keep AccountNumber not 1010 and AccountType other than Revenue or Expense. In Power Query add BridgeEffect with Add Column → Custom Column:\n\n~~~text title=\"Power Query — Bridge effects / BridgeEffect\"\n[Credit]-[Debit]\n~~~\n\nGroup by AccountNumber and AccountName, summing BridgeEffect into a column with the same name. Add NonzeroEffect with the expression below and filter it to true:\n\n~~~text title=\"Power Query — Bridge effects / NonzeroEffect\"\nNumber.Round(Number.Abs([BridgeEffect]),2) > 0\n~~~\n\nLoad as BridgeEffects. On Review label B8 Quarter pre-close profit and enter:\n\n~~~text title=\"Excel — Review!B8\"\n=SUM(ProfitSummary[ProfitAmount])\n~~~\n\nPlace the 19 effect rows beneath the profit explanation. Label B9 Calculated cash movement and enter:\n\n~~~text title=\"Excel — Review!B9\"\n=SUM(B8,BridgeEffects[BridgeEffect])\n~~~\n\nLabel B10 Ledger cash movement and enter:\n\n~~~text title=\"Excel — Review!B10\"\n=SUM(CashActivity[DebitNet])\n~~~\n\nLabel B11 Bridge difference and enter:\n\n~~~text title=\"Excel — Review!B11\"\n=ROUND(B9-B10,2)\n~~~\n\nChart the signed effects using a column chart, clearly separating starting profit and calculated cash movement from individual effects.",
             "queries": [
               "c07-bridge"
             ],
@@ -1074,12 +1556,19 @@
             "meaning": "This bridge explains the accounting difference. It does not mean every inventory increase was paid in cash or every liability increase is an operating cash inflow. The published cash-flow statement applies its own operating, investing, and financing classifications.",
             "keep": "Save the zero-difference bridge and identify the largest three effects.",
             "mismatch": "Do not use post-close retained-earnings movement as an additional profit effect: that would count annual profit again.",
-            "sqlText": "Exclude cash and revenue/expense accounts, keep quarter activity, and remove annual close entries. Credit minus debit on the remaining accounts supplies the effects needed to bridge pre-close profit to cash. HAVING removes immaterial zero aggregates after grouping.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "Exclude cash and revenue/expense accounts, keep quarter activity, and remove annual close entries. Credit minus debit on the remaining accounts supplies the effects needed to bridge pre-close profit to cash. HAVING removes immaterial zero aggregates after grouping.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "QuarterLedger, ProfitSummary, and CashActivity (Session 2.1)"
+            ],
+            "excelOutputs": [
+              "BridgeEffects: nonzero Q4 noncash/non-P&L effects",
+              "Review: profit-to-cash reconciliation and chart"
+            ]
           },
           {
             "title": "Trace one liability movement to source documents",
             "question": "Can the large GRNI entries be explained by a receipt and a later invoice?",
-            "excel": "Reference quarter LedgerHistory; merge AccountData and filter AccountNumber 2020, December dates. In Power Query add a Custom Column named AbsoluteAmount:\n\n~~~text title=\"Power Query — Selected liability trace / AbsoluteAmount\"\nNumber.Abs([DebitNet])\n~~~\n\nSort AbsoluteAmount descending then GLEntryID and keep the first five rows. Follow GoodsReceipt 27267 and PurchaseInvoice 39692 into their headers and lines. Merge PurchaseInvoiceLineData filtered to invoice 39692 with GoodsReceiptLineData on GoodsReceiptLineID, then GoodsReceiptData on GoodsReceiptID.",
+            "excel": "Reference LedgerPrepared as LiabilityTrace and filter AccountNumber 2020 and December 1–31, 2026. In Power Query add a Custom Column named AbsoluteAmount:\n\n~~~text title=\"Power Query — Selected liability trace / AbsoluteAmount\"\nNumber.Abs([DebitNet])\n~~~\n\nSort AbsoluteAmount descending then GLEntryID and keep the first five rows. Import PurchaseInvoice as PurchaseInvoiceData, PurchaseInvoiceLine as PurchaseInvoiceLineData, GoodsReceipt as GoodsReceiptData, and GoodsReceiptLine as GoodsReceiptLineData. Follow GoodsReceipt 27267 and PurchaseInvoice 39692 into these headers and lines. Reference PurchaseInvoiceLineData as ReceiptInvoiceTrace, filter PurchaseInvoiceID 39692, merge GoodsReceiptLineData on GoodsReceiptLineID, then GoodsReceiptData on GoodsReceiptID.",
             "queries": [
               "c07-source",
               "c07-source-documents"
@@ -1088,7 +1577,16 @@
             "meaning": "The matching amounts and explicit link support a transition from GRNI into AP, not payment. That distinction helps explain why a liability balance can change even without immediate cash movement.",
             "keep": "Save the two-document trace and identify the next table needed to investigate payment.",
             "mismatch": "Matching amounts alone are insufficient. Require the GoodsReceiptLineID relationship.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "LedgerPrepared (full-history detail from Session 2.1)",
+              "PurchaseInvoiceData ← PurchaseInvoice and PurchaseInvoiceLineData ← PurchaseInvoiceLine (import here)",
+              "GoodsReceiptData ← GoodsReceipt and GoodsReceiptLineData ← GoodsReceiptLine (import here)"
+            ],
+            "excelOutputs": [
+              "LiabilityTrace: selected December 2026 2020 ledger rows",
+              "ReceiptInvoiceTrace: invoice 39692 / receipt support"
+            ]
           }
         ],
         "stop": "Save the profit, cash, full bridge, and one source trace. Draft a plain-language explanation of why profit and cash moved differently."
@@ -1109,7 +1607,7 @@
           {
             "title": "Inspect both closing journals",
             "question": "Should the equity transfer equal fourth-quarter profit or full-year profit?",
-            "excel": "Import JournalEntryData filtered to PostingDate December 31, 2026 and EntryType beginning Year-End Close. Inner merge GLEntryData using SourceDocumentType JournalEntry and SourceDocumentID = JournalEntryID. Merge AccountData. In Power Query add a Custom Column named DebitNet:\n\n~~~text title=\"Power Query — Closing journal detail / DebitNet\"\n[Debit]-[Credit]\n~~~\n\nGroup by JournalEntryID, EntryType, AccountNumber, summing DebitNet. Separately reference the full-year 2026 ledger. Add ProfitAmount using the expression below, then group all selected rows and sum ProfitAmount twice: once excluding closing entries, once including them:\n\n~~~text title=\"Power Query — Full-year performance / ProfitAmount\"\n[Credit]-[Debit]\n~~~\n\n Keep the same account-type and Header exclusions used for Profit.",
+            "excel": "Reference the raw JournalEntryData as ClosingJournals and filter PostingDate December 31, 2026 and EntryType beginning Year-End Close. Reference LedgerPrepared as ClosingJournalDetail, filter SourceDocumentType JournalEntry, and Inner merge ClosingJournals on SourceDocumentID = JournalEntryID. Keep all account lines; AccountNumber and DebitNet are already present from LedgerPrepared. Expand JournalEntryID from ClosingJournals and keep the existing EntryType; retain SourceDocumentType and SourceDocumentID as the source pair.\n\nReference ClosingJournalDetail as ClosingJournalSummary and group by JournalEntryID, EntryType, AccountNumber, summing DebitNet. Separately reference LedgerPrepared as FullYearPerformance and filter PostingDate January 1–December 31, 2026, without a quarter restriction. Add ProfitAmount using the expression below:\n\n~~~text title=\"Power Query — Full-year performance / ProfitAmount\"\n[Credit]-[Debit]\n~~~\n\n Filter AccountType Revenue or Expense and AccountSubType not Header. Add a custom column ReviewYear with the constant 2026. Preserve FullYearPerformance and create two references: AnnualPreClose excludes EntryType beginning Year-End Close while keeping null EntryType; AnnualPostClose keeps closing entries. In each reference Group By ReviewYear and sum ProfitAmount as AnnualProfit. Keep both one-row results for comparison.",
             "queries": [
               "c07-close",
               "c07-annual-check"
@@ -1118,7 +1616,16 @@
             "meaning": "A zero post-close P&L balance confirms the transfer for the selected definition; it does not mean the business earned no profit. Do not add the annual transfer to the quarter’s operating result.",
             "keep": "Save the closing sequence and annual comparison.",
             "mismatch": "An annual close cannot be checked against a quarter-only P&L. Keep annual and quarterly schedules distinctly labeled.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "JournalEntryData and LedgerPrepared (full-history queries from Session 2.1)"
+            ],
+            "excelOutputs": [
+              "ClosingJournals: two December 31, 2026 close headers",
+              "ClosingJournalDetail: retained full selected vouchers",
+              "ClosingJournalSummary: journal/account amounts",
+              "FullYearPerformance: retained 2026 P&L detail; AnnualPreClose and AnnualPostClose: separate annual-profit summaries"
+            ]
           }
         ],
         "stop": "Save the annual close workpaper. Explain why the retained-earnings movement uses a different period from the management performance discussion."
@@ -1145,7 +1652,14 @@
             "meaning": "Matching totals support the reconciliation on these definitions. They do not prove every underlying transaction is error-free. The source trace and unresolved items remain part of the review.",
             "keep": "Save a compact report tie-out table with difference columns.",
             "mismatch": "Choose actual reports, not the pro forma reports. Do not add both subtotal and detail rows.",
-            "sqlText": "Open the published Monthly Income Statement and Monthly Indirect Cash Flow CSV downloads from Reports and Analytics in a text editor. Read the header, then locate FiscalYear 2026 and FiscalPeriod 10, 11, and 12. Retain only Net Income subtotal rows for the profit comparison, and Net Change in Cash rows for cash movement. Compare with c07-profit.sql and c07-cash.sql. Read October Beginning Cash and December Ending Cash once; do not sum monthly balances. This inspection does not require importing the reports into your database."
+            "sqlText": "Open the published Monthly Income Statement and Monthly Indirect Cash Flow CSV downloads from Reports and Analytics in a text editor. Read the header, then locate FiscalYear 2026 and FiscalPeriod 10, 11, and 12. Retain only Net Income subtotal rows for the profit comparison, and Net Change in Cash rows for cash movement. Compare with c07-profit.sql and c07-cash.sql. Read October Beginning Cash and December Ending Cash once; do not sum monthly balances. This inspection does not require importing the reports into your database.",
+            "excelInputs": [
+              "Existing Monthly Income Statement report download",
+              "Existing Monthly Indirect Cash Flow report download"
+            ],
+            "excelOutputs": [
+              "StatementComparison: Q4 2026 income/cash movements and October/December cash endpoints"
+            ]
           },
           {
             "title": "Write the management explanation",
@@ -1156,7 +1670,13 @@
             "meaning": "Recommend reviewing the drivers of inventory growth and the payment outlook rather than treating profit as available cash. State what additional aging, inventory, or operating evidence is needed before making a liquidity or purchasing decision.",
             "keep": "Save the memo, bridge, report comparison, and source workpaper.",
             "mismatch": "Do not present a selected document trace as proof of every control-account balance.",
-            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools."
+            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools.",
+            "excelInputs": [
+              "Review rollforward, profit/cash bridge, close checks, and StatementComparison (earlier stages)"
+            ],
+            "excelOutputs": [
+              "Review: management explanation and unresolved-items table"
+            ]
           }
         ],
         "stop": "The completed review should stand on its own: definitions, reproducible schedules, source evidence, limitations, and an action priority."
@@ -1174,19 +1694,58 @@
           "Depreciation records asset use; debt payments separate principal and interest."
         ]
       ],
-      "excel": "Import FixedAssetData filtered to ID 18 and FixedAssetEventData for that ID. Import DebtScheduleLineData filtered DebtAgreementID 2 and PaymentDate through December 31, 2026. Load the asset as FixedAssetData and add MonthlyDepreciation:\n\n~~~text title=\"Excel — FixedAssetData[MonthlyDepreciation]\"\n=ROUND(([@OriginalCost]-[@ResidualValue])/[@UsefulLifeMonths],2)\n~~~\n\nThis asset begins depreciation in the month after its January in-service date. Import GLEntryData for GoodsReceipt/15616, PurchaseInvoice/21692, JournalEntry/445, and the two JournalEntry/685 rows whose Description names this asset. Keep the last two as an excerpt of the larger depreciation voucher. Load the debt schedule as DebtScheduleLineData. Filter PaymentDate to October–December 2026. On Review label B20 Principal, B21 Interest, B22 Payment, and B23 Payment difference. Enter each formula:\n\n~~~text title=\"Excel — Review!B20\"\n=SUBTOTAL(109,DebtScheduleLineData[PrincipalAmount])\n~~~\n\n\n\n~~~text title=\"Excel — Review!B21\"\n=SUBTOTAL(109,DebtScheduleLineData[InterestAmount])\n~~~\n\n\n\n~~~text title=\"Excel — Review!B22\"\n=SUBTOTAL(109,DebtScheduleLineData[PaymentAmount])\n~~~\n\n\n\n~~~text title=\"Excel — Review!B23\"\n=ROUND(B20+B21-B22,2)\n~~~\n\n",
+      "excel": "Import FixedAsset as FixedAssetData, FixedAssetEvent as FixedAssetEventData, and DebtScheduleLine as DebtScheduleLineData; preserve the raw queries. Reference FixedAssetData and filter FixedAssetID 18; filter a separate FixedAssetEventData reference to that same ID. Reference DebtScheduleLineData and filter DebtAgreementID 2 and PaymentDate through December 31, 2026. Load the selected asset as AssetReview and add MonthlyDepreciation:\n\n~~~text title=\"Excel — AssetReview[MonthlyDepreciation]\"\n=ROUND(([@OriginalCost]-[@ResidualValue])/[@UsefulLifeMonths],2)\n~~~\n\nThis asset begins depreciation in the month after its January in-service date. Reference LedgerHistory as AssetLedgerExcerpt and filter document pairs GoodsReceipt/15616, PurchaseInvoice/21692, JournalEntry/445, and the two JournalEntry/685 rows whose Description names this asset. Keep the last two as an excerpt of the larger depreciation voucher. Reference the selected debt schedule as DebtReview and load it. Filter PaymentDate to October–December 2026. On Review label B20 Principal, B21 Interest, B22 Payment, and B23 Payment difference. Enter each formula:\n\n~~~text title=\"Excel — Review!B20\"\n=SUBTOTAL(109,DebtReview[PrincipalAmount])\n~~~\n\n\n\n~~~text title=\"Excel — Review!B21\"\n=SUBTOTAL(109,DebtReview[InterestAmount])\n~~~\n\n\n\n~~~text title=\"Excel — Review!B22\"\n=SUBTOTAL(109,DebtReview[PaymentAmount])\n~~~\n\n\n\n~~~text title=\"Excel — Review!B23\"\n=ROUND(B20+B21-B22,2)\n~~~\n\n",
       "queries": [
         "c07-assets",
         "c07-depreciation",
         "c07-asset-postings",
         "c07-debt"
       ],
-      "check": "Asset cost is 280,000 and monthly depreciation 2,333.33. December’s asset-specific depreciation debits manufacturing cost clearing, not cash. The note-financing entry has no cash line. Q4 debt-2 payments total 16,396.26: principal 12,500.72 and interest 3,895.54. Principal reduces debt; interest is a separate expense/cash classification. The description-based depreciation excerpt is not a unique formal asset-to-ledger key."
+      "check": "Asset cost is 280,000 and monthly depreciation 2,333.33. December’s asset-specific depreciation debits manufacturing cost clearing, not cash. The note-financing entry has no cash line. Q4 debt-2 payments total 16,396.26: principal 12,500.72 and interest 3,895.54. Principal reduces debt; interest is a separate expense/cash classification. The description-based depreciation excerpt is not a unique formal asset-to-ledger key.",
+      "excelInputs": [
+        "FixedAssetData ← FixedAsset and FixedAssetEventData ← FixedAssetEvent (import here; use selected references)",
+        "DebtScheduleLineData ← DebtScheduleLine (import here; raw query retained)",
+        "LedgerHistory (full-history query from Session 1.1)"
+      ],
+      "excelOutputs": [
+        "AssetReview: asset 18 and depreciation formula",
+        "AssetLedgerExcerpt: selected source rows, with partial voucher labeled",
+        "DebtReview: agreement 2 payment schedule and Q4 principal/interest check"
+      ]
     },
     "interpretation": "The quarter produces positive pre-close profit while cash falls. The complete ledger bridge explains that difference and the selected receipt/invoice trace illustrates a liability transition. The annual closing entries transfer full-year profit to retained earnings without creating cash. Management can now discuss inventory and obligation timing using reconciled evidence, while recognizing that an arithmetic tie-out alone does not establish transaction validity.",
     "challenge": "Apply the framework to fourth-quarter 2025 and December 31, 2025. Build openings from earlier history, exclude annual close from period performance, trace a material bridge item, and explain which management priority changes.",
     "hint": "Do not reuse the worked opening balances. Reconstruct all earlier history through September 30, 2025 and use the 2025 closing journals. Select an asset lifecycle that actually occurs in the relevant records if you extend the case.",
-    "criteria": "Assess opening history, signs, close exclusions, complete cash bridge, matched report definitions, source support, and priorities that reflect uncertainty."
+    "criteria": "Assess opening history, signs, close exclusions, complete cash bridge, matched report definitions, source support, and priorities that reflect uncertainty.",
+    "prerequisiteLinks": [
+      {
+        "label": "6. Find the Accounting Entries",
+        "to": "/docs/learn-and-practice/find-the-accounting-entries"
+      },
+      {
+        "label": "11. Follow an Estimate into Settlement",
+        "to": "/docs/learn-and-practice/follow-an-estimate-into-settlement"
+      },
+      {
+        "label": "12. Turn Records into a Conclusion",
+        "to": "/docs/learn-and-practice/turn-records-into-a-conclusion"
+      },
+      {
+        "label": "Case 1: customer account review",
+        "to": "/docs/analytics/cases/o2c-trace-case",
+        "recommended": true
+      },
+      {
+        "label": "Case 3: supplier obligations",
+        "to": "/docs/analytics/cases/p2p-accrual-settlement-case",
+        "recommended": true
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Retain full ledger history for openings; distinguish pre-close performance, cash movements, balance snapshots, and complete closing vouchers."
+    ]
   },
   {
     "number": 8,
@@ -1229,7 +1788,7 @@
           {
             "title": "Specify two review criteria",
             "question": "Could the same number of flags mean different things in different populations?",
-            "excel": "Import PurchaseInvoiceData without a date filter. Import DisbursementPaymentData without removing rows. Create a Reference named CheckPayments, filter CheckNumber not blank, and load that reference for the check-reference test. Keep the original query available for invoice payment investigations. Import TimeClockEntryData filtered WorkDate October 1–December 31, 2026, ClockStatus Approved, and OvertimeHours greater than zero. Load the last selection as Overtime. On Review label B2 Invoice documents, B3 Payments with a check reference, and B4 Approved overtime records. Enter the counts:\n\n~~~text title=\"Excel — Review!B2\"\n=ROWS(PurchaseInvoiceData[PurchaseInvoiceID])\n~~~\n\n\n\n~~~text title=\"Excel — Review!B3\"\n=ROWS(CheckPayments[DisbursementID])\n~~~\n\n\n\n~~~text title=\"Excel — Review!B4\"\n=ROWS(Overtime[TimeClockEntryID])\n~~~\n\n For the invoice test define a repeated reference as the same SupplierID and exact InvoiceNumber occurring more than once; for checks use SupplierID and nonblank CheckNumber. For overtime, first test missing linked approval or hours above linked ApprovedHours. Treat identity, status, and timing as further evidence checks.",
+            "excel": "Import PurchaseInvoice as PurchaseInvoiceData without a date filter. Import DisbursementPayment as DisbursementPaymentData without removing rows; retain both complete raw queries. Create a Reference named CheckPayments, filter CheckNumber not blank, and load that reference for the check-reference test. Keep the original query available for invoice payment investigations. Import TimeClockEntry as TimeClockEntryData; preserve the raw query and reference it as Overtime, filtered WorkDate October 1–December 31, 2026, ClockStatus Approved, and OvertimeHours greater than zero. Load the last selection as Overtime. On Review label B2 Invoice documents, B3 Payments with a check reference, and B4 Approved overtime records. Enter the counts:\n\n~~~text title=\"Excel — Review!B2\"\n=ROWS(PurchaseInvoiceData[PurchaseInvoiceID])\n~~~\n\n\n\n~~~text title=\"Excel — Review!B3\"\n=ROWS(CheckPayments[DisbursementID])\n~~~\n\n\n\n~~~text title=\"Excel — Review!B4\"\n=ROWS(Overtime[TimeClockEntryID])\n~~~\n\n For the invoice test define a repeated reference as the same SupplierID and exact InvoiceNumber occurring more than once; for checks use SupplierID and nonblank CheckNumber. For overtime, first test missing linked approval or hours above linked ApprovedHours. Treat identity, status, and timing as further evidence checks.",
             "queries": [
               "c08-populations"
             ],
@@ -1237,7 +1796,16 @@
             "meaning": "The tests do not cover every AP or payroll risk. Exact reference matching also misses differently formatted duplicates; note that limitation before interpreting a zero or low rate.",
             "keep": "Save a scope sheet with risks, criteria, exclusions, denominators, and expected evidence.",
             "mismatch": "Do not filter AP to Q4 simply to match overtime dates. The worked duplicate-reference evidence is across released history.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "PurchaseInvoiceData ← PurchaseInvoice and DisbursementPaymentData ← DisbursementPayment (import here; full populations retained)",
+              "TimeClockEntryData ← TimeClockEntry (import here; raw query retained)"
+            ],
+            "excelOutputs": [
+              "CheckPayments: nonblank check references only",
+              "Overtime: Q4 2026 approved entries with positive overtime",
+              "Review: separate population counts and criteria"
+            ]
           }
         ],
         "stop": "Save the scope and criteria before viewing flags. This prevents the results from silently redefining the question."
@@ -1258,7 +1826,7 @@
           {
             "title": "Find groups without multiplying documents",
             "question": "Should the denominator count duplicate groups or document rows?",
-            "excel": "In Power Query Reference PurchaseInvoiceData as InvoiceGroups. Group by SupplierID and InvoiceNumber; Count Rows as Occurrences; filter Occurrences greater than 1. Merge those groups back to PurchaseInvoiceData on both keys using an Inner join and expand the document columns. Separately group nonblank-check DisbursementPaymentData by SupplierID and CheckNumber, Count Rows, retain counts greater than 1, then merge back on both keys. Name the outputs DuplicateInvoices and DuplicateChecks. Summarize payments by PurchaseInvoiceID before merging their total to DuplicateInvoices.",
+            "excel": "In Power Query Reference PurchaseInvoiceData as InvoiceGroups. Group by SupplierID and InvoiceNumber; Count Rows as Occurrences; filter Occurrences greater than 1. Reference InvoiceGroups as DuplicateInvoices and Inner merge to PurchaseInvoiceData on both keys; expand the document columns. Separately reference CheckPayments as CheckGroups, group by SupplierID and CheckNumber, Count Rows as Occurrences, and retain counts greater than 1. Reference CheckGroups as DuplicateChecks and Inner merge to CheckPayments on both keys; expand the document columns. Reference DisbursementPaymentData as PaymentsByInvoice, group by PurchaseInvoiceID and Sum Amount as PaidAmount, then Left merge that unique-key summary to DuplicateInvoices. Keep the grouped-key queries and full source queries available; load DuplicateInvoices and DuplicateChecks for inspection.",
             "queries": [
               "c08-duplicates",
               "c08-checks"
@@ -1267,12 +1835,20 @@
             "meaning": "Twelve flagged invoice rows and six groups are different counts. A percentage based on groups divided by document rows would mix units. Keep the invoice and payment flag rates separate.",
             "keep": "Save both group lists and all flagged document rows.",
             "mismatch": "Group within supplier. A reference repeated by two different suppliers is not the same test. Exclude blank check references explicitly.",
-            "sqlText": "groups identifies exact supplier/reference pairs occurring more than once. Joining the group back retrieves each flagged document. The payment SUM is independent, so multiple payments cannot duplicate invoice values.\n\nBlank references are excluded before grouping. The same supplier and CheckNumber must match. Keep both group counts and payment-row counts; they answer different questions.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "groups identifies exact supplier/reference pairs occurring more than once. Joining the group back retrieves each flagged document. The payment SUM is independent, so multiple payments cannot duplicate invoice values.\n\nBlank references are excluded before grouping. The same supplier and CheckNumber must match. Keep both group counts and payment-row counts; they answer different questions.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "PurchaseInvoiceData, DisbursementPaymentData, and CheckPayments (Session 1.1)"
+            ],
+            "excelOutputs": [
+              "InvoiceGroups and CheckGroups: repeated-reference keys",
+              "PaymentsByInvoice: independently summed payments",
+              "DuplicateInvoices and DuplicateChecks: document-level exception evidence"
+            ]
           },
           {
             "title": "Follow the first invoice pair to receipts and payment",
             "question": "Do invoices 28 and 44 represent the same goods and amount?",
-            "excel": "Import PurchaseInvoiceLineData filtered PurchaseInvoiceID 28 or 44. Keep GoodsReceiptLineID, POLineID, ItemID, Quantity, and LineTotal. Import DisbursementPaymentData filtered to those same invoice IDs without the nonblank-check filter; these payments may use another method. Compare document dates and amounts, receipt links, and payment IDs. Retain a separate register row for each invoice.",
+            "excel": "Import PurchaseInvoiceLine as PurchaseInvoiceLineData; reference it as InvoicePairLines and filter PurchaseInvoiceID 28 or 44. Keep GoodsReceiptLineID, POLineID, ItemID, Quantity, and LineTotal. Reference the original DisbursementPaymentData as InvoicePairPayments and filter to those same invoice IDs without the nonblank-check filter; these payments may use another method. Compare document dates and amounts, receipt links, and payment IDs. Retain a separate register row for each invoice.",
             "queries": [
               "c08-invoice-detail",
               "c08-payment-detail"
@@ -1281,7 +1857,16 @@
             "meaning": "The repeated invoice reference is supported. The different amounts, items, and receipt links weaken the claim that these are duplicate economic transactions. The source data alone does not show the supplier’s original invoice images or a bank confirmation.",
             "keep": "Write Workpaper A: criterion, flagged keys, source trail, alternative explanation, conclusion, missing evidence, and next action.",
             "mismatch": "A paid status or matching reference cannot establish duplicate payment. Do not sum the pair and label it a proven loss.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "PurchaseInvoiceLineData ← PurchaseInvoiceLine (import here)",
+              "DisbursementPaymentData (complete raw query from Session 1.1)"
+            ],
+            "excelOutputs": [
+              "InvoicePairLines: invoices 28/44 line evidence",
+              "InvoicePairPayments: all-method payments for invoices 28/44",
+              "Review: separate invoice register rows"
+            ]
           },
           {
             "title": "Investigate the repeated check example",
@@ -1292,7 +1877,14 @@
             "meaning": "The repeated check reference warrants treasury/AP follow-up. Distinct payment rows and clearing fields still do not replace external banking evidence. Classify the reference exception as supported and the duplicate-cash-loss claim as unresolved.",
             "keep": "Retain the payment pair and specify the bank or supplier evidence needed.",
             "mismatch": "Do not confuse CheckNumber with the unique DisbursementID.",
-            "sqlText": "Return to c08-checks.sql. Read the two rows with CheckNumber CHK0006076 and compare their invoice IDs, dates, amounts, and cleared dates. Keep this check-reference investigation separate from the invoice-reference workpaper."
+            "sqlText": "Return to c08-checks.sql. Read the two rows with CheckNumber CHK0006076 and compare their invoice IDs, dates, amounts, and cleared dates. Keep this check-reference investigation separate from the invoice-reference workpaper.",
+            "excelInputs": [
+              "DuplicateChecks and PurchaseInvoiceData (earlier stages)"
+            ],
+            "excelOutputs": [
+              "DuplicateChecks: invoice lookup columns",
+              "Review: SupplierID 1 / CHK0006076 evidence, separate from repeated-invoice criterion"
+            ]
           }
         ],
         "stop": "Save Workpaper A and both AP exception registers. Your conclusion must separate a confirmed reference problem from an unproven loss."
@@ -1313,15 +1905,23 @@
           {
             "title": "Classify the hours test",
             "question": "Why would an Inner join hide the very exception you want to inspect?",
-            "excel": "Import OvertimeApprovalData as Approvals. In Power Query Left outer merge Overtime to Approvals on OvertimeApprovalID. Expand the approval ID as MatchedApprovalID, ApprovedHours, ApprovedDate as OvertimeApprovedDate, and Status. Keep the time record’s original ApprovedDate separately. Load as OvertimeReview. Add HoursTest:\n\n~~~text title=\"Excel — OvertimeReview[HoursTest]\"\n=IF([@MatchedApprovalID]=\"\",\"Missing linked approval\",IF([@ApprovedHours]<[@OvertimeHours],\"Hours exceed approval\",\"Hours supported\"))\n~~~\n\nCreate a PivotTable with HoursTest in Rows and Count of TimeClockEntryID in Values. Preserve zero approved hours as a real value.",
+            "excel": "Import OvertimeApproval as Approvals. In Power Query Left outer merge Overtime to Approvals on OvertimeApprovalID. Expand the approval ID as MatchedApprovalID, ApprovedHours, ApprovedDate as OvertimeApprovedDate, and Status. Keep the time record’s original ApprovedDate separately. Load as OvertimeReview. Add HoursTest:\n\n~~~text title=\"Excel — OvertimeReview[HoursTest]\"\n=IF([@MatchedApprovalID]=\"\",\"Missing linked approval\",IF([@ApprovedHours]<[@OvertimeHours],\"Hours exceed approval\",\"Hours supported\"))\n~~~\n\nCreate a PivotTable with HoursTest in Rows and Count of TimeClockEntryID in Values. Preserve zero approved hours as a real value.",
             "queries": [
               "c08-overtime"
             ],
             "check": "1,895 eligible time entries: 336 missing linked approval, zero with hours exceeding a linked approval, and 1,559 with hours supported. The missing-link rate is 17.73% of eligible entries.",
-            "meaning": "This is a documented-link test. It does not establish that all 336 employees lacked authorization outside the file, and the 1,559 hours-supported rows still need identity, status, and date checks for a fuller authorization conclusion.",
+            "meaning": "These 336 time entries lack a linked approval record under this test; this does not establish that the associated employees lacked authorization outside the file. The 1,559 hours-supported rows still need identity, status, and date checks for a fuller authorization conclusion.",
             "keep": "Save the complete classification and the flagged subset with stable IDs.",
             "mismatch": "Keep null matches. A zero-row exception list after an Inner join is not evidence of effective control.",
-            "sqlText": "LEFT JOIN retains missing approvals. CASE applies the hours-support criteria in order: no linked record, insufficient approved hours, then hours supported. The WHERE clause fixes the eligible quarter, approved clock status, and positive overtime denominator.\n\nRun each complete statement separately and retain its result before continuing."
+            "sqlText": "LEFT JOIN retains missing approvals. CASE applies the hours-support criteria in order: no linked record, insufficient approved hours, then hours supported. The WHERE clause fixes the eligible quarter, approved clock status, and positive overtime denominator.\n\nRun each complete statement separately and retain its result before continuing.",
+            "excelInputs": [
+              "Overtime (Session 1.1)",
+              "Approvals ← OvertimeApproval (import here)"
+            ],
+            "excelOutputs": [
+              "OvertimeReview: time-entry detail and approval match; HoursTest classification",
+              "HoursTestCounts: entry-count PivotTable"
+            ]
           },
           {
             "title": "Compare a flag with an hours-supported record",
@@ -1334,7 +1934,14 @@
             "meaning": "The comparison supports a missing-link finding for 49581 under this review’s criterion. It does not prove the work was not performed, the employee was overpaid, or anyone acted dishonestly.",
             "keep": "Write Workpaper B with the tested criterion, both records, the evidence gap, and a proposed follow-up.",
             "mismatch": "Do not use an anomaly label as evidence. Compare source fields and distinguish a missing record from a contradictory record.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing."
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "excelInputs": [
+              "OvertimeReview and Approvals (Session 3.1)"
+            ],
+            "excelOutputs": [
+              "OvertimeReview: additional approval-identity/date fields",
+              "Review: selected missing-link and hours-supported evidence"
+            ]
           }
         ],
         "stop": "Save the overtime register and Workpaper B. State the denominator and the boundaries of the test in its conclusion."
@@ -1361,7 +1968,13 @@
             "meaning": "A reasonable priority is to obtain supplier/bank evidence for repeated payment references and restore verifiable overtime authorization links before claiming loss or misconduct. Other priorities are acceptable if they explain impact and uncertainty.",
             "keep": "Save the exception register and a brief prioritization rationale.",
             "mismatch": "Do not combine the 336 overtime flags and 16 AP document flags into one overall exception rate.",
-            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools."
+            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools.",
+            "excelInputs": [
+              "Earlier AP/check/overtime workpapers with their separate populations"
+            ],
+            "excelOutputs": [
+              "ExceptionRegister: bounded findings and follow-up priorities"
+            ]
           },
           {
             "title": "Propose controls that can be tested",
@@ -1372,7 +1985,13 @@
             "meaning": "For AP, inspect recorded review/override evidence for a sample of repeated references and verify all invoices remain in the population. For overtime, trace selected paid hours to valid approvals and inspect escalation evidence. Test both flagged and unflagged records.",
             "keep": "Write a 600–800 word controls memo with two workpapers, priorities, proposed controls, and test procedures.",
             "mismatch": "A recommendation to “improve controls” is incomplete without an owner, evidence, and a criterion a reviewer can assess.",
-            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools."
+            "sqlText": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools.",
+            "excelInputs": [
+              "ExceptionRegister (Session 4.1)"
+            ],
+            "excelOutputs": [
+              "ControlReview: proposed controls, test populations, procedures, and failure criteria"
+            ]
           }
         ],
         "stop": "Save both workpapers, the register, and controls memo. Your independent challenge begins with new evidence and no public model conclusion."
@@ -1392,11 +2011,34 @@
       "intro": "Extend the same risk-to-evidence method to pricing, planning support, or employee authority. These are separate scopes, not extra flags to append to the core denominator.",
       "excel": "For pricing, relate SalesOrderLine to PriceOverrideApproval and effective price/promotion records. For planning, relate WorkOrder or PurchaseRequisition to SupplyPlanRecommendation while retaining missing links. For authority, compare the actor and approval date with the relevant employee-role evidence, distinguishing current assignments from historical authority. Define a criterion and a population before loading detail; use the optional canonical queries below as maps of the available source fields.",
       "queries": [],
-      "check": "Retain an evidence workpaper and state where the records cannot establish historical authorization. These extensions do not supply assessment model answers."
+      "check": "Retain an evidence workpaper and state where the records cannot establish historical authorization. These extensions do not supply assessment model answers.",
+      "excelInputs": [
+        "Choose only one optional investigation and import its named source tables before use",
+        "Read the selected canonical query for exact source keys, dates, and population"
+      ],
+      "excelOutputs": [
+        "SpecialistWorkpaper: chosen criterion, separate source detail, valid joins, and bounded conclusion"
+      ]
     },
     "interpretation": "The worked review demonstrates why a flag is not a finding about fraud or financial loss. Repeated references and missing approval links are supported conditions; their economic consequences need additional evidence. Controls become useful recommendations when the owner, timing, evidence, test population, and failure criteria are explicit.",
     "challenge": "Investigate Q3 2026 overtime using the same eligibility and hours-support criteria. For AP, define a new review of supplier invoice references within 2025 and investigate any flagged groups, or document a clean result. Keep denominators distinct and justify your follow-up priorities.",
     "hint": "A new population can produce fewer flags, different explanations, or no exceptions. Evaluate evidence completeness before treating a zero result as assurance. Preserve all eligible records when joining support.",
-    "criteria": "Assess explicit criteria and denominators, source tracing, alternative explanations, proportionate conclusions, and controls that can be assessed without relying on anomaly labels."
+    "criteria": "Assess explicit criteria and denominators, source tracing, alternative explanations, proportionate conclusions, and controls that can be assessed without relying on anomaly labels.",
+    "prerequisiteLinks": [
+      {
+        "label": "Complete one earlier process case",
+        "to": "/docs/analytics/cases"
+      },
+      {
+        "label": "BPMN Process and Internal Control Workshop",
+        "to": "/docs/learn-and-practice/bpmn-controls-workshop",
+        "recommended": true
+      }
+    ],
+    "readiness": [
+      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
+      "Define an explicit criterion and denominator; distinguish time entries from people and an exception flag from a proven control failure."
+    ]
   }
 ]

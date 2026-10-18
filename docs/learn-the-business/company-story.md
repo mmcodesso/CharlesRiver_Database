@@ -11,7 +11,7 @@ pagination_next: learn-the-business/process-flows
 import CompanyStoryHero from "@site/src/components/CompanyStoryHero";
 
 <CompanyStoryHero
-  title="The Company"
+  title="Company Story"
   lead={<><CompanyName /> brings furniture, lighting, textiles, accessories, and design help into one home-furnishings business. Follow the people who turn a customer's idea into goods, services, and accounting records.</>}
   anchors={[
     { label: "Place", value: "Greater Boston and the Charles River" },
