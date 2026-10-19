@@ -16,11 +16,11 @@ import TutorialFigure from "@site/src/components/Tutorial/Figure";
 
 <span id="context-and-problem"></span>
 
-The operations planner needs a readable description of the order. An item identifier is useful to a system; a product name is useful to the person preparing the goods. Connect the records while keeping the two order lines intact.
+The operations planner needs a readable description of the order. An item identifier connects system records, while a product name helps the person preparing the goods understand the order. Connect the records while keeping the two order lines intact.
 
 <span id="learning-objectives"></span>
 
-**Your task:** Use customer and item keys to add descriptions while preserving one row per order line.
+**Your task.** Use customer and item keys to add descriptions while preserving one row per order line.
 
 <TutorialFigure figureId="connect-the-records" />
 
@@ -31,12 +31,12 @@ Finish [Read an Order](read-an-order.md).
 <ToolSteps>
 <TabItem value="excel">
 
-For Excel, start `Lesson03.xlsx`; import `T9_SalesOrder` as `SalesOrderData`, `T10_SalesOrderLine` as `OrderLineData`, `T4_Customer` as `CustomerData`, and `T44_Item` as `ItemData`. Filter the two order tables to `SalesOrderID = 11` in Power Query before loading. Keep all customer and item rows.
+Start `Lesson03.xlsx` in Excel and import `T9_SalesOrder` as `SalesOrderData`, `T10_SalesOrderLine` as `OrderLineData`, `T4_Customer` as `CustomerData`, and `T44_Item` as `ItemData`. Filter the two order tables to `SalesOrderID = 11` in Power Query before loading. Keep all customer and item rows.
 
 </TabItem>
 <TabItem value="sql">
 
-Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson03.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson03.sql**. Run each supplied query separately, using its filters to identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
@@ -64,7 +64,7 @@ The order stores a customer key. The customer table supplies the description. On
 </TabItem>
 <TabItem value="sql">
 
-`JOIN` puts matching records together. `so` and `c` are short aliases; `ON` states which stored keys must match.
+`JOIN` puts matching records together. `so` and `c` are short aliases, and `ON` states which stored keys must match.
 
 ```sql title="l03-customer-join.sql"
 SELECT so.SalesOrderID, so.CustomerID, c.CustomerName
@@ -81,7 +81,7 @@ Expect **one order row**, with CustomerID **130** and **Jones, Richardson and Be
 
 ## 2. Add Product Descriptions
 
-Now start from order lines. Each selected line has an `ItemID`; the item master supplies its description.
+Now start from order lines. The item master supplies the description associated with each selected line's `ItemID`.
 
 <ToolSteps>
 <TabItem value="excel">
@@ -98,7 +98,7 @@ Add a `SupplyMode` column to `OrderLineData` and enter:
 =XLOOKUP([@ItemID],ItemData[ItemID],ItemData[SupplyMode],"No match",0)
 ```
 
- Confirm that the table still has two lines and its line amounts still total 11,397.78. `XLOOKUP` returns one match; it is appropriate here because each item key identifies one item. It cannot retrieve all shipments for a line.
+ Confirm that the table still has two lines and its line amounts still total 11,397.78. `XLOOKUP` is appropriate here because it returns one match and each item key identifies one item. It cannot retrieve all shipments for a line.
 
 </TabItem>
 <TabItem value="sql">
@@ -144,6 +144,17 @@ Both selected items have unit of measure Each. Adding this column should preserv
 ## Readiness Check: After Lesson 3
 
 Show a partner or instructor your result **before** opening the next lesson. Explain what one row represents, why the item key is unique in the lookup table, and why the selected order still has two lines totaling 11,397.78. Point to the saved before/after counts. Explain why a first-match lookup would lose evidence if several shipments matched one line.
+
+If you are studying alone, write the same explanation on `Notes` and compare it with the self-check below. Proceed when both your row and amount checks and your grain explanation agree. Use the [method rubric](pathname:///teaching/method-rubric.md) to identify anything that needs repair.
+
+<details>
+<summary>Check your readiness independently</summary>
+
+The selected order still contains **two lines** totaling **11,397.78** after customer and item descriptions are added. `ItemID` must be unique in the Item lookup table, so each source line acquires one description without multiplying rows. Check that uniqueness rather than inferring it from a matching total.
+
+Suppose one order line has two shipment matches. A first-match lookup returns only one shipment and hides the other. Retain both shipment rows for a line-level trace, or summarize shipments by order-line key before comparing shipped quantity with the order. Explain the changed grain and check quantities as well as match counts. This counterexample describes a relationship pattern, not an additional claim about the selected order.
+
+</details>
 
 If the row count or amount changes, inspect the joined table’s key and match count, then rerun the check. If your result matches but you cannot explain its grain, return to [Lesson 2](read-an-order.md) before continuing. Keep the check in the [blank evidence template](pathname:///teaching/evidence-template.md).
 

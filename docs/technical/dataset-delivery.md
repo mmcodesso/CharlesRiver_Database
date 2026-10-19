@@ -21,7 +21,7 @@ For most courses, start with the three public formats:
 - <FileName type="excel" />
 - <FileName type="csv" />
 
-Get these files from [Downloads](../start-here/downloads.md). A <FileName type="support" /> companion can be created by a local instructor run or supplied separately for a course; it is not part of the public download package. Do not ask students to find a fourth public download.
+Get these files from [Downloads](../start-here/downloads.md). A <FileName type="support" /> companion can be created by a local instructor run or supplied separately for a course outside the public download package. Do not ask students to find a fourth public download.
 
 Then point students to:
 
@@ -121,6 +121,11 @@ Use these when you need stable reruns or limited local adjustments to the genera
 
 ### Rolling the fiscal window and the book scenarios
 
+Classroom adoption uses the published files. The following construction details are for maintainers testing a different fiscal window. They are public reproducibility documentation and should not be used as independent assessment evidence.
+
+<details>
+<summary>Inspect fiscal-window calibration and scenario construction</summary>
+
 The calibrations that give the dataset its storylines (the plant's late-year load and its bridge year, cost and pay growth, the dates of the capital plan) are stated relative to the year the scenario ends. That year is the year of `fiscal_year_end` unless the settings file sets `scenario_end_year`, which a short or long test configuration uses to keep the default calibration years. Changing only the fiscal range and keeping `random_seed` therefore tells the same story a year later: fiscal 2025-2027 or 2026-2028 instead of 2024-2026.
 
 A few storylines the companion textbook (Accounting Analytics: An Integrated Approach) relies on are not calibrations but accidents of the seed on one window. The `book_scenarios` section of `config/settings.yaml` states each of them relative to the window, with the last fiscal year C and the year before it, P. A step plants its storyline only when the build does not already contain it, so the default window is unchanged and a rolled window keeps the story.
@@ -132,6 +137,8 @@ A few storylines the companion textbook (Accounting Analytics: An Integrated App
 | `stranded_work_orders` | No work order released before C is still open when the data end. A work order that stalls with a rounding sliver of its quantity unfinished is short-closed at the quantity produced and closed in the last month. Work orders released in C stay open, as the backlog the text describes. |
 
 `enabled: false` (or no section, as in the test configurations) turns all three off. The steps live in `src/generator_dataset/book_scenarios.py` and, for `cutoff_invoices`, in `inject_invoice_before_shipment` of `anomalies.py`. Each logs a `BOOK SCENARIO` line saying whether it found its storyline in place or planted it.
+
+</details>
 
 ## Available Settings Files
 
@@ -160,7 +167,7 @@ The main SQLite database and main Excel workbook are the core student-facing dat
 
 - Share the SQLite database for SQL work.
 - Share the Excel workbook for pivot and chart-based analysis.
-- Local full runs can write report files to `outputs/reports/`. Website report assets are served from `static/reports/`; the current public documentation site is hosted through the Cloudflare `greenfield` Worker and its Git integration.
+- Local full runs can write report files to `outputs/reports/`. Website report assets are served from `static/reports/` through the Cloudflare `greenfield` Worker and its Git integration.
 - `.github/workflows/deploy-docs.yml` retains a legacy GitHub Pages workflow. Its report-preparation and deployment steps describe that workflow, not the current Cloudflare hosting path. Classroom adoption does not require a hosting change or a new report build.
 - Share the support workbook when classes need anomaly and validation companion material.
 - Share the CSV zip when students or analysts need one CSV per table.

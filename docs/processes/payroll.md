@@ -29,7 +29,7 @@ A shift defines an expected work pattern. Assignments and rosters place employee
 
 Raw clock punches provide evidence of attendance. An arrival or departure event is useful support, but raw punches are not the approved payroll-hours source in this dataset. Approved daily time records supply the regular and overtime hours used for hourly payroll.
 
-Supervisors provide the approval support. Absence and overtime records can add context when expected and recorded hours differ. An attendance exception identifies something for review; it does not by itself establish misconduct or an automatic payroll hold.
+Supervisors provide the approval support. Absence and overtime records can add context when expected and recorded hours differ. An attendance exception identifies an issue for review without establishing misconduct or an automatic payroll hold.
 
 For the first reading, keep three questions separate: what work was expected, what evidence was recorded, and what hours were approved? Payroll needs the approved result, while an investigation may return to the underlying evidence.
 
@@ -39,13 +39,13 @@ Payroll uses approved time to support hourly earnings for the pay period. Regula
 
 A **payroll register** records the employee's payroll result, with detail lines for earnings, deductions, and employer amounts. It is the main payroll accounting event rather than another attendance record.
 
-**Gross pay** is the employee's earnings before deductions. **Employee deductions** reduce the amount paid to the employee and create amounts owed elsewhere. **Net pay** is the amount owed to the employee after those deductions. **Employer costs**, such as employer payroll burden, add company expense and related obligations without simply becoming employee net pay.
+**Gross pay** is the employee's earnings before deductions. **Employee deductions** reduce the amount paid to the employee and create amounts owed elsewhere. **Net pay** is the amount owed to the employee after those deductions. **Employer costs**, such as employer payroll burden, add company cost and related obligations without becoming employee net pay. Manufacturing capitalization follows the recognition rules below.
 
-The distinction explains why one payroll result can create several liabilities. Employee payment addresses net pay; taxes, withholding, and other deductions have their own settlement responsibilities.
+The distinction explains why one payroll result can create several liabilities. Employee payment addresses net pay, while taxes, withholding, and other deductions have their own settlement responsibilities.
 
 ## Record the Payroll, Then Settle It
 
-Approved attendance does not directly post payroll expense. The payroll register records the expense and liability picture for the period.
+Approved attendance supports payroll without creating an independent posting. PayrollSummary recognizes wages and employer costs from the register facts, with credits to payroll liabilities. Nonmanufacturing amounts are period expense. Qualifying manufacturing labor and related burden debit Manufacturing Cost Clearing (`1090`) directly. Manufacturing payroll in months with no capitalizable direct labor debits Manufacturing Variance (`5080`).
 
 Treasury later pays employee net pay. The payroll-payment event reduces accrued payroll and cash. It answers whether the employee obligation was settled, with its own payment date.
 
@@ -65,7 +65,7 @@ This gives the controller two settlement questions: were employees paid, and whi
 
 <BpmnDiagram modelId="payroll" />
 
-The model separates employee payment from liability remittance. Its parallel settlement branches describe the need to complete both kinds of obligation; they do not require both to occur on the same day.
+The model separates employee payment from liability remittance. Its parallel settlement branches describe the need to complete both kinds of obligation without requiring both to occur on the same day.
 
 Employees are part of the company participant. Agencies and benefit providers are external recipients. The lane arrangement helps you follow responsibility, while actual approval and payment records establish the evidence for a selected period.
 
@@ -80,15 +80,19 @@ This map answers **which records support approved work and which establish the a
 ```mermaid
 flowchart LR
     accTitle: Approved time employee payroll and period remittances
-    accDescr: Roster and raw punches support approved time. Labor support leads to register lines and register, then employee payment. The payroll period separately connects to register and period remittances.
-    ROSTER[EmployeeShiftRoster] --> TIME[TimeClockEntry: approved hours]
+    accDescr: Solid labeled arrows identify stored keys and explicit ledger sources. Dashed arrows show punch support or summary aggregation. Register recognition, employee payment, and remittance each reach the ledger separately.
+    ROSTER[EmployeeShiftRoster] -->|EmployeeShiftRosterID| TIME[TimeClockEntry: approved hours]
     PUNCH[TimeClockPunch: raw evidence] -. Supports review .-> TIME
-    TIME --> LABOR[LaborTimeEntry: support and allocation]
-    LABOR --> LINES[PayrollRegisterLine]
-    LINES --> REG[PayrollRegister]
-    REG --> PAY[PayrollPayment: net pay]
-    PERIOD[PayrollPeriod] --> REG
-    PERIOD --> REMIT[PayrollLiabilityRemittance]
+    TIME -->|TimeClockEntryID| LABOR[LaborTimeEntry: support and allocation]
+    LABOR -->|LaborTimeEntryID| LINES[PayrollRegisterLine]
+    LINES -->|PayrollRegisterID| REG[PayrollRegister]
+    REG -->|PayrollRegisterID| PAY[PayrollPayment: net pay]
+    PERIOD[PayrollPeriod] -->|PayrollPeriodID| REG
+    PERIOD -->|PayrollPeriodID| REMIT[PayrollLiabilityRemittance]
+    REG -. Aggregate period cost center and account .-> PS[PayrollSummary source label]
+    PS -->|Source type and summary ID| GL[GLEntry]
+    PAY -->|PayrollPayment source type and ID| GL
+    REMIT -->|PayrollLiabilityRemittance source type and ID| GL
 ```
 
 Follow approved hourly support into earnings detail. Then distinguish employee-level payroll from period-level liability remittances. Repeating a period-level remittance beside every employee would multiply the same amount.
@@ -96,15 +100,15 @@ Follow approved hourly support into earnings detail. Then distinguish employee-l
 | Stage | Accounting meaning |
 |---|---|
 | Approved daily time | Supports hourly payroll; no direct posting by itself |
-| Payroll register | Records expense, employee net-pay liability, and related payroll liabilities |
+| Payroll register | Supports summarized recognition of expense or manufacturing cost and the related payroll liabilities |
 | Employee payment | Reduces accrued payroll and cash |
 | Liability remittance | Reduces the relevant payroll liabilities and cash |
 
-The dataset's ledger source label for register postings is `PayrollSummary`. The [Posting Reference](../reference/posting.md#payrollsummary-register-summaries) explains that mapping; source labels should not be assumed to match table names.
+The dataset's ledger source label for register postings is `PayrollSummary`. The [Posting Reference](../reference/posting.md#payrollsummary-register-summaries) explains the mapping between source labels and their underlying records.
 
 ## Connect Payroll Back to Production and Design
 
-For manufacturing, labor allocations can connect approved work to a work-order operation. Payroll then supports labor and overhead reclassifications into manufacturing costing. Those connections add cost support while preserving the standard-cost completion model.
+For manufacturing, labor allocations can connect approved work to a work-order operation. PayrollSummary posts capitalizable manufacturing labor and related burden directly to `1090`. Separate factory-overhead and depreciation journals supply other manufacturing cost support. These sources preserve the standard-cost completion model without a later payroll-to-manufacturing reclassification journal.
 
 Design-service employees also move through payroll, but engagement analysis uses service-time cost snapshots. Their labor remains payroll period expense. A customer billing rate, a service-time cost rate, and a payroll amount answer different questions.
 
@@ -147,7 +151,7 @@ No. Employee payment is recorded January 19 and clears the bank January 22. None
 <details>
 <summary>Which record supplies the approved hours for hourly payroll?</summary>
 
-The approved daily attendance record, `TimeClockEntry`. Raw punches provide underlying evidence for review; they are not the authoritative approved-hours result.
+The approved daily attendance record, `TimeClockEntry`. Raw punches support the review of approved hours without replacing the approved-hours result.
 
 </details>
 
@@ -182,24 +186,24 @@ Return to these sections when you have a specific question or an assignment that
 | Gross-to-net payroll | `PayrollPeriod`, `PayrollRegister`, `PayrollRegisterLine` | One employee payroll header with earnings, deductions, and employer burden detail | Analyze payroll posting, gross-to-net logic, and liability creation |
 | Employee settlement | `PayrollPayment` | Net-pay settlement event | Review when accrued payroll clears in cash |
 | Liability remittance | `PayrollLiabilityRemittance` | Payment of payroll withholding, tax, and deduction liabilities | Separate employee payment from agency and vendor settlement |
-| Control review | `AttendanceException`, `GLEntry`, `JournalEntry` | Exception log and posted accounting records | Support audit, payroll control, and manufacturing reclass analysis |
+| Control review | `AttendanceException`, `GLEntry`, `JournalEntry` | Exception log, summarized payroll postings, and separate manufacturing journals | Support audit, payroll control, and manufacturing cost analysis |
 
 ### When Accounting Happens
 
 | Event | Business meaning | Accounting effect |
 |---|---|---|
 | Approved time entry | Daily attendance is approved for payroll and labor support | No direct posting by itself |
-| Payroll register | Payroll calculates gross pay, employee deductions, and employer burden | Debits salary and wage expense plus payroll burden accounts, credits accrued payroll and payroll-related liabilities |
+| Payroll register | Payroll calculates gross pay, employee deductions, and employer burden | PayrollSummary debits nonmanufacturing expense, capitalizable manufacturing cost in `1090`, or noncapitalizable manufacturing payroll in `5080`, and credits payroll liabilities |
 | Payroll payment | Treasury clears employee net pay | Debit `2030` Accrued Payroll and credit cash |
 | Payroll liability remittance | Treasury clears withholding, employer-tax, and deduction liabilities | Debit `2031`, `2032`, or `2033` and credit cash |
-| Direct labor or overhead reclass | Payroll-supported manufacturing labor and burden move into costing flows | Journal-driven reclass from payroll expense pools into manufacturing clearing or overhead paths |
+| Other manufacturing cost support | Finance records factory overhead and manufacturing-equipment depreciation separately from payroll | Separate JournalEntry sources debit `1090`, or `5080` for factory overhead in months with no capitalizable direct labor. Credits are cash for overhead and accumulated depreciation for depreciation |
 
 ### Key Traceability and Data Notes
 
 - `TimeClockEntry` is the approved daily attendance source for hourly payroll. It is the main worked-hours record for payroll support.
 - `TimeClockPunch` is raw support beneath that approved layer and should be treated as evidence, not as the authoritative payroll-hours source.
 - `LaborTimeEntry` is the bridge from approved time into costing and payroll traceability, especially when direct manufacturing labor is tied to `WorkOrderOperationID`.
-- `PayrollRegister` is the main payroll accounting event. It creates the expense and liability picture for the period.
+- `PayrollRegister` supplies employee-level recognition facts. PayrollSummary groups them by period, cost center, and account for the ledger.
 - `PayrollPayment` and `PayrollLiabilityRemittance` are separate settlement paths. One clears employee net pay, and the other clears withholding and deduction liabilities later.
 - `AttendanceException` sits beside the normal flow as a control-review table rather than as a posting event.
 - Design-service labor stays in payroll expense under the `Design Services` cost center. Customer-engagement margin is analyzed through `ServiceTimeEntry`, not capitalized into inventory or manufacturing clearing.
@@ -213,7 +217,7 @@ Return to these sections when you have a specific question or an assignment that
 
 ### Time, Attendance, and Approved Hours
 
-Which hours were expected, recorded, and approved? Follow shifts and rosters into punch evidence and the approved `TimeClockEntry`. The approved daily result supplies payroll hours; the underlying records support its review.
+Which hours were expected, recorded, and approved? Follow shifts and rosters into punch evidence and the approved `TimeClockEntry`. The approved daily result supplies payroll hours, while the underlying records support its review.
 
 ```mermaid
 flowchart LR
@@ -335,25 +339,23 @@ flowchart LR
 - Evidence path: PayrollRegister -> PayrollPayment and PayrollLiabilityRemittance, with GLEntry for posted effect.
 - Comparison: Compare approved payroll date, payment date, and remittance date by payroll period.
 
-### Direct Labor and Manufacturing Reclass
+<span id="direct-labor-and-manufacturing-reclass"></span>
 
-Payroll also feeds manufacturing. When approved time and labor support are tied to work-order operations, the dataset can trace direct labor into production analysis and then reclass payroll-supported amounts through direct-labor and manufacturing-overhead journals.
+### Manufacturing Payroll and Cost Support
+
+Approved time and labor allocations support the production explanation. PayrollSummary recognizes capitalizable manufacturing labor and related burden directly in Manufacturing Cost Clearing (`1090`). Manufacturing payroll in months with no capitalizable direct labor goes to Manufacturing Variance (`5080`). Nonmanufacturing wages and burden remain period expense. Factory overhead and depreciation have separate journal sources.
 
 ```mermaid
 flowchart LR
-    accTitle: Labor allocation and payroll reclassification evidence
-    accDescr: Approved time leads to labor allocation and work-order operation evidence. Labor and payroll support a reclassification journal and ledger detail.
-    TCE[Time Clock Entry]
-    LTE[Labor Time Entry]
-    WOO[Work Order Operation]
-    PR[Payroll Register]
-    JE[Journal Entry Reclass]
-    GL[GLEntry]
-
-    TCE --> LTE --> WOO
-    LTE --> PR
-    LTE --> JE --> GL
-    PR --> JE
+    accTitle: Manufacturing labor support and direct payroll recognition
+    accDescr: Solid arrows label stored keys or explicit ledger-source identifiers. The dashed arrow represents aggregation rather than a foreign key. PayrollSummary and separate factory-overhead and depreciation journals each reach the ledger.
+    TCE[TimeClockEntry] -->|TimeClockEntryID| LTE[LaborTimeEntry]
+    LTE -->|WorkOrderOperationID| WOO[WorkOrderOperation]
+    LTE -->|LaborTimeEntryID| PRL[PayrollRegisterLine]
+    PRL -->|PayrollRegisterID| PR[PayrollRegister]
+    PR -. Aggregate period cost center and account .-> PS[PayrollSummary source label]
+    PS -->|Source type and constructed summary ID| GL[GLEntry]
+    JE[JournalEntry factory overhead and depreciation] -->|JournalEntry source type and ID| GL
 ```
 
 **Tables involved**
@@ -362,26 +364,26 @@ flowchart LR
 |---|---|
 | `TimeClockEntry`, `LaborTimeEntry` | Carry approved time and labor allocation into costing analysis |
 | `WorkOrderOperation` | Shows which routing operation consumed the direct labor |
-| `PayrollRegister` | Provides the payroll-side source for the later reclass logic |
-| `JournalEntry`, `GLEntry` | Show the accounting effect of direct-labor and overhead reclass | 
+| `PayrollRegister`, `PayrollRegisterLine` | Provide employee facts for period/cost-center payroll summaries |
+| `JournalEntry`, `GLEntry` | Show direct PayrollSummary recognition and separate factory-overhead and depreciation journal postings |
 
 **Key joins**
 
 - `LaborTimeEntry.WorkOrderOperationID -> WorkOrderOperation.WorkOrderOperationID`
 - `PayrollRegisterLine.LaborTimeEntryID -> LaborTimeEntry.LaborTimeEntryID`
-- `GLEntry.SourceDocumentType` plus `SourceDocumentID` for reclass trace
+- `GLEntry.SourceDocumentType` plus `SourceDocumentID` for each actual posting source. PayrollSummary uses a constructed summary identifier, not `PayrollRegisterID`.
 
 **Analytical plan**
 
-- Objective: Trace direct manufacturing labor from approved time into payroll support and reclass accounting.
-- Evidence path: TimeClockEntry -> LaborTimeEntry -> WorkOrderOperation, plus PayrollRegisterLine and reclass journals.
-- Comparison: Group by work order, work center, item, or payroll period.
+- Trace manufacturing labor from approved time into operational support, then compare payroll facts with their summarized ledger recognition.
+- Follow stored time and register-line keys. Aggregate employee facts independently before comparing period/cost-center totals with PayrollSummary.
+- Keep work-order labor support separate from pooled clearing. Voucher `PRS-0002-004`, dated February 2, 2024, debits `1090` for **169,382.48**. Its five ledger rows balance at that amount, with credits to four payroll liabilities. Its period **2**, cost center **4**, and constructed source ID **1002004** identify the summary, not an individual register. Use the [summary mapping and reconciliation method](../reference/posting.md#payrollsummary-register-summaries).
 
 ### Design-Service Labor Support
 
 Not every labor-support question in the dataset ends in manufacturing. Design employees can support customer engagements directly. In that path, payroll still records the wages and liabilities in the normal way, but `ServiceTimeEntry` carries the approved billable and non-billable hours plus the labor-cost snapshot used for customer-engagement margin analysis.
 
-Manufacturing labor can be reclassified into production costing. Design-service labor remains payroll period expense; service-time records supply the cost snapshots for engagement analysis.
+Capitalizable manufacturing payroll is recognized directly in clearing. Design-service labor remains payroll period expense, while service-time records supply the cost snapshots for engagement analysis.
 
 ### Attendance Exceptions and Control Review
 

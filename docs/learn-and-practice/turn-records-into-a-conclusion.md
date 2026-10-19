@@ -20,13 +20,13 @@ The controller asks how invoiced activity changed across the first three months 
 
 <span id="learning-objectives"></span>
 
-**Your task:** Build a monthly invoice summary and turn a checked result into a bounded business conclusion.
+**Your task.** Build a monthly invoice summary and turn a checked result into a bounded business conclusion.
 
 <TutorialFigure figureId="turn-records-into-a-conclusion" />
 
 ## Before You Start
 
-The recommended full route completes Lessons 1–11 in order. For a focused module, the minimum preparation is [Lesson 1](meet-the-records.md), [Lesson 2](read-an-order.md), [Lesson 3](connect-the-records.md), and [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). You must also be able to distinguish order, shipment, invoice, receipt, and application; [Lesson 4](source-to-ledger.md), [Lesson 5](follow-customer-settlement.md), and [Lesson 6](find-the-accounting-entries.md) teach those distinctions.
+The recommended full route completes Lessons 1–11 in order. For a focused module, the minimum preparation is [Lesson 1](meet-the-records.md), [Lesson 2](read-an-order.md), [Lesson 3](connect-the-records.md), and [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). You must also be able to distinguish order, shipment, invoice, receipt, and application. [Lesson 4](source-to-ledger.md), [Lesson 5](follow-customer-settlement.md), and [Lesson 6](find-the-accounting-entries.md) teach those distinctions.
 
 **Summary readiness:** Before proceeding, show that you can keep one row per invoice, compare row count with distinct-key count, set inclusive-start/exclusive-end date bounds, group without repeating header amounts, and trace a summary back to a source example. State one conclusion that an invoice subtotal cannot support. If these skills are missing, complete the linked sales lessons first.
 
@@ -38,7 +38,7 @@ Start a **new** `Lesson12.xlsx` so earlier single-invoice filters cannot carry o
 </TabItem>
 <TabItem value="sql">
 
-Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson12.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson12.sql**. Run each supplied query separately, using its filters to identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
@@ -71,7 +71,7 @@ On Notes label B2 Invoice rows, B3 Invoiced amount, and B4 Distinct invoices. En
 =ROWS(UNIQUE(InvoiceData[SalesInvoiceID]))
 ```
 
-UNIQUE lists distinct keys; ROWS counts them. The row count and distinct-key count should agree because this source is one row per invoice.
+UNIQUE lists distinct keys, and ROWS counts them. The row count and distinct-key count should agree because this source is one row per invoice.
 
 </TabItem>
 <TabItem value="sql">
@@ -108,7 +108,7 @@ Keep the same population and change only its presentation: combine invoices shar
 
 
 2. Click inside the table and choose **Insert → PivotTable → New Worksheet**.
-3. Put `MonthStart` in **Rows**. If Excel automatically groups dates, right-click a grouped date and choose **Ungroup**; the MonthStart values already identify months.
+3. Put `MonthStart` in **Rows**. If Excel automatically groups dates, right-click a grouped date and choose **Ungroup** because the MonthStart values already identify months.
 4. Put `SalesInvoiceID` in **Values**, open **Value Field Settings**, and select **Count**.
 5. Put `SubTotal` in **Values** and select **Sum**. Format amounts with two decimal places.
 6. Sort months oldest to newest. Compare both grand totals with Step 1.
@@ -118,7 +118,7 @@ Keep the same population and change only its presentation: combine invoices shar
 </TabItem>
 <TabItem value="sql">
 
-`strftime('%Y-%m', InvoiceDate)` produces a year-month label. `GROUP BY` forms one group per month; `ORDER BY` makes the result chronological.
+`strftime('%Y-%m', InvoiceDate)` produces a year-month label. `GROUP BY` forms one group per month, and `ORDER BY` makes the result chronological.
 
 ```sql title="l12-monthly-summary.sql"
 SELECT strftime('%Y-%m', InvoiceDate) AS Month,
@@ -141,7 +141,7 @@ ORDER BY Month;
 | 2024-03 | 564 | 2,217,382.41 |
 | **Quarter** | **1,355** | **5,796,664.16** |
 
-Both tools should produce the same monthly values. The SQL route can use the result table directly as its visual evidence; a chart is optional.
+Both tools should produce the same monthly values. The SQL route can present the result table as visual evidence, with a chart added if useful.
 
 ## 3. Investigate Before Explaining
 
@@ -150,7 +150,7 @@ February's invoiced amount exceeds January's. That observation does not establis
 <ToolSteps>
 <TabItem value="excel">
 
-Filter the worksheet table `InvoiceData[MonthStart]` to February. Sort `SubTotal` largest to smallest; for ties compare `SalesInvoiceID` ascending. Inspect the first five invoice IDs, customers, dates, and subtotals. Do not reinterpret the filtered worksheet subtotal as the full-quarter total. Keep the original PivotTable as the unfiltered population summary.
+Filter the worksheet table `InvoiceData[MonthStart]` to February. Sort `SubTotal` largest to smallest, using ascending `SalesInvoiceID` to resolve ties. Inspect the first five invoice IDs, customers, dates, and subtotals. Do not reinterpret the filtered worksheet subtotal as the full-quarter total. Keep the original PivotTable as the unfiltered population summary.
 
 </TabItem>
 <TabItem value="sql">
@@ -169,7 +169,7 @@ LIMIT 5;
 </TabItem>
 </ToolSteps>
 
-The five invoice IDs, in descending amount order, are **693, 698, 696, 690, and 682**. The largest has subtotal **30,053.79**. Record at least one actual invoice identifier from the sample. A larger count of invoices is one observed difference between January and February; customer mix, service billing, credits, or timing require further investigation before an explanation.
+The five invoice IDs, in descending amount order, are **693, 698, 696, 690, and 682**. The largest has subtotal **30,053.79**. Record at least one actual invoice identifier from the sample. A larger count of invoices is one observed difference between January and February. Investigate customer mix, service billing, credits, and timing before explaining the change.
 
 <span id="assessed-deliverable"></span>
 
@@ -180,6 +180,8 @@ Write a short memo with four parts: **Finding**, **Evidence and check**, **Limit
 <span id="interpretation-and-limitations"></span>
 
 This summary excludes credits and does not establish recognized net revenue, margin, cash collection, or a cause of change. Before comparing it with [Reports and Analytics](../analytics/index.md#sales-and-customers), read the report's population and calculation. Different definitions can produce valid different totals.
+
+For a posted comparison, read the [monthly income statement source](../analytics/analysis-tracks.md#query-financial-27-income-statement-monthly). Select January–March 2024 and its net-revenue rows in your saved results, retaining the fiscal year, period, line label, and row type. Its account-based revenue includes the effects defined in that query, while the tutorial sums invoice SubTotal. Explain credits, freight, tax exclusions, source populations, and posting cutoffs before proposing a reconciliation. Keep invoice-based and posted measures separately labeled. A difference between their totals does not by itself establish an error.
 
 ## Try One Change
 

@@ -30,15 +30,15 @@ The operations planner wants to change a schedule after a difficult production p
 
 **Worked scope.** 336 work orders released January 1–31, 2024, with events assessed through February 29. Begin with work order 1 and compare work order 67. Capacity comparisons cover all scheduled work in the selected work centers and dates, not only the January cohort.
 
-Choose Excel or SQL; your selection carries between lessons and cases.
+Choose Excel or SQL. The site retains your selection between lessons and cases.
 
-**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [9. Follow Manufacturing Costs](/docs/learn-and-practice/manufacturing-cost-flow); [Manufacturing process chapter](/docs/processes/manufacturing). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records), [2. Read an Order](/docs/learn-and-practice/read-an-order), [3. Connect the Records](/docs/learn-and-practice/connect-the-records), [9. Follow Manufacturing Costs](/docs/learn-and-practice/manufacturing-cost-flow), [Manufacturing process chapter](/docs/processes/manufacturing). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
 **Ready to begin:**
 
-- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
 - Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
-- Aggregate issue, labor, completion, and close independently by work order; compare capacity at one row per center/day.
+- Aggregate issue, labor, completion, and close independently by work order, and compare capacity at one row per center/day.
 
 ## Key Data Sources
 
@@ -120,7 +120,7 @@ Create Case05.xlsx or Case05.sql. A release-date cohort stays fixed even when co
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c05-cohort.sql"
 SELECT WorkOrderID,
        ItemID,
@@ -173,7 +173,7 @@ Current Status is not an as-of measure. Test the actual dates against the cutoff
 
 **Named inputs:** `WorkOrderOperationData ← WorkOrderOperation and WorkOrderOperationScheduleData ← WorkOrderOperationSchedule (import here)`.
 
-**Produced outputs:** `SelectedOperations: operations for WO1/WO67`; `ScheduleByOperation: dated schedule summary`; `OperationTrace: selected operations with schedule support`.
+**Produced outputs:** `SelectedOperations: operations for WO1/WO67`, `ScheduleByOperation: dated schedule summary`, `OperationTrace: selected operations with schedule support`.
 
 1. Import WorkOrderOperation as WorkOrderOperationData and WorkOrderOperationSchedule as WorkOrderOperationScheduleData; preserve the raw queries.
 
@@ -188,7 +188,7 @@ Current Status is not an as-of measure. Test the actual dates against the cutoff
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c05-operations.sql"
 SELECT o.WorkOrderID,
        o.WorkOrderOperationID,
@@ -218,7 +218,7 @@ The absence of operation detail for WO1 is an evidence limitation, not proof tha
 <details>
 <summary>If your result differs</summary>
 
-Do not use an Inner join from Orders to Operations for the cohort summary; it would hide WO1.
+An Inner join from Orders to Operations would hide WO1 from the cohort summary, so retain the prescribed Left join.
 
 </details>
 
@@ -247,9 +247,9 @@ Materials, labor support, completions, and close records each have their own gra
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `Orders (Session 1.1)`; `MaterialIssueLineData ← MaterialIssueLine and MaterialIssueData ← MaterialIssue (import here)`; `LaborTimeEntryData ← LaborTimeEntry (import here)`; `ProductionCompletionLineData ← ProductionCompletionLine and ProductionCompletionData ← ProductionCompletion (import here)`; `WorkOrderCloseData ← WorkOrderClose (import here)`.
+**Named inputs:** `Orders (Session 1.1)`, `MaterialIssueLineData ← MaterialIssueLine and MaterialIssueData ← MaterialIssue (import here)`, `LaborTimeEntryData ← LaborTimeEntry (import here)`, `ProductionCompletionLineData ← ProductionCompletionLine and ProductionCompletionData ← ProductionCompletion (import here)`, `WorkOrderCloseData ← WorkOrderClose (import here)`.
 
-**Produced outputs:** `IssuesByWorkOrder, LaborByWorkOrder, CompletionsByWorkOrder, ClosesByWorkOrder: separate one-row-per-work-order summaries`; `CostBridge: all 336 cohort orders; unclosed variance remains null`.
+**Produced outputs:** `IssuesByWorkOrder, LaborByWorkOrder, CompletionsByWorkOrder, ClosesByWorkOrder: separate one-row-per-work-order summaries`, `CostBridge: all 336 cohort orders; unclosed variance remains null`.
 
 1. Import MaterialIssueLine as MaterialIssueLineData, MaterialIssue as MaterialIssueData, LaborTimeEntry as LaborTimeEntryData, ProductionCompletionLine as ProductionCompletionLineData, ProductionCompletion as ProductionCompletionData, and WorkOrderClose as WorkOrderCloseData.
 
@@ -326,12 +326,12 @@ ORDER BY w.WorkOrderID;
 
 **Checkpoint.** 336 rows remain. WO1: issue 754.29, labor support 191.89, completion materials 729.36, conversion 290.49, completed total 1,019.85. Its material variance is 24.93 and conversion variance 718.23, totaling 743.16.
 
-Material issue less standard material completion equals the material variance for this closed example. Labor support is only one cost input; it is not the whole actual conversion cost. Do not force it to equal completion conversion plus close variance.
+Material issue less standard material completion equals the material variance for this closed example. Labor support is one input into actual conversion cost rather than its complete measure. Do not force it to equal completion conversion plus close variance.
 
 <details>
 <summary>If your result differs</summary>
 
-Do not add direct labor and overhead variance again after using ConversionVarianceAmount; that amount already combines them.
+ConversionVarianceAmount already combines direct labor and overhead variance, so adding those components again would double-count them.
 
 </details>
 
@@ -346,7 +346,7 @@ Do not add direct labor and overhead variance again after using ConversionVarian
 
 **Named inputs:** `CostBridge (Session 2.1)`.
 
-**Produced outputs:** `CostBridge: AbsVariance and VariancePerCompletedUnit columns`; `Review: separate WO1/WO67 cost and timing comparison`.
+**Produced outputs:** `CostBridge: AbsVariance and VariancePerCompletedUnit columns`, `Review: separate WO1/WO67 cost and timing comparison`.
 
 1. In CostBridge add AbsVariance; leave unclosed orders blank:
 
@@ -373,7 +373,7 @@ Do not add direct labor and overhead variance again after using ConversionVarian
 </TabItem>
 <TabItem value="sql">
 
-This repeats the same independently aggregated cost method for WO1 and WO67. It is executable by itself; it does not depend on a temporary table created in another step.
+This repeats the same independently aggregated cost method for WO1 and WO67. It runs independently without a temporary table from an earlier step.
 
 Run each complete statement separately and retain its result before continuing.
 ```sql title="c05-contrast.sql"
@@ -457,9 +457,9 @@ A cohort’s late completion can coincide with capacity pressure without proving
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `WorkOrderOperationScheduleData (raw query from Session 1.2)`; `WorkCenterCalendarData ← WorkCenterCalendar (import here)`.
+**Named inputs:** `WorkOrderOperationScheduleData (raw query from Session 1.2)`, `WorkCenterCalendarData ← WorkCenterCalendar (import here)`.
 
-**Produced outputs:** `LoadByCenterDay: one schedule total per center/day`; `DailyCapacity: one calendar capacity row per center/day; retained for inspection`; `UnmatchedScheduleDates: reverse Left anti merge`; `CapacityByCenter: independently summed daily capacity/load`.
+**Produced outputs:** `LoadByCenterDay: one schedule total per center/day`, `DailyCapacity: one calendar capacity row per center/day; retained for inspection`, `UnmatchedScheduleDates: reverse Left anti merge`, `CapacityByCenter: independently summed daily capacity/load`.
 
 1. Reference the raw WorkOrderOperationScheduleData as LoadByCenterDay, filter ScheduleDate January 1–February 29, 2024, group by WorkCenterID and ScheduleDate, and sum ScheduledHours.
 
@@ -484,7 +484,7 @@ A cohort’s late completion can coincide with capacity pressure without proving
 </TabItem>
 <TabItem value="sql">
 
-Daily schedule totals are joined to the calendar before work-center aggregation. DaysAboveCapacity counts daily peaks; comparing only two period totals would lose them.
+Daily schedule totals are joined to the calendar before work-center aggregation. DaysAboveCapacity preserves daily peaks that a comparison of period totals would hide.
 
 Run each complete statement separately and retain its result before continuing.
 ```sql title="c05-capacity.sql"
@@ -573,9 +573,9 @@ Save a reproducible cost bridge and a bounded recommendation. Keep unresolved ev
 
 ## Prepare the Decision
 
-The production review should separate cost accounting from operational timing. The data supports specific investigations into documentation, daily capacity peaks, and the 46 orders awaiting close at the cutoff. It does not support a blanket conclusion that employees were inefficient or that every late order arose from inadequate capacity.
+The production review should separate cost accounting from operational timing. The data supports specific investigations into documentation, daily capacity peaks, and the 46 orders awaiting close at the cutoff. It does not support a blanket conclusion that employees were inefficient or that every late order arose from inadequate capacity. For an AIS submission, complete the short selected-work-order WIP checkpoint in [Lesson 9](../../learn-and-practice/manufacturing-cost-flow.md#keep-your-evidence). It uses work order 1 as a separate trace. The wider pooled-clearing reconciliation remains optional, and its costs cannot all be assigned to that order.
 
-**Deliverable:** A work-order cost bridge, completion/close comparison, capacity evidence, and a production review memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** A work-order cost bridge, completion/close comparison, capacity evidence, and a production review memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A clearly ordered SQL result table can support the conclusion, with a chart added if useful.
 
 ## Independent Challenge
 
@@ -584,11 +584,11 @@ Use work orders released in February 2024 and assess events through March 31. Re
 <details>
 <summary>Planning hint</summary>
 
-Keep the release cohort fixed while changing event cutoffs. Do not select only orders that eventually close; that would remove the unfinished population you need to explain.
+Keep the release cohort fixed while changing event cutoffs. Retain orders without a close because their unfinished position is part of the population to explain.
 
 </details>
 
-**Assessment criteria:** Assess cohort integrity, separate aggregation, standard versus actual support, completion versus close, capacity scope, and a recommendation that acknowledges uncertainty. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+**Assessment criteria:** Assess cohort integrity, separate aggregation, standard versus actual support, completion versus close, capacity scope, and a recommendation that acknowledges uncertainty. Your instructor evaluates the method, evidence, and reasoning. Model answers for this challenge remain in private course materials.
 
 ## Optional worked extension — Read the replenishment support
 
@@ -608,7 +608,7 @@ Follow WO67’s recommendation 777 into its item, warehouse, and planning week. 
 
 3. Reference the selected recommendation as PlanningSupport and Left merge on ItemID, WarehouseID, and BucketWeekStartDate = ForecastWeekStartDate in that order.
 
-4. Keep forecast approval and recommended quantity separate; a gross requirement can include more than forecast demand.
+4. Keep forecast approval and recommended quantity separate because a gross requirement can include more than forecast demand.
 
 </TabItem>
 <TabItem value="sql">
@@ -639,7 +639,7 @@ ORDER BY f.DemandForecastID;
 </TabItem>
 </ToolSteps>
 
-**Worked check.** Recommendation 777 has Sales Backlog as its driver, gross requirement 36.25, recommended quantity 32.99, and need-by date February 4. The matching current forecast is 10.96, approved January 19. Forecast alone therefore does not explain the recommendation quantity; keep backlog, availability, and the recommendation calculation distinct.
+**Worked check.** Recommendation 777 has Sales Backlog as its driver, gross requirement 36.25, recommended quantity 32.99, and need-by date February 4. The matching current forecast is 10.96, approved January 19. Keep backlog, availability, and the recommendation calculation distinct because forecast alone does not explain the recommended quantity.
 
 <details>
 <summary>Further queries and earlier case topics</summary>
@@ -648,9 +648,9 @@ ORDER BY f.DemandForecastID;
 
 ## Recommended Query Sequence
 
-These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. These optional references extend the complete guided routes above. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-<QuerySequence items={caseQuerySequences["manufacturing-labor-cost-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
+<QuerySequence items={caseQuerySequences["manufacturing-labor-cost-case"]} helperText="Choose a reference after completing the guided investigation and verify its scope before comparing totals." />
 
 </details>
 

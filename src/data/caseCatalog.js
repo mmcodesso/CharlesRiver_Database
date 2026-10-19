@@ -41,9 +41,9 @@ export const caseCatalog = [
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Keep the order cohort fixed while changing event cutoffs; distinguish receipt from application and balance each complete voucher."
+      "Keep the order cohort fixed while changing event cutoffs. Distinguish receipt from application and balance each complete voucher."
     ],
     "deliverable": "A document timeline, two-date invoice settlement schedule, and a customer response with an action owner."
   },
@@ -85,9 +85,9 @@ export const caseCatalog = [
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Distinguish work dates, approval dates, billing coverage, and invoice dates; summarize hours and costs at engagement/month grain."
+      "Distinguish work dates, approval dates, billing coverage, and invoice dates when summarizing hours and costs at engagement/month grain."
     ],
     "deliverable": "An engagement-period reconciliation, an hours/billing/cost bridge, and a design review memo."
   },
@@ -129,9 +129,9 @@ export const caseCatalog = [
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Aggregate receipt, invoice, payment, and estimate evidence separately; explain GRNI, AP, and accrued-service obligations at each cutoff."
+      "Aggregate receipt, invoice, payment, and estimate evidence separately before explaining GRNI, AP, and accrued-service obligations at each cutoff."
     ],
     "deliverable": "Separate goods and expense-obligation schedules, selected posting checks, and a quarter-end review note."
   },
@@ -166,9 +166,9 @@ export const caseCatalog = [
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Preserve invoice-line grain; state the limits of current standard costs and separately dated credits in historical comparisons."
+      "Preserve invoice-line grain and state the limits of current standard costs and separately dated credits in historical comparisons."
     ],
     "deliverable": "A product comparison, selected pricing evidence, a simple analytical chart, and a recommendation memo."
   },
@@ -210,9 +210,9 @@ export const caseCatalog = [
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Aggregate issue, labor, completion, and close independently by work order; compare capacity at one row per center/day."
+      "Aggregate issue, labor, completion, and close independently by work order, and compare capacity at one row per center/day."
     ],
     "deliverable": "A work-order cost bridge, completion/close comparison, capacity evidence, and a production review memo."
   },
@@ -254,9 +254,9 @@ export const caseCatalog = [
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Preserve approved-time detail; distinguish identified from unassigned centers and employee-period pay from center workload."
+      "Preserve approved-time detail, distinguish identified from unassigned centers, and keep employee-period pay separate from center workload."
     ],
     "deliverable": "A coverage comparison, employee-period pay reconciliation, settlement schedule, and staffing recommendation."
   },
@@ -301,9 +301,9 @@ export const caseCatalog = [
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Retain full ledger history for openings; distinguish pre-close performance, cash movements, balance snapshots, and complete closing vouchers."
+      "Retain full ledger history for openings and distinguish pre-close performance, cash movements, balance snapshots, and complete closing vouchers."
     ],
     "deliverable": "A full-history balance rollforward, profit/cash bridge, selected source reconciliation, and management review memo."
   },
@@ -334,9 +334,9 @@ export const caseCatalog = [
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Define an explicit criterion and denominator; distinguish time entries from people and an exception flag from a proven control failure."
+      "Define an explicit criterion and denominator, distinguishing time entries from people and an exception flag from a proven control failure."
     ],
     "deliverable": "An exception register, two source-supported workpapers, and prioritized control recommendations."
   }

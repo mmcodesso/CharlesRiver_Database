@@ -24,21 +24,21 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 <span id="the-problem-to-solve"></span>
 <span id="learning-objectives"></span>
 
-The controller requests a focused controls review. A list of flags is easy to produce; the harder task is to investigate alternatives and explain what the evidence establishes. You will examine repeated supplier references and overtime approval support, then recommend controls with a clear owner, procedure, and assessment method.
+The controller requests a focused controls review. Investigate alternative explanations for each flag before deciding what the evidence establishes. You will examine repeated supplier references and overtime approval support, then recommend controls with a clear owner, procedure, and assessment method.
 
 <CaseOverview slug="audit-review-pack-case" />
 
 **Worked scope.** Duplicate supplier invoice and check references across the entire recorded history, plus approved overtime entries with positive overtime dated October 1–December 31, 2026. These populations have different denominators. The review uses source records, not instructor anomaly labels or the support workbook.
 
-Choose Excel or SQL; your selection carries between lessons and cases.
+Choose Excel or SQL. The site retains your selection between lessons and cases.
 
-**Preparation:** [Complete one earlier process case](/docs/analytics/cases); [BPMN Process and Internal Control Workshop](/docs/learn-and-practice/bpmn-controls-workshop) (recommended). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+**Preparation:** [Complete one earlier process case](/docs/analytics/cases), [BPMN Process and Internal Control Workshop](/docs/learn-and-practice/bpmn-controls-workshop) (recommended). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
 **Ready to begin:**
 
-- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
 - Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
-- Define an explicit criterion and denominator; distinguish time entries from people and an exception flag from a proven control failure.
+- Define an explicit criterion and denominator, distinguishing time entries from people and an exception flag from a proven control failure.
 
 ## Key Data Sources
 
@@ -81,9 +81,9 @@ Create Case08.xlsx or Case08.sql and a Review note. Use four conclusion categori
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `PurchaseInvoiceData ← PurchaseInvoice and DisbursementPaymentData ← DisbursementPayment (import here; full populations retained)`; `TimeClockEntryData ← TimeClockEntry (import here; raw query retained)`.
+**Named inputs:** `PurchaseInvoiceData ← PurchaseInvoice and DisbursementPaymentData ← DisbursementPayment (import here; full populations retained)`, `TimeClockEntryData ← TimeClockEntry (import here; raw query retained)`.
 
-**Produced outputs:** `CheckPayments: nonblank check references only`; `Overtime: Q4 2026 approved entries with positive overtime`; `Review: separate population counts and criteria`.
+**Produced outputs:** `CheckPayments: nonblank check references only`, `Overtime: Q4 2026 approved entries with positive overtime`, `Review: separate population counts and criteria`.
 
 1. Import PurchaseInvoice as PurchaseInvoiceData without a date filter.
 
@@ -122,7 +122,7 @@ Create Case08.xlsx or Case08.sql and a Review note. Use four conclusion categori
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c08-populations.sql"
 SELECT 'Supplier invoices: released history' AS Population,
        COUNT(*) AS Documents
@@ -144,7 +144,7 @@ ORDER BY Population;
 
 **Checkpoint.** 40,204 supplier invoices; 12,130 payments with a nonblank check reference; 1,895 approved positive-overtime entries in Q4 2026.
 
-The tests do not cover every AP or payroll risk. Exact reference matching also misses differently formatted duplicates; note that limitation before interpreting a zero or low rate.
+The tests do not cover every AP or payroll risk. Note that exact reference matching misses differently formatted duplicates before interpreting a zero or low rate.
 
 <details>
 <summary>If your result differs</summary>
@@ -181,7 +181,7 @@ A repeated reference may indicate a duplicate document, a reused reference, or a
 
 **Named inputs:** `PurchaseInvoiceData, DisbursementPaymentData, and CheckPayments (Session 1.1)`.
 
-**Produced outputs:** `InvoiceGroups and CheckGroups: repeated-reference keys`; `PaymentsByInvoice: independently summed payments`; `DuplicateInvoices and DuplicateChecks: document-level exception evidence`.
+**Produced outputs:** `InvoiceGroups and CheckGroups: repeated-reference keys`, `PaymentsByInvoice: independently summed payments`, `DuplicateInvoices and DuplicateChecks: document-level exception evidence`.
 
 1. In Power Query Reference PurchaseInvoiceData as InvoiceGroups.
 
@@ -202,7 +202,7 @@ A repeated reference may indicate a duplicate document, a reused reference, or a
 
 groups identifies exact supplier/reference pairs occurring more than once. Joining the group back retrieves each flagged document. The payment SUM is independent, so multiple payments cannot duplicate invoice values.
 
-Blank references are excluded before grouping. The same supplier and CheckNumber must match. Keep both group counts and payment-row counts; they answer different questions.
+Blank references are excluded before grouping. The same supplier and CheckNumber must match. Retain both group counts and payment-row counts because they answer different questions.
 
 Run each complete statement separately and retain its result before continuing.
 ```sql title="c08-duplicates.sql"
@@ -270,9 +270,9 @@ Group within supplier. A reference repeated by two different suppliers is not th
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `PurchaseInvoiceLineData ← PurchaseInvoiceLine (import here)`; `DisbursementPaymentData (complete raw query from Session 1.1)`.
+**Named inputs:** `PurchaseInvoiceLineData ← PurchaseInvoiceLine (import here)`, `DisbursementPaymentData (complete raw query from Session 1.1)`.
 
-**Produced outputs:** `InvoicePairLines: invoices 28/44 line evidence`; `InvoicePairPayments: all-method payments for invoices 28/44`; `Review: separate invoice register rows`.
+**Produced outputs:** `InvoicePairLines: invoices 28/44 line evidence`, `InvoicePairPayments: all-method payments for invoices 28/44`, `Review: separate invoice register rows`.
 
 1. Import PurchaseInvoiceLine as PurchaseInvoiceLineData; reference it as InvoicePairLines and filter PurchaseInvoiceID 28 or 44.
 
@@ -287,7 +287,7 @@ Group within supplier. A reference repeated by two different suppliers is not th
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c08-invoice-detail.sql"
 SELECT l.PurchaseInvoiceID,
        l.PILineID,
@@ -340,7 +340,7 @@ A paid status or matching reference cannot establish duplicate payment. Do not s
 
 **Named inputs:** `DuplicateChecks and PurchaseInvoiceData (earlier stages)`.
 
-**Produced outputs:** `DuplicateChecks: invoice lookup columns`; `Review: SupplierID 1 / CHK0006076 evidence, separate from repeated-invoice criterion`.
+**Produced outputs:** `DuplicateChecks: invoice lookup columns`, `Review: SupplierID 1 / CHK0006076 evidence, separate from repeated-invoice criterion`.
 
 1. In DuplicateChecks filter SupplierID 1 and CheckNumber CHK0006076.
 
@@ -405,9 +405,9 @@ Approved payroll time and a linked overtime approval are different records. A po
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `Overtime (Session 1.1)`; `Approvals ← OvertimeApproval (import here)`.
+**Named inputs:** `Overtime (Session 1.1)`, `Approvals ← OvertimeApproval (import here)`.
 
-**Produced outputs:** `OvertimeReview: time-entry detail and approval match; HoursTest classification`; `HoursTestCounts: entry-count PivotTable`.
+**Produced outputs:** `OvertimeReview: time-entry detail and approval match; HoursTest classification`, `HoursTestCounts: entry-count PivotTable`.
 
 1. Import OvertimeApproval as Approvals.
 
@@ -478,7 +478,7 @@ Keep null matches. A zero-row exception list after an Inner join is not evidence
 
 **Named inputs:** `OvertimeReview and Approvals (Session 3.1)`.
 
-**Produced outputs:** `OvertimeReview: additional approval-identity/date fields`; `Review: selected missing-link and hours-supported evidence`.
+**Produced outputs:** `OvertimeReview: additional approval-identity/date fields`, `Review: selected missing-link and hours-supported evidence`.
 
 1. Filter OvertimeReview to TimeClockEntryIDs 49436 and 49581.
 
@@ -491,7 +491,7 @@ Keep null matches. A zero-row exception list after an Inner join is not evidence
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c08-compare.sql"
 SELECT t.TimeClockEntryID,
        t.EmployeeID,
@@ -640,9 +640,9 @@ Save both workpapers, the register, and controls memo. Your independent challeng
 
 ## Prepare the Decision
 
-The worked review demonstrates why a flag is not a finding about fraud or financial loss. Repeated references and missing approval links are supported conditions; their economic consequences need additional evidence. Controls become useful recommendations when the owner, timing, evidence, test population, and failure criteria are explicit.
+The worked review demonstrates why a flag is not a finding about fraud or financial loss. Repeated references and missing approval links are supported conditions whose economic consequences require additional evidence. Controls become useful recommendations when the owner, timing, evidence, test population, and failure criteria are explicit.
 
-**Deliverable:** An exception register, two source-supported workpapers, and prioritized control recommendations. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** An exception register, two source-supported workpapers, and prioritized control recommendations. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A clearly ordered SQL result table can support the conclusion, with a chart added if useful.
 
 ## Independent Challenge
 
@@ -655,7 +655,7 @@ A new population can produce fewer flags, different explanations, or no exceptio
 
 </details>
 
-**Assessment criteria:** Assess explicit criteria and denominators, source tracing, alternative explanations, proportionate conclusions, and controls that can be assessed without relying on anomaly labels. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+**Assessment criteria:** Assess explicit criteria and denominators, source tracing, alternative explanations, proportionate conclusions, and controls that can be assessed without relying on anomaly labels. Your instructor evaluates the method, evidence, and reasoning. Model answers for this challenge remain in private course materials.
 
 ## Optional specialist investigations
 
@@ -665,7 +665,7 @@ Extend the same risk-to-evidence method to pricing, planning support, or employe
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `Choose only one optional investigation and import its named source tables before use`; `Read the selected canonical query for exact source keys, dates, and population`.
+**Named inputs:** `Choose only one optional investigation and import its named source tables before use`, `Read the selected canonical query for exact source keys, dates, and population`.
 
 **Produced outputs:** `SpecialistWorkpaper: chosen criterion, separate source detail, valid joins, and bounded conclusion`.
 
@@ -694,9 +694,9 @@ Choose a specialist query from the optional sequence below. Define its criterion
 
 ## Recommended Query Sequence
 
-These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. These optional references extend the complete guided routes above. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-<QuerySequence items={caseQuerySequences["audit-review-pack-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
+<QuerySequence items={caseQuerySequences["audit-review-pack-case"]} helperText="Choose a reference after completing the guided investigation and verify its scope before comparing totals." />
 
 </details>
 

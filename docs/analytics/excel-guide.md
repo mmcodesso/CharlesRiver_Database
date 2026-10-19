@@ -28,7 +28,7 @@ The released workbook is about **129 MB** and contains **82 formatted tables**, 
 
 1. In your blank workbook, choose **Data → Get Data → From File → From Excel Workbook** on Windows. On Mac, choose **Data → Get Data (Power Query)** and select **Excel workbook** as the source.
 2. Browse to the downloaded <FileName type="excel" />.
-3. In the Navigator, select **T4_Customer**, the formatted Excel Table. Do not also select the worksheet named Customer; that would import the same records twice.
+3. In the Navigator, select **T4_Customer**, the formatted Excel Table. Selecting the worksheet named Customer as well would import the same records twice.
 4. Choose **Transform Data** to open Power Query Editor. On Mac, the import dialog may first ask you to select the workbook and continue to its data preview.
 5. In **Query Settings**, set the query name to **CustomerData**.
 6. Confirm the first row contains field names such as CustomerID and CustomerName. Check the type icon beside CustomerID: choose **Whole Number** if necessary. Keep CustomerName and CustomerSegment as **Text**.
@@ -78,15 +78,15 @@ The same date bounds apply in both tools:
 | March 2024 | On or after March 1, 2024 **and** before April 1, 2024 | `OrderDate >= '2024-03-01' AND OrderDate < '2024-04-01'` | March 1 is included; February 29 and April 1 are excluded. |
 | Q1 2024 | On or after January 1, 2024 **and** before April 1, 2024 | `OrderDate >= '2024-01-01' AND OrderDate < '2024-04-01'` | January 1 is included; December 31, 2023 and April 1 are excluded. |
 
-These are alternative filters: Q1 also includes January and February. Neither filter changes the source file. A date boundary describes which records qualify; it does not promise that the source contains a record on every included date.
+These filters select different periods because Q1 also includes January and February. Neither filter changes the source file. A date boundary describes which records qualify without implying that every included date contains a record.
 
-A **Power Query filter** limits which rows are loaded. A **worksheet filter** only hides rows already loaded. `SUM` includes hidden rows; `SUBTOTAL(109,...)` sums visible rows. Lessons specify which kind of filter and calculation they need.
+A **Power Query filter** limits which rows are loaded. A **worksheet filter** only hides rows already loaded. `SUM` includes hidden rows, while `SUBTOTAL(109,...)` sums visible rows. Lessons specify which kind of filter and calculation they need.
 
 To edit an import, on Windows open **Data → Queries & Connections**, then double-click the query. On Mac use **Data → Get Data (Power Query) → Launch Power Query Editor** and select the query. Refresh the imported table after changing its source query. Refresh a PivotTable separately after its input changes.
 
 ## If Your Result Looks Different
 
-- **Formula shows a name error:** check the working table and column names. The formulas use English function names; localized Excel may use translated names and semicolons instead of commas.
+- **Formula shows a name error:** check the working table and column names. Localized Excel may use translated names and semicolons instead of the English function names and commas shown here.
 - **Date filters behave like text filters:** set the column type to Date in Power Query. For typed cutoff cells, use `DATE(year,month,day)`.
 - **A lookup says “No match”:** compare the stored keys and their types. Do not replace missing matches with a guessed name or zero.
 - **An amount differs:** check the source table, source filters, worksheet filters, and whether a merge repeated rows.

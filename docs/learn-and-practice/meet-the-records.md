@@ -20,7 +20,7 @@ The sales coordinator has a customer name on a request. Before discussing an ord
 
 <span id="learning-objectives"></span>
 
-**Your task:** Recognize one customer record, its identifier, and its descriptive fields.
+**Your task.** Recognize one customer record, its identifier, and its descriptive fields.
 
 <TutorialFigure figureId="meet-the-records" />
 
@@ -36,7 +36,7 @@ Use the `CustomerData` table imported during setup.
 </TabItem>
 <TabItem value="sql">
 
-Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson01.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson01.sql**. Run each supplied query separately, using its filters to identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
@@ -59,7 +59,7 @@ A customer identifier is the stored link used by other records. A customer name 
 </TabItem>
 <TabItem value="sql">
 
-Copy the whole query into **Execute SQL**, then run it. `SELECT` names the columns to display; `FROM` names the table; `WHERE` retains the matching customer.
+Copy the whole query into **Execute SQL**, then run it. `SELECT` names the columns to display, `FROM` names the table, and `WHERE` retains the matching customer.
 
 ```sql title="l01-customer.sql"
 SELECT CustomerID, CustomerName, CustomerSegment, City
@@ -71,7 +71,7 @@ WHERE CustomerID = 130;
 </TabItem>
 </ToolSteps>
 
-You should find **one row**: CustomerID **130**, **Jones, Richardson and Beard**, segment **Design Trade**. One row describes one customer; it is not an order or an invoice.
+You should find **one row**: CustomerID **130**, **Jones, Richardson and Beard**, segment **Design Trade**. This row describes the customer rather than an order or invoice.
 
 ## 2. Look at a Small Group
 
@@ -82,13 +82,13 @@ Now widen the question: which customers belong to the same segment? Sorting make
 
 1. Clear the `CustomerID` filter.
 2. Filter `CustomerSegment` to **Design Trade**.
-3. Sort `CustomerName` **A to Z**. Review the first five names; if two names match, compare their `CustomerID` values.
-4. Keep this distinction in your notes: the filter selects a population; looking at five rows selects only a preview.
+3. Sort `CustomerName` **A to Z**. Review the first five names and compare `CustomerID` values when names match.
+4. Keep this distinction in your notes: the filter selects a population, while the first five rows provide only a preview.
 
 </TabItem>
 <TabItem value="sql">
 
-`ORDER BY` controls the displayed order. `LIMIT 5` keeps this first result small; it does not mean the company has only five design-trade customers.
+`ORDER BY` controls the displayed order. `LIMIT 5` keeps this first result small without changing the number of design-trade customers in the source.
 
 ```sql title="l01-segment-preview.sql"
 SELECT CustomerID, CustomerName, CustomerSegment

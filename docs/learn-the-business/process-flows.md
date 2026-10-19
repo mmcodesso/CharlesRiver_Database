@@ -22,7 +22,7 @@ Start with five questions. **What starts the work? Who acts? What do they do? Wh
 
 For goods fulfillment, the customer's order establishes demand. Warehouse staff record a shipment. Customer accounting uses shipment support for billing. The invoice then establishes an amount owed by the customer.
 
-Each document answers a different question. An order does not prove shipment; a shipment does not establish that an invoice has been settled. The sequence becomes easier to read when you identify the purpose of each handoff before looking at database names.
+Each document answers a different question. An order does not prove shipment, and a shipment does not establish invoice settlement. The sequence becomes easier to read when you identify the purpose of each handoff before looking at database names.
 
 When you examine the records, look for partial quantities, different dates, and unresolved balances. Use the process model to identify the next document to inspect, then establish how far the selected transaction has progressed.
 
@@ -58,6 +58,8 @@ The controller eventually brings the accounting consequences together. That expl
 
 The chapters use two complementary diagram views. A **BPMN business-process model** shows work and responsibility. A **Mermaid record-flow diagram** shows relationships among documents or accounting events.
 
+In detailed record maps, a field label on a solid arrow identifies a stored-key relationship or an explicit ledger-source mapping. A dashed arrow identifies analytical support, aggregation, or an account effect, with chronology stated on the arrow when it matters. A receipt-to-issue support comparison does not establish a stored lineage key. Read each label before choosing a join. These record-map conventions differ from BPMN sequence and message flows described below.
+
 BPMN means Business Process Model and Notation. You can begin with a small set of symbols:
 
 | Symbol | First reading |
@@ -77,7 +79,7 @@ Click either kind of diagram to expand it. The expanded view provides the same n
 
 Begin with the ordinary business situation and follow the people doing the work. Then explain the accounting events: which activities create postings, and which simply provide context or support?
 
-Next, connect the familiar documents to their stored records. The chapter's small record map helps you recognize what to look for later; you do not need to memorize the full table inventory.
+Next, connect the familiar documents to their stored records. The chapter's small record map helps you recognize the records needed later without memorizing the full table inventory.
 
 Finally, consider one complication and answer the concept checks. A partial delivery or a later payment can reveal why the process distinctions matter. Optional sections provide detailed fields, additional models, control questions, and assignments when you are ready for them.
 
@@ -95,7 +97,7 @@ Continue to [Order-to-Cash](../processes/o2c.md). Follow the customer's goods fr
 
 ## Optional Reference
 
-The model library and extended notation are available for later analysis and diagram editing. The current [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) supports analytical methods; the associated AIS textbook is forthcoming.
+The model library and extended notation are available for later analysis and diagram editing. The current [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) supports analytical methods. The associated AIS textbook is forthcoming.
 
 <details>
 <summary>Explore the full company architecture</summary>
@@ -104,7 +106,7 @@ The model library and extended notation are available for later analysis and dia
 
 <BpmnDiagram modelId="process-architecture" />
 
-The architecture groups the company's business cycles and responsibilities. Each cycle has its own trigger and boundary; the drawing does not impose a single serial schedule on all transactions. Purchasing supplies merchandise and components, manufacturing supplies selected finished goods, payroll supports factory and service staff, and finance complements the operating cycles with journals and close.
+The architecture groups the company's business cycles and responsibilities. Each cycle has its own trigger and boundary, so the drawing does not impose a single serial schedule on all transactions. Purchasing supplies merchandise and components, manufacturing supplies selected finished goods, payroll supports factory and service staff, and finance complements the operating cycles with journals and close.
 
 Return to [the connected business map](#see-the-connected-business) for a simpler view, or choose an editable source in the [model library](#model-library).
 
@@ -116,7 +118,7 @@ Return to [the connected business map](#see-the-connected-business) for a simple
 
 Begin with **Order-to-Cash**, **Procure-to-Pay**, or **Manufacturing and Conversion** for the three core AIS modules. Design Services, payroll, and finance connect those cycles to employee time, customer billing, settlement, and close. Focused detail models keep exceptions and proposed reviews separate from the main paths.
 
-Before a data activity, finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). The first activity follows the event in that model; check any further lesson prerequisites on its page.
+Before a data activity, finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Check the first activity's further prerequisites before following the event shown in its model.
 
 | Model | First accounting trace |
 |---|---|
@@ -126,7 +128,7 @@ Before a data activity, finish [Lesson 1](../learn-and-practice/meet-the-records
 | Payroll | [Lesson 10: Follow Hours into Payroll](../learn-and-practice/follow-hours-into-payroll.md) |
 | Manual Journals and Close | [Lesson 11: Follow an Estimate into Settlement](../learn-and-practice/follow-an-estimate-into-settlement.md); then the [statement and close case](../analytics/cases/financial-statement-bridge-case.md) |
 
-The [BPMN and Controls Workshop](../learn-and-practice/bpmn-controls-workshop.md) remains an optional extension after one verified trace. Each row below links a model to its process guide, learning activity, case, and editable `.drawio` source. Click a diagram or its Expand model button to open the viewer. Download the source to adapt it in [diagrams.net](https://app.diagrams.net/) or Draw.io Desktop; keep proposed changes explicitly labeled. Viewing the published diagrams requires only a browser.
+The [BPMN and Controls Workshop](../learn-and-practice/bpmn-controls-workshop.md) remains an optional extension after one verified trace. Each row below links a model to its process guide, learning activity, case, and editable `.drawio` source. Click a diagram or its Expand model button to open the viewer. Download the source to adapt it in [diagrams.net](https://app.diagrams.net/) or Draw.io Desktop, keeping proposed changes explicitly labeled. Viewing the published diagrams requires only a browser.
 
 <BpmnModelCatalog />
 
@@ -148,7 +150,7 @@ The [BPMN and Controls Workshop](../learn-and-practice/bpmn-controls-workshop.md
 | Solid arrow | Sequence within one pool | It may cross lanes but must not cross a participant boundary |
 | Dashed arrow with open source circle and open target | Message between participants | It cannot be used as an internal lane-to-lane handoff |
 
-Read the [OMG BPMN 2.0.2 specification](https://www.omg.org/spec/BPMN/2.0.2/) for the formal notation and [Draw.io's BPMN library guide](https://www.drawio.com/docs/diagram-types/bpmn-2-0/) for authoring. In a notation conflict, the OMG specification is authoritative. This introduction selects the symbols used here; it does not reproduce the full standard.
+Read the [OMG BPMN 2.0.2 specification](https://www.omg.org/spec/BPMN/2.0.2/) for the formal notation and [Draw.io's BPMN library guide](https://www.drawio.com/docs/diagram-types/bpmn-2-0/) for authoring. In a notation conflict, the OMG specification is authoritative. This introduction explains the symbols used here rather than reproducing the full standard.
 
 ### Evidence and Control Boundaries
 

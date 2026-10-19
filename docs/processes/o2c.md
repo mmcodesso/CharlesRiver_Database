@@ -19,7 +19,7 @@ import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
 Return to the furnishing project in our [company story](../learn-the-business/company-story.md). The design-trade customer has selected goods, and the sales coordinator records the request. The immediate question is practical: **what has the company promised, and what still needs to happen before the invoice is settled?**
 
-Begin by following the work from department to department; no download is needed for this reading. Later, trace a selected order and use its documents to explain what was delivered, billed, and settled.
+Begin by following the work from department to department without downloading a file. Later, trace a selected order and use its documents to explain what was delivered, billed, and settled.
 
 Order-to-cash, or O2C, connects the customer's order with fulfillment, billing, and settlement. Sales, the warehouse, customer accounting, and treasury each contribute evidence. Their activities answer different questions about the same commercial relationship.
 
@@ -33,7 +33,7 @@ The warehouse then considers what can be shipped. Available stock may support fu
 
 A shipment records goods leaving inventory. This is the point at which the dataset recognizes the inventory reduction and cost of goods sold. Outbound freight also has its own expense and accrual effect. Those costs arise from fulfillment even though customer billing is a separate event.
 
-The operations planner's supply work continues behind this activity. Purchased goods depend on inventory and replenishment; manufactured goods also depend on production. The later purchasing and manufacturing chapters explain those responsibilities. An O2C investigation starts with what the warehouse actually fulfilled.
+The operations planner's supply work continues behind this activity. Purchased goods depend on inventory and replenishment, while manufactured goods also depend on production. The later purchasing and manufacturing chapters explain those responsibilities. An O2C investigation starts with what the warehouse actually fulfilled.
 
 ## Bill the Goods That Shipped
 
@@ -43,7 +43,7 @@ This separation makes timing visible. The order shows what was requested, the sh
 
 In a goods-sale trace, an invoice line links to the shipment line it bills. The order and invoice totals alone cannot establish that relationship. Freight billed to the customer and sales tax also need to be distinguished from merchandise revenue when interpreting an invoice.
 
-The customer may have design work billed as well. That work follows approved hours rather than a shipment. We will follow it in the next chapter; first, complete the goods-sale settlement path.
+The customer may have design work billed as well. That work follows approved hours rather than a shipment. Complete the goods-sale settlement path before following design work in the next chapter.
 
 ## Receive the Money and Apply It
 
@@ -63,7 +63,7 @@ For the sales coordinator, the customer relationship may look complete once deli
 
 ## Follow the Responsibilities
 
-**Who hands the work to whom?** Read the main BPMN from the customer's request through Sales, Warehouse, Accounting, and Treasury. A lane shows a responsibility; arrows within the company show the sequence of activities.
+**Who hands the work to whom?** Read the main BPMN from the customer's request through Sales, Warehouse, Accounting, and Treasury. A lane shows a responsibility, while arrows within the company show the sequence of activities.
 
 <BpmnDiagram modelId="order-to-cash" />
 
@@ -89,7 +89,7 @@ flowchart LR
     APP -->|Applied to| SI
 ```
 
-Follow the goods across the top path. Then follow received money through its application to the invoice. This is a reading map; detailed joins belong to the reference sections below.
+Follow the goods across the top path. Then follow received money through its application to the invoice. Use this map to follow the records, then consult the reference sections below for detailed joins.
 
 The principal accounting events in the published model are:
 
@@ -113,7 +113,7 @@ An open invoice is therefore a starting point for investigation. Check its due d
 
 ## Bridge an Event to an Entry
 
-Continue with the [Lessons 4–6 sale records](../learn-and-practice/find-the-accounting-entries.md#3-tell-the-event-to-entry-story). The table widens the selected order-line trace to **complete event vouchers**; the shipment and invoice contain two goods lines.
+Continue with the [Lessons 4–6 sale records](../learn-and-practice/find-the-accounting-entries.md#3-tell-the-event-to-entry-story). The table widens the selected order-line trace to **complete event vouchers** that include both goods lines in the shipment and invoice.
 
 | Event and date | Supporting evidence | Why the accounts change | Cutoff question |
 |---|---|---|---|
@@ -128,7 +128,7 @@ Continue with the [Lessons 4–6 sale records](../learn-and-practice/find-the-ac
 <details>
 <summary>Reveal the event distinction</summary>
 
-The receipt increases cash and unapplied customer money. Application 225 reduces AR on February 23 without a second cash inflow. Exclude that application from a February 22 cutoff. These two records alone do not establish the invoice’s full balance; inspect its other applications and relevant credits. [Lesson 6](../learn-and-practice/find-the-accounting-entries.md#3-tell-the-event-to-entry-story) checks all 15 ledger rows and separates complete vouchers from one selected goods line.
+The receipt increases cash and unapplied customer money. Application 225 reduces AR on February 23 without a second cash inflow. Exclude that application from a February 22 cutoff. Inspect the invoice's other applications and relevant credits before calculating its full balance from the selected records. [Lesson 6](../learn-and-practice/find-the-accounting-entries.md#3-tell-the-event-to-entry-story) checks all 15 ledger rows and separates complete vouchers from one selected goods line.
 
 </details>
 
@@ -137,7 +137,7 @@ The receipt increases cash and unapplied customer money. Application 225 reduces
 <details>
 <summary>The order is recorded. Has the dataset recognized the goods revenue?</summary>
 
-No. The order records demand and commercial terms. Shipment records fulfillment and inventory cost; the sales invoice records the receivable and goods revenue in this model.
+No. The order records demand and commercial terms. Shipment records fulfillment and inventory cost, while the sales invoice records the receivable and goods revenue in this model.
 
 </details>
 
@@ -197,7 +197,7 @@ Return to these sections when you have a specific question or an assignment that
 - `CashReceipt.SalesInvoiceID` is compatibility metadata only and should not be treated as the authoritative settlement link.
 - `SalesOrderLine` carries pricing lineage through `BaseListPrice`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, and `PricingMethod`.
 - `ServiceBillingLine` is the authoritative hours-to-invoice bridge for design services, and `ServiceTimeEntry` is the approved-hours source behind that billing.
-- `SalesCommissionAccrual` is the invoice-line commission bridge. Its base is `SalesInvoiceLine.LineTotal`; freight, sales tax, deposits, AR timing, and unapplied cash are outside the commission base.
+- `SalesCommissionAccrual` is the invoice-line commission bridge. Its `SalesInvoiceLine.LineTotal` base excludes freight, sales tax, deposits, AR timing, and unapplied cash.
 - `SalesCommissionAdjustment` records credit-memo clawbacks, and `SalesCommissionPaymentLine` shows which accruals and adjustments were included in each sales-rep payment.
 - Some receipts remain unapplied for a period of time, which is useful for open-AR, unapplied-cash, and settlement-timing analysis.
 
@@ -285,19 +285,23 @@ flowchart LR
 
 ### 3. Shipment to Invoice Traceability
 
-Which shipped goods support the billed revenue? Follow the shipment line into the invoice line, retaining both dates and quantities. This view supports cutoff, completeness, and occurrence questions; the [Schema Reference](../reference/schema.md) provides the full entity relationships.
+Which shipped goods support the billed revenue? Follow the shipment line into the invoice line, retaining both dates and quantities. This view supports cutoff, completeness, and occurrence questions. Consult the [Schema Reference](../reference/schema.md) for the full entity relationships.
 
 ```mermaid
 flowchart LR
     accTitle: Customer order shipment invoice and ledger
-    accDescr: A customer connects to the sales order, shipment, sales invoice, and ledger detail in sequence.
+    accDescr: Labeled solid arrows follow stored keys through order, shipment, and invoice lines. Shipment and invoice have independent ledger-source routes.
     C[Customer]
-    SO[Sales Order]
-    SH[Shipment]
-    SI[Sales Invoice]
+    SO[SalesOrderLine and header]
+    SH[ShipmentLine and header]
+    SI[SalesInvoiceLine and header]
     GL[GLEntry]
 
-    C --> SO -->  SH  --> SI  --> GL
+    C -->|CustomerID on order header| SO
+    SO -->|SalesOrderLineID| SH
+    SH -->|ShipmentLineID| SI
+    SH -->|Shipment source type and header ID| GL
+    SI -->|SalesInvoice source type and header ID| GL
 ```
 
 **Tables involved**
@@ -328,14 +332,20 @@ Which invoice did the money settle? Follow a receipt into its applications, then
 ```mermaid
 flowchart LR
     accTitle: Receipt to unapplied money and invoice application
-    accDescr: Cash receipt increases unapplied customer money, which an application allocates to a sales invoice and ledger detail.
+    accDescr: Solid labeled arrows identify receipt and invoice keys or independent posting sources. Dashed links explain the unapplied-cash account effect rather than a stored join.
     CR[Cash Receipt]
     DEP[Customer Deposits and Unapplied Cash]
     CRA[Cash Receipt Application]
     SI[Sales Invoice]
     GL[GLEntry]
 
-    CR --> DEP --> CRA --> SI --> GL
+    CR -->|CashReceiptID| CRA
+    CRA -->|SalesInvoiceID| SI
+    CR -->|CashReceipt source type and ID| GL
+    CRA -->|CashReceiptApplication source type and ID| GL
+    SI -->|SalesInvoice source type and ID| GL
+    CR -. Credits account 2060 .-> DEP
+    CRA -. Debits account 2060 .-> DEP
 ```
 
 **Tables involved**
@@ -403,11 +413,11 @@ flowchart LR
 
 <BpmnDiagram modelId="cash-application" />
 
-The matching decision explains application versus remaining unapplied cash. The detail includes receipt capture for context; the parent allocation review starts after that receipt. It is a teaching interpretation of the records, not evidence of an automated exception queue or a one-to-one execution binding between diagrams.
+The matching decision explains application versus remaining unapplied cash. The detail includes receipt capture as context for the parent allocation review that follows it. It is a teaching interpretation of the records, not evidence of an automated exception queue or a one-to-one execution binding between diagrams.
 
 <BpmnDiagram modelId="returns-credit-refunds" />
 
-A physical return restores inventory. An approved credit memo reduces open receivables and retains any excess as customer credit; one memo can do both. A later refund clears customer credit in cash. These events need not occur together. Mermaid links show relationship endpoints rather than an exclusive business gateway; use the detailed BPMN allocation step and actual `GLEntry` rows when a memo spans both.
+A physical return restores inventory. An approved credit memo reduces open receivables and retains any excess as customer credit, so one memo can do both. A later refund clears customer credit in cash. These events need not occur together. When a memo spans both accounts, compare the Mermaid relationship endpoints with the detailed BPMN allocation step and actual `GLEntry` rows rather than interpreting the links as an exclusive gateway.
 
 ### Returns, Credits, and Refunds
 
@@ -416,19 +426,23 @@ Some sales do not end with the original invoice. In this dataset, returns are th
 ```mermaid
 flowchart LR
     accTitle: Return credit and refund accounting evidence
-    accDescr: Shipment and invoice lead to return and credit memo records, then an optional refund. Dashed links describe inventory restoration, credit accounting, and customer-credit cash settlement.
-    SHL[Shipment]
-    SIL[Sales Invoice]
-    SR[Sales Return]
-    SRL[Sales Return]
-    CM[Credit Memo]
+    accDescr: Solid labeled arrows identify stored keys and independent posting sources. A dashed link marks the conditional chronology of a later refund. A return, credit memo, and refund each have their own accounting route.
+    SHL[ShipmentLine]
+    SIL[SalesInvoiceLine]
+    SR[SalesReturn]
+    SRL[SalesReturnLine]
+    CM[CreditMemo]
     RF[CustomerRefund]
     GL[GLEntry]
 
-    SHL --> SIL --> SR --> SRL --> CM --> RF
-    SR -. Restores Inventory and Reverses COGS .-> GL
-    CM -. Posts Contra Revenue Tax Reversal and AR or Customer Credit .-> GL
-    RF -. Clears Customer Credit and Cash .-> GL
+    SHL -->|ShipmentLineID| SIL
+    SHL -->|ShipmentLineID| SRL
+    SRL -->|SalesReturnID| SR
+    SR -->|SalesReturnID| CM
+    CM -. Later refund only if customer credit is paid out .-> RF
+    SR -->|SalesReturn source type and ID| GL
+    CM -->|CreditMemo source type and ID| GL
+    RF -->|CustomerRefund source type and ID| GL
 ```
 
 | Exception stage | Main tables | Why students use them |
@@ -455,19 +469,19 @@ flowchart LR
 ```mermaid
 flowchart LR
     accTitle: Credit memo and remaining customer credit
-    accDescr: An original invoice connects to return and credit memo records. The memo can reduce an open invoice, or an already-paid invoice can leave customer credit that proceeds to refund.
+    accDescr: The solid arrow identifies the original-invoice key. Dashed arrows describe accounting allocation and conditional later refund chronology, not database joins.
     INV[Original Sales Invoice]
-    RET[Sales Return]
     CM[Credit Memo]
     CC[Customer Credit]
     RF[Customer Refund]
 
-    INV --> RET --> CM
-    CM -->|Invoice still open| INV
-    CM -->|Invoice already paid| CC --> RF
+    INV -->|OriginalSalesInvoiceID on memo| CM
+    CM -. Reduces remaining AR when present .-> INV
+    CM -. Excess credit after AR allocation .-> CC
+    CC -. Later refund if paid out .-> RF
 ```
 
-This local lineage view distinguishes AR correction from customer credit. Its labeled links illustrate common endpoint relationships, not an exclusive gateway or a rule that every memo generates a refund. A memo may reduce the remaining AR and create excess customer credit in the same posting, including after partial settlement. Treasury may later clear that credit through `CustomerRefund`; reconcile both account effects at the selected date.
+This local lineage view distinguishes AR correction from customer credit. Its labeled links illustrate common endpoint relationships, not an exclusive gateway or a rule that every memo generates a refund. A memo may reduce the remaining AR and create excess customer credit in the same posting, including after partial settlement. Reconcile both account effects at the selected date, including any later clearance through `CustomerRefund`.
 
 </details>
 
@@ -489,10 +503,10 @@ This local lineage view distinguishes AR correction from customer credit. Its la
 **Prerequisites, tools, and sources:** complete the goods-sale tracing exercise linked above. Use the published SQLite file with a SQL tool, or the Excel workbook with filters and lookups, plus the editable Draw.io model. Work from `SalesOrderLine`, `ShipmentLine`, `SalesInvoiceLine`, their headers, `CashReceiptApplication`, `CashReceipt`, and `GLEntry`. Add `PriceOverrideApproval`, `CreditMemo`, or `CustomerRefund` only if your selected issue needs that evidence.
 
 1. Record the source file, scope, reporting date, and actual document and line keys. Mark the corresponding activities and responsibilities on a copy of the model.
-2. Compare demand, fulfillment, billing, and application dates without duplicating header totals. Identify an observed gap or timing difference; do not assume a violation.
+2. Compare demand, fulfillment, billing, and application dates without duplicating header totals. Describe an observed gap or timing difference before assessing whether evidence supports a violation.
 3. Write one risk/control-matrix row naming the risk, objective, proposed owner, evidence, test, and limitation. Label any added independent review or hold as a **proposed teaching control**.
 
-**Assessed deliverable:** submit the annotated model, a reproducible evidence table, and the risk/control row. Explain which observation could change a business decision and what follow-up evidence would be needed. One trace cannot establish population completeness, operational effectiveness, or misconduct. Extend the work through the existing O2C case and reports below; the [BPMN and controls workshop](../learn-and-practice/bpmn-controls-workshop.md) supplies a reusable matrix format.
+**Assessed deliverable:** submit the annotated model, a reproducible evidence table, and the risk/control row. Explain which observation could change a business decision and what follow-up evidence would be needed. One trace cannot establish population completeness, operational effectiveness, or misconduct. Extend the work through the existing O2C case and reports below. The [BPMN and controls workshop](../learn-and-practice/bpmn-controls-workshop.md) supplies a reusable matrix format.
 
 </details>
 

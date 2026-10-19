@@ -41,7 +41,7 @@ test("twelve tutorials form a complete path with both tool routes and accurate m
 });
 
 test("every published worked SQL block executes against the verified read-only release", () => {
-  const database = path.join(root, "outputs/CharlesRiver.sqlite");
+  const database = path.resolve(root, process.env.CHARLES_RIVER_TEACHING_SQLITE || "outputs/CharlesRiver.sqlite");
   assert.ok(fs.existsSync(database), "The verified release is required for tutorial result validation");
   const hash = crypto.createHash("sha256").update(fs.readFileSync(database)).digest("hex");
   assert.equal(hash, verified.sha256, "Wrong tutorial release");

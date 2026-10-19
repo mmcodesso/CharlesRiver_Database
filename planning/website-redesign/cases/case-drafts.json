@@ -30,7 +30,7 @@
     "sections": [
       {
         "title": "Session 1 — Establish what was delivered and billed",
-        "intro": "Save a separate Case01.xlsx or Case01.sql. Keep a Review sheet or text note for the scope, decisions, and evidence. The order date selects the cohort; shipment and invoice dates determine what had happened by the review date.",
+        "intro": "Save a separate Case01.xlsx or Case01.sql. Keep a Review sheet or text note for the scope, decisions, and evidence. The order date selects the cohort, while shipment and invoice dates determine what had happened by the review date.",
         "figure": [
           "handoffs",
           "Who must contribute to the customer response?",
@@ -49,7 +49,7 @@
               "c01-orders"
             ],
             "check": "Six orders, 22 lines. Order 29 has five lines totaling 20,969.46. The other orders are 75, 236, 185, 434, and 388.",
-            "meaning": "An order header answers who and when; its lines describe separate goods. Keep the order total out of a line-level sum.",
+            "meaning": "An order header identifies the customer and date, while its lines describe the separate goods. Keep the order total out of a line-level sum.",
             "keep": "Save OrderLines and the six-row order summary.",
             "mismatch": "If the count is larger, check the customer and order-date filter before changing any join.",
             "sqlText": "GROUP BY produces one result per order and date. COUNT counts line identifiers; SUM totals their amounts. The inner SELECT defines the fixed order population. ORDER BY makes the result repeatable.\n\nRun each complete statement separately and retain its result before continuing.",
@@ -133,7 +133,7 @@
             "meaning": "This credit changes the April explanation. It is subsequent evidence, not a reduction that was already recorded on March 31.",
             "keep": "Save Applications, Credits, and the dates of the receipt/application handoffs.",
             "mismatch": "A credit found by order only needs further allocation evidence. Do not force it onto the first invoice. This worked credit has an explicit invoice link.",
-            "sqlText": "Each result is one application. ReceiptAmount repeats when one receipt funds several applications. Sum AppliedAmount for invoice settlement; use distinct receipt IDs when describing received cash.\n\nRun each complete statement separately and retain its result before continuing.",
+            "sqlText": "Each result is one application. ReceiptAmount repeats when one receipt funds several applications. Sum AppliedAmount for invoice settlement and retain distinct receipt IDs when describing received cash.\n\nRun each complete statement separately and retain its result before continuing.",
             "excelInputs": [
               "Invoices and SelectedOrders (Session 1)",
               "CashReceiptApplicationData ← CashReceiptApplication and CashReceiptData ← CashReceipt (import here)",
@@ -202,7 +202,7 @@
         "April 30: the same order cohort leaves 7,293.32."
       ]
     ],
-    "interpretation": "The worked result supports a focused customer-account response, not an assertion about every balance Hubbard Inc has ever held. Operations owns the quantity question; customer accounting owns allocation and credit confirmation; treasury supplies receipt evidence. A plausible next action is to confirm the later fulfillment position and contact the customer about the remaining selected invoices with the two-date schedule attached.",
+    "interpretation": "The worked result supports a focused customer-account response, not an assertion about every balance Hubbard Inc has ever held. Operations addresses quantities, customer accounting confirms allocations and credits, and treasury supplies receipt evidence. A plausible next action is to confirm the later fulfillment position and contact the customer about the remaining selected invoices with the two-date schedule attached.",
     "challenge": "Select customer 120’s orders dated April 1–June 30, 2024. Reconstruct June 30 and July 31. Retain the cohort, invoice schedule, applications, credits, and one complete voucher. Explain whether the same action priorities still make sense.",
     "hint": "Change the order-cohort dates separately from the event cutoffs. Rebuild the invoice list rather than reusing the worked case’s 20 IDs. A valid result can have no credits or no remaining balance.",
     "criteria": "Assess correct population, separate event dates, no repeated receipt totals, complete voucher checks, and an action justified by the observed evidence.",
@@ -233,9 +233,9 @@
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Keep the order cohort fixed while changing event cutoffs; distinguish receipt from application and balance each complete voucher."
+      "Keep the order cohort fixed while changing event cutoffs. Distinguish receipt from application and balance each complete voucher."
     ]
   },
   {
@@ -251,7 +251,7 @@
     "prep": "follow-design-time-into-billing",
     "question": "How does design effort become approved work, billed amounts, and recorded cost?",
     "scenario": "The design lead is preparing a quarterly review with the controller. Several engagements overlap, and a busy month does not necessarily mean that the same month contains all related invoices. You will explain the relationship before suggesting where the lead should spend follow-up time. Predict which date describes work and which date establishes billing.",
-    "scope": "Service work dated January 1–March 31, 2024: 204 time entries across 21 engagements. Begin with engagement 2, then use the whole defined population. Billing periods are selected by their work coverage; invoice dates remain visible.",
+    "scope": "Service work dated January 1–March 31, 2024: 204 time entries across 21 engagements. Begin with engagement 2, then use the whole defined population. Select billing periods by their work coverage and retain the invoice dates separately.",
     "sources": [
       "ServiceEngagement",
       "ServiceTimeEntry",
@@ -285,7 +285,7 @@
             "meaning": "The terms provide a rate and planning context. They do not replace recorded hours or establish whether time was approved.",
             "keep": "Save the selected engagement list and engagement 2’s terms.",
             "mismatch": "A lookup is appropriate here because ServiceEngagementID is unique in the terms table. Confirm 21 distinct keys before merging.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "ServiceTimeEntryData ← ServiceTimeEntry (import here; filter Q1 2024 into TimeData)",
               "Engagements ← ServiceEngagement (import here)"
@@ -321,7 +321,7 @@
       },
       {
         "title": "Session 2 — Connect covered time to billing",
-        "intro": "A time row is not a billing row. Aggregate within the billing period before comparing hours; otherwise each invoice amount could repeat once for every time entry.",
+        "intro": "A time row is not a billing row. Aggregate within the billing period before comparing hours to avoid repeating each invoice amount for every time entry.",
         "figure": [
           "billing",
           "How does a billing period connect time and invoice evidence?",
@@ -340,7 +340,7 @@
               "c02-billing"
             ],
             "check": "33 billing lines cover 1,409.88 hours and 244,865.45 of line amounts. Every billed-hours comparison agrees. Billing line 2 covers January 12–30 for engagement 2; its 32.67 hours become 6,860.70 on invoice 241 dated January 31.",
-            "meaning": "Coverage dates explain which work is billed. Invoice date explains when it is invoiced. A future population may have uncovered time, overlapping periods, or approval after invoicing; retain those as exceptions rather than filling in a match.",
+            "meaning": "Coverage dates explain which work is billed. Invoice date explains when it is invoiced. A future population may have uncovered time, overlapping periods, or approval after invoicing. Retain those exceptions rather than filling in a match. For a complete accounting checkpoint, retrieve invoice 241 and explain why approved time creates no additional revenue posting. Follow the paired Excel and SQL procedure in [Lesson 7](../../learn-and-practice/follow-design-time-into-billing.md#3-retrieve-the-invoice-voucher). Keep this single-engagement example separate from the case population.",
             "keep": "Save Billing and a zero/nonzero HoursDifference check.",
             "mismatch": "If totals multiply, check whether you merged raw time rows into Billing. SUMIFS keeps the billing row unique. Compare period boundaries inclusively.",
             "sqlText": "The correlated SUM uses the billing line’s engagement and inclusive coverage dates, plus approval by InvoiceDate. It returns one hours total per billing row without expanding that row once for every time entry.\n\nRun each complete statement separately and retain its result before continuing.",
@@ -361,10 +361,10 @@
               "c02-bridge"
             ],
             "check": "Engagement 2: January billed amount 6,860.70 and time cost 937.02; February 7,753.20 and 1,042.22. Quarter billable share is 95.04%; billed amounts less recorded time cost is 195,843.05.",
-            "meaning": "The release supports an hours-to-billing reconciliation and a limited time-cost comparison. It does not allocate every overhead, selling, support, or financing cost to each engagement. Also, an invoice is not evidence of cash collection; use Case 1 for settlement.",
+            "meaning": "The release supports an hours-to-billing reconciliation and a limited time-cost comparison. It does not allocate every overhead, selling, support, or financing cost to each engagement. Also, an invoice does not establish cash collection. Use Case 1 to investigate settlement.",
             "keep": "Retain the matched summaries, chart, and a 250-word memo explaining one follow-up and one limitation.",
             "mismatch": "Do not subtract a full employee’s payroll from each engagement. Work-date cost and invoice-date revenue need aligned coverage before comparison.",
-            "sqlText": "effort and billing each return one aggregate row before they are combined. The ratio uses all selected hours; the difference uses billed line amounts and recorded time cost with the stated boundary.\n\nRun each complete statement separately and retain its result before continuing.",
+            "sqlText": "effort and billing each return one aggregate row before they are combined. The ratio uses all selected hours, while the difference compares billed line amounts with recorded time cost within the stated boundary.\n\nRun each complete statement separately and retain its result before continuing.",
             "excelInputs": [
               "TimeData and Billing (earlier stages)"
             ],
@@ -413,9 +413,9 @@
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Distinguish work dates, approval dates, billing coverage, and invoice dates; summarize hours and costs at engagement/month grain."
+      "Distinguish work dates, approval dates, billing coverage, and invoice dates when summarizing hours and costs at engagement/month grain."
     ]
   },
   {
@@ -448,7 +448,7 @@
     "sections": [
       {
         "title": "Session 1 — Follow received goods into supplier liabilities",
-        "intro": "Create Case03.xlsx or Case03.sql. Label the goods schedule and accrual schedule separately. A purchase order records a commitment; a receipt establishes a different event.",
+        "intro": "Create Case03.xlsx or Case03.sql. Label the goods schedule and accrual schedule separately. A purchase order records a commitment, while a receipt establishes arrival.",
         "figure": [
           "branches",
           "Why do purchasing obligations follow two paths?",
@@ -469,8 +469,8 @@
             "check": "Five receipts and five lines; standard receipt cost totals 7,234.30. Receipt IDs are 174, 175, 253, 396, and 340.",
             "meaning": "The receipt amount is inventory at standard cost. The supplier invoice may contain a different purchase cost or tax, so receipt cost cannot simply be subtracted from invoice GrandTotal to calculate GRNI.",
             "keep": "Save Receipts and a receipt-date timeline.",
-            "mismatch": "Filter by receipt date, not purchase-order date. Receipt line IDs are 175, 176, 254, 397, and 341; they differ from header IDs.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "mismatch": "Filter by receipt date, not purchase-order date. Receipt line IDs 175, 176, 254, 397, and 341 identify a different grain from the headers.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "PurchaseOrderData ← PurchaseOrder (import here)",
               "GoodsReceiptData ← GoodsReceipt and GoodsReceiptLineData ← GoodsReceiptLine (import here)"
@@ -492,7 +492,7 @@
             "meaning": "A receipt can be invoiced in parts, and an invoice can remain unpaid. A one-result lookup would lose the later match. Keep a merge for this one-to-many relationship.",
             "keep": "Save GoodsInvoices and date-conditioned payment columns.",
             "mismatch": "An eighth match dated July 14 lies beyond this follow-up window. Preserve it as later evidence without including it in June totals.",
-            "sqlText": "One result row is one matched supplier invoice line. The two correlated payment totals are calculated independently. InvoiceDate limits subsequent evidence to June 30; it does not imply payment by that date.\n\nRun each complete statement separately and retain its result before continuing.",
+            "sqlText": "One result row is one matched supplier invoice line. The two correlated payment totals are calculated independently. InvoiceDate limits subsequent invoice evidence to June 30 without establishing payment by that date.\n\nRun each complete statement separately and retain its result before continuing.",
             "excelInputs": [
               "Receipts (Session 1.1)",
               "PurchaseInvoiceLineData ← PurchaseInvoiceLine and PurchaseInvoiceData ← PurchaseInvoice (import here)",
@@ -529,7 +529,7 @@
       },
       {
         "title": "Session 2 — Replace estimates with later evidence",
-        "intro": "The controller’s three repairs-and-maintenance estimates follow a different path. An invoice consumes the estimate; any difference must be explained from the actual postings.",
+        "intro": "The controller’s three repairs-and-maintenance estimates follow a different path. An invoice consumes the estimate, and the actual postings explain any difference.",
         "figure": [
           "transitions",
           "How does the obligation change its accounting form?",
@@ -574,7 +574,7 @@
             "meaning": "The later evidence changes the liability’s form and, where necessary, the expense amount. Reading only journal totals would hide the underestimates recognized on the invoices.",
             "keep": "Save complete voucher checks and identify the expense effect for each estimate.",
             "mismatch": "Keep all voucher lines for a balance check. Use only account 2040 when calculating the selected accrued-expense liability.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "JournalEntryData (raw query from Session 2.1)",
               "GLEntryData and AccountData (raw queries from Session 1.3)"
@@ -593,10 +593,10 @@
               "c03-payments"
             ],
             "check": "Seven payments appear. Goods payments total 5,132.04. The three accrual-related invoices are paid May 20, June 13, and June 22, totaling 29,823.52.",
-            "meaning": "At March 31 the selected expenses include the two open estimates and the first invoice’s AP. Later settlement explains what happened afterward; it does not remove the March obligation.",
+            "meaning": "At March 31 the selected expenses include the two open estimates and the first invoice’s AP. Later settlement explains subsequent events without removing the obligation at March 31.",
             "keep": "Write a 250–350 word review note: distinguish GRNI, accrued expenses, and AP; quantify the selected positions; name one June follow-up.",
             "mismatch": "Keep the separate populations labeled. Do not offset a supplier receipt liability with an unrelated maintenance accrual.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "DisbursementPaymentData (raw query from Session 1.2)",
               "Payments, AccrualInvoices, and Obligations (earlier stages)"
@@ -646,9 +646,9 @@
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Aggregate receipt, invoice, payment, and estimate evidence separately; explain GRNI, AP, and accrued-service obligations at each cutoff."
+      "Aggregate receipt, invoice, payment, and estimate evidence separately before explaining GRNI, AP, and accrued-service obligations at each cutoff."
     ]
   },
   {
@@ -664,7 +664,7 @@
     ],
     "prep": "turn-records-into-a-conclusion",
     "question": "Which product group deserves a focused review, and what evidence supports that priority?",
-    "scenario": "Commercial leadership has time for one product review. The sales coordinator proposes looking at discounts; the controller asks whether product mix, cost assumptions, or delivery performance could explain the same pattern. Your job is to compare those explanations and recommend a bounded next investigation, not to declare a product group unprofitable from one percentage.",
+    "scenario": "Commercial leadership has time for one product review. The sales coordinator proposes reviewing discounts, while the controller asks whether product mix, cost assumptions, or delivery performance could explain the same pattern. Your job is to compare those explanations and recommend a bounded next investigation, not to declare a product group unprofitable from one percentage.",
     "scope": "Goods invoice lines dated January 1–March 31, 2024. Compare product groups using the same population. Credits are a separate credit-date population. Current product-master attributes and standard costs are descriptive reference data, not historical snapshots.",
     "sources": [
       "Item",
@@ -697,7 +697,7 @@
           {
             "title": "Inspect classifications before grouping",
             "question": "Will every blank collection name mean the same thing across item types?",
-            "excel": "Import Item as Items. Create a PivotTable by ItemType with Count of ItemID. Filter CollectionName blanks separately for each type. Inspect IsActive, LifecycleStatus, LaunchDate, and ItemGroup. Do not remove inactive items before selecting historical sales; current inactivity does not mean an item could not be sold in 2024.",
+            "excel": "Import Item as Items. Create a PivotTable by ItemType with Count of ItemID. Filter CollectionName blanks separately for each type. Inspect IsActive, LifecycleStatus, LaunchDate, and ItemGroup. Retain currently inactive items when selecting historical sales because current inactivity does not establish their status in 2024.",
             "queries": [
               "c04-master"
             ],
@@ -705,7 +705,7 @@
             "meaning": "Grouping by ItemGroup avoids silently dropping blank collections. A collection-level extension must retain an explicit Unclassified category and investigate why a classification is absent.",
             "keep": "Save the item-type counts and classification note.",
             "mismatch": "The exact goods label is Finished Good, including the space. A spelling mismatch can produce a plausible-looking empty analysis.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "Items ← Item (import here)"
             ],
@@ -725,7 +725,7 @@
             "meaning": "These totals describe billed goods. Quantity spans different products and units, so the total is a completeness check rather than a useful physical output measure.",
             "keep": "Save ProductLines and the population check.",
             "mismatch": "Do not include service lines or sum GrandTotal here. Preserve all qualifying lines even when current catalog fields are incomplete.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "Items (Session 1.1)",
               "SalesInvoiceData ← SalesInvoice and SalesInvoiceLineData ← SalesInvoiceLine (import here)"
@@ -781,11 +781,11 @@
               "c04-override",
               "c04-promotion"
             ],
-            "check": "Line 69 carries approval 9; approved price 417.96 agrees with its unit price and approval date January 10. Line 1548 links promotion 1, whose recorded effective dates are March 1–March 1, while its order is dated March 11. That is a date-support exception requiring follow-up; the invoice is dated March 19.",
-            "meaning": "An approval explains authorization, not whether the discount was commercially successful. A promoted line and a non-promoted line can differ in product, customer, volume, and date. A causal promotion-effect claim needs more evidence. For promotion 1, ask for the intended effective period and supporting approval rather than assuming the recorded date range was valid.",
+            "check": "Line 69 carries approval 9; approved price 417.96 agrees with its unit price and approval date January 10. Line 1548 links promotion 1, whose recorded effective dates are March 1–March 1, while its order is dated March 11. The March 19 invoice date does not resolve this order-date support exception.",
+            "meaning": "The linked approval records the stated authorization basis. Verify the actor's authority, status, and date before concluding that authorization was valid. It does not establish commercial success. A promoted line and a non-promoted line can differ in product, customer, volume, and date. A causal promotion-effect claim needs more evidence. For promotion 1, ask for the intended effective period and supporting approval rather than assuming the recorded date range was valid.",
             "keep": "Keep two pricing evidence rows with the criterion tested and the result.",
             "mismatch": "Use the stored pricing IDs. A text label such as Approved Override is not a substitute for reading its linked record.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "ProductLines (Session 1.2)",
               "Overrides ← PriceOverrideApproval and Promotions ← PromotionProgram (import here)",
@@ -866,7 +866,7 @@
         "Choose a focused review, identify an owner, and state what evidence could change it."
       ]
     ],
-    "interpretation": "Furniture merits a focused review in the worked analysis, but the first action should diagnose cost assumptions, product mix, and delivery performance alongside pricing. Similar realization rates across groups weaken a simple discount-only explanation. The recommendation remains provisional because current standard costs are not a complete historical cost-of-sales measure.",
+    "interpretation": "Furniture merits a focused review in the worked analysis, but the first action should diagnose cost assumptions, product mix, and delivery performance alongside pricing. Similar realization rates across groups weaken a simple discount-only explanation. The recommendation remains provisional because current standard costs are not a complete historical cost-of-sales measure. To investigate historical posted cost, retain the selected invoice-line and shipment-line keys, retrieve complete Shipment vouchers, and isolate their COGS rows after checking balance. Aggregate selected line costs separately from whole vouchers. Align the invoice and shipment dates and population before comparing them with current Item.StandardCost. The [monthly posted revenue and COGS query](../analysis-tracks.md#query-financial-01-monthly-revenue-and-gross-margin) is a company-level reference, not a directly comparable product-group profit measure. Its source filters exclude returns and credit memos, so it is not net profit.",
     "challenge": "Repeat for April–June 2024. Keep the measure definitions unchanged. Defend whether the priority should change, and identify one result that would reverse your recommendation after source follow-up.",
     "hint": "Use the same invoice-date population for the main comparison and a separately labeled credit-date population. Retain blank classifications and inspect the actual pricing links.",
     "criteria": "Assess comparable populations, weighted ratios, cost labels, source tracing, alternative explanations, and a proportionate recommendation.",
@@ -885,9 +885,9 @@
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Preserve invoice-line grain; state the limits of current standard costs and separately dated credits in historical comparisons."
+      "Preserve invoice-line grain and state the limits of current standard costs and separately dated credits in historical comparisons."
     ]
   },
   {
@@ -946,7 +946,7 @@
             "meaning": "Completion and close measure different responsibilities. A chronology anomaly also means these dates require source follow-up before a scheduling recommendation relies on them.",
             "keep": "Save Orders and the timing counts, including the exceptions.",
             "mismatch": "Current Status is not an as-of measure. Test the actual dates against the cutoff and retain missing links.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "WorkOrderData ← WorkOrder (import here)"
             ],
@@ -964,8 +964,8 @@
             "check": "Four operation rows for work order 67, progressing through work centers 1–4. No operation rows are returned for work order 1. WO67’s scheduled hours are 9.47, 19.28, 11.45, and 4.44 by operation sequence.",
             "meaning": "The absence of operation detail for WO1 is an evidence limitation, not proof that no work happened. Other documents still record its material issue and completion. Compare support completeness before inferring efficiency.",
             "keep": "Save the operation trace and a note about WO1’s missing support.",
-            "mismatch": "Do not use an Inner join from Orders to Operations for the cohort summary; it would hide WO1.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "mismatch": "An Inner join from Orders to Operations would hide WO1 from the cohort summary, so retain the prescribed Left join.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "WorkOrderOperationData ← WorkOrderOperation and WorkOrderOperationScheduleData ← WorkOrderOperationSchedule (import here)"
             ],
@@ -999,9 +999,9 @@
               "c05-costs"
             ],
             "check": "336 rows remain. WO1: issue 754.29, labor support 191.89, completion materials 729.36, conversion 290.49, completed total 1,019.85. Its material variance is 24.93 and conversion variance 718.23, totaling 743.16.",
-            "meaning": "Material issue less standard material completion equals the material variance for this closed example. Labor support is only one cost input; it is not the whole actual conversion cost. Do not force it to equal completion conversion plus close variance.",
+            "meaning": "Material issue less standard material completion equals the material variance for this closed example. Labor support is one input into actual conversion cost rather than its complete measure. Do not force it to equal completion conversion plus close variance.",
             "keep": "Save CostBridge and a WO1 bridge with units and cost basis labeled.",
-            "mismatch": "Do not add direct labor and overhead variance again after using ConversionVarianceAmount; that amount already combines them.",
+            "mismatch": "ConversionVarianceAmount already combines direct labor and overhead variance, so adding those components again would double-count them.",
             "sqlText": "Four named results summarize issues, labor, completions, and closes separately by WorkOrderID. LEFT JOIN adds these totals to the fixed release cohort. Missing close totals stay null, distinguishing an unclosed order from a zero variance.\n\nRun each complete statement separately and retain its result before continuing.",
             "excelInputs": [
               "Orders (Session 1.1)",
@@ -1026,7 +1026,7 @@
             "meaning": "The larger absolute variance partly reflects scale. It also has operation support that WO1 lacks. Inspect the dates and cost components before attributing the difference to worker productivity or a particular work center.",
             "keep": "Save the two-order comparison and two competing explanations.",
             "mismatch": "A blank variance is not a zero variance. Rank closed orders only and show the 46 orders not yet closed separately.",
-            "sqlText": "This repeats the same independently aggregated cost method for WO1 and WO67. It is executable by itself; it does not depend on a temporary table created in another step.\n\nRun each complete statement separately and retain its result before continuing.",
+            "sqlText": "This repeats the same independently aggregated cost method for WO1 and WO67. It runs independently without a temporary table from an earlier step.\n\nRun each complete statement separately and retain its result before continuing.",
             "excelInputs": [
               "CostBridge (Session 2.1)"
             ],
@@ -1062,7 +1062,7 @@
             "meaning": "This capacity comparison covers all scheduled work, so it provides context for the cohort rather than allocating all capacity pressure to it. Available work-center hours are not interchangeable with employee paid hours.",
             "keep": "Save the center summary and one daily detail view supporting or weakening your explanation.",
             "mismatch": "Keep calendar dates with no load. Check calendar coverage before concluding there are no overloaded days.",
-            "sqlText": "Daily schedule totals are joined to the calendar before work-center aggregation. DaysAboveCapacity counts daily peaks; comparing only two period totals would lose them.\n\nRun each complete statement separately and retain its result before continuing.",
+            "sqlText": "Daily schedule totals are joined to the calendar before work-center aggregation. DaysAboveCapacity preserves daily peaks that a comparison of period totals would hide.\n\nRun each complete statement separately and retain its result before continuing.",
             "excelInputs": [
               "WorkOrderOperationScheduleData (raw query from Session 1.2)",
               "WorkCenterCalendarData ← WorkCenterCalendar (import here)"
@@ -1107,11 +1107,11 @@
     "extension": {
       "title": "Optional worked extension — Read the replenishment support",
       "intro": "Follow WO67’s recommendation 777 into its item, warehouse, and planning week. This is one planning trace, not a reconstruction of the whole planning system.",
-      "excel": "Import SupplyPlanRecommendation as SupplyPlanRecommendationData and reference it to filter ID 777. Import DemandForecast as DemandForecastData and filter IsCurrent = 1. Reference the selected recommendation as PlanningSupport and Left merge on ItemID, WarehouseID, and BucketWeekStartDate = ForecastWeekStartDate in that order. Keep forecast approval and recommended quantity separate; a gross requirement can include more than forecast demand.",
+      "excel": "Import SupplyPlanRecommendation as SupplyPlanRecommendationData and reference it to filter ID 777. Import DemandForecast as DemandForecastData and filter IsCurrent = 1. Reference the selected recommendation as PlanningSupport and Left merge on ItemID, WarehouseID, and BucketWeekStartDate = ForecastWeekStartDate in that order. Keep forecast approval and recommended quantity separate because a gross requirement can include more than forecast demand.",
       "queries": [
         "c05-planning"
       ],
-      "check": "Recommendation 777 has Sales Backlog as its driver, gross requirement 36.25, recommended quantity 32.99, and need-by date February 4. The matching current forecast is 10.96, approved January 19. Forecast alone therefore does not explain the recommendation quantity; keep backlog, availability, and the recommendation calculation distinct.",
+      "check": "Recommendation 777 has Sales Backlog as its driver, gross requirement 36.25, recommended quantity 32.99, and need-by date February 4. The matching current forecast is 10.96, approved January 19. Keep backlog, availability, and the recommendation calculation distinct because forecast alone does not explain the recommended quantity.",
       "excelInputs": [
         "SupplyPlanRecommendationData ← SupplyPlanRecommendation and DemandForecastData ← DemandForecast (import here)"
       ],
@@ -1119,9 +1119,9 @@
         "PlanningSupport: recommendation 777 matched to current forecast by item/warehouse/week"
       ]
     },
-    "interpretation": "The production review should separate cost accounting from operational timing. The data supports specific investigations into documentation, daily capacity peaks, and the 46 orders awaiting close at the cutoff. It does not support a blanket conclusion that employees were inefficient or that every late order arose from inadequate capacity.",
+    "interpretation": "The production review should separate cost accounting from operational timing. The data supports specific investigations into documentation, daily capacity peaks, and the 46 orders awaiting close at the cutoff. It does not support a blanket conclusion that employees were inefficient or that every late order arose from inadequate capacity. For an AIS submission, complete the short selected-work-order WIP checkpoint in [Lesson 9](../../learn-and-practice/manufacturing-cost-flow.md#keep-your-evidence). It uses work order 1 as a separate trace. The wider pooled-clearing reconciliation remains optional, and its costs cannot all be assigned to that order.",
     "challenge": "Use work orders released in February 2024 and assess events through March 31. Rebuild all four cost summaries, select a contrasting order by an explicit rule, and defend one operational follow-up.",
-    "hint": "Keep the release cohort fixed while changing event cutoffs. Do not select only orders that eventually close; that would remove the unfinished population you need to explain.",
+    "hint": "Keep the release cohort fixed while changing event cutoffs. Retain orders without a close because their unfinished position is part of the population to explain.",
     "criteria": "Assess cohort integrity, separate aggregation, standard versus actual support, completion versus close, capacity scope, and a recommendation that acknowledges uncertainty.",
     "prerequisiteLinks": [
       {
@@ -1146,9 +1146,9 @@
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Aggregate issue, labor, completion, and close independently by work order; compare capacity at one row per center/day."
+      "Aggregate issue, labor, completion, and close independently by work order, and compare capacity at one row per center/day."
     ]
   },
   {
@@ -1200,7 +1200,7 @@
               "c06-coverage"
             ],
             "check": "Assembly has 2,033.11 rostered hours, 673.91 operation hours, 1,988.59 approved regular hours, and 177.92 approved overtime hours.",
-            "meaning": "Scheduled operation hours describe production activity; rostered hours describe people’s planned presence. Their difference is not automatically idle time. Employees may perform support work outside the operation schedule.",
+            "meaning": "Scheduled operation hours describe production activity, while rostered hours describe people's planned presence. Their difference is not automatically idle time. Employees may perform support work outside the operation schedule.",
             "keep": "Save Coverage and a short explanation of each denominator.",
             "mismatch": "Do not compute a staffing deficit by subtracting unlike hour measures without a documented labor requirement per operation.",
             "sqlText": "Roster, load, and worked are separate work-center summaries. Their units and inclusion rules remain visible even though they share a center key. The center master retains centers with no activity.\n\nRun each complete statement separately and retain its result before continuing.",
@@ -1226,7 +1226,7 @@
             "meaning": "This evidence cannot establish an Assembly absence problem. A useful next step is to understand the unassigned record and the coverage definition rather than spreading the absence across centers.",
             "keep": "Save the absence scope note alongside Coverage.",
             "mismatch": "Dropping the blank center makes the absence disappear. Keep missing classification visible.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "EmployeeAbsenceData ← EmployeeAbsence (import here)",
               "EmployeeShiftRosterData (raw query from Session 1.1)"
@@ -1261,10 +1261,10 @@
               "c06-pay-summary"
             ],
             "check": "209 registers: 104 in period 1 and 105 in period 2. Period 1 gross pay is 125,541.19 and net pay 104,320.59. Period 2 gross pay is 265,084.43 and net pay 220,069.69. Each header’s gross less withholdings equals net.",
-            "meaning": "The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly. WorkCenters counts identified centers only. A zero means approved time with no identified center; a null after the payroll join means no approved hourly support in this scope. Keep both categories separate from identified work centers.",
+            "meaning": "The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly. WorkCenters counts identified centers only. A zero means approved time with no identified center, while a null after the payroll join means no approved hourly support in this scope. Keep both categories separate from identified work centers. Complete the [Lesson 10 summary checkpoint](../../learn-and-practice/follow-hours-into-payroll.md#4-compare-summary-recognition-with-detailed-payment) for a separate period/cost-center population before interpreting ledger payroll. Aggregate the register facts and ledger account independently. A PayrollSummary source ID is not PayrollRegisterID.",
             "keep": "Save PayBridge and the two period totals.",
             "mismatch": "Do not join payroll headers to raw clock rows. A register repeated ten times would make pay appear ten times too large.",
-            "sqlText": "hours groups by EmployeeID and PayrollPeriodID before joining payroll. A null hours result is retained for a register without approved hourly support. COUNT(DISTINCT WorkCenterID) excludes null centers and records identified location variety without repeating pay across locations. It returns zero for an approved-time employee-period with only null centers; the outer payroll join retains null when there is no approved-time employee-period at all. The Excel route retains missing-center evidence in a separate branch.\n\nRun each complete statement separately and retain its result before continuing.",
+            "sqlText": "hours groups by EmployeeID and PayrollPeriodID before joining payroll. A null hours result is retained for a register without approved hourly support. COUNT(DISTINCT WorkCenterID) excludes null centers and records identified location variety without repeating pay across locations. It returns zero for an approved-time employee-period with only null centers. The outer payroll join retains null when there is no approved-time employee-period at all. The Excel route retains missing-center evidence in a separate branch.\n\nRun each complete statement separately and retain its result before continuing.",
             "excelInputs": [
               "ApprovedTime (retained detail from Session 1.1)",
               "PayrollRegisterData ← PayrollRegister (import here)"
@@ -1285,10 +1285,10 @@
               "c06-employee-lines"
             ],
             "check": "Employee 17 has 74.48 regular hours and 4.93 overtime hours, gross pay 2,320.35, employee withholdings 348.72, and net pay 1,971.63. Employer tax 177.51 and benefits 157.50 bring the selected employer cost to 2,655.36.",
-            "meaning": "Employee deductions reduce the employee’s cash payment; employer costs add to the company’s expense. Neither should be confused with a manufacturing labor allocation or a design time-cost snapshot.",
+            "meaning": "Employee deductions reduce the employee's cash payment, while employer costs add to company cost. Apply the manufacturing recognition rules before labeling those costs as period expense. Neither should be confused with a manufacturing labor allocation or a design time-cost snapshot.",
             "keep": "Save the employee reconciliation and a definition of the selected employer-cost measure.",
             "mismatch": "Pay is rounded at the earning-line level. Use recorded line amounts before assuming a tiny difference from hours times a displayed rate is an error.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "PayBridge (Session 2.1)",
               "PayrollRegisterLineData ← PayrollRegisterLine (import here; raw query retained)"
@@ -1327,7 +1327,7 @@
             "meaning": "The missing payment link is a follow-up item, not proof of nonpayment outside the dataset. One period-1 payment is dated January 18, which also deserves comparison with its approval evidence if the review extends to payment authorization.",
             "keep": "Save the payment schedule and one unresolved-payment workpaper.",
             "mismatch": "Compare distinct register IDs as well as money. Zero-pay registers can have payment records and should not be silently removed.",
-            "sqlText": "LEFT JOIN keeps the payroll registers; a null PayrollPaymentID identifies unmatched payment evidence. This is a test of records in the file, not proof of what happened outside it.\n\nRun each complete statement separately and retain its result before continuing.",
+            "sqlText": "LEFT JOIN retains the payroll registers, with a null PayrollPaymentID identifying unmatched payment evidence. This is a test of records in the file, not proof of what happened outside it.\n\nRun each complete statement separately and retain its result before continuing.",
             "excelInputs": [
               "SelectedPayroll (Session 2.1)",
               "PayrollPaymentData ← PayrollPayment (import here)"
@@ -1349,7 +1349,7 @@
             "meaning": "These are period-wide obligations. Do not assign the whole remittance to employee 17 or to Assembly. Payment date and remittance date answer different settlement questions.",
             "keep": "Save the two-period liability reconciliation.",
             "mismatch": "Total EmployeeWithholdings includes more than tax. Match liability categories before declaring a difference.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "PayrollRegisterLineData (raw query retained in Session 2.2)",
               "SelectedPayroll (Session 2.1)",
@@ -1393,7 +1393,7 @@
     ],
     "interpretation": "The worked investigation supports a targeted staffing review and a separate payment-evidence follow-up. It does not establish a direct conversion from operation hours to required headcount. The pay and remittance reconciliations show why employee deductions, employer costs, employee cash, and provider cash must remain separate.",
     "challenge": "Repeat for payroll periods 3 and 4 using their complete work-date windows. Compare Assembly with another center, reconcile one employee-period, and identify the strongest supported action.",
-    "hint": "Read the period start/end dates first. Rebuild employee-period summaries and examine unmatched payment rows; do not assume the first case’s exceptions recur.",
+    "hint": "Read the period start/end dates first. Rebuild employee-period summaries and examine unmatched payment rows before deciding whether the earlier exceptions recur.",
     "criteria": "Assess compatible grains, approved-hour filters, unique payroll headers, deduction classification, separate settlement branches, and evidence limits in the recommendation.",
     "prerequisiteLinks": [
       {
@@ -1418,9 +1418,9 @@
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Preserve approved-time detail; distinguish identified from unassigned centers and employee-period pay from center workload."
+      "Preserve approved-time detail, distinguish identified from unassigned centers, and keep employee-period pay separate from center workload."
     ]
   },
   {
@@ -1437,7 +1437,7 @@
     "prep": "find-the-accounting-entries",
     "question": "How can the company report profit while cash falls, and what does the year-end close change?",
     "scenario": "The controller is preparing the year-end management review. Management wants an explanation of performance, cash movement, and obligations. A collection of reports is not enough: you must reconcile the periods, trace selected source evidence, and decide which unresolved matters deserve attention first. Predict why closing revenue and expense accounts should not itself create or consume cash.",
-    "scope": "Fourth-quarter 2026 activity and December 31 balances. Opening balances include all recorded history before October 1, including the opening journal and earlier years. The fixed-asset extension follows asset 18 across its 2026 lifecycle. The working file includes later supplier payments; exclude 2027 events from year-end balances.",
+    "scope": "Fourth-quarter 2026 activity and December 31 balances. Opening balances include all recorded history before October 1, including the opening journal and earlier years. The fixed-asset extension follows asset 18 across its 2026 lifecycle. Exclude the working file's later 2027 supplier payments from year-end balances.",
     "sources": [
       "GLEntry",
       "Account",
@@ -1529,7 +1529,7 @@
               "c07-cash"
             ],
             "check": "Pre-close profit: October 255,812.14; November 405,751.40; December 502,693.70; quarter 1,164,257.24. Cash falls 743,539.66. Customer cash receipts add 7,816,054.56; supplier payments use 5,912,239.65.",
-            "meaning": "Profit and cash are different measures of the same business period. A customer receipt may settle an earlier invoice; a supplier payment may settle an earlier obligation. The annual close must not erase the quarter’s performance measure.",
+            "meaning": "Profit and cash are different measures of the same business period. Customer receipts and supplier payments may settle invoices or obligations from earlier periods. The annual close must not erase the quarter’s performance measure.",
             "keep": "Save monthly Profit and CashActivity with the close exclusion documented.",
             "mismatch": "Preserve null journal matches for operational events. Filtering null EntryType out would remove much of the ledger.",
             "sqlText": "The journal join applies only when the source type is JournalEntry. COALESCE preserves operational entries with no journal match, while NOT LIKE excludes the annual close. Profit uses credit minus debit for revenue and expense accounts.\n\nRun each complete statement separately and retain its result before continuing.",
@@ -1577,7 +1577,7 @@
             "meaning": "The matching amounts and explicit link support a transition from GRNI into AP, not payment. That distinction helps explain why a liability balance can change even without immediate cash movement.",
             "keep": "Save the two-document trace and identify the next table needed to investigate payment.",
             "mismatch": "Matching amounts alone are insufficient. Require the GoodsReceiptLineID relationship.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "LedgerPrepared (full-history detail from Session 2.1)",
               "PurchaseInvoiceData ← PurchaseInvoice and PurchaseInvoiceLineData ← PurchaseInvoiceLine (import here)",
@@ -1613,10 +1613,10 @@
               "c07-annual-check"
             ],
             "check": "Journals 850 and 851 transfer annual pre-close profit of 4,503,611.24. The annual post-close revenue/expense net is zero. This is different from fourth-quarter profit of 1,164,257.24.",
-            "meaning": "A zero post-close P&L balance confirms the transfer for the selected definition; it does not mean the business earned no profit. Do not add the annual transfer to the quarter’s operating result.",
+            "meaning": "A zero post-close P&L balance confirms the transfer for the selected definition without implying that the business earned no profit. Do not add the annual transfer to the quarter’s operating result.",
             "keep": "Save the closing sequence and annual comparison.",
             "mismatch": "An annual close cannot be checked against a quarter-only P&L. Keep annual and quarterly schedules distinctly labeled.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "JournalEntryData and LedgerPrepared (full-history queries from Session 2.1)"
             ],
@@ -1652,7 +1652,7 @@
             "meaning": "Matching totals support the reconciliation on these definitions. They do not prove every underlying transaction is error-free. The source trace and unresolved items remain part of the review.",
             "keep": "Save a compact report tie-out table with difference columns.",
             "mismatch": "Choose actual reports, not the pro forma reports. Do not add both subtotal and detail rows.",
-            "sqlText": "Open the published Monthly Income Statement and Monthly Indirect Cash Flow CSV downloads from Reports and Analytics in a text editor. Read the header, then locate FiscalYear 2026 and FiscalPeriod 10, 11, and 12. Retain only Net Income subtotal rows for the profit comparison, and Net Change in Cash rows for cash movement. Compare with c07-profit.sql and c07-cash.sql. Read October Beginning Cash and December Ending Cash once; do not sum monthly balances. This inspection does not require importing the reports into your database.",
+            "sqlText": "Open the published Monthly Income Statement and Monthly Indirect Cash Flow CSV downloads from Reports and Analytics in a text editor. Read the header, then locate FiscalYear 2026 and FiscalPeriod 10, 11, and 12. Retain only Net Income subtotal rows for the profit comparison, and Net Change in Cash rows for cash movement. Compare with c07-profit.sql and c07-cash.sql. Retain October Beginning Cash and December Ending Cash once each rather than summing monthly balances. This inspection does not require importing the reports into your database.",
             "excelInputs": [
               "Existing Monthly Income Statement report download",
               "Existing Monthly Indirect Cash Flow report download"
@@ -1701,7 +1701,7 @@
         "c07-asset-postings",
         "c07-debt"
       ],
-      "check": "Asset cost is 280,000 and monthly depreciation 2,333.33. December’s asset-specific depreciation debits manufacturing cost clearing, not cash. The note-financing entry has no cash line. Q4 debt-2 payments total 16,396.26: principal 12,500.72 and interest 3,895.54. Principal reduces debt; interest is a separate expense/cash classification. The description-based depreciation excerpt is not a unique formal asset-to-ledger key.",
+      "check": "Asset cost is 280,000 and monthly depreciation 2,333.33. December’s asset-specific depreciation debits manufacturing cost clearing, not cash. The note-financing entry has no cash line. Q4 debt-2 payments total 16,396.26: principal 12,500.72 and interest 3,895.54. Principal reduces debt, while interest has a separate expense and cash classification. The description-based depreciation excerpt is not a unique formal asset-to-ledger key.",
       "excelInputs": [
         "FixedAssetData ← FixedAsset and FixedAssetEventData ← FixedAssetEvent (import here; use selected references)",
         "DebtScheduleLineData ← DebtScheduleLine (import here; raw query retained)",
@@ -1742,9 +1742,9 @@
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Retain full ledger history for openings; distinguish pre-close performance, cash movements, balance snapshots, and complete closing vouchers."
+      "Retain full ledger history for openings and distinguish pre-close performance, cash movements, balance snapshots, and complete closing vouchers."
     ]
   },
   {
@@ -1759,7 +1759,7 @@
     ],
     "prep": "bpmn-controls-workshop",
     "question": "Which query flags become supported findings, and what control could be assessed?",
-    "scenario": "The controller requests a focused controls review. A list of flags is easy to produce; the harder task is to investigate alternatives and explain what the evidence establishes. You will examine repeated supplier references and overtime approval support, then recommend controls with a clear owner, procedure, and assessment method.",
+    "scenario": "The controller requests a focused controls review. Investigate alternative explanations for each flag before deciding what the evidence establishes. You will examine repeated supplier references and overtime approval support, then recommend controls with a clear owner, procedure, and assessment method.",
     "scope": "Duplicate supplier invoice and check references across the entire recorded history, plus approved overtime entries with positive overtime dated October 1–December 31, 2026. These populations have different denominators. The review uses source records, not instructor anomaly labels or the support workbook.",
     "sources": [
       "PurchaseInvoice",
@@ -1793,10 +1793,10 @@
               "c08-populations"
             ],
             "check": "40,204 supplier invoices; 12,130 payments with a nonblank check reference; 1,895 approved positive-overtime entries in Q4 2026.",
-            "meaning": "The tests do not cover every AP or payroll risk. Exact reference matching also misses differently formatted duplicates; note that limitation before interpreting a zero or low rate.",
+            "meaning": "The tests do not cover every AP or payroll risk. Note that exact reference matching misses differently formatted duplicates before interpreting a zero or low rate.",
             "keep": "Save a scope sheet with risks, criteria, exclusions, denominators, and expected evidence.",
             "mismatch": "Do not filter AP to Q4 simply to match overtime dates. The worked duplicate-reference evidence is across recorded history.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "PurchaseInvoiceData ← PurchaseInvoice and DisbursementPaymentData ← DisbursementPayment (import here; full populations retained)",
               "TimeClockEntryData ← TimeClockEntry (import here; raw query retained)"
@@ -1835,7 +1835,7 @@
             "meaning": "Twelve flagged invoice rows and six groups are different counts. A percentage based on groups divided by document rows would mix units. Keep the invoice and payment flag rates separate.",
             "keep": "Save both group lists and all flagged document rows.",
             "mismatch": "Group within supplier. A reference repeated by two different suppliers is not the same test. Exclude blank check references explicitly.",
-            "sqlText": "groups identifies exact supplier/reference pairs occurring more than once. Joining the group back retrieves each flagged document. The payment SUM is independent, so multiple payments cannot duplicate invoice values.\n\nBlank references are excluded before grouping. The same supplier and CheckNumber must match. Keep both group counts and payment-row counts; they answer different questions.\n\nRun each complete statement separately and retain its result before continuing.",
+            "sqlText": "groups identifies exact supplier/reference pairs occurring more than once. Joining the group back retrieves each flagged document. The payment SUM is independent, so multiple payments cannot duplicate invoice values.\n\nBlank references are excluded before grouping. The same supplier and CheckNumber must match. Retain both group counts and payment-row counts because they answer different questions.\n\nRun each complete statement separately and retain its result before continuing.",
             "excelInputs": [
               "PurchaseInvoiceData, DisbursementPaymentData, and CheckPayments (Session 1.1)"
             ],
@@ -1857,7 +1857,7 @@
             "meaning": "The repeated invoice reference is supported. The different amounts, items, and receipt links weaken the claim that these are duplicate economic transactions. The source data alone does not show the supplier’s original invoice images or a bank confirmation.",
             "keep": "Write Workpaper A: criterion, flagged keys, source trail, alternative explanation, conclusion, missing evidence, and next action.",
             "mismatch": "A paid status or matching reference cannot establish duplicate payment. Do not sum the pair and label it a proven loss.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "PurchaseInvoiceLineData ← PurchaseInvoiceLine (import here)",
               "DisbursementPaymentData (complete raw query from Session 1.1)"
@@ -1934,7 +1934,7 @@
             "meaning": "The comparison supports a missing-link finding for 49581 under this review’s criterion. It does not prove the work was not performed, the employee was overpaid, or anyone acted dishonestly.",
             "keep": "Write Workpaper B with the tested criterion, both records, the evidence gap, and a proposed follow-up.",
             "mismatch": "Do not use an anomaly label as evidence. Compare source fields and distinguish a missing record from a contradictory record.",
-            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.",
+            "sqlText": "Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.",
             "excelInputs": [
               "OvertimeReview and Approvals (Session 3.1)"
             ],
@@ -2020,7 +2020,7 @@
         "SpecialistWorkpaper: chosen criterion, separate source detail, valid joins, and bounded conclusion"
       ]
     },
-    "interpretation": "The worked review demonstrates why a flag is not a finding about fraud or financial loss. Repeated references and missing approval links are supported conditions; their economic consequences need additional evidence. Controls become useful recommendations when the owner, timing, evidence, test population, and failure criteria are explicit.",
+    "interpretation": "The worked review demonstrates why a flag is not a finding about fraud or financial loss. Repeated references and missing approval links are supported conditions whose economic consequences require additional evidence. Controls become useful recommendations when the owner, timing, evidence, test population, and failure criteria are explicit.",
     "challenge": "Investigate Q3 2026 overtime using the same eligibility and hours-support criteria. For AP, define a new review of supplier invoice references within 2025 and investigate any flagged groups, or document a clean result. Keep denominators distinct and justify your follow-up priorities.",
     "hint": "A new population can produce fewer flags, different explanations, or no exceptions. Evaluate evidence completeness before treating a zero result as assurance. Preserve all eligible records when joining support.",
     "criteria": "Assess explicit criteria and denominators, source tracing, alternative explanations, proportionate conclusions, and controls that can be assessed without relying on anomaly labels.",
@@ -2036,9 +2036,9 @@
       }
     ],
     "readiness": [
-      "Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
+      "Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.",
       "Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.",
-      "Define an explicit criterion and denominator; distinguish time entries from people and an exception flag from a proven control failure."
+      "Define an explicit criterion and denominator, distinguishing time entries from people and an exception flag from a proven control failure."
     ]
   }
 ]

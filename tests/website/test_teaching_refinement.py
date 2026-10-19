@@ -13,6 +13,7 @@ from decimal import Decimal
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import re
 import sqlite3
@@ -23,7 +24,7 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SQLITE = ROOT / "outputs/CharlesRiver.sqlite"
+SQLITE = ROOT / os.environ.get("CHARLES_RIVER_TEACHING_SQLITE", "outputs/CharlesRiver.sqlite")
 RELEASE_SHA256 = "de861968e07412d71032b6ed6a0fb8eb9825cf6911886b1597c4a628a914474c"
 REGISTERS = [
     json.loads((ROOT / f"planning/website-redesign/{area}/verified-examples.json").read_text())

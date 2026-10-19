@@ -20,7 +20,7 @@ Treasury says the customer has sent money. Customer accounting asks which invoic
 
 <span id="learning-objectives"></span>
 
-**Your task:** Compare cash receipts and invoice applications at two dates and explain the remaining balance.
+**Your task.** Compare cash receipts and invoice applications at two dates and explain the remaining balance.
 
 <TutorialFigure figureId="follow-customer-settlement" />
 
@@ -36,7 +36,7 @@ In `Lesson05.xlsx`, import `T16_SalesInvoice` as `InvoiceData` filtered to ID 20
 </TabItem>
 <TabItem value="sql">
 
-Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson05.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson05.sql**. Run each supplied query separately, using its filters to identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
@@ -91,7 +91,7 @@ ORDER BY a.ApplicationDate, a.CashReceiptApplicationID;
 | 608 | 337 | 2024-03-16 | 2024-03-16 | 7,927.21 |
 | 1194 | 528 | 2024-04-14 | 2024-04-16 | 3,130.89 |
 
-Receipt **528** is **7,092.79**, but only **3,130.89** is applied here. The first receipt also predates this order; read the stored application as evidence of allocation, without inventing a reason for the advance.
+Receipt **528** is **7,092.79**, but only **3,130.89** is applied here. The first receipt also predates this order. Its stored application establishes the allocation, but the file does not explain the reason for the advance.
 
 ## 2. Reconstruct Two Reporting Dates
 
@@ -131,7 +131,7 @@ Check for credits by importing `T23_CreditMemo`. Filter `OriginalSalesInvoiceID 
 </TabItem>
 <TabItem value="sql">
 
-Run once for January 31. Then change the date literal to `2024-02-29` and run again. The invoice amount is the verified header total from Lesson 4. `AND` requires both the invoice and date conditions to hold; `<=` includes the cutoff date. The credit query uses `OR` to retain a credit linked through either the invoice or its order.
+Run once for January 31. Then change the date literal to `2024-02-29` and run again. The invoice amount is the verified header total from Lesson 4. `AND` requires both the invoice and date conditions to hold, while `<=` includes the cutoff date. The credit query uses `OR` to retain a credit linked through either the invoice or its order.
 
 ```sql title="l05-as-of-balance.sql"
 SELECT ROUND(SUM(AppliedAmount), 2) AS AppliedThroughDate,
@@ -165,7 +165,7 @@ Save the four application rows, two reporting-date calculations, and the empty c
 
 <span id="interpretation-and-limitations"></span>
 
-Use `CashReceiptApplication` to establish settlement of a particular invoice. `CashReceipt.SalesInvoiceID` is not a substitute for the application records. This worked calculation has no credits; it is not a complete receivables-aging model for every invoice.
+Use `CashReceiptApplication` to establish settlement of a particular invoice. `CashReceipt.SalesInvoiceID` is not a substitute for the application records. This worked calculation has no credits and does not provide a complete receivables-aging model for every invoice.
 
 ## Try One Change
 
@@ -174,7 +174,7 @@ Change the reporting date to **2024-04-16**. Compare the total applied with the 
 <details>
 <summary>Compare your reasoning</summary>
 
-The four applications sum to 12,248.33, leaving zero for this invoice. Receipt 528 can still have allocations to other invoices; do not substitute its full amount for this invoice's application.
+The four applications sum to 12,248.33, leaving zero for this invoice. Receipt 528 can still have allocations to other invoices, so use only the amount applied to this invoice.
 
 </details>
 

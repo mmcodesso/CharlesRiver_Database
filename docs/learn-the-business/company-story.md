@@ -78,7 +78,7 @@ Four roles connect the chapters. Follow the question each person passes to the n
 | Design lead | Arrange engagement staffing and review the support for service hours | Which work is approved and ready for billing? |
 | Controller | Bring the accounting consequences together at period end | Do the records explain the balances and the period? |
 
-These roles work with receiving, warehouse, production, customer accounting, accounts payable, payroll, and treasury staff. Each handoff changes what the company knows. An order records a request; receiving records a delivery from a supplier; a shipment records goods leaving inventory. No single department's records tell the entire story.
+These roles work with receiving, warehouse, production, customer accounting, accounts payable, payroll, and treasury staff. Each handoff changes what the company knows. An order records a request, receiving records a supplier delivery, and a shipment records goods leaving inventory. No single department's records tell the entire story.
 
 <span id="a-typical-operating-cycle"></span>
 
@@ -86,7 +86,7 @@ These roles work with receiving, warehouse, production, customer accounting, acc
 
 The sales coordinator starts with the customer's selection of goods and need for design help. Recording an order gives the company something to work toward. It does not establish that any goods have left the warehouse or that the customer has been billed.
 
-The operations planner considers supply. Available purchased goods may support fulfillment, while other needs depend on replenishment. Selected manufactured products bring components and production work into the picture. Purchasing and production also serve other customers and ongoing stock needs; their activity cannot all be attributed to this one project.
+The operations planner considers supply. Available purchased goods may support fulfillment, while other needs depend on replenishment. Selected manufactured products bring components and production work into the picture. Purchasing and production also serve other customers and ongoing stock needs, so their activity cannot all be attributed to this one project.
 
 Meanwhile, the design lead arranges the service work. Staff record billable and non-billable time, and approved billable hours support monthly customer billing. The design team's work can overlap with goods fulfillment rather than waiting for every product to be delivered.
 

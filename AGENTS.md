@@ -2,6 +2,10 @@
 
 ## Website Redesign Mission and Frozen Baseline
 
+### Review-improvements publication scope (19 October 2026)
+
+After reviewing the October 19 implementation handoff, the user explicitly authorized committing the changes on `codex/review-improvements-2026-10-19`, merging them into main, and deploying. This supersedes the review-only publication restriction for these website corrections. Use the existing `greenfield` Worker and main-branch Git integration, preserving the dataset/report freeze and release/account/hosting configuration. Published report assets may be reused in temporary validation storage without replacing the frozen local files. See `planning/website-redesign/review-2026-10-19/PUBLICATION.md` for approval and validation evidence.
+
 ### Current teaching-refinement publication scope (18 October 2026)
 
 The website-only refinement on `codex/charles-river-teaching-refinement` was reviewed from `37d17fd5ca288a5c386481ce7059cfda14563aee` and teaching release v2027.1. After reviewing the implementation handoff, the user explicitly authorized committing these changes, merging them into main, and deploying on Cloudflare on 18 October 2026. This supersedes the review-only rollout restriction for this publication. Use the existing `greenfield` Worker and main-branch Git integration; preserve the dataset/report freeze and existing release/account/hosting configuration.

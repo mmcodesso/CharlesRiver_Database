@@ -12,7 +12,7 @@ import reportTopics from "@site/src/data/reportTopics.json";
 
 Start with a question from the [company story](../learn-the-business/company-story.md) or a [business process](../learn-the-business/process-flows.md), then choose a report below. Reports are grouped by the part of the business you are investigating, with previews and Excel or CSV downloads together in each card.
 
-Each card identifies its row grain and period basis, links to the matching process and practice lesson, and opens the exact **View source SQL** destination in the existing Query Library. Check these before interpreting a result. Previews show a limited number of rows; downloads contain the full report. Expand **Interpret this report** for discussion questions and suggested analysis where available.
+Each card identifies its row grain and period basis, links to the matching process and practice lesson, and opens the exact **View source SQL** destination in the existing Query Library. Check these before interpreting a result. Downloads contain the full report, while previews show a limited number of rows. Expand **Interpret this report** for discussion questions and suggested analysis where available.
 
 ## Start with a Guided Investigation
 

@@ -63,11 +63,26 @@ SELECT COUNT(*) AS CustomerRows
 FROM Customer;
 ```
 
-Expect **220** customer records. This confirms the population used by the examples; it is not a complete validation of the database.
+Expect **220** customer records. This confirms the example population without validating every record in the database.
 
 Use the SQL editor's save control to save your query text as **Lesson01.sql** in your analysis folder. Save each later lesson's statements in its own file. Keep a short note of the source filename, selected identifiers, date filters, and what each result row represents.
 
 When a lesson contains several queries, run them one at a time and inspect each result. Replace the editor text or use a fresh SQL tab to avoid accidentally interpreting the output of a different statement.
+
+## Save the Result Not Just the Query
+
+A saved `.sql` file preserves instructions. A result file preserves the rows those instructions returned. Keep both so a reader can reproduce and check your evidence.
+
+1. Execute one intended query and confirm its result headings, filters, and row count. For `setup-customer.sql`, the result should contain three columns and one customer row.
+2. In **Execute SQL**, open the **Save results** control's menu and choose **Export to CSV**. This exports the last executed query result. The main **File → Export → Table(s) as CSV file** command exports tables and is unsuitable for retaining a filtered query result.
+3. In the export dialog, enable **Column names in first line** and choose a comma as the **Field separator**. Save the result as `setup-customer-result.csv` in your analysis folder. Use a distinct result filename for each later query.
+4. Record the saved SQL filename or query label, source dataset baseline assigned to the class, cutoff and date basis, tool version, and result row count in `Notes` or the [evidence template](pathname:///teaching/evidence-template.md). Obtain baseline details through [Downloads](../start-here/downloads.md).
+5. Reopen the CSV in a text editor or import it into a separate worksheet. Confirm the column headers, selected customer ID, and one data row. For larger results, compare the saved row count and a control total with the query result. A CSV has no saved data types, so check dates and identifiers when importing it again.
+6. If the query correctly returns no rows, record **zero result rows** with the exact filters and execution date. Retain a header-only CSV when the tool permits it. If export is unavailable for an empty grid, keep the SQL and an explicit empty-result note. Do not substitute rows from another query or the whole source table.
+
+For a small result, select every intended cell in the result grid, open its context menu, and choose **Copy with Headers**. Paste into a blank worksheet, then verify the headers, number of data rows, and values before saving. Copying only the visible selection can omit evidence, so use CSV export for larger results.
+
+These English labels are defined in [DB Browser 3.13.1's shared Windows and Mac UI source](https://github.com/sqlitebrowser/sqlitebrowser/blob/v3.13.1/src/MainWindow.ui), [CSV dialog](https://github.com/sqlitebrowser/sqlitebrowser/blob/v3.13.1/src/ExportDataDialog.ui), and [result-grid copy actions](https://github.com/sqlitebrowser/sqlitebrowser/blob/v3.13.1/src/ExtendedTableWidget.cpp). Other versions or translations can differ. Use the result control beside the SQL output, then verify the exported rows.
 
 <span id="how-to-read-the-result-and-keep-going"></span>
 
@@ -85,7 +100,7 @@ The database uses SQLite. Use the supplied syntax rather than translating exampl
 - **“No such column”:** check spelling and whether you copied the full query.
 - **No rows:** check the identifier, date boundary, and source table. An empty result can also be the intended answer.
 - **More rows than expected:** inspect the join keys and the meaning of one row before adding totals.
-- **A total is blank:** SQL aggregates over an empty population can return `NULL`; check the filter before treating that as zero.
+- **A total is blank:** Check the filter before treating `NULL` as zero, because SQL aggregates over an empty population can return `NULL`.
 - **The wrong result appears:** run only the intended statement and check its output headings.
 
 The [Schema Reference](../reference/schema.md) provides exact fields once you need them. The [Query Library](analysis-tracks.md) provides larger investigations after the tutorials.
@@ -107,4 +122,4 @@ SQLiteStudio, DBeaver configured for SQLite, or an existing SQLite command-line 
 
 ## Next Steps
 
-Continue to [1. Meet the Records](../learn-and-practice/meet-the-records.md?tool=sql). Keep the SQL tab selected throughout the tutorials; completing the Excel steps is optional.
+Continue to [1. Meet the Records](../learn-and-practice/meet-the-records.md?tool=sql). Keep the SQL tab selected throughout the tutorials. You can complete the Excel steps separately if you wish.

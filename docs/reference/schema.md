@@ -454,7 +454,7 @@ erDiagram
 
 ### Join and Traceability Cues
 
-- `DemandForecast` and `InventoryPolicy` inform recommendations through shared `ItemID`, `WarehouseID`, planning buckets, and recommendation `DriverType`; there is no direct stored forecast or policy ID on `SupplyPlanRecommendation`
+- `DemandForecast` and `InventoryPolicy` inform recommendations through shared `ItemID`, `WarehouseID`, planning buckets, and recommendation `DriverType`, without a direct stored forecast or policy ID on `SupplyPlanRecommendation`
 - `PurchaseRequisition.SupplyPlanRecommendationID -> SupplyPlanRecommendation.SupplyPlanRecommendationID`
 - `WorkOrder.SupplyPlanRecommendationID -> SupplyPlanRecommendation.SupplyPlanRecommendationID`
 - `MaterialRequirementPlan.SupplyPlanRecommendationID -> SupplyPlanRecommendation.SupplyPlanRecommendationID`
@@ -466,7 +466,7 @@ erDiagram
 - Service invoice lines stay in `SalesInvoiceLine`, but `ShipmentLineID` remains null on those rows and `ServiceBillingLine` becomes the authoritative hours-to-invoice bridge.
 - O2C freight remains header-level. `SalesOrder.FreightTerms` sets the policy, `Shipment.FreightCost` and `Shipment.BillableFreightAmount` capture the fulfillment result, `SalesInvoice.FreightAmount` carries billed freight, and `CreditMemo.FreightCreditAmount` shows any freight credit.
 - Price-list and promotion lineage live directly on `SalesOrderLine`, `SalesInvoiceLine`, and `CreditMemoLine`. Postings remain net revenue.
-- Sales commissions are a separate O2C payable routine. `SalesCommissionAccrual.CommissionBaseAmount` comes from `SalesInvoiceLine.LineTotal`; commission payments settle `2034` Sales Commission Payable separately from payroll.
+- Sales commissions are a separate O2C payable routine. `SalesCommissionAccrual.CommissionBaseAmount` comes from `SalesInvoiceLine.LineTotal`. Commission payments settle `2034` Sales Commission Payable separately from payroll.
 - `PurchaseOrder.RequisitionID` is compatibility metadata when one PO batches multiple requisitions. Use `PurchaseOrderLine.RequisitionID` as the authoritative trace.
 - `PurchaseInvoiceLine.GoodsReceiptLineID` is the main match key for receipt-based inventory invoicing.
 - `PurchaseInvoiceLine.AccrualJournalEntryID` links direct service invoices back to accrual journals.

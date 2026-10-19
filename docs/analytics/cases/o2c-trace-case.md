@@ -30,15 +30,15 @@ The sales coordinator is preparing a response to a design-trade customer. The wa
 
 **Worked scope.** Customer 120, Hubbard Inc: the six orders placed from January 1 through March 31, 2024. Compare March 31 and April 30. This selection excludes other orders and is not the customer’s complete account history.
 
-Choose Excel or SQL; your selection carries between lessons and cases.
+Choose Excel or SQL. The site retains your selection between lessons and cases.
 
-**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [4. Follow a Goods Sale](/docs/learn-and-practice/source-to-ledger); [5. Follow Customer Settlement](/docs/learn-and-practice/follow-customer-settlement); [6. Find the Accounting Entries](/docs/learn-and-practice/find-the-accounting-entries). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records), [2. Read an Order](/docs/learn-and-practice/read-an-order), [3. Connect the Records](/docs/learn-and-practice/connect-the-records), [4. Follow a Goods Sale](/docs/learn-and-practice/source-to-ledger), [5. Follow Customer Settlement](/docs/learn-and-practice/follow-customer-settlement), [6. Find the Accounting Entries](/docs/learn-and-practice/find-the-accounting-entries). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
 **Ready to begin:**
 
-- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
 - Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
-- Keep the order cohort fixed while changing event cutoffs; distinguish receipt from application and balance each complete voucher.
+- Keep the order cohort fixed while changing event cutoffs. Distinguish receipt from application and balance each complete voucher.
 
 ## Key Data Sources
 
@@ -67,7 +67,7 @@ Each source below has a distinct row meaning. Import only the fields and populat
 
 ## Session 1 — Establish what was delivered and billed
 
-Save a separate Case01.xlsx or Case01.sql. Keep a Review sheet or text note for the scope, decisions, and evidence. The order date selects the cohort; shipment and invoice dates determine what had happened by the review date.
+Save a separate Case01.xlsx or Case01.sql. Keep a Review sheet or text note for the scope, decisions, and evidence. The order date selects the cohort, while shipment and invoice dates determine what had happened by the review date.
 
 <CaseFigure figureId="case01-handoffs" />
 
@@ -79,9 +79,9 @@ Save a separate Case01.xlsx or Case01.sql. Keep a Review sheet or text note for 
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `SalesOrderData ← SalesOrder (import here)`; `SalesOrderLineData ← SalesOrderLine (import here)`.
+**Named inputs:** `SalesOrderData ← SalesOrder (import here)`, `SalesOrderLineData ← SalesOrderLine (import here)`.
 
-**Produced outputs:** `SelectedOrders: six order headers`; `OrderLines: 22 selected order lines`; `OrderSummary: six-row PivotTable`.
+**Produced outputs:** `SelectedOrders: six order headers`, `OrderLines: 22 selected order lines`, `OrderSummary: six-row PivotTable`.
 
 1. Import `T9_SalesOrder` → `SalesOrderData`, `T10_SalesOrderLine` → `SalesOrderLineData`.
 
@@ -125,7 +125,7 @@ ORDER BY o.OrderDate,o.SalesOrderID;
 
 **Checkpoint.** Six orders, 22 lines. Order 29 has five lines totaling 20,969.46. The other orders are 75, 236, 185, 434, and 388.
 
-An order header answers who and when; its lines describe separate goods. Keep the order total out of a line-level sum.
+An order header identifies the customer and date, while its lines describe the separate goods. Keep the order total out of a line-level sum.
 
 <details>
 <summary>If your result differs</summary>
@@ -143,9 +143,9 @@ If the count is larger, check the customer and order-date filter before changing
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `OrderLines (Session 1.1)`; `ShipmentData ← Shipment and ShipmentLineData ← ShipmentLine (import here)`; `SalesInvoiceData ← SalesInvoice and SalesInvoiceLineData ← SalesInvoiceLine (import here)`.
+**Named inputs:** `OrderLines (Session 1.1)`, `ShipmentData ← Shipment and ShipmentLineData ← ShipmentLine (import here)`, `SalesInvoiceData ← SalesInvoice and SalesInvoiceLineData ← SalesInvoiceLine (import here)`.
 
-**Produced outputs:** `ShippedByOrderLine and BilledByOrderLine: one row per order line with a dated event`; `Fulfillment: all 22 selected order lines`.
+**Produced outputs:** `ShippedByOrderLine and BilledByOrderLine: one row per order line with a dated event`, `Fulfillment: all 22 selected order lines`.
 
 1. Import Shipment as ShipmentData, ShipmentLine as ShipmentLineData, SalesInvoice as SalesInvoiceData, and SalesInvoiceLine as SalesInvoiceLineData before merging.
 
@@ -232,7 +232,7 @@ More than 22 rows means a detail table was joined before summarizing. A tiny flo
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `SalesInvoiceData (raw query from Session 1.2)`; `SelectedOrders (Session 1.1)`.
+**Named inputs:** `SalesInvoiceData (raw query from Session 1.2)`, `SelectedOrders (Session 1.1)`.
 
 **Produced outputs:** `Invoices: 20 selected invoice headers, including later dates`.
 
@@ -314,9 +314,9 @@ Receiving money and applying it to an invoice are separate events. Start from th
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `Invoices and SelectedOrders (Session 1)`; `CashReceiptApplicationData ← CashReceiptApplication and CashReceiptData ← CashReceipt (import here)`; `CreditMemoData ← CreditMemo (import here)`.
+**Named inputs:** `Invoices and SelectedOrders (Session 1)`, `CashReceiptApplicationData ← CashReceiptApplication and CashReceiptData ← CashReceipt (import here)`, `CreditMemoData ← CreditMemo (import here)`.
 
-**Produced outputs:** `Applications: selected application detail`; `Receipts: unique receipt headers`; `CreditsByOrder and CreditsByInvoice: separate selections`; `Credits: deduplicated union by CreditMemoID`.
+**Produced outputs:** `Applications: selected application detail`, `Receipts: unique receipt headers`, `CreditsByOrder and CreditsByInvoice: separate selections`, `Credits: deduplicated union by CreditMemoID`.
 
 1. Import CashReceiptApplication as CashReceiptApplicationData and CashReceipt as CashReceiptData.
 
@@ -351,7 +351,7 @@ Receiving money and applying it to an invoice are separate events. Start from th
 </TabItem>
 <TabItem value="sql">
 
-Each result is one application. ReceiptAmount repeats when one receipt funds several applications. Sum AppliedAmount for invoice settlement; use distinct receipt IDs when describing received cash.
+Each result is one application. ReceiptAmount repeats when one receipt funds several applications. Sum AppliedAmount for invoice settlement and retain distinct receipt IDs when describing received cash.
 
 Run each complete statement separately and retain its result before continuing.
 ```sql title="c01-applications.sql"
@@ -414,9 +414,9 @@ A credit found by order only needs further allocation evidence. Do not force it 
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `Invoices, Applications, and Credits (earlier stages)`; `Review!B2: reporting date`.
+**Named inputs:** `Invoices, Applications, and Credits (earlier stages)`, `Review!B2: reporting date`.
 
-**Produced outputs:** `Invoices: cutoff-dependent Applied, Credited, and Remaining columns`; `Two dated values-only settlement snapshots`.
+**Produced outputs:** `Invoices: cutoff-dependent Applied, Credited, and Remaining columns`, `Two dated values-only settlement snapshots`.
 
 1. Set the table names to Invoices, Applications, and Credits exactly.
 
@@ -517,9 +517,9 @@ Check application dates, not just receipt dates. A final Paid status cannot reco
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `GLEntryData ← GLEntry and AccountData ← Account (import here)`; `Earlier settlement and fulfillment checks`.
+**Named inputs:** `GLEntryData ← GLEntry and AccountData ← Account (import here)`, `Earlier settlement and fulfillment checks`.
 
-**Produced outputs:** `SelectedLedger: 10 rows, four complete vouchers`; `VoucherChecks: debit/credit PivotTable`; `Review: customer response`.
+**Produced outputs:** `SelectedLedger: 10 rows, four complete vouchers`, `VoucherChecks: debit/credit PivotTable`, `Review: customer response`.
 
 1. Import GLEntry as GLEntryData and Account as AccountData.
 
@@ -585,9 +585,9 @@ Save the two cutoff schedules, the event-to-accounting check, and your response.
 
 ## Prepare the Decision
 
-The worked result supports a focused customer-account response, not an assertion about every balance Hubbard Inc has ever held. Operations owns the quantity question; customer accounting owns allocation and credit confirmation; treasury supplies receipt evidence. A plausible next action is to confirm the later fulfillment position and contact the customer about the remaining selected invoices with the two-date schedule attached.
+The worked result supports a focused customer-account response, not an assertion about every balance Hubbard Inc has ever held. Operations addresses quantities, customer accounting confirms allocations and credits, and treasury supplies receipt evidence. A plausible next action is to confirm the later fulfillment position and contact the customer about the remaining selected invoices with the two-date schedule attached.
 
-**Deliverable:** A document timeline, two-date invoice settlement schedule, and a customer response with an action owner. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** A document timeline, two-date invoice settlement schedule, and a customer response with an action owner. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A clearly ordered SQL result table can support the conclusion, with a chart added if useful.
 
 ## Independent Challenge
 
@@ -600,7 +600,7 @@ Change the order-cohort dates separately from the event cutoffs. Rebuild the inv
 
 </details>
 
-**Assessment criteria:** Assess correct population, separate event dates, no repeated receipt totals, complete voucher checks, and an action justified by the observed evidence. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+**Assessment criteria:** Assess correct population, separate event dates, no repeated receipt totals, complete voucher checks, and an action justified by the observed evidence. Your instructor evaluates the method, evidence, and reasoning. Model answers for this challenge remain in private course materials.
 
 <details>
 <summary>Further queries and earlier case topics</summary>
@@ -609,9 +609,9 @@ Change the order-cohort dates separately from the event cutoffs. Rebuild the inv
 
 ## Recommended Query Sequence
 
-These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. These optional references extend the complete guided routes above. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-<QuerySequence items={caseQuerySequences["o2c-trace-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
+<QuerySequence items={caseQuerySequences["o2c-trace-case"]} helperText="Choose a reference after completing the guided investigation and verify its scope before comparing totals." />
 
 </details>
 

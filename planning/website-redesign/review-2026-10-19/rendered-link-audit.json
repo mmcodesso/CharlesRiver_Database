@@ -1,0 +1,115 @@
+{
+  "sitemapRoutes": 49,
+  "internalLinkOccurrences": 4902,
+  "missingTargets": [
+    {
+      "target": "/reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/pro-forma-monthly-income-statement.xlsx",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/pro-forma-monthly-income-statement.csv",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/pro-forma-monthly-balance-sheet.xlsx",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/pro-forma-monthly-balance-sheet.csv",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/pro-forma-monthly-indirect-cash-flow.xlsx",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/pro-forma-monthly-indirect-cash-flow.csv",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/budget-vs-actual-statement-bridge-monthly.xlsx",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/budget-vs-actual-statement-bridge-monthly.csv",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/budget-vs-actual-working-capital-and-cash-bridge.xlsx",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/budget-vs-actual-working-capital-and-cash-bridge.csv",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/budget-vs-actual-revenue-price-volume-cost-bridge.xlsx",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/budget-vs-actual-revenue-price-volume-cost-bridge.csv",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/design-service-revenue-and-billed-hours.xlsx",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/design-service-revenue-and-billed-hours.csv",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/sales-commission-expense-by-rep-segment.xlsx",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/sales-commission-expense-by-rep-segment.csv",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/sales-commission-payable-rollforward.xlsx",
+      "from": [
+        "/docs/analytics"
+      ]
+    },
+    {
+      "target": "/reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/sales-commission-payable-rollforward.csv",
+      "from": [
+        "/docs/analytics"
+      ]
+    }
+  ],
+  "missingFragments": []
+}

@@ -10,7 +10,7 @@ toc_max_heading_level: 2
 
 # Dataset Guide
 
-The [company story](../learn-the-business/company-story.md) introduces orders, deliveries, invoices, and payments. The dataset stores information about those familiar business events in tables. You can read this introduction before opening a file; keep it nearby when you begin your first exercise.
+The [company story](../learn-the-business/company-story.md) introduces orders, deliveries, invoices, and payments. The dataset stores information about those familiar business events in tables. Read this introduction before opening a file and keep it nearby during your first exercise.
 
 <DatasetStructuredData
   pagePath="/docs/dataset-overview"
@@ -42,11 +42,11 @@ Before calculating, decide whether you are counting orders, lines, or another ev
 
 ## Connect Records Through Their Keys
 
-An **identifier**, often called a key, distinguishes a record. The order's `SalesOrderID` identifies its header; the same value on a line indicates which order owns that line. The identifier is a link, not a quantity to add.
+An **identifier**, often called a key, distinguishes a record. The order's `SalesOrderID` identifies its header and connects each line to its parent order. The identifier is a link, not a quantity to add.
 
 Other relationships connect different stages of work. A goods invoice line can identify the shipment line it bills. A cash application identifies the invoice to which received money was allocated. Those relationships let you ask specific questions about fulfillment and settlement.
 
-A relationship does not always mean one row matches one other row. An order can have several lines and shipments; an invoice can have several cash applications. Combining these records without considering their grain can repeat quantities or amounts.
+A relationship does not always mean one row matches one other row. An order can have several lines and shipments, just as an invoice can have several cash applications. Combining these records without considering their grain can repeat quantities or amounts.
 
 Business diagrams help you understand the purpose of a relationship. For exact columns, consult [Schema Reference](../reference/schema.md). An arrow between activities does not by itself specify a database join.
 
@@ -66,9 +66,22 @@ Keep the dates as well as the identifiers. A shipment and invoice can be related
 
 You do not need the whole database for this first trace. Add records because they answer a question, rather than joining every available table.
 
+### Classify the Posting Route
+
+Classify the selected event at its current step, rather than assigning a permanent accounting category to its table.
+
+| Posting route | Example and evidence needed |
+|---|---|
+| No accounting effect at this step | Entering a sales order records a commitment. Shipment and invoicing require their own event evidence. |
+| Operational evidence for a later posting | Approved time and labor allocations support payroll or billing. Their approval does not independently recognize revenue or wages. |
+| Accounting event carried through a linked journal or other source | A fixed-asset financing event identifies a journal. Retrieve that journal's complete voucher before explaining its effect. |
+| Direct posting source, including a summary | An invoice, cash application, or PayrollSummary identifies posted ledger rows. Confirm the source type, identifier, date, and grain. |
+
+Finding no ledger rows under a table's name does not establish that its event has no accounting effect. The [Posting Reference](../reference/posting.md#journal-mediated-accounting-events) follows two events through their stored journal links. Use that reference to distinguish a new posting from support for an existing posting.
+
 ## Distinguish Plans, Events, and Accounting
 
-Some records describe expectations or setup. An item record describes a product; a forecast describes expected demand; a purchase order records a supplier commitment. These provide context without necessarily creating an accounting entry.
+Some records describe expectations or setup. An item record describes a product, a forecast describes expected demand, and a purchase order records a supplier commitment. These provide context without necessarily creating an accounting entry.
 
 Other records describe execution or settlement: goods arrive, products ship, payroll is posted, or an invoice is settled. Each event has its own accounting treatment in this model.
 
@@ -111,7 +124,7 @@ Continue to [Meet the Records](../learn-and-practice/meet-the-records.md), the f
 
 ## Optional Reference
 
-Expand the reference that answers your current question. These paths summarize related records; consult the schema for the full keys and the posting reference for accounting rules.
+Expand the reference that answers your current question. Use these summaries to locate related records, the schema to confirm their keys, and the posting reference to establish accounting rules.
 
 <details>
 <summary>Look up the table inventory and document structure</summary>
@@ -151,8 +164,10 @@ Students usually understand the model fastest when they read it in layers:
 |---|---|---|
 | Business master data | `Customer`, `Supplier`, `Item`, `Employee`, `Warehouse`, `CostCenter` | Defines who, what, and where |
 | Planning and setup | BOMs, routings, shifts, rosters, forecasts, inventory policies | Explains what should happen before execution starts |
-| Execution documents | Orders, service engagements, approved service time, shipments, receipts, invoices, work orders, labor records, payroll records | Shows what actually happened |
+| Business documents and operational events | Orders, service engagements, approved service time, shipments, receipts, invoices, work orders, labor records, payroll records | Distinguishes commitments, approved work, execution, and settlement through event, status, and date evidence |
 | Ledger and control | `JournalEntry`, `GLEntry`, budgets, remittances | Shows the accounting effect and reporting layer |
+
+An approved order or released work order alone does not prove shipment, completed production, or accounting recognition. Inspect the relevant downstream event, status, and date before making that claim.
 
 Many document families also use a header-line pattern:
 
@@ -210,7 +225,7 @@ For exact field-level lookup, go to [Schema Reference](../reference/schema.md).
 
 These are the fastest ways to move through the model.
 
-Read the paths as navigation sequences. A complete join often passes through line tables or a stored bridge key; use the [Schema Reference](../reference/schema.md) to confirm each relationship and row grain before combining amounts.
+Read the paths as navigation sequences. Before combining amounts, use the [Schema Reference](../reference/schema.md) to confirm the relationships and row grains of the line tables and stored bridge keys in the join.
 
 ### O2C path
 
@@ -240,7 +255,7 @@ Sales commissions follow the invoice-line revenue path:
 
 `SalesCommissionRate -> SalesCommissionAccrual -> SalesCommissionAdjustment or SalesCommissionPaymentLine -> SalesCommissionPayment`
 
-Commission accruals reference `SalesInvoiceLine`; return-related adjustments reference `CreditMemoLine`. Payment detail preserves the accrual or adjustment source being settled.
+Commission accruals reference `SalesInvoiceLine`, while return-related adjustments reference `CreditMemoLine`. Payment detail preserves the accrual or adjustment source being settled.
 
 ### P2P path
 
@@ -296,7 +311,7 @@ Then use:
 
 to move back to the originating event.
 
-Use the stored source type rather than assuming it always matches a table name. For example, payroll-register postings use `PayrollSummary` as their `GLEntry.SourceDocumentType`; the [PayrollSummary register mapping](../reference/posting.md#payrollsummary-register-summaries) explains its period/cost-center summary grain, constructed source identifier, and aggregate tie-out. Do not join that identifier directly to `PayrollRegisterID`.
+Use the stored source type rather than assuming it always matches a table name. For example, payroll-register postings use `PayrollSummary` as their `GLEntry.SourceDocumentType`. The [PayrollSummary register mapping](../reference/posting.md#payrollsummary-register-summaries) explains its period/cost-center summary grain, constructed source identifier, and aggregate tie-out. Do not join that identifier directly to `PayrollRegisterID`.
 
 </details>
 <details>

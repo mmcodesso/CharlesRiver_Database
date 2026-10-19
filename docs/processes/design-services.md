@@ -43,7 +43,7 @@ The design lead's operational question is about the work and its support. Accoun
 
 In this dataset, monthly service billing brings approved billable time into a customer invoice. The billing record connects billed hours to the invoice line. It does not rely on a physical shipment.
 
-The service invoice creates accounts receivable and design-service revenue, with applicable tax recorded. Creating an engagement or approving time does not itself post that customer revenue in this model. This describes the dataset's posting design; it is not a rule for every service contract.
+The service invoice creates accounts receivable and design-service revenue, with applicable tax recorded. Creating an engagement or approving time does not itself post that customer revenue in this model. This posting design applies to the selected records and should not be assumed for every service contract.
 
 The customer's eventual payment follows the [cash receipt and application path](o2c.md#receive-the-money-and-apply-it) already introduced. A service invoice can be open at a reporting date just as a goods invoice can. The receipt and its applications establish settlement.
 
@@ -59,7 +59,7 @@ The customer's eventual payment follows the [cash receipt and application path](
 
 <BpmnDiagram modelId="design-services" />
 
-The design team supplies the support for hours; accounting uses the billing records to establish what reached the invoice. Treasury and customer accounting handle money and its application after billing.
+The design team supplies hour records that accounting compares with the billing records to establish what reached the invoice. Treasury and customer accounting handle money and its application after billing.
 
 Read the model as responsibilities and activities. It does not establish an additional customer-acceptance workflow or prove that every approval was independent. Those claims would require their own evidence.
 
@@ -80,7 +80,7 @@ flowchart LR
     BILL --> INV[SalesInvoiceLine]
 ```
 
-Follow the engagement through its staff support, then compare approved time with the monthly billing records. The map summarizes the path; a monthly billing row must not be treated as a separate invoice for every daily time row.
+Follow the engagement through its staff support, then compare approved time with the monthly billing records. The map summarizes the path without implying that each daily time row creates a separate invoice from the monthly billing record.
 
 Four amounts answer different questions. The **billing price** determines the customer charge for billed hours. The **time-cost snapshot** supports analysis of the labor associated with an engagement. **Payroll expense** records employee costs in the pay cycle. **Service revenue** comes from the posted invoice.
 
@@ -98,7 +98,7 @@ Approved time can establish supported work without establishing that it has alre
 
 ## Bridge an Event to an Entry
 
-Reuse [Lesson 7’s engagement 2](../learn-and-practice/follow-design-time-into-billing.md). This is a separate verified example; it is not an extension of the selected goods sale.
+Reuse [Lesson 7’s engagement 2](../learn-and-practice/follow-design-time-into-billing.md). This separate verified example does not extend the selected goods sale.
 
 | Event and date basis | Supporting evidence | Why the accounts change | Cutoff question |
 |---|---|---|---|
@@ -112,7 +112,7 @@ Reuse [Lesson 7’s engagement 2](../learn-and-practice/follow-design-time-into-
 <details>
 <summary>Reveal the recognition and cost boundaries</summary>
 
-No. Lesson 7 verifies 32.67 billed hours × 210.00 = 6,860.70 on invoice line 387. The **complete invoice** debits AR 7,306.65 and credits service revenue 6,860.70 plus tax payable 445.95; its three ledger rows balance. The 937.02 is time-cost support including selected non-billable work, rather than a payroll reconciliation or all engagement costs. This release recognizes service revenue at invoicing; use that dataset convention when interpreting the trace.
+No. Lesson 7 verifies 32.67 billed hours × 210.00 = 6,860.70 on invoice line 387. The **complete invoice** debits AR 7,306.65 and credits service revenue 6,860.70 plus tax payable 445.95, balancing its three ledger rows. The 937.02 is time-cost support including selected non-billable work, rather than a payroll reconciliation or all engagement costs. Interpret the trace using the dataset convention that service revenue is recognized at invoicing.
 
 </details>
 
@@ -241,7 +241,7 @@ flowchart LR
 
 ### 4. Payroll and Service Margin Interpretation
 
-Service employees also pass through normal payroll. Billing and receivables belong to the customer process; employee costs and payroll liabilities belong to the pay cycle. Compare billed revenue with the included `ServiceTimeEntry.ExtendedCost` snapshots to explain a labor-margin view, stating its cost and timing limits.
+Service employees also pass through normal payroll. Billing and receivables belong to the customer process, while employee costs and payroll liabilities belong to the pay cycle. Compare billed revenue with the included `ServiceTimeEntry.ExtendedCost` snapshots to explain a labor-margin view, stating its cost and timing limits.
 
 **Starter analytical question:** Which engagements show the strongest labor margin after comparing billed revenue to the approved time-cost snapshot?
 
@@ -262,7 +262,7 @@ Service employees also pass through normal payroll. Billing and receivables belo
 
 **Context and objective:** an engagement lead and accounting need to understand whether approved service effort was billed on the intended monthly basis. Interpret the service process and evaluate one risk at the handoff from time approval to billing.
 
-**Prerequisites, tools, and sources:** read the O2C cash-application discussion and this page's billing bridge. Use a SQL tool with the published SQLite file, or Excel filters and lookups, plus a copy of the editable Draw.io model. Sources are `SalesOrderLine`, `ServiceEngagement`, `ServiceEngagementAssignment`, `ServiceTimeEntry`, `ServiceBillingLine`, `SalesInvoiceLine`, `SalesInvoice`, and `GLEntry`; add payroll records only when explaining the separately defined employee-cost scope.
+**Prerequisites, tools, and sources:** read the O2C cash-application discussion and this page's billing bridge. Use a SQL tool with the published SQLite file, or Excel filters and lookups, plus a copy of the editable Draw.io model. Sources are `SalesOrderLine`, `ServiceEngagement`, `ServiceEngagementAssignment`, `ServiceTimeEntry`, `ServiceBillingLine`, `SalesInvoiceLine`, `SalesInvoice`, and `GLEntry`. Add payroll records only when explaining the separately defined employee-cost scope.
 
 1. Record the source file, engagement, billing period, and reporting date. Mark the relevant activities and responsible roles on the model.
 2. Compare approved billable hours, non-billable hours, and billed hours for the period. Preserve the monthly rollup grain and explain date or scope differences before calling them missing revenue.

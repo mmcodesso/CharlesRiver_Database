@@ -30,15 +30,15 @@ The operations planner is considering an overtime response. Payroll asks whether
 
 **Worked scope.** January 1–28, 2024, using complete payroll periods 1 and 2. Begin with Assembly work center 2, then compare centers and the company-wide period payroll. Payment and remittance dates extend beyond the work window.
 
-Choose Excel or SQL; your selection carries between lessons and cases.
+Choose Excel or SQL. The site retains your selection between lessons and cases.
 
-**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [10. Follow Hours into Payroll](/docs/learn-and-practice/follow-hours-into-payroll); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records), [2. Read an Order](/docs/learn-and-practice/read-an-order), [3. Connect the Records](/docs/learn-and-practice/connect-the-records), [10. Follow Hours into Payroll](/docs/learn-and-practice/follow-hours-into-payroll), [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
 **Ready to begin:**
 
-- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
 - Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
-- Preserve approved-time detail; distinguish identified from unassigned centers and employee-period pay from center workload.
+- Preserve approved-time detail, distinguish identified from unassigned centers, and keep employee-period pay separate from center workload.
 
 ## Key Data Sources
 
@@ -78,9 +78,9 @@ Create Case06.xlsx or Case06.sql. State the grain of each source before joining 
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `WorkCenterData ← WorkCenter (import here)`; `EmployeeShiftRosterData ← EmployeeShiftRoster and WorkOrderOperationScheduleData ← WorkOrderOperationSchedule (import here)`; `TimeClockEntryData ← TimeClockEntry (import here)`.
+**Named inputs:** `WorkCenterData ← WorkCenter (import here)`, `EmployeeShiftRosterData ← EmployeeShiftRoster and WorkOrderOperationScheduleData ← WorkOrderOperationSchedule (import here)`, `TimeClockEntryData ← TimeClockEntry (import here)`.
 
-**Produced outputs:** `ApprovedTime: retained approved TimeClockEntryID detail for January 1–28, 2024 / periods 1 and 2`; `RosterByCenter, OperationLoadByCenter, and WorkedByCenter: separate summaries`; `Coverage: identified-center comparisons; null-center summaries retained separately`.
+**Produced outputs:** `ApprovedTime: retained approved TimeClockEntryID detail for January 1–28, 2024 / periods 1 and 2`, `RosterByCenter, OperationLoadByCenter, and WorkedByCenter: separate summaries`, `Coverage: identified-center comparisons; null-center summaries retained separately`.
 
 1. Import WorkCenter as WorkCenterData, EmployeeShiftRoster as EmployeeShiftRosterData, WorkOrderOperationSchedule as WorkOrderOperationScheduleData, and TimeClockEntry as TimeClockEntryData.
 
@@ -141,7 +141,7 @@ ORDER BY c.WorkCenterID;
 
 **Checkpoint.** Assembly has 2,033.11 rostered hours, 673.91 operation hours, 1,988.59 approved regular hours, and 177.92 approved overtime hours.
 
-Scheduled operation hours describe production activity; rostered hours describe people’s planned presence. Their difference is not automatically idle time. Employees may perform support work outside the operation schedule.
+Scheduled operation hours describe production activity, while rostered hours describe people's planned presence. Their difference is not automatically idle time. Employees may perform support work outside the operation schedule.
 
 <details>
 <summary>If your result differs</summary>
@@ -159,9 +159,9 @@ Do not compute a staffing deficit by subtracting unlike hour measures without a 
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `EmployeeAbsenceData ← EmployeeAbsence (import here)`; `EmployeeShiftRosterData (raw query from Session 1.1)`.
+**Named inputs:** `EmployeeAbsenceData ← EmployeeAbsence (import here)`, `EmployeeShiftRosterData (raw query from Session 1.1)`.
 
-**Produced outputs:** `AbsenceDetail: absence rows with roster center evidence`; `AbsenceByCenter: including an Unassigned displayed group`.
+**Produced outputs:** `AbsenceDetail: absence rows with roster center evidence`, `AbsenceByCenter: including an Unassigned displayed group`.
 
 1. Import EmployeeAbsence as EmployeeAbsenceData.
 
@@ -178,7 +178,7 @@ Do not compute a staffing deficit by subtracting unlike hour measures without a 
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c06-absence.sql"
 SELECT r.WorkCenterID,
        COUNT(*) AS Absences,
@@ -230,9 +230,9 @@ Move from a location view to an employee-period view. One employee’s entire pa
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `ApprovedTime (retained detail from Session 1.1)`; `PayrollRegisterData ← PayrollRegister (import here)`.
+**Named inputs:** `ApprovedTime (retained detail from Session 1.1)`, `PayrollRegisterData ← PayrollRegister (import here)`.
 
-**Produced outputs:** `HoursByEmployeePeriod: all approved hours, with identified WorkCenters count`; `CentersByEmployeePeriod: distinct nonnull center count`; `UnassignedCenterByEmployeePeriod: separate null-center count and hours`; `SelectedPayroll: periods 1 and 2`; `PayBridge: 209 registers; missing hourly support stays null`.
+**Produced outputs:** `HoursByEmployeePeriod: all approved hours, with identified WorkCenters count`, `CentersByEmployeePeriod: distinct nonnull center count`, `UnassignedCenterByEmployeePeriod: separate null-center count and hours`, `SelectedPayroll: periods 1 and 2`, `PayBridge: 209 registers; missing hourly support stays null`.
 
 1. Reference the retained ApprovedTime detail as HoursByEmployeePeriod.
 
@@ -269,7 +269,7 @@ Move from a location view to an employee-period view. One employee’s entire pa
 </TabItem>
 <TabItem value="sql">
 
-hours groups by EmployeeID and PayrollPeriodID before joining payroll. A null hours result is retained for a register without approved hourly support. COUNT(DISTINCT WorkCenterID) excludes null centers and records identified location variety without repeating pay across locations. It returns zero for an approved-time employee-period with only null centers; the outer payroll join retains null when there is no approved-time employee-period at all. The Excel route retains missing-center evidence in a separate branch.
+hours groups by EmployeeID and PayrollPeriodID before joining payroll. A null hours result is retained for a register without approved hourly support. COUNT(DISTINCT WorkCenterID) excludes null centers and records identified location variety without repeating pay across locations. It returns zero for an approved-time employee-period with only null centers. The outer payroll join retains null when there is no approved-time employee-period at all. The Excel route retains missing-center evidence in a separate branch.
 
 Run each complete statement separately and retain its result before continuing.
 ```sql title="c06-pay.sql"
@@ -318,7 +318,7 @@ ORDER BY PayrollPeriodID;
 
 **Checkpoint.** 209 registers: 104 in period 1 and 105 in period 2. Period 1 gross pay is 125,541.19 and net pay 104,320.59. Period 2 gross pay is 265,084.43 and net pay 220,069.69. Each header’s gross less withholdings equals net.
 
-The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly. WorkCenters counts identified centers only. A zero means approved time with no identified center; a null after the payroll join means no approved hourly support in this scope. Keep both categories separate from identified work centers.
+The periods differ materially in gross pay. Before calling that an overtime effect, inspect employee populations, hours, pay types, and the first period’s support. Company payroll includes more than Assembly. WorkCenters counts identified centers only. A zero means approved time with no identified center, while a null after the payroll join means no approved hourly support in this scope. Keep both categories separate from identified work centers. Complete the [Lesson 10 summary checkpoint](../../learn-and-practice/follow-hours-into-payroll.md#4-compare-summary-recognition-with-detailed-payment) for a separate period/cost-center population before interpreting ledger payroll. Aggregate the register facts and ledger account independently. A PayrollSummary source ID is not PayrollRegisterID.
 
 <details>
 <summary>If your result differs</summary>
@@ -336,9 +336,9 @@ Do not join payroll headers to raw clock rows. A register repeated ten times wou
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `PayBridge (Session 2.1)`; `PayrollRegisterLineData ← PayrollRegisterLine (import here; raw query retained)`.
+**Named inputs:** `PayBridge (Session 2.1)`, `PayrollRegisterLineData ← PayrollRegisterLine (import here; raw query retained)`.
 
-**Produced outputs:** `EmployeePayLines: register 121 only`; `EmployeePayCalculation: LineType PivotTable`; `PayBridge: RecordedEmployerCost column`.
+**Produced outputs:** `EmployeePayLines: register 121 only`, `EmployeePayCalculation: LineType PivotTable`, `PayBridge: RecordedEmployerCost column`.
 
 1. Filter PayBridge to EmployeeID 17, period 2, register 121.
 
@@ -361,7 +361,7 @@ Do not join payroll headers to raw clock rows. A register repeated ten times wou
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c06-employee-lines.sql"
 SELECT LineType,
        ROUND(SUM(COALESCE(Hours,0)),2) AS Hours,
@@ -378,7 +378,7 @@ ORDER BY LineType;
 
 **Checkpoint.** Employee 17 has 74.48 regular hours and 4.93 overtime hours, gross pay 2,320.35, employee withholdings 348.72, and net pay 1,971.63. Employer tax 177.51 and benefits 157.50 bring the selected employer cost to 2,655.36.
 
-Employee deductions reduce the employee’s cash payment; employer costs add to the company’s expense. Neither should be confused with a manufacturing labor allocation or a design time-cost snapshot.
+Employee deductions reduce the employee's cash payment, while employer costs add to company cost. Apply the manufacturing recognition rules before labeling those costs as period expense. Neither should be confused with a manufacturing labor allocation or a design time-cost snapshot.
 
 <details>
 <summary>If your result differs</summary>
@@ -410,9 +410,9 @@ Paying employees leaves obligations to tax agencies and benefit providers. Exami
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `SelectedPayroll (Session 2.1)`; `PayrollPaymentData ← PayrollPayment (import here)`.
+**Named inputs:** `SelectedPayroll (Session 2.1)`, `PayrollPaymentData ← PayrollPayment (import here)`.
 
-**Produced outputs:** `PaymentSchedule: payment-date / period totals`; `UnpaidRegisters: unmatched register evidence`.
+**Produced outputs:** `PaymentSchedule: payment-date / period totals`, `UnpaidRegisters: unmatched register evidence`.
 
 1. Import PayrollPayment as PayrollPaymentData and preserve the raw query.
 
@@ -425,7 +425,7 @@ Paying employees leaves obligations to tax agencies and benefit providers. Exami
 </TabItem>
 <TabItem value="sql">
 
-LEFT JOIN keeps the payroll registers; a null PayrollPaymentID identifies unmatched payment evidence. This is a test of records in the file, not proof of what happened outside it.
+LEFT JOIN retains the payroll registers, with a null PayrollPaymentID identifying unmatched payment evidence. This is a test of records in the file, not proof of what happened outside it.
 
 Run each complete statement separately and retain its result before continuing.
 ```sql title="c06-payments.sql"
@@ -476,9 +476,9 @@ Compare distinct register IDs as well as money. Zero-pay registers can have paym
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `PayrollRegisterLineData (raw query retained in Session 2.2)`; `SelectedPayroll (Session 2.1)`; `PayrollLiabilityRemittanceData ← PayrollLiabilityRemittance (import here)`.
+**Named inputs:** `PayrollRegisterLineData (raw query retained in Session 2.2)`, `SelectedPayroll (Session 2.1)`, `PayrollLiabilityRemittanceData ← PayrollLiabilityRemittance (import here)`.
 
-**Produced outputs:** `LiabilityTotals: period / LineType amounts`; `Remittances: two-period liability settlement records`; `Review: matched liability-type reconciliations`.
+**Produced outputs:** `LiabilityTotals: period / LineType amounts`, `Remittances: two-period liability settlement records`, `Review: matched liability-type reconciliations`.
 
 1. Reference the raw PayrollRegisterLineData as LiabilityTotals and merge SelectedPayroll to restrict periods 1 and 2.
 
@@ -515,7 +515,7 @@ Compare distinct register IDs as well as money. Zero-pay registers can have paym
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c06-deductions.sql"
 SELECT p.PayrollPeriodID,
        l.LineType,
@@ -607,7 +607,7 @@ Save the coverage analysis, pay bridge, employee example, and two settlement sch
 
 The worked investigation supports a targeted staffing review and a separate payment-evidence follow-up. It does not establish a direct conversion from operation hours to required headcount. The pay and remittance reconciliations show why employee deductions, employer costs, employee cash, and provider cash must remain separate.
 
-**Deliverable:** A coverage comparison, employee-period pay reconciliation, settlement schedule, and staffing recommendation. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** A coverage comparison, employee-period pay reconciliation, settlement schedule, and staffing recommendation. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A clearly ordered SQL result table can support the conclusion, with a chart added if useful.
 
 ## Independent Challenge
 
@@ -616,11 +616,11 @@ Repeat for payroll periods 3 and 4 using their complete work-date windows. Compa
 <details>
 <summary>Planning hint</summary>
 
-Read the period start/end dates first. Rebuild employee-period summaries and examine unmatched payment rows; do not assume the first case’s exceptions recur.
+Read the period start/end dates first. Rebuild employee-period summaries and examine unmatched payment rows before deciding whether the earlier exceptions recur.
 
 </details>
 
-**Assessment criteria:** Assess compatible grains, approved-hour filters, unique payroll headers, deduction classification, separate settlement branches, and evidence limits in the recommendation. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+**Assessment criteria:** Assess compatible grains, approved-hour filters, unique payroll headers, deduction classification, separate settlement branches, and evidence limits in the recommendation. Your instructor evaluates the method, evidence, and reasoning. Model answers for this challenge remain in private course materials.
 
 <details>
 <summary>Further queries and earlier case topics</summary>
@@ -629,9 +629,9 @@ Read the period start/end dates first. Rebuild employee-period summaries and exa
 
 ## Recommended Query Sequence
 
-These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. These optional references extend the complete guided routes above. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-<QuerySequence items={caseQuerySequences["workforce-coverage-and-attendance-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
+<QuerySequence items={caseQuerySequences["workforce-coverage-and-attendance-case"]} helperText="Choose a reference after completing the guided investigation and verify its scope before comparing totals." />
 
 </details>
 

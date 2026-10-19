@@ -20,7 +20,7 @@ The sales coordinator opens order **SO-2024-000011**. The order has a total, but
 
 <span id="learning-objectives"></span>
 
-**Your task:** Distinguish one sales order from its two lines and check the amount without counting the header twice.
+**Your task.** Distinguish one sales order from its two lines and check the amount without counting the header twice.
 
 <TutorialFigure figureId="read-an-order" />
 
@@ -31,12 +31,12 @@ Finish [Meet the Records](meet-the-records.md).
 <ToolSteps>
 <TabItem value="excel">
 
-Create a fresh Excel analysis workbook, `Lesson02.xlsx`. Import `T9_SalesOrder` as `SalesOrderData` and `T10_SalesOrderLine` as `OrderLineData`, using the [repeat-an-import steps](../analytics/excel-guide.md#repeat-an-import). These are Excel Table names in the published workbook; SQL uses `SalesOrder` and `SalesOrderLine`.
+Create a fresh Excel analysis workbook, `Lesson02.xlsx`. Import `T9_SalesOrder` as `SalesOrderData` and `T10_SalesOrderLine` as `OrderLineData`, using the [repeat-an-import steps](../analytics/excel-guide.md#repeat-an-import). SQL uses `SalesOrder` and `SalesOrderLine`, while the published workbook uses the Excel Table names above.
 
 </TabItem>
 <TabItem value="sql">
 
-Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson02.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson02.sql**. Run each supplied query separately, using its filters to identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
@@ -96,12 +96,12 @@ A line identifies part of an order. The same `SalesOrderID` can therefore appear
 
 
 
-`103` counts visible nonblank identifiers; `109` sums visible amounts. An ordinary `SUM` still includes filtered-out rows, so it would answer a different question here.
+`103` counts visible nonblank identifiers, while `109` sums visible amounts. An ordinary `SUM` still includes filtered-out rows, so it would answer a different question here.
 
 </TabItem>
 <TabItem value="sql">
 
-Inspect the rows first, then run the second query to count and total that same population. `COUNT(*)` counts rows; `SUM(LineTotal)` adds their amounts; `ROUND(..., 2)` displays the result to two decimal places. `AS` gives each result column a readable label.
+Inspect the rows first, then run the second query to count and total that same population. `COUNT(*)` counts rows, `SUM(LineTotal)` adds their amounts, and `ROUND(..., 2)` displays the result to two decimal places. `AS` gives each result column a readable label.
 
 ```sql title="l02-lines.sql"
 SELECT SalesOrderLineID, LineNumber, LineTotal
@@ -126,7 +126,7 @@ WHERE SalesOrderID = 11;
 | 42 | 1 | 3,552.21 |
 | 43 | 2 | 7,845.57 |
 
-Your check should return **2 lines** and **11,397.78**, agreeing with the header. These are order-line amounts; freight and tax on a later invoice are different fields.
+Your check should return **2 lines** and **11,397.78**, agreeing with the header. These order-line amounts are separate from freight and tax on a later invoice.
 
 <span id="assessed-deliverable"></span>
 
@@ -136,7 +136,7 @@ Save the single header, two line identifiers, visible-line count, and line-total
 
 <span id="interpretation-and-limitations"></span>
 
-If you later display the header total alongside both lines, adding those repeated header values would double the order amount. A matching total checks this selected order; it does not establish fulfillment or collection.
+If you later display the header total alongside both lines, adding those repeated header values would double the order amount. A matching total checks this selected order without establishing fulfillment or collection.
 
 ## Try One Change
 

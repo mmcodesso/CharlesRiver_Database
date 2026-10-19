@@ -20,7 +20,7 @@ At January month end, the controller estimates repairs and maintenance expense b
 
 <span id="learning-objectives"></span>
 
-**Your task:** Trace an expense estimate to its supplier invoice, residual adjustment, and later payment.
+**Your task.** Trace an expense estimate to its supplier invoice, residual adjustment, and later payment.
 
 <TutorialFigure figureId="follow-an-estimate-into-settlement" />
 
@@ -31,12 +31,19 @@ Read [Journals and Close](../processes/manual-journals-and-close.md). This examp
 <ToolSteps>
 <TabItem value="excel">
 
-In `Lesson11.xlsx`, import `T2_JournalEntry` as `JournalData` filtered to JournalEntryID 9 **or** 698; `T38_PurchaseInvoiceLine` as `PILineData` filtered to AccrualJournalEntryID 9; `T37_PurchaseInvoice` as `InvoiceData` filtered to ID 39851; and `T39_DisbursementPayment` as `PaymentData` filtered to PurchaseInvoiceID 39851.
+In `Lesson11.xlsx`, import the following tables with separate filters for each source.
+
+| Published table | Working name | Power Query filter |
+|---|---|---|
+| `T2_JournalEntry` | `JournalData` | `JournalEntryID = 9` or `698` |
+| `T38_PurchaseInvoiceLine` | `PILineData` | `AccrualJournalEntryID = 9` |
+| `T37_PurchaseInvoice` | `InvoiceData` | `PurchaseInvoiceID = 39851` |
+| `T39_DisbursementPayment` | `PaymentData` | `PurchaseInvoiceID = 39851` |
 
 </TabItem>
 <TabItem value="sql">
 
-Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson11.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson11.sql**. Run each supplied query separately, using its filters to identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
@@ -51,7 +58,7 @@ The original journal records estimated expense and an accrued liability. The lat
 <ToolSteps>
 <TabItem value="excel">
 
-Read journal 9's date, description, and `TotalAmount`. In `PILineData`, confirm `AccrualJournalEntryID = 9`, `PurchaseInvoiceID = 39851`, and a blank goods-receipt link. Compare the line amount with `InvoiceData`. On Notes label B2 Estimate less invoice and enter the formula below. The journal lookup selects journal 9 only; summing JournalData would also include adjustment 698:
+Read journal 9's date, description, and `TotalAmount`. In `PILineData`, confirm `AccrualJournalEntryID = 9`, `PurchaseInvoiceID = 39851`, and a blank goods-receipt link. Compare the line amount with `InvoiceData`. On Notes label B2 Estimate less invoice and enter the formula below. Use the following lookup to select journal 9 alone. Summing JournalData would also include adjustment 698.
 
 ```text title="Excel — Notes!B2"
 =XLOOKUP(9,JournalData[JournalEntryID],JournalData[TotalAmount],"No match",0)-SUM(PILineData[LineTotal])
@@ -84,7 +91,7 @@ ORDER BY l.PILineID;
 </TabItem>
 </ToolSteps>
 
-The **January 31** estimate is **10,039.33**. The **March 9** supplier invoice is **10,019.59**. The estimate exceeds the invoice by **19.74**. The empty receipt link is expected for this accrued-service branch; it is not a missing inventory receipt.
+The **January 31** estimate is **10,039.33**. The **March 9** supplier invoice is **10,019.59**. The estimate exceeds the invoice by **19.74**. The empty receipt link is expected because this accrued-service branch does not require an inventory receipt.
 
 ## 2. Explain the Residual Adjustment and Payment
 
@@ -166,13 +173,17 @@ ORDER BY g.GLEntryID;
 </TabItem>
 </ToolSteps>
 
-The adjustment debits the accrued-expense liability and credits repairs and maintenance expense, **19.74** on each side. It reduces an estimate that was too high; it is not an additional expense for an underestimate.
+The adjustment debits the accrued-expense liability and credits repairs and maintenance expense, **19.74** on each side. It reduces an estimate that was too high rather than adding expense for an underestimate.
 
 <span id="assessed-deliverable"></span>
 
 ## Keep Your Evidence
 
 Save the four-event timeline, 19.74 residual calculation, and adjustment posting explanation. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+
+Classify each event before interpreting its amount. Journal 9 recognizes expense and accrued liability on January 31. Invoice 39851 transfers **10,019.59** from that liability to AP on March 9. Journal 698 removes the **19.74** unused estimate on March 11. The May 20 payment settles AP and does not create another expense.
+
+For the selected accrual, roll forward a **0.00** opening balance through **10,039.33** recognition, **10,019.59** invoice relief, and **19.74** adjustment relief to **0.00** at March 31. The payable is a separate balance until May 20. Retain the complete adjustment voucher and explain why the invoice's stored AccrualJournalEntryID supports the transfer. A receipt-based inventory match would follow the wrong branch.
 
 <span id="interpretation-and-limitations"></span>
 
@@ -185,7 +196,7 @@ What remains of this accrual on **March 10**, and what changes on **March 11**? 
 <details>
 <summary>Compare your reasoning</summary>
 
-After the March 9 invoice, 19.74 remains in the selected accrual until its March 11 adjustment. The payable is 10,019.59 and is not paid on either date; settlement occurs on May 20.
+After the March 9 invoice, 19.74 remains in the selected accrual until its March 11 adjustment. The 10,019.59 payable remains unpaid on both dates and is settled on May 20.
 
 </details>
 
