@@ -1,23 +1,125 @@
-<mxfile host="Electron" agent="Charles River website" version="29.6.6" type="device"><diagram id="manufacturing-variances" name="Manufacturing Variances | proposed evidence-review activity"><mxGraphModel dx="1800" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1920" pageHeight="1280" math="0" shadow="0" background="#FFFFFF"><root><mxCell id="0"/>
-<mxCell id="1" parent="0"/>
-<object id="title" label="Manufacturing Variances | proposed evidence-review activity" bpmnType="heading" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=28;align=left;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="40" y="15" width="1800" height="40" as="geometry"/></mxCell></object>
-<object id="subtitle" label="BPMN 2.0 teaching activity • this is an analytical / control-design exercise, not an approval workflow implemented by the dataset." bpmnType="heading" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=14;align=left;" vertex="1" parent="1"><mxGeometry x="40" y="62" width="1800" height="34" as="geometry"/></mxCell></object>
-<object id="charles-river" label="Charles River Home Furnishings, Inc. — organizational responsibilities are a teaching allocation" bpmnType="pool" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=1;startSize=38;collapsible=0;fontStyle=1;fillColor=#E9EFEA;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="40" y="245" width="1800" height="498" as="geometry"/></mxCell></object>
-<object id="analyst" label="Cost analyst (teaching role)" bpmnType="lane" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river"><mxGeometry x="0" y="38" width="1800" height="220" as="geometry"/></mxCell></object>
-<object id="reviewer" label="Independent reviewer (proposed)" bpmnType="lane" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river"><mxGeometry x="0" y="258" width="1800" height="240" as="geometry"/></mxCell></object>
-<object id="selected" label="Close record&#xa;selected" bpmnType="start" participant="charles-river"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=standard;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;" vertex="1" parent="analyst"><mxGeometry x="185" y="47" width="42" height="42" as="geometry"/></mxCell></object>
-<object id="collect" label="Collect work-order, issue,&#xa;completion and labor evidence" bpmnType="task" participant="charles-river" evidenceTables="WorkOrder,MaterialIssue,ProductionCompletion,LaborTimeEntry,WorkOrderClose" teachingStatus="proposed-review"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;" vertex="1" parent="analyst"><mxGeometry x="290" y="32" width="240" height="66" as="geometry"/></mxCell></object>
-<object id="reconcile" label="Compare recorded close&#xa;with source cost support" bpmnType="task" participant="charles-river" evidenceTables="WorkOrderClose,GLEntry" teachingStatus="proposed-review"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;" vertex="1" parent="analyst"><mxGeometry x="630" y="32" width="220" height="66" as="geometry"/></mxCell></object>
-<object id="explained" label="Difference&#xa;explained?" bpmnType="exclusive" participant="charles-river"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.gateway2;outline=none;symbol=none;gwType=exclusive;perimeter=rhombusPerimeter;verticalLabelPosition=top;verticalAlign=bottom;labelBackgroundColor=#FFFFFF;labelWidth=140;" vertex="1" parent="reviewer"><mxGeometry x="970" y="57" width="42" height="42" as="geometry"/></mxCell></object>
-<object id="document" label="Document supported&#xa;variance explanation" bpmnType="task" participant="charles-river" evidenceTables="WorkOrderClose,GLEntry" teachingStatus="proposed-review"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;" vertex="1" parent="reviewer"><mxGeometry x="1220" y="47" width="210" height="66" as="geometry"/></mxCell></object>
-<object id="done" label="Review conclusion&#xa;recorded by student" bpmnType="end" participant="charles-river"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=end;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;" vertex="1" parent="reviewer"><mxGeometry x="1650" y="52" width="42" height="42" as="geometry"/></mxCell></object>
-<object id="followup" label="Propose targeted follow-up;&#xa;identify missing evidence" bpmnType="task" participant="charles-river" evidenceTables="WorkOrderClose,LaborTimeEntry,GLEntry" teachingStatus="proposed-review"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;" vertex="1" parent="reviewer"><mxGeometry x="1210" y="147" width="240" height="66" as="geometry"/></mxCell></object>
-<object id="open" label="Further evidence&#xa;required" bpmnType="end" participant="charles-river"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=end;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;" vertex="1" parent="reviewer"><mxGeometry x="1640" y="147" width="42" height="42" as="geometry"/></mxCell></object>
-<object id="flow-1" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="selected" target="collect"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="flow-2" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="collect" target="reconcile"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="flow-3" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="reconcile" target="explained"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="950" y="348"/><mxPoint x="950" y="581"/></Array></mxGeometry></mxCell></object>
-<object id="flow-4" label="Yes" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="explained" target="document"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="flow-5" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="document" target="done"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="flow-6" label="No" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="explained" target="followup"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1120" y="581"/><mxPoint x="1120" y="683"/></Array></mxGeometry></mxCell></object>
-<object id="flow-7" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="followup" target="open"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="scope" label="All analyst/reviewer tasks are proposed teaching activities. The database records cost close, not this independent review, its sign-off, or a hold on finished goods.&#xa;Submit a risk/control matrix and an evidence-based explanation; no favorable/unfavorable amount or correct conclusion is predetermined by the model." bpmnType="heading" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=13;align=left;" vertex="1" parent="1"><mxGeometry x="40" y="767" width="1800" height="48" as="geometry"/></mxCell></object></root></mxGraphModel></diagram></mxfile>
+<mxfile host="Electron" agent="Charles River website" version="29.6.6" type="device">
+  <diagram id="manufacturing-variances" name="Manufacturing Variances | proposed evidence-review activity">
+    <mxGraphModel dx="1800" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1920" pageHeight="1280" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="Manufacturing Variances | proposed evidence-review activity" bpmnType="heading">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=28;align=left;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="15" width="1800" height="40" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="BPMN 2.0 teaching activity • this is an analytical / control-design exercise, not an approval workflow implemented by the dataset." bpmnType="heading">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=14;align=left;" vertex="1" parent="1">
+            <mxGeometry x="40" y="62" width="1800" height="34" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="charles-river" label="Charles River Home Furnishings, Inc. — organizational responsibilities are a teaching allocation" bpmnType="pool">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=1;startSize=38;collapsible=0;fontStyle=1;fillColor=#E9EFEA;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="40" y="245" width="1800" height="498" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="analyst" label="Cost analyst (teaching role)" bpmnType="lane">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river">
+            <mxGeometry x="0" y="38" width="1800" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="reviewer" label="Independent reviewer (proposed)" bpmnType="lane">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river">
+            <mxGeometry x="0" y="258" width="1800" height="240" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="selected" label="Close record&#10;selected" bpmnType="start" participant="charles-river">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=standard;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;fontSize=16;" vertex="1" parent="analyst">
+            <mxGeometry x="185" y="47" width="42" height="42" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="collect" label="Collect work-order, issue,&#10;completion and labor evidence" bpmnType="task" participant="charles-river" evidenceTables="WorkOrder,MaterialIssue,ProductionCompletion,LaborTimeEntry,WorkOrderClose" teachingStatus="proposed-review">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;fontSize=16;" vertex="1" parent="analyst">
+            <mxGeometry x="290" y="32" width="240" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="reconcile" label="Compare recorded close&#10;with source cost support" bpmnType="task" participant="charles-river" evidenceTables="WorkOrderClose,GLEntry" teachingStatus="proposed-review">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;fontSize=16;" vertex="1" parent="analyst">
+            <mxGeometry x="630" y="32" width="220" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="explained" label="Difference&#10;explained?" bpmnType="exclusive" participant="charles-river">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.gateway2;outline=none;symbol=none;gwType=exclusive;perimeter=rhombusPerimeter;verticalLabelPosition=top;verticalAlign=bottom;labelBackgroundColor=#FFFFFF;labelWidth=140;fontSize=16;" vertex="1" parent="reviewer">
+            <mxGeometry x="970" y="57" width="42" height="42" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="document" label="Document supported&#10;variance explanation" bpmnType="task" participant="charles-river" evidenceTables="WorkOrderClose,GLEntry" teachingStatus="proposed-review">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;fontSize=16;" vertex="1" parent="reviewer">
+            <mxGeometry x="1220" y="47" width="210" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="done" label="Review conclusion&#10;recorded by student" bpmnType="end" participant="charles-river">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=end;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;fontSize=16;" vertex="1" parent="reviewer">
+            <mxGeometry x="1650" y="52" width="42" height="42" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="followup" label="Propose targeted follow-up;&#10;identify missing evidence" bpmnType="task" participant="charles-river" evidenceTables="WorkOrderClose,LaborTimeEntry,GLEntry" teachingStatus="proposed-review">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;fontSize=16;" vertex="1" parent="reviewer">
+            <mxGeometry x="1210" y="147" width="240" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="open" label="Further evidence&#10;required" bpmnType="end" participant="charles-river">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=end;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;fontSize=16;" vertex="1" parent="reviewer">
+            <mxGeometry x="1640" y="147" width="42" height="42" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-1" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="selected" target="collect">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-2" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="collect" target="reconcile">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-3" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="reconcile" target="explained">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="950" y="348" />
+                <mxPoint x="950" y="581" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="flow-4" label="Yes" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="explained" target="document">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-5" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="document" target="done">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-6" label="No" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="explained" target="followup">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1120" y="581" />
+                <mxPoint x="1120" y="683" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="flow-7" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="followup" target="open">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="scope" label="All analyst/reviewer tasks are proposed teaching activities. The database records cost close, not this independent review, its sign-off, or a hold on finished goods.&#10;Submit a risk/control matrix and an evidence-based explanation; no favorable/unfavorable amount or correct conclusion is predetermined by the model." bpmnType="heading">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=13;align=left;" vertex="1" parent="1">
+            <mxGeometry x="40" y="767" width="1800" height="48" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

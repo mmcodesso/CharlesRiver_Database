@@ -131,7 +131,9 @@ function MermaidRenderer({ value }) {
   const openerRef = useRef(null);
   const panzoomRef = useRef(null);
   const svgRef = useRef(null);
+  const viewModeRef = useRef("fit");
   const [isOpen, setIsOpen] = useState(false);
+  const [zoomPercent, setZoomPercent] = useState(100);
 
   useEffect(() => {
     if (!isOpen) {
@@ -218,6 +220,13 @@ function MermaidRenderer({ value }) {
         return;
       }
 
+      if (viewModeRef.current !== "fit") {
+        if (viewModeRef.current === "actual") actualSize();
+        hasInitialFitCompleted = true;
+        detachInitialFitListeners();
+        return;
+      }
+
       if (fitDiagramToViewport()) {
         hasInitialFitCompleted = true;
         detachInitialFitListeners();
@@ -267,6 +276,7 @@ function MermaidRenderer({ value }) {
         filterKey: () => true,
       });
       panzoomRef.current = localPanzoom;
+      localPanzoom.on("transform", () => setZoomPercent(Math.round(localPanzoom.getTransform().scale * 100)));
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -308,6 +318,7 @@ function MermaidRenderer({ value }) {
   }
 
   const openViewer = (event) => {
+    viewModeRef.current = "fit";
     openerRef.current = event.currentTarget;
     setIsOpen(true);
   };
@@ -316,6 +327,7 @@ function MermaidRenderer({ value }) {
     if (!panzoomRef.current || !viewportRef.current) {
       return;
     }
+    viewModeRef.current = "custom";
 
     const center = getViewportCenter(viewportRef.current);
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -328,17 +340,32 @@ function MermaidRenderer({ value }) {
   const zoomIn = () => zoomBy(1.2);
   const zoomOut = () => zoomBy(1 / 1.2);
   const resetZoom = () => {
+    viewModeRef.current = "fit";
     fitDiagramInViewport({
       panzoom: panzoomRef.current,
       svg: svgRef.current,
       viewport: viewportRef.current,
     });
   };
+  const actualSize = () => {
+    viewModeRef.current = "actual";
+    const panzoom = panzoomRef.current;
+    const svg = svgRef.current;
+    const viewport = viewportRef.current;
+    if (!panzoom || !svg || !viewport) return;
+    const dimensions = getSvgDimensions(svg);
+    panzoom.zoomTo(0, 0, 1);
+    panzoom.moveTo(0, 0);
+    panzoom.zoomAbs(0, 0, 1);
+    panzoom.moveTo(Math.max(12, (viewport.clientWidth - dimensions.width) / 2) - dimensions.x,
+      Math.max(12, (viewport.clientHeight - dimensions.height) / 2) - dimensions.y);
+  };
 
   const handleViewportKeyDown = (event) => {
     const offsets = { ArrowLeft: [40, 0], ArrowRight: [-40, 0], ArrowUp: [0, 40], ArrowDown: [0, -40] };
     if (offsets[event.key]) {
       event.preventDefault();
+      if (panzoomRef.current) viewModeRef.current = "custom";
       panzoomRef.current?.moveBy(...offsets[event.key]);
     } else if (event.key === "+" || event.key === "=") {
       event.preventDefault();
@@ -349,6 +376,9 @@ function MermaidRenderer({ value }) {
     } else if (event.key === "0") {
       event.preventDefault();
       resetZoom();
+    } else if (event.key === "1") {
+      event.preventDefault();
+      actualSize();
     }
   };
 
@@ -403,16 +433,18 @@ function MermaidRenderer({ value }) {
               <div>
                 <p className={styles.modalTitle}>{diagramTitle}</p>
                 <p className={styles.modalHint}>
-                  Drag to pan or focus the diagram and use arrow keys. Use + and - to zoom; 0 resets the view.
+                  Arrow keys pan; + and - zoom; 0 fits the diagram; 1 shows actual size.
                 </p>
               </div>
               <div className={styles.controlGroup}>
+                <output className={styles.zoomStatus} aria-label="Diagram zoom">{zoomPercent}%</output>
                 <button type="button" className={styles.controlButton} onClick={zoomOut} aria-label="Zoom out">
                   -
                 </button>
                 <button type="button" className={styles.controlButton} onClick={zoomIn} aria-label="Zoom in">
                   +
                 </button>
+                <button type="button" className={clsx(styles.controlButton, styles.textButton)} onClick={actualSize} aria-label="View at actual size (100%)">100%</button>
                 <button
                   type="button"
                   className={clsx(styles.controlButton, styles.textButton)}
@@ -436,7 +468,7 @@ function MermaidRenderer({ value }) {
               className={styles.viewport}
               tabIndex={0}
               role="region"
-                  aria-label={`${diagramTitle}. Arrow keys pan; plus and minus zoom; zero resets the view.`}
+                  aria-label={`${diagramTitle}. Arrow keys pan; plus and minus zoom; zero fits the view; one shows actual size.`}
               onKeyDown={handleViewportKeyDown}
             >
               <MermaidMarkup

@@ -1,0 +1,262 @@
+<mxfile host="Electron" version="29.6.6" type="device">
+  <diagram id="supplier-liabilities" name="Supplier invoices and separate settlement">
+    <mxGraphModel grid="1" gridSize="10" page="0" pageWidth="1160" pageHeight="1000" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="Supplier invoices and separate settlement">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="25" y="15" width="1110" height="70" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="Does the supplier line match received goods or an accrued-service estimate?">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="87" width="1110" height="55" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoice" label="PurchaseInvoice" tableName="PurchaseInvoice" primaryHome="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=42;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#e9f1ed;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="25" y="170" width="330" height="214.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoice__grain" label="One supplier invoice header" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseInvoice">
+            <mxGeometry x="0" y="42.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoice__PurchaseInvoiceID" label="PurchaseInvoiceID (PK)" fieldName="PurchaseInvoiceID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseInvoice">
+            <mxGeometry x="0" y="94.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoice__InvoiceNumber" label="InvoiceNumber" fieldName="InvoiceNumber">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseInvoice">
+            <mxGeometry x="0" y="124.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoice__SupplierID" label="SupplierID (FK)" fieldName="SupplierID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseInvoice">
+            <mxGeometry x="0" y="154.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoice__PurchaseOrderID" label="PurchaseOrderID (FK)" fieldName="PurchaseOrderID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseInvoice">
+            <mxGeometry x="0" y="184.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoiceLine" label="PurchaseInvoiceLine" tableName="PurchaseInvoiceLine" primaryHome="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=42;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#e9f1ed;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="410" y="170" width="330" height="244.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoiceLine__grain" label="One goods or accrued-service&#10;supplier invoice line" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseInvoiceLine">
+            <mxGeometry x="0" y="42.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoiceLine__PILineID" label="PILineID (PK)" fieldName="PILineID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseInvoiceLine">
+            <mxGeometry x="0" y="94.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoiceLine__PurchaseInvoiceID" label="PurchaseInvoiceID (FK)" fieldName="PurchaseInvoiceID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseInvoiceLine">
+            <mxGeometry x="0" y="124.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoiceLine__POLineID" label="POLineID (FK)" fieldName="POLineID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseInvoiceLine">
+            <mxGeometry x="0" y="154.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoiceLine__GoodsReceiptLineID" label="GoodsReceiptLineID (FK)" fieldName="GoodsReceiptLineID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseInvoiceLine">
+            <mxGeometry x="0" y="184.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseInvoiceLine__AccrualJournalEntryID" label="AccrualJournalEntryID (FK)" fieldName="AccrualJournalEntryID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseInvoiceLine">
+            <mxGeometry x="0" y="214.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DisbursementPayment" label="DisbursementPayment" tableName="DisbursementPayment" primaryHome="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=42;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#e9f1ed;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="795" y="170" width="330" height="214.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DisbursementPayment__grain" label="One supplier invoice payment" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DisbursementPayment">
+            <mxGeometry x="0" y="42.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DisbursementPayment__DisbursementID" label="DisbursementID (PK)" fieldName="DisbursementID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DisbursementPayment">
+            <mxGeometry x="0" y="94.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DisbursementPayment__PurchaseInvoiceID" label="PurchaseInvoiceID (FK)" fieldName="PurchaseInvoiceID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DisbursementPayment">
+            <mxGeometry x="0" y="124.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DisbursementPayment__SupplierID" label="SupplierID (FK)" fieldName="SupplierID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DisbursementPayment">
+            <mxGeometry x="0" y="154.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DisbursementPayment__PaymentDate" label="PaymentDate" fieldName="PaymentDate">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DisbursementPayment">
+            <mxGeometry x="0" y="184.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="GoodsReceiptLine" label="GoodsReceiptLine&#10;Shared reference" tableName="GoodsReceiptLine" primaryHome="false">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=65;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#f0f1f3;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="25" y="610" width="330" height="237.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="GoodsReceiptLine__grain" label="One received purchasing-line&#10;quantity" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="GoodsReceiptLine">
+            <mxGeometry x="0" y="65.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="GoodsReceiptLine__GoodsReceiptLineID" label="GoodsReceiptLineID (PK)" fieldName="GoodsReceiptLineID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="GoodsReceiptLine">
+            <mxGeometry x="0" y="117.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="GoodsReceiptLine__GoodsReceiptID" label="GoodsReceiptID (FK)" fieldName="GoodsReceiptID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="GoodsReceiptLine">
+            <mxGeometry x="0" y="147.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="GoodsReceiptLine__POLineID" label="POLineID (FK)" fieldName="POLineID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="GoodsReceiptLine">
+            <mxGeometry x="0" y="177.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="GoodsReceiptLine__ItemID" label="ItemID (FK)" fieldName="ItemID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="GoodsReceiptLine">
+            <mxGeometry x="0" y="207.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="JournalEntry" label="JournalEntry&#10;Shared reference" tableName="JournalEntry" primaryHome="false">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=65;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#f0f1f3;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="410" y="610" width="330" height="237.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="JournalEntry__grain" label="One finance-controlled journal&#10;header" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="JournalEntry">
+            <mxGeometry x="0" y="65.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="JournalEntry__JournalEntryID" label="JournalEntryID (PK)" fieldName="JournalEntryID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="JournalEntry">
+            <mxGeometry x="0" y="117.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="JournalEntry__EntryType" label="EntryType" fieldName="EntryType">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="JournalEntry">
+            <mxGeometry x="0" y="147.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="JournalEntry__PostingDate" label="PostingDate" fieldName="PostingDate">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="JournalEntry">
+            <mxGeometry x="0" y="177.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="JournalEntry__ReversesJournalEntryID" label="ReversesJournalEntryID (FK)" fieldName="ReversesJournalEntryID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="JournalEntry">
+            <mxGeometry x="0" y="207.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseOrderLine" label="PurchaseOrderLine&#10;Shared reference" tableName="PurchaseOrderLine" primaryHome="false">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=65;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#f0f1f3;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="795" y="610" width="330" height="237.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseOrderLine__grain" label="One ordered purchasing line" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseOrderLine">
+            <mxGeometry x="0" y="65.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseOrderLine__POLineID" label="POLineID (PK)" fieldName="POLineID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseOrderLine">
+            <mxGeometry x="0" y="117.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseOrderLine__PurchaseOrderID" label="PurchaseOrderID (FK)" fieldName="PurchaseOrderID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseOrderLine">
+            <mxGeometry x="0" y="147.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseOrderLine__RequisitionID" label="RequisitionID (FK)" fieldName="RequisitionID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseOrderLine">
+            <mxGeometry x="0" y="177.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PurchaseOrderLine__ItemID" label="ItemID (FK)" fieldName="ItemID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PurchaseOrderLine">
+            <mxGeometry x="0" y="207.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="r1" label="r1" relationKind="reference" childTable="PurchaseInvoiceLine" childFields="PurchaseInvoiceID" parentTable="PurchaseInvoice" parentFields="PurchaseInvoiceID" condition="">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=ERmandOne;endArrow=ERzeroToMany;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="PurchaseInvoice__PurchaseInvoiceID" target="PurchaseInvoiceLine__PurchaseInvoiceID">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="379.0" y="279.0" />
+                <mxPoint x="379.0" y="309.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r2" label="r2" relationKind="reference" childTable="PurchaseInvoiceLine" childFields="POLineID" parentTable="PurchaseOrderLine" parentFields="POLineID" condition="">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=ERzeroToOne;endArrow=ERzeroToMany;endFill=1;dashed=0;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="PurchaseOrderLine__POLineID" target="PurchaseInvoiceLine__POLineID">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="771.0" y="742.0" />
+                <mxPoint x="771.0" y="339.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r3" label="r3" relationKind="reference" childTable="PurchaseInvoiceLine" childFields="GoodsReceiptLineID" parentTable="GoodsReceiptLine" parentFields="GoodsReceiptLineID" condition="">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=ERzeroToOne;endArrow=ERzeroToMany;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="GoodsReceiptLine__GoodsReceiptLineID" target="PurchaseInvoiceLine__GoodsReceiptLineID">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="379.0" y="742.0" />
+                <mxPoint x="379.0" y="369.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r4" label="r4" relationKind="reference" childTable="PurchaseInvoiceLine" childFields="AccrualJournalEntryID" parentTable="JournalEntry" parentFields="JournalEntryID" condition="">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=ERzeroToOne;endArrow=ERzeroToMany;endFill=1;dashed=0;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="JournalEntry__JournalEntryID" target="PurchaseInvoiceLine__AccrualJournalEntryID">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="386.0" y="742.0" />
+                <mxPoint x="386.0" y="399.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r5" label="r5" relationKind="reference" childTable="DisbursementPayment" childFields="PurchaseInvoiceID" parentTable="PurchaseInvoice" parentFields="PurchaseInvoiceID" condition="">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=ERmandOne;endArrow=ERzeroToMany;endFill=1;dashed=0;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="PurchaseInvoice__PurchaseInvoiceID" target="DisbursementPayment__PurchaseInvoiceID">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1.0" y="279.0" />
+                <mxPoint x="1.0" y="162.0" />
+                <mxPoint x="771.0" y="162.0" />
+                <mxPoint x="771.0" y="309.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="footer" label="(PK) = primary key. (FK) = foreign key.&#10;Solid crow’s-foot lines show foreign-key relationships; dashed labeled lines show conditional traces or analytical matches. See r1, r2… in the relationship table.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="879.0" width="1110" height="60" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

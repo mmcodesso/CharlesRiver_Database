@@ -9,6 +9,7 @@ toc_max_heading_level: 2
 ---
 
 import BpmnDiagram, { BpmnModelCatalog } from "@site/src/components/BpmnDiagram";
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
 
 # Business Processes and Models
 
@@ -32,23 +33,7 @@ When you examine the records, look for partial quantities, different dates, and 
 
 **How do the company's activities depend on one another?** Follow customer demand into goods and design work, then look at the support supplied by purchasing, production, and payroll.
 
-```mermaid
-flowchart TD
-    accTitle: Connections across six Charles River processes
-    accDescr: Customer demand supports goods sales and design services. Purchasing supplies goods and manufacturing components, manufacturing supplies finished goods, payroll supports labor, and each process contributes to finance and period-end explanation.
-    NEED[Customer furnishing needs] --> SALES[Order-to-cash: goods and billing]
-    NEED --> DESIGN[Design services: staff time and billing]
-    BUY[Purchasing: merchandise and components] -->|Goods| SALES
-    BUY -->|Components| MAKE[Manufacturing: selected products]
-    MAKE -->|Finished goods| SALES
-    PAY[Payroll: employee costs and obligations] -. Labor support .-> MAKE
-    PAY -. Labor support .-> DESIGN
-    SALES --> FIN[Finance: accounting and period-end explanation]
-    DESIGN --> FIN
-    BUY --> FIN
-    MAKE --> FIN
-    PAY --> FIN
-```
+<EvidenceDiagram modelId="company-dependencies" />
 
 The map shows dependencies across the business. It is not a schedule in which all transactions occur one after another, and its arrows are not instructions for joining tables. Purchasing and payroll support the wider company as well as customer-facing work.
 
@@ -56,7 +41,7 @@ The controller eventually brings the accounting consequences together. That expl
 
 ## Read Activities and Records Differently
 
-The chapters use two complementary diagram views. A **BPMN business-process model** shows work and responsibility. A **Mermaid record-flow diagram** shows relationships among documents or accounting events.
+The chapters use two complementary diagram views. A **BPMN business-process model** shows work and responsibility. A **record and accounting evidence map** shows relationships among documents or accounting events.
 
 In detailed record maps, a field label on a solid arrow identifies a stored-key relationship or an explicit ledger-source mapping. A dashed arrow identifies analytical support, aggregation, or an account effect, with chronology stated on the arrow when it matters. A receipt-to-issue support comparison does not establish a stored lineage key. Read each label before choosing a join. These record-map conventions differ from BPMN sequence and message flows described below.
 

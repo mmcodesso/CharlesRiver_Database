@@ -1,0 +1,110 @@
+<mxfile host="Electron" version="29.6.6" type="device">
+  <diagram id="shared-masters" name="Shared item, warehouse, and employee records">
+    <mxGraphModel grid="1" gridSize="10" page="0" pageWidth="1160" pageHeight="1000" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="Shared item, warehouse, and employee records">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="25" y="15" width="1110" height="70" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="Which identifiers let an investigation move across processes?">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="87" width="1110" height="55" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Item" label="Item" tableName="Item" primaryHome="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=42;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#e9f1ed;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="25" y="170" width="330" height="214.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Item__grain" label="One item in the product or service&#10;master" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Item">
+            <mxGeometry x="0" y="42.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Item__ItemID" label="ItemID (PK)" fieldName="ItemID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Item">
+            <mxGeometry x="0" y="94.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Item__ItemCode" label="ItemCode" fieldName="ItemCode">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Item">
+            <mxGeometry x="0" y="124.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Item__ItemGroup" label="ItemGroup" fieldName="ItemGroup">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Item">
+            <mxGeometry x="0" y="154.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Item__CollectionName" label="CollectionName" fieldName="CollectionName">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Item">
+            <mxGeometry x="0" y="184.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Warehouse" label="Warehouse" tableName="Warehouse" primaryHome="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=42;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#e9f1ed;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="410" y="170" width="330" height="184.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Warehouse__grain" label="One warehouse" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Warehouse">
+            <mxGeometry x="0" y="42.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Warehouse__WarehouseID" label="WarehouseID (PK)" fieldName="WarehouseID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Warehouse">
+            <mxGeometry x="0" y="94.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Warehouse__WarehouseName" label="WarehouseName" fieldName="WarehouseName">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Warehouse">
+            <mxGeometry x="0" y="124.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Warehouse__ManagerID" label="ManagerID (FK)" fieldName="ManagerID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Warehouse">
+            <mxGeometry x="0" y="154.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Employee" label="Employee" tableName="Employee" primaryHome="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=42;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#e9f1ed;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="795" y="170" width="330" height="214.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Employee__grain" label="One employee" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Employee">
+            <mxGeometry x="0" y="42.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Employee__EmployeeID" label="EmployeeID (PK)" fieldName="EmployeeID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Employee">
+            <mxGeometry x="0" y="94.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Employee__EmployeeNumber" label="EmployeeNumber" fieldName="EmployeeNumber">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Employee">
+            <mxGeometry x="0" y="124.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Employee__JobTitle" label="JobTitle" fieldName="JobTitle">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Employee">
+            <mxGeometry x="0" y="154.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="Employee__JobFamily" label="JobFamily" fieldName="JobFamily">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Employee">
+            <mxGeometry x="0" y="184.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="footer" label="(PK) = primary key. (FK) = foreign key.&#10;Solid crow’s-foot lines show foreign-key relationships; dashed labeled lines show conditional traces or analytical matches. See r1, r2… in the relationship table.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="436" width="1110" height="60" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

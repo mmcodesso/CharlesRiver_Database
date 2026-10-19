@@ -6,6 +6,8 @@ sidebar_label: Schema Reference
 
 # Schema Reference
 
+import SchemaDiagram, { SchemaTableIndex } from "@site/src/components/SchemaDiagram";
+
 This reference is the table map for the dataset: which tables belong together, how the main relationships work, which keys matter most, and where the bridges between groups live. The database contains 82 user tables, including five sales-commission tables and four fixed-asset and financing tables.
 
 If you need the big-picture business story first, start with [Dataset Guide](../start-here/dataset-overview.md) and [Process Flows](../learn-the-business/process-flows.md).
@@ -14,7 +16,7 @@ If you need the big-picture business story first, start with [Dataset Guide](../
 
 - The published SQLite file includes a physical primary key on each table's main surrogate ID column.
 - The SQLite file also includes a curated index set for high-value joins and stable business identifiers, but it does not index every relationship column in the model.
-- Some business identifiers remain intentionally non-unique in anomaly scenarios, so fields such as supplier invoice numbers or payment references are not universally enforced as unique in SQLite.
+- Some business identifiers remain intentionally non-unique in anomaly scenarios, so identify individual rows by their primary keys rather than supplier invoice numbers or payment references.
 
 ## How the Reference Is Organized
 
@@ -38,11 +40,17 @@ If you need the big-picture business story first, start with [Dataset Guide](../
 | Demand planning and MRP | Forecasting, inventory policy, recommendations, MRP, and rough-cut capacity | 5 |
 | Total | Published user tables | 82 |
 
+<SchemaDiagram modelId="company-data-overview" />
+
+<SchemaTableIndex />
+
 ## How to Read the ER Diagrams
 
 - Each diagram shows the **main local relationships** inside one table group, not every possible key in the database.
-- These ERs are **schema-direct** diagrams. An edge appears only when a stored key supports it, or when a polymorphic source-document trace is called out explicitly in prose.
-- The diagrams are intentionally simplified. The compact tables below each diagram carry the highest-value fields students usually need first.
+- Solid crow’s-foot lines show foreign keys (FK). Dashed, labeled lines identify conditional source traces or analytical matches. Each line has an r1/r2 identifier to the relationship table below its diagram.
+- Column names end in `(PK)` for primary keys and `(FK)` for foreign keys. Some foreign keys lead to shared tables outside the focused view; find those tables in the index. A circle permits zero; a crow’s foot permits several matching rows.
+- Conditional traces require their source type as well as their ID. Analytical matches specify grouping fields, dates, or intervals rather than claiming a direct single-record link.
+- Each focused view shows row grain, selected keys, and context references. Open its table and relationship explanation before constructing a join. The complete table index assigns every table one primary home.
 - Cross-group bridges such as `ItemID`, `SupplyPlanRecommendationID`, and `AccrualJournalEntryID` are summarized separately so the group diagrams stay readable.
 - The process pages explain business flow. This reference explains table structure and join logic.
 
@@ -60,7 +68,7 @@ These are the main keys students use to move across groups.
 | `WorkOrderOperationID` | Manufacturing into operation schedules and labor traceability | Connects scheduling and labor detail to one operation |
 | `ServiceEngagementID` | O2C service delivery into staffing, approved time, and billing | Main design-services execution anchor |
 | `TimeClockEntryID` | Payroll and time into labor, attendance exceptions, and payroll support | Approved time bridge |
-| `PayrollRegisterID` | Payroll header into line detail and payment | Main payroll posting anchor |
+| `PayrollRegisterID` | Payroll header into line detail and payment | Employee-register and payment anchor; recognition reconciles through the PayrollSummary period/cost-center mapping |
 | `AccrualJournalEntryID` | Accounting core into accrued-service AP settlement | Bridges finance estimates to later AP activity |
 | `AccountID` | Accounting core into budgets and reporting | Chart-of-accounts bridge |
 | `SourceDocumentType`, `SourceDocumentID`, `SourceLineID` | Operational groups into `GLEntry` | Main path back from posted accounting to source activity |
@@ -69,12 +77,7 @@ These are the main keys students use to move across groups.
 
 This group provides the posting anchor for every process. `JournalEntry` is the finance-controlled header, `GLEntry` is the posted detail, and `Account` gives the reporting and control-account meaning.
 
-```mermaid
-erDiagram
-    accTitle: Accounting core account-to-ledger relationship
-    accDescr: Account classifies posted GLEntry detail. Journal source trace fields are explained separately below.
-    Account ||--o{ GLEntry : classifies
-```
+<SchemaDiagram modelId="accounting-core" />
 
 | Table | Use it for | Highest-value keys or fields |
 |---|---|---|
@@ -93,14 +96,7 @@ erDiagram
 
 This group holds the fixed-asset subledger: the asset register itself, the lifecycle events that tie CAPEX back to purchasing and disposal, and the note-payable schedules used for financed equipment.
 
-```mermaid
-erDiagram
-    accTitle: Fixed assets, lifecycle events, financing and repayment schedules
-    accDescr: A fixed asset links to lifecycle events and debt agreements; each agreement links to its amortization schedule lines.
-    FixedAsset ||--o{ FixedAssetEvent : tracks
-    FixedAsset ||--o{ DebtAgreement : financed_by
-    DebtAgreement ||--o{ DebtScheduleLine : amortizes
-```
+<SchemaDiagram modelId="asset-financing" />
 
 | Table | Use it for | Highest-value keys or fields |
 |---|---|---|
@@ -122,46 +118,17 @@ erDiagram
 
 This group holds the full customer-side relationship map: pricing setup, goods and service order capture, service delivery, physical fulfillment, billing, cash settlement, and the return-credit-refund branch.
 
-```mermaid
-erDiagram
-    accTitle: Customer orders, fulfillment, billing and settlement relationships
-    accDescr: Customer-side records connect goods and service order lines to their own fulfillment and billing evidence; receipt applications connect received cash to invoices, with separate return and credit branches.
-    Customer ||--o{ PriceList : scoped_to
-    Customer ||--o{ SalesOrder : places
-    Customer ||--o{ SalesInvoice : billed_to
-    Customer ||--o{ CashReceipt : pays
-    Customer ||--o{ SalesReturn : requests
-    PriceList ||--|{ PriceListLine : contains
-    SalesOrder ||--|{ SalesOrderLine : contains
-    PriceListLine o|--o{ SalesOrderLine : prices
-    PromotionProgram o|--o{ SalesOrderLine : discounts
-    PriceOverrideApproval o|--o| SalesOrderLine : approves
-    SalesOrderLine ||--o| ServiceEngagement : opens
-    ServiceEngagement ||--|{ ServiceEngagementAssignment : staffs
-    ServiceEngagement ||--o{ ServiceTimeEntry : records
-    ServiceEngagementAssignment ||--o{ ServiceTimeEntry : performs
-    SalesOrder ||--o{ Shipment : fulfills
-    SalesOrderLine ||--o{ ShipmentLine : ships
-    Shipment ||--|{ ShipmentLine : contains
-    SalesInvoice ||--|{ SalesInvoiceLine : contains
-    ShipmentLine ||--o{ SalesInvoiceLine : billed_on
-    ServiceEngagement ||--o{ ServiceBillingLine : billed_as
-    SalesInvoiceLine ||--o| ServiceBillingLine : traced_by
-    CashReceipt ||--o{ CashReceiptApplication : applies
-    SalesInvoice ||--o{ CashReceiptApplication : settled_by
-    SalesInvoiceLine ||--o| SalesCommissionAccrual : earns
-    SalesCommissionRate ||--o{ SalesCommissionAccrual : rates
-    SalesCommissionAccrual ||--o{ SalesCommissionAdjustment : clawed_back_by
-    SalesCommissionAccrual ||--o{ SalesCommissionPaymentLine : settled_by
-    SalesCommissionAdjustment ||--o{ SalesCommissionPaymentLine : netted_by
-    SalesCommissionPayment ||--|{ SalesCommissionPaymentLine : contains
-    SalesReturn ||--|{ SalesReturnLine : contains
-    ShipmentLine ||--o{ SalesReturnLine : returned_on
-    SalesInvoice ||--o{ CreditMemo : corrected_by
-    CreditMemo ||--|{ CreditMemoLine : contains
-    SalesReturnLine ||--o{ CreditMemoLine : credits
-    CreditMemo ||--o{ CustomerRefund : refunded_by
-```
+<SchemaDiagram modelId="commercial-terms" />
+
+<SchemaDiagram modelId="goods-fulfillment" />
+
+<SchemaDiagram modelId="service-delivery" />
+
+<SchemaDiagram modelId="cash-allocation" />
+
+<SchemaDiagram modelId="returns-credit" />
+
+<SchemaDiagram modelId="commissions" />
 
 | Table | Use it for | Highest-value keys or fields |
 |---|---|---|
@@ -220,23 +187,9 @@ erDiagram
 
 This group holds the supplier-side relationship map: requisition, PO, receipt, invoice, and payment. The main cross-group bridge here is the accrued-service path through `AccrualJournalEntryID`.
 
-```mermaid
-erDiagram
-    accTitle: Supplier purchasing, receipts, invoices and payments
-    accDescr: Purchase order lines connect requisitions, receipts and invoice lines; supplier invoices connect separately to their disbursement payments.
-    Supplier ||--o{ PurchaseOrder : receives
-    Supplier ||--o{ PurchaseInvoice : bills
-    Supplier ||--o{ DisbursementPayment : paid_by
-    PurchaseRequisition ||--o{ PurchaseOrderLine : requested_on
-    PurchaseOrder ||--|{ PurchaseOrderLine : contains
-    PurchaseOrder ||--o{ GoodsReceipt : received_as
-    PurchaseOrderLine ||--o{ GoodsReceiptLine : received_on
-    GoodsReceipt ||--|{ GoodsReceiptLine : contains
-    PurchaseInvoice ||--|{ PurchaseInvoiceLine : contains
-    PurchaseOrderLine ||--o{ PurchaseInvoiceLine : billed_for
-    GoodsReceiptLine o|--o{ PurchaseInvoiceLine : matched_by
-    PurchaseInvoice ||--o{ DisbursementPayment : settled_by
-```
+<SchemaDiagram modelId="procurement-receiving" />
+
+<SchemaDiagram modelId="supplier-liabilities" />
 
 | Table | Use it for | Highest-value keys or fields |
 |---|---|---|
@@ -263,27 +216,11 @@ erDiagram
 
 This group covers the local manufacturing structure: recipe, routing, work center, work order, issue, completion, and close. Planning and payroll bridges are summarized separately above.
 
-```mermaid
-erDiagram
-    accTitle: Manufacturing work-order evidence branches
-    accDescr: Bills of material, routing and work centers support work-order operations and schedules. Material issues, production completions and work-order close are separate work-order branches.
-    BillOfMaterial ||--|{ BillOfMaterialLine : contains
-    Routing ||--|{ RoutingOperation : contains
-    WorkCenter ||--o{ WorkCenterCalendar : schedules
-    WorkCenter ||--o{ RoutingOperation : hosts
-    BillOfMaterial ||--o{ WorkOrder : supports
-    Routing ||--o{ WorkOrder : supports
-    WorkOrder ||--|{ WorkOrderOperation : contains
-    RoutingOperation ||--o{ WorkOrderOperation : realized_as
-    WorkOrderOperation ||--o{ WorkOrderOperationSchedule : scheduled_as
-    WorkCenter ||--o{ WorkOrderOperationSchedule : loads
-    WorkOrder ||--o{ MaterialIssue : consumes
-    BillOfMaterialLine ||--o{ MaterialIssueLine : issued_from
-    MaterialIssue ||--|{ MaterialIssueLine : contains
-    WorkOrder ||--o{ ProductionCompletion : completes
-    ProductionCompletion ||--|{ ProductionCompletionLine : contains
-    WorkOrder ||--o{ WorkOrderClose : closes
-```
+<SchemaDiagram modelId="manufacturing-definitions" />
+
+<SchemaDiagram modelId="work-order-scheduling" />
+
+<SchemaDiagram modelId="manufacturing-cost-events" />
 
 | Table | Use it for | Highest-value keys or fields |
 |---|---|---|
@@ -317,26 +254,9 @@ erDiagram
 
 This group holds the workforce-side relationship map: shifts, rosters, raw punches, approved time, labor detail, payroll registers, payments, and remittances.
 
-```mermaid
-erDiagram
-    accTitle: Workforce attendance, approved time, payroll and settlement
-    accDescr: Shift rosters connect attendance observations and approvals to time entries; payroll periods group time and registers, with separate employee payments and liability remittances.
-    ShiftDefinition ||--o{ EmployeeShiftAssignment : assigns
-    ShiftDefinition ||--o{ EmployeeShiftRoster : schedules
-    EmployeeShiftRoster ||--o{ EmployeeAbsence : records
-    EmployeeShiftRoster ||--o{ OvertimeApproval : approves
-    EmployeeShiftRoster ||--o{ TimeClockEntry : supports
-    TimeClockEntry ||--o{ TimeClockPunch : evidenced_by
-    TimeClockEntry ||--o{ AttendanceException : reviewed_by
-    TimeClockEntry ||--o{ LaborTimeEntry : allocates
-    PayrollPeriod ||--o{ TimeClockEntry : groups
-    PayrollPeriod ||--o{ LaborTimeEntry : groups
-    PayrollPeriod ||--o{ PayrollRegister : drives
-    PayrollRegister ||--|{ PayrollRegisterLine : contains
-    LaborTimeEntry o|--o{ PayrollRegisterLine : supports
-    PayrollRegister ||--o{ PayrollPayment : settled_by
-    PayrollPeriod ||--o{ PayrollLiabilityRemittance : remits
-```
+<SchemaDiagram modelId="attendance-time" />
+
+<SchemaDiagram modelId="payroll-settlement" />
 
 | Table | Use it for | Highest-value keys or fields |
 |---|---|---|
@@ -375,23 +295,7 @@ erDiagram
 
 This group holds the anchor entities reused across the rest of the model. These tables are intentionally simple, but they matter because most other groups attach to them.
 
-```mermaid
-erDiagram
-    accTitle: Shared item, warehouse and employee master records
-    accDescr: Three anchor entities show their primary identifiers and selected descriptive fields; cross-process uses of those identifiers are explained in the text below.
-    Item {
-        int ItemID PK
-        string SupplyMode
-    }
-    Warehouse {
-        int WarehouseID PK
-        string WarehouseName
-    }
-    Employee {
-        int EmployeeID PK
-        string JobTitle
-    }
-```
+<SchemaDiagram modelId="shared-masters" />
 
 | Table | Use it for | Highest-value keys or fields |
 |---|---|---|
@@ -409,13 +313,7 @@ erDiagram
 
 This group is small, but it gives the model its reporting structure. `CostCenter` organizes responsibility, `BudgetLine` stores the driver-based monthly planning detail, and `Budget` preserves the student-facing cost-center summary generated from that detail.
 
-```mermaid
-erDiagram
-    accTitle: Cost-center budget summary and planning detail
-    accDescr: CostCenter connects separately to the summarized Budget and driver-based BudgetLine records. Read the listed account, item and warehouse keys before joining detail.
-    CostCenter ||--o{ Budget : summarizes
-    CostCenter ||--o{ BudgetLine : plans
-```
+<SchemaDiagram modelId="budgets-responsibility" />
 
 | Table | Use it for | Highest-value keys or fields |
 |---|---|---|
@@ -436,13 +334,7 @@ erDiagram
 
 This group covers the planning layer that sits ahead of later purchasing and manufacturing execution. It explains why replenishment pressure existed before a requisition or work order appeared.
 
-```mermaid
-erDiagram
-    accTitle: Supply recommendations, component requirements and capacity plans
-    accDescr: SupplyPlanRecommendation connects separately to MaterialRequirementPlan and RoughCutCapacityPlan; forecast and inventory-policy evidence is linked by the shared fields described below.
-    SupplyPlanRecommendation ||--o{ MaterialRequirementPlan : explodes_to
-    SupplyPlanRecommendation ||--o{ RoughCutCapacityPlan : loads
-```
+<SchemaDiagram modelId="demand-supply-planning" />
 
 | Table | Use it for | Highest-value keys or fields |
 |---|---|---|

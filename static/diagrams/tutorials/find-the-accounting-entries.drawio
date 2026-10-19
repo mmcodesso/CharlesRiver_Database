@@ -1,1 +1,45 @@
-<mxfile host="app.diagrams.net"><diagram id="find-the-accounting-entries" name="Find the Accounting Entries"><mxGraphModel dx="1000" dy="500" grid="1" gridSize="10" page="1" pageWidth="1000" pageHeight="500"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="title" value="How do separate events change separate accounts?" style="text;html=0;whiteSpace=wrap;fontSize=23;fontStyle=1;fontColor=#163d48;align=left;" vertex="1" parent="1"><mxGeometry x="25" y="15" width="920" height="60" as="geometry"/></mxCell><mxCell id="n0" value="&lt;b&gt;1. Invoice 202&lt;/b&gt;&lt;br&gt;&lt;br&gt;31 January 2024&lt;br&gt;Receivable increases&lt;br&gt;Billing is recognized" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e5f2ef;strokeColor=#48766e;fontColor=#183c48;fontSize=18;spacing=15;arcSize=8;" vertex="1" parent="1"><mxGeometry x="25" y="110" width="285" height="230" as="geometry"/></mxCell><mxCell id="n1" value="&lt;b&gt;2. Receipt 173&lt;/b&gt;&lt;br&gt;&lt;br&gt;22 February 2024&lt;br&gt;Debit cash 952.07&lt;br&gt;Credit deposits 952.07" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f7f4ed;strokeColor=#48766e;fontColor=#183c48;fontSize=18;spacing=15;arcSize=8;" vertex="1" parent="1"><mxGeometry x="345" y="110" width="285" height="230" as="geometry"/></mxCell><mxCell id="n2" value="&lt;b&gt;3. Application 225&lt;/b&gt;&lt;br&gt;&lt;br&gt;23 February 2024&lt;br&gt;Debit deposits 952.07&lt;br&gt;Credit receivables 952.07" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf1f7;strokeColor=#48766e;fontColor=#183c48;fontSize=18;spacing=15;arcSize=8;" vertex="1" parent="1"><mxGeometry x="665" y="110" width="285" height="230" as="geometry"/></mxCell><mxCell id="e0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#48766e;strokeWidth=2;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="n0" target="n1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#48766e;strokeWidth=2;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="n1" target="n2"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="footer" value="Charles River · guided tutorial" style="text;html=0;fontColor=#526869;fontSize=15;align=left;" vertex="1" parent="1"><mxGeometry x="25" y="450" width="920" height="30" as="geometry"/></mxCell></root></mxGraphModel></diagram></mxfile>
+<mxfile host="Electron" version="29.6.6" type="device">
+  <diagram id="find-the-accounting-entries" name="How do separate events change separate accounts?">
+    <mxGraphModel grid="1" gridSize="10" page="0" pageWidth="1160" pageHeight="1000" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="How do separate events change separate accounts?">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="25" y="15" width="1110" height="70" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="Read document dates and accounting effects separately. The timeline does not create additional database relationships.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="87" width="1110" height="55" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="n0" label="Invoice 202&#10;&#10;31 January 2024&#10;Receivable increases&#10;Billing is recognized">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="170" width="330" height="280" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="n1" label="Receipt 173&#10;&#10;22 February 2024&#10;Debit cash 952.07&#10;Credit deposits 952.07">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="410" y="170" width="330" height="280" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="n2" label="Application 225&#10;&#10;23 February 2024&#10;Debit deposits 952.07&#10;Credit receivables 952.07">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="795" y="170" width="330" height="280" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="time-axis" label="Time / reporting context →     Read each stated date and cutoff; arrows here do not identify stored keys.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=20;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="490" width="1100" height="60" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="footer" label="Read document dates and accounting effects separately. The timeline does not create additional database relationships.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="602" width="1110" height="60" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

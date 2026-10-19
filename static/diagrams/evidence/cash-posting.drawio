@@ -1,0 +1,122 @@
+<mxfile host="Electron" version="29.6.6" type="device">
+  <diagram id="cash-posting" name="Receipt to unapplied money and invoice application">
+    <mxGraphModel grid="1" gridSize="10" page="0" pageWidth="1160" pageHeight="1000" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="Receipt to unapplied money and invoice application">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="25" y="15" width="1110" height="70" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="Follow the numbered connectors with the evidence table below the diagram.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="87" width="1110" height="55" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="CR" label="Cash Receipt&#10;&#10;Record&#10;Record evidence&#10;Check row grain and keys in the ER view">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#e9f1ed;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="170" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DEP" label="Customer Deposits and Unapplied Cash&#10;&#10;Account effect&#10;Interpret with the accompanying process explanation">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="410" y="170" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="CRA" label="Cash Receipt Application&#10;&#10;Record&#10;Record evidence&#10;Check row grain and keys in the ER view">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#e9f1ed;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="795" y="170" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="SI" label="Sales Invoice&#10;&#10;Record&#10;Record evidence&#10;Check row grain and keys in the ER view">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#e9f1ed;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="450" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="GL" label="GLEntry&#10;&#10;Record&#10;Record evidence&#10;Check row grain and keys in the ER view">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#e9f1ed;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="410" y="450" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="r1" label="r1" relationKind="reference">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="CR" target="CRA">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="379.0" y="280.0" />
+                <mxPoint x="379.0" y="162.0" />
+                <mxPoint x="771.0" y="162.0" />
+                <mxPoint x="771.0" y="280.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r2" label="r2" relationKind="reference">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="CRA" target="SI">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1149.0" y="280.0" />
+                <mxPoint x="1149.0" y="426.0" />
+                <mxPoint x="379.0" y="426.0" />
+                <mxPoint x="379.0" y="560.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r3" label="r3" relationKind="posting">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=0;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="CR" target="GL">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1.0" y="280.0" />
+                <mxPoint x="1.0" y="694.0" />
+                <mxPoint x="386.0" y="694.0" />
+                <mxPoint x="386.0" y="560.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r4" label="r4" relationKind="posting">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="CRA" target="GL">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1195.0" y="280.0" />
+                <mxPoint x="1195.0" y="560.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r5" label="r5" relationKind="posting">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=0;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="SI" target="GL">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="-45.0" y="560.0" />
+                <mxPoint x="-45.0" y="730.0" />
+                <mxPoint x="764.0" y="730.0" />
+                <mxPoint x="764.0" y="560.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r6" label="r6" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="CR" target="DEP">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r7" label="r7" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="CRA" target="DEP">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="footer" label="Solid numbered connectors identify reference or posting paths. Dashed connectors identify analytical, conditional, or business context.&#10;Read r1, r2… in the evidence table before choosing a join, a date boundary, or an accounting interpretation.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="762.0" width="1110" height="60" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

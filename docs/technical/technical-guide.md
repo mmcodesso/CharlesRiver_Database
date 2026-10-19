@@ -5,6 +5,9 @@ slug: /technical-guide
 sidebar_label: Technical Guide
 ---
 
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
+
+
 # Technical Guide
 
 This page gives the codebase-level view of how the dataset is generated.
@@ -41,25 +44,7 @@ The two runtime objects that matter most are:
 
 ## End-to-End Build Flow
 
-```mermaid
-flowchart LR
-    accTitle: Local dataset build from settings to exported teaching files
-    accDescr: Settings initialize the generation context, tables and master data precede operating activity, and accounting postings and year-end close precede validation, anomaly injection and file exports. This documents the local generator workflow; classroom users begin with the published files.
-    S[Load Settings]
-    C[Initialize GenerationContext]
-    E[Create Empty Tables]
-    M[Generate Master Data, BOMs, Routings, and Calendar]
-    B[Generate Opening Balances and Budgets]
-    O[Generate O2C, P2P, Manufacturing, Payroll, and Labor Activity]
-    J[Generate Recurring Journals and Accrual Activity]
-    P[Post Events to GLEntry]
-    Y[Generate Year-End Close Journals]
-    V[Run Validations]
-    A[Inject Anomalies]
-    X[Export SQLite, Excel, Curated Reports, CSV Zip, and Log]
-
-    S --> C --> E --> M --> B --> O --> J --> P --> Y --> V --> A --> X
-```
+<EvidenceDiagram modelId="technical-build" />
 
 In plain language, the build:
 

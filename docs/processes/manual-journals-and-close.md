@@ -8,6 +8,7 @@ toc_max_heading_level: 2
 ---
 
 import BpmnDiagram from "@site/src/components/BpmnDiagram";
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
 
 # Manual Journals and Close Cycle
 
@@ -79,19 +80,7 @@ Use actual creator and approver fields when investigating responsibility. The di
 
 The record map asks **how a finance estimate connects to a later supplier bill and its accounting detail**.
 
-```mermaid
-flowchart LR
-    accTitle: Accrual invoice adjustment and payment evidence
-    accDescr: An accrual journal links to supplier-invoice lines through AccrualJournalEntryID. Invoice leads to payment, and adjustment points back through ReversesJournalEntryID. These posting events connect separately to ledger detail.
-    EST[JournalEntry: accrual] -->|AccrualJournalEntryID| LINE[PurchaseInvoiceLine]
-    LINE --> BILL[PurchaseInvoice]
-    BILL --> PAY[DisbursementPayment]
-    ADJ[JournalEntry: adjustment] -->|ReversesJournalEntryID| EST
-    EST -. Posted detail .-> GL[GLEntry]
-    BILL -. Posted detail .-> GL
-    ADJ -. Posted detail .-> GL
-    PAY -. Posted detail .-> GL
-```
+<EvidenceDiagram modelId="accrual-posting" />
 
 The journal header identifies the finance-controlled entry. `GLEntry` contains the posted account detail because this model has no separate journal-line table.
 
@@ -226,17 +215,7 @@ Return to these sections when you have a specific question or an assignment that
 
 Which recurring entries explain the month's finance-controlled expenses and estimates? Follow journal headers for rent, utilities, depreciation, and accruals into their posted account detail.
 
-```mermaid
-flowchart LR
-    accTitle: Recurring journal category and ledger accounts
-    accDescr: A recurring category connects to its journal entry, ledger detail, and account.
-    RC[Recurring category]
-    JE[JournalEntry]
-    GL[GLEntry]
-    AC[Account]
-
-    RC --> JE --> GL --> AC
-```
+<EvidenceDiagram modelId="recurring-journal" />
 
 **Tables involved**
 
@@ -259,17 +238,7 @@ flowchart LR
 
 How does finance-controlled activity support manufacturing cost? Follow factory-overhead journals into their ledger entries. These postings complement the material, labor, completion, and close evidence rather than replacing the operational documents.
 
-```mermaid
-flowchart LR
-    accTitle: Factory overhead journals and manufacturing cost support
-    accDescr: Factory overhead connects through journal entry and ledger detail to manufacturing costing support.
-    FO[Factory Overhead]
-    JE[JournalEntry]
-    GL[GLEntry]
-    MFG[Manufacturing costing support]
-
-    FO --> JE --> GL --> MFG
-```
+<EvidenceDiagram modelId="overhead-support" />
 
 **Tables involved**
 
@@ -293,24 +262,7 @@ Warehouse payroll, warehouse rent, and warehouse supplies stay in operating expe
 
 How was the finance estimate cleared? Follow the original accrual into the direct service invoice, any residual adjustment, and payment. When the estimate exceeds the linked invoice, an adjustment reverses the unused balance. Stale uninvoiced accruals can have separate partial-cleanup adjustments. Outbound freight also uses account `2040` in O2C, but it belongs to a different operational path.
 
-```mermaid
-flowchart LR
-    accTitle: Accrual settlement and adjustment branches
-    accDescr: An accrual journal connects through a linked supplier invoice to payment, while a separate branch leads to adjustment. Each accounting event connects separately to ledger detail.
-    AC[Accrual JournalEntry]
-    PIL[Purchase Invoice AccrualJournalEntryID]
-    PI[Purchase Invoice]
-    DP[Disbursement Payment]
-    AJ[Accrual Adjustment]
-    GL[GLEntry]
-
-    AC --> PIL --> PI --> DP
-    AC --> AJ
-    AC --> GL
-    PI --> GL
-    DP --> GL
-    AJ --> GL
-```
+The [accrual evidence map above](#evidence-accrual-posting) shows both invoice settlement and the independent residual adjustment. Compare those branches rather than treating them as one payment sequence.
 
 **Tables involved**
 

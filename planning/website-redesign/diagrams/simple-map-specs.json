@@ -1,0 +1,110 @@
+[
+  {
+    "page": "docs/processes/manufacturing.md",
+    "title": "Weekly planning and manufacturing requirements",
+    "description": "Demand forecasts and inventory policies support supply recommendations, which feed material requirements and rough-cut capacity planning.",
+    "notation": "flowchart LR\n    accTitle: Weekly planning and manufacturing requirements\n    accDescr: Demand forecasts and inventory policies support supply recommendations, which feed material requirements and rough-cut capacity planning.\n    DF[Demand Forecast]\n    IP[Inventory Policy]\n    SPR[Supply Plan Recommendation]\n    MRP[Material Requirement Plan]\n    RCCP[Rough Cut Capacity Plan]\n\n    DF -. Item and warehouse; relevant weekly bucket .-> SPR\n    IP -. Item and warehouse; active policy and driver .-> SPR\n    SPR --> MRP\n    SPR --> RCCP"
+  },
+  {
+    "page": "docs/processes/manufacturing.md",
+    "title": "Manufacturing recipe and routing records",
+    "description": "An item links to its bill of material and routing. Routing operations identify work centers, whose calendars provide daily capacity.",
+    "notation": "flowchart LR\n    accTitle: Manufacturing recipe and routing records\n    accDescr: An item links to its bill of material and routing. Routing operations identify work centers, whose calendars provide daily capacity.\n    ITEM[Item]\n    BOM[Bill of Material]\n    RT[Routing]\n    RTO[Routing Operation]\n    WC[Work Center]\n    WCC[Work Center Calendar]\n\n    ITEM --> BOM\n    ITEM --> RT --> RTO --> WC --> WCC"
+  },
+  {
+    "page": "docs/processes/manufacturing.md",
+    "title": "Work-order release and daily operation schedules",
+    "description": "A supply recommendation supports a work order and its operations. Daily schedules match work-center calendar records on both center and date.",
+    "notation": "flowchart LR\n    accTitle: Work-order release and daily operation schedules\n    accDescr: A supply recommendation supports a work order and its operations. Daily schedules match work-center calendar records on both center and date.\n    SPR[Supply Plan Recommendation]\n    WO[Work Order]\n    WOO[Work Order Operation]\n    WOS[Work Order Operation Schedule]\n    WCC[Work Center Calendar]\n\n    SPR --> WO --> WOO --> WOS\n    WCC -. WorkCenterID and CalendarDate equals ScheduleDate .-> WOS"
+  },
+  {
+    "page": "docs/processes/payroll.md",
+    "title": "Approved time and payroll-period support for the register",
+    "description": "Approved time matches payroll by employee and period; labor allocations link through PayrollRegisterLine. PayrollPeriod identifies the register population.",
+    "notation": "flowchart LR\n    accTitle: Approved time and payroll-period support for the register\n    accDescr: Approved time matches payroll by employee and period; labor allocations link through PayrollRegisterLine. PayrollPeriod identifies the register population.\n    TCE[Time Clock Entry]\n    LTE[Labor Time Entry]\n    PP[Payroll Period]\n    PR[Payroll Register]\n\n\n    TCE -. EmployeeID and PayrollPeriodID; aggregate hours .-> PR\n    TCE -->|TimeClockEntryID| LTE\n    LTE -->|LaborTimeEntryID| LINE[PayrollRegisterLine]\n    LINE -->|PayrollRegisterID| PR\n    PP -->|PayrollPeriodID| PR"
+  },
+  {
+    "page": "docs/processes/manual-journals-and-close.md",
+    "title": "Recurring journal category and ledger accounts",
+    "description": "A recurring category connects to its journal entry, ledger detail, and account.",
+    "notation": "flowchart LR\n    accTitle: Recurring journal category and ledger accounts\n    accDescr: A recurring category connects to its journal entry, ledger detail, and account.\n    RC[Recurring category]\n    JE[JournalEntry]\n    GL[GLEntry]\n    AC[Account]\n\n    RC --> JE --> GL --> AC"
+  },
+  {
+    "page": "docs/processes/manual-journals-and-close.md",
+    "title": "Factory overhead journals and manufacturing cost support",
+    "description": "Factory overhead connects through journal entry and ledger detail to manufacturing costing support.",
+    "notation": "flowchart LR\n    accTitle: Factory overhead journals and manufacturing cost support\n    accDescr: Factory overhead connects through journal entry and ledger detail to manufacturing costing support.\n    FO[Factory Overhead]\n    JE[JournalEntry]\n    GL[GLEntry]\n    MFG[Manufacturing costing support]\n\n    FO --> JE --> GL --> MFG"
+  },
+  {
+    "page": "docs/processes/design-services.md",
+    "title": "Design work approved time and invoice evidence",
+    "description": "A service order line leads to an engagement, staff assignments, approved time, monthly billing support, and an invoice line.",
+    "notation": "flowchart LR\n    accTitle: Design work approved time and invoice evidence\n    accDescr: A service order line leads to an engagement, staff assignments, approved time, monthly billing support, and an invoice line.\n    ORDER[Service order line] --> ENG[ServiceEngagement]\n    ENG --> STAFF[ServiceEngagementAssignment]\n    STAFF -->|ServiceEngagementAssignmentID| TIME[ServiceTimeEntry: approved hours]\n    TIME -. Engagement and inclusive billing period; sum billable hours .-> BILL[ServiceBillingLine]\n    BILL -->|SalesInvoiceLineID| INV[SalesInvoiceLine]"
+  },
+  {
+    "page": "docs/processes/design-services.md",
+    "title": "Customer demand and the service engagement",
+    "description": "Customer and sales order connect through a service order line to its engagement.",
+    "notation": "flowchart LR\n    accTitle: Customer demand and the service engagement\n    accDescr: Customer and sales order connect through a service order line to its engagement.\n    C[Customer]\n    SO[Sales Order]\n    SOL[Service Order Line]\n    ENG[Service Engagement]\n\n    C --> SO --> SOL --> ENG"
+  },
+  {
+    "page": "docs/processes/design-services.md",
+    "title": "Service engagement staff and time evidence",
+    "description": "An engagement leads to assignments and time entries. Employee records support both assignments and time.",
+    "notation": "flowchart LR\n    accTitle: Service engagement staff and time evidence\n    accDescr: An engagement leads to assignments and time entries. Employee records support both assignments and time.\n    ENG[Service Engagement]\n    ASG[Assignments]\n    TIME[Service Time Entry]\n    EMP[Employee]\n\n    ENG --> ASG --> TIME\n    EMP --> ASG\n    EMP --> TIME"
+  },
+  {
+    "page": "docs/processes/design-services.md",
+    "title": "Approved service time billing and settlement",
+    "description": "Approved time is matched by engagement and the inclusive billing interval. A billing line stores its invoice-line key; the invoice header supplies the invoice key used by cash applications.",
+    "notation": "flowchart LR\n    accTitle: Approved service time billing and settlement\n    accDescr: Approved time is matched by engagement and the inclusive billing interval. A billing line stores its invoice-line key; the invoice header supplies the invoice key used by cash applications.\n    TIME[Approved Service Time]\n    BILL[Service Billing Line]\n    INV[Sales Invoice Line]\n    CASH[Cash Application]\n\n    TIME -. Engagement and inclusive billing dates; aggregate hours .-> BILL\n    BILL -->|SalesInvoiceLineID| INV\n    INV -->|SalesInvoiceID| HEADER[SalesInvoice]\n    HEADER -->|SalesInvoiceID| CASH"
+  },
+  {
+    "page": "docs/processes/p2p.md",
+    "title": "Receipt-matched purchase evidence",
+    "description": "Requisition connects to a purchase-order line, goods-receipt line, supplier-invoice line and header, then disbursement.",
+    "notation": "flowchart LR\n    accTitle: Receipt-matched purchase evidence\n    accDescr: Requisition connects to a purchase-order line, goods-receipt line, supplier-invoice line and header, then disbursement.\n    REQ[PurchaseRequisition] --> PO[PurchaseOrderLine]\n    PO --> REC[GoodsReceiptLine]\n    REC --> BILL[PurchaseInvoiceLine]\n    BILL --> HEADER[PurchaseInvoice]\n    HEADER --> PAY[DisbursementPayment]"
+  },
+  {
+    "page": "docs/processes/p2p.md",
+    "title": "Forecast and policy support a purchase request",
+    "description": "Demand forecast and inventory policy feed a supply-plan recommendation that supports a purchase requisition.",
+    "notation": "flowchart LR\n    accTitle: Forecast and policy support a purchase request\n    accDescr: Demand forecast and inventory policy feed a supply-plan recommendation that supports a purchase requisition.\n    DF[Demand Forecast]\n    IP[Inventory Policy]\n    SPR[Supply Plan Recommendation]\n    PR[Purchase Requisition]\n\n    DF -. Item and warehouse; relevant weekly bucket .-> SPR\n    IP -. Item and warehouse; active policy and driver .-> SPR\n    SPR -->|SupplyPlanRecommendationID| PR"
+  },
+  {
+    "page": "docs/processes/p2p.md",
+    "title": "Purchase request order and receipt",
+    "description": "Solid arrows label stored requisition and purchase-order-line keys. Headers supply document context through their line keys.",
+    "notation": "flowchart LR\n    accTitle: Purchase request order and receipt\n    accDescr: Solid arrows label stored requisition and purchase-order-line keys. Headers supply document context through their line keys.\n    PR[Purchase Requisition]\n    PO[PurchaseOrderLine]\n    GR[GoodsReceiptLine]\n\n    PR -->|RequisitionID| PO\n    PO -->|POLineID| GR"
+  },
+  {
+    "page": "docs/processes/o2c.md",
+    "title": "Goods sale and customer settlement records",
+    "description": "An order leads to shipment and invoice records. A separate cash receipt passes through an application to the invoice.",
+    "notation": "flowchart LR\n    accTitle: Goods sale and customer settlement records\n    accDescr: An order leads to shipment and invoice records. A separate cash receipt passes through an application to the invoice.\n    SO[SalesOrder and SalesOrderLine] --> SH[Shipment and ShipmentLine]\n    SH --> SI[SalesInvoice and SalesInvoiceLine]\n    CR[CashReceipt] --> APP[CashReceiptApplication]\n    APP -->|Applied to| SI"
+  },
+  {
+    "page": "docs/processes/o2c.md",
+    "title": "Pricing support for the sales order",
+    "description": "Customer and item context connects through price lists, promotions, and override approval to a sales order.",
+    "notation": "flowchart LR\n    accTitle: Pricing support for the sales order\n    accDescr: Customer and item context connects through price lists, promotions, and override approval to a sales order.\n    CTX[Customer and Item Context]\n    PL[Price List]\n    PROMO[Promotion Program]\n    OVR[Price Override Approval]\n    SO[Sales Order]\n\n    CTX --> PL --> SO\n    CTX --> PROMO --> SO\n    CTX --> OVR --> SO"
+  },
+  {
+    "page": "docs/processes/o2c.md",
+    "title": "Available inventory and backordered quantity",
+    "description": "A sales order reaches available finished goods. Enough stock proceeds to shipment and invoice; short stock leads through backordered quantity to a later shipment.",
+    "notation": "flowchart LR\n    accTitle: Available inventory and backordered quantity\n    accDescr: A sales order reaches available finished goods. Enough stock proceeds to shipment and invoice; short stock leads through backordered quantity to a later shipment.\n    SOL[Sales Order]\n    FG[Available Finished Goods]\n    BO[Backordered Quantity]\n    SHL[Later Shipment]\n    SIL[Later Sales Invoice]\n\n    SOL --> FG\n    FG -->|Enough stock| SHL --> SIL\n    FG -->|Short stock| BO --> SHL"
+  },
+  {
+    "page": "docs/processes/o2c.md",
+    "title": "Credit memo and remaining customer credit",
+    "description": "The solid arrow identifies the original-invoice key. Dashed arrows describe accounting allocation and conditional later refund chronology, not database joins.",
+    "notation": "flowchart LR\n    accTitle: Credit memo and remaining customer credit\n    accDescr: The solid arrow identifies the original-invoice key. Dashed arrows describe accounting allocation and conditional later refund chronology, not database joins.\n    INV[Original Sales Invoice]\n    CM[Credit Memo]\n    CC[Customer Credit]\n    RF[Customer Refund]\n\n    INV -->|OriginalSalesInvoiceID on memo| CM\n    CM -. Reduces remaining AR when present .-> INV\n    CM -. Excess credit after AR allocation .-> CC\n    CC -. Later refund if paid out .-> RF"
+  },
+  {
+    "page": "docs/technical/technical-guide.md",
+    "title": "Local dataset build from settings to exported teaching files",
+    "description": "Settings initialize the generation context, tables and master data precede operating activity, and accounting postings and year-end close precede validation, anomaly injection and file exports. This documents the local generator workflow; classroom users begin with the published files.",
+    "notation": "flowchart LR\n    accTitle: Local dataset build from settings to exported teaching files\n    accDescr: Settings initialize the generation context, tables and master data precede operating activity, and accounting postings and year-end close precede validation, anomaly injection and file exports. This documents the local generator workflow; classroom users begin with the published files.\n    S[Load Settings]\n    C[Initialize GenerationContext]\n    E[Create Empty Tables]\n    M[Generate Master Data, BOMs, Routings, and Calendar]\n    B[Generate Opening Balances and Budgets]\n    O[Generate O2C, P2P, Manufacturing, Payroll, and Labor Activity]\n    J[Generate Recurring Journals and Accrual Activity]\n    P[Post Events to GLEntry]\n    Y[Generate Year-End Close Journals]\n    V[Run Validations]\n    A[Inject Anomalies]\n    X[Export SQLite, Excel, Curated Reports, CSV Zip, and Log]\n\n    S --> C --> E --> M --> B --> O --> J --> P --> Y --> V --> A --> X"
+  }
+]

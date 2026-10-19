@@ -8,6 +8,7 @@ toc_max_heading_level: 2
 ---
 
 import BpmnDiagram from "@site/src/components/BpmnDiagram";
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
 
 # Procure-to-Pay Process
 
@@ -87,16 +88,7 @@ Notice that the supplier is external to the company. The requisition is an inter
 
 This map answers **how the ordinary inventory purchase can be followed from request to payment**.
 
-```mermaid
-flowchart LR
-    accTitle: Receipt-matched purchase evidence
-    accDescr: Requisition connects to a purchase-order line, goods-receipt line, supplier-invoice line and header, then disbursement.
-    REQ[PurchaseRequisition] --> PO[PurchaseOrderLine]
-    PO --> REC[GoodsReceiptLine]
-    REC --> BILL[PurchaseInvoiceLine]
-    BILL --> HEADER[PurchaseInvoice]
-    HEADER --> PAY[DisbursementPayment]
-```
+<EvidenceDiagram modelId="goods-purchase-path" />
 
 Read each record as the document stage just described. The detailed reference retains the exact keys, including how lines connect when orders batch requests or receipts arrive in parts.
 
@@ -208,18 +200,7 @@ Return to these sections when you have a specific question or an assignment that
 
 What supported the decision to replenish? Follow weekly forecast, policy, and projected availability into `SupplyPlanRecommendation`, then into the requisition. This establishes the planning context before the supplier commitment.
 
-```mermaid
-flowchart LR
-    accTitle: Forecast and policy support a purchase request
-    accDescr: Demand forecast and inventory policy feed a supply-plan recommendation that supports a purchase requisition.
-    DF[Demand Forecast]
-    IP[Inventory Policy]
-    SPR[Supply Plan Recommendation]
-    PR[Purchase Requisition]
-
-    DF --> SPR
-    IP --> SPR --> PR
-```
+<EvidenceDiagram modelId="purchase-planning" />
 
 **Tables involved**
 
@@ -242,17 +223,7 @@ flowchart LR
 
 What was ordered, and how much arrived? Follow the requisition into the supplier-order line and its receipt lines. Retain the dates and quantities to explain partial receipts and receiving delays.
 
-```mermaid
-flowchart LR
-    accTitle: Purchase request order and receipt
-    accDescr: Solid arrows label stored requisition and purchase-order-line keys. Headers supply document context through their line keys.
-    PR[Purchase Requisition]
-    PO[PurchaseOrderLine]
-    GR[GoodsReceiptLine]
-
-    PR -->|RequisitionID| PO
-    PO -->|POLineID| GR
-```
+<EvidenceDiagram modelId="requisition-receipt" />
 
 **Tables involved**
 
@@ -278,22 +249,7 @@ flowchart LR
 
 Which receipt supports the supplier's billed line? Follow `GoodsReceiptLine` into `PurchaseInvoiceLine` for the ordinary inventory and materials path, then inspect the resulting AP and GRNI postings.
 
-```mermaid
-flowchart LR
-    accTitle: Receipt invoice and ledger evidence
-    accDescr: Solid labeled arrows follow stored line keys to headers. Goods receipt and purchase invoice each have an independent ledger-source route.
-    GRL[GoodsReceiptLine]
-    GR[GoodsReceipt]
-    PIL[PurchaseInvoiceLine]
-    PI[PurchaseInvoice]
-    GL[GLEntry]
-
-    GRL -->|GoodsReceiptID| GR
-    GRL -->|GoodsReceiptLineID| PIL
-    PIL -->|PurchaseInvoiceID| PI
-    GR -->|GoodsReceipt source type and ID| GL
-    PI -->|PurchaseInvoice source type and ID| GL
-```
+<EvidenceDiagram modelId="receipt-invoice-posting" />
 
 **Tables involved**
 
@@ -315,21 +271,7 @@ flowchart LR
 
 What remained payable at the reporting date? Follow the supplier invoice into its disbursement, comparing invoice, due, and payment dates. A later payment can explain eventual settlement while AP was still open earlier.
 
-```mermaid
-flowchart LR
-    accTitle: Supplier invoice payable and disbursement
-    accDescr: A solid labeled arrow identifies the invoice-payment key. Invoice and disbursement each post independently. Dashed arrows explain the AP account effect rather than stored joins.
-    PI[Purchase Invoice]
-    AP[Accounts Payable]
-    DP[Disbursement Payment]
-    GL[GLEntry]
-
-    PI -->|PurchaseInvoiceID| DP
-    PI -->|PurchaseInvoice source type and ID| GL
-    DP -->|DisbursementPayment source type and DisbursementID| GL
-    PI -. Credits AP .-> AP
-    DP -. Debits AP .-> AP
-```
+<EvidenceDiagram modelId="supplier-settlement-posting" />
 
 **Tables involved**
 

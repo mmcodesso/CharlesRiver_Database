@@ -1,0 +1,125 @@
+<mxfile host="Electron" version="29.6.6" type="device">
+  <diagram id="pricing-evidence" name="Pricing support for the sales order">
+    <mxGraphModel grid="1" gridSize="10" page="0" pageWidth="1160" pageHeight="1000" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="Pricing support for the sales order">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="25" y="15" width="1110" height="70" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="Which connections use foreign keys, and which supply analytical or business context?">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="87" width="1110" height="55" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="CTX" label="Customer and Item Context&#10;&#10;Context for interpreting the named evidence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="170" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PL" label="PriceList&#10;&#10;One customer or segment price-list scope">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#e9f1ed;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="410" y="170" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PROMO" label="PromotionProgram&#10;&#10;One promotion definition">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#e9f1ed;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="795" y="170" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="OVR" label="PriceOverrideApproval&#10;&#10;One recorded order-line price approval">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#e9f1ed;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="450" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="SO" label="SalesOrderLine&#10;&#10;One ordered item or service line">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#e9f1ed;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="410" y="450" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PLL" label="PriceListLine&#10;&#10;One item price within a price list">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#e9f1ed;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="795" y="450" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="r1" label="r1" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="CTX" target="PL">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r2" label="r2" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="CTX" target="PROMO">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="379.0" y="280.0" />
+                <mxPoint x="379.0" y="162.0" />
+                <mxPoint x="771.0" y="162.0" />
+                <mxPoint x="771.0" y="280.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r3" label="r3" relationKind="reference">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="PROMO" target="SO">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1195.0" y="280.0" />
+                <mxPoint x="1195.0" y="730.0" />
+                <mxPoint x="386.0" y="730.0" />
+                <mxPoint x="386.0" y="560.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r4" label="r4" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="CTX" target="OVR">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1.0" y="280.0" />
+                <mxPoint x="1.0" y="560.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r5" label="r5" relationKind="reference">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="OVR" target="SO">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r6" label="r6" relationKind="reference">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="PL" target="PLL">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="764.0" y="280.0" />
+                <mxPoint x="764.0" y="560.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r7" label="r7" relationKind="reference">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="PLL" target="SO">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1149.0" y="560.0" />
+                <mxPoint x="1149.0" y="694.0" />
+                <mxPoint x="764.0" y="694.0" />
+                <mxPoint x="764.0" y="560.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="footer" label="Numbered connectors are explained in the evidence table. Solid lines show foreign-key or posting paths; dashed lines show analytical or business context.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="762.0" width="1110" height="60" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

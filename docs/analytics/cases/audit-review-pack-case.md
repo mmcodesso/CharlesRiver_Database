@@ -181,7 +181,7 @@ A repeated reference may indicate a duplicate document, a reused reference, or a
 
 **Named inputs:** `PurchaseInvoiceData, DisbursementPaymentData, and CheckPayments (Session 1.1)`.
 
-**Produced outputs:** `InvoiceGroups and CheckGroups: repeated-reference keys`, `PaymentsByInvoice: independently summed payments`, `DuplicateInvoices and DuplicateChecks: document-level exception evidence`.
+**Produced outputs:** `InvoiceGroups and CheckGroups: repeated document references`, `PaymentsByInvoice: independently summed payments`, `DuplicateInvoices and DuplicateChecks: document-level exception evidence`.
 
 1. In Power Query Reference PurchaseInvoiceData as InvoiceGroups.
 

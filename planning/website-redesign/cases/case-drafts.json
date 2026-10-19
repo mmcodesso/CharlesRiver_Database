@@ -1840,7 +1840,7 @@
               "PurchaseInvoiceData, DisbursementPaymentData, and CheckPayments (Session 1.1)"
             ],
             "excelOutputs": [
-              "InvoiceGroups and CheckGroups: repeated-reference keys",
+              "InvoiceGroups and CheckGroups: repeated document references",
               "PaymentsByInvoice: independently summed payments",
               "DuplicateInvoices and DuplicateChecks: document-level exception evidence"
             ]

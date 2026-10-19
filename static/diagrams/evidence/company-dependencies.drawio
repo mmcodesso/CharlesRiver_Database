@@ -1,0 +1,181 @@
+<mxfile host="Electron" version="29.6.6" type="device">
+  <diagram id="company-dependencies" name="Connections across six Charles River processes">
+    <mxGraphModel grid="1" gridSize="10" page="0" pageWidth="1160" pageHeight="1000" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="Connections across six Charles River processes">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="25" y="15" width="1110" height="70" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="Follow the numbered connectors with the evidence table below the diagram.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="87" width="1110" height="55" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="NEED" label="Customer furnishing needs&#10;&#10;Business context&#10;Interpret with the accompanying process explanation">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="170" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="SALES" label="Order-to-cash: goods and billing&#10;&#10;Business context&#10;Interpret with the accompanying process explanation">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="410" y="170" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DESIGN" label="Design services: staff time and billing&#10;&#10;Business context&#10;Interpret with the accompanying process explanation">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="795" y="170" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="BUY" label="Purchasing: merchandise and components&#10;&#10;Business context&#10;Interpret with the accompanying process explanation">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="450" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="MAKE" label="Manufacturing: selected products&#10;&#10;Business context&#10;Interpret with the accompanying process explanation">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="410" y="450" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="PAY" label="Payroll: employee costs and obligations&#10;&#10;Business context&#10;Interpret with the accompanying process explanation">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="795" y="450" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="FIN" label="Finance: accounting and period-end explanation&#10;&#10;Business context&#10;Interpret with the accompanying process explanation">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="730" width="330" height="220" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="r1" label="r1" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="NEED" target="SALES">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r2" label="r2" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="NEED" target="DESIGN">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1.0" y="280.0" />
+                <mxPoint x="1.0" y="162.0" />
+                <mxPoint x="764.0" y="162.0" />
+                <mxPoint x="764.0" y="280.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r3" label="r3" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="BUY" target="SALES">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="379.0" y="560.0" />
+                <mxPoint x="379.0" y="280.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r4" label="r4" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="BUY" target="MAKE">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r5" label="r5" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="MAKE" target="SALES">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="764.0" y="560.0" />
+                <mxPoint x="764.0" y="280.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r6" label="r6" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="PAY" target="MAKE">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r7" label="r7" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="PAY" target="DESIGN">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1149.0" y="560.0" />
+                <mxPoint x="1149.0" y="280.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r8" label="r8" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="SALES" target="FIN">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="386.0" y="280.0" />
+                <mxPoint x="386.0" y="426.0" />
+                <mxPoint x="-45.0" y="426.0" />
+                <mxPoint x="-45.0" y="840.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r9" label="r9" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="DESIGN" target="FIN">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="771.0" y="280.0" />
+                <mxPoint x="771.0" y="162.0" />
+                <mxPoint x="1195.0" y="162.0" />
+                <mxPoint x="1195.0" y="974.0" />
+                <mxPoint x="379.0" y="974.0" />
+                <mxPoint x="379.0" y="840.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r10" label="r10" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="BUY" target="FIN">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1.0" y="560.0" />
+                <mxPoint x="1.0" y="840.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r11" label="r11" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="MAKE" target="FIN">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="386.0" y="560.0" />
+                <mxPoint x="386.0" y="706.0" />
+                <mxPoint x="379.0" y="706.0" />
+                <mxPoint x="379.0" y="840.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r12" label="r12" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="PAY" target="FIN">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="771.0" y="560.0" />
+                <mxPoint x="771.0" y="840.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="footer" label="Solid numbered connectors identify reference or posting paths. Dashed connectors identify analytical, conditional, or business context.&#10;Read r1, r2… in the evidence table before choosing a join, a date boundary, or an accounting interpretation.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="1006.0" width="1110" height="60" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

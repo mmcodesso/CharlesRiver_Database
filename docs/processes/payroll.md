@@ -8,6 +8,7 @@ toc_max_heading_level: 2
 ---
 
 import BpmnDiagram from "@site/src/components/BpmnDiagram";
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
 
 # Payroll Process
 
@@ -77,23 +78,7 @@ Employees are part of the company participant. Agencies and benefit providers ar
 
 This map answers **which records support approved work and which establish the accounting and settlement events**.
 
-```mermaid
-flowchart LR
-    accTitle: Approved time employee payroll and period remittances
-    accDescr: Solid labeled arrows identify stored keys and explicit ledger sources. Dashed arrows show punch support or summary aggregation. Register recognition, employee payment, and remittance each reach the ledger separately.
-    ROSTER[EmployeeShiftRoster] -->|EmployeeShiftRosterID| TIME[TimeClockEntry: approved hours]
-    PUNCH[TimeClockPunch: raw evidence] -. Supports review .-> TIME
-    TIME -->|TimeClockEntryID| LABOR[LaborTimeEntry: support and allocation]
-    LABOR -->|LaborTimeEntryID| LINES[PayrollRegisterLine]
-    LINES -->|PayrollRegisterID| REG[PayrollRegister]
-    REG -->|PayrollRegisterID| PAY[PayrollPayment: net pay]
-    PERIOD[PayrollPeriod] -->|PayrollPeriodID| REG
-    PERIOD -->|PayrollPeriodID| REMIT[PayrollLiabilityRemittance]
-    REG -. Aggregate period cost center and account .-> PS[PayrollSummary source label]
-    PS -->|Source type and summary ID| GL[GLEntry]
-    PAY -->|PayrollPayment source type and ID| GL
-    REMIT -->|PayrollLiabilityRemittance source type and ID| GL
-```
+<EvidenceDiagram modelId="payroll-evidence" />
 
 Follow approved hourly support into earnings detail. Then distinguish employee-level payroll from period-level liability remittances. Repeating a period-level remittance beside every employee would multiply the same amount.
 
@@ -219,23 +204,7 @@ Return to these sections when you have a specific question or an assignment that
 
 Which hours were expected, recorded, and approved? Follow shifts and rosters into punch evidence and the approved `TimeClockEntry`. The approved daily result supplies payroll hours, while the underlying records support its review.
 
-```mermaid
-flowchart LR
-    accTitle: Roster punch and approval support for daily time
-    accDescr: Shift definitions and assignments lead to roster evidence. Roster links to absence, overtime approval, and raw punches; approval and punches support daily time.
-    SD[Shift Definition]
-    ESA[Employee Shift Assignment]
-    ESR[Employee Shift Roster]
-    ABS[Employee Absence]
-    OTA[Overtime Approval]
-    TCP[Time Clock Punch]
-    TCE[Time Clock Entry]
-
-    SD --> ESA --> ESR
-    ESR --> ABS
-    ESR --> OTA --> TCE
-    ESR --> TCP --> TCE
-```
+<EvidenceDiagram modelId="attendance-evidence" />
 
 **Tables involved**
 
@@ -263,20 +232,7 @@ flowchart LR
 
 Once daily time is approved, payroll turns that support into gross pay. Hourly earnings use approved `TimeClockEntry` hours, while `LaborTimeEntry` adds the labor-traceability layer that helps students connect approved time to payroll lines and direct manufacturing support.
 
-```mermaid
-flowchart LR
-    accTitle: Approved time and payroll-period support for the register
-    accDescr: Time-clock entries connect directly and through labor allocations to the payroll register. The payroll period also identifies the register population.
-    TCE[Time Clock Entry]
-    LTE[Labor Time Entry]
-    PP[Payroll Period]
-    PR[Payroll Register]
-
-
-    TCE --> PR
-    TCE --> LTE --> PR
-    PP --> PR
-```
+<EvidenceDiagram modelId="approved-time-register" />
 
 **Tables involved**
 
@@ -304,23 +260,7 @@ flowchart LR
 
 Which payroll obligations were created and settled? Follow the register into employee net-pay payments and the separate period-level remittances. Compare their dates before explaining which liabilities remain.
 
-```mermaid
-flowchart LR
-    accTitle: Employee net pay and other payroll-liability settlement
-    accDescr: A register creates accrued net pay and other payroll liabilities. Employee payment and liability remittance settle separate branches; register and settlement records connect to the ledger.
-    PR[Payroll Register]
-    NET[Accrued Payroll]
-    TAX[Payroll Liabilities]
-    PAY[Payroll Payment]
-    REM[Payroll Liability Remittance]
-    GL[GLEntry]
-
-    PR --> NET --> PAY
-    PR --> TAX --> REM
-    PR --> GL
-    PAY --> GL
-    REM --> GL
-```
+<EvidenceDiagram modelId="payroll-obligations" />
 
 **Tables involved**
 
@@ -345,18 +285,7 @@ flowchart LR
 
 Approved time and labor allocations support the production explanation. PayrollSummary recognizes capitalizable manufacturing labor and related burden directly in Manufacturing Cost Clearing (`1090`). Manufacturing payroll in months with no capitalizable direct labor goes to Manufacturing Variance (`5080`). Nonmanufacturing wages and burden remain period expense. Factory overhead and depreciation have separate journal sources.
 
-```mermaid
-flowchart LR
-    accTitle: Manufacturing labor support and direct payroll recognition
-    accDescr: Solid arrows label stored keys or explicit ledger-source identifiers. The dashed arrow represents aggregation rather than a foreign key. PayrollSummary and separate factory-overhead and depreciation journals each reach the ledger.
-    TCE[TimeClockEntry] -->|TimeClockEntryID| LTE[LaborTimeEntry]
-    LTE -->|WorkOrderOperationID| WOO[WorkOrderOperation]
-    LTE -->|LaborTimeEntryID| PRL[PayrollRegisterLine]
-    PRL -->|PayrollRegisterID| PR[PayrollRegister]
-    PR -. Aggregate period cost center and account .-> PS[PayrollSummary source label]
-    PS -->|Source type and constructed summary ID| GL[GLEntry]
-    JE[JournalEntry factory overhead and depreciation] -->|JournalEntry source type and ID| GL
-```
+<EvidenceDiagram modelId="manufacturing-payroll-support" />
 
 **Tables involved**
 
@@ -389,21 +318,7 @@ Capitalizable manufacturing payroll is recognized directly in clearing. Design-s
 
 Which attendance concerns need follow-up? Use `AttendanceException` to connect a logged issue with roster expectations, punch evidence, approved hours, and any downstream payroll support. Inspect its status and evidence before reaching a conclusion.
 
-```mermaid
-flowchart LR
-    accTitle: Attendance evidence exceptions and payroll
-    accDescr: Roster, raw punches, and approved time feed attendance-exception evidence. Approved time also connects to payroll; an exception link does not establish a payment block.
-    ESR[Employee Shift Roster]
-    TCP[Time Clock Punch]
-    TCE[Time Clock Entry]
-    AE[Attendance Exception]
-    PR[Payroll Register]
-
-    ESR --> TCP --> TCE --> PR
-    ESR --> AE
-    TCP --> AE
-    TCE --> AE
-```
+<EvidenceDiagram modelId="attendance-review" />
 
 **Tables involved**
 

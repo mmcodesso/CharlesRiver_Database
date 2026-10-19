@@ -8,6 +8,7 @@ toc_max_heading_level: 2
 ---
 
 import BpmnDiagram from "@site/src/components/BpmnDiagram";
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
 
 # Manufacturing Process
 
@@ -121,17 +122,7 @@ The model describes teaching responsibilities. Its lanes and recorded close fiel
 
 This map asks **which records show that materials were used, goods were completed, and the order was closed**.
 
-```mermaid
-flowchart LR
-    accTitle: Manufacturing records around one work order
-    accDescr: Planning supports a work order with separate material issue, operation, completion, and close branches. Labor entries support operations.
-    PLAN[SupplyPlanRecommendation] --> WO[WorkOrder]
-    WO --> ISSUE[MaterialIssue and lines]
-    WO --> OPS[WorkOrderOperation]
-    LABOR[LaborTimeEntry] -->|Labor support| OPS
-    WO --> DONE[ProductionCompletion and lines]
-    WO --> CLOSE[WorkOrderClose]
-```
+<EvidenceDiagram modelId="work-order-evidence" />
 
 Begin with the work order and follow each related event. The branches provide different kinds of evidence around the same order and cannot be treated as interchangeable measures of progress or cost.
 
@@ -224,21 +215,7 @@ Return to these sections when you have a specific question or an assignment that
 
 Why was manufacture recommended? Follow weekly planning into component requirements and rough-cut capacity. These records describe expected demand and load before detailed production execution.
 
-```mermaid
-flowchart LR
-    accTitle: Weekly planning and manufacturing requirements
-    accDescr: Demand forecasts and inventory policies support supply recommendations, which feed material requirements and rough-cut capacity planning.
-    DF[Demand Forecast]
-    IP[Inventory Policy]
-    SPR[Supply Plan Recommendation]
-    MRP[Material Requirement Plan]
-    RCCP[Rough Cut Capacity Plan]
-
-    DF --> SPR
-    IP --> SPR
-    SPR --> MRP
-    SPR --> RCCP
-```
+<EvidenceDiagram modelId="weekly-planning" />
 
 **Tables involved**
 
@@ -266,20 +243,7 @@ flowchart LR
 
 What recipe and production steps define the item? Follow its bill of material into component requirements and its routing into work-center operations. This is the standard design against which execution can be compared.
 
-```mermaid
-flowchart LR
-    accTitle: Manufacturing recipe and routing records
-    accDescr: An item links to its bill of material and routing. Routing operations identify work centers, whose calendars provide daily capacity.
-    ITEM[Item]
-    BOM[Bill of Material]
-    RT[Routing]
-    RTO[Routing Operation]
-    WC[Work Center]
-    WCC[Work Center Calendar]
-
-    ITEM --> BOM
-    ITEM --> RT --> RTO --> WC --> WCC
-```
+<EvidenceDiagram modelId="recipe-routing" />
 
 **Tables involved**
 
@@ -302,19 +266,7 @@ flowchart LR
 
 How was the recommendation put into production? Follow the released work order into its operations and daily schedule. Compare release, due, scheduled, and actual dates when explaining the progress of the work.
 
-```mermaid
-flowchart LR
-    accTitle: Work-order release and daily operation schedules
-    accDescr: A supply recommendation supports a work order and its operations. Daily schedules match work-center calendar records on both center and date.
-    SPR[Supply Plan Recommendation]
-    WO[Work Order]
-    WOO[Work Order Operation]
-    WOS[Work Order Operation Schedule]
-    WCC[Work Center Calendar]
-
-    SPR --> WO --> WOO --> WOS
-    WCC --> WOS
-```
+<EvidenceDiagram modelId="operation-scheduling" />
 
 **Tables involved**
 
@@ -375,21 +327,7 @@ For this center/day, **four schedule rows** total **6.45 hours** against **101.7
 
 How did purchased components support production? Inspect the purchasing and receiving evidence alongside the later material issue to the work order. Receipt brings components into stock, while issue moves their cost into WIP.
 
-```mermaid
-flowchart LR
-    accTitle: Purchased component support and subsequent material issue
-    accDescr: Purchasing and receiving support component availability. A separate work-order material issue records components moving into production.
-    SPR[Supply Plan Recommendation]
-    PR[Purchase Requisition]
-    PO[Purchase Order]
-    GR[Goods Receipt]
-    WO[Work Order]
-    MI[Material Issue]
-
-    SPR --> PR --> PO --> GR
-    WO --> MI
-    GR -. Item warehouse and timing support only .-> MI
-```
+<EvidenceDiagram modelId="component-availability" />
 
 **Tables involved**
 
@@ -411,18 +349,7 @@ flowchart LR
 
 Which approved work supports the operation's labor explanation? Follow `TimeClockEntry` into `LaborTimeEntry` and the work-order operation. PayrollSummary recognizes qualifying manufacturing payroll directly in clearing. Factory overhead and depreciation use separate journals. These accounting sources do not allocate every pooled cost to an individual work order.
 
-```mermaid
-flowchart LR
-    accTitle: Operational labor evidence and payroll cost support
-    accDescr: Labeled solid arrows identify stored keys. Dashed arrows identify aggregation or analytical support. PayrollSummary posts directly to the ledger. Factory overhead and depreciation have separate journal routes.
-    TCE[TimeClockEntry] -->|TimeClockEntryID| LTE[LaborTimeEntry]
-    LTE -->|WorkOrderOperationID| WOO[WorkOrderOperation]
-    LTE -->|LaborTimeEntryID| PRL[PayrollRegisterLine]
-    PRL -->|PayrollRegisterID| PR[PayrollRegister]
-    PR -. Aggregate by period cost center and account .-> PS[PayrollSummary source label]
-    PS -->|Source type and constructed summary ID| GL[GLEntry]
-    JE[JournalEntry factory overhead and depreciation] -->|JournalEntry source type and ID| GL
-```
+<EvidenceDiagram modelId="manufacturing-payroll-support" />
 
 **Tables involved**
 
@@ -446,24 +373,7 @@ flowchart LR
 
 When were goods available, and when was their order closed? Compare `ProductionCompletion` and `WorkOrderClose` separately. Completion recognizes finished goods at standard cost, while close resolves the remaining variance and balances.
 
-```mermaid
-flowchart LR
-    accTitle: Separate completion and close branches of a work order
-    accDescr: A work order links separately to material issues, labor, production completion lines, and accounting close. Completion makes finished goods available before close.
-    WO[Work Order]
-    MI[Material Issue]
-    LTE[Labor Time Entry]
-    PC[Production Completion]
-    PCL[Production Completion Line]
-    WOC[WorkOrderClose]
-    FG[Finished goods available to O2C]
-
-    WO --> MI
-    WO --> LTE
-    WO --> PC --> PCL
-    PC --> FG
-    WO --> WOC
-```
+<EvidenceDiagram modelId="completion-close" />
 
 **Tables involved**
 

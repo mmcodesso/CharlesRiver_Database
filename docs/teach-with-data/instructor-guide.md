@@ -26,7 +26,7 @@ Review the chosen activity with the actual class file before assigning it. The d
 ## Recommended Teaching Sequence
 
 1. **Understand the company.** Assign [Start Here](../start-here/index.md) and [Company Story](../learn-the-business/company-story.md). Ask students to explain the difference between purchased goods, manufactured goods, and hourly services.
-2. **Understand a process.** Use [Business Processes and Models](../learn-the-business/process-flows.md), then one detailed process page. Pair BPMN with Mermaid to distinguish activities and responsibilities from information relationships and accounting effects. Identify the business need, documents, approvals, and handoffs.
+2. **Understand a process.** Use [Business Processes and Models](../learn-the-business/process-flows.md), then one detailed process page. Pair BPMN with record and accounting evidence maps to distinguish activities and responsibilities from information relationships and accounting effects. Identify the business need, documents, approvals, and handoffs.
 3. **Explore the evidence.** Use [Dataset Guide](../start-here/dataset-overview.md) and a foundational task in [Learn and Practice](../learn-and-practice/index.md). Keep the [Schema Reference](../reference/schema.md) and [Posting Reference](../reference/posting.md) available as lookup tools.
 4. **Analyze a population.** Choose the [SQL Guide](../analytics/sql-guide.md), [Excel Guide](../analytics/excel-guide.md), a [query resource](../analytics/analysis-tracks.md), or a [Reports and Analytics](../analytics/index.md).
 5. **Interpret and decide.** Assign an [integrated case](../analytics/cases/index.md). Require a supported accounting explanation, limitations, and a specific recommendation or request for further evidence.

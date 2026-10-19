@@ -9,6 +9,9 @@ toc_max_heading_level: 2
 
 import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
+
+
 # Design Services Process
 
 <span id="business-storyline"></span>
@@ -69,16 +72,7 @@ Read the model as responsibilities and activities. It does not establish an addi
 
 The record map asks **how work and billing are related without using shipment evidence**.
 
-```mermaid
-flowchart LR
-    accTitle: Design work approved time and invoice evidence
-    accDescr: A service order line leads to an engagement, staff assignments, approved time, monthly billing support, and an invoice line.
-    ORDER[Service order line] --> ENG[ServiceEngagement]
-    ENG --> STAFF[ServiceEngagementAssignment]
-    STAFF --> TIME[ServiceTimeEntry: approved hours]
-    TIME -->|Monthly billing support| BILL[ServiceBillingLine]
-    BILL --> INV[SalesInvoiceLine]
-```
+<EvidenceDiagram modelId="service-time-billing" />
 
 Follow the engagement through its staff support, then compare approved time with the monthly billing records. The map summarizes the path without implying that each daily time row creates a separate invoice from the monthly billing record.
 
@@ -187,17 +181,7 @@ Return to these sections when you have a specific question or an assignment that
 
 The process begins on the customer side. A service line is created on the sales order, then the operating team opens an engagement that carries planned hours, the lead employee, and the expected delivery window.
 
-```mermaid
-flowchart LR
-    accTitle: Customer demand and the service engagement
-    accDescr: Customer and sales order connect through a service order line to its engagement.
-    C[Customer]
-    SO[Sales Order]
-    SOL[Service Order Line]
-    ENG[Service Engagement]
-
-    C --> SO --> SOL --> ENG
-```
+<EvidenceDiagram modelId="service-demand" />
 
 **Starter analytical question:** Which customers create the most planned design-service hours, and how concentrated is that workload?
 
@@ -205,19 +189,7 @@ flowchart LR
 
 Once the engagement is active, the company assigns one or more employees to it. Approved daily service time then accumulates by employee and date. This layer is where students can compare planned hours, assigned hours, billable hours, non-billable hours, and cost snapshots.
 
-```mermaid
-flowchart LR
-    accTitle: Service engagement staff and time evidence
-    accDescr: An engagement leads to assignments and time entries. Employee records support both assignments and time.
-    ENG[Service Engagement]
-    ASG[Assignments]
-    TIME[Service Time Entry]
-    EMP[Employee]
-
-    ENG --> ASG --> TIME
-    EMP --> ASG
-    EMP --> TIME
-```
+<EvidenceDiagram modelId="service-staffing" />
 
 **Starter analytical question:** Which engagements rely most on senior-designer time versus designer time, and where do non-billable hours accumulate?
 
@@ -225,17 +197,7 @@ flowchart LR
 
 Billing does not happen every time an employee works. The dataset bills approved billable hours monthly. `ServiceBillingLine` stores the rolled-up hours for that invoice line, which makes it the main student bridge between approved service delivery and posted customer revenue.
 
-```mermaid
-flowchart LR
-    accTitle: Approved service time billing and settlement
-    accDescr: Approved service time supports a service billing line and invoice line, followed by cash application.
-    TIME[Approved Service Time]
-    BILL[Service Billing Line]
-    INV[Sales Invoice Line]
-    CASH[Cash Application]
-
-    TIME --> BILL --> INV --> CASH
-```
+<EvidenceDiagram modelId="service-billing-settlement" />
 
 **Starter analytical question:** Which customers show the biggest difference between approved service hours and billed service hours at month-end?
 

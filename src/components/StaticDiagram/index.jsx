@@ -12,7 +12,10 @@ export default function StaticDiagram({ model, assetRoot, kind = "diagram", chil
   const imageRef = useRef(null);
   const surfaceRef = useRef(null);
   const panzoomRef = useRef(null);
+  const viewModeRef = useRef("fit");
   const [isOpen, setIsOpen] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+  const [zoomPercent, setZoomPercent] = useState(100);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -29,6 +32,7 @@ export default function StaticDiagram({ model, assetRoot, kind = "diagram", chil
   }, [isOpen]);
 
   function resetView() {
+    viewModeRef.current = "fit";
     const image = imageRef.current;
     const surface = surfaceRef.current;
     const panzoom = panzoomRef.current;
@@ -50,12 +54,32 @@ export default function StaticDiagram({ model, assetRoot, kind = "diagram", chil
     );
   }
 
+  function actualSize() {
+    viewModeRef.current = "actual";
+    const image = imageRef.current;
+    const surface = surfaceRef.current;
+    const panzoom = panzoomRef.current;
+    if (!image?.naturalWidth || !surface || !panzoom) return;
+    // Normalize position before changing scale: panzoom can reject a zoom
+    // when the old fitted image would leave its bounds during that change.
+    panzoom.zoomTo(0, 0, 1);
+    panzoom.moveTo(0, 0);
+    panzoom.zoomAbs(0, 0, 1);
+    panzoom.moveTo(Math.max(12, (surface.clientWidth - image.naturalWidth) / 2), Math.max(12, (surface.clientHeight - image.naturalHeight) / 2));
+  }
+
   useEffect(() => {
     if (!isOpen) return undefined;
     const image = imageRef.current;
     let cancelled = false;
     let panzoom;
     let observer;
+    const refreshView = () => {
+      if (!image.complete || !image.naturalWidth || !panzoomRef.current) return;
+      if (viewModeRef.current === "actual") actualSize();
+      else if (viewModeRef.current === "fit") resetView();
+      setIsReady(true);
+    };
     async function initialize() {
       const { default: createPanzoom } = await import("panzoom");
       if (cancelled) return;
@@ -69,15 +93,16 @@ export default function StaticDiagram({ model, assetRoot, kind = "diagram", chil
         filterKey: () => true,
       });
       panzoomRef.current = panzoom;
-      image.addEventListener("load", resetView);
-      observer = new ResizeObserver(resetView);
+      panzoom.on("transform", () => setZoomPercent(Math.round(panzoom.getTransform().scale * 100)));
+      image.addEventListener("load", refreshView);
+      observer = new ResizeObserver(refreshView);
       observer.observe(surfaceRef.current);
-      resetView();
+      refreshView();
     }
     initialize();
     return () => {
       cancelled = true;
-      image.removeEventListener("load", resetView);
+      image.removeEventListener("load", refreshView);
       observer?.disconnect();
       panzoom?.dispose();
       panzoomRef.current = null;
@@ -85,6 +110,8 @@ export default function StaticDiagram({ model, assetRoot, kind = "diagram", chil
   }, [isOpen]);
 
   function open(event) {
+    viewModeRef.current = "fit";
+    setIsReady(false);
     openerRef.current = event.currentTarget;
     setIsOpen(true);
   }
@@ -92,6 +119,7 @@ export default function StaticDiagram({ model, assetRoot, kind = "diagram", chil
     const panzoom = panzoomRef.current;
     const surface = surfaceRef.current;
     if (!panzoom || !surface) return;
+    viewModeRef.current = "custom";
     const x = surface.clientWidth / 2;
     const y = surface.clientHeight / 2;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) panzoom.zoomTo(x, y, factor);
@@ -101,11 +129,13 @@ export default function StaticDiagram({ model, assetRoot, kind = "diagram", chil
     const offsets = { ArrowLeft: [40, 0], ArrowRight: [-40, 0], ArrowUp: [0, 40], ArrowDown: [0, -40] };
     if (offsets[event.key]) {
       event.preventDefault();
+      if (panzoomRef.current) viewModeRef.current = "custom";
       panzoomRef.current?.zoomTo(0, 0, 1);
       panzoomRef.current?.moveBy(...offsets[event.key]);
-    } else if (["+", "=", "-", "0"].includes(event.key)) {
+    } else if (["+", "=", "-", "0", "1"].includes(event.key)) {
       event.preventDefault();
       if (event.key === "0") resetView();
+      else if (event.key === "1") actualSize();
       else zoomBy(event.key === "-" ? 1 / 1.2 : 1.2);
     }
   }
@@ -134,15 +164,17 @@ export default function StaticDiagram({ model, assetRoot, kind = "diagram", chil
     <p className={styles.resources}><a href={sourceUrl} download aria-label={`Download editable ${model.title} Draw.io source`}>Download editable Draw.io</a></p>
     {children}
     {isOpen ? <dialog ref={dialogRef} className={`${diagramStyles.modal} ${styles.dialog}`} aria-label={`${model.title} ${kind === "model" ? "BPMN" : "diagram"} viewer`} onKeyDown={handleDialogKey} onCancel={(event) => { event.preventDefault(); setIsOpen(false); }}>
-      <div className={diagramStyles.modalToolbar}><div><p className={diagramStyles.modalTitle}>Diagram viewer</p><p className={diagramStyles.modalHint}>Drag to pan or focus the diagram and use arrow keys. Use + and - to zoom; 0 resets the view.</p></div>
+      <div className={diagramStyles.modalToolbar}><div><p className={diagramStyles.modalTitle}>{model.title}</p><p className={diagramStyles.modalHint}>Arrow keys pan; + and - zoom; 0 fits the diagram; 1 shows actual size.</p></div>
         <div className={diagramStyles.controlGroup}>
-          <button className={diagramStyles.controlButton} type="button" aria-label="Zoom out" onClick={() => zoomBy(1 / 1.2)}>-</button>
-          <button className={diagramStyles.controlButton} type="button" aria-label="Zoom in" onClick={() => zoomBy(1.2)}>+</button>
-          <button className={`${diagramStyles.controlButton} ${diagramStyles.textButton}`} type="button" onClick={resetView}>Reset</button>
+          <output className={diagramStyles.zoomStatus} aria-label="Diagram zoom">{zoomPercent}%</output>
+          <button className={diagramStyles.controlButton} type="button" disabled={!isReady} aria-label="Zoom out" onClick={() => zoomBy(1 / 1.2)}>-</button>
+          <button className={diagramStyles.controlButton} type="button" disabled={!isReady} aria-label="Zoom in" onClick={() => zoomBy(1.2)}>+</button>
+          <button className={`${diagramStyles.controlButton} ${diagramStyles.textButton}`} type="button" disabled={!isReady} aria-label="View at actual size (100%)" onClick={actualSize}>100%</button>
+          <button className={`${diagramStyles.controlButton} ${diagramStyles.textButton}`} type="button" disabled={!isReady} onClick={resetView}>Reset</button>
           <button className={`${diagramStyles.controlButton} ${diagramStyles.textButton}`} ref={closeRef} type="button" onClick={() => setIsOpen(false)}>Close</button>
         </div>
       </div>
-      <div className={`${diagramStyles.viewport} ${styles.viewport}`} tabIndex={0} role="region" aria-label={`${model.title} diagram. Arrow keys pan; plus and minus zoom; zero resets the view.`} onKeyDown={handleKey}>
+      <div className={`${diagramStyles.viewport} ${styles.viewport}`} tabIndex={0} role="region" aria-label={`${model.title} diagram. Arrow keys pan; plus and minus zoom; zero fits the view; one shows actual size.`} onKeyDown={handleKey}>
         <div ref={surfaceRef} className={`${diagramStyles.modalDiagram} ${diagramStyles.zoomSurface}`}>
           <img ref={imageRef} className={styles.zoomImage} src={svgUrl} alt={model.alt} draggable={false} />
         </div>

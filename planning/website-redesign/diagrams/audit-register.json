@@ -1,0 +1,1739 @@
+[
+  {
+    "originalId": "docs/learn-the-business/process-flows.md#mermaid-1",
+    "page": "docs/learn-the-business/process-flows.md",
+    "title": "Connections across six Charles River processes",
+    "format": "flowchart TD",
+    "sourceLine": 35,
+    "sourceSha256": "214297768c01b8d603a5277f44d0e691c18370fb7e2b3fe08cc2ca027de471d3",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "company-dependencies"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/design-services.md#mermaid-1",
+    "page": "docs/processes/design-services.md",
+    "title": "Design work approved time and invoice evidence",
+    "format": "flowchart LR",
+    "sourceLine": 72,
+    "sourceSha256": "874b69872fd514ddc34813d005a819061264c76e16c50172d36f3ba0e8107c4a",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "service-time-billing"
+    ],
+    "semanticCorrections": "Approved billable time matches engagement and inclusive billing dates; the billed invoice line has its own stored key.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/design-services.md#mermaid-2",
+    "page": "docs/processes/design-services.md",
+    "title": "Customer demand and the service engagement",
+    "format": "flowchart LR",
+    "sourceLine": 190,
+    "sourceSha256": "fd7c6ba23f5a2f1473b69f73e074fb7376f76375e91a78b58d364f2e10a0e375",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "service-demand"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/design-services.md#mermaid-3",
+    "page": "docs/processes/design-services.md",
+    "title": "Service engagement staff and time evidence",
+    "format": "flowchart LR",
+    "sourceLine": 208,
+    "sourceSha256": "ba60c19c0afd64e3ce4b3146fcaa110c4251419c644ae00b6a4f21cc267cb424",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "service-staffing"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/design-services.md#mermaid-4",
+    "page": "docs/processes/design-services.md",
+    "title": "Approved service time billing and settlement",
+    "format": "flowchart LR",
+    "sourceLine": 228,
+    "sourceSha256": "fbd6af04bf240849c8c1d2b4794174f1d055ee248210d78eb47d50fc6b55bf3f",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "service-billing-settlement"
+    ],
+    "semanticCorrections": "ServiceBillingLine links to SalesInvoiceLine; invoice-header SalesInvoiceID links to cash applications. Time is aggregated by engagement/interval.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/manual-journals-and-close.md#mermaid-1",
+    "page": "docs/processes/manual-journals-and-close.md",
+    "title": "Accrual invoice adjustment and payment evidence",
+    "format": "flowchart LR",
+    "sourceLine": 82,
+    "sourceSha256": "7e0f4931afab336850a3f41ec5dfeaf12b1021f3d2b8f4616d0558bf403d35f4",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "accrual-posting"
+    ],
+    "semanticCorrections": "PurchaseInvoiceLine.AccrualJournalEntryID links the estimate; ReversesJournalEntryID links the independent residual adjustment. Payment settles AP.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/manual-journals-and-close.md#mermaid-2",
+    "page": "docs/processes/manual-journals-and-close.md",
+    "title": "Recurring journal category and ledger accounts",
+    "format": "flowchart LR",
+    "sourceLine": 229,
+    "sourceSha256": "cb95e93290798da820667aa842ba71275948532a50a9529d6e49d312af4b5daa",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "recurring-journal"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/manual-journals-and-close.md#mermaid-3",
+    "page": "docs/processes/manual-journals-and-close.md",
+    "title": "Factory overhead journals and manufacturing cost support",
+    "format": "flowchart LR",
+    "sourceLine": 262,
+    "sourceSha256": "20aa648adb8a7aa22de0b57b221e8da0c6741f421334952a15c1dc7620f80853",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "overhead-support"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/manual-journals-and-close.md#mermaid-4",
+    "page": "docs/processes/manual-journals-and-close.md",
+    "title": "Accrual settlement and adjustment branches",
+    "format": "flowchart LR",
+    "sourceLine": 296,
+    "sourceSha256": "fa923ef8dedb4919baac3d82c1137ddce738336fa04deaa90591a27860b5bcad",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Consolidated to one same-page map and anchor",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "accrual-posting"
+    ],
+    "semanticCorrections": "PurchaseInvoiceLine.AccrualJournalEntryID links the estimate; ReversesJournalEntryID links the independent residual adjustment. Payment settles AP.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/manufacturing.md#mermaid-1",
+    "page": "docs/processes/manufacturing.md",
+    "title": "Manufacturing records around one work order",
+    "format": "flowchart LR",
+    "sourceLine": 124,
+    "sourceSha256": "62ec47b915bdc03061b5e748e70c94b147af7d651926cd990cc83c6ddd04a739",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "work-order-evidence"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/manufacturing.md#mermaid-2",
+    "page": "docs/processes/manufacturing.md",
+    "title": "Weekly planning and manufacturing requirements",
+    "format": "flowchart LR",
+    "sourceLine": 227,
+    "sourceSha256": "cd78af6e7cdae24e808cd477329882b9f07ef7798927023e8d9bad8712545958",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "weekly-planning"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/manufacturing.md#mermaid-3",
+    "page": "docs/processes/manufacturing.md",
+    "title": "Manufacturing recipe and routing records",
+    "format": "flowchart LR",
+    "sourceLine": 269,
+    "sourceSha256": "d42660fe8a5723ae438b26c3b67a4091b811ec442292d976ea64d0b2610d8bae",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "recipe-routing"
+    ],
+    "semanticCorrections": "BillOfMaterialLine explicitly supplies component recipes alongside the routing/operation/work-center path.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/manufacturing.md#mermaid-4",
+    "page": "docs/processes/manufacturing.md",
+    "title": "Work-order release and daily operation schedules",
+    "format": "flowchart LR",
+    "sourceLine": 305,
+    "sourceSha256": "ef65a63278ffa4268b0707e13eede8f0e3d37322df16465a72db072db157acc1",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "operation-scheduling"
+    ],
+    "semanticCorrections": "Daily calendar matching uses BOTH WorkCenterID and ScheduleDate/CalendarDate.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/manufacturing.md#mermaid-5",
+    "page": "docs/processes/manufacturing.md",
+    "title": "Purchased component support and subsequent material issue",
+    "format": "flowchart LR",
+    "sourceLine": 378,
+    "sourceSha256": "fb9709632f0b37209b29003c6335c014abdf15e103b4121dd481bb3bd6ec9343",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "component-availability"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/manufacturing.md#mermaid-6",
+    "page": "docs/processes/manufacturing.md",
+    "title": "Operational labor evidence and payroll cost support",
+    "format": "flowchart LR",
+    "sourceLine": 414,
+    "sourceSha256": "2dbc3aa4d43818580689dddf08c38f4e00955f42d1826122f02df2038e50a2ba",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "manufacturing-payroll-support"
+    ],
+    "semanticCorrections": "PayrollRegisterLine bridges labor to register; period/cost-center/account aggregation supports the constructed PayrollSummary source, separate from journals.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/manufacturing.md#mermaid-7",
+    "page": "docs/processes/manufacturing.md",
+    "title": "Separate completion and close branches of a work order",
+    "format": "flowchart LR",
+    "sourceLine": 449,
+    "sourceSha256": "fc830e7c5528636ba5e22ef131e7a6154b2adf1e271e82127bd773b5c86df273",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "completion-close"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/o2c.md#mermaid-1",
+    "page": "docs/processes/o2c.md",
+    "title": "Goods sale and customer settlement records",
+    "format": "flowchart LR",
+    "sourceLine": 82,
+    "sourceSha256": "61f066f57574d66a6e3cf6734d857d8cc3da12ca266e7c7b3de8c08fc06a3d2c",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "goods-settlement-path"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/o2c.md#mermaid-2",
+    "page": "docs/processes/o2c.md",
+    "title": "Pricing support for the sales order",
+    "format": "flowchart LR",
+    "sourceLine": 215,
+    "sourceSha256": "0cc51346a055f54ef04b4385e31a79a1603e8ad7612fef944629c0dd2e6b828d",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "pricing-evidence"
+    ],
+    "semanticCorrections": "PriceListLine bridges list scope to SalesOrderLine. PromotionID and PriceOverrideApprovalID remain separate foreign-key paths.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/o2c.md#mermaid-3",
+    "page": "docs/processes/o2c.md",
+    "title": "Sales commission accrual adjustment and payment",
+    "format": "flowchart LR",
+    "sourceLine": 251,
+    "sourceSha256": "64254294626ea2ee7143485f7128bb4ca4b5098710208e39e9d5e9a75c28a78a",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "commission-posting"
+    ],
+    "semanticCorrections": "Invoice lines and commission rates meet at accruals. Payment-line SourceDocumentType qualifies SourceDocumentID for accruals and adjustments.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/o2c.md#mermaid-4",
+    "page": "docs/processes/o2c.md",
+    "title": "Customer order shipment invoice and ledger",
+    "format": "flowchart LR",
+    "sourceLine": 290,
+    "sourceSha256": "c829e69a3c93fb2e4441c7af3580f60fe1a6981500d47ee41b5b47318d2f5d50",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "goods-posting"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/o2c.md#mermaid-5",
+    "page": "docs/processes/o2c.md",
+    "title": "Receipt to unapplied money and invoice application",
+    "format": "flowchart LR",
+    "sourceLine": 332,
+    "sourceSha256": "c392184de00b780bc4f02601cbc93f09edc7d31f94743792323c88bdfda85a05",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "cash-posting"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/o2c.md#mermaid-6",
+    "page": "docs/processes/o2c.md",
+    "title": "Available inventory and backordered quantity",
+    "format": "flowchart LR",
+    "sourceLine": 378,
+    "sourceSha256": "41b911f34de95abbf1e4294d6c801215b8a2f8046e905f559858c53f6186787f",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "backorder-context"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/o2c.md#mermaid-7",
+    "page": "docs/processes/o2c.md",
+    "title": "Return credit and refund accounting evidence",
+    "format": "flowchart LR",
+    "sourceLine": 426,
+    "sourceSha256": "936c950159f34a958eacfe705baff4ce9464032a48f5bea6bae069a2e5ca1c1c",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "returns-posting"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/o2c.md#mermaid-8",
+    "page": "docs/processes/o2c.md",
+    "title": "Credit memo and remaining customer credit",
+    "format": "flowchart LR",
+    "sourceLine": 469,
+    "sourceSha256": "f29e2d80ef842148949d81583ffcccaf232f9eff3de8d35c38ad524fcbdfea29",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "customer-credit-path"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/p2p.md#mermaid-1",
+    "page": "docs/processes/p2p.md",
+    "title": "Receipt-matched purchase evidence",
+    "format": "flowchart LR",
+    "sourceLine": 90,
+    "sourceSha256": "dec7b12676dc4f24302fc134f343825003bc5fd5eff67be3f95cd3c238bff3af",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "goods-purchase-path"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/p2p.md#mermaid-2",
+    "page": "docs/processes/p2p.md",
+    "title": "Forecast and policy support a purchase request",
+    "format": "flowchart LR",
+    "sourceLine": 211,
+    "sourceSha256": "8de732196c735b2c99ff1196c982c10c57ae1300273f8be6ad3966c1697efc8d",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "purchase-planning"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/p2p.md#mermaid-3",
+    "page": "docs/processes/p2p.md",
+    "title": "Purchase request order and receipt",
+    "format": "flowchart LR",
+    "sourceLine": 245,
+    "sourceSha256": "1d98afb688194cc2a6e0e0b7e7d76372844dfb7e2915b5698ba551fe3b9975f9",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "requisition-receipt"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/p2p.md#mermaid-4",
+    "page": "docs/processes/p2p.md",
+    "title": "Receipt invoice and ledger evidence",
+    "format": "flowchart LR",
+    "sourceLine": 281,
+    "sourceSha256": "1ca5e689f0bc1a1c8f9841da7ab12b21b4666b9a452ac6e296343ebf58a90dfa",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "receipt-invoice-posting"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/p2p.md#mermaid-5",
+    "page": "docs/processes/p2p.md",
+    "title": "Supplier invoice payable and disbursement",
+    "format": "flowchart LR",
+    "sourceLine": 318,
+    "sourceSha256": "49211d16988f5c7410158874c48745636cb38af0f97f6f05e6a25e8fefb75a75",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "supplier-settlement-posting"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/payroll.md#mermaid-1",
+    "page": "docs/processes/payroll.md",
+    "title": "Approved time employee payroll and period remittances",
+    "format": "flowchart LR",
+    "sourceLine": 80,
+    "sourceSha256": "6125ed15270bc795b00023d7d34eda4b9bba5a277edeca865cd534bdc1c4dce5",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "payroll-evidence"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/payroll.md#mermaid-2",
+    "page": "docs/processes/payroll.md",
+    "title": "Roster punch and approval support for daily time",
+    "format": "flowchart LR",
+    "sourceLine": 222,
+    "sourceSha256": "bbf954f6b9b9acfc68242328d20feed4f390264907f13209aec197330fd755e9",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "attendance-evidence"
+    ],
+    "semanticCorrections": "Foreign-key paths are distinct from analytical matches, account effects, and business context. Existing process scope is preserved.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/payroll.md#mermaid-3",
+    "page": "docs/processes/payroll.md",
+    "title": "Approved time and payroll-period support for the register",
+    "format": "flowchart LR",
+    "sourceLine": 266,
+    "sourceSha256": "48492acf6b4910c41067aad4db47d1715637a9ad3ee3674c05fb988dd3032dc5",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "approved-time-register"
+    ],
+    "semanticCorrections": "Approved time aggregates by employee and period, while labor allocations pass through PayrollRegisterLine.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/payroll.md#mermaid-4",
+    "page": "docs/processes/payroll.md",
+    "title": "Employee net pay and other payroll-liability settlement",
+    "format": "flowchart LR",
+    "sourceLine": 307,
+    "sourceSha256": "9591ca576743e5cf555a2a9d4f4b6ebed63d6058cc921f044fcdac9ef0debd8f",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "payroll-obligations"
+    ],
+    "semanticCorrections": "Employee-register net pay and period-level remittances are separate obligations. Recognition uses the PayrollSummary aggregation bridge.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/payroll.md#mermaid-5",
+    "page": "docs/processes/payroll.md",
+    "title": "Manufacturing labor support and direct payroll recognition",
+    "format": "flowchart LR",
+    "sourceLine": 348,
+    "sourceSha256": "7f08825972a244fcb5d7a95f47038f73074a80582d9b04e1b97d8d5977489b0d",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Reused shared native Draw.io support map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "manufacturing-payroll-support"
+    ],
+    "semanticCorrections": "PayrollRegisterLine bridges labor to register; period/cost-center/account aggregation supports the constructed PayrollSummary source, separate from journals.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/processes/payroll.md#mermaid-6",
+    "page": "docs/processes/payroll.md",
+    "title": "Attendance evidence exceptions and payroll",
+    "format": "flowchart LR",
+    "sourceLine": 392,
+    "sourceSha256": "f282c6a6f499bb1f088262b0504f200cdaac700b6cfcc48d9a2bc5bc128d3953",
+    "purpose": "Process or accounting evidence",
+    "audience": "Students and instructors",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "attendance-review"
+    ],
+    "semanticCorrections": "AttendanceException has no punch key. Roster/time keys supply the trace; payroll uses LaborTimeEntry and PayrollRegisterLine.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/reference/schema.md#mermaid-1",
+    "page": "docs/reference/schema.md",
+    "title": "Accounting core account-to-ledger relationship",
+    "format": "erDiagram",
+    "sourceLine": 72,
+    "sourceSha256": "0c8ad88858b3500cf3c6b95c1c604c063d62c3731feac323475739b9a0add460",
+    "purpose": "Entity relationships",
+    "audience": "Students and instructors",
+    "disposition": "Replaced by focused native Draw.io ER views",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "accounting-core"
+    ],
+    "semanticCorrections": "Physical primary keys, foreign-key optionality, grain, conditional source traces, and composite/aggregate matches verified against the checksum-matched release. JournalEntry is now visible.",
+    "layoutIssues": "Split large collections into focused views. Short numbered connectors preserve readable table labels. Every table has an indexed primary home.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/reference/schema.md#mermaid-2",
+    "page": "docs/reference/schema.md",
+    "title": "Fixed assets, lifecycle events, financing and repayment schedules",
+    "format": "erDiagram",
+    "sourceLine": 96,
+    "sourceSha256": "9f6696648df2c9f6201a74e369d6b654deb4983818cdcb2740c9c5294fec9711",
+    "purpose": "Entity relationships",
+    "audience": "Students and instructors",
+    "disposition": "Replaced by focused native Draw.io ER views",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "asset-financing"
+    ],
+    "semanticCorrections": "Physical primary keys, foreign-key optionality, grain, conditional source traces, and composite/aggregate matches verified against the checksum-matched release.",
+    "layoutIssues": "Split large collections into focused views. Short numbered connectors preserve readable table labels. Every table has an indexed primary home.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/reference/schema.md#mermaid-3",
+    "page": "docs/reference/schema.md",
+    "title": "Customer orders, fulfillment, billing and settlement relationships",
+    "format": "erDiagram",
+    "sourceLine": 125,
+    "sourceSha256": "911ce67077f41852ce89235b03ea08bf98917c6e396b64df684a18514cebfc39",
+    "purpose": "Entity relationships",
+    "audience": "Students and instructors",
+    "disposition": "Replaced by focused native Draw.io ER views",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "commercial-terms",
+      "goods-fulfillment",
+      "service-delivery",
+      "cash-allocation",
+      "returns-credit",
+      "commissions"
+    ],
+    "semanticCorrections": "Physical primary keys, foreign-key optionality, grain, conditional source traces, and composite/aggregate matches verified against the checksum-matched release. PriceList.CustomerID and SalesInvoiceLine.ShipmentLineID are optional.",
+    "layoutIssues": "Split large collections into focused views. Short numbered connectors preserve readable table labels. Every table has an indexed primary home.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/reference/schema.md#mermaid-4",
+    "page": "docs/reference/schema.md",
+    "title": "Supplier purchasing, receipts, invoices and payments",
+    "format": "erDiagram",
+    "sourceLine": 223,
+    "sourceSha256": "cfc1df68fa8bb0d95912ae80455f6de7677db43a70a9b8c6d572883202abc351",
+    "purpose": "Entity relationships",
+    "audience": "Students and instructors",
+    "disposition": "Replaced by focused native Draw.io ER views",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "procurement-receiving",
+      "supplier-liabilities"
+    ],
+    "semanticCorrections": "Physical primary keys, foreign-key optionality, grain, conditional source traces, and composite/aggregate matches verified against the checksum-matched release. PurchaseInvoiceLine.POLineID is optional.",
+    "layoutIssues": "Split large collections into focused views. Short numbered connectors preserve readable table labels. Every table has an indexed primary home.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/reference/schema.md#mermaid-5",
+    "page": "docs/reference/schema.md",
+    "title": "Manufacturing work-order evidence branches",
+    "format": "erDiagram",
+    "sourceLine": 266,
+    "sourceSha256": "5c781bfa897857c5a5e0f1fa0da1034732a6825e9779e1a1ecbbf3f5b9d899a3",
+    "purpose": "Entity relationships",
+    "audience": "Students and instructors",
+    "disposition": "Replaced by focused native Draw.io ER views",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "manufacturing-definitions",
+      "work-order-scheduling",
+      "manufacturing-cost-events"
+    ],
+    "semanticCorrections": "Physical primary keys, foreign-key optionality, grain, conditional source traces, and composite/aggregate matches verified against the checksum-matched release.",
+    "layoutIssues": "Split large collections into focused views. Short numbered connectors preserve readable table labels. Every table has an indexed primary home.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/reference/schema.md#mermaid-6",
+    "page": "docs/reference/schema.md",
+    "title": "Workforce attendance, approved time, payroll and settlement",
+    "format": "erDiagram",
+    "sourceLine": 320,
+    "sourceSha256": "adb06f040bba0ef95d46e751af66488b5e4945c3c982b753d70930970f100c30",
+    "purpose": "Entity relationships",
+    "audience": "Students and instructors",
+    "disposition": "Replaced by focused native Draw.io ER views",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "attendance-time",
+      "payroll-settlement"
+    ],
+    "semanticCorrections": "Physical primary keys, foreign-key optionality, grain, conditional source traces, and composite/aggregate matches verified against the checksum-matched release.",
+    "layoutIssues": "Split large collections into focused views. Short numbered connectors preserve readable table labels. Every table has an indexed primary home.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/reference/schema.md#mermaid-7",
+    "page": "docs/reference/schema.md",
+    "title": "Shared item, warehouse and employee master records",
+    "format": "erDiagram",
+    "sourceLine": 378,
+    "sourceSha256": "55bbf406c2b306d9f5570b038c44872ef77d37ac9010d1dd3c937584c3d5c849",
+    "purpose": "Entity relationships",
+    "audience": "Students and instructors",
+    "disposition": "Replaced by focused native Draw.io ER views",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "shared-masters"
+    ],
+    "semanticCorrections": "Physical primary keys, foreign-key optionality, grain, conditional source traces, and composite/aggregate matches verified against the checksum-matched release.",
+    "layoutIssues": "Split large collections into focused views. Short numbered connectors preserve readable table labels. Every table has an indexed primary home.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/reference/schema.md#mermaid-8",
+    "page": "docs/reference/schema.md",
+    "title": "Cost-center budget summary and planning detail",
+    "format": "erDiagram",
+    "sourceLine": 412,
+    "sourceSha256": "cfb79994de2596e2f04cc1d4fd6b3e4d4e394f464a6c6752eab4dbabbc81a1a1",
+    "purpose": "Entity relationships",
+    "audience": "Students and instructors",
+    "disposition": "Replaced by focused native Draw.io ER views",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "budgets-responsibility"
+    ],
+    "semanticCorrections": "Physical primary keys, foreign-key optionality, grain, conditional source traces, and composite/aggregate matches verified against the checksum-matched release. BudgetLine.CostCenterID is optional.",
+    "layoutIssues": "Split large collections into focused views. Short numbered connectors preserve readable table labels. Every table has an indexed primary home.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/reference/schema.md#mermaid-9",
+    "page": "docs/reference/schema.md",
+    "title": "Supply recommendations, component requirements and capacity plans",
+    "format": "erDiagram",
+    "sourceLine": 439,
+    "sourceSha256": "2cfa4b6bf9186e1ff1cbd8f6910151405c973a261230523b625d3a448acbac02",
+    "purpose": "Entity relationships",
+    "audience": "Students and instructors",
+    "disposition": "Replaced by focused native Draw.io ER views",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "demand-supply-planning"
+    ],
+    "semanticCorrections": "Physical primary keys, foreign-key optionality, grain, conditional source traces, and composite/aggregate matches verified against the checksum-matched release. DemandForecast and InventoryPolicy are now visible as analytical context.",
+    "layoutIssues": "Split large collections into focused views. Short numbered connectors preserve readable table labels. Every table has an indexed primary home.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "docs/technical/technical-guide.md#mermaid-1",
+    "page": "docs/technical/technical-guide.md",
+    "title": "Local dataset build from settings to exported teaching files",
+    "format": "flowchart LR",
+    "sourceLine": 44,
+    "sourceSha256": "33db7588bfc5468c7e6d5bc5ccb780c81d5c051a20a0b1bd82310baf2a1317aa",
+    "purpose": "Local generator build sequence",
+    "audience": "Technical maintainers",
+    "disposition": "Converted to native Draw.io evidence map",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "technical-build"
+    ],
+    "semanticCorrections": "Existing technical workflow is retained outside the business-process learning sequence.",
+    "layoutIssues": "Native editable cards, numbered connectors, and exported clear corridors replace automatic Mermaid layout.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "bpmn/order-to-cash",
+    "title": "Order-to-Cash",
+    "format": "drawio",
+    "source": "static/diagrams/bpmn/order-to-cash.drawio",
+    "sourceSha256": "96e27489fecbcd5b59c5459fb4a93b0bdc3fd418886a1e54cbfc67830029e76d",
+    "purpose": "A goods fulfillment pass separates the customer order, available shipment, invoice and commission accrual, cash receipt, and application.",
+    "audience": "Students and instructors",
+    "disposition": "Retained native BPMN with label and corridor refinements",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "order-to-cash"
+    ],
+    "semanticCorrections": "Existing gateways, open-item outcomes, separate settlement/completion/close events, and proposed-control boundaries are preserved. Instance scope is explicit.",
+    "layoutIssues": "Existing flow layout retained with larger essential labels.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "bpmn/procure-to-pay",
+    "title": "Procure-to-Pay",
+    "format": "drawio",
+    "source": "static/diagrams/bpmn/procure-to-pay.drawio",
+    "sourceSha256": "b3bf49c643f43b79d4f10932d70667de9b2eed108f5c56d4a71ff79497e155fc",
+    "purpose": "Follow goods procurement from approved need through purchasing, receipt, invoice linkage, and supplier payment.",
+    "audience": "Students and instructors",
+    "disposition": "Retained native BPMN with label and corridor refinements",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "procure-to-pay"
+    ],
+    "semanticCorrections": "Existing gateways, open-item outcomes, separate settlement/completion/close events, and proposed-control boundaries are preserved. Instance scope is explicit.",
+    "layoutIssues": "Existing flow layout retained with larger essential labels.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "bpmn/manufacturing-conversion",
+    "title": "Manufacturing and Conversion",
+    "format": "drawio",
+    "source": "static/diagrams/bpmn/manufacturing-conversion.drawio",
+    "sourceSha256": "61ea0e27667021bc19c48e394b8fc1a08ffd4c2c9fb42bfc30c3acb11f195889",
+    "purpose": "Separate planning, material issue, production execution, finished-goods completion, and cost close.",
+    "audience": "Students and instructors",
+    "disposition": "Retained native BPMN with label and corridor refinements",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "manufacturing-conversion"
+    ],
+    "semanticCorrections": "Existing gateways, open-item outcomes, separate settlement/completion/close events, and proposed-control boundaries are preserved. Instance scope is explicit.",
+    "layoutIssues": "Existing flow layout retained with larger essential labels.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "bpmn/design-services",
+    "title": "Design Services",
+    "format": "drawio",
+    "source": "static/diagrams/bpmn/design-services.drawio",
+    "sourceSha256": "8451833f1ff1e6b55261e15fe63ea6cfc6941b25fcc69b442a602ce651c2ab95",
+    "purpose": "Trace an hourly service engagement through approved time, billable classification, monthly invoicing, and customer cash.",
+    "audience": "Students and instructors",
+    "disposition": "Retained native BPMN with label and corridor refinements",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "design-services"
+    ],
+    "semanticCorrections": "Existing gateways, open-item outcomes, separate settlement/completion/close events, and proposed-control boundaries are preserved. Instance scope is explicit.",
+    "layoutIssues": "Essential labels enlarged. Five original crossings in four models were removed.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "bpmn/payroll",
+    "title": "Payroll",
+    "format": "drawio",
+    "source": "static/diagrams/bpmn/payroll.drawio",
+    "sourceSha256": "6eb750ad0066c5fab68fd2ab20b28c766900a73f889c85740b24bd7bd5b62108",
+    "purpose": "Distinguish attendance and approved time from the payroll register, employee net pay, and liability remittance.",
+    "audience": "Students and instructors",
+    "disposition": "Retained native BPMN with label and corridor refinements",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "payroll"
+    ],
+    "semanticCorrections": "Existing gateways, open-item outcomes, separate settlement/completion/close events, and proposed-control boundaries are preserved. Instance scope is explicit.",
+    "layoutIssues": "Essential labels enlarged. Five original crossings in four models were removed.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "bpmn/manual-journals-close",
+    "title": "Manual Journals and Close",
+    "format": "drawio",
+    "source": "static/diagrams/bpmn/manual-journals-close.drawio",
+    "sourceSha256": "e1117a2046fb5235b6c34756e0ea7ea456b69da90db8df590efbfaa9e9d3fdda",
+    "purpose": "Follow journal preparation, recorded approval, posted detail, and the separate year-end closing branch.",
+    "audience": "Students and instructors",
+    "disposition": "Retained native BPMN with label and corridor refinements",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "manual-journals-close"
+    ],
+    "semanticCorrections": "Existing gateways, open-item outcomes, separate settlement/completion/close events, and proposed-control boundaries are preserved. Instance scope is explicit.",
+    "layoutIssues": "Existing flow layout retained with larger essential labels.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "bpmn/returns-credit-refunds",
+    "title": "Returns, Credit Memos and Refunds",
+    "format": "drawio",
+    "source": "static/diagrams/bpmn/returns-credit-refunds.drawio",
+    "sourceSha256": "98e962c92a340a97f78963b1d55f7ef0e94f3778b39bc4736f52ddec037f2e93",
+    "purpose": "Separate the physical goods return, credit memo, receivable correction, open customer credit, and optional cash refund.",
+    "audience": "Students and instructors",
+    "disposition": "Retained native BPMN with label and corridor refinements",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "returns-credit-refunds"
+    ],
+    "semanticCorrections": "Existing gateways, open-item outcomes, separate settlement/completion/close events, and proposed-control boundaries are preserved. Instance scope is explicit.",
+    "layoutIssues": "Essential labels enlarged. Five original crossings in four models were removed.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "bpmn/cash-application",
+    "title": "Cash Application",
+    "format": "drawio",
+    "source": "static/diagrams/bpmn/cash-application.drawio",
+    "sourceSha256": "e73650b276b3212d7b5f1038fc6912b663c00a9067c090bddddc7d5f47dfdf24",
+    "purpose": "Explain why cash arrival, invoice allocation, and residual unapplied money require separate evidence.",
+    "audience": "Students and instructors",
+    "disposition": "Retained native BPMN with label and corridor refinements",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "cash-application"
+    ],
+    "semanticCorrections": "Existing gateways, open-item outcomes, separate settlement/completion/close events, and proposed-control boundaries are preserved. Instance scope is explicit.",
+    "layoutIssues": "Existing flow layout retained with larger essential labels.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "bpmn/accrual-settlement",
+    "title": "Accrued-Service Settlement",
+    "format": "drawio",
+    "source": "static/diagrams/bpmn/accrual-settlement.drawio",
+    "sourceSha256": "9fcbb8dbe1e034f0e303b59ba7d86b607c79aebe054a1b8058c020c7d17a16e2",
+    "purpose": "Follow an expense estimate into a linked supplier service invoice and AP payment without inventing a goods receipt.",
+    "audience": "Students and instructors",
+    "disposition": "Retained native BPMN with label and corridor refinements",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "accrual-settlement"
+    ],
+    "semanticCorrections": "Existing gateways, open-item outcomes, separate settlement/completion/close events, and proposed-control boundaries are preserved. Instance scope is explicit.",
+    "layoutIssues": "Existing flow layout retained with larger essential labels.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "bpmn/manufacturing-variances",
+    "title": "Manufacturing Variances",
+    "format": "drawio",
+    "source": "static/diagrams/bpmn/manufacturing-variances.drawio",
+    "sourceSha256": "58c91c7087e8975d32b7274e43a4753180ac6fa48a121ae9d327c8b0c8ab3aed",
+    "purpose": "A clearly proposed evidence-review activity for explaining work-order cost close and planning further investigation.",
+    "audience": "Students and instructors",
+    "disposition": "Retained native BPMN with label and corridor refinements",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "manufacturing-variances"
+    ],
+    "semanticCorrections": "Existing gateways, open-item outcomes, separate settlement/completion/close events, and proposed-control boundaries are preserved. Instance scope is explicit.",
+    "layoutIssues": "Existing flow layout retained with larger essential labels.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "bpmn/process-architecture",
+    "title": "Business-Process Architecture",
+    "format": "drawio",
+    "source": "static/diagrams/bpmn/process-architecture.drawio",
+    "sourceSha256": "a53dc175fc97fd79271264016c89149114ac9c868974be0b1e0bcbf78cb0661b",
+    "purpose": "Six separately triggered business cycles share operational evidence and the ledger; each collapsed activity corresponds to a detailed model.",
+    "audience": "Students and instructors",
+    "disposition": "Retained native BPMN with label and corridor refinements",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "process-architecture"
+    ],
+    "semanticCorrections": "Existing gateways, open-item outcomes, separate settlement/completion/close events, and proposed-control boundaries are preserved. Instance scope is explicit.",
+    "layoutIssues": "Essential labels enlarged. Five original crossings in four models were removed.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/meet-the-records",
+    "title": "Meet the Records",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/meet-the-records.drawio",
+    "sourceSha256": "756bd303c42b66998c53b28e9839b39ae09ecebb0f036ba11d75a54759101397",
+    "purpose": "Which parts of a customer row identify and describe it?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "meet-the-records"
+    ],
+    "semanticCorrections": "Three attributes describe one customer row; they are not three tables or three events.",
+    "layoutIssues": "Replaced universal three-box sequence with record-columns. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/read-an-order",
+    "title": "Read an Order",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/read-an-order.drawio",
+    "sourceSha256": "43ee76d173c3c8b8204429b80018e0d72aa3a9da12213e6fe60f79df7174eda7",
+    "purpose": "How can one order have two lines?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "read-an-order"
+    ],
+    "semanticCorrections": "One selected order header supports two separate line records. Connect each line directly to the header.",
+    "layoutIssues": "Replaced universal three-box sequence with header-lines. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/connect-the-records",
+    "title": "Connect the Records",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/connect-the-records.drawio",
+    "sourceSha256": "f27a67ce100e1a0074fe7531cdc9616e2a3fe9911375d0183df24503c0dc93c5",
+    "purpose": "Which keys bring descriptions into the order?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "connect-the-records"
+    ],
+    "semanticCorrections": "Match stored foreign keys (FK) while keeping headers, lines, and master records at their own grains.",
+    "layoutIssues": "Replaced universal three-box sequence with record-links. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/source-to-ledger",
+    "title": "Follow a Goods Sale",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/source-to-ledger.drawio",
+    "sourceSha256": "db860505549197e09b048d78872654e5ac6d887100e6c97bf6bf03b6acea2204",
+    "purpose": "What connects this ordered line to its invoice?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "source-to-ledger"
+    ],
+    "semanticCorrections": "Match stored foreign keys (FK) while keeping headers, lines, and master records at their own grains.",
+    "layoutIssues": "Replaced universal three-box sequence with record-links. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/follow-customer-settlement",
+    "title": "Follow Customer Settlement",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/follow-customer-settlement.drawio",
+    "sourceSha256": "e3baa6a97668d33d23fba8a697bb875792556164520b1aebe7a11dd1262ed7c8",
+    "purpose": "When does this receipt reduce the invoice balance?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "follow-customer-settlement"
+    ],
+    "semanticCorrections": "An invoice and an incoming receipt meet through a dated application. Their existence alone does not establish allocation.",
+    "layoutIssues": "Replaced universal three-box sequence with allocation. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/find-the-accounting-entries",
+    "title": "Find the Accounting Entries",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/find-the-accounting-entries.drawio",
+    "sourceSha256": "dad5efdd53668f9c4b228dff61cb72b27cca2136789a057226e268c94cb6ea56",
+    "purpose": "How do separate events change separate accounts?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "find-the-accounting-entries"
+    ],
+    "semanticCorrections": "Read document dates and accounting effects separately. The timeline does not create additional database relationships.",
+    "layoutIssues": "Replaced universal three-box sequence with dated-events. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/follow-design-time-into-billing",
+    "title": "Follow Design Time into Billing",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/follow-design-time-into-billing.drawio",
+    "sourceSha256": "15bb3852ba2fe23fc714b45f2432cc3329a37263e679e91b7188e6a114e8019f",
+    "purpose": "How does approved time become billed revenue?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "follow-design-time-into-billing"
+    ],
+    "semanticCorrections": "Match engagement and the inclusive billing period, then aggregate approved billable time. This is distinct from a stored billing-line key on each time entry.",
+    "layoutIssues": "Replaced universal three-box sequence with billing-match. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/receipt-to-payable",
+    "title": "Follow a Purchase",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/receipt-to-payable.drawio",
+    "sourceSha256": "58d4fefef66bc2bf3cf022c370e14461ad7429e280d4cb204b5b53c6578280d1",
+    "purpose": "How do receipt, billing, and payment change the liability?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "receipt-to-payable"
+    ],
+    "semanticCorrections": "Read document dates and accounting effects separately. The timeline does not create additional database relationships.",
+    "layoutIssues": "Replaced universal three-box sequence with dated-events. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/manufacturing-cost-flow",
+    "title": "Follow Manufacturing Costs",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/manufacturing-cost-flow.drawio",
+    "sourceSha256": "0b6fd356eb16cd73b10706e528ee17e846528f039e510ec9f7ff4027c5e28ca7",
+    "purpose": "When are the goods complete and the work order closed?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "manufacturing-cost-flow"
+    ],
+    "semanticCorrections": "Read document dates and accounting effects separately. The timeline does not create additional database relationships.",
+    "layoutIssues": "Replaced universal three-box sequence with dated-events. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/follow-hours-into-payroll",
+    "title": "Follow Hours into Payroll",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/follow-hours-into-payroll.drawio",
+    "sourceSha256": "7ca4644d91d995ffe9a0b2d909f2930fbceb4b97dc927040e23178d5071630af",
+    "purpose": "Which payroll obligations are settled separately?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "follow-hours-into-payroll"
+    ],
+    "semanticCorrections": "Employee-register net pay and period-level remittances have separate grains, source records, and settlement dates.",
+    "layoutIssues": "Replaced universal three-box sequence with payroll-branches. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/follow-an-estimate-into-settlement",
+    "title": "Follow an Estimate into Settlement",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/follow-an-estimate-into-settlement.drawio",
+    "sourceSha256": "d74992174e71e646b17b875f1ef48d740657b47e632e3d7dfed861821be400b9",
+    "purpose": "What remains after the supplier invoice uses the estimate?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "follow-an-estimate-into-settlement"
+    ],
+    "semanticCorrections": "Invoice payment settles AP; a residual-accrual adjustment refers back to the estimate independently of payment.",
+    "layoutIssues": "Replaced universal three-box sequence with accrual-branches. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "tutorials/turn-records-into-a-conclusion",
+    "title": "Turn Records into a Conclusion",
+    "format": "drawio",
+    "source": "static/diagrams/tutorials/turn-records-into-a-conclusion.drawio",
+    "sourceSha256": "a18c2560e5e430eb8906b346b94965424a6de39185364f6db8e045aff118fb6b",
+    "purpose": "How does a checked population support a conclusion?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "turn-records-into-a-conclusion"
+    ],
+    "semanticCorrections": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result.",
+    "layoutIssues": "Replaced universal three-box sequence with analytical-workflow. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case01-handoffs",
+    "title": "Who must contribute to the customer response?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case01-handoffs.drawio",
+    "sourceSha256": "a6649aa692beb0ef29bab10936ade08834a09c733ce955ea2fc2e29616deaaf7",
+    "purpose": "Who must contribute to the customer response?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case01-handoffs"
+    ],
+    "semanticCorrections": "Rows show proposed teaching responsibilities. They do not establish employee access independence or control operation.",
+    "layoutIssues": "Replaced universal three-box sequence with responsibilities. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case01-relationships",
+    "title": "Why must settlement records be summarized separately?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case01-relationships.drawio",
+    "sourceSha256": "19432eee4330227526b303b6ca5076697fb00782560e2623ed19ece1ab527c17",
+    "purpose": "Why must settlement records be summarized separately?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case01-relationships"
+    ],
+    "semanticCorrections": "Summarize each many-side independently to the comparison grain before joining; keep other analytical grains separate.",
+    "layoutIssues": "Replaced universal three-box sequence with aggregate-join. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case01-timeline",
+    "title": "What changed between the two reviews?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case01-timeline.drawio",
+    "sourceSha256": "d5ec62637843ab23b7fa59b3ac837d3023f135240dd8407db9e04e2cf33e8e71",
+    "purpose": "What changed between the two reviews?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case01-timeline"
+    ],
+    "semanticCorrections": "Read document dates and accounting effects separately. The timeline does not create additional database relationships.",
+    "layoutIssues": "Replaced universal three-box sequence with dated-events. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case02-responsibilities",
+    "title": "Who turns time into a customer bill?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case02-responsibilities.drawio",
+    "sourceSha256": "40e26317646fc6b060da62112cfce9378a67af89a90ad662551d8ba7f3842e81",
+    "purpose": "Who turns time into a customer bill?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case02-responsibilities"
+    ],
+    "semanticCorrections": "Rows show proposed teaching responsibilities. They do not establish employee access independence or control operation.",
+    "layoutIssues": "Replaced universal three-box sequence with responsibilities. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case02-billing",
+    "title": "How does a billing period connect time and invoice evidence?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case02-billing.drawio",
+    "sourceSha256": "2755cac115dcb65f7da5808c6d336e4819e20e5c771565ee98987b49f6a2d7be",
+    "purpose": "How does a billing period connect time and invoice evidence?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case02-billing"
+    ],
+    "semanticCorrections": "Match engagement and the inclusive billing period, then aggregate approved billable time. This is distinct from a stored billing-line key on each time entry.",
+    "layoutIssues": "Replaced universal three-box sequence with billing-match. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case02-bridge",
+    "title": "Which measures belong in the design review?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case02-bridge.drawio",
+    "sourceSha256": "c8bcd2d3bffabfbb373df64e033c792da8ce605cfadef01852ed681b82f353e5",
+    "purpose": "Which measures belong in the design review?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case02-bridge"
+    ],
+    "semanticCorrections": "These measures are compared side by side. Their different definitions and grains do not form a transaction sequence.",
+    "layoutIssues": "Replaced universal three-box sequence with measure-comparison. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case03-branches",
+    "title": "Why do purchasing obligations follow two paths?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case03-branches.drawio",
+    "sourceSha256": "b521fe492fc15308b759833548165fc91b1c1061adc38ebbf787c3a977ae8ca3",
+    "purpose": "Why do purchasing obligations follow two paths?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case03-branches"
+    ],
+    "semanticCorrections": "Goods and accrued services follow separate evidence paths. Compare their obligations without joining their populations together.",
+    "layoutIssues": "Replaced universal three-box sequence with two-populations. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case03-transitions",
+    "title": "How does the obligation change its accounting form?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case03-transitions.drawio",
+    "sourceSha256": "0b8073703506f10493b289784e7acb51f2f2cc9219a4d236637c5d8b3fe5b4ef",
+    "purpose": "How does the obligation change its accounting form?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case03-transitions"
+    ],
+    "semanticCorrections": "Distinguish pre-invoice obligations, accounts payable, payment, and any independent residual-accrual adjustment.",
+    "layoutIssues": "Replaced universal three-box sequence with liability-states. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case03-timeline",
+    "title": "What does the later evidence change?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case03-timeline.drawio",
+    "sourceSha256": "fbb9bc533e6c96eb29e42651ce4cd2d24ea067c1132571772bcf4cd243317bc6",
+    "purpose": "What does the later evidence change?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case03-timeline"
+    ],
+    "semanticCorrections": "Read document dates and accounting effects separately. The timeline does not create additional database relationships.",
+    "layoutIssues": "Replaced universal three-box sequence with dated-events. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case04-decision",
+    "title": "Which evidence can support a product priority?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case04-decision.drawio",
+    "sourceSha256": "2cf22857c65017756ff1b0fdd42ea077af89db5bd9d4ee2876ddc707c7675a22",
+    "purpose": "Which evidence can support a product priority?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case04-decision"
+    ],
+    "semanticCorrections": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result.",
+    "layoutIssues": "Replaced universal three-box sequence with analytical-workflow. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case04-relationships",
+    "title": "Which records explain a billed price?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case04-relationships.drawio",
+    "sourceSha256": "8ad6970d63809542eac11cc0da606f7a276c392273b54b323e8e69ee785139c1",
+    "purpose": "Which records explain a billed price?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case04-relationships"
+    ],
+    "semanticCorrections": "A billed line has several kinds of supporting context. Foreign keys, approval validity, and cost assumptions answer different questions.",
+    "layoutIssues": "Replaced universal three-box sequence with support-branches. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case04-measures",
+    "title": "Which comparisons can be combined responsibly?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case04-measures.drawio",
+    "sourceSha256": "cc22672e166b5649dcc96982a4eb08545e2e051d5fd189f6d590a17e4eda3533",
+    "purpose": "Which comparisons can be combined responsibly?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case04-measures"
+    ],
+    "semanticCorrections": "These measures are compared side by side. Their different definitions and grains do not form a transaction sequence.",
+    "layoutIssues": "Replaced universal three-box sequence with measure-comparison. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case04-conclusion",
+    "title": "How does a comparison become a decision?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case04-conclusion.drawio",
+    "sourceSha256": "52cec3b931fb041435682b00797786bb620f3add1661e19e73e007e400e46e31",
+    "purpose": "How does a comparison become a decision?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case04-conclusion"
+    ],
+    "semanticCorrections": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result.",
+    "layoutIssues": "Replaced universal three-box sequence with analytical-workflow. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case05-planning",
+    "title": "How does a plan become production evidence?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case05-planning.drawio",
+    "sourceSha256": "06b49e6db3c9438b3692512c03da83b9d3f73f52b7f386860abc424a2af486c7",
+    "purpose": "How does a plan become production evidence?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case05-planning"
+    ],
+    "semanticCorrections": "Planning and schedules describe intended activity; dated issue, completion, and close records establish execution.",
+    "layoutIssues": "Replaced universal three-box sequence with planning-evidence. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case05-costs",
+    "title": "What changes when materials become finished goods?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case05-costs.drawio",
+    "sourceSha256": "1481232669d3cb2f7d066c45bd5a70c43475408b3eae008caf7cb15bd53651be",
+    "purpose": "What changes when materials become finished goods?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case05-costs"
+    ],
+    "semanticCorrections": "Material issue, standard-cost completion, and variance close have distinct account effects and evidence populations.",
+    "layoutIssues": "Replaced universal three-box sequence with cost-events. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case05-grains",
+    "title": "Which totals can be joined without multiplication?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case05-grains.drawio",
+    "sourceSha256": "63245ecf369a396d90a7251d2a35aa6eb2b64fa6483dd7f0037943eeb0553684",
+    "purpose": "Which totals can be joined without multiplication?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case05-grains"
+    ],
+    "semanticCorrections": "Summarize each many-side independently to the comparison grain before joining; keep other analytical grains separate.",
+    "layoutIssues": "Replaced universal three-box sequence with aggregate-join. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case05-timeline",
+    "title": "When are goods available, and when is accounting complete?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case05-timeline.drawio",
+    "sourceSha256": "4b916951ea42fd4171e00c8aa98adf60d11b2540dd5b2bb9620bd01ea23524b9",
+    "purpose": "When are goods available, and when is accounting complete?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case05-timeline"
+    ],
+    "semanticCorrections": "Compare work orders on parallel dated tracks. Finished-goods availability and accounting close are different milestones.",
+    "layoutIssues": "Replaced universal three-box sequence with parallel-timelines. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case06-attendance",
+    "title": "Which evidence describes an employee’s work?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case06-attendance.drawio",
+    "sourceSha256": "85edc87804be628ad1e7d6bb0a672f7f0bf5c12648c34c409d3d877330fd2bd5",
+    "purpose": "Which evidence describes an employee’s work?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case06-attendance"
+    ],
+    "semanticCorrections": "Roster expectations, observations, approved time, and payroll supply different evidence; reconcile their grains and linked keys.",
+    "layoutIssues": "Replaced universal three-box sequence with support-layers. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case06-grains",
+    "title": "At what level should pay be connected?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case06-grains.drawio",
+    "sourceSha256": "9f6708eb4eb0d968ae7d97a729a6646bd90fd12d891eac89debcdff2dc676df9",
+    "purpose": "At what level should pay be connected?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case06-grains"
+    ],
+    "semanticCorrections": "Summarize each many-side independently to the comparison grain before joining; keep other analytical grains separate.",
+    "layoutIssues": "Replaced universal three-box sequence with aggregate-join. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case06-pay",
+    "title": "How do approved hours become pay and cost?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case06-pay.drawio",
+    "sourceSha256": "179a5eb1fee6f98f2dad6c25f645aee03540b41d020b1e8aaeae882710a66f45",
+    "purpose": "How do approved hours become pay and cost?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case06-pay"
+    ],
+    "semanticCorrections": "Employee deductions explain net pay. Employer taxes and benefits add separate cost and obligations.",
+    "layoutIssues": "Replaced universal three-box sequence with pay-cost-branches. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case06-settlement",
+    "title": "Which obligations remain after employees receive net pay?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case06-settlement.drawio",
+    "sourceSha256": "775fc16b7c820d37db1b21c8e47f1fad8e2efa29a921a5708161cff95bb3f415",
+    "purpose": "Which obligations remain after employees receive net pay?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case06-settlement"
+    ],
+    "semanticCorrections": "Employee net-pay payments and period-level liability remittances settle separate obligations; neither proves the other is complete.",
+    "layoutIssues": "Replaced universal three-box sequence with settlement-branches. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case07-statements",
+    "title": "How do source events reach the management review?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case07-statements.drawio",
+    "sourceSha256": "90ee0e3de1b90da26ebfdf586b61e47e88ebf48df1b7bb502a7468d48c9b175f",
+    "purpose": "How do source events reach the management review?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case07-statements"
+    ],
+    "semanticCorrections": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result.",
+    "layoutIssues": "Replaced universal three-box sequence with analytical-workflow. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case07-rollforward",
+    "title": "Which history belongs in each column?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case07-rollforward.drawio",
+    "sourceSha256": "43fca6e263e6eb4c2a30fbff60575fff1798bc2e7f99a37139e8b5eb81fa2afe",
+    "purpose": "Which history belongs in each column?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case07-rollforward"
+    ],
+    "semanticCorrections": "Opening balance plus in-scope movement equals closing balance. State the cutoff and treatment of closing entries.",
+    "layoutIssues": "Replaced universal three-box sequence with balance-equation. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case07-close",
+    "title": "What does the annual closing sequence do?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case07-close.drawio",
+    "sourceSha256": "cbb8cc517cbc97165780c4c6944e48ff777f2a2b6816406340e9f671d820229c",
+    "purpose": "What does the annual closing sequence do?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case07-close"
+    ],
+    "semanticCorrections": "Read document dates and accounting effects separately. The timeline does not create additional database relationships.",
+    "layoutIssues": "Replaced universal three-box sequence with dated-events. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case07-profit-cash",
+    "title": "How should management read the quarter?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case07-profit-cash.drawio",
+    "sourceSha256": "3786a3f02a21cbc1be9644d926d774614307f4ab6ef70ba8535d6cf079244718",
+    "purpose": "How should management read the quarter?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case07-profit-cash"
+    ],
+    "semanticCorrections": "These measures are compared side by side. Their different definitions and grains do not form a transaction sequence.",
+    "layoutIssues": "Replaced universal three-box sequence with measure-comparison. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case07-asset",
+    "title": "How does a financed asset affect cost and cash?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case07-asset.drawio",
+    "sourceSha256": "439a562ea20ed961b1c80d58fefd487c408c5fd53500085e43188cdcf988bc72",
+    "purpose": "How does a financed asset affect cost and cash?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case07-asset"
+    ],
+    "semanticCorrections": "Asset acquisition and financing lead to separate depreciation and debt-service evidence; separate principal from interest.",
+    "layoutIssues": "Replaced universal three-box sequence with asset-branches. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case08-risk",
+    "title": "What turns a risk into an investigation?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case08-risk.drawio",
+    "sourceSha256": "cfbc71ba778c397e360c5e55f2127b83bc15b6f9f7bd0cf1ba5982bca356c398",
+    "purpose": "What turns a risk into an investigation?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case08-risk"
+    ],
+    "semanticCorrections": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result.",
+    "layoutIssues": "Replaced universal three-box sequence with analytical-workflow. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case08-ap",
+    "title": "What evidence distinguishes a repeated reference from duplicate payment?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case08-ap.drawio",
+    "sourceSha256": "47a8768c8fa7531837e75395db07e6b5f97456db24e14df7f262997149d4e445",
+    "purpose": "What evidence distinguishes a repeated reference from duplicate payment?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case08-ap"
+    ],
+    "semanticCorrections": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result.",
+    "layoutIssues": "Replaced universal three-box sequence with analytical-workflow. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case08-overtime",
+    "title": "Which approval supports the overtime hours?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case08-overtime.drawio",
+    "sourceSha256": "33aa1ba23dd3132104f0409be911188991f5beea1834dd656960d42a22794aff",
+    "purpose": "Which approval supports the overtime hours?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case08-overtime"
+    ],
+    "semanticCorrections": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result.",
+    "layoutIssues": "Replaced universal three-box sequence with analytical-workflow. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case08-finding",
+    "title": "How should an exception be classified?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case08-finding.drawio",
+    "sourceSha256": "3bb9a2445c65448fc023233bd1f9925b36f6b3af2c9dfa68b6c7f4849dddb600",
+    "purpose": "How should an exception be classified?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case08-finding"
+    ],
+    "semanticCorrections": "An investigation can reach several defensible classifications. A query flag alone does not determine the conclusion.",
+    "layoutIssues": "Replaced universal three-box sequence with classification. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  },
+  {
+    "originalId": "cases/case08-assessment",
+    "title": "How can the proposed control be assessed?",
+    "format": "drawio",
+    "source": "static/diagrams/cases/case08-assessment.drawio",
+    "sourceSha256": "bc1d862549c70ef346c9614eaeafd0c45860b2812339d88ac8761a8dea567b0b",
+    "purpose": "How can the proposed control be assessed?",
+    "audience": "Students and instructors",
+    "disposition": "Redrawn for the learning question",
+    "validation": "Passed: source/export/hash agreement, released field checks, connector geometry, production build, and website regression. Shared viewer checked on representative desktop, tablet, and phone views; no learner-study or accessibility-conformance claim.",
+    "replacementModels": [
+      "case08-assessment"
+    ],
+    "semanticCorrections": "This is a proposed classroom assessment cycle. Preserve its population and denominator when repeating the assessment.",
+    "layoutIssues": "Replaced universal three-box sequence with assessment-cycle. Original figure ID, selected records, amounts, and text steps are preserved.",
+    "evidenceBasis": "Checksum-matched released SQLite, retained process/posting documentation, original verified worked selections; conceptual and technical paths are explicitly identified."
+  }
+]

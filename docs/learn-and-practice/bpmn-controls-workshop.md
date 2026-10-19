@@ -22,7 +22,7 @@ Follow five steps: **identify a handoff → connect it to evidence → describe 
 ## Learning Objectives
 
 - Explain the trigger, participants, normal path, decisions, exceptions, and end state of a process.
-- Distinguish organizational responsibility in BPMN from database relationships and posting lineage in Mermaid.
+- Distinguish organizational responsibility in BPMN from database relationships and posting lineage in the evidence maps.
 - Match selected business activities to source documents, table grains, keys, dates, and `GLEntry` evidence.
 - Identify business risks and control objectives, and design procedures that could assess a proposed control.
 - Explain the limits of transaction data when evaluating authorization and segregation of duties.
@@ -54,7 +54,7 @@ Begin with order-to-cash, then compare procure-to-pay and conversion. Choose one
 2. Narrate one normal path in business language. At each handoff, identify what the receiving role needs to know and which document or information supports the next activity.
 3. Select a gateway. Explain what question it answers, which outcomes are possible, and whether its outgoing paths represent alternatives or parallel work. Do not infer execution times or concurrency from the dates of unrelated rows.
 4. Identify an exception or an out-of-scope branch. Explain how it changes the question being asked. If the overview omits its detail, follow the related model or process subsection before adding steps yourself.
-5. Compare the BPMN and Mermaid views. Choose one BPMN task and locate the corresponding operational record or posting path. Explain why a lane, a table, and a ledger source are different representations.
+5. Compare the BPMN and record evidence views. Choose one BPMN task and locate the corresponding operational record or posting path. Explain why a lane, a table, and a ledger source are different representations.
 
 For notation checks, sequence flows stay within a pool and can cross its lanes, while message flows communicate between participants in separate pools. An exclusive gateway selects an alternative path, while a parallel split activates each outgoing path. Check the [OMG BPMN 2.0.2 specification](https://www.omg.org/spec/BPMN/2.0.2/) and the [official draw.io BPMN guide](https://www.drawio.com/docs/diagram-types/bpmn-2-0/) when reviewing a model.
 
@@ -122,7 +122,7 @@ Assessment considers business understanding, notation, traceability, control rea
 
 ## Interpretation and Limitations
 
-BPMN expresses a process model. To evaluate a depicted control, inspect the relevant approval, timing, and transaction evidence because the diagram itself is not an execution log. Lane assignments describe responsibilities and do not establish actual system access. Confirm exact cardinality and fields before analyzing the selected information relationships and accounting effects shown in Mermaid.
+BPMN expresses a process model. To evaluate a depicted control, inspect the relevant approval, timing, and transaction evidence because the diagram itself is not an execution log. Lane assignments describe responsibilities and do not establish actual system access. Confirm exact cardinality and fields before analyzing the selected information relationships and accounting effects shown in the evidence maps.
 
 The published data supports source-record investigation, with intentional anomalies and documented model boundaries. Transaction rows alone cannot provide complete assurance about employee conduct, external documents, management review, or control effectiveness. A `.drawio` document is an editable diagram, not validated executable BPMN 2.0 XML.
 

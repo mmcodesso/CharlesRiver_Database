@@ -8,6 +8,7 @@ toc_max_heading_level: 2
 ---
 
 import BpmnDiagram from "@site/src/components/BpmnDiagram";
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
 
 # Order-to-Cash Process
 
@@ -79,15 +80,7 @@ The lanes are a teaching model. They do not prove that recorded tasks were perfo
 
 The following map answers a narrower question: **which records help explain the goods, the bill, and its settlement?** You do not need to memorize the table names. Read them as labels for documents you now understand.
 
-```mermaid
-flowchart LR
-    accTitle: Goods sale and customer settlement records
-    accDescr: An order leads to shipment and invoice records. A separate cash receipt passes through an application to the invoice.
-    SO[SalesOrder and SalesOrderLine] --> SH[Shipment and ShipmentLine]
-    SH --> SI[SalesInvoice and SalesInvoiceLine]
-    CR[CashReceipt] --> APP[CashReceiptApplication]
-    APP -->|Applied to| SI
-```
+<EvidenceDiagram modelId="goods-settlement-path" />
 
 Follow the goods across the top path. Then follow received money through its application to the invoice. Use this map to follow the records, then consult the reference sections below for detailed joins.
 
@@ -212,20 +205,7 @@ Return to these sections when you have a specific question or an assignment that
 
 What explains the price on an order line? Follow the base price, promotion, and any approved override into the recorded pricing method. Compare those inputs before interpreting margin or a pricing exception. The [Schema Reference](../reference/schema.md) identifies the full relationships.
 
-```mermaid
-flowchart LR
-    accTitle: Pricing support for the sales order
-    accDescr: Customer and item context connects through price lists, promotions, and override approval to a sales order.
-    CTX[Customer and Item Context]
-    PL[Price List]
-    PROMO[Promotion Program]
-    OVR[Price Override Approval]
-    SO[Sales Order]
-
-    CTX --> PL --> SO
-    CTX --> PROMO --> SO
-    CTX --> OVR --> SO
-```
+<EvidenceDiagram modelId="pricing-evidence" />
 
 **Tables involved**
 
@@ -248,22 +228,7 @@ flowchart LR
 
 Commission accounting starts from posted customer invoice lines. The routine applies a simple rate matrix by revenue type and customer segment, accrues the expense to a dedicated payable, reverses part of that payable when a credit memo claws back returned revenue, and pays sales reps monthly in arrears.
 
-```mermaid
-flowchart LR
-    accTitle: Sales commission accrual adjustment and payment
-    accDescr: An invoice line and rate support commission accrual. Accrual, adjustment, and payment connect to ledger detail, and adjustments affect payment.
-    SI[Sales Invoice Line]
-    RATE[Sales Commission Rate]
-    ACC[Sales Commission Accrual]
-    ADJ[Sales Commission Adjustment]
-    PAY[Sales Commission Payment]
-    GL[GLEntry]
-
-    SI --> RATE --> ACC --> GL
-    ACC --> ADJ --> GL
-    ACC --> PAY --> GL
-    ADJ --> PAY
-```
+<EvidenceDiagram modelId="commission-posting" />
 
 **Tables involved**
 
@@ -287,22 +252,7 @@ flowchart LR
 
 Which shipped goods support the billed revenue? Follow the shipment line into the invoice line, retaining both dates and quantities. This view supports cutoff, completeness, and occurrence questions. Consult the [Schema Reference](../reference/schema.md) for the full entity relationships.
 
-```mermaid
-flowchart LR
-    accTitle: Customer order shipment invoice and ledger
-    accDescr: Labeled solid arrows follow stored keys through order, shipment, and invoice lines. Shipment and invoice have independent ledger-source routes.
-    C[Customer]
-    SO[SalesOrderLine and header]
-    SH[ShipmentLine and header]
-    SI[SalesInvoiceLine and header]
-    GL[GLEntry]
-
-    C -->|CustomerID on order header| SO
-    SO -->|SalesOrderLineID| SH
-    SH -->|ShipmentLineID| SI
-    SH -->|Shipment source type and header ID| GL
-    SI -->|SalesInvoice source type and header ID| GL
-```
+<EvidenceDiagram modelId="goods-posting" />
 
 **Tables involved**
 
@@ -329,24 +279,7 @@ flowchart LR
 
 Which invoice did the money settle? Follow a receipt into its applications, then inspect the amounts and dates applied to the selected invoice. This separates cash arrival from settlement for open-receivable and unapplied-cash analysis.
 
-```mermaid
-flowchart LR
-    accTitle: Receipt to unapplied money and invoice application
-    accDescr: Solid labeled arrows identify receipt and invoice keys or independent posting sources. Dashed links explain the unapplied-cash account effect rather than a stored join.
-    CR[Cash Receipt]
-    DEP[Customer Deposits and Unapplied Cash]
-    CRA[Cash Receipt Application]
-    SI[Sales Invoice]
-    GL[GLEntry]
-
-    CR -->|CashReceiptID| CRA
-    CRA -->|SalesInvoiceID| SI
-    CR -->|CashReceipt source type and ID| GL
-    CRA -->|CashReceiptApplication source type and ID| GL
-    SI -->|SalesInvoice source type and ID| GL
-    CR -. Credits account 2060 .-> DEP
-    CRA -. Debits account 2060 .-> DEP
-```
+<EvidenceDiagram modelId="cash-posting" />
 
 **Tables involved**
 
@@ -375,20 +308,7 @@ Hourly billing uses approved service time rather than shipment evidence. Follow 
 
 Where did time pass between the order, shipment, and invoice? Compare their dates while retaining the ordered and fulfilled quantities. Inventory shortages and partial fulfillment can explain timing differences that deserve closer investigation.
 
-```mermaid
-flowchart LR
-    accTitle: Available inventory and backordered quantity
-    accDescr: A sales order reaches available finished goods. Enough stock proceeds to shipment and invoice; short stock leads through backordered quantity to a later shipment.
-    SOL[Sales Order]
-    FG[Available Finished Goods]
-    BO[Backordered Quantity]
-    SHL[Later Shipment]
-    SIL[Later Sales Invoice]
-
-    SOL --> FG
-    FG -->|Enough stock| SHL --> SIL
-    FG -->|Short stock| BO --> SHL
-```
+<EvidenceDiagram modelId="backorder-context" />
 
 **Tables involved**
 
@@ -417,33 +337,13 @@ The matching decision explains application versus remaining unapplied cash. The 
 
 <BpmnDiagram modelId="returns-credit-refunds" />
 
-A physical return restores inventory. An approved credit memo reduces open receivables and retains any excess as customer credit, so one memo can do both. A later refund clears customer credit in cash. These events need not occur together. When a memo spans both accounts, compare the Mermaid relationship endpoints with the detailed BPMN allocation step and actual `GLEntry` rows rather than interpreting the links as an exclusive gateway.
+A physical return restores inventory. An approved credit memo reduces open receivables and retains any excess as customer credit, so one memo can do both. A later refund clears customer credit in cash. These events need not occur together. When a memo spans both accounts, compare the evidence-map endpoints with the detailed BPMN allocation step and actual `GLEntry` rows rather than interpreting the links as an exclusive gateway.
 
 ### Returns, Credits, and Refunds
 
 Some sales do not end with the original invoice. In this dataset, returns are the main customer-side exception path inside O2C, not a separate business cycle. The exception starts from something that was already shipped and billed, then moves through physical return, financial correction, and sometimes cash refund if the customer had already paid.
 
-```mermaid
-flowchart LR
-    accTitle: Return credit and refund accounting evidence
-    accDescr: Solid labeled arrows identify stored keys and independent posting sources. A dashed link marks the conditional chronology of a later refund. A return, credit memo, and refund each have their own accounting route.
-    SHL[ShipmentLine]
-    SIL[SalesInvoiceLine]
-    SR[SalesReturn]
-    SRL[SalesReturnLine]
-    CM[CreditMemo]
-    RF[CustomerRefund]
-    GL[GLEntry]
-
-    SHL -->|ShipmentLineID| SIL
-    SHL -->|ShipmentLineID| SRL
-    SRL -->|SalesReturnID| SR
-    SR -->|SalesReturnID| CM
-    CM -. Later refund only if customer credit is paid out .-> RF
-    SR -->|SalesReturn source type and ID| GL
-    CM -->|CreditMemo source type and ID| GL
-    RF -->|CustomerRefund source type and ID| GL
-```
+<EvidenceDiagram modelId="returns-posting" />
 
 | Exception stage | Main tables | Why students use them |
 |---|---|---|
@@ -466,20 +366,7 @@ flowchart LR
 - `CreditMemoLine` preserves the original pricing lineage through `BaseListPrice`, `PriceListLineID`, `PromotionID`, `PriceOverrideApprovalID`, `PricingMethod`, and `Discount`.
 - `CustomerRefund` is used only when the return scenario leaves customer credit that is later cleared in cash.
 
-```mermaid
-flowchart LR
-    accTitle: Credit memo and remaining customer credit
-    accDescr: The solid arrow identifies the original-invoice key. Dashed arrows describe accounting allocation and conditional later refund chronology, not database joins.
-    INV[Original Sales Invoice]
-    CM[Credit Memo]
-    CC[Customer Credit]
-    RF[Customer Refund]
-
-    INV -->|OriginalSalesInvoiceID on memo| CM
-    CM -. Reduces remaining AR when present .-> INV
-    CM -. Excess credit after AR allocation .-> CC
-    CC -. Later refund if paid out .-> RF
-```
+<EvidenceDiagram modelId="customer-credit-path" />
 
 This local lineage view distinguishes AR correction from customer credit. Its labeled links illustrate common endpoint relationships, not an exclusive gateway or a rule that every memo generates a refund. A memo may reduce the remaining AR and create excess customer credit in the same posting, including after partial settlement. Reconcile both account effects at the selected date, including any later clearance through `CustomerRefund`.
 

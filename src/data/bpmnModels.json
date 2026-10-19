@@ -8,7 +8,18 @@
     "processPath": "/docs/processes/o2c",
     "exercisePath": "/docs/learn-and-practice/source-to-ledger",
     "casePath": "/docs/analytics/cases/o2c-trace-case",
-    "tables": ["SalesOrder", "SalesOrderLine", "Shipment", "ShipmentLine", "SalesInvoice", "SalesInvoiceLine", "SalesCommissionAccrual", "CashReceipt", "CashReceiptApplication", "GLEntry"],
+    "tables": [
+      "SalesOrder",
+      "SalesOrderLine",
+      "Shipment",
+      "ShipmentLine",
+      "SalesInvoice",
+      "SalesInvoiceLine",
+      "SalesCommissionAccrual",
+      "CashReceipt",
+      "CashReceiptApplication",
+      "GLEntry"
+    ],
     "steps": [
       "The customer communicates an order. Sales records demand and commercial pricing; an order is not recognized revenue.",
       "Warehouse considers the available shipment for this pass. Unfilled quantity remains open; the model does not invent a rejection or automatic replenishment workflow.",
@@ -16,7 +27,8 @@
       "Treasury records cash arrival as cash and unapplied customer money. Advance receipts may occur independently of the sequence shown here.",
       "Customer accounting reviews allocation of received cash. Applications may be recorded, or money may remain unapplied. The end records completion of this review pass, not full order or invoice settlement. The related detail includes receipt capture for context; this parent review starts after the receipt."
     ],
-    "boundary": "This goods-path teaching allocation summarizes stored events, not a verified workflow engine or proof of segregation of duties. Service delivery, returns, and detailed cash application have separate models. Independent shipment-to-billing-to-GL reconciliation is a proposed teaching control."
+    "boundary": "This goods-path teaching allocation summarizes stored events, not a verified workflow engine or proof of segregation of duties. Service delivery, returns, and detailed cash application have separate models. Independent shipment-to-billing-to-GL reconciliation is a proposed teaching control.",
+    "instanceScope": "One goods-fulfillment and customer-cash review pass; demand or balances can remain open."
   },
   {
     "id": "procure-to-pay",
@@ -27,14 +39,25 @@
     "processPath": "/docs/processes/p2p",
     "exercisePath": "/docs/learn-and-practice/receipt-to-payable",
     "casePath": "/docs/analytics/cases/p2p-accrual-settlement-case",
-    "tables": ["PurchaseRequisition", "PurchaseOrder", "PurchaseOrderLine", "GoodsReceipt", "GoodsReceiptLine", "PurchaseInvoice", "PurchaseInvoiceLine", "DisbursementPayment", "GLEntry"],
+    "tables": [
+      "PurchaseRequisition",
+      "PurchaseOrder",
+      "PurchaseOrderLine",
+      "GoodsReceipt",
+      "GoodsReceiptLine",
+      "PurchaseInvoice",
+      "PurchaseInvoiceLine",
+      "DisbursementPayment",
+      "GLEntry"
+    ],
     "steps": [
       "An operating need leads to a requisition and an authorized purchase order communicated to the supplier.",
       "Receiving records delivered goods. The selected supplier invoice links its lines to receipt evidence; the diagram does not require invoice arrival and receipt on the same day.",
       "Accounts payable records the invoice and Treasury records a supplier disbursement. Supplier payments can extend beyond the operating-year boundary.",
       "This goods path excludes direct service-accrual settlement, which has a separate model without a goods receipt."
     ],
-    "boundary": "Stored authorization and receipt/invoice links support evidence checks. They do not establish a system-enforced three-way-match block. Independent quantity matching and payment authorization review are proposed teaching controls."
+    "boundary": "Stored authorization and receipt/invoice links support evidence checks. They do not establish a system-enforced three-way-match block. Independent quantity matching and payment authorization review are proposed teaching controls.",
+    "instanceScope": "One selected goods-purchasing path, with receipt, invoice, and payment as distinct events."
   },
   {
     "id": "manufacturing-conversion",
@@ -45,14 +68,24 @@
     "processPath": "/docs/processes/manufacturing",
     "exercisePath": "/docs/learn-and-practice/manufacturing-cost-flow",
     "casePath": "/docs/analytics/cases/manufacturing-labor-cost-case",
-    "tables": ["SupplyPlanRecommendation", "WorkOrder", "WorkOrderOperation", "MaterialIssueLine", "ProductionCompletionLine", "WorkOrderClose", "LaborTimeEntry", "GLEntry"],
+    "tables": [
+      "SupplyPlanRecommendation",
+      "WorkOrder",
+      "WorkOrderOperation",
+      "MaterialIssueLine",
+      "ProductionCompletionLine",
+      "WorkOrderClose",
+      "LaborTimeEntry",
+      "GLEntry"
+    ],
     "steps": [
       "Planning reviews demand, supply, materials, and capacity support before a work order references its bill of material and routing.",
       "Warehouse issues components into work in process. Production executes operations with recorded labor support.",
       "Completion makes finished goods available at standard cost. Work-order cost close records a distinct accounting event.",
       "A separate variance-review model proposes an analytical activity; it is not a gate that delays finished-goods availability."
     ],
-    "boundary": "Planning rows do not prove authorization or execution. Labor analysis must distinguish operational support from payroll expense. Independent cost reconciliation and variance review are proposed controls rather than stored approvals."
+    "boundary": "Planning rows do not prove authorization or execution. Labor analysis must distinguish operational support from payroll expense. Independent cost reconciliation and variance review are proposed controls rather than stored approvals.",
+    "instanceScope": "One work-order production and accounting-close pass; completion makes goods available before close."
   },
   {
     "id": "design-services",
@@ -63,7 +96,16 @@
     "processPath": "/docs/processes/design-services",
     "exercisePath": "/docs/learn-and-practice/follow-design-time-into-billing",
     "casePath": "/docs/analytics/cases/design-services-performance-case",
-    "tables": ["SalesOrderLine", "ServiceEngagement", "ServiceEngagementAssignment", "ServiceTimeEntry", "ServiceBillingLine", "SalesInvoiceLine", "CashReceiptApplication", "GLEntry"],
+    "tables": [
+      "SalesOrderLine",
+      "ServiceEngagement",
+      "ServiceEngagementAssignment",
+      "ServiceTimeEntry",
+      "ServiceBillingLine",
+      "SalesInvoiceLine",
+      "CashReceiptApplication",
+      "GLEntry"
+    ],
     "steps": [
       "Sales records an hourly service order; the Design team establishes an engagement and staff assignments.",
       "Approved time is classified as billable or non-billable. Non-billable hours retain analytical cost support but do not enter customer billing.",
@@ -77,7 +119,8 @@
         "label": "Optional BPMN and Controls Workshop after a verified trace",
         "to": "/docs/learn-and-practice/bpmn-controls-workshop"
       }
-    ]
+    ],
+    "instanceScope": "One selected time classification within an engagement; monthly billing aggregates approved billable time."
   },
   {
     "id": "payroll",
@@ -88,7 +131,17 @@
     "processPath": "/docs/processes/payroll",
     "exercisePath": "/docs/learn-and-practice/follow-hours-into-payroll",
     "casePath": "/docs/analytics/cases/audit-review-pack-case",
-    "tables": ["TimeClockPunch", "TimeClockEntry", "OvertimeApproval", "AttendanceException", "PayrollRegister", "PayrollRegisterLine", "PayrollPayment", "PayrollLiabilityRemittance", "GLEntry"],
+    "tables": [
+      "TimeClockPunch",
+      "TimeClockEntry",
+      "OvertimeApproval",
+      "AttendanceException",
+      "PayrollRegister",
+      "PayrollRegisterLine",
+      "PayrollPayment",
+      "PayrollLiabilityRemittance",
+      "GLEntry"
+    ],
     "steps": [
       "The payroll period triggers attendance capture and approval of daily time; exception records are evidence for investigation.",
       "Payroll accounting calculates and approves a register from supported time and compensation inputs.",
@@ -102,7 +155,8 @@
         "label": "Optional BPMN and Controls Workshop after a verified trace",
         "to": "/docs/learn-and-practice/bpmn-controls-workshop"
       }
-    ]
+    ],
+    "instanceScope": "One payroll period with employee-level net-pay payments and separate period-level remittance obligations."
   },
   {
     "id": "manual-journals-close",
@@ -113,7 +167,11 @@
     "processPath": "/docs/processes/manual-journals-and-close",
     "exercisePath": "/docs/learn-and-practice/follow-an-estimate-into-settlement",
     "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
-    "tables": ["JournalEntry", "GLEntry", "Account"],
+    "tables": [
+      "JournalEntry",
+      "GLEntry",
+      "Account"
+    ],
     "steps": [
       "Reporting-period activity leads to preparation of a journal and its source rationale.",
       "A distinct teaching role records approval; accounting posts detail to GLEntry under the JournalEntry header.",
@@ -131,7 +189,8 @@
         "label": "Optional BPMN and Controls Workshop after a verified trace",
         "to": "/docs/learn-and-practice/bpmn-controls-workshop"
       }
-    ]
+    ],
+    "instanceScope": "One reporting-period journal path, with annual closing entries on the year-end branch."
   },
   {
     "id": "returns-credit-refunds",
@@ -142,14 +201,23 @@
     "processPath": "/docs/processes/o2c",
     "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
     "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
-    "tables": ["SalesReturn", "SalesReturnLine", "CreditMemo", "CreditMemoLine", "SalesCommissionAdjustment", "CustomerRefund", "GLEntry"],
+    "tables": [
+      "SalesReturn",
+      "SalesReturnLine",
+      "CreditMemo",
+      "CreditMemoLine",
+      "SalesCommissionAdjustment",
+      "CustomerRefund",
+      "GLEntry"
+    ],
     "steps": [
       "The scope starts with returned goods from an already shipped and billed sale; Warehouse records the physical return.",
       "Customer accounting approves and issues a credit memo, including the related accounting and commission adjustment evidence.",
       "Allocate the memo against open receivables and retain any excess as customer credit. A single memo can affect both AR and customer credit; these are not mutually exclusive whole-memo outcomes.",
       "A customer credit may remain open or be refunded in cash. The gateway describes the recorded resolution, not an automatic refund policy."
     ],
-    "boundary": "Invoice, return, credit, refund, and commission records have different grains and dates. Independent validation of quantity, original invoice, approval, clawback, and refund authorization is a proposed teaching control."
+    "boundary": "Invoice, return, credit, refund, and commission records have different grains and dates. Independent validation of quantity, original invoice, approval, clawback, and refund authorization is a proposed teaching control.",
+    "instanceScope": "One goods-return and customer-credit resolution pass; refund remains optional."
   },
   {
     "id": "cash-application",
@@ -160,7 +228,12 @@
     "processPath": "/docs/processes/o2c",
     "exercisePath": "/docs/learn-and-practice/follow-customer-settlement",
     "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
-    "tables": ["CashReceipt", "CashReceiptApplication", "SalesInvoice", "GLEntry"],
+    "tables": [
+      "CashReceipt",
+      "CashReceiptApplication",
+      "SalesInvoice",
+      "GLEntry"
+    ],
     "steps": [
       "Treasury records an incoming customer payment as cash and unapplied money, independently of invoice settlement.",
       "If an invoice allocation is identified, Customer Accounting records one or more applications. An unmatched receipt remains unapplied.",
@@ -174,7 +247,8 @@
         "label": "Optional BPMN and Controls Workshop after a verified trace",
         "to": "/docs/learn-and-practice/bpmn-controls-workshop"
       }
-    ]
+    ],
+    "instanceScope": "One receipt and allocation review pass, allowing unapplied residual money."
   },
   {
     "id": "accrual-settlement",
@@ -185,7 +259,13 @@
     "processPath": "/docs/processes/p2p",
     "exercisePath": "/docs/learn-and-practice/follow-an-estimate-into-settlement",
     "casePath": "/docs/analytics/cases/p2p-accrual-settlement-case",
-    "tables": ["JournalEntry", "PurchaseInvoice", "PurchaseInvoiceLine", "DisbursementPayment", "GLEntry"],
+    "tables": [
+      "JournalEntry",
+      "PurchaseInvoice",
+      "PurchaseInvoiceLine",
+      "DisbursementPayment",
+      "GLEntry"
+    ],
     "steps": [
       "Finance estimates an incurred service expense and records an accrued liability.",
       "The supplier invoice is linked through PurchaseInvoiceLine.AccrualJournalEntryID; the service path has no GoodsReceiptLineID.",
@@ -199,7 +279,8 @@
         "label": "Optional BPMN and Controls Workshop after a verified trace",
         "to": "/docs/learn-and-practice/bpmn-controls-workshop"
       }
-    ]
+    ],
+    "instanceScope": "One accrued-service invoice and AP settlement path, with any residual accrual evaluated separately."
   },
   {
     "id": "manufacturing-variances",
@@ -210,14 +291,22 @@
     "processPath": "/docs/processes/manufacturing",
     "exercisePath": "/docs/learn-and-practice/manufacturing-cost-flow",
     "casePath": "/docs/analytics/cases/manufacturing-labor-cost-case",
-    "tables": ["WorkOrder", "MaterialIssue", "ProductionCompletion", "LaborTimeEntry", "WorkOrderClose", "GLEntry"],
+    "tables": [
+      "WorkOrder",
+      "MaterialIssue",
+      "ProductionCompletion",
+      "LaborTimeEntry",
+      "WorkOrderClose",
+      "GLEntry"
+    ],
     "steps": [
       "A student selects a recorded work-order close and defines the reporting boundary.",
       "The proposed analyst role collects material, completion, labor, and close evidence, then reconciles recorded cost support.",
       "The proposed reviewer evaluates whether the evidence explains the difference. A supported explanation is documented; otherwise targeted follow-up identifies missing evidence.",
       "The activity ends with a student conclusion or an unresolved evidence request. It does not prescribe a favorable or unfavorable answer."
     ],
-    "boundary": "Every analyst/reviewer task is a proposed classroom activity. The database does not implement this independent review, its sign-off, or a finished-goods hold. Submit a risk/control matrix rather than assuming control operation."
+    "boundary": "Every analyst/reviewer task is a proposed classroom activity. The database does not implement this independent review, its sign-off, or a finished-goods hold. Submit a risk/control matrix rather than assuming control operation.",
+    "instanceScope": "One proposed classroom review of selected work-order cost-close evidence."
   },
   {
     "id": "process-architecture",
@@ -228,13 +317,26 @@
     "processPath": "/docs/process-flows",
     "exercisePath": "/docs/learn-and-practice/bpmn-controls-workshop",
     "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
-    "tables": ["SalesOrder", "SalesInvoice", "PurchaseOrder", "PurchaseInvoice", "WorkOrder", "ProductionCompletion", "ServiceEngagement", "ServiceBillingLine", "PayrollRegister", "JournalEntry", "GLEntry"],
+    "tables": [
+      "SalesOrder",
+      "SalesInvoice",
+      "PurchaseOrder",
+      "PurchaseInvoice",
+      "WorkOrder",
+      "ProductionCompletion",
+      "ServiceEngagement",
+      "ServiceBillingLine",
+      "PayrollRegister",
+      "JournalEntry",
+      "GLEntry"
+    ],
     "steps": [
       "Customer demand starts goods sales or Design Services. Supply needs, production needs, payroll periods, and reporting periods trigger other scopes independently.",
       "Each collapsed activity expands into one of the six main process models, with its own participants, evidence, decisions, and boundary.",
       "Shared master data, purchasing support, production output, labor, and ledger records connect the cycles. The accompanying Mermaid architecture explains those information dependencies.",
       "Each end indicates recorded activity within that scope. There is no global join requiring every cycle or settlement to finish before reporting."
     ],
-    "boundary": "These are alternative process scopes at architecture level, not one serial order lifecycle or a claim of simultaneous execution. Internal roles are teaching allocations. Read the detailed models and process guides before inferring controls or accounting effects."
+    "boundary": "These are alternative process scopes at architecture level, not one serial order lifecycle or a claim of simultaneous execution. Internal roles are teaching allocations. Read the detailed models and process guides before inferring controls or accounting effects.",
+    "instanceScope": "Six independently triggered process scopes; no global sequence or reporting synchronization is implied."
   }
 ]
