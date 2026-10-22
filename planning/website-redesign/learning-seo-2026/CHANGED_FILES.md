@@ -1,7 +1,9 @@
-# Changed files
+# Publication change list
 
-Integrated educational-site and Hub-alignment changes. All changes are website presentation, website tests, authored social assets, or private audit evidence. Existing generated branding/manifests were refreshed by prebuild and have no substantive Git diff. The Hub repository was read only.
+Direct learning/discovery/metadata publication changes relative to integrated main 05868411d31d8726e9b0a106494cac9a89eef1c2. Incoming main teaching/diagram changes are preserved separately; original baseline/final JSON files remain historical review evidence. Generated branding/manifests have no substantive diff.
 
+- `.gitattributes`
+- `AGENTS.md`
 - `docs/analytics/analysis-tracks.md`
 - `docs/analytics/sql-guide.md`
 - `docs/processes/design-services.md`
@@ -24,6 +26,7 @@ Integrated educational-site and Hub-alignment changes. All changes are website p
 - `planning/website-redesign/learning-seo-2026/CHANGED_FILES.md`
 - `planning/website-redesign/learning-seo-2026/HUB_ALIGNMENT_REVIEW.md`
 - `planning/website-redesign/learning-seo-2026/KEYWORD_MAP.md`
+- `planning/website-redesign/learning-seo-2026/PUBLICATION.md`
 - `planning/website-redesign/learning-seo-2026/VALIDATION.md`
 - `planning/website-redesign/learning-seo-2026/audit.cjs`
 - `planning/website-redesign/learning-seo-2026/baseline-inventory.md`
@@ -36,11 +39,13 @@ Integrated educational-site and Hub-alignment changes. All changes are website p
 - `planning/website-redesign/learning-seo-2026/hub-review-after.json`
 - `planning/website-redesign/learning-seo-2026/hub-review-before.json`
 - `planning/website-redesign/learning-seo-2026/package-evidence.json`
+- `planning/website-redesign/learning-seo-2026/publication-review.cjs`
 - `planning/website-redesign/learning-seo-2026/render-social-card.cjs`
 - `planning/website-redesign/learning-seo-2026/repeated-passages.json`
 - `planning/website-redesign/learning-seo-2026/social-card-evidence.json`
 - `planning/website-redesign/learning-seo-2026/zenodo-evidence.json`
 - `src/components/CatalogNavigation/TopicLearningLinks.jsx`
+- `src/components/EvidenceDiagram/index.jsx`
 - `src/components/QueryLibrary/index.jsx`
 - `src/components/ReportCatalog/index.jsx`
 - `src/components/SiteBranding/index.jsx`
@@ -51,5 +56,6 @@ Integrated educational-site and Hub-alignment changes. All changes are website p
 - `static/img/charles-river-learning-social.png`
 - `static/img/charles-river-learning-social.svg`
 - `tests/website/browser-interactions.cjs`
+- `tests/website/cases.test.cjs`
 - `tests/website/navigation-seo.test.cjs`
 - `tests/website/rendered-site.test.cjs`

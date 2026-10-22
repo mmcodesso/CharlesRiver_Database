@@ -1,5 +1,7 @@
 # Hub alignment: review, plan and acceptance criteria
 
+This records the completed feature review. The later user-authorized merge/publication and integration with newer main are documented in `PUBLICATION.md`; its publication status supersedes the review-only status below.
+
 ## Source hierarchy and review findings
 
 This follow-up preserves the existing feature branch and all prior website work. The live Hub and Charles River pages were read through the web tool. Direct HTTP clients receive 403 responses for the Hub. The clean local Hub `main` checkout at `cab33558b2c664144c6a0d0302e47d37753b4342` provides its current metadata contracts; the web retrieval still shows older visible content. These are distinct observations, not proof that the current Hub source is deployed.

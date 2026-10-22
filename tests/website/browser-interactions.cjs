@@ -120,23 +120,21 @@ test('catalog filters survive reload, empty states, reset and back/forward', { t
   await page.waitForFunction(() => !new URLSearchParams(location.search).has('cr_reports_q'));
 });
 
-test('Mermaid and BPMN viewers preserve naming, keyboard zoom, Escape, focus return and inert background', { timeout: 3600000 }, async () => {
+test('native evidence and BPMN viewers preserve naming, keyboard zoom, Escape, focus return and inert background', { timeout: 3600000 }, async () => {
   await visit('/docs/processes/o2c');
-  // Mermaid diagrams render asynchronously; wait for this specific wide record map,
-  // rather than selecting whichever of several diagrams finishes rendering first.
-  const mermaidOpener = page.getByRole('button', { name: 'Expand Goods sale and customer settlement records diagram', exact: true });
-  await mermaidOpener.waitFor();
-  assert.ok(!(await mermaidOpener.getAttribute('aria-label')).includes('Record relationship diagram'));
-  await mermaidOpener.focus();
+  const evidence = require('../../src/data/processEvidenceDiagrams.json').find(model => model.id === 'goods-settlement-path');
+  const evidenceOpener = page.getByRole('button', { name: `Expand ${evidence.title} diagram`, exact: true });
+  await evidenceOpener.waitFor();
+  await evidenceOpener.focus();
   await page.keyboard.press('Enter');
   let dialog = page.locator('dialog[open]');
-  await dialog.locator('svg').waitFor();
+  await dialog.locator('img').waitFor();
   const waitForFittedDiagram = () => page.waitForFunction(() => {
-    const svg = document.querySelector('dialog[open] svg');
-    const viewport = svg?.closest('[role="region"]');
-    if (!svg || !viewport || !svg.style.transform) return false;
-    const bounds = svg.getBoundingClientRect(), area = viewport.getBoundingClientRect();
-    return bounds.width > area.width * 0.65 && bounds.left >= area.left && bounds.right <= area.right && bounds.height <= area.height;
+    const img = document.querySelector('dialog[open] img');
+    const viewport = img?.closest('[role="region"]');
+    if (!img?.complete || !viewport || !img.style.transform) return false;
+    const bounds = img.getBoundingClientRect(), area = viewport.getBoundingClientRect();
+    return bounds.width > 0 && bounds.left >= area.left - 1 && bounds.right <= area.right + 1 && bounds.top >= area.top - 1 && bounds.bottom <= area.bottom + 1;
   });
   await waitForFittedDiagram();
   const viewport = dialog.getByRole('region');
@@ -145,7 +143,7 @@ test('Mermaid and BPMN viewers preserve naming, keyboard zoom, Escape, focus ret
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('0');
   await waitForFittedDiagram();
-  await assertModal(dialog, mermaidOpener);
+  await assertModal(dialog, evidenceOpener);
   const bpmnOpener = page.getByRole('button', { name: /^Expand .* model$/ }).first();
   await bpmnOpener.focus();
   await page.keyboard.press('Space');

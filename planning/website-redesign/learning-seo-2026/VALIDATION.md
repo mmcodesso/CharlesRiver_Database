@@ -1,5 +1,7 @@
 # Validation and review handoff
 
+Publication update: the subsequent user instruction “Merge, commit and deploy” supersedes the review-only status below. `PUBLICATION.md` records integration with the newer main and the final deployment acceptance process. The results here describe the original reviewed feature state; integrated publication results are separately retained in `outputs/_learning_seo_publication/`.
+
 Branch: `feature/charles-river-learning-seo-2026`.
 Baseline commit: `6424f57b684030817fde232e94eb8084238493cf`.
 Review date: 22 October 2026.

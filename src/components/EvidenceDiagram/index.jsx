@@ -1,11 +1,14 @@
 import Link from "@docusaurus/Link";
+import useBrokenLinks from "@docusaurus/useBrokenLinks";
 import StaticDiagram from "@site/src/components/StaticDiagram";
 import models from "@site/src/data/processEvidenceDiagrams.json";
 import styles from "@site/src/components/SchemaDiagram/styles.module.css";
 
 export default function EvidenceDiagram({ modelId }) {
+  const brokenLinks = useBrokenLinks();
   const model = models.find(entry => entry.id === modelId);
   if (!model) throw new Error(`Unknown evidence diagram: ${modelId}`);
+  brokenLinks.collectAnchor(`evidence-${model.id}`);
   const nodes = Object.fromEntries(model.nodes.map(node => [node.id, node]));
   return <section id={`evidence-${model.id}`} className={styles.section} aria-label={model.title}>
     <p><strong>{model.technical ? "Technical build workflow" : model.id === "company-dependencies" ? "Business dependency map" : "Record and accounting evidence map"}</strong></p>

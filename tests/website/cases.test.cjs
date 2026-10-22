@@ -6,7 +6,7 @@ const test = require('node:test');
 const yaml = require('js-yaml');
 const { DatabaseSync } = require('node:sqlite');
 const root = path.resolve(__dirname, '../..');
-const read = p => fs.readFileSync(path.join(root, p), 'utf8');
+const read = p => fs.readFileSync(path.join(root, p), 'utf8').replace(/\r\n/g, '\n');
 const examples = require('../../planning/website-redesign/cases/verified-examples.json');
 const legacy = require('../../planning/website-redesign/cases/legacy-routes.json');
 const drafts = require('../../planning/website-redesign/cases/case-drafts.json');

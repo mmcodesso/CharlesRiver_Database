@@ -2,6 +2,10 @@
 
 ## Website Redesign Mission and Frozen Baseline
 
+### Learning discovery and metadata publication scope (22 October 2026)
+
+After reviewing the educational-site audit and Hub-alignment adjustments, the user explicitly requested, "Merge, commit and deploy." This authorizes committing `feature/charles-river-learning-seo-2026`, integrating current `main`, merging into `main`, and publishing through the existing `greenfield` Worker and main-branch Git integration. It supersedes the review-only restriction for this batch. Preserve the newer teaching/diagram improvements on main, all dataset/report/source freezes, and existing release/account/hosting settings. See `planning/website-redesign/learning-seo-2026/PUBLICATION.md` for integration and acceptance evidence.
+
 ### Diagram-learning publication scope (19 October 2026)
 
 After reviewing the completed diagram handoff, the user explicitly requested, "Great, lets merge commit and deploy." This authorizes committing `codex/diagram-learning-refinement`, merging into `main`, and publishing through the existing `greenfield` Worker and main-branch Git integration. It supersedes the local-review restriction for this diagram batch. Preserve the dataset/report freeze and existing release/account/hosting configuration. See `planning/website-redesign/diagrams/PUBLICATION.md` for approval and validation evidence.
