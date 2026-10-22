@@ -12,12 +12,6 @@ toc_max_heading_level: 2
 
 The [company story](../learn-the-business/company-story.md) introduces orders, deliveries, invoices, and payments. The dataset stores information about those familiar business events in tables. You can read this introduction before opening a file; keep it nearby when you begin your first exercise.
 
-<DatasetStructuredData
-  pagePath="/docs/dataset-overview"
-  sameAsPath="/"
-  description="Learn to read document records and their relationships in the 82-table Charles River teaching dataset."
-/>
-
 <span id="what-the-dataset-is"></span>
 
 ## Start with One Record

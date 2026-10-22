@@ -2,8 +2,10 @@ import Head from "@docusaurus/Head";
 import { useDoc } from "@docusaurus/plugin-content-docs/client";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import DocItemMetadata from "@theme-original/DocItem/Metadata";
+import { SocialPageMetadata } from "@site/src/components/SiteBranding";
 import {
   buildLearningResourceStructuredData,
+  buildWebPageStructuredData,
   serializeStructuredData,
 } from "@site/src/components/SiteBranding/structuredData.cjs";
 
@@ -22,6 +24,12 @@ export default function Metadata() {
   return (
     <>
       <DocItemMetadata />
+      <SocialPageMetadata title={metadata.title} description={metadata.description} />
+      <Head>
+        <script type="application/ld+json">{serializeStructuredData(buildWebPageStructuredData(siteConfig.customFields.branding, {
+          ...metadata, learningResourceId: resource?.['@id'],
+        }))}</script>
+      </Head>
       {resource ? (
         <Head>
           <script type="application/ld+json">{serializeStructuredData(resource)}</script>

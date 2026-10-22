@@ -1,7 +1,6 @@
-const LICENSE_URL = "https://creativecommons.org/licenses/by-sa/4.0/";
-const HUB_URL = "https://accountinganalyticshub.com/";
+const publication = require('./publication.cjs');
+const LICENSE_URL = publication.licenseUrl;
 const {
-  getTeachingReleaseUrl,
   getTeachingDownloadBaseUrl,
 } = require("../../data/teachingRelease.cjs");
 
@@ -28,34 +27,43 @@ function getReleaseDownloadUrl(branding, type) {
 }
 
 function publisher() {
-  return { "@type": "Organization", name: "Accounting Analytics Hub", url: HUB_URL };
+  return { "@type": "Organization", "@id": publication.publisherId, name: "Accounting Analytics Hub", url: publication.hubUrl };
 }
 
-function buildDatasetStructuredData(branding, { pagePath = "/", description } = {}) {
+function creator() {
+  return { "@type": "Person", "@id": publication.creatorId, name: publication.creatorName,
+    alternateName: publication.archivalCreatorName, url: publication.creatorUrl };
+}
+
+function buildDatasetStructuredData(branding, { pagePath = "/docs/downloads", description } = {}) {
   const datasetName = branding.datasetName ?? "Accounting Dataset";
-  const datasetUrl = toAbsoluteUrl(branding.baseUrl);
-  const releaseUrl = getTeachingReleaseUrl(branding.repositoryUrl);
   const isDownloadsPage = pagePath.replace(/\/+$/, "") === "/docs/downloads";
 
   return {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    "@id": `${datasetUrl}#dataset`,
+    "@id": publication.datasetId,
     name: datasetName,
-    alternateName: branding.displayName,
+    alternateName: [branding.displayName, publication.citationTitle],
     description: description ?? `${datasetName} is an accounting learning environment connecting business processes, source documents, accounting records, SQL, Excel, and guided cases.`,
-    url: datasetUrl,
+    url: toAbsoluteUrl(branding.baseUrl),
+    identifier: { "@type": "PropertyValue", propertyID: "DOI (all versions)",
+      value: publication.conceptDoi.replace('https://doi.org/', ''), url: publication.conceptDoi },
     mainEntityOfPage: toAbsoluteUrl(branding.baseUrl, pagePath),
+    subjectOf: { "@id": `${publication.discoveryUrl}#webpage` },
     isAccessibleForFree: true,
     license: LICENSE_URL,
-    creator: { "@type": "Person", name: "Mauricio Mello Codesso" },
+    creator: creator(),
     publisher: publisher(),
     ...(isDownloadsPage ? {
-      sameAs: releaseUrl,
+      sameAs: publication.conceptDoi,
       citation: {
         "@type": "CreativeWork",
-        name: datasetName,
-        url: releaseUrl,
+        name: publication.citationTitle,
+        datePublished: publication.citationYear,
+        url: publication.versionDoi,
+        creator: creator(),
+        publisher: publisher(),
       },
       distribution: [
         ["sqlite", "SQLite Database", "application/vnd.sqlite3"],
@@ -71,6 +79,39 @@ function buildDatasetStructuredData(branding, { pagePath = "/", description } = 
   };
 }
 
+function buildWebPageStructuredData(branding, metadata) {
+  const url = toAbsoluteUrl(branding.baseUrl, metadata.permalink === '/' ? '/' : metadata.permalink.replace(/\/+$/, ''));
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
+    name: metadata.title,
+    description: metadata.description,
+    inLanguage: "en",
+    isPartOf: { "@id": `${toAbsoluteUrl(branding.baseUrl)}#website` },
+    about: { "@id": publication.datasetId },
+    publisher: publisher(),
+    ...(metadata.learningResourceId ? { mainEntity: { "@id": metadata.learningResourceId } } : {}),
+  };
+}
+
+function buildWebSiteStructuredData(branding, description) {
+  const url = toAbsoluteUrl(branding.baseUrl);
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${url}#website`,
+    url,
+    name: branding.datasetName,
+    description,
+    inLanguage: "en",
+    publisher: publisher(),
+    about: { "@id": publication.datasetId },
+    isPartOf: { "@type": "WebSite", "@id": `${publication.hubUrl}#website`, name: "Accounting Analytics Hub", url: publication.hubUrl },
+  };
+}
+
 function buildLearningResourceStructuredData(branding, metadata, resourceType) {
   const url = toAbsoluteUrl(branding.baseUrl, metadata.permalink);
   return {
@@ -82,12 +123,14 @@ function buildLearningResourceStructuredData(branding, metadata, resourceType) {
     url,
     mainEntityOfPage: url,
     learningResourceType: resourceType,
+    about: { "@id": publication.datasetId },
     inLanguage: "en",
     isAccessibleForFree: true,
     license: LICENSE_URL,
     publisher: publisher(),
     isPartOf: {
-      "@type": "CreativeWork",
+      "@type": "WebSite",
+      "@id": `${toAbsoluteUrl(branding.baseUrl)}#website`,
       name: branding.datasetName,
       url: toAbsoluteUrl(branding.baseUrl),
     },
@@ -101,6 +144,8 @@ function serializeStructuredData(value) {
 module.exports = {
   buildDatasetStructuredData,
   buildLearningResourceStructuredData,
+  buildWebPageStructuredData,
+  buildWebSiteStructuredData,
   getFileName,
   getReleaseDownloadUrl,
   serializeStructuredData,

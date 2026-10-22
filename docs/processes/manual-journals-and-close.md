@@ -171,6 +171,8 @@ No. Monthly entries recognize or adjust activity for their purpose and period. A
 
 <span id="opening-balance-and-year-end-close"></span>
 
+**Find analytical evidence.** Browse [Statements and Cash queries](../analytics/analysis-tracks.md#statements-and-cash) and [related reports](../analytics/index.md#statements-and-cash). Use the [Schema Reference](../reference/schema.md) for join keys and the [Posting Reference](../reference/posting.md) for accounting effects.
+
 ## Optional Reference
 
 Return to these sections when you have a specific question or an assignment that uses the data. The chapter above can be read without opening a file.

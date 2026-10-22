@@ -1,5 +1,5 @@
 ---
-title: Schema Reference
+title: Accounting Database Schema and Join Reference
 description: Reference for the 82 published Charles River SQLite tables, key columns, source-document bridges, and entity relationships.
 sidebar_label: Schema Reference
 ---

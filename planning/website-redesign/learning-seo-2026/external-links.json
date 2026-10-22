@@ -1,0 +1,111 @@
+{
+  "checkedAt": "2026-10-22T15:44:08.022Z",
+  "results": [
+    {
+      "url": "https://aa.accountinganalyticshub.com/",
+      "method": "GET",
+      "status": 200,
+      "finalUrl": "https://aa.accountinganalyticshub.com/",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://aa.accountinganalyticshub.com/chapters/09-sql-essentials/chapter.html",
+      "method": "GET",
+      "status": 200,
+      "finalUrl": "https://aa.accountinganalyticshub.com/chapters/09-sql-essentials/chapter.html",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://aa.accountinganalyticshub.com/chapters/10-joining-and-summarizing/chapter.html",
+      "method": "GET",
+      "status": 200,
+      "finalUrl": "https://aa.accountinganalyticshub.com/chapters/10-joining-and-summarizing/chapter.html",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://aa.accountinganalyticshub.com/front-matter/preface.html#sec-to-the-instructor",
+      "method": "GET",
+      "status": 200,
+      "finalUrl": "https://aa.accountinganalyticshub.com/front-matter/preface.html",
+      "contentType": "text/html; charset=utf-8",
+      "fragmentFound": true
+    },
+    {
+      "url": "https://accountinganalyticshub.com/",
+      "method": "GET",
+      "status": 403,
+      "finalUrl": "https://accountinganalyticshub.com/",
+      "contentType": "text/html; charset=UTF-8"
+    },
+    {
+      "url": "https://accountinganalyticshub.com/author/mauricio-codesso/",
+      "method": "GET",
+      "status": 403,
+      "finalUrl": "https://accountinganalyticshub.com/author/mauricio-codesso/",
+      "contentType": "text/html; charset=UTF-8"
+    },
+    {
+      "url": "https://accountinganalyticshub.com/charles-river/",
+      "method": "GET",
+      "status": 403,
+      "finalUrl": "https://accountinganalyticshub.com/charles-river/",
+      "contentType": "text/html; charset=UTF-8"
+    },
+    {
+      "url": "https://doi.org/10.5281/zenodo.23428083",
+      "method": "GET",
+      "status": 403,
+      "finalUrl": "https://zenodo.org/doi/10.5281/zenodo.23428083",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://doi.org/10.5281/zenodo.23428084",
+      "method": "GET",
+      "status": 403,
+      "finalUrl": "https://zenodo.org/doi/10.5281/zenodo.23428084",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://github.com/mmcodesso/CharlesRiver_Database/issues/new/choose",
+      "method": "GET",
+      "status": 200,
+      "finalUrl": "https://github.com/login",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://github.com/mmcodesso/CharlesRiver_Database/releases",
+      "method": "GET",
+      "status": 200,
+      "finalUrl": "https://github.com/mmcodesso/CharlesRiver_Database/releases",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://github.com/mmcodesso/CharlesRiver_Database/releases/latest/download/CharlesRiver_csv.zip",
+      "method": "HEAD",
+      "status": 200,
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1203343831/7e6f4b78-d20a-41ea-85d4-68afea6966ec",
+      "contentType": "application/octet-stream"
+    },
+    {
+      "url": "https://github.com/mmcodesso/CharlesRiver_Database/releases/latest/download/CharlesRiver.sqlite",
+      "method": "HEAD",
+      "status": 200,
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1203343831/756845d6-42e1-4777-8216-2f8f511285c5",
+      "contentType": "application/octet-stream"
+    },
+    {
+      "url": "https://github.com/mmcodesso/CharlesRiver_Database/releases/latest/download/CharlesRiver.xlsx",
+      "method": "HEAD",
+      "status": 200,
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1203343831/53e4b9ff-6fa4-45ce-ba82-4039f557f206",
+      "contentType": "application/octet-stream"
+    },
+    {
+      "url": "https://github.com/mmcodesso/CharlesRiver_Database/releases/tag/v2027.1",
+      "method": "GET",
+      "status": 200,
+      "finalUrl": "https://github.com/mmcodesso/CharlesRiver_Database/releases/tag/v2027.1",
+      "contentType": "text/html; charset=utf-8"
+    }
+  ]
+}

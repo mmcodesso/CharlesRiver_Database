@@ -1,9 +1,12 @@
 import Head from "@docusaurus/Head";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import { useTitleFormatter } from "@docusaurus/theme-common/internal";
 import { getTeachingReleaseUrl } from "@site/src/data/teachingRelease.cjs";
 import {
   buildDatasetStructuredData,
+  buildWebPageStructuredData,
+  buildWebSiteStructuredData,
   getFileName,
   getReleaseDownloadUrl,
   serializeStructuredData,
@@ -69,7 +72,25 @@ export function TeachingReleaseIntegrity() {
   );
 }
 
-export function DatasetStructuredData({ pagePath = "/", description }) {
+export function SocialPageMetadata({ title, description }) {
+  const titleFormatter = useTitleFormatter();
+  return <Head>
+    <meta name="twitter:title" content={titleFormatter.format(title)} />
+    <meta name="twitter:description" content={description} />
+  </Head>;
+}
+
+export function HomeStructuredData({ title, description }) {
+  const branding = useSiteBranding();
+  const entries = [buildWebSiteStructuredData(branding, description),
+    buildWebPageStructuredData(branding, { title, description, permalink: '/' })];
+  return <>
+    <SocialPageMetadata title={title} description={description} />
+    <Head>{entries.map(entry => <script key={entry['@id']} type="application/ld+json">{serializeStructuredData(entry)}</script>)}</Head>
+  </>;
+}
+
+export function DatasetStructuredData({ pagePath = "/docs/downloads", description }) {
   const branding = useSiteBranding();
   const dataset = buildDatasetStructuredData(branding, { pagePath, description });
 

@@ -1,4 +1,4 @@
-// Uses the cloud runtime's existing Playwright and Chromium; no project dependencies added.
+// Uses an existing Playwright runtime (local or NODE_PATH); no project dependencies added.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -11,7 +11,9 @@ let browser, context, page;
 const browserErrors = [];
 before(async () => {
   fs.mkdirSync(output, { recursive: true });
-  browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
+  const executablePath = process.env.WEBSITE_CHROMIUM_PATH ||
+    (process.platform === 'linux' && fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined);
+  browser = await chromium.launch({ executablePath, headless: true, args: ['--no-sandbox'] });
   context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: base });
   page = await context.newPage();
@@ -174,4 +176,43 @@ test('representative phone/tablet/desktop and theme layouts retain horizontal co
     await page.screenshot({ path: path.join(output, `workforce-css-zoom-${factor}.png`) });
   }
   await page.evaluate(() => { document.documentElement.style.zoom = ''; });
+});
+
+test('learning section entry points and catalog reading paths remain usable across widths', { timeout: 3600000 }, async () => {
+  const routes = ['/', '/docs/', '/docs/company-story', '/docs/processes/o2c', '/docs/learn-and-practice', '/docs/analytics/cases', '/docs/analytics', '/docs/analytics/analysis-tracks', '/docs/reference/schema', '/docs/technical-guide', '/docs/teach-with-data/instructor-adoption', '/docs/downloads'];
+  for (const width of [390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    for (const route of routes) {
+      await visit(route);
+      assert.equal(await page.locator('h1').count(), 1, route);
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), route + ' ' + width);
+      if (['/', '/docs/analytics/analysis-tracks', '/docs/processes/o2c'].includes(route)) {
+        await page.screenshot({ path: path.join(output, 'learning-seo-' + width + '-' + (route === '/' ? 'home' : route.split('/').pop()) + '.png') });
+      }
+      if (route === '/docs/analytics/analysis-tracks') {
+        await page.locator('section[aria-labelledby="sales-and-customers"] > div').first().screenshot({ path: path.join(output, 'learning-seo-' + width + '-topic.png') });
+      }
+      if (route === '/' && width !== 768) {
+        await page.locator('section[aria-labelledby="resources-heading"]').screenshot({ path: path.join(output, 'hub-alignment-resources-' + width + '.png') });
+      }
+    }
+  }
+  await visit('/docs/analytics/analysis-tracks');
+  const processLink = page.locator('section[aria-labelledby="sales-and-customers"]').getByRole('link', { name: 'Order-to-Cash', exact: true });
+  await processLink.focus();
+  await page.keyboard.press('Enter');
+  await page.waitForURL('**/docs/processes/o2c');
+  await page.getByRole('heading', { level: 1, name: 'Order-to-Cash Process', exact: true }).waitFor();
+});
+
+test('homepage query discovery updates page-specific social metadata after keyboard navigation', { timeout: 3600000 }, async () => {
+  await visit('/');
+  const queryLink = page.getByRole('link', { name: /^SQL Query Library/ });
+  await queryLink.focus();
+  await page.keyboard.press('Enter');
+  await page.waitForURL('**/docs/analytics/analysis-tracks');
+  await page.getByRole('heading', { level: 1, name: 'Query Library', exact: true }).waitFor();
+  await page.waitForFunction(() => document.querySelector('meta[name="twitter:title"]')?.content === document.querySelector('meta[property="og:title"]')?.content);
+  assert.ok((await page.locator('meta[name="twitter:title"]').getAttribute('content')).includes('SQL Query Library for Accounting Analysis'));
+  assert.equal(await page.locator('meta[property="og:image"]').count(), 1);
 });

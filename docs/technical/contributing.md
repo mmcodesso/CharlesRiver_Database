@@ -1,6 +1,6 @@
 ---
-title: Contributing
-description: How students, instructors, and maintainers can contribute ideas, questions, improvements, and corrections.
+title: Contribute to Charles River Teaching Materials
+description: Report a Charles River documentation error, propose a teaching improvement, or share a reproducible accounting-data question with the project maintainers.
 sidebar_label: Contributing
 slug: /technical/contributing
 ---

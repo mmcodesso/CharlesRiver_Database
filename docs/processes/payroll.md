@@ -164,6 +164,8 @@ Not necessarily. Employee payment clears net pay, while withholding, tax, and de
 
 **Investigate this process.** Finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Then follow [Lesson 10: Follow Hours into Payroll](../learn-and-practice/follow-hours-into-payroll.md). Check the selected lesson’s further prerequisites before beginning.
 
+**Find analytical evidence.** Browse [People and Payroll queries](../analytics/analysis-tracks.md#people-and-payroll) and [related reports](../analytics/index.md#people-and-payroll). Use the [Schema Reference](../reference/schema.md) for join keys and the [Posting Reference](../reference/posting.md) for accounting effects.
+
 ## Optional Reference
 
 Return to these sections when you have a specific question or an assignment that uses the data. The chapter above can be read without opening a file.

@@ -1,6 +1,6 @@
 ---
-title: Roadmap
-description: Planned future expansion areas for the dataset and documentation.
+title: Charles River Dataset and Documentation Roadmap
+description: Review implemented Charles River capabilities and proposed dataset and documentation improvements when planning future teaching materials.
 slug: /roadmap
 sidebar_label: Roadmap
 ---

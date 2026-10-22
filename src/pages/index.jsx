@@ -1,7 +1,8 @@
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
-import { DatasetStructuredData } from "@site/src/components/SiteBranding";
+import { HomeStructuredData } from "@site/src/components/SiteBranding";
+import publication from "@site/src/components/SiteBranding/publication.cjs";
 import { caseCatalog } from "@site/src/data/caseCatalog";
 import reportTopics from "@site/src/data/reportTopics.json";
 import queryTopics from "@site/src/data/queryTopics.json";
@@ -24,12 +25,12 @@ export default function Home() {
   const { siteConfig } = useDocusaurusContext();
   const branding = siteConfig.customFields?.branding ?? {};
   const displayName = branding.displayName ?? "Charles River";
-  const description = `${branding.datasetName ?? "Charles River Accounting Dataset"}: learn connected accounting processes through 82 published tables, SQL and Excel exercises, and ${caseCatalog.length} guided teaching cases.`;
+  const description = `Understand ${displayName}'s business processes, trace source documents to the ledger, and practice accounting analysis with SQL, Excel, cases and reports.`;
   const reportCount = reportTopics.reduce((count, topic) => count + topic.reports.length, 0);
   const queryCount = queryTopics.reduce((count, topic) => count + topic.queries.length, 0);
   return (
     <Layout title="Accounting Processes, Data & Teaching Cases" description={description}>
-      <DatasetStructuredData pagePath="/" description={description} />
+      <HomeStructuredData title="Accounting Processes, Data & Teaching Cases" description={description} />
       <main className={styles.page}>
         <section className={styles.hero} aria-labelledby="home-title">
           <div className={styles.heroCopy}>
@@ -68,10 +69,11 @@ export default function Home() {
         <section className={styles.section} aria-labelledby="resources-heading"><div className={styles.resourceGrid}>
           <div><p className={styles.eyebrow}>One environment, connected resources</p><h2 id="resources-heading">Teach the concepts.<br />Examine the company.<br />Interpret the results.</h2><p className={styles.lede}>Accounting Analytics Hub brings the learning resources together. The textbook develops the concepts; {displayName} provides the company, data, and investigations.</p><a className={styles.textLink} href="https://aa.accountinganalyticshub.com/">Read Accounting Analytics: An Integrated Approach <span aria-hidden="true">↗</span></a></div>
           <div className={styles.resourceList}>
-            <Link to="/docs/analytics"><strong>Reports & analytics</strong><span>{reportCount} reports organized by business topic, plus {queryCount} SQL files.</span><span aria-hidden="true">→</span></Link>
+            <Link to="/docs/analytics"><strong>Reports & analytics</strong><span>{reportCount} reports organized by business topic, with interpretation guidance.</span><span aria-hidden="true">→</span></Link>
+            <Link to="/docs/analytics/analysis-tracks"><strong>SQL Query Library</strong><span>{queryCount} SQL files, source tables, and guided reconciliation paths.</span><span aria-hidden="true">→</span></Link>
             <Link to="/docs/reference/schema"><strong>Dataset reference</strong><span>Look up keys, document relationships, and posting logic.</span><span aria-hidden="true">→</span></Link>
             <Link to="/docs/teach-with-data/instructor-adoption"><strong>For instructors</strong><span>Connect AIS, analytics, financial, managerial, and audit coursework.</span><span aria-hidden="true">→</span></Link>
-            <a href="https://accountinganalyticshub.com/"><strong>Accounting Analytics Hub</strong><span>Open textbooks and planned learning pathways.</span><span aria-hidden="true">↗</span></a>
+            <a href={publication.discoveryUrl}><strong>Charles River at the Hub</strong><span>Publication overview, dataset identity, and connections to the wider learning environment.</span><span aria-hidden="true">↗</span></a>
           </div>
         </div></section>
         <section className={styles.downloadSection} aria-labelledby="download-heading"><div className={styles.sectionInner}><div><p className={styles.eyebrow}>Ready to explore</p><h2 id="download-heading">The files are ready.<br />Bring an accounting question.</h2><p>Download the company records and begin with a focused investigation.</p><p className={styles.small}>The <Link to="/docs/dataset-overview">Dataset Guide</Link> explains the tables and settlement postings beyond the main operating years.</p></div><Link className="button button--primary" to="/docs/downloads">Get the dataset <span aria-hidden="true">↓</span></Link></div></section>

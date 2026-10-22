@@ -160,26 +160,25 @@ test("indexing, sitemap, breadcrumb, and canonical settings remain enabled", () 
   assert.doesNotMatch(robots, /Disallow: \/\s*$/m);
 });
 
-test("dataset schema shares one identity with verified creator and only published formats", () => {
-  const home = buildDatasetStructuredData(branding);
-  const downloads = buildDatasetStructuredData(branding, { pagePath: "/docs/downloads", description: "Download the published teaching files." });
-  assert.equal(home["@id"], downloads["@id"]);
-  assert.equal(home.creator["@type"], "Person");
-  assert.equal(home.creator.name, "Mauricio Mello Codesso");
-  assert.equal(home.version, undefined);
+test("dataset identity and citation follow the DOI and verified Zenodo record", () => {
+  const publication = require('../../src/components/SiteBranding/publication.cjs');
+  const downloads = buildDatasetStructuredData(branding);
+  assert.equal(downloads['@id'], publication.datasetId);
+  assert.equal(downloads.identifier.url, publication.conceptDoi);
+  assert.equal(downloads.url, branding.baseUrl + '/');
+  assert.equal(downloads.creator.name, publication.creatorName);
+  assert.equal(downloads.creator.alternateName, publication.archivalCreatorName);
+  assert.equal(downloads.license, 'https://creativecommons.org/licenses/by-sa/4.0/');
   assert.equal(downloads.version, undefined);
-  assert.equal(home.license, "https://creativecommons.org/licenses/by-sa/4.0/");
-  assert.equal(home.distribution, undefined);
-  assert.equal(home.sameAs, undefined);
-  assert.equal(home.citation, undefined);
+  assert.equal(downloads.datePublished, undefined);
+  assert.equal(downloads.citation.datePublished, publication.citationYear);
+  assert.equal(downloads.citation.url, publication.versionDoi);
   assert.equal(downloads.distribution.length, 3);
-  assert.ok(downloads.distribution.every((item) => item.contentUrl.includes("/releases/latest/download/")));
-  assert.ok(downloads.distribution.every((item) => !item.contentUrl.includes("_support")));
-  assert.equal(downloads.sameAs, `${branding.repositoryUrl}/releases/latest`);
-  assert.equal(downloads.description, "Download the published teaching files.");
-  assert.equal(downloads.mainEntityOfPage, `${branding.baseUrl}/docs/downloads`);
-  assert.equal(home.identifier, undefined);
-  assert.equal(home.temporalCoverage, undefined);
+  assert.equal(downloads.subjectOf['@id'], publication.discoveryUrl + '#webpage');
+  assert.equal(downloads.sameAs, publication.conceptDoi);
+  assert.ok(downloads.distribution.every(item => item.contentUrl.includes('/releases/latest/download/')));
+  assert.ok(downloads.distribution.every(item => !item.contentUrl.includes('_support')));
+  assert.equal(downloads.mainEntityOfPage, branding.baseUrl + '/docs/downloads');
 });
 
 test("learning schema describes visible page metadata without invented outcomes", () => {
@@ -191,6 +190,35 @@ test("learning schema describes visible page metadata without invented outcomes"
   assert.equal(resource.url, `${branding.baseUrl}${metadata.permalink}`);
   assert.equal(resource.dateModified, undefined);
   assert.equal(resource.educationalLevel, undefined);
+});
+
+test("cross-site entity identities match the recorded clean Hub main source", () => {
+  const expected = require('../../planning/website-redesign/learning-seo-2026/hub-alignment-evidence.json').verified;
+  const publication = require('../../src/components/SiteBranding/publication.cjs');
+  const { buildWebPageStructuredData, buildWebSiteStructuredData } = require('../../src/components/SiteBranding/structuredData.cjs');
+  const dataset = buildDatasetStructuredData(branding);
+  assert.equal(dataset['@id'], expected.datasetId);
+  assert.equal(dataset.url, expected.datasetUrl);
+  assert.equal(dataset.publisher['@id'], expected.publisherId);
+  assert.equal(dataset.publisher.name, expected.publisherName);
+  assert.equal(dataset.creator['@id'], expected.authorId);
+  assert.equal(dataset.creator.url, expected.authorUrl);
+  assert.equal(dataset.creator.name, expected.authorName);
+  assert.equal(dataset.sameAs, expected.conceptDoi);
+  assert.equal(dataset.citation.url, expected.revisionDoi);
+  assert.equal(dataset.citation.name, expected.registryTitle);
+  assert.equal(dataset.citation.datePublished, expected.citationYear);
+  assert.equal(dataset.citation.publisher['@id'], expected.publisherId);
+  assert.equal(dataset.license, expected.license);
+  const website = buildWebSiteStructuredData(branding, 'Company and evidence learning.');
+  assert.equal(website.publisher['@id'], expected.publisherId);
+  assert.equal(website.isPartOf['@id'], 'https://accountinganalyticshub.com/#website');
+  const learning = buildLearningResourceStructuredData(branding, { title: 'Trace', description: 'Trace evidence.', permalink: '/docs/example' }, 'Exercise');
+  const page = buildWebPageStructuredData(branding, { title: 'Trace', description: 'Trace evidence.', permalink: '/docs/example', learningResourceId: learning['@id'] });
+  assert.equal(learning.isPartOf['@id'], website['@id']);
+  assert.equal(learning.about['@id'], expected.datasetId);
+  assert.equal(page.mainEntity['@id'], learning['@id']);
+  assert.equal(publication.archivalCreatorName, 'Mauricio Mello Codesso');
 });
 
 test("JSON-LD serialization cannot close its script element", () => {

@@ -138,6 +138,8 @@ It establishes only the margin defined by the revenue and costs included. State 
 
 **Investigate this process.** Finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Then follow [Lesson 7: Follow Design Time into Billing](../learn-and-practice/follow-design-time-into-billing.md). Check the selected lesson’s further prerequisites before beginning.
 
+**Find analytical evidence.** Browse [Sales and Customers queries](../analytics/analysis-tracks.md#sales-and-customers) and [related reports](../analytics/index.md#sales-and-customers). Use the [Schema Reference](../reference/schema.md) for join keys and the [Posting Reference](../reference/posting.md) for accounting effects.
+
 ## Optional Reference
 
 Return to these sections when you have a specific question or an assignment that uses the data. The chapter above can be read without opening a file.

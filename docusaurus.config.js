@@ -1,5 +1,6 @@
 const { themes } = require("prism-react-renderer");
 const { loadSiteBranding } = require("./config/loadSiteBranding.cjs");
+const publication = require("./src/components/SiteBranding/publication.cjs");
 
 const branding = loadSiteBranding();
 
@@ -144,10 +145,17 @@ const config = {
     branding,
   },
   themeConfig: {
-    image: "img/site-social-card.svg",
+    image: publication.socialImage,
     metadata: [
       { name: "theme-color", content: "#196252" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:site_name", content: branding.datasetName },
+      { property: "og:type", content: "website" },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: publication.socialImageAlt },
+      { name: "twitter:image:alt", content: publication.socialImageAlt },
     ],
     colorMode: {
       defaultMode: "light",
@@ -206,6 +214,7 @@ const config = {
           position: "right",
           items: [
             { href: "https://accountinganalyticshub.com/", label: "Accounting Analytics Hub" },
+            { href: publication.discoveryUrl, label: "Charles River Publication Overview" },
             { href: "https://aa.accountinganalyticshub.com/", label: "Accounting Analytics Textbook" },
           ],
         },
@@ -229,6 +238,7 @@ const config = {
             { label: "Business Processes", to: "/docs/process-flows" },
             { label: "Cases", to: "/docs/analytics/cases" },
             { label: "Reports and Analytics", to: "/docs/analytics" },
+            { label: "Query Library", to: "/docs/analytics/analysis-tracks" },
             { label: "Dataset Reference", to: "/docs/reference/schema" },
           ],
         },
@@ -240,6 +250,7 @@ const config = {
               to: "/docs/teach-with-data/instructor-adoption",
             },
             { label: "Accounting Analytics Hub", href: "https://accountinganalyticshub.com/" },
+            { label: "Charles River Publication Overview", href: publication.discoveryUrl },
             { label: "Accounting Analytics Textbook", href: "https://aa.accountinganalyticshub.com/" },
           ],
         },
@@ -261,7 +272,7 @@ const config = {
           ],
         },
       ],
-      copyright: `Copyright &copy; ${new Date().getFullYear()} <a href="https://AccountingAnalyticsHub.com" target="_blank" rel="noopener noreferrer">Accounting Analytics Hub</a>.`,
+      copyright: `Copyright &copy; ${new Date().getFullYear()} <a href="${publication.hubUrl}" target="_blank" rel="noopener noreferrer">Accounting Analytics Hub</a>.`,
     },
     prism: {
       theme: themes.github,

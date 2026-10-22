@@ -161,6 +161,8 @@ No. Establish the balance using events up to the reporting date. The later disbu
 
 **Investigate this process.** Finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Then follow [Lesson 8: Follow a Purchase](../learn-and-practice/receipt-to-payable.md); use [Lesson 11: Follow an Estimate into Settlement](../learn-and-practice/follow-an-estimate-into-settlement.md) for the accrued-service branch. Check the selected lesson’s further prerequisites before beginning.
 
+**Find analytical evidence.** Browse [Purchasing and Inventory queries](../analytics/analysis-tracks.md#purchasing-and-inventory) and [related reports](../analytics/index.md#purchasing-and-inventory). Use the [Schema Reference](../reference/schema.md) for join keys and the [Posting Reference](../reference/posting.md) for accounting effects.
+
 ## Optional Reference
 
 Return to these sections when you have a specific question or an assignment that uses the data. The chapter above can be read without opening a file.

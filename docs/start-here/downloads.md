@@ -17,7 +17,6 @@ If you are still reading the company and process chapters, you can return here l
 
 <DatasetStructuredData
   pagePath="/docs/downloads"
-  sameAsPath="/"
   description="Download the published Charles River SQLite database, Excel workbook, or CSV package for accounting process tracing, analysis, and teaching."
 />
 
@@ -72,5 +71,13 @@ The public package provides SQLite, Excel, and CSV downloads. A support workbook
 <span id="before-the-first-assignment"></span>
 
 ## Next Steps
+
+For publication discovery, visit the [Charles River dataset page at Accounting Analytics Hub](https://accountinganalyticshub.com/charles-river/). The dataset identifier is [10.5281/zenodo.23428083](https://doi.org/10.5281/zenodo.23428083); its creator is [Mauricio Codesso](https://accountinganalyticshub.com/author/mauricio-codesso/). Reuse is governed by [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Keep the version and format of the file used alongside this identifier when describing your analysis.
+
+For the published snapshot identified as Version 2027.1, the Hub recommends this citation using the scholarly record's title, assigned year and revision DOI:
+
+> Codesso, M. (2027). *Charles River Accounting Database* (Version 2027.1) [Dataset]. Accounting Analytics Hub. [10.5281/zenodo.23428084](https://doi.org/10.5281/zenodo.23428084).
+
+The record's title uses “Database”; this educational site uses “Charles River Accounting Dataset.” The citation year comes from the publication record, while **2024–2026** describes the main operating years represented in the records. If you use a later release, retain its own version and citation details.
 
 Continue to the [Dataset Guide](dataset-overview.md) to learn how to read the records before beginning the guided tutorials.

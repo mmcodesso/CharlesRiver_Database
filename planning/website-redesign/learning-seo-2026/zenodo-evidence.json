@@ -1,0 +1,47 @@
+{
+  "retrieved_at": "2026-10-22T15:16:06.0609358Z",
+  "source": "https://zenodo.org/api/records/23428083",
+  "id": 23428084,
+  "doi": "10.5281/zenodo.23428084",
+  "conceptdoi": "10.5281/zenodo.23428083",
+  "metadata": {
+    "title": "Charles River Accounting Database",
+    "publication_date": "2027-01-18",
+    "version": "2027.1",
+    "creators": [
+      {
+        "name": "Codesso, Mauricio Mello",
+        "affiliation": "Northeastern University",
+        "orcid": "0000-0002-6214-7177"
+      }
+    ],
+    "license": {
+      "id": "cc-by-sa-4.0"
+    },
+    "related_identifiers": [
+      {
+        "identifier": "978-65--9782219-5",
+        "relation": "isSupplementTo",
+        "resource_type": "publication-book",
+        "scheme": "isbn"
+      }
+    ]
+  },
+  "files": [
+    {
+      "key": "CharlesRiver_csv.zip",
+      "size": 33341957,
+      "checksum": "md5:454d318ebc2472372acca73902d54944"
+    },
+    {
+      "key": "CharlesRiver.sqlite",
+      "size": 335650816,
+      "checksum": "md5:51720be32b34bb9fe9a9fdedd77e6b11"
+    },
+    {
+      "key": "CharlesRiver.xlsx",
+      "size": 128963313,
+      "checksum": "md5:97c61f014d3ea2cb50f08e06cfdca65e"
+    }
+  ]
+}

@@ -107,4 +107,6 @@ SQLiteStudio, DBeaver configured for SQLite, or an existing SQLite command-line 
 
 ## Next Steps
 
+For conceptual support, read the textbook's [SQL Essentials for Accounting Analytics](https://aa.accountinganalyticshub.com/chapters/09-sql-essentials/chapter.html) and [Joining and Summarizing Data in SQL](https://aa.accountinganalyticshub.com/chapters/10-joining-and-summarizing/chapter.html). Return to the Charles River lessons to apply those techniques to a defined source population.
+
 Continue to [1. Meet the Records](../learn-and-practice/meet-the-records.md?tool=sql). Keep the SQL tab selected throughout the tutorials; completing the Excel steps is optional.

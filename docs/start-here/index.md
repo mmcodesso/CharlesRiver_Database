@@ -52,6 +52,8 @@ Charles River belongs to [Accounting Analytics Hub](https://accountinganalyticsh
 
 Teaching a class? The [Instructor Adoption Guide](../teach-with-data/instructor-guide.md) connects the material to course preparation and assignments.
 
+For the publication overview, visit the [Hub's Charles River dataset page](https://accountinganalyticshub.com/charles-river/). Continue here for the company, processes, records, and applied investigations.
+
 ## Next Steps
 
 Begin with [Company Story](../learn-the-business/company-story.md): meet the customer, the staff, and the work that will connect the chapters.

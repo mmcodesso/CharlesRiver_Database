@@ -1,0 +1,10 @@
+{
+  "source": "static/img/charles-river-learning-social.svg",
+  "sourceSha256": "b8c0bf3e5cbe3ed56a11668ec2b878a2a5e2882f617db64164eef9def33e8851",
+  "png": "static/img/charles-river-learning-social.png",
+  "pngSha256": "76657b810bfbfa43bb0957778c116de2e303240b3af1b217048d7e7bcc403c67",
+  "width": 1200,
+  "height": 630,
+  "bytes": 54543,
+  "process": "Authored vector exported by existing Chromium through render-social-card.cjs; no original generated branding asset edited."
+}

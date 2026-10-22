@@ -1,6 +1,6 @@
 ---
-title: License
-description: Licensing terms for the dataset open educational resource.
+title: Charles River Dataset License and Attribution
+description: Read the Charles River dataset's Creative Commons Attribution-ShareAlike 4.0 reuse terms and find the license and attribution guidance.
 sidebar_label: License
 slug: /technical/license
 ---

@@ -74,6 +74,59 @@ test("learning activities have server-rendered accurate LearningResource metadat
     assert.equal(resource.name, metadata.title);
     assert.equal(resource.description, metadata.description);
     assert.equal(resource.url, `${branding.baseUrl}${route}`);
+    const page = structuredData(html).find(entry => entry['@type'] === 'WebPage');
+    assert.equal(page.mainEntity['@id'], resource['@id']);
+    assert.equal(resource.isPartOf['@id'], branding.baseUrl + '/#website');
+  }
+});
+
+test("all authored pages have one consistent social preview and unique descriptions", () => {
+  const publication = require('../../src/components/SiteBranding/publication.cjs');
+  const descriptions = new Set();
+  const bytes = fs.readFileSync(path.join(root, 'static', publication.socialImage));
+  assert.equal(bytes.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+  assert.equal(bytes.readUInt32BE(16), 1200);
+  assert.equal(bytes.readUInt32BE(20), 630);
+  for (const route of ['/', ...docs.map(doc => doc.route)]) {
+    const html = fs.readFileSync(builtFile(route), 'utf8');
+    const tags = [...html.matchAll(/<meta\b[^>]*>/g)].map(match => match[0]);
+    const get = key => {
+      const matches = tags.filter(tag => attribute(tag, 'name') === key || attribute(tag, 'property') === key);
+      assert.equal(matches.length, 1, route + ': ' + key);
+      return attribute(matches[0], 'content');
+    };
+    const description = get('description');
+    assert.ok(!descriptions.has(description), 'Duplicate description: ' + route);
+    descriptions.add(description);
+    assert.equal(get('og:description'), description);
+    assert.equal(get('twitter:description'), description);
+    assert.equal(get('twitter:title'), get('og:title'));
+    assert.equal(get('og:site_name'), branding.datasetName);
+    assert.equal(get('og:type'), 'website');
+    assert.equal(get('og:image'), branding.baseUrl + '/' + publication.socialImage);
+    assert.equal(get('twitter:image'), get('og:image'));
+    assert.equal(get('og:image:type'), 'image/png');
+    assert.equal(get('og:image:width'), '1200');
+    assert.equal(get('og:image:height'), '630');
+    assert.equal(get('twitter:image:alt'), get('og:image:alt'));
+    assert.ok(html.includes(`href="${publication.discoveryUrl}"`), 'Global publisher discovery: ' + route);
+    assert.ok(html.includes('href="/docs/analytics/analysis-tracks"'), 'Global query discovery: ' + route);
+    assert.ok(builtFile('/' + publication.socialImage));
+  }
+});
+
+test("catalog topics expose process, schema, practice and case links before JavaScript", () => {
+  const source = fs.readFileSync(path.join(root, 'src/components/CatalogNavigation/TopicLearningLinks.jsx'), 'utf8');
+  const targets = [...source.matchAll(/\['[^']+', '([^']+)'\]/g)].map(match => match[1]);
+  assert.equal(targets.length, 25);
+  for (const route of ['/docs/analytics', '/docs/analytics/analysis-tracks']) {
+    const html = fs.readFileSync(builtFile(route), 'utf8');
+    assert.equal((html.match(/Connect the evidence:/g) ?? []).length, 6);
+    for (const target of targets) assert.ok(html.includes(`href="${target}"`), route + ' -> ' + target);
+  }
+  for (const route of ['/docs', '/docs/downloads', '/docs/teach-with-data/instructor-adoption']) {
+    const html = fs.readFileSync(builtFile(route), 'utf8');
+    assert.ok(html.includes('href="https://accountinganalyticshub.com/charles-river/"'), route);
   }
 });
 
@@ -87,17 +140,26 @@ test("case discovery renders eight investigations in three levels without tool f
 });
 
 test("dataset metadata and direct release links are present before JavaScript runs", () => {
-  const identities = [];
-  for (const route of ["/", "/docs/downloads", "/docs/dataset-overview"]) {
-    const html = fs.readFileSync(builtFile(route), "utf8");
-    const dataset = structuredData(html).find((entry) => entry["@type"] === "Dataset");
-    assert.ok(dataset, `Dataset schema: ${route}`);
-    assert.equal(dataset.creator.name, "Mauricio Mello Codesso");
-    assert.equal(dataset.version, undefined);
-    assert.equal(dataset.distribution?.length, route === "/docs/downloads" ? 3 : undefined);
-    identities.push(dataset["@id"]);
+  const publication = require('../../src/components/SiteBranding/publication.cjs');
+  for (const route of ['/', ...docs.map(doc => doc.route)]) {
+    const html = fs.readFileSync(builtFile(route), 'utf8');
+    const entries = structuredData(html);
+    const datasets = entries.filter(entry => entry['@type'] === 'Dataset');
+    assert.equal(datasets.length, route === '/docs/downloads' ? 1 : 0, route);
+    const page = entries.find(entry => entry['@type'] === 'WebPage');
+    assert.ok(page, 'WebPage: ' + route);
+    assert.equal(page.url, branding.baseUrl + (route === '/' ? '/' : route));
+    assert.equal(page.about['@id'], publication.datasetId);
+    if (datasets.length) {
+      assert.equal(datasets[0]['@id'], publication.datasetId);
+      assert.equal(datasets[0].creator.name, publication.creatorName);
+      assert.equal(datasets[0].distribution.length, 3);
+      assert.equal(datasets[0].subjectOf['@id'], publication.discoveryUrl + '#webpage');
+      assert.equal(datasets[0].datePublished, undefined);
+    }
   }
-  assert.equal(new Set(identities).size, 1);
+  const homeEntries = structuredData(fs.readFileSync(builtFile('/'), 'utf8'));
+  assert.equal(homeEntries.filter(entry => entry['@type'] === 'WebSite').length, 1);
   for (const { route } of [{ route: "/" }, ...docs]) {
     const html = fs.readFileSync(builtFile(route), "utf8");
     assert.doesNotMatch(html, /\bv\d{4}\.\d+\b/, `Numbered dataset version on ${route}`);

@@ -1,6 +1,6 @@
 ---
-title: Customize
-description: Optional instructor guide for creating a local dataset and adjusting generation settings.
+title: Instructor Guide to Local Dataset Customization
+description: Understand the optional Charles River generation workflow, available local settings, and how customized instructor packages differ from the published teaching files.
 slug: /technical/dataset-delivery
 sidebar_label: Customize
 ---

@@ -9,7 +9,9 @@ sidebar_label: For Instructors
 
 Start with an accounting question students should be able to explain. <DisplayName /> connects one company's business processes, records, reports, query resources, and cases. Assign a focused document trace or build a wider investigation, then ask students to explain what their evidence supports and which action should follow. Students can use the published files without running the dataset generator.
 
-Charles River is part of [Accounting Analytics Hub](https://accountinganalyticshub.com/). The [Accounting Analytics: An Integrated Approach textbook](https://aa.accountinganalyticshub.com/) supplies conceptual depth and tool instruction; this site supplies the company, records, and applied work. The textbook's [instructor preface](https://aa.accountinganalyticshub.com/front-matter/preface.html#to-the-instructor) provides additional adoption context. The Hub's future AIS and tool courses are planned resources, rather than available courses required for this material.
+Charles River is part of [Accounting Analytics Hub](https://accountinganalyticshub.com/). The [Accounting Analytics: An Integrated Approach textbook](https://aa.accountinganalyticshub.com/) supplies conceptual depth and tool instruction; this site supplies the company, records, and applied work. The textbook's [instructor preface](https://aa.accountinganalyticshub.com/front-matter/preface.html#sec-to-the-instructor) provides additional adoption context. The Hub's future AIS and tool courses are planned resources, rather than available courses required for this material.
+
+For a concise publication overview to share in a syllabus, use the [Hub's Charles River dataset discovery page](https://accountinganalyticshub.com/charles-river/). Use this guide for classroom preparation and the [Downloads page](../start-here/downloads.md) for file and citation details.
 
 ## Prepare the Class Files
 

@@ -11,6 +11,7 @@ import reportTeachingMetadata from "@site/src/data/reportTeachingMetadata.json";
 import { queryLibraryLink } from "@site/src/components/CatalogNavigation/queryLinks";
 import useCatalogFilters, { matchesSearch } from "@site/src/components/CatalogNavigation/useCatalogFilters";
 import resolveCaseLink from "@site/src/components/Cases/resolveCaseLink";
+import TopicLearningLinks from "@site/src/components/CatalogNavigation/TopicLearningLinks";
 import styles from "./styles.module.css";
 
 function getReportEntry(reportKey) {
@@ -160,6 +161,7 @@ export function ReportCatalog({ topics }) {
           <div className={styles.groupHeader}>
             <Heading as="h3" id={topic.id} className={styles.groupTitle}>{topic.title}</Heading>
             <p>{topic.description}</p>
+            <TopicLearningLinks topicId={topic.id} />
           </div>
           <div className={styles.groupGrid}>
             {topic.reports.map((key) => (

@@ -1,0 +1,55 @@
+# Changed files
+
+Integrated educational-site and Hub-alignment changes. All changes are website presentation, website tests, authored social assets, or private audit evidence. Existing generated branding/manifests were refreshed by prebuild and have no substantive Git diff. The Hub repository was read only.
+
+- `docs/analytics/analysis-tracks.md`
+- `docs/analytics/sql-guide.md`
+- `docs/processes/design-services.md`
+- `docs/processes/manual-journals-and-close.md`
+- `docs/processes/manufacturing.md`
+- `docs/processes/o2c.md`
+- `docs/processes/p2p.md`
+- `docs/processes/payroll.md`
+- `docs/reference/schema.md`
+- `docs/start-here/dataset-overview.md`
+- `docs/start-here/downloads.md`
+- `docs/start-here/index.md`
+- `docs/teach-with-data/instructor-guide.md`
+- `docs/technical/contributing.md`
+- `docs/technical/dataset-delivery.md`
+- `docs/technical/license.md`
+- `docs/technical/roadmap.md`
+- `docusaurus.config.js`
+- `planning/website-redesign/learning-seo-2026/AUDIT.md`
+- `planning/website-redesign/learning-seo-2026/CHANGED_FILES.md`
+- `planning/website-redesign/learning-seo-2026/HUB_ALIGNMENT_REVIEW.md`
+- `planning/website-redesign/learning-seo-2026/KEYWORD_MAP.md`
+- `planning/website-redesign/learning-seo-2026/VALIDATION.md`
+- `planning/website-redesign/learning-seo-2026/audit.cjs`
+- `planning/website-redesign/learning-seo-2026/baseline-inventory.md`
+- `planning/website-redesign/learning-seo-2026/baseline.json`
+- `planning/website-redesign/learning-seo-2026/check-external-links.cjs`
+- `planning/website-redesign/learning-seo-2026/external-links.json`
+- `planning/website-redesign/learning-seo-2026/final-inventory.md`
+- `planning/website-redesign/learning-seo-2026/final.json`
+- `planning/website-redesign/learning-seo-2026/hub-alignment-evidence.json`
+- `planning/website-redesign/learning-seo-2026/hub-review-after.json`
+- `planning/website-redesign/learning-seo-2026/hub-review-before.json`
+- `planning/website-redesign/learning-seo-2026/package-evidence.json`
+- `planning/website-redesign/learning-seo-2026/render-social-card.cjs`
+- `planning/website-redesign/learning-seo-2026/repeated-passages.json`
+- `planning/website-redesign/learning-seo-2026/social-card-evidence.json`
+- `planning/website-redesign/learning-seo-2026/zenodo-evidence.json`
+- `src/components/CatalogNavigation/TopicLearningLinks.jsx`
+- `src/components/QueryLibrary/index.jsx`
+- `src/components/ReportCatalog/index.jsx`
+- `src/components/SiteBranding/index.jsx`
+- `src/components/SiteBranding/publication.cjs`
+- `src/components/SiteBranding/structuredData.cjs`
+- `src/pages/index.jsx`
+- `src/theme/DocItem/Metadata/index.jsx`
+- `static/img/charles-river-learning-social.png`
+- `static/img/charles-river-learning-social.svg`
+- `tests/website/browser-interactions.cjs`
+- `tests/website/navigation-seo.test.cjs`
+- `tests/website/rendered-site.test.cjs`

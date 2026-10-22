@@ -1,0 +1,2849 @@
+[
+  {
+    "route": "/",
+    "title": "Accounting Processes, Data &amp; Teaching Cases | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Accounting Processes, Data &amp; Teaching Cases | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Charles River Accounting Dataset: learn connected accounting processes through 82 published tables, SQL and Excel exercises, and 8 guided teaching cases.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Charles River Accounting Dataset: learn connected accounting processes through 82 published tables, SQL and Excel exercises, and 8 guided teaching cases.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://charlesriver.accountinganalyticshub.com/#website",
+        "url": "https://charlesriver.accountinganalyticshub.com/",
+        "name": "Charles River Accounting Dataset",
+        "description": "Charles River Accounting Dataset: learn connected accounting processes through 82 published tables, SQL and Excel exercises, and 8 guided teaching cases.",
+        "inLanguage": "en",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/",
+        "name": "Accounting Processes, Data & Teaching Cases",
+        "description": "Charles River Accounting Dataset: learn connected accounting processes through 82 published tables, SQL and Excel exercises, and 8 guided teaching cases.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/analysis-tracks",
+    "title": "SQL Query Library for Accounting Analysis | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/analysis-tracks\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"SQL Query Library for Accounting Analysis | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Browse all 170 Charles River SQL queries in the same six business topics as the reports, inspect source logic, and follow guided reconciliation paths.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Browse all 170 Charles River SQL queries in the same six business topics as the reports, inspect source logic, and follow guided reconciliation paths.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/analysis-tracks#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/analysis-tracks",
+        "name": "SQL Query Library for Accounting Analysis",
+        "description": "Browse all 170 Charles River SQL queries in the same six business topics as the reports, inspect source logic, and follow guided reconciliation paths.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Query Library",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/analysis-tracks"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/cases/audit-review-pack-case",
+    "title": "8. Investigate Exceptions and Recommend Controls | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/audit-review-pack-case\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"8. Investigate Exceptions and Recommend Controls | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Which query flags become supported findings, and what control could be assessed?\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Which query flags become supported findings, and what control could be assessed?\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/audit-review-pack-case#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/audit-review-pack-case",
+        "name": "8. Investigate Exceptions and Recommend Controls",
+        "description": "Which query flags become supported findings, and what control could be assessed?",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/audit-review-pack-case#learning-resource",
+        "name": "8. Investigate Exceptions and Recommend Controls",
+        "description": "Which query flags become supported findings, and what control could be assessed?",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/audit-review-pack-case",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/audit-review-pack-case",
+        "learningResourceType": "Case study",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Cases",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "8. Investigate Exceptions and Recommend Controls",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/audit-review-pack-case"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/cases/design-services-performance-case",
+    "title": "2. Review Design Work and Billing | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/design-services-performance-case\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"2. Review Design Work and Billing | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"How does design effort become approved work, billed amounts, and recorded cost?\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"How does design effort become approved work, billed amounts, and recorded cost?\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/design-services-performance-case#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/design-services-performance-case",
+        "name": "2. Review Design Work and Billing",
+        "description": "How does design effort become approved work, billed amounts, and recorded cost?",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/design-services-performance-case#learning-resource",
+        "name": "2. Review Design Work and Billing",
+        "description": "How does design effort become approved work, billed amounts, and recorded cost?",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/design-services-performance-case",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/design-services-performance-case",
+        "learningResourceType": "Case study",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Cases",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "2. Review Design Work and Billing",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/design-services-performance-case"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/cases/financial-statement-bridge-case",
+    "title": "7. Explain Profit, Cash, and the Year-End Close | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/financial-statement-bridge-case\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"7. Explain Profit, Cash, and the Year-End Close | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"How can the company report profit while cash falls, and what does the year-end close change?\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"How can the company report profit while cash falls, and what does the year-end close change?\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/financial-statement-bridge-case#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/financial-statement-bridge-case",
+        "name": "7. Explain Profit, Cash, and the Year-End Close",
+        "description": "How can the company report profit while cash falls, and what does the year-end close change?",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/financial-statement-bridge-case#learning-resource",
+        "name": "7. Explain Profit, Cash, and the Year-End Close",
+        "description": "How can the company report profit while cash falls, and what does the year-end close change?",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/financial-statement-bridge-case",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/financial-statement-bridge-case",
+        "learningResourceType": "Case study",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Cases",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "7. Explain Profit, Cash, and the Year-End Close",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/financial-statement-bridge-case"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/cases",
+    "title": "Cases: Guided Business Investigations | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/cases\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Cases: Guided Business Investigations | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Eight substantial Charles River cases with complete Excel and SQL routes, worked evidence, and independent challenges.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Eight substantial Charles River cases with complete Excel and SQL routes, worked evidence, and independent challenges.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases",
+        "name": "Cases: Guided Business Investigations",
+        "description": "Eight substantial Charles River cases with complete Excel and SQL routes, worked evidence, and independent challenges.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Cases",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/cases/manufacturing-labor-cost-case",
+    "title": "5. Explain Production Cost and Delivery Pressure | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/manufacturing-labor-cost-case\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"5. Explain Production Cost and Delivery Pressure | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Do completion, recorded cost, and financial close tell the same production story?\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Do completion, recorded cost, and financial close tell the same production story?\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/manufacturing-labor-cost-case#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/manufacturing-labor-cost-case",
+        "name": "5. Explain Production Cost and Delivery Pressure",
+        "description": "Do completion, recorded cost, and financial close tell the same production story?",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/manufacturing-labor-cost-case#learning-resource",
+        "name": "5. Explain Production Cost and Delivery Pressure",
+        "description": "Do completion, recorded cost, and financial close tell the same production story?",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/manufacturing-labor-cost-case",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/manufacturing-labor-cost-case",
+        "learningResourceType": "Case study",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Cases",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "5. Explain Production Cost and Delivery Pressure",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/manufacturing-labor-cost-case"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/cases/o2c-trace-case",
+    "title": "1. Resolve a Customer Account Review | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/o2c-trace-case\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"1. Resolve a Customer Account Review | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"What can we tell the customer about delivery, billing, and the amount still unsettled?\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"What can we tell the customer about delivery, billing, and the amount still unsettled?\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/o2c-trace-case#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/o2c-trace-case",
+        "name": "1. Resolve a Customer Account Review",
+        "description": "What can we tell the customer about delivery, billing, and the amount still unsettled?",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/o2c-trace-case#learning-resource",
+        "name": "1. Resolve a Customer Account Review",
+        "description": "What can we tell the customer about delivery, billing, and the amount still unsettled?",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/o2c-trace-case",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/o2c-trace-case",
+        "learningResourceType": "Case study",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Cases",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "1. Resolve a Customer Account Review",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/o2c-trace-case"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/cases/p2p-accrual-settlement-case",
+    "title": "3. Explain Supplier Obligations at Month End | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/p2p-accrual-settlement-case\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"3. Explain Supplier Obligations at Month End | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Which selected obligations are uninvoiced receipts, supplier payables, or remaining estimates?\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Which selected obligations are uninvoiced receipts, supplier payables, or remaining estimates?\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/p2p-accrual-settlement-case#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/p2p-accrual-settlement-case",
+        "name": "3. Explain Supplier Obligations at Month End",
+        "description": "Which selected obligations are uninvoiced receipts, supplier payables, or remaining estimates?",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/p2p-accrual-settlement-case#learning-resource",
+        "name": "3. Explain Supplier Obligations at Month End",
+        "description": "Which selected obligations are uninvoiced receipts, supplier payables, or remaining estimates?",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/p2p-accrual-settlement-case",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/p2p-accrual-settlement-case",
+        "learningResourceType": "Case study",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Cases",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "3. Explain Supplier Obligations at Month End",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/p2p-accrual-settlement-case"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/cases/product-portfolio-profitability-case",
+    "title": "4. Choose a Product and Pricing Priority | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/product-portfolio-profitability-case\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"4. Choose a Product and Pricing Priority | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Which product group deserves a focused review, and what evidence supports that priority?\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Which product group deserves a focused review, and what evidence supports that priority?\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/product-portfolio-profitability-case#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/product-portfolio-profitability-case",
+        "name": "4. Choose a Product and Pricing Priority",
+        "description": "Which product group deserves a focused review, and what evidence supports that priority?",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/product-portfolio-profitability-case#learning-resource",
+        "name": "4. Choose a Product and Pricing Priority",
+        "description": "Which product group deserves a focused review, and what evidence supports that priority?",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/product-portfolio-profitability-case",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/product-portfolio-profitability-case",
+        "learningResourceType": "Case study",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Cases",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "4. Choose a Product and Pricing Priority",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/product-portfolio-profitability-case"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/cases/workforce-coverage-and-attendance-case",
+    "title": "6. Explain Staffing, Overtime, and Payroll Cost | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/workforce-coverage-and-attendance-case\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"6. Explain Staffing, Overtime, and Payroll Cost | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"What do staffing plans, approved work, and paid cost actually establish?\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"What do staffing plans, approved work, and paid cost actually establish?\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/workforce-coverage-and-attendance-case#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/workforce-coverage-and-attendance-case",
+        "name": "6. Explain Staffing, Overtime, and Payroll Cost",
+        "description": "What do staffing plans, approved work, and paid cost actually establish?",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/workforce-coverage-and-attendance-case#learning-resource",
+        "name": "6. Explain Staffing, Overtime, and Payroll Cost",
+        "description": "What do staffing plans, approved work, and paid cost actually establish?",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/workforce-coverage-and-attendance-case",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/workforce-coverage-and-attendance-case",
+        "learningResourceType": "Case study",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Cases",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "6. Explain Staffing, Overtime, and Payroll Cost",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/cases/workforce-coverage-and-attendance-case"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/excel-guide",
+    "title": "Set Up Excel for the Tutorials | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/excel-guide\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Set Up Excel for the Tutorials | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Import the released customer table into Microsoft 365 Excel, verify its rows, and prepare a separate tutorial workbook.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Import the released customer table into Microsoft 365 Excel, verify its rows, and prepare a separate tutorial workbook.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/excel-guide#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/excel-guide",
+        "name": "Set Up Excel for the Tutorials",
+        "description": "Import the released customer table into Microsoft 365 Excel, verify its rows, and prepare a separate tutorial workbook.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/excel-guide#learning-resource",
+        "name": "Set Up Excel for the Tutorials",
+        "description": "Import the released customer table into Microsoft 365 Excel, verify its rows, and prepare a separate tutorial workbook.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/excel-guide",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/analytics/excel-guide",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Set Up Excel",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/excel-guide"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics",
+    "title": "Reports and Analytics | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Reports and Analytics | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Browse all 48 Charles River reports by business topic, preview results, download Excel or CSV files, and connect findings to SQL and teaching cases.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Browse all 48 Charles River reports by business topic, preview results, download Excel or CSV files, and connect findings to SQL and teaching cases.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics",
+        "name": "Reports and Analytics",
+        "description": "Browse all 48 Charles River reports by business topic, preview results, download Excel or CSV files, and connect findings to SQL and teaching cases.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Reports and Analytics",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/analytics/sql-guide",
+    "title": "Set Up SQL for the Tutorials | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/analytics/sql-guide\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Set Up SQL for the Tutorials | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Open the Charles River SQLite database in DB Browser, run a short customer query, and save your first tutorial SQL.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Open the Charles River SQLite database in DB Browser, run a short customer query, and save your first tutorial SQL.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/sql-guide#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/sql-guide",
+        "name": "Set Up SQL for the Tutorials",
+        "description": "Open the Charles River SQLite database in DB Browser, run a short customer query, and save your first tutorial SQL.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/analytics/sql-guide#learning-resource",
+        "name": "Set Up SQL for the Tutorials",
+        "description": "Open the Charles River SQLite database in DB Browser, run a short customer query, and save your first tutorial SQL.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/analytics/sql-guide",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/analytics/sql-guide",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Set Up SQL",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/analytics/sql-guide"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/bpmn-controls-workshop",
+    "title": "BPMN Process and Internal Control Workshop | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/bpmn-controls-workshop\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"BPMN Process and Internal Control Workshop | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Extend a completed tutorial trace into a process handoff, evidence map, and proposed control with a testable assessment plan.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Extend a completed tutorial trace into a process handoff, evidence map, and proposed control with a testable assessment plan.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/bpmn-controls-workshop#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/bpmn-controls-workshop",
+        "name": "BPMN Process and Internal Control Workshop",
+        "description": "Extend a completed tutorial trace into a process handoff, evidence map, and proposed control with a testable assessment plan.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/bpmn-controls-workshop#learning-resource",
+        "name": "BPMN Process and Internal Control Workshop",
+        "description": "Extend a completed tutorial trace into a process handoff, evidence map, and proposed control with a testable assessment plan.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/bpmn-controls-workshop",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/bpmn-controls-workshop",
+        "learningResourceType": "Exercise",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "BPMN and Controls Workshop",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/bpmn-controls-workshop"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/connect-the-records",
+    "title": "3. Connect the Records | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/connect-the-records\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"3. Connect the Records | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Use customer and item keys to add descriptions while preserving one row per order line.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Use customer and item keys to add descriptions while preserving one row per order line.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/connect-the-records#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/connect-the-records",
+        "name": "3. Connect the Records",
+        "description": "Use customer and item keys to add descriptions while preserving one row per order line.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/connect-the-records#learning-resource",
+        "name": "3. Connect the Records",
+        "description": "Use customer and item keys to add descriptions while preserving one row per order line.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/connect-the-records",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/connect-the-records",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "3. Connect the Records",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/connect-the-records"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/find-the-accounting-entries",
+    "title": "6. Find the Accounting Entries | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/find-the-accounting-entries\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"6. Find the Accounting Entries | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Connect selected business events to complete ledger vouchers and explain their debit and credit effects.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Connect selected business events to complete ledger vouchers and explain their debit and credit effects.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/find-the-accounting-entries#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/find-the-accounting-entries",
+        "name": "6. Find the Accounting Entries",
+        "description": "Connect selected business events to complete ledger vouchers and explain their debit and credit effects.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/find-the-accounting-entries#learning-resource",
+        "name": "6. Find the Accounting Entries",
+        "description": "Connect selected business events to complete ledger vouchers and explain their debit and credit effects.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/find-the-accounting-entries",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/find-the-accounting-entries",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "6. Find the Accounting Entries",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/find-the-accounting-entries"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/follow-an-estimate-into-settlement",
+    "title": "11. Follow an Estimate into Settlement | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-an-estimate-into-settlement\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"11. Follow an Estimate into Settlement | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Trace an expense estimate to its supplier invoice, residual adjustment, and later payment.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Trace an expense estimate to its supplier invoice, residual adjustment, and later payment.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-an-estimate-into-settlement#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-an-estimate-into-settlement",
+        "name": "11. Follow an Estimate into Settlement",
+        "description": "Trace an expense estimate to its supplier invoice, residual adjustment, and later payment.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-an-estimate-into-settlement#learning-resource",
+        "name": "11. Follow an Estimate into Settlement",
+        "description": "Trace an expense estimate to its supplier invoice, residual adjustment, and later payment.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-an-estimate-into-settlement",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-an-estimate-into-settlement",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "11. Follow an Estimate into Settlement",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-an-estimate-into-settlement"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/follow-customer-settlement",
+    "title": "5. Follow Customer Settlement | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-customer-settlement\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"5. Follow Customer Settlement | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Compare cash receipts and invoice applications at two dates and explain the remaining balance.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Compare cash receipts and invoice applications at two dates and explain the remaining balance.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-customer-settlement#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-customer-settlement",
+        "name": "5. Follow Customer Settlement",
+        "description": "Compare cash receipts and invoice applications at two dates and explain the remaining balance.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-customer-settlement#learning-resource",
+        "name": "5. Follow Customer Settlement",
+        "description": "Compare cash receipts and invoice applications at two dates and explain the remaining balance.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-customer-settlement",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-customer-settlement",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "5. Follow Customer Settlement",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-customer-settlement"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/follow-design-time-into-billing",
+    "title": "7. Follow Design Time into Billing | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-design-time-into-billing\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"7. Follow Design Time into Billing | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Reconcile approved time to one service billing period and distinguish revenue from time-cost support.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Reconcile approved time to one service billing period and distinguish revenue from time-cost support.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-design-time-into-billing#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-design-time-into-billing",
+        "name": "7. Follow Design Time into Billing",
+        "description": "Reconcile approved time to one service billing period and distinguish revenue from time-cost support.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-design-time-into-billing#learning-resource",
+        "name": "7. Follow Design Time into Billing",
+        "description": "Reconcile approved time to one service billing period and distinguish revenue from time-cost support.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-design-time-into-billing",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-design-time-into-billing",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "7. Follow Design Time into Billing",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-design-time-into-billing"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/follow-hours-into-payroll",
+    "title": "10. Follow Hours into Payroll | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-hours-into-payroll\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"10. Follow Hours into Payroll | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Reconcile approved hours and net pay while distinguishing employee payment from period-wide remittances.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Reconcile approved hours and net pay while distinguishing employee payment from period-wide remittances.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-hours-into-payroll#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-hours-into-payroll",
+        "name": "10. Follow Hours into Payroll",
+        "description": "Reconcile approved hours and net pay while distinguishing employee payment from period-wide remittances.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-hours-into-payroll#learning-resource",
+        "name": "10. Follow Hours into Payroll",
+        "description": "Reconcile approved hours and net pay while distinguishing employee payment from period-wide remittances.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-hours-into-payroll",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-hours-into-payroll",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "10. Follow Hours into Payroll",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/follow-hours-into-payroll"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice",
+    "title": "Learn and Practice — Guided Excel and SQL Tutorials | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Learn and Practice — Guided Excel and SQL Tutorials | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Follow twelve connected Charles River tutorials from customer records to accounting evidence and a supported business conclusion, using Excel or SQL.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Follow twelve connected Charles River tutorials from customer records to accounting evidence and a supported business conclusion, using Excel or SQL.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice",
+        "name": "Learn and Practice — Guided Excel and SQL Tutorials",
+        "description": "Follow twelve connected Charles River tutorials from customer records to accounting evidence and a supported business conclusion, using Excel or SQL.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/manufacturing-cost-flow",
+    "title": "9. Follow Manufacturing Costs | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/manufacturing-cost-flow\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"9. Follow Manufacturing Costs | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Separate material issue, standard-cost completion, and the later close of one work order.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Separate material issue, standard-cost completion, and the later close of one work order.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/manufacturing-cost-flow#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/manufacturing-cost-flow",
+        "name": "9. Follow Manufacturing Costs",
+        "description": "Separate material issue, standard-cost completion, and the later close of one work order.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/manufacturing-cost-flow#learning-resource",
+        "name": "9. Follow Manufacturing Costs",
+        "description": "Separate material issue, standard-cost completion, and the later close of one work order.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/manufacturing-cost-flow",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/manufacturing-cost-flow",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "9. Follow Manufacturing Costs",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/manufacturing-cost-flow"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/meet-the-records",
+    "title": "1. Meet the Records | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/meet-the-records\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"1. Meet the Records | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Recognize one customer record, its identifier, and its descriptive fields.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Recognize one customer record, its identifier, and its descriptive fields.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/meet-the-records#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/meet-the-records",
+        "name": "1. Meet the Records",
+        "description": "Recognize one customer record, its identifier, and its descriptive fields.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/meet-the-records#learning-resource",
+        "name": "1. Meet the Records",
+        "description": "Recognize one customer record, its identifier, and its descriptive fields.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/meet-the-records",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/meet-the-records",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "1. Meet the Records",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/meet-the-records"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/read-an-order",
+    "title": "2. Read an Order | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/read-an-order\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"2. Read an Order | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Distinguish one sales order from its two lines and check the amount without counting the header twice.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Distinguish one sales order from its two lines and check the amount without counting the header twice.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/read-an-order#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/read-an-order",
+        "name": "2. Read an Order",
+        "description": "Distinguish one sales order from its two lines and check the amount without counting the header twice.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/read-an-order#learning-resource",
+        "name": "2. Read an Order",
+        "description": "Distinguish one sales order from its two lines and check the amount without counting the header twice.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/read-an-order",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/read-an-order",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "2. Read an Order",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/read-an-order"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/receipt-to-payable",
+    "title": "8. Follow a Purchase | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/receipt-to-payable\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"8. Follow a Purchase | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Follow a receipt-matched purchase through GRNI, supplier invoicing, and a payment after year end.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Follow a receipt-matched purchase through GRNI, supplier invoicing, and a payment after year end.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/receipt-to-payable#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/receipt-to-payable",
+        "name": "8. Follow a Purchase",
+        "description": "Follow a receipt-matched purchase through GRNI, supplier invoicing, and a payment after year end.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/receipt-to-payable#learning-resource",
+        "name": "8. Follow a Purchase",
+        "description": "Follow a receipt-matched purchase through GRNI, supplier invoicing, and a payment after year end.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/receipt-to-payable",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/receipt-to-payable",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "8. Follow a Purchase",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/receipt-to-payable"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/source-to-ledger",
+    "title": "4. Follow a Goods Sale | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/source-to-ledger\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"4. Follow a Goods Sale | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Trace a released goods line from order to shipment and invoice with Excel or simple SQL.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Trace a released goods line from order to shipment and invoice with Excel or simple SQL.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/source-to-ledger#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/source-to-ledger",
+        "name": "4. Follow a Goods Sale",
+        "description": "Trace a released goods line from order to shipment and invoice with Excel or simple SQL.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/source-to-ledger#learning-resource",
+        "name": "4. Follow a Goods Sale",
+        "description": "Trace a released goods line from order to shipment and invoice with Excel or simple SQL.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/source-to-ledger",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/source-to-ledger",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "4. Follow a Goods Sale",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/source-to-ledger"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+    "title": "12. Turn Records into a Conclusion | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/turn-records-into-a-conclusion\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"12. Turn Records into a Conclusion | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Build a monthly invoice summary and turn a checked result into a bounded business conclusion.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Build a monthly invoice summary and turn a checked result into a bounded business conclusion.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/turn-records-into-a-conclusion#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/turn-records-into-a-conclusion",
+        "name": "12. Turn Records into a Conclusion",
+        "description": "Build a monthly invoice summary and turn a checked result into a bounded business conclusion.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/turn-records-into-a-conclusion#learning-resource",
+        "name": "12. Turn Records into a Conclusion",
+        "description": "Build a monthly invoice summary and turn a checked result into a bounded business conclusion.",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/turn-records-into-a-conclusion",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/turn-records-into-a-conclusion",
+        "learningResourceType": "Tutorial",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "isPartOf": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Dataset",
+          "url": "https://charlesriver.accountinganalyticshub.com/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Learn and Practice",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "12. Turn Records into a Conclusion",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/learn-and-practice/turn-records-into-a-conclusion"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/company-story",
+    "title": "The Charles River Company Story | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/company-story\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"The Charles River Company Story | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Meet Charles River&#x27;s customers and staff, and follow a furnishing project through the connected work of merchandise, manufacturing, and hourly design services.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Meet Charles River&#x27;s customers and staff, and follow a furnishing project through the connected work of merchandise, manufacturing, and hourly design services.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/company-story#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/company-story",
+        "name": "The Charles River Company Story",
+        "description": "Meet Charles River's customers and staff, and follow a furnishing project through the connected work of merchandise, manufacturing, and hourly design services.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Company Story",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/company-story"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/process-flows",
+    "title": "Business Processes — Following the Work Between Departments | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/process-flows\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Business Processes — Following the Work Between Departments | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Learn to follow Charles River&#x27;s responsibilities, documents, and accounting events, with a guided introduction to business-process diagrams and optional editable models.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Learn to follow Charles River&#x27;s responsibilities, documents, and accounting events, with a guided introduction to business-process diagrams and optional editable models.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/process-flows#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/process-flows",
+        "name": "Business Processes — Following the Work Between Departments",
+        "description": "Learn to follow Charles River's responsibilities, documents, and accounting events, with a guided introduction to business-process diagrams and optional editable models.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Business Processes",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/process-flows"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/processes/design-services",
+    "title": "Design Services — From Staff Time to Customer Billing | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/processes/design-services\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Design Services — From Staff Time to Customer Billing | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Follow Charles River&#x27;s design engagement through staffing, recorded hours, approval, and monthly billing, and distinguish service revenue from labor cost.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Follow Charles River&#x27;s design engagement through staffing, recorded hours, approval, and monthly billing, and distinguish service revenue from labor cost.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/processes/design-services#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/processes/design-services",
+        "name": "Design Services — From Staff Time to Customer Billing",
+        "description": "Follow Charles River's design engagement through staffing, recorded hours, approval, and monthly billing, and distinguish service revenue from labor cost.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Business Processes",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/process-flows"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Design Services",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/processes/design-services"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/processes/manual-journals-and-close",
+    "title": "Journals and Close — Explaining the Company&#x27;s Period-End Position | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/processes/manual-journals-and-close\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Journals and Close — Explaining the Company&#x27;s Period-End Position | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Follow Charles River&#x27;s controller through expense estimates, later supplier settlement, monthly adjustments, and the separate purpose of annual closing entries.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Follow Charles River&#x27;s controller through expense estimates, later supplier settlement, monthly adjustments, and the separate purpose of annual closing entries.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/processes/manual-journals-and-close#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/processes/manual-journals-and-close",
+        "name": "Journals and Close — Explaining the Company's Period-End Position",
+        "description": "Follow Charles River's controller through expense estimates, later supplier settlement, monthly adjustments, and the separate purpose of annual closing entries.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Business Processes",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/process-flows"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Journals and Close",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/processes/manual-journals-and-close"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/processes/manufacturing",
+    "title": "Manufacturing — From Components to Finished Goods and Close | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/processes/manufacturing\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Manufacturing — From Components to Finished Goods and Close | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Follow Charles River&#x27;s selected manufacturing through planning, material issue, labor support, standard-cost completion, and work-order close.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Follow Charles River&#x27;s selected manufacturing through planning, material issue, labor support, standard-cost completion, and work-order close.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/processes/manufacturing#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/processes/manufacturing",
+        "name": "Manufacturing — From Components to Finished Goods and Close",
+        "description": "Follow Charles River's selected manufacturing through planning, material issue, labor support, standard-cost completion, and work-order close.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Business Processes",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/process-flows"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Manufacturing",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/processes/manufacturing"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/processes/o2c",
+    "title": "Order-to-Cash — From Customer Order to Settlement | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/processes/o2c\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Order-to-Cash — From Customer Order to Settlement | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Follow Charles River&#x27;s customer order through shipment, billing, cash receipt, and invoice settlement before exploring the supporting records and exceptions.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Follow Charles River&#x27;s customer order through shipment, billing, cash receipt, and invoice settlement before exploring the supporting records and exceptions.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/processes/o2c#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/processes/o2c",
+        "name": "Order-to-Cash — From Customer Order to Settlement",
+        "description": "Follow Charles River's customer order through shipment, billing, cash receipt, and invoice settlement before exploring the supporting records and exceptions.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Business Processes",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/process-flows"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Order-to-Cash",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/processes/o2c"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/processes/p2p",
+    "title": "Procure-to-Pay — From a Supply Need to Supplier Payment | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/processes/p2p\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Procure-to-Pay — From a Supply Need to Supplier Payment | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Follow Charles River&#x27;s purchasing request, supplier order, goods receipt, invoice, and payment, and learn why inventory and payable timing differ.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Follow Charles River&#x27;s purchasing request, supplier order, goods receipt, invoice, and payment, and learn why inventory and payable timing differ.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/processes/p2p#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/processes/p2p",
+        "name": "Procure-to-Pay — From a Supply Need to Supplier Payment",
+        "description": "Follow Charles River's purchasing request, supplier order, goods receipt, invoice, and payment, and learn why inventory and payable timing differ.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Business Processes",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/process-flows"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Procure-to-Pay",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/processes/p2p"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/processes/payroll",
+    "title": "Payroll — From Approved Work to Pay and Liability Settlement | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/processes/payroll\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Payroll — From Approved Work to Pay and Liability Settlement | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Follow an hourly employee&#x27;s work through attendance approval, gross-to-net payroll, employee payment, and the separate remittance of payroll liabilities.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Follow an hourly employee&#x27;s work through attendance approval, gross-to-net payroll, employee payment, and the separate remittance of payroll liabilities.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/processes/payroll#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/processes/payroll",
+        "name": "Payroll — From Approved Work to Pay and Liability Settlement",
+        "description": "Follow an hourly employee's work through attendance approval, gross-to-net payroll, employee payment, and the separate remittance of payroll liabilities.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Business Processes",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/process-flows"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Payroll",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/processes/payroll"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/reference/posting",
+    "title": "GLEntry Posting Reference | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/reference/posting\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"GLEntry Posting Reference | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Student-friendly guide to how business events become posted ledger entries.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Student-friendly guide to how business events become posted ledger entries.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/reference/posting#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/reference/posting",
+        "name": "GLEntry Posting Reference",
+        "description": "Student-friendly guide to how business events become posted ledger entries.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "GLEntry Posting",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/reference/posting"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/reference/schema",
+    "title": "Accounting Database Schema and Join Reference | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/reference/schema\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Accounting Database Schema and Join Reference | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Reference for the 82 published Charles River SQLite tables, key columns, source-document bridges, and entity relationships.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Reference for the 82 published Charles River SQLite tables, key columns, source-document bridges, and entity relationships.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/reference/schema#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/reference/schema",
+        "name": "Accounting Database Schema and Join Reference",
+        "description": "Reference for the 82 published Charles River SQLite tables, key columns, source-document bridges, and entity relationships.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Schema Reference",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/reference/schema"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/dataset-overview",
+    "title": "Dataset Guide — Reading Documents, Tables, and Relationships | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/dataset-overview\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Dataset Guide — Reading Documents, Tables, and Relationships | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Learn what a record represents, how document headers and lines connect, and how Charles River&#x27;s operational events lead to accounting entries.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Learn what a record represents, how document headers and lines connect, and how Charles River&#x27;s operational events lead to accounting entries.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/dataset-overview#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/dataset-overview",
+        "name": "Dataset Guide — Reading Documents, Tables, and Relationships",
+        "description": "Learn what a record represents, how document headers and lines connect, and how Charles River's operational events lead to accounting entries.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Getting Started",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Dataset Guide",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/dataset-overview"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/downloads",
+    "title": "Download and Open the Charles River Teaching Files | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/downloads\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Download and Open the Charles River Teaching Files | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Choose the published SQLite, Excel, or CSV format, retain a source copy, and check your first file before beginning a Charles River accounting exercise.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Choose the published SQLite, Excel, or CSV format, retain a source copy, and check your first file before beginning a Charles River accounting exercise.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/downloads#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/downloads",
+        "name": "Download and Open the Charles River Teaching Files",
+        "description": "Choose the published SQLite, Excel, or CSV format, retain a source copy, and check your first file before beginning a Charles River accounting exercise.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Getting Started",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Downloads",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/downloads"
+          }
+        ]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "@id": "https://doi.org/10.5281/zenodo.23428083",
+        "name": "Charles River Accounting Dataset",
+        "alternateName": "Charles River",
+        "description": "Download the published Charles River SQLite database, Excel workbook, or CSV package for accounting process tracing, analysis, and teaching.",
+        "url": "https://accountinganalyticshub.com/charles-river/",
+        "identifier": "https://doi.org/10.5281/zenodo.23428083",
+        "mainEntityOfPage": "https://charlesriver.accountinganalyticshub.com/docs/downloads",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "creator": {
+          "@type": "Person",
+          "name": "Mauricio Mello Codesso"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Accounting Analytics Hub",
+          "url": "https://accountinganalyticshub.com/"
+        },
+        "sameAs": [
+          "https://accountinganalyticshub.com/charles-river/",
+          "https://doi.org/10.5281/zenodo.23428083",
+          "https://github.com/mmcodesso/CharlesRiver_Database/releases/latest"
+        ],
+        "citation": {
+          "@type": "CreativeWork",
+          "name": "Charles River Accounting Database",
+          "datePublished": "2027",
+          "url": "https://doi.org/10.5281/zenodo.23428084",
+          "creator": {
+            "@type": "Person",
+            "name": "Mauricio Mello Codesso"
+          }
+        },
+        "distribution": [
+          {
+            "@type": "DataDownload",
+            "name": "Charles River Accounting Dataset SQLite Database",
+            "encodingFormat": "application/vnd.sqlite3",
+            "contentUrl": "https://github.com/mmcodesso/CharlesRiver_Database/releases/latest/download/CharlesRiver.sqlite"
+          },
+          {
+            "@type": "DataDownload",
+            "name": "Charles River Accounting Dataset Excel Workbook",
+            "encodingFormat": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "contentUrl": "https://github.com/mmcodesso/CharlesRiver_Database/releases/latest/download/CharlesRiver.xlsx"
+          },
+          {
+            "@type": "DataDownload",
+            "name": "Charles River Accounting Dataset CSV Zip Package",
+            "encodingFormat": "application/zip",
+            "contentUrl": "https://github.com/mmcodesso/CharlesRiver_Database/releases/latest/download/CharlesRiver_csv.zip"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs",
+    "title": "Start Learning with Charles River | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Start Learning with Charles River | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Begin with the company and its people, follow their accounting processes, and then explore the evidence behind a supported business explanation.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Begin with the company and its people, follow their accounting processes, and then explore the evidence behind a supported business explanation.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs",
+        "name": "Start Learning with Charles River",
+        "description": "Begin with the company and its people, follow their accounting processes, and then explore the evidence behind a supported business explanation.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Getting Started",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/why-this-dataset",
+    "title": "Why Learn Accounting with Connected Records? | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/why-this-dataset\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Why Learn Accounting with Connected Records? | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Discover how following one company&#x27;s orders, deliveries, invoices, and payments helps you move from accounting totals to supported explanations.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Discover how following one company&#x27;s orders, deliveries, invoices, and payments helps you move from accounting totals to supported explanations.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/why-this-dataset#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/why-this-dataset",
+        "name": "Why Learn Accounting with Connected Records?",
+        "description": "Discover how following one company's orders, deliveries, invoices, and payments helps you move from accounting totals to supported explanations.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Getting Started",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Why This Dataset",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/why-this-dataset"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/teach-with-data/instructor-adoption",
+    "title": "Teaching Accounting with Charles River | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/teach-with-data/instructor-adoption\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Teaching Accounting with Charles River | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Plan process-led accounting modules, select foundational exercises and integrated cases, and assess evidence, interpretation, and decisions with Charles River.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Plan process-led accounting modules, select foundational exercises and integrated cases, and assess evidence, interpretation, and decisions with Charles River.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/teach-with-data/instructor-adoption#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/teach-with-data/instructor-adoption",
+        "name": "Teaching Accounting with Charles River",
+        "description": "Plan process-led accounting modules, select foundational exercises and integrated cases, and assess evidence, interpretation, and decisions with Charles River.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "For Instructors",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/teach-with-data/instructor-adoption"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/technical/contributing",
+    "title": "Contribute to Charles River Teaching Materials | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/technical/contributing\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Contribute to Charles River Teaching Materials | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Report a Charles River documentation error, propose a teaching improvement, or share a reproducible accounting-data question with the project maintainers.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Report a Charles River documentation error, propose a teaching improvement, or share a reproducible accounting-data question with the project maintainers.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/technical/contributing#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/technical/contributing",
+        "name": "Contribute to Charles River Teaching Materials",
+        "description": "Report a Charles River documentation error, propose a teaching improvement, or share a reproducible accounting-data question with the project maintainers.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Contributing",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/technical/contributing"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/technical/dataset-delivery",
+    "title": "Instructor Guide to Local Dataset Customization | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/technical/dataset-delivery\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Instructor Guide to Local Dataset Customization | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Understand the optional Charles River generation workflow, available local settings, and how customized instructor packages differ from the published teaching files.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Understand the optional Charles River generation workflow, available local settings, and how customized instructor packages differ from the published teaching files.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/technical/dataset-delivery#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/technical/dataset-delivery",
+        "name": "Instructor Guide to Local Dataset Customization",
+        "description": "Understand the optional Charles River generation workflow, available local settings, and how customized instructor packages differ from the published teaching files.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Customize",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/technical/dataset-delivery"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/technical/license",
+    "title": "Charles River Dataset License and Attribution | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/technical/license\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Charles River Dataset License and Attribution | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Read the Charles River dataset&#x27;s Creative Commons Attribution-ShareAlike 4.0 reuse terms and find the license and attribution guidance.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Read the Charles River dataset&#x27;s Creative Commons Attribution-ShareAlike 4.0 reuse terms and find the license and attribution guidance.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/technical/license#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/technical/license",
+        "name": "Charles River Dataset License and Attribution",
+        "description": "Read the Charles River dataset's Creative Commons Attribution-ShareAlike 4.0 reuse terms and find the license and attribution guidance.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "License",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/technical/license"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/roadmap",
+    "title": "Charles River Dataset and Documentation Roadmap | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/roadmap\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Charles River Dataset and Documentation Roadmap | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"Review implemented Charles River capabilities and proposed dataset and documentation improvements when planning future teaching materials.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"Review implemented Charles River capabilities and proposed dataset and documentation improvements when planning future teaching materials.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/roadmap#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/roadmap",
+        "name": "Charles River Dataset and Documentation Roadmap",
+        "description": "Review implemented Charles River capabilities and proposed dataset and documentation improvements when planning future teaching materials.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Roadmap",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/roadmap"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "/docs/technical-guide",
+    "title": "Technical Guide | Charles River Accounting Dataset",
+    "meta": [
+      "<meta data-rh=\"true\" property=\"og:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" name=\"twitter:image\" content=\"https://charlesriver.accountinganalyticshub.com/img/site-social-card.svg\">",
+      "<meta data-rh=\"true\" property=\"og:url\" content=\"https://charlesriver.accountinganalyticshub.com/docs/technical-guide\">",
+      "<meta data-rh=\"true\" property=\"og:locale\" content=\"en\">",
+      "<meta data-rh=\"true\" name=\"twitter:card\" content=\"summary_large_image\">",
+      "<meta data-rh=\"true\" property=\"og:title\" content=\"Technical Guide | Charles River Accounting Dataset\">",
+      "<meta data-rh=\"true\" name=\"description\" content=\"System-level guide to how the dataset generator builds, posts, validates, and exports the dataset.\">",
+      "<meta data-rh=\"true\" property=\"og:description\" content=\"System-level guide to how the dataset generator builds, posts, validates, and exports the dataset.\">"
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://charlesriver.accountinganalyticshub.com/docs/technical-guide#webpage",
+        "url": "https://charlesriver.accountinganalyticshub.com/docs/technical-guide",
+        "name": "Technical Guide",
+        "description": "System-level guide to how the dataset generator builds, posts, validates, and exports the dataset.",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@id": "https://charlesriver.accountinganalyticshub.com/#website"
+        },
+        "about": {
+          "@id": "https://doi.org/10.5281/zenodo.23428083"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Technical Guide",
+            "item": "https://charlesriver.accountinganalyticshub.com/docs/technical-guide"
+          }
+        ]
+      }
+    ]
+  }
+]

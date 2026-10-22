@@ -1,0 +1,53 @@
+{
+  "reviewDate": "2026-10-22",
+  "hub": {
+    "branch": "main",
+    "commit": "cab33558b2c664144c6a0d0302e47d37753b4342",
+    "status": "",
+    "sources": [
+      {
+        "file": "src/config/entities.ts",
+        "sha256": "d62e77410cba07e6e3bf88edd1d035a24100b286fc8a1d7fc0508e83c385e999"
+      },
+      {
+        "file": "src/config/site.ts",
+        "sha256": "003413850a3d70205ad03831feb316d048c0539bcf8a598f3adb50c0ef797814"
+      },
+      {
+        "file": "src/data/datasets.ts",
+        "sha256": "479f5bd446241370307bd3a63e229ec3d1e2b6f94e5d0525a0a1982055734c84"
+      },
+      {
+        "file": "src/data/academic.ts",
+        "sha256": "93cbadb0d3e7d608abb1d4c183aac0e530814636b68919719513e36f98b7d430"
+      },
+      {
+        "file": "src/utils/structured-data.ts",
+        "sha256": "4de1b8d7fa9e5478d8d06f1dfbd0e3c9a90ad42d41de76d16c1f155762754e31"
+      },
+      {
+        "file": "src/pages/charles-river.astro",
+        "sha256": "e2d7235fcdd0d185ded465c0575ffd662083c904ff525c823f08a7cc293ed040"
+      }
+    ]
+  },
+  "verified": {
+    "datasetId": "https://charlesriver.accountinganalyticshub.com/#dataset",
+    "datasetUrl": "https://charlesriver.accountinganalyticshub.com/",
+    "publisherId": "https://accountinganalyticshub.com/#organization",
+    "publisherName": "Accounting Analytics Hub",
+    "authorId": "https://accountinganalyticshub.com/author/mauricio-codesso/#person",
+    "authorUrl": "https://accountinganalyticshub.com/author/mauricio-codesso/",
+    "authorName": "Mauricio Codesso",
+    "conceptDoi": "https://doi.org/10.5281/zenodo.23428083",
+    "revisionDoi": "https://doi.org/10.5281/zenodo.23428084",
+    "registryTitle": "Charles River Accounting Database",
+    "citationYear": "2027",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "limits": [
+    "Direct HTTP clients receive 403 for Hub pages; web retrieval exposes older visible content than the clean local main source.",
+    "Do not treat the local main source snapshot as proof that its latest metadata is deployed.",
+    "Hub fixed revision downloads and Charles River latest-release downloads are intentional different discovery/use roles."
+  ]
+}

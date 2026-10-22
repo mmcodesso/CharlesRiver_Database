@@ -7,6 +7,7 @@ import { auditAnomalyCoverage } from "@site/src/generated/queryDocCollections";
 import queryTopics from "@site/src/data/queryTopics.json";
 import topicGuidance from "@site/src/data/queryTopicGuidance.json";
 import learningPaths from "@site/src/data/queryLearningPaths.json";
+import TopicLearningLinks from "@site/src/components/CatalogNavigation/TopicLearningLinks";
 import styles from "@site/src/components/ReportCatalog/styles.module.css";
 import { queryAnchor } from "@site/src/components/CatalogNavigation/queryLinks";
 import useCatalogFilters, { matchesSearch } from "@site/src/components/CatalogNavigation/useCatalogFilters";
@@ -86,6 +87,7 @@ export default function QueryLibrary() {
             <div className={styles.groupHeader}>
               <Heading as="h3" id={topic.id} className={styles.groupTitle}>{topic.title}</Heading>
               <p>{topic.description}</p>
+              <TopicLearningLinks topicId={topic.id} />
               <details className={styles.guidance}>
                 <summary aria-label={`Interpret these results for ${topic.title}`}>Interpret these results</summary>
                 <div className={styles.guidanceBody}>

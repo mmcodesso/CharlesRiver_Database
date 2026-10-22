@@ -1,0 +1,42 @@
+{
+  "baseline": "6424f57b684030817fde232e94eb8084238493cf",
+  "minimumCharacters": 160,
+  "repeats": [
+    {
+      "text": "Each source below has a distinct row meaning. Import only the fields and populations requested in each stage. Working tables default to the source name plus Data unless a stage assigns a more specific name.",
+      "routes": [
+        "/docs/analytics/cases/audit-review-pack-case",
+        "/docs/analytics/cases/design-services-performance-case",
+        "/docs/analytics/cases/financial-statement-bridge-case",
+        "/docs/analytics/cases/manufacturing-labor-cost-case",
+        "/docs/analytics/cases/o2c-trace-case",
+        "/docs/analytics/cases/p2p-accrual-settlement-case",
+        "/docs/analytics/cases/product-portfolio-profitability-case",
+        "/docs/analytics/cases/workforce-coverage-and-attendance-case"
+      ]
+    },
+    {
+      "text": "These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.",
+      "routes": [
+        "/docs/analytics/cases/audit-review-pack-case",
+        "/docs/analytics/cases/design-services-performance-case",
+        "/docs/analytics/cases/financial-statement-bridge-case",
+        "/docs/analytics/cases/manufacturing-labor-cost-case",
+        "/docs/analytics/cases/o2c-trace-case",
+        "/docs/analytics/cases/p2p-accrual-settlement-case",
+        "/docs/analytics/cases/product-portfolio-profitability-case",
+        "/docs/analytics/cases/workforce-coverage-and-attendance-case"
+      ]
+    },
+    {
+      "text": "Use the saved result tables from the preceding stages to construct this comparison and written interpretation. Retain the query names, filters, source keys, and amounts in your case notes. An ordered result table can communicate the comparison without making a chart or switching tools.",
+      "routes": [
+        "/docs/analytics/cases/audit-review-pack-case",
+        "/docs/analytics/cases/financial-statement-bridge-case",
+        "/docs/analytics/cases/manufacturing-labor-cost-case",
+        "/docs/analytics/cases/product-portfolio-profitability-case",
+        "/docs/analytics/cases/workforce-coverage-and-attendance-case"
+      ]
+    }
+  ]
+}

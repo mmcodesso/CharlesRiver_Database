@@ -173,6 +173,8 @@ No. Actual labor support helps explain production and payroll-supported costing,
 
 **Investigate this process:** complete [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus the [Excel](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md), before the [manufacturing cost-flow exercise](../learn-and-practice/manufacturing-cost-flow.md). It follows one work order through its accounting events; the optional account reconciliation then extends that same example.
 
+**Find analytical evidence.** Browse [Production and Planning queries](../analytics/analysis-tracks.md#production-and-planning) and [related reports](../analytics/index.md#production-and-planning). Use the [Schema Reference](../reference/schema.md) for join keys and the [Posting Reference](../reference/posting.md) for accounting effects.
+
 ## Optional Reference
 
 Return to these sections when you have a specific question or an assignment that uses the data. The chapter above can be read without opening a file.
