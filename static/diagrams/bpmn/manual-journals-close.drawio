@@ -1,24 +1,135 @@
-<mxfile host="Electron" agent="Charles River website" version="29.6.6" type="device"><diagram id="manual-journals-close" name="Manual Journals and Close | preparation, approval, posting"><mxGraphModel dx="1800" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1920" pageHeight="1280" math="0" shadow="0" background="#FFFFFF"><root><mxCell id="0"/>
-<mxCell id="1" parent="0"/>
-<object id="title" label="Manual Journals and Close | preparation, approval, posting" bpmnType="heading" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=28;align=left;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="40" y="15" width="1800" height="40" as="geometry"/></mxCell></object>
-<object id="subtitle" label="BPMN 2.0 teaching model • recurring journal activity and year-end closing are distinct from operational subledger processes." bpmnType="heading" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=14;align=left;" vertex="1" parent="1"><mxGeometry x="40" y="62" width="1800" height="34" as="geometry"/></mxCell></object>
-<object id="charles-river" label="Charles River Home Furnishings, Inc. — organizational responsibilities are a teaching allocation" bpmnType="pool" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=1;startSize=38;collapsible=0;fontStyle=1;fillColor=#E9EFEA;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="40" y="245" width="1800" height="638" as="geometry"/></mxCell></object>
-<object id="preparer" label="Journal preparer" bpmnType="lane" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river"><mxGeometry x="0" y="38" width="1800" height="180" as="geometry"/></mxCell></object>
-<object id="approver" label="Journal approver" bpmnType="lane" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river"><mxGeometry x="0" y="218" width="1800" height="160" as="geometry"/></mxCell></object>
-<object id="accounting" label="Finance / controller" bpmnType="lane" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river"><mxGeometry x="0" y="378" width="1800" height="260" as="geometry"/></mxCell></object>
-<object id="period" label="Reporting period&#xa;activity" bpmnType="timerStart" participant="charles-river"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=standard;symbol=timer;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;" vertex="1" parent="preparer"><mxGeometry x="185" y="47" width="42" height="42" as="geometry"/></mxCell></object>
-<object id="prepare" label="Prepare journal&#xa;and source rationale" bpmnType="task" participant="charles-river" evidenceTables="JournalEntry"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;" vertex="1" parent="preparer"><mxGeometry x="290" y="32" width="190" height="66" as="geometry"/></mxCell></object>
-<object id="approve" label="Record journal&#xa;approval" bpmnType="task" participant="charles-river" evidenceTables="JournalEntry"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;" vertex="1" parent="approver"><mxGeometry x="570" y="42" width="180" height="66" as="geometry"/></mxCell></object>
-<object id="post" label="Post accounting&#xa;entry detail" bpmnType="task" participant="charles-river" evidenceTables="JournalEntry,GLEntry"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;" vertex="1" parent="accounting"><mxGeometry x="835" y="42" width="180" height="66" as="geometry"/></mxCell></object>
-<object id="yearend" label="Year-end&#xa;close?" bpmnType="exclusive" participant="charles-river"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.gateway2;outline=none;symbol=none;gwType=exclusive;perimeter=rhombusPerimeter;verticalLabelPosition=top;verticalAlign=bottom;labelBackgroundColor=#FFFFFF;labelWidth=140;" vertex="1" parent="accounting"><mxGeometry x="1090" y="52" width="42" height="42" as="geometry"/></mxCell></object>
-<object id="period-end" label="Period activity&#xa;posted" bpmnType="end" participant="charles-river"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=end;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;" vertex="1" parent="accounting"><mxGeometry x="1370" y="42" width="42" height="42" as="geometry"/></mxCell></object>
-<object id="closing" label="Close P&amp;L through income&#xa;summary / retained earnings" bpmnType="task" participant="charles-river" evidenceTables="JournalEntry,GLEntry,Account"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;" vertex="1" parent="accounting"><mxGeometry x="1250" y="152" width="225" height="66" as="geometry"/></mxCell></object>
-<object id="closed" label="Annual close&#xa;recorded" bpmnType="end" participant="charles-river"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=end;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;" vertex="1" parent="accounting"><mxGeometry x="1600" y="162" width="42" height="42" as="geometry"/></mxCell></object>
-<object id="flow-1" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="period" target="prepare"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="flow-2" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="prepare" target="approve"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="560" y="348"/><mxPoint x="560" y="538"/></Array></mxGeometry></mxCell></object>
-<object id="flow-3" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="approve" target="post"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="835" y="538"/><mxPoint x="835" y="698"/></Array></mxGeometry></mxCell></object>
-<object id="flow-4" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="post" target="yearend"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="flow-5" label="No" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="yearend" target="period-end"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="flow-6" label="Yes" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="yearend" target="closing"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1205" y="696"/><mxPoint x="1205" y="808"/></Array></mxGeometry></mxCell></object>
-<object id="flow-7" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="closing" target="closed"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="scope" label="JournalEntry is the header; GLEntry holds posted detail. The model does not invent a journal-line table, a close checklist, or a period-lock system.&#xa;Independent reconciliation / segregation-of-duties review is a proposed control. Accrued-service settlement has its own supplier-invoice model." bpmnType="heading" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=13;align=left;" vertex="1" parent="1"><mxGeometry x="40" y="907" width="1800" height="48" as="geometry"/></mxCell></object></root></mxGraphModel></diagram></mxfile>
+<mxfile host="Electron" agent="Charles River website" version="29.6.6" type="device">
+  <diagram id="manual-journals-close" name="Manual Journals and Close | preparation, approval, posting">
+    <mxGraphModel dx="1800" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1920" pageHeight="1280" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="Manual Journals and Close | preparation, approval, posting" bpmnType="heading">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=28;align=left;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="15" width="1800" height="40" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="BPMN 2.0 teaching model • recurring journal activity and year-end closing are distinct from operational subledger processes." bpmnType="heading">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=14;align=left;" vertex="1" parent="1">
+            <mxGeometry x="40" y="62" width="1800" height="34" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="charles-river" label="Charles River Home Furnishings, Inc. — organizational responsibilities are a teaching allocation" bpmnType="pool">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=1;startSize=38;collapsible=0;fontStyle=1;fillColor=#E9EFEA;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="40" y="245" width="1800" height="638" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="preparer" label="Journal preparer" bpmnType="lane">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river">
+            <mxGeometry x="0" y="38" width="1800" height="180" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="approver" label="Journal approver" bpmnType="lane">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river">
+            <mxGeometry x="0" y="218" width="1800" height="160" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="accounting" label="Finance / controller" bpmnType="lane">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river">
+            <mxGeometry x="0" y="378" width="1800" height="260" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="period" label="Reporting period&#10;activity" bpmnType="timerStart" participant="charles-river">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=standard;symbol=timer;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;fontSize=16;" vertex="1" parent="preparer">
+            <mxGeometry x="185" y="47" width="42" height="42" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="prepare" label="Prepare journal&#10;and source rationale" bpmnType="task" participant="charles-river" evidenceTables="JournalEntry">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;fontSize=16;" vertex="1" parent="preparer">
+            <mxGeometry x="290" y="32" width="190" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="approve" label="Record journal&#10;approval" bpmnType="task" participant="charles-river" evidenceTables="JournalEntry">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;fontSize=16;" vertex="1" parent="approver">
+            <mxGeometry x="570" y="42" width="180" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="post" label="Post accounting&#10;entry detail" bpmnType="task" participant="charles-river" evidenceTables="JournalEntry,GLEntry">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;fontSize=16;" vertex="1" parent="accounting">
+            <mxGeometry x="835" y="42" width="180" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="yearend" label="Year-end&#10;close?" bpmnType="exclusive" participant="charles-river">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.gateway2;outline=none;symbol=none;gwType=exclusive;perimeter=rhombusPerimeter;verticalLabelPosition=top;verticalAlign=bottom;labelBackgroundColor=#FFFFFF;labelWidth=140;fontSize=16;" vertex="1" parent="accounting">
+            <mxGeometry x="1090" y="52" width="42" height="42" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="period-end" label="Period activity&#10;posted" bpmnType="end" participant="charles-river">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=end;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;fontSize=16;" vertex="1" parent="accounting">
+            <mxGeometry x="1370" y="42" width="42" height="42" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="closing" label="Close P&amp;L through income&#10;summary / retained earnings" bpmnType="task" participant="charles-river" evidenceTables="JournalEntry,GLEntry,Account">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;fontSize=16;" vertex="1" parent="accounting">
+            <mxGeometry x="1250" y="152" width="225" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="closed" label="Annual close&#10;recorded" bpmnType="end" participant="charles-river">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=end;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;fontSize=16;" vertex="1" parent="accounting">
+            <mxGeometry x="1600" y="162" width="42" height="42" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-1" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="period" target="prepare">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-2" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="prepare" target="approve">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="560" y="348" />
+                <mxPoint x="560" y="538" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="flow-3" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="approve" target="post">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="835" y="538" />
+                <mxPoint x="835" y="698" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="flow-4" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="post" target="yearend">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-5" label="No" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="yearend" target="period-end">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-6" label="Yes" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="yearend" target="closing">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1205" y="696" />
+                <mxPoint x="1205" y="808" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="flow-7" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="closing" target="closed">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="scope" label="JournalEntry is the header; GLEntry holds posted detail. The model does not invent a journal-line table, a close checklist, or a period-lock system.&#10;Independent reconciliation / segregation-of-duties review is a proposed control. Accrued-service settlement has its own supplier-invoice model." bpmnType="heading">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=13;align=left;" vertex="1" parent="1">
+            <mxGeometry x="40" y="907" width="1800" height="48" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

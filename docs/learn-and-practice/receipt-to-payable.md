@@ -21,7 +21,7 @@ The operations planner requests a component for production. Receiving records it
 
 <span id="learning-objectives"></span>
 
-**Your task:** Follow a receipt-matched purchase through GRNI, supplier invoicing, and a payment after year end.
+**Your task.** Follow a receipt-matched purchase through GRNI, supplier invoicing, and a payment after year end.
 
 <TutorialFigure figureId="receipt-to-payable" />
 
@@ -37,7 +37,7 @@ In `Lesson08.xlsx`, import the source tables named in each step using [the impor
 </TabItem>
 <TabItem value="sql">
 
-Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson08.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson08.sql**. Run each supplied query separately, using its filters to identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
@@ -47,12 +47,22 @@ Open the SQLite database in your SQL tool. Save this lesson's statements as **Le
 
 ## 1. Trace Request, Order, and Receipt
 
-The request explains an internal need; the purchase order records a supplier commitment; the receipt records arrival. The requisition link here is stored on the purchase-order line.
+The request explains an internal need, the purchase order records a supplier commitment, and the receipt records arrival. The requisition link here is stored on the purchase-order line.
 
 <ToolSteps>
 <TabItem value="excel">
 
-Import `T32_PurchaseRequisition` as `RequestData`, filtered to `RequisitionID = 21330`; `T34_PurchaseOrderLine` as `POLineData`, filtered to `POLineID = 21074`; `T33_PurchaseOrder` as `POData`, filtered to `PurchaseOrderID = 16253`; `T36_GoodsReceiptLine` as `ReceiptLineData`, filtered to `GoodsReceiptLineID = 25479`; and `T35_GoodsReceipt` as `GoodsReceiptData`, filtered to `GoodsReceiptID = 23913`. Read the matching keys, dates, and selected line amounts. Keep the PO's header total separate from the selected line.
+Import these tables and apply each filter in Power Query before loading.
+
+| Published table | Working name | Filter |
+|---|---|---|
+| `T32_PurchaseRequisition` | `RequestData` | `RequisitionID = 21330` |
+| `T34_PurchaseOrderLine` | `POLineData` | `POLineID = 21074` |
+| `T33_PurchaseOrder` | `POData` | `PurchaseOrderID = 16253` |
+| `T36_GoodsReceiptLine` | `ReceiptLineData` | `GoodsReceiptLineID = 25479` |
+| `T35_GoodsReceipt` | `GoodsReceiptData` | `GoodsReceiptID = 23913` |
+
+Read the matching keys, dates, and selected line amounts. Keep the PO's header total separate from the selected line.
 
 </TabItem>
 <TabItem value="sql">
@@ -81,7 +91,7 @@ WHERE l.GoodsReceiptLineID = 25479;
 </TabItem>
 </ToolSteps>
 
-Request and order are dated **2026-09-10**. Receipt **23913** is dated **2026-09-27**. The selected line has standard cost **8.83**. Receipt records materials inventory and goods received not invoiced (**GRNI**); the PO itself does not create that inventory posting.
+Request and order are dated **2026-09-10**. Receipt **23913** is dated **2026-09-27**. The selected line has standard cost **8.83**. Receipt records materials inventory and goods received not invoiced (**GRNI**), while the PO itself records the commitment without an inventory posting.
 
 ## 2. Follow the Supplier Invoice and Payment
 
@@ -90,7 +100,15 @@ The invoice moves the received-goods obligation into accounts payable. Its tax a
 <ToolSteps>
 <TabItem value="excel">
 
-Import `T38_PurchaseInvoiceLine` as `PILineData`, filtered to `GoodsReceiptLineID = 25479`; `T37_PurchaseInvoice` as `PurchaseInvoiceData`, filtered to `PurchaseInvoiceID = 36461`; and `T39_DisbursementPayment` as `PaymentData`, filtered to the same invoice ID. Check receipt-line 25479 appears on invoice line **36861**. Record the goods amount, tax, full invoice amount, invoice date, and payment date on `Notes`.
+Import the invoice and payment evidence separately.
+
+| Published table | Working name | Filter |
+|---|---|---|
+| `T38_PurchaseInvoiceLine` | `PILineData` | `GoodsReceiptLineID = 25479` |
+| `T37_PurchaseInvoice` | `PurchaseInvoiceData` | `PurchaseInvoiceID = 36461` |
+| `T39_DisbursementPayment` | `PaymentData` | `PurchaseInvoiceID = 36461` |
+
+Check that receipt line 25479 appears on invoice line **36861**. Record the goods amount, tax, full invoice amount, invoice date, and payment date on `Notes`.
 
 </TabItem>
 <TabItem value="sql">
@@ -121,6 +139,22 @@ ORDER BY PaymentDate, DisbursementID;
 
 The invoice is dated **2026-11-29**: **8.83** goods + **0.13** tax = **8.96** payable. Disbursement **39645** pays **8.96** on **2027-01-08**. At **2026-12-31**, the invoice is still payable even though the file contains its later payment.
 
+## 3. Check Recognition and Settlement in the Ledger
+
+Use the [complete-voucher retrieval method](find-the-accounting-entries.md#1-locate-the-complete-event-vouchers). In Excel, import `T3_GLEntry` separately for each source pair below and add account names from `T1_Account`. In SQL, adapt Lesson 6's paired filters and voucher check to the same three pairs. Keep the full source vouchers before selecting an account.
+
+Each source pair below gives `SourceDocumentType` followed by `SourceDocumentID`.
+
+| Source pair | Posting date | Rows and total per side |
+|---|---|---|
+| `GoodsReceipt` / `23913` | September 27, 2026 | Two rows, 8.83 |
+| `PurchaseInvoice` / `36461` | November 30, 2026 | Three rows, 8.96 |
+| `DisbursementPayment` / `39645` | January 8, 2027 | Two rows, 8.96 |
+
+The receipt debits materials inventory and credits GRNI for **8.83**. The invoice debits GRNI for **8.83** and purchase variance for **0.13**, with an AP credit of **8.96**. Payment debits AP and credits cash for **8.96**. Explain each effect separately before describing the changing obligation.
+
+Read `ApprovedDate` on invoice 36461 to explain why its November 29 document date differs from its November 30 recognition date. Use `InvoiceDate` for document lag, the approval and posting dates for recognized AP, and `DueDate` for overdue status. The request and purchase order support the transaction without independently posting inventory or AP.
+
 <span id="assessed-deliverable"></span>
 
 ## Keep Your Evidence
@@ -129,16 +163,27 @@ Save the five-event timeline from request to payment, the stored line keys, and 
 
 <span id="interpretation-and-limitations"></span>
 
-At September 30, the received amount belongs in GRNI; after the November invoice, it is replaced by the payable. This selected receipt line has one invoice match. Other receipts can be billed in parts. Accrued-service purchases use a different link, which you will investigate in Lesson 11.
+The received amount belongs in GRNI at September 30 and is transferred to AP when the November invoice is recognized. This selected receipt line has one invoice match. Other receipts can be billed in parts. Accrued-service purchases use a different link, which you will investigate in Lesson 11.
 
 ## Try One Change
 
 Move the reporting date from December 31, 2026 to January 8, 2027. Which event changes the payable conclusion?
 
+For a second record, begin with invoice **36460**. Find its receipt-line key and dated payment evidence yourself. Predict whether a missing payment row supports a conclusion about cash settlement or about authorization.
+
+<details>
+<summary>Hint for the second invoice</summary>
+
+Read PurchaseInvoiceLine for the selected invoice, follow GoodsReceiptLineID to the receipt header, and inspect DisbursementPayment separately by PurchaseInvoiceID. An empty payment result requires an explicit zero-row evidence note rather than a substitute payment from another invoice.
+
+</details>
+
 <details>
 <summary>Compare your reasoning</summary>
 
 The recorded disbursement on January 8 settles the 8.96 payable. Its bank-clearing date is January 9, a further date distinction. Do not move the payment into December merely because the invoice is now marked paid.
+
+Invoice 36460 links to receipt line **24307** and receipt **22844**, dated September 27, 2026. Its invoice and approval dates are November 12, and its due date is January 11, 2027. No DisbursementPayment row identifies that invoice in the file. That supports a conclusion about absent recorded payment evidence, with a stated cutoff. It does not establish that the original purchase lacked authorization.
 
 </details>
 

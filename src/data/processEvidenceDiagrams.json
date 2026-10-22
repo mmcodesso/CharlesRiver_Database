@@ -1,0 +1,4974 @@
+[
+  {
+    "id": "company-dependencies",
+    "title": "Connections across six Charles River processes",
+    "question": "Connections across six Charles River processes?",
+    "description": "Customer demand supports goods sales and design services. Purchasing supplies goods and manufacturing components, manufacturing supplies finished goods, payroll supports labor, and each process contributes to finance and period-end explanation.",
+    "page": "docs/learn-the-business/process-flows.md",
+    "nodes": [
+      {
+        "id": "NEED",
+        "title": "Customer furnishing needs",
+        "role": "business context",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      },
+      {
+        "id": "SALES",
+        "title": "Order-to-cash: goods and billing",
+        "role": "business context",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      },
+      {
+        "id": "DESIGN",
+        "title": "Design services: staff time and billing",
+        "role": "business context",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      },
+      {
+        "id": "BUY",
+        "title": "Purchasing: merchandise and components",
+        "role": "business context",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      },
+      {
+        "id": "MAKE",
+        "title": "Manufacturing: selected products",
+        "role": "business context",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      },
+      {
+        "id": "PAY",
+        "title": "Payroll: employee costs and obligations",
+        "role": "business context",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      },
+      {
+        "id": "FIN",
+        "title": "Finance: accounting and period-end explanation",
+        "role": "business context",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "NEED",
+        "target": "SALES",
+        "label": "Information and accounting context",
+        "kind": "context",
+        "id": "r1",
+        "recordLinks": []
+      },
+      {
+        "source": "NEED",
+        "target": "DESIGN",
+        "label": "Information and accounting context",
+        "kind": "context",
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "BUY",
+        "target": "SALES",
+        "label": "Goods",
+        "kind": "context",
+        "id": "r3",
+        "recordLinks": []
+      },
+      {
+        "source": "BUY",
+        "target": "MAKE",
+        "label": "Components",
+        "kind": "context",
+        "id": "r4",
+        "recordLinks": []
+      },
+      {
+        "source": "MAKE",
+        "target": "SALES",
+        "label": "Finished goods",
+        "kind": "context",
+        "id": "r5",
+        "recordLinks": []
+      },
+      {
+        "source": "PAY",
+        "target": "MAKE",
+        "label": "Labor support",
+        "kind": "context",
+        "id": "r6",
+        "recordLinks": []
+      },
+      {
+        "source": "PAY",
+        "target": "DESIGN",
+        "label": "Labor support",
+        "kind": "context",
+        "id": "r7",
+        "recordLinks": []
+      },
+      {
+        "source": "SALES",
+        "target": "FIN",
+        "label": "Information and accounting context",
+        "kind": "context",
+        "id": "r8",
+        "recordLinks": []
+      },
+      {
+        "source": "DESIGN",
+        "target": "FIN",
+        "label": "Information and accounting context",
+        "kind": "context",
+        "id": "r9",
+        "recordLinks": []
+      },
+      {
+        "source": "BUY",
+        "target": "FIN",
+        "label": "Information and accounting context",
+        "kind": "context",
+        "id": "r10",
+        "recordLinks": []
+      },
+      {
+        "source": "MAKE",
+        "target": "FIN",
+        "label": "Information and accounting context",
+        "kind": "context",
+        "id": "r11",
+        "recordLinks": []
+      },
+      {
+        "source": "PAY",
+        "target": "FIN",
+        "label": "Information and accounting context",
+        "kind": "context",
+        "id": "r12",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "This is a conceptual dependency map of six business processes, not a serial company-wide workflow or a diagram of foreign keys.",
+    "alt": "Connections across six Charles River processes. Customer demand supports goods sales and design services. Purchasing supplies goods and manufacturing components, manufacturing supplies finished goods, payroll supports labor, and each process contributes to finance and period-end explanation. This is a conceptual dependency map of six business processes, not a serial company-wide workflow or a diagram of foreign keys.",
+    "steps": [
+      "Customer furnishing needs — business context",
+      "Order-to-cash: goods and billing — business context",
+      "Design services: staff time and billing — business context",
+      "Purchasing: merchandise and components — business context",
+      "Manufacturing: selected products — business context",
+      "Payroll: employee costs and obligations — business context",
+      "Finance: accounting and period-end explanation — business context"
+    ]
+  },
+  {
+    "id": "accrual-posting",
+    "title": "Accrual invoice adjustment and payment evidence",
+    "question": "Accrual invoice adjustment and payment evidence?",
+    "description": "An accrual journal links to supplier-invoice lines through AccrualJournalEntryID. Invoice leads to payment, and adjustment points back through ReversesJournalEntryID. These posting events connect separately to ledger detail.",
+    "page": "docs/processes/manual-journals-and-close.md",
+    "nodes": [
+      {
+        "id": "EST",
+        "title": "JournalEntry: accrual",
+        "role": "record",
+        "tables": [
+          "JournalEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "LINE",
+        "title": "PurchaseInvoiceLine",
+        "role": "record",
+        "tables": [
+          "PurchaseInvoiceLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "BILL",
+        "title": "PurchaseInvoice",
+        "role": "record",
+        "tables": [
+          "PurchaseInvoice"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PAY",
+        "title": "DisbursementPayment",
+        "role": "record",
+        "tables": [
+          "DisbursementPayment"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "ADJ",
+        "title": "JournalEntry: adjustment",
+        "role": "record",
+        "tables": [
+          "JournalEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "EST",
+        "target": "LINE",
+        "label": "AccrualJournalEntryID",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "PurchaseInvoiceLine",
+            "field": "AccrualJournalEntryID",
+            "parent": "JournalEntry",
+            "parentField": "JournalEntryID"
+          }
+        ]
+      },
+      {
+        "source": "LINE",
+        "target": "BILL",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "PurchaseInvoiceLine",
+            "field": "PurchaseInvoiceID",
+            "parent": "PurchaseInvoice",
+            "parentField": "PurchaseInvoiceID"
+          }
+        ]
+      },
+      {
+        "source": "BILL",
+        "target": "PAY",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "DisbursementPayment",
+            "field": "PurchaseInvoiceID",
+            "parent": "PurchaseInvoice",
+            "parentField": "PurchaseInvoiceID"
+          }
+        ]
+      },
+      {
+        "source": "ADJ",
+        "target": "EST",
+        "label": "ReversesJournalEntryID",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "JournalEntry",
+            "field": "JournalEntryID",
+            "parent": "JournalEntry",
+            "parentField": "JournalEntryID"
+          },
+          {
+            "child": "JournalEntry",
+            "field": "JournalEntryID",
+            "parent": "JournalEntry",
+            "parentField": "JournalEntryID"
+          }
+        ]
+      },
+      {
+        "source": "EST",
+        "target": "GL",
+        "label": "GLEntry source type JournalEntry and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "JournalEntry"
+        ],
+        "id": "r5",
+        "recordLinks": []
+      },
+      {
+        "source": "BILL",
+        "target": "GL",
+        "label": "GLEntry source type PurchaseInvoice and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "PurchaseInvoice"
+        ],
+        "id": "r6",
+        "recordLinks": []
+      },
+      {
+        "source": "ADJ",
+        "target": "GL",
+        "label": "GLEntry source type JournalEntry and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "JournalEntry"
+        ],
+        "id": "r7",
+        "recordLinks": []
+      },
+      {
+        "source": "PAY",
+        "target": "GL",
+        "label": "GLEntry source type DisbursementPayment and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "DisbursementPayment"
+        ],
+        "id": "r8",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Accrual invoice adjustment and payment evidence. An accrual journal links to supplier-invoice lines through AccrualJournalEntryID. Invoice leads to payment, and adjustment points back through ReversesJournalEntryID. These posting events connect separately to ledger detail. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "JournalEntry: accrual — record",
+      "PurchaseInvoiceLine — record",
+      "PurchaseInvoice — record",
+      "DisbursementPayment — record",
+      "JournalEntry: adjustment — record",
+      "GLEntry — record"
+    ]
+  },
+  {
+    "id": "work-order-evidence",
+    "title": "Manufacturing records around one work order",
+    "question": "Manufacturing records around one work order?",
+    "description": "Planning supports a work order with separate material issue, operation, completion, and close branches. Labor entries support operations.",
+    "page": "docs/processes/manufacturing.md",
+    "nodes": [
+      {
+        "id": "PLAN",
+        "title": "SupplyPlanRecommendation",
+        "role": "record",
+        "tables": [
+          "SupplyPlanRecommendation"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "WO",
+        "title": "WorkOrder",
+        "role": "record",
+        "tables": [
+          "WorkOrder"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "ISSUE",
+        "title": "MaterialIssue and lines",
+        "role": "record",
+        "tables": [
+          "MaterialIssue"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "OPS",
+        "title": "WorkOrderOperation",
+        "role": "record",
+        "tables": [
+          "WorkOrderOperation"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "LABOR",
+        "title": "LaborTimeEntry",
+        "role": "record",
+        "tables": [
+          "LaborTimeEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "DONE",
+        "title": "ProductionCompletion and lines",
+        "role": "record",
+        "tables": [
+          "ProductionCompletion"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "CLOSE",
+        "title": "WorkOrderClose",
+        "role": "record",
+        "tables": [
+          "WorkOrderClose"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "PLAN",
+        "target": "WO",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "WorkOrder",
+            "field": "SupplyPlanRecommendationID",
+            "parent": "SupplyPlanRecommendation",
+            "parentField": "SupplyPlanRecommendationID"
+          }
+        ]
+      },
+      {
+        "source": "WO",
+        "target": "ISSUE",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "MaterialIssue",
+            "field": "WorkOrderID",
+            "parent": "WorkOrder",
+            "parentField": "WorkOrderID"
+          }
+        ]
+      },
+      {
+        "source": "WO",
+        "target": "OPS",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "WorkOrderOperation",
+            "field": "WorkOrderID",
+            "parent": "WorkOrder",
+            "parentField": "WorkOrderID"
+          }
+        ]
+      },
+      {
+        "source": "LABOR",
+        "target": "OPS",
+        "label": "Labor support",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "LaborTimeEntry",
+            "field": "WorkOrderOperationID",
+            "parent": "WorkOrderOperation",
+            "parentField": "WorkOrderOperationID"
+          }
+        ]
+      },
+      {
+        "source": "WO",
+        "target": "DONE",
+        "label": "",
+        "kind": "reference",
+        "id": "r5",
+        "recordLinks": [
+          {
+            "child": "ProductionCompletion",
+            "field": "WorkOrderID",
+            "parent": "WorkOrder",
+            "parentField": "WorkOrderID"
+          }
+        ]
+      },
+      {
+        "source": "WO",
+        "target": "CLOSE",
+        "label": "",
+        "kind": "reference",
+        "id": "r6",
+        "recordLinks": [
+          {
+            "child": "WorkOrderClose",
+            "field": "WorkOrderID",
+            "parent": "WorkOrder",
+            "parentField": "WorkOrderID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Manufacturing records around one work order. Planning supports a work order with separate material issue, operation, completion, and close branches. Labor entries support operations. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "SupplyPlanRecommendation — record",
+      "WorkOrder — record",
+      "MaterialIssue and lines — record",
+      "WorkOrderOperation — record",
+      "LaborTimeEntry — record",
+      "ProductionCompletion and lines — record",
+      "WorkOrderClose — record"
+    ]
+  },
+  {
+    "id": "component-availability",
+    "title": "Purchased component support and subsequent material issue",
+    "question": "Purchased component support and subsequent material issue?",
+    "description": "Purchasing and receiving support component availability. A separate work-order material issue records components moving into production.",
+    "page": "docs/processes/manufacturing.md",
+    "nodes": [
+      {
+        "id": "SPR",
+        "title": "Supply Plan Recommendation",
+        "role": "record",
+        "tables": [
+          "SupplyPlanRecommendation"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PR",
+        "title": "Purchase Requisition",
+        "role": "record",
+        "tables": [
+          "PurchaseRequisition"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PO",
+        "title": "PurchaseOrderLine",
+        "role": "record",
+        "tables": [
+          "PurchaseOrderLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "GR",
+        "title": "GoodsReceiptLine",
+        "role": "record",
+        "tables": [
+          "GoodsReceiptLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "WO",
+        "title": "Work Order",
+        "role": "record",
+        "tables": [
+          "WorkOrder"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "MI",
+        "title": "Material Issue",
+        "role": "record",
+        "tables": [
+          "MaterialIssue"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "SPR",
+        "target": "PR",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "PurchaseRequisition",
+            "field": "SupplyPlanRecommendationID",
+            "parent": "SupplyPlanRecommendation",
+            "parentField": "SupplyPlanRecommendationID"
+          }
+        ]
+      },
+      {
+        "source": "PR",
+        "target": "PO",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "PurchaseOrderLine",
+            "field": "RequisitionID",
+            "parent": "PurchaseRequisition",
+            "parentField": "RequisitionID"
+          }
+        ]
+      },
+      {
+        "source": "PO",
+        "target": "GR",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "GoodsReceiptLine",
+            "field": "POLineID",
+            "parent": "PurchaseOrderLine",
+            "parentField": "POLineID"
+          }
+        ]
+      },
+      {
+        "source": "WO",
+        "target": "MI",
+        "label": "",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "MaterialIssue",
+            "field": "WorkOrderID",
+            "parent": "WorkOrder",
+            "parentField": "WorkOrderID"
+          }
+        ]
+      },
+      {
+        "source": "GR",
+        "target": "MI",
+        "label": "Item warehouse and timing support only",
+        "kind": "aggregate",
+        "id": "r5",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Purchased component support and subsequent material issue. Purchasing and receiving support component availability. A separate work-order material issue records components moving into production. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "Supply Plan Recommendation — record",
+      "Purchase Requisition — record",
+      "PurchaseOrderLine — record",
+      "GoodsReceiptLine — record",
+      "Work Order — record",
+      "Material Issue — record"
+    ]
+  },
+  {
+    "id": "manufacturing-payroll-support",
+    "title": "Operational labor evidence and payroll cost support",
+    "question": "Operational labor evidence and payroll cost support?",
+    "description": "Labeled solid arrows identify stored keys. Dashed arrows identify aggregation or analytical support. PayrollSummary posts directly to the ledger. Factory overhead and depreciation have separate journal routes.",
+    "page": "docs/processes/manufacturing.md",
+    "nodes": [
+      {
+        "id": "TCE",
+        "title": "TimeClockEntry",
+        "role": "record",
+        "tables": [
+          "TimeClockEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "LTE",
+        "title": "LaborTimeEntry",
+        "role": "record",
+        "tables": [
+          "LaborTimeEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "WOO",
+        "title": "WorkOrderOperation",
+        "role": "record",
+        "tables": [
+          "WorkOrderOperation"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PRL",
+        "title": "PayrollRegisterLine",
+        "role": "record",
+        "tables": [
+          "PayrollRegisterLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PR",
+        "title": "PayrollRegister",
+        "role": "record",
+        "tables": [
+          "PayrollRegister"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PS",
+        "title": "PayrollSummary source label",
+        "role": "source label",
+        "tables": [],
+        "description": "Constructed posting identifier; not a table"
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "JE",
+        "title": "JournalEntry factory overhead and depreciation",
+        "role": "record",
+        "tables": [
+          "JournalEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "TCE",
+        "target": "LTE",
+        "label": "TimeClockEntryID",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "LaborTimeEntry",
+            "field": "TimeClockEntryID",
+            "parent": "TimeClockEntry",
+            "parentField": "TimeClockEntryID"
+          }
+        ]
+      },
+      {
+        "source": "LTE",
+        "target": "WOO",
+        "label": "WorkOrderOperationID",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "LaborTimeEntry",
+            "field": "WorkOrderOperationID",
+            "parent": "WorkOrderOperation",
+            "parentField": "WorkOrderOperationID"
+          }
+        ]
+      },
+      {
+        "source": "LTE",
+        "target": "PRL",
+        "label": "LaborTimeEntryID",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "PayrollRegisterLine",
+            "field": "LaborTimeEntryID",
+            "parent": "LaborTimeEntry",
+            "parentField": "LaborTimeEntryID"
+          }
+        ]
+      },
+      {
+        "source": "PRL",
+        "target": "PR",
+        "label": "PayrollRegisterID",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "PayrollRegisterLine",
+            "field": "PayrollRegisterID",
+            "parent": "PayrollRegister",
+            "parentField": "PayrollRegisterID"
+          }
+        ]
+      },
+      {
+        "source": "PR",
+        "target": "PS",
+        "label": "Aggregate by period cost center and account",
+        "kind": "aggregate",
+        "id": "r5",
+        "recordLinks": []
+      },
+      {
+        "source": "PS",
+        "target": "GL",
+        "label": "GLEntry source type PayrollSummary and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "PayrollSummary"
+        ],
+        "id": "r6",
+        "recordLinks": []
+      },
+      {
+        "source": "JE",
+        "target": "GL",
+        "label": "GLEntry source type JournalEntry and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "JournalEntry"
+        ],
+        "id": "r7",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Operational labor evidence and payroll cost support. Labeled solid arrows identify stored keys. Dashed arrows identify aggregation or analytical support. PayrollSummary posts directly to the ledger. Factory overhead and depreciation have separate journal routes. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "TimeClockEntry — record",
+      "LaborTimeEntry — record",
+      "WorkOrderOperation — record",
+      "PayrollRegisterLine — record",
+      "PayrollRegister — record",
+      "PayrollSummary source label — source label",
+      "GLEntry — record",
+      "JournalEntry factory overhead and depreciation — record"
+    ]
+  },
+  {
+    "id": "completion-close",
+    "title": "Separate completion and close branches of a work order",
+    "question": "Separate completion and close branches of a work order?",
+    "description": "A work order links separately to material issues, labor, production completion lines, and accounting close. Completion makes finished goods available before close.",
+    "page": "docs/processes/manufacturing.md",
+    "nodes": [
+      {
+        "id": "WO",
+        "title": "Work Order",
+        "role": "record",
+        "tables": [
+          "WorkOrder"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "MI",
+        "title": "Material Issue",
+        "role": "record",
+        "tables": [
+          "MaterialIssue"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "LTE",
+        "title": "Labor Time Entry",
+        "role": "record",
+        "tables": [
+          "LaborTimeEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PC",
+        "title": "Production Completion",
+        "role": "record",
+        "tables": [
+          "ProductionCompletion"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PCL",
+        "title": "Production Completion Line",
+        "role": "record",
+        "tables": [
+          "ProductionCompletionLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "WOC",
+        "title": "WorkOrderClose",
+        "role": "record",
+        "tables": [
+          "WorkOrderClose"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "FG",
+        "title": "Finished goods available to O2C",
+        "role": "business context",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "WO",
+        "target": "MI",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "MaterialIssue",
+            "field": "WorkOrderID",
+            "parent": "WorkOrder",
+            "parentField": "WorkOrderID"
+          }
+        ]
+      },
+      {
+        "source": "WO",
+        "target": "LTE",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "LaborTimeEntry",
+            "field": "WorkOrderID",
+            "parent": "WorkOrder",
+            "parentField": "WorkOrderID"
+          }
+        ]
+      },
+      {
+        "source": "WO",
+        "target": "PC",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "ProductionCompletion",
+            "field": "WorkOrderID",
+            "parent": "WorkOrder",
+            "parentField": "WorkOrderID"
+          }
+        ]
+      },
+      {
+        "source": "PC",
+        "target": "PCL",
+        "label": "",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "ProductionCompletionLine",
+            "field": "ProductionCompletionID",
+            "parent": "ProductionCompletion",
+            "parentField": "ProductionCompletionID"
+          }
+        ]
+      },
+      {
+        "source": "PC",
+        "target": "FG",
+        "label": "Conceptual support; consult the detailed keys before joining",
+        "kind": "context",
+        "id": "r5",
+        "recordLinks": []
+      },
+      {
+        "source": "WO",
+        "target": "WOC",
+        "label": "",
+        "kind": "reference",
+        "id": "r6",
+        "recordLinks": [
+          {
+            "child": "WorkOrderClose",
+            "field": "WorkOrderID",
+            "parent": "WorkOrder",
+            "parentField": "WorkOrderID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Separate completion and close branches of a work order. A work order links separately to material issues, labor, production completion lines, and accounting close. Completion makes finished goods available before close. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "Work Order — record",
+      "Material Issue — record",
+      "Labor Time Entry — record",
+      "Production Completion — record",
+      "Production Completion Line — record",
+      "WorkOrderClose — record",
+      "Finished goods available to O2C — business context"
+    ]
+  },
+  {
+    "id": "commission-posting",
+    "title": "Sales commission accrual adjustment and payment",
+    "question": "Sales commission accrual adjustment and payment?",
+    "description": "An invoice line and rate support commission accrual. Accrual, adjustment, and payment connect to ledger detail, and adjustments affect payment.",
+    "page": "docs/processes/o2c.md",
+    "nodes": [
+      {
+        "id": "SI",
+        "title": "Sales Invoice Line",
+        "role": "record",
+        "tables": [
+          "SalesInvoiceLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "RATE",
+        "title": "Sales Commission Rate",
+        "role": "record",
+        "tables": [
+          "SalesCommissionRate"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "ACC",
+        "title": "Sales Commission Accrual",
+        "role": "record",
+        "tables": [
+          "SalesCommissionAccrual"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "ADJ",
+        "title": "Sales Commission Adjustment",
+        "role": "record",
+        "tables": [
+          "SalesCommissionAdjustment"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PAY",
+        "title": "Sales Commission Payment",
+        "role": "record",
+        "tables": [
+          "SalesCommissionPayment"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PL",
+        "title": "SalesCommissionPaymentLine",
+        "role": "record",
+        "tables": [
+          "SalesCommissionPaymentLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "RATE",
+        "target": "ACC",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "SalesCommissionAccrual",
+            "field": "SalesCommissionRateID",
+            "parent": "SalesCommissionRate",
+            "parentField": "SalesCommissionRateID"
+          }
+        ]
+      },
+      {
+        "source": "ACC",
+        "target": "GL",
+        "label": "GLEntry source type SalesCommissionAccrual and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "SalesCommissionAccrual"
+        ],
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "ACC",
+        "target": "ADJ",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "SalesCommissionAdjustment",
+            "field": "SalesCommissionAccrualID",
+            "parent": "SalesCommissionAccrual",
+            "parentField": "SalesCommissionAccrualID"
+          }
+        ]
+      },
+      {
+        "source": "ADJ",
+        "target": "GL",
+        "label": "GLEntry source type SalesCommissionAdjustment and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "SalesCommissionAdjustment"
+        ],
+        "id": "r4",
+        "recordLinks": []
+      },
+      {
+        "source": "PAY",
+        "target": "GL",
+        "label": "GLEntry source type SalesCommissionPayment and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "SalesCommissionPayment"
+        ],
+        "id": "r5",
+        "recordLinks": []
+      },
+      {
+        "source": "SI",
+        "target": "ACC",
+        "label": "",
+        "kind": "reference",
+        "id": "r6",
+        "recordLinks": [
+          {
+            "child": "SalesCommissionAccrual",
+            "field": "SalesInvoiceLineID",
+            "parent": "SalesInvoiceLine",
+            "parentField": "SalesInvoiceLineID"
+          }
+        ]
+      },
+      {
+        "source": "ACC",
+        "target": "PL",
+        "label": "SourceDocumentType = 'SalesCommissionAccrual'",
+        "kind": "conditional",
+        "id": "r7",
+        "recordLinks": [],
+        "conditionalTrace": {
+          "child": "SalesCommissionPaymentLine",
+          "field": "SourceDocumentID",
+          "parent": "SalesCommissionAccrual",
+          "parentField": "SalesCommissionAccrualID",
+          "condition": "SourceDocumentType = 'SalesCommissionAccrual'"
+        }
+      },
+      {
+        "source": "ADJ",
+        "target": "PL",
+        "label": "SourceDocumentType = 'SalesCommissionAdjustment'",
+        "kind": "conditional",
+        "id": "r8",
+        "recordLinks": [],
+        "conditionalTrace": {
+          "child": "SalesCommissionPaymentLine",
+          "field": "SourceDocumentID",
+          "parent": "SalesCommissionAdjustment",
+          "parentField": "SalesCommissionAdjustmentID",
+          "condition": "SourceDocumentType = 'SalesCommissionAdjustment'"
+        }
+      },
+      {
+        "source": "PL",
+        "target": "PAY",
+        "label": "",
+        "kind": "reference",
+        "id": "r9",
+        "recordLinks": [
+          {
+            "child": "SalesCommissionPaymentLine",
+            "field": "SalesCommissionPaymentID",
+            "parent": "SalesCommissionPayment",
+            "parentField": "SalesCommissionPaymentID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Sales commission accrual adjustment and payment. An invoice line and rate support commission accrual. Accrual, adjustment, and payment connect to ledger detail, and adjustments affect payment. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "Sales Invoice Line — record",
+      "Sales Commission Rate — record",
+      "Sales Commission Accrual — record",
+      "Sales Commission Adjustment — record",
+      "Sales Commission Payment — record",
+      "GLEntry — record",
+      "SalesCommissionPaymentLine — record"
+    ]
+  },
+  {
+    "id": "goods-posting",
+    "title": "Customer order shipment invoice and ledger",
+    "question": "Customer order shipment invoice and ledger?",
+    "description": "Labeled solid arrows follow stored keys through order, shipment, and invoice lines. Shipment and invoice have independent ledger-source routes.",
+    "page": "docs/processes/o2c.md",
+    "nodes": [
+      {
+        "id": "C",
+        "title": "Customer",
+        "role": "record",
+        "tables": [
+          "Customer"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "SO",
+        "title": "SalesOrderLine and header",
+        "role": "record",
+        "tables": [
+          "SalesOrder",
+          "SalesOrderLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "SH",
+        "title": "ShipmentLine and header",
+        "role": "record",
+        "tables": [
+          "Shipment",
+          "ShipmentLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "SI",
+        "title": "SalesInvoiceLine and header",
+        "role": "record",
+        "tables": [
+          "SalesInvoice",
+          "SalesInvoiceLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "C",
+        "target": "SO",
+        "label": "CustomerID on order header",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "SalesOrder",
+            "field": "CustomerID",
+            "parent": "Customer",
+            "parentField": "CustomerID"
+          }
+        ]
+      },
+      {
+        "source": "SO",
+        "target": "SH",
+        "label": "SalesOrderLineID",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "Shipment",
+            "field": "SalesOrderID",
+            "parent": "SalesOrder",
+            "parentField": "SalesOrderID"
+          },
+          {
+            "child": "ShipmentLine",
+            "field": "SalesOrderLineID",
+            "parent": "SalesOrderLine",
+            "parentField": "SalesOrderLineID"
+          }
+        ]
+      },
+      {
+        "source": "SH",
+        "target": "SI",
+        "label": "ShipmentLineID",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "SalesInvoiceLine",
+            "field": "ShipmentLineID",
+            "parent": "ShipmentLine",
+            "parentField": "ShipmentLineID"
+          }
+        ]
+      },
+      {
+        "source": "SH",
+        "target": "GL",
+        "label": "GLEntry source type Shipment and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "Shipment"
+        ],
+        "id": "r4",
+        "recordLinks": []
+      },
+      {
+        "source": "SI",
+        "target": "GL",
+        "label": "GLEntry source type SalesInvoice and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "SalesInvoice"
+        ],
+        "id": "r5",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Customer order shipment invoice and ledger. Labeled solid arrows follow stored keys through order, shipment, and invoice lines. Shipment and invoice have independent ledger-source routes. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "Customer — record",
+      "SalesOrderLine and header — record",
+      "ShipmentLine and header — record",
+      "SalesInvoiceLine and header — record",
+      "GLEntry — record"
+    ]
+  },
+  {
+    "id": "cash-posting",
+    "title": "Receipt to unapplied money and invoice application",
+    "question": "Receipt to unapplied money and invoice application?",
+    "description": "Solid labeled arrows identify receipt and invoice keys or independent posting sources. Dashed links explain the unapplied-cash account effect rather than a stored join.",
+    "page": "docs/processes/o2c.md",
+    "nodes": [
+      {
+        "id": "CR",
+        "title": "Cash Receipt",
+        "role": "record",
+        "tables": [
+          "CashReceipt"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "DEP",
+        "title": "Customer Deposits and Unapplied Cash",
+        "role": "account effect",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      },
+      {
+        "id": "CRA",
+        "title": "Cash Receipt Application",
+        "role": "record",
+        "tables": [
+          "CashReceiptApplication"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "SI",
+        "title": "Sales Invoice",
+        "role": "record",
+        "tables": [
+          "SalesInvoice"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "CR",
+        "target": "CRA",
+        "label": "CashReceiptID",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "CashReceiptApplication",
+            "field": "CashReceiptID",
+            "parent": "CashReceipt",
+            "parentField": "CashReceiptID"
+          }
+        ]
+      },
+      {
+        "source": "CRA",
+        "target": "SI",
+        "label": "SalesInvoiceID",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "CashReceiptApplication",
+            "field": "SalesInvoiceID",
+            "parent": "SalesInvoice",
+            "parentField": "SalesInvoiceID"
+          }
+        ]
+      },
+      {
+        "source": "CR",
+        "target": "GL",
+        "label": "GLEntry source type CashReceipt and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "CashReceipt"
+        ],
+        "id": "r3",
+        "recordLinks": []
+      },
+      {
+        "source": "CRA",
+        "target": "GL",
+        "label": "GLEntry source type CashReceiptApplication and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "CashReceiptApplication"
+        ],
+        "id": "r4",
+        "recordLinks": []
+      },
+      {
+        "source": "SI",
+        "target": "GL",
+        "label": "GLEntry source type SalesInvoice and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "SalesInvoice"
+        ],
+        "id": "r5",
+        "recordLinks": []
+      },
+      {
+        "source": "CR",
+        "target": "DEP",
+        "label": "Credits account 2060",
+        "kind": "context",
+        "id": "r6",
+        "recordLinks": []
+      },
+      {
+        "source": "CRA",
+        "target": "DEP",
+        "label": "Debits account 2060",
+        "kind": "context",
+        "id": "r7",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Receipt to unapplied money and invoice application. Solid labeled arrows identify receipt and invoice keys or independent posting sources. Dashed links explain the unapplied-cash account effect rather than a stored join. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "Cash Receipt — record",
+      "Customer Deposits and Unapplied Cash — account effect",
+      "Cash Receipt Application — record",
+      "Sales Invoice — record",
+      "GLEntry — record"
+    ]
+  },
+  {
+    "id": "returns-posting",
+    "title": "Return credit and refund accounting evidence",
+    "question": "Return credit and refund accounting evidence?",
+    "description": "Stored line and header references connect return evidence to credit and optional refund records. Return, credit memo, and refund each have an independent type-qualified posting route.",
+    "page": "docs/processes/o2c.md",
+    "nodes": [
+      {
+        "id": "SHL",
+        "title": "ShipmentLine",
+        "role": "record",
+        "tables": [
+          "ShipmentLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "SIL",
+        "title": "SalesInvoiceLine",
+        "role": "record",
+        "tables": [
+          "SalesInvoiceLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "SR",
+        "title": "SalesReturn",
+        "role": "record",
+        "tables": [
+          "SalesReturn"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "SRL",
+        "title": "SalesReturnLine",
+        "role": "record",
+        "tables": [
+          "SalesReturnLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "CM",
+        "title": "CreditMemo",
+        "role": "record",
+        "tables": [
+          "CreditMemo"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "RF",
+        "title": "CustomerRefund",
+        "role": "record",
+        "tables": [
+          "CustomerRefund"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "SHL",
+        "target": "SIL",
+        "label": "ShipmentLineID",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "SalesInvoiceLine",
+            "field": "ShipmentLineID",
+            "parent": "ShipmentLine",
+            "parentField": "ShipmentLineID"
+          }
+        ]
+      },
+      {
+        "source": "SHL",
+        "target": "SRL",
+        "label": "ShipmentLineID",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "SalesReturnLine",
+            "field": "ShipmentLineID",
+            "parent": "ShipmentLine",
+            "parentField": "ShipmentLineID"
+          }
+        ]
+      },
+      {
+        "source": "SRL",
+        "target": "SR",
+        "label": "SalesReturnID",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "SalesReturnLine",
+            "field": "SalesReturnID",
+            "parent": "SalesReturn",
+            "parentField": "SalesReturnID"
+          }
+        ]
+      },
+      {
+        "source": "SR",
+        "target": "CM",
+        "label": "SalesReturnID",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "CreditMemo",
+            "field": "SalesReturnID",
+            "parent": "SalesReturn",
+            "parentField": "SalesReturnID"
+          }
+        ]
+      },
+      {
+        "source": "CM",
+        "target": "RF",
+        "label": "CreditMemoID; a refund is a separate optional cash event",
+        "kind": "reference",
+        "id": "r5",
+        "recordLinks": [
+          {
+            "child": "CustomerRefund",
+            "field": "CreditMemoID",
+            "parent": "CreditMemo",
+            "parentField": "CreditMemoID"
+          }
+        ]
+      },
+      {
+        "source": "SR",
+        "target": "GL",
+        "label": "GLEntry source type SalesReturn and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "SalesReturn"
+        ],
+        "id": "r6",
+        "recordLinks": []
+      },
+      {
+        "source": "CM",
+        "target": "GL",
+        "label": "GLEntry source type CreditMemo and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "CreditMemo"
+        ],
+        "id": "r7",
+        "recordLinks": []
+      },
+      {
+        "source": "RF",
+        "target": "GL",
+        "label": "GLEntry source type CustomerRefund and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "CustomerRefund"
+        ],
+        "id": "r8",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Return credit and refund accounting evidence. Stored line and header references connect return evidence to credit and optional refund records. Return, credit memo, and refund each have an independent type-qualified posting route. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "ShipmentLine — record",
+      "SalesInvoiceLine — record",
+      "SalesReturn — record",
+      "SalesReturnLine — record",
+      "CreditMemo — record",
+      "CustomerRefund — record",
+      "GLEntry — record"
+    ]
+  },
+  {
+    "id": "receipt-invoice-posting",
+    "title": "Receipt invoice and ledger evidence",
+    "question": "Receipt invoice and ledger evidence?",
+    "description": "Solid labeled arrows follow stored line keys to headers. Goods receipt and purchase invoice each have an independent ledger-source route.",
+    "page": "docs/processes/p2p.md",
+    "nodes": [
+      {
+        "id": "GRL",
+        "title": "GoodsReceiptLine",
+        "role": "record",
+        "tables": [
+          "GoodsReceiptLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "GR",
+        "title": "GoodsReceipt",
+        "role": "record",
+        "tables": [
+          "GoodsReceipt"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PIL",
+        "title": "PurchaseInvoiceLine",
+        "role": "record",
+        "tables": [
+          "PurchaseInvoiceLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PI",
+        "title": "PurchaseInvoice",
+        "role": "record",
+        "tables": [
+          "PurchaseInvoice"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "GRL",
+        "target": "GR",
+        "label": "GoodsReceiptID",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "GoodsReceiptLine",
+            "field": "GoodsReceiptID",
+            "parent": "GoodsReceipt",
+            "parentField": "GoodsReceiptID"
+          }
+        ]
+      },
+      {
+        "source": "GRL",
+        "target": "PIL",
+        "label": "GoodsReceiptLineID",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "PurchaseInvoiceLine",
+            "field": "GoodsReceiptLineID",
+            "parent": "GoodsReceiptLine",
+            "parentField": "GoodsReceiptLineID"
+          }
+        ]
+      },
+      {
+        "source": "PIL",
+        "target": "PI",
+        "label": "PurchaseInvoiceID",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "PurchaseInvoiceLine",
+            "field": "PurchaseInvoiceID",
+            "parent": "PurchaseInvoice",
+            "parentField": "PurchaseInvoiceID"
+          }
+        ]
+      },
+      {
+        "source": "GR",
+        "target": "GL",
+        "label": "GLEntry source type GoodsReceipt and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "GoodsReceipt"
+        ],
+        "id": "r4",
+        "recordLinks": []
+      },
+      {
+        "source": "PI",
+        "target": "GL",
+        "label": "GLEntry source type PurchaseInvoice and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "PurchaseInvoice"
+        ],
+        "id": "r5",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Receipt invoice and ledger evidence. Solid labeled arrows follow stored line keys to headers. Goods receipt and purchase invoice each have an independent ledger-source route. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "GoodsReceiptLine — record",
+      "GoodsReceipt — record",
+      "PurchaseInvoiceLine — record",
+      "PurchaseInvoice — record",
+      "GLEntry — record"
+    ]
+  },
+  {
+    "id": "supplier-settlement-posting",
+    "title": "Supplier invoice payable and disbursement",
+    "question": "Supplier invoice payable and disbursement?",
+    "description": "A solid labeled arrow identifies the invoice-payment key. Invoice and disbursement each post independently. Dashed arrows explain the AP account effect rather than stored joins.",
+    "page": "docs/processes/p2p.md",
+    "nodes": [
+      {
+        "id": "PI",
+        "title": "Purchase Invoice",
+        "role": "record",
+        "tables": [
+          "PurchaseInvoice"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "AP",
+        "title": "Accounts Payable",
+        "role": "account effect",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      },
+      {
+        "id": "DP",
+        "title": "Disbursement Payment",
+        "role": "record",
+        "tables": [
+          "DisbursementPayment"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "PI",
+        "target": "DP",
+        "label": "PurchaseInvoiceID",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "DisbursementPayment",
+            "field": "PurchaseInvoiceID",
+            "parent": "PurchaseInvoice",
+            "parentField": "PurchaseInvoiceID"
+          }
+        ]
+      },
+      {
+        "source": "PI",
+        "target": "GL",
+        "label": "GLEntry source type PurchaseInvoice and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "PurchaseInvoice"
+        ],
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "DP",
+        "target": "GL",
+        "label": "GLEntry source type DisbursementPayment and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "DisbursementPayment"
+        ],
+        "id": "r3",
+        "recordLinks": []
+      },
+      {
+        "source": "PI",
+        "target": "AP",
+        "label": "Credits AP",
+        "kind": "context",
+        "id": "r4",
+        "recordLinks": []
+      },
+      {
+        "source": "DP",
+        "target": "AP",
+        "label": "Debits AP",
+        "kind": "context",
+        "id": "r5",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Supplier invoice payable and disbursement. A solid labeled arrow identifies the invoice-payment key. Invoice and disbursement each post independently. Dashed arrows explain the AP account effect rather than stored joins. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "Purchase Invoice — record",
+      "Accounts Payable — account effect",
+      "Disbursement Payment — record",
+      "GLEntry — record"
+    ]
+  },
+  {
+    "id": "payroll-evidence",
+    "title": "Approved time employee payroll and period remittances",
+    "question": "Approved time employee payroll and period remittances?",
+    "description": "Solid labeled arrows identify stored keys and explicit ledger sources. Dashed arrows show punch support or summary aggregation. Register recognition, employee payment, and remittance each reach the ledger separately.",
+    "page": "docs/processes/payroll.md",
+    "nodes": [
+      {
+        "id": "ROSTER",
+        "title": "EmployeeShiftRoster",
+        "role": "record",
+        "tables": [
+          "EmployeeShiftRoster"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "TIME",
+        "title": "TimeClockEntry: approved hours",
+        "role": "record",
+        "tables": [
+          "TimeClockEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PUNCH",
+        "title": "TimeClockPunch: raw evidence",
+        "role": "record",
+        "tables": [
+          "TimeClockPunch"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "LABOR",
+        "title": "LaborTimeEntry: support and allocation",
+        "role": "record",
+        "tables": [
+          "LaborTimeEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "LINES",
+        "title": "PayrollRegisterLine",
+        "role": "record",
+        "tables": [
+          "PayrollRegisterLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "REG",
+        "title": "PayrollRegister",
+        "role": "record",
+        "tables": [
+          "PayrollRegister"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PAY",
+        "title": "PayrollPayment: net pay",
+        "role": "record",
+        "tables": [
+          "PayrollPayment"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PERIOD",
+        "title": "PayrollPeriod",
+        "role": "record",
+        "tables": [
+          "PayrollPeriod"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "REMIT",
+        "title": "PayrollLiabilityRemittance",
+        "role": "record",
+        "tables": [
+          "PayrollLiabilityRemittance"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PS",
+        "title": "PayrollSummary source label",
+        "role": "source label",
+        "tables": [],
+        "description": "Constructed posting identifier; not a table"
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "ROSTER",
+        "target": "TIME",
+        "label": "EmployeeShiftRosterID",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "TimeClockEntry",
+            "field": "EmployeeShiftRosterID",
+            "parent": "EmployeeShiftRoster",
+            "parentField": "EmployeeShiftRosterID"
+          }
+        ]
+      },
+      {
+        "source": "PUNCH",
+        "target": "TIME",
+        "label": "TimeClockEntryID; raw punches support review of approved time",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "TimeClockPunch",
+            "field": "TimeClockEntryID",
+            "parent": "TimeClockEntry",
+            "parentField": "TimeClockEntryID"
+          }
+        ]
+      },
+      {
+        "source": "TIME",
+        "target": "LABOR",
+        "label": "TimeClockEntryID",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "LaborTimeEntry",
+            "field": "TimeClockEntryID",
+            "parent": "TimeClockEntry",
+            "parentField": "TimeClockEntryID"
+          }
+        ]
+      },
+      {
+        "source": "LABOR",
+        "target": "LINES",
+        "label": "LaborTimeEntryID",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "PayrollRegisterLine",
+            "field": "LaborTimeEntryID",
+            "parent": "LaborTimeEntry",
+            "parentField": "LaborTimeEntryID"
+          }
+        ]
+      },
+      {
+        "source": "LINES",
+        "target": "REG",
+        "label": "PayrollRegisterID",
+        "kind": "reference",
+        "id": "r5",
+        "recordLinks": [
+          {
+            "child": "PayrollRegisterLine",
+            "field": "PayrollRegisterID",
+            "parent": "PayrollRegister",
+            "parentField": "PayrollRegisterID"
+          }
+        ]
+      },
+      {
+        "source": "REG",
+        "target": "PAY",
+        "label": "PayrollRegisterID",
+        "kind": "reference",
+        "id": "r6",
+        "recordLinks": [
+          {
+            "child": "PayrollPayment",
+            "field": "PayrollRegisterID",
+            "parent": "PayrollRegister",
+            "parentField": "PayrollRegisterID"
+          }
+        ]
+      },
+      {
+        "source": "PERIOD",
+        "target": "REG",
+        "label": "PayrollPeriodID",
+        "kind": "reference",
+        "id": "r7",
+        "recordLinks": [
+          {
+            "child": "PayrollRegister",
+            "field": "PayrollPeriodID",
+            "parent": "PayrollPeriod",
+            "parentField": "PayrollPeriodID"
+          }
+        ]
+      },
+      {
+        "source": "PERIOD",
+        "target": "REMIT",
+        "label": "PayrollPeriodID",
+        "kind": "reference",
+        "id": "r8",
+        "recordLinks": [
+          {
+            "child": "PayrollLiabilityRemittance",
+            "field": "PayrollPeriodID",
+            "parent": "PayrollPeriod",
+            "parentField": "PayrollPeriodID"
+          }
+        ]
+      },
+      {
+        "source": "REG",
+        "target": "PS",
+        "label": "Aggregate period cost center and account",
+        "kind": "aggregate",
+        "id": "r9",
+        "recordLinks": []
+      },
+      {
+        "source": "PS",
+        "target": "GL",
+        "label": "GLEntry source type PayrollSummary and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "PayrollSummary"
+        ],
+        "id": "r10",
+        "recordLinks": []
+      },
+      {
+        "source": "PAY",
+        "target": "GL",
+        "label": "GLEntry source type PayrollPayment and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "PayrollPayment"
+        ],
+        "id": "r11",
+        "recordLinks": []
+      },
+      {
+        "source": "REMIT",
+        "target": "GL",
+        "label": "GLEntry source type PayrollLiabilityRemittance and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "PayrollLiabilityRemittance"
+        ],
+        "id": "r12",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Approved time employee payroll and period remittances. Solid labeled arrows identify stored keys and explicit ledger sources. Dashed arrows show punch support or summary aggregation. Register recognition, employee payment, and remittance each reach the ledger separately. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "EmployeeShiftRoster — record",
+      "TimeClockEntry: approved hours — record",
+      "TimeClockPunch: raw evidence — record",
+      "LaborTimeEntry: support and allocation — record",
+      "PayrollRegisterLine — record",
+      "PayrollRegister — record",
+      "PayrollPayment: net pay — record",
+      "PayrollPeriod — record",
+      "PayrollLiabilityRemittance — record",
+      "PayrollSummary source label — source label",
+      "GLEntry — record"
+    ]
+  },
+  {
+    "id": "attendance-evidence",
+    "title": "Roster punch and approval support for daily time",
+    "question": "Roster punch and approval support for daily time?",
+    "description": "Shift definitions and assignments lead to roster evidence. Roster links to absence, overtime approval, and raw punches; approval and punches support daily time.",
+    "page": "docs/processes/payroll.md",
+    "nodes": [
+      {
+        "id": "SD",
+        "title": "Shift Definition",
+        "role": "record",
+        "tables": [
+          "ShiftDefinition"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "ESA",
+        "title": "Employee Shift Assignment",
+        "role": "record",
+        "tables": [
+          "EmployeeShiftAssignment"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "ESR",
+        "title": "Employee Shift Roster",
+        "role": "record",
+        "tables": [
+          "EmployeeShiftRoster"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "ABS",
+        "title": "Employee Absence",
+        "role": "record",
+        "tables": [
+          "EmployeeAbsence"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "OTA",
+        "title": "Overtime Approval",
+        "role": "record",
+        "tables": [
+          "OvertimeApproval"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "TCP",
+        "title": "Time Clock Punch",
+        "role": "record",
+        "tables": [
+          "TimeClockPunch"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "TCE",
+        "title": "Time Clock Entry",
+        "role": "record",
+        "tables": [
+          "TimeClockEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "SD",
+        "target": "ESA",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "EmployeeShiftAssignment",
+            "field": "ShiftDefinitionID",
+            "parent": "ShiftDefinition",
+            "parentField": "ShiftDefinitionID"
+          }
+        ]
+      },
+      {
+        "source": "ESA",
+        "target": "ESR",
+        "label": "Match employee and shift over assignment effective dates; no stored assignment ID on roster",
+        "kind": "aggregate",
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "ESR",
+        "target": "ABS",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "EmployeeAbsence",
+            "field": "EmployeeShiftRosterID",
+            "parent": "EmployeeShiftRoster",
+            "parentField": "EmployeeShiftRosterID"
+          }
+        ]
+      },
+      {
+        "source": "ESR",
+        "target": "OTA",
+        "label": "",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "OvertimeApproval",
+            "field": "EmployeeShiftRosterID",
+            "parent": "EmployeeShiftRoster",
+            "parentField": "EmployeeShiftRosterID"
+          }
+        ]
+      },
+      {
+        "source": "OTA",
+        "target": "TCE",
+        "label": "",
+        "kind": "reference",
+        "id": "r5",
+        "recordLinks": [
+          {
+            "child": "TimeClockEntry",
+            "field": "OvertimeApprovalID",
+            "parent": "OvertimeApproval",
+            "parentField": "OvertimeApprovalID"
+          }
+        ]
+      },
+      {
+        "source": "ESR",
+        "target": "TCP",
+        "label": "",
+        "kind": "reference",
+        "id": "r6",
+        "recordLinks": [
+          {
+            "child": "TimeClockPunch",
+            "field": "EmployeeShiftRosterID",
+            "parent": "EmployeeShiftRoster",
+            "parentField": "EmployeeShiftRosterID"
+          }
+        ]
+      },
+      {
+        "source": "TCP",
+        "target": "TCE",
+        "label": "",
+        "kind": "reference",
+        "id": "r7",
+        "recordLinks": [
+          {
+            "child": "TimeClockPunch",
+            "field": "TimeClockEntryID",
+            "parent": "TimeClockEntry",
+            "parentField": "TimeClockEntryID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Roster punch and approval support for daily time. Shift definitions and assignments lead to roster evidence. Roster links to absence, overtime approval, and raw punches; approval and punches support daily time. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "Shift Definition — record",
+      "Employee Shift Assignment — record",
+      "Employee Shift Roster — record",
+      "Employee Absence — record",
+      "Overtime Approval — record",
+      "Time Clock Punch — record",
+      "Time Clock Entry — record"
+    ]
+  },
+  {
+    "id": "payroll-obligations",
+    "title": "Employee net pay and other payroll-liability settlement",
+    "question": "Employee net pay and other payroll-liability settlement?",
+    "description": "A register creates accrued net pay and other payroll liabilities. Employee payment and liability remittance settle separate branches; register and settlement records connect to the ledger.",
+    "page": "docs/processes/payroll.md",
+    "nodes": [
+      {
+        "id": "PR",
+        "title": "Payroll Register",
+        "role": "record",
+        "tables": [
+          "PayrollRegister"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "NET",
+        "title": "Calculated employee net pay",
+        "role": "account effect",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      },
+      {
+        "id": "TAX",
+        "title": "Calculated tax and benefit obligations",
+        "role": "account effect",
+        "tables": [],
+        "description": "Interpret with the accompanying process explanation"
+      },
+      {
+        "id": "PAY",
+        "title": "Payroll Payment",
+        "role": "record",
+        "tables": [
+          "PayrollPayment"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "REM",
+        "title": "Payroll Liability Remittance",
+        "role": "record",
+        "tables": [
+          "PayrollLiabilityRemittance"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PS",
+        "title": "PayrollSummary source label",
+        "role": "source label",
+        "tables": [],
+        "description": "Constructed posting identifier; not a table"
+      },
+      {
+        "id": "PP",
+        "title": "PayrollPeriod",
+        "role": "record",
+        "tables": [
+          "PayrollPeriod"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "PR",
+        "target": "PAY",
+        "label": "Employee-register payment",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "PayrollPayment",
+            "field": "PayrollRegisterID",
+            "parent": "PayrollRegister",
+            "parentField": "PayrollRegisterID"
+          }
+        ]
+      },
+      {
+        "source": "PR",
+        "target": "PP",
+        "label": "PayrollPeriodID",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "PayrollRegister",
+            "field": "PayrollPeriodID",
+            "parent": "PayrollPeriod",
+            "parentField": "PayrollPeriodID"
+          }
+        ]
+      },
+      {
+        "source": "PP",
+        "target": "REM",
+        "label": "Period-level remittance",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "PayrollLiabilityRemittance",
+            "field": "PayrollPeriodID",
+            "parent": "PayrollPeriod",
+            "parentField": "PayrollPeriodID"
+          }
+        ]
+      },
+      {
+        "source": "PR",
+        "target": "NET",
+        "label": "Register measure",
+        "kind": "context",
+        "id": "r4",
+        "recordLinks": []
+      },
+      {
+        "source": "PR",
+        "target": "TAX",
+        "label": "Register measure",
+        "kind": "context",
+        "id": "r5",
+        "recordLinks": []
+      },
+      {
+        "source": "PR",
+        "target": "PS",
+        "label": "Aggregate by period, cost center, and account",
+        "kind": "aggregate",
+        "id": "r6",
+        "recordLinks": []
+      },
+      {
+        "source": "PS",
+        "target": "GL",
+        "label": "GLEntry source type PayrollSummary and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "PayrollSummary"
+        ],
+        "id": "r7",
+        "recordLinks": []
+      },
+      {
+        "source": "PAY",
+        "target": "GL",
+        "label": "GLEntry source type PayrollPayment and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "PayrollPayment"
+        ],
+        "id": "r8",
+        "recordLinks": []
+      },
+      {
+        "source": "REM",
+        "target": "GL",
+        "label": "GLEntry source type PayrollLiabilityRemittance and source ID",
+        "kind": "posting",
+        "sourceTypes": [
+          "PayrollLiabilityRemittance"
+        ],
+        "id": "r9",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Employee net pay and other payroll-liability settlement. A register creates accrued net pay and other payroll liabilities. Employee payment and liability remittance settle separate branches; register and settlement records connect to the ledger. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "Payroll Register — record",
+      "Calculated employee net pay — account effect",
+      "Calculated tax and benefit obligations — account effect",
+      "Payroll Payment — record",
+      "Payroll Liability Remittance — record",
+      "GLEntry — record",
+      "PayrollSummary source label — source label",
+      "PayrollPeriod — record"
+    ]
+  },
+  {
+    "id": "attendance-review",
+    "title": "Attendance evidence exceptions and payroll",
+    "question": "Attendance evidence exceptions and payroll?",
+    "description": "Roster, raw punches, and approved time feed attendance-exception evidence. Approved time also connects to payroll; an exception link does not establish a payment block.",
+    "page": "docs/processes/payroll.md",
+    "nodes": [
+      {
+        "id": "ESR",
+        "title": "Employee Shift Roster",
+        "role": "record",
+        "tables": [
+          "EmployeeShiftRoster"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "TCP",
+        "title": "Time Clock Punch",
+        "role": "record",
+        "tables": [
+          "TimeClockPunch"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "TCE",
+        "title": "Time Clock Entry",
+        "role": "record",
+        "tables": [
+          "TimeClockEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "AE",
+        "title": "Attendance Exception",
+        "role": "record",
+        "tables": [
+          "AttendanceException"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PR",
+        "title": "Payroll Register",
+        "role": "record",
+        "tables": [
+          "PayrollRegister"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "LTE",
+        "title": "LaborTimeEntry",
+        "role": "record",
+        "tables": [
+          "LaborTimeEntry"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      },
+      {
+        "id": "PRL",
+        "title": "PayrollRegisterLine",
+        "role": "record",
+        "tables": [
+          "PayrollRegisterLine"
+        ],
+        "description": "Record evidence\nCheck row grain and keys in the ER view"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "ESR",
+        "target": "TCP",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "TimeClockPunch",
+            "field": "EmployeeShiftRosterID",
+            "parent": "EmployeeShiftRoster",
+            "parentField": "EmployeeShiftRosterID"
+          }
+        ]
+      },
+      {
+        "source": "TCP",
+        "target": "TCE",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "TimeClockPunch",
+            "field": "TimeClockEntryID",
+            "parent": "TimeClockEntry",
+            "parentField": "TimeClockEntryID"
+          }
+        ]
+      },
+      {
+        "source": "ESR",
+        "target": "AE",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "AttendanceException",
+            "field": "EmployeeShiftRosterID",
+            "parent": "EmployeeShiftRoster",
+            "parentField": "EmployeeShiftRosterID"
+          }
+        ]
+      },
+      {
+        "source": "TCE",
+        "target": "AE",
+        "label": "",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "AttendanceException",
+            "field": "TimeClockEntryID",
+            "parent": "TimeClockEntry",
+            "parentField": "TimeClockEntryID"
+          }
+        ]
+      },
+      {
+        "source": "TCE",
+        "target": "LTE",
+        "label": "",
+        "kind": "reference",
+        "id": "r5",
+        "recordLinks": [
+          {
+            "child": "LaborTimeEntry",
+            "field": "TimeClockEntryID",
+            "parent": "TimeClockEntry",
+            "parentField": "TimeClockEntryID"
+          }
+        ]
+      },
+      {
+        "source": "LTE",
+        "target": "PRL",
+        "label": "",
+        "kind": "reference",
+        "id": "r6",
+        "recordLinks": [
+          {
+            "child": "PayrollRegisterLine",
+            "field": "LaborTimeEntryID",
+            "parent": "LaborTimeEntry",
+            "parentField": "LaborTimeEntryID"
+          }
+        ]
+      },
+      {
+        "source": "PRL",
+        "target": "PR",
+        "label": "",
+        "kind": "reference",
+        "id": "r7",
+        "recordLinks": [
+          {
+            "child": "PayrollRegisterLine",
+            "field": "PayrollRegisterID",
+            "parent": "PayrollRegister",
+            "parentField": "PayrollRegisterID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "alt": "Attendance evidence exceptions and payroll. Roster, raw punches, and approved time feed attendance-exception evidence. Approved time also connects to payroll; an exception link does not establish a payment block. Read each numbered connector with its evidence explanation. Reference paths are not a time sequence; analytical support and account effects do not create additional stored keys.",
+    "steps": [
+      "Employee Shift Roster — record",
+      "Time Clock Punch — record",
+      "Time Clock Entry — record",
+      "Attendance Exception — record",
+      "Payroll Register — record",
+      "LaborTimeEntry — record",
+      "PayrollRegisterLine — record"
+    ]
+  },
+  {
+    "id": "weekly-planning",
+    "title": "Weekly planning and manufacturing requirements",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "Demand forecasts and inventory policies support supply recommendations, which feed material requirements and rough-cut capacity planning.",
+    "page": "docs/processes/manufacturing.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "DF",
+        "title": "DemandForecast",
+        "description": "One item/location forecast for a weekly bucket",
+        "role": "record",
+        "tables": [
+          "DemandForecast"
+        ]
+      },
+      {
+        "id": "IP",
+        "title": "InventoryPolicy",
+        "description": "One item/location replenishment policy",
+        "role": "record",
+        "tables": [
+          "InventoryPolicy"
+        ]
+      },
+      {
+        "id": "SPR",
+        "title": "SupplyPlanRecommendation",
+        "description": "One item/location supply recommendation in a planning bucket",
+        "role": "record",
+        "tables": [
+          "SupplyPlanRecommendation"
+        ]
+      },
+      {
+        "id": "MRP",
+        "title": "MaterialRequirementPlan",
+        "description": "One component requirement for a supply recommendation",
+        "role": "record",
+        "tables": [
+          "MaterialRequirementPlan"
+        ]
+      },
+      {
+        "id": "RCCP",
+        "title": "RoughCutCapacityPlan",
+        "description": "One work-center capacity requirement for a supply recommendation",
+        "role": "record",
+        "tables": [
+          "RoughCutCapacityPlan"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "DF",
+        "target": "SPR",
+        "label": "Item and warehouse; relevant weekly bucket",
+        "kind": "aggregate",
+        "id": "r1",
+        "recordLinks": []
+      },
+      {
+        "source": "IP",
+        "target": "SPR",
+        "label": "Item and warehouse; active policy and driver",
+        "kind": "aggregate",
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "SPR",
+        "target": "MRP",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "MaterialRequirementPlan",
+            "field": "SupplyPlanRecommendationID",
+            "parent": "SupplyPlanRecommendation",
+            "parentField": "SupplyPlanRecommendationID"
+          }
+        ]
+      },
+      {
+        "source": "SPR",
+        "target": "RCCP",
+        "label": "",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "RoughCutCapacityPlan",
+            "field": "SupplyPlanRecommendationID",
+            "parent": "SupplyPlanRecommendation",
+            "parentField": "SupplyPlanRecommendationID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Weekly planning and manufacturing requirements. Demand forecasts and inventory policies support supply recommendations, which feed material requirements and rough-cut capacity planning. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "DemandForecast — record",
+      "InventoryPolicy — record",
+      "SupplyPlanRecommendation — record",
+      "MaterialRequirementPlan — record",
+      "RoughCutCapacityPlan — record"
+    ]
+  },
+  {
+    "id": "recipe-routing",
+    "title": "Manufacturing recipe and routing records",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "An item links to its bill of material and routing. Routing operations identify work centers, whose calendars provide daily capacity.",
+    "page": "docs/processes/manufacturing.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "ITEM",
+        "title": "Item",
+        "description": "One item in the product or service master",
+        "role": "record",
+        "tables": [
+          "Item"
+        ]
+      },
+      {
+        "id": "BOM",
+        "title": "BillOfMaterial",
+        "description": "One versioned manufactured-item recipe",
+        "role": "record",
+        "tables": [
+          "BillOfMaterial"
+        ]
+      },
+      {
+        "id": "RT",
+        "title": "Routing",
+        "description": "One versioned manufactured-item routing",
+        "role": "record",
+        "tables": [
+          "Routing"
+        ]
+      },
+      {
+        "id": "RTO",
+        "title": "RoutingOperation",
+        "description": "One operation within a routing",
+        "role": "record",
+        "tables": [
+          "RoutingOperation"
+        ]
+      },
+      {
+        "id": "WC",
+        "title": "WorkCenter",
+        "description": "One production work center",
+        "role": "record",
+        "tables": [
+          "WorkCenter"
+        ]
+      },
+      {
+        "id": "WCC",
+        "title": "WorkCenterCalendar",
+        "description": "One work center on one calendar date",
+        "role": "record",
+        "tables": [
+          "WorkCenterCalendar"
+        ]
+      },
+      {
+        "id": "BOML",
+        "title": "BillOfMaterialLine",
+        "description": "One component within a BOM",
+        "role": "record",
+        "tables": [
+          "BillOfMaterialLine"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "ITEM",
+        "target": "BOM",
+        "label": "Business context; no direct foreign key is depicted",
+        "kind": "context",
+        "id": "r1",
+        "recordLinks": []
+      },
+      {
+        "source": "ITEM",
+        "target": "RT",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "Item",
+            "field": "RoutingID",
+            "parent": "Routing",
+            "parentField": "RoutingID"
+          }
+        ]
+      },
+      {
+        "source": "RT",
+        "target": "RTO",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "RoutingOperation",
+            "field": "RoutingID",
+            "parent": "Routing",
+            "parentField": "RoutingID"
+          }
+        ]
+      },
+      {
+        "source": "RTO",
+        "target": "WC",
+        "label": "",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "RoutingOperation",
+            "field": "WorkCenterID",
+            "parent": "WorkCenter",
+            "parentField": "WorkCenterID"
+          }
+        ]
+      },
+      {
+        "source": "WC",
+        "target": "WCC",
+        "label": "",
+        "kind": "reference",
+        "id": "r5",
+        "recordLinks": [
+          {
+            "child": "WorkCenterCalendar",
+            "field": "WorkCenterID",
+            "parent": "WorkCenter",
+            "parentField": "WorkCenterID"
+          }
+        ]
+      },
+      {
+        "source": "BOM",
+        "target": "BOML",
+        "label": "BOMID",
+        "kind": "reference",
+        "id": "r6",
+        "recordLinks": [
+          {
+            "child": "BillOfMaterialLine",
+            "field": "BOMID",
+            "parent": "BillOfMaterial",
+            "parentField": "BOMID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Manufacturing recipe and routing records. An item links to its bill of material and routing. Routing operations identify work centers, whose calendars provide daily capacity. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "Item — record",
+      "BillOfMaterial — record",
+      "Routing — record",
+      "RoutingOperation — record",
+      "WorkCenter — record",
+      "WorkCenterCalendar — record",
+      "BillOfMaterialLine — record"
+    ]
+  },
+  {
+    "id": "operation-scheduling",
+    "title": "Work-order release and daily operation schedules",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "A supply recommendation supports a work order and its operations. Daily schedules match work-center calendar records on both center and date.",
+    "page": "docs/processes/manufacturing.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "SPR",
+        "title": "SupplyPlanRecommendation",
+        "description": "One item/location supply recommendation in a planning bucket",
+        "role": "record",
+        "tables": [
+          "SupplyPlanRecommendation"
+        ]
+      },
+      {
+        "id": "WO",
+        "title": "WorkOrder",
+        "description": "One manufacturing work-order header",
+        "role": "record",
+        "tables": [
+          "WorkOrder"
+        ]
+      },
+      {
+        "id": "WOO",
+        "title": "WorkOrderOperation",
+        "description": "One operation within a work order",
+        "role": "record",
+        "tables": [
+          "WorkOrderOperation"
+        ]
+      },
+      {
+        "id": "WOS",
+        "title": "WorkOrderOperationSchedule",
+        "description": "One scheduled operation on a work-center date",
+        "role": "record",
+        "tables": [
+          "WorkOrderOperationSchedule"
+        ]
+      },
+      {
+        "id": "WCC",
+        "title": "WorkCenterCalendar",
+        "description": "One work center on one calendar date",
+        "role": "record",
+        "tables": [
+          "WorkCenterCalendar"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "SPR",
+        "target": "WO",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "WorkOrder",
+            "field": "SupplyPlanRecommendationID",
+            "parent": "SupplyPlanRecommendation",
+            "parentField": "SupplyPlanRecommendationID"
+          }
+        ]
+      },
+      {
+        "source": "WO",
+        "target": "WOO",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "WorkOrderOperation",
+            "field": "WorkOrderID",
+            "parent": "WorkOrder",
+            "parentField": "WorkOrderID"
+          }
+        ]
+      },
+      {
+        "source": "WOO",
+        "target": "WOS",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "WorkOrderOperationSchedule",
+            "field": "WorkOrderOperationID",
+            "parent": "WorkOrderOperation",
+            "parentField": "WorkOrderOperationID"
+          }
+        ]
+      },
+      {
+        "source": "WCC",
+        "target": "WOS",
+        "label": "WorkCenterID and CalendarDate equals ScheduleDate",
+        "kind": "aggregate",
+        "id": "r4",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Work-order release and daily operation schedules. A supply recommendation supports a work order and its operations. Daily schedules match work-center calendar records on both center and date. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "SupplyPlanRecommendation — record",
+      "WorkOrder — record",
+      "WorkOrderOperation — record",
+      "WorkOrderOperationSchedule — record",
+      "WorkCenterCalendar — record"
+    ]
+  },
+  {
+    "id": "approved-time-register",
+    "title": "Approved time and payroll-period support for the register",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "Approved time matches payroll by employee and period; labor allocations link through PayrollRegisterLine. PayrollPeriod identifies the register population.",
+    "page": "docs/processes/payroll.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "TCE",
+        "title": "TimeClockEntry",
+        "description": "One approved-time record for an employee work date",
+        "role": "record",
+        "tables": [
+          "TimeClockEntry"
+        ]
+      },
+      {
+        "id": "LTE",
+        "title": "LaborTimeEntry",
+        "description": "One labor allocation supporting an operation and pay period",
+        "role": "record",
+        "tables": [
+          "LaborTimeEntry"
+        ]
+      },
+      {
+        "id": "PP",
+        "title": "PayrollPeriod",
+        "description": "One payroll calendar period",
+        "role": "record",
+        "tables": [
+          "PayrollPeriod"
+        ]
+      },
+      {
+        "id": "PR",
+        "title": "PayrollRegister",
+        "description": "One employee payroll register in a pay period",
+        "role": "record",
+        "tables": [
+          "PayrollRegister"
+        ]
+      },
+      {
+        "id": "LINE",
+        "title": "PayrollRegisterLine",
+        "description": "One earning, deduction, tax, or benefit line",
+        "role": "record",
+        "tables": [
+          "PayrollRegisterLine"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "TCE",
+        "target": "PR",
+        "label": "EmployeeID and PayrollPeriodID; aggregate hours",
+        "kind": "aggregate",
+        "id": "r1",
+        "recordLinks": []
+      },
+      {
+        "source": "TCE",
+        "target": "LTE",
+        "label": "TimeClockEntryID",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "LaborTimeEntry",
+            "field": "TimeClockEntryID",
+            "parent": "TimeClockEntry",
+            "parentField": "TimeClockEntryID"
+          }
+        ]
+      },
+      {
+        "source": "LTE",
+        "target": "LINE",
+        "label": "LaborTimeEntryID",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "PayrollRegisterLine",
+            "field": "LaborTimeEntryID",
+            "parent": "LaborTimeEntry",
+            "parentField": "LaborTimeEntryID"
+          }
+        ]
+      },
+      {
+        "source": "LINE",
+        "target": "PR",
+        "label": "PayrollRegisterID",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "PayrollRegisterLine",
+            "field": "PayrollRegisterID",
+            "parent": "PayrollRegister",
+            "parentField": "PayrollRegisterID"
+          }
+        ]
+      },
+      {
+        "source": "PP",
+        "target": "PR",
+        "label": "PayrollPeriodID",
+        "kind": "reference",
+        "id": "r5",
+        "recordLinks": [
+          {
+            "child": "PayrollRegister",
+            "field": "PayrollPeriodID",
+            "parent": "PayrollPeriod",
+            "parentField": "PayrollPeriodID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Approved time and payroll-period support for the register. Approved time matches payroll by employee and period; labor allocations link through PayrollRegisterLine. PayrollPeriod identifies the register population. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "TimeClockEntry — record",
+      "LaborTimeEntry — record",
+      "PayrollPeriod — record",
+      "PayrollRegister — record",
+      "PayrollRegisterLine — record"
+    ]
+  },
+  {
+    "id": "recurring-journal",
+    "title": "Recurring journal category and ledger accounts",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "A recurring category connects to its journal entry, ledger detail, and account.",
+    "page": "docs/processes/manual-journals-and-close.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "RC",
+        "title": "Recurring category",
+        "description": "Context for interpreting the named evidence",
+        "role": "business context",
+        "tables": []
+      },
+      {
+        "id": "JE",
+        "title": "JournalEntry",
+        "description": "One finance-controlled journal header",
+        "role": "record",
+        "tables": [
+          "JournalEntry"
+        ]
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "description": "One posted account line in a voucher",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ]
+      },
+      {
+        "id": "AC",
+        "title": "Account",
+        "description": "One chart-of-accounts account",
+        "role": "record",
+        "tables": [
+          "Account"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "RC",
+        "target": "JE",
+        "label": "Business context; no direct foreign key is depicted",
+        "kind": "context",
+        "id": "r1",
+        "recordLinks": []
+      },
+      {
+        "source": "JE",
+        "target": "GL",
+        "label": "SourceDocumentType = 'JournalEntry' plus SourceDocumentID",
+        "kind": "posting",
+        "sourceTypes": [
+          "JournalEntry"
+        ],
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "GL",
+        "target": "AC",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "GLEntry",
+            "field": "AccountID",
+            "parent": "Account",
+            "parentField": "AccountID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Recurring journal category and ledger accounts. A recurring category connects to its journal entry, ledger detail, and account. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "Recurring category — business context",
+      "JournalEntry — record",
+      "GLEntry — record",
+      "Account — record"
+    ]
+  },
+  {
+    "id": "overhead-support",
+    "title": "Factory overhead journals and manufacturing cost support",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "Factory overhead connects through journal entry and ledger detail to manufacturing costing support.",
+    "page": "docs/processes/manual-journals-and-close.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "FO",
+        "title": "Factory Overhead",
+        "description": "Context for interpreting the named evidence",
+        "role": "business context",
+        "tables": []
+      },
+      {
+        "id": "JE",
+        "title": "JournalEntry",
+        "description": "One finance-controlled journal header",
+        "role": "record",
+        "tables": [
+          "JournalEntry"
+        ]
+      },
+      {
+        "id": "GL",
+        "title": "GLEntry",
+        "description": "One posted account line in a voucher",
+        "role": "record",
+        "tables": [
+          "GLEntry"
+        ]
+      },
+      {
+        "id": "MFG",
+        "title": "Manufacturing costing support",
+        "description": "Context for interpreting the named evidence",
+        "role": "business context",
+        "tables": []
+      }
+    ],
+    "relationships": [
+      {
+        "source": "FO",
+        "target": "JE",
+        "label": "Business context; no direct foreign key is depicted",
+        "kind": "context",
+        "id": "r1",
+        "recordLinks": []
+      },
+      {
+        "source": "JE",
+        "target": "GL",
+        "label": "SourceDocumentType = 'JournalEntry' plus SourceDocumentID",
+        "kind": "posting",
+        "sourceTypes": [
+          "JournalEntry"
+        ],
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "GL",
+        "target": "MFG",
+        "label": "Business context; no direct foreign key is depicted",
+        "kind": "context",
+        "id": "r3",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Factory overhead journals and manufacturing cost support. Factory overhead connects through journal entry and ledger detail to manufacturing costing support. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "Factory Overhead — business context",
+      "JournalEntry — record",
+      "GLEntry — record",
+      "Manufacturing costing support — business context"
+    ]
+  },
+  {
+    "id": "service-time-billing",
+    "title": "Design work approved time and invoice evidence",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "A service order line leads to an engagement, staff assignments, approved time, monthly billing support, and an invoice line.",
+    "page": "docs/processes/design-services.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "ORDER",
+        "title": "SalesOrderLine",
+        "description": "One ordered item or service line",
+        "role": "record",
+        "tables": [
+          "SalesOrderLine"
+        ]
+      },
+      {
+        "id": "ENG",
+        "title": "ServiceEngagement",
+        "description": "One engagement for a service order line",
+        "role": "record",
+        "tables": [
+          "ServiceEngagement"
+        ]
+      },
+      {
+        "id": "STAFF",
+        "title": "ServiceEngagementAssignment",
+        "description": "One employee assignment to an engagement",
+        "role": "record",
+        "tables": [
+          "ServiceEngagementAssignment"
+        ]
+      },
+      {
+        "id": "TIME",
+        "title": "ServiceTimeEntry",
+        "description": "One employee service-time entry on a work date",
+        "role": "record",
+        "tables": [
+          "ServiceTimeEntry"
+        ]
+      },
+      {
+        "id": "BILL",
+        "title": "ServiceBillingLine",
+        "description": "One engagement billing-period rollup linked to an invoice line",
+        "role": "record",
+        "tables": [
+          "ServiceBillingLine"
+        ]
+      },
+      {
+        "id": "INV",
+        "title": "SalesInvoiceLine",
+        "description": "One billed goods or service line",
+        "role": "record",
+        "tables": [
+          "SalesInvoiceLine"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "ORDER",
+        "target": "ENG",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "ServiceEngagement",
+            "field": "SalesOrderLineID",
+            "parent": "SalesOrderLine",
+            "parentField": "SalesOrderLineID"
+          }
+        ]
+      },
+      {
+        "source": "ENG",
+        "target": "STAFF",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "ServiceEngagementAssignment",
+            "field": "ServiceEngagementID",
+            "parent": "ServiceEngagement",
+            "parentField": "ServiceEngagementID"
+          }
+        ]
+      },
+      {
+        "source": "STAFF",
+        "target": "TIME",
+        "label": "ServiceEngagementAssignmentID",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "ServiceTimeEntry",
+            "field": "ServiceEngagementAssignmentID",
+            "parent": "ServiceEngagementAssignment",
+            "parentField": "ServiceEngagementAssignmentID"
+          }
+        ]
+      },
+      {
+        "source": "TIME",
+        "target": "BILL",
+        "label": "Engagement and inclusive billing period; sum billable hours",
+        "kind": "aggregate",
+        "id": "r4",
+        "recordLinks": []
+      },
+      {
+        "source": "BILL",
+        "target": "INV",
+        "label": "SalesInvoiceLineID",
+        "kind": "reference",
+        "id": "r5",
+        "recordLinks": [
+          {
+            "child": "ServiceBillingLine",
+            "field": "SalesInvoiceLineID",
+            "parent": "SalesInvoiceLine",
+            "parentField": "SalesInvoiceLineID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Design work approved time and invoice evidence. A service order line leads to an engagement, staff assignments, approved time, monthly billing support, and an invoice line. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "SalesOrderLine — record",
+      "ServiceEngagement — record",
+      "ServiceEngagementAssignment — record",
+      "ServiceTimeEntry — record",
+      "ServiceBillingLine — record",
+      "SalesInvoiceLine — record"
+    ]
+  },
+  {
+    "id": "service-demand",
+    "title": "Customer demand and the service engagement",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "Customer and sales order connect through a service order line to its engagement.",
+    "page": "docs/processes/design-services.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "C",
+        "title": "Customer",
+        "description": "One customer",
+        "role": "record",
+        "tables": [
+          "Customer"
+        ]
+      },
+      {
+        "id": "SO",
+        "title": "SalesOrder",
+        "description": "One customer order header",
+        "role": "record",
+        "tables": [
+          "SalesOrder"
+        ]
+      },
+      {
+        "id": "SOL",
+        "title": "SalesOrderLine",
+        "description": "One ordered item or service line",
+        "role": "record",
+        "tables": [
+          "SalesOrderLine"
+        ]
+      },
+      {
+        "id": "ENG",
+        "title": "ServiceEngagement",
+        "description": "One engagement for a service order line",
+        "role": "record",
+        "tables": [
+          "ServiceEngagement"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "C",
+        "target": "SO",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "SalesOrder",
+            "field": "CustomerID",
+            "parent": "Customer",
+            "parentField": "CustomerID"
+          }
+        ]
+      },
+      {
+        "source": "SO",
+        "target": "SOL",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "SalesOrderLine",
+            "field": "SalesOrderID",
+            "parent": "SalesOrder",
+            "parentField": "SalesOrderID"
+          }
+        ]
+      },
+      {
+        "source": "SOL",
+        "target": "ENG",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "ServiceEngagement",
+            "field": "SalesOrderLineID",
+            "parent": "SalesOrderLine",
+            "parentField": "SalesOrderLineID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Customer demand and the service engagement. Customer and sales order connect through a service order line to its engagement. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "Customer — record",
+      "SalesOrder — record",
+      "SalesOrderLine — record",
+      "ServiceEngagement — record"
+    ]
+  },
+  {
+    "id": "service-staffing",
+    "title": "Service engagement staff and time evidence",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "An engagement leads to assignments and time entries. Employee records support both assignments and time.",
+    "page": "docs/processes/design-services.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "ENG",
+        "title": "ServiceEngagement",
+        "description": "One engagement for a service order line",
+        "role": "record",
+        "tables": [
+          "ServiceEngagement"
+        ]
+      },
+      {
+        "id": "ASG",
+        "title": "ServiceEngagementAssignment",
+        "description": "One employee assignment to an engagement",
+        "role": "record",
+        "tables": [
+          "ServiceEngagementAssignment"
+        ]
+      },
+      {
+        "id": "TIME",
+        "title": "ServiceTimeEntry",
+        "description": "One employee service-time entry on a work date",
+        "role": "record",
+        "tables": [
+          "ServiceTimeEntry"
+        ]
+      },
+      {
+        "id": "EMP",
+        "title": "Employee",
+        "description": "One employee",
+        "role": "record",
+        "tables": [
+          "Employee"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "ENG",
+        "target": "ASG",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "ServiceEngagementAssignment",
+            "field": "ServiceEngagementID",
+            "parent": "ServiceEngagement",
+            "parentField": "ServiceEngagementID"
+          }
+        ]
+      },
+      {
+        "source": "ASG",
+        "target": "TIME",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "ServiceTimeEntry",
+            "field": "ServiceEngagementAssignmentID",
+            "parent": "ServiceEngagementAssignment",
+            "parentField": "ServiceEngagementAssignmentID"
+          }
+        ]
+      },
+      {
+        "source": "EMP",
+        "target": "ASG",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "ServiceEngagementAssignment",
+            "field": "EmployeeID",
+            "parent": "Employee",
+            "parentField": "EmployeeID"
+          }
+        ]
+      },
+      {
+        "source": "EMP",
+        "target": "TIME",
+        "label": "",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "ServiceTimeEntry",
+            "field": "EmployeeID",
+            "parent": "Employee",
+            "parentField": "EmployeeID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Service engagement staff and time evidence. An engagement leads to assignments and time entries. Employee records support both assignments and time. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "ServiceEngagement — record",
+      "ServiceEngagementAssignment — record",
+      "ServiceTimeEntry — record",
+      "Employee — record"
+    ]
+  },
+  {
+    "id": "service-billing-settlement",
+    "title": "Approved service time billing and settlement",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "Approved time is matched by engagement and the inclusive billing interval. A billing line stores its invoice-line key; the invoice header supplies the invoice key used by cash applications.",
+    "page": "docs/processes/design-services.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "TIME",
+        "title": "ServiceTimeEntry",
+        "description": "One employee service-time entry on a work date",
+        "role": "record",
+        "tables": [
+          "ServiceTimeEntry"
+        ]
+      },
+      {
+        "id": "BILL",
+        "title": "ServiceBillingLine",
+        "description": "One engagement billing-period rollup linked to an invoice line",
+        "role": "record",
+        "tables": [
+          "ServiceBillingLine"
+        ]
+      },
+      {
+        "id": "INV",
+        "title": "SalesInvoiceLine",
+        "description": "One billed goods or service line",
+        "role": "record",
+        "tables": [
+          "SalesInvoiceLine"
+        ]
+      },
+      {
+        "id": "CASH",
+        "title": "CashReceiptApplication",
+        "description": "One dated receipt allocation to an invoice",
+        "role": "record",
+        "tables": [
+          "CashReceiptApplication"
+        ]
+      },
+      {
+        "id": "HEADER",
+        "title": "SalesInvoice",
+        "description": "One customer invoice header",
+        "role": "record",
+        "tables": [
+          "SalesInvoice"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "TIME",
+        "target": "BILL",
+        "label": "Engagement and inclusive billing dates; aggregate hours",
+        "kind": "aggregate",
+        "id": "r1",
+        "recordLinks": []
+      },
+      {
+        "source": "BILL",
+        "target": "INV",
+        "label": "SalesInvoiceLineID",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "ServiceBillingLine",
+            "field": "SalesInvoiceLineID",
+            "parent": "SalesInvoiceLine",
+            "parentField": "SalesInvoiceLineID"
+          }
+        ]
+      },
+      {
+        "source": "INV",
+        "target": "HEADER",
+        "label": "SalesInvoiceID",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "SalesInvoiceLine",
+            "field": "SalesInvoiceID",
+            "parent": "SalesInvoice",
+            "parentField": "SalesInvoiceID"
+          }
+        ]
+      },
+      {
+        "source": "HEADER",
+        "target": "CASH",
+        "label": "SalesInvoiceID",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "CashReceiptApplication",
+            "field": "SalesInvoiceID",
+            "parent": "SalesInvoice",
+            "parentField": "SalesInvoiceID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Approved service time billing and settlement. Approved time is matched by engagement and the inclusive billing interval. A billing line stores its invoice-line key; the invoice header supplies the invoice key used by cash applications. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "ServiceTimeEntry — record",
+      "ServiceBillingLine — record",
+      "SalesInvoiceLine — record",
+      "CashReceiptApplication — record",
+      "SalesInvoice — record"
+    ]
+  },
+  {
+    "id": "goods-purchase-path",
+    "title": "Receipt-matched purchase evidence",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "Requisition connects to a purchase-order line, goods-receipt line, supplier-invoice line and header, then disbursement.",
+    "page": "docs/processes/p2p.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "REQ",
+        "title": "PurchaseRequisition",
+        "description": "One internal item requisition",
+        "role": "record",
+        "tables": [
+          "PurchaseRequisition"
+        ]
+      },
+      {
+        "id": "PO",
+        "title": "PurchaseOrderLine",
+        "description": "One ordered purchasing line",
+        "role": "record",
+        "tables": [
+          "PurchaseOrderLine"
+        ]
+      },
+      {
+        "id": "REC",
+        "title": "GoodsReceiptLine",
+        "description": "One received purchasing-line quantity",
+        "role": "record",
+        "tables": [
+          "GoodsReceiptLine"
+        ]
+      },
+      {
+        "id": "BILL",
+        "title": "PurchaseInvoiceLine",
+        "description": "One goods or accrued-service supplier invoice line",
+        "role": "record",
+        "tables": [
+          "PurchaseInvoiceLine"
+        ]
+      },
+      {
+        "id": "HEADER",
+        "title": "PurchaseInvoice",
+        "description": "One supplier invoice header",
+        "role": "record",
+        "tables": [
+          "PurchaseInvoice"
+        ]
+      },
+      {
+        "id": "PAY",
+        "title": "DisbursementPayment",
+        "description": "One supplier invoice payment",
+        "role": "record",
+        "tables": [
+          "DisbursementPayment"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "REQ",
+        "target": "PO",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "PurchaseOrderLine",
+            "field": "RequisitionID",
+            "parent": "PurchaseRequisition",
+            "parentField": "RequisitionID"
+          }
+        ]
+      },
+      {
+        "source": "PO",
+        "target": "REC",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "GoodsReceiptLine",
+            "field": "POLineID",
+            "parent": "PurchaseOrderLine",
+            "parentField": "POLineID"
+          }
+        ]
+      },
+      {
+        "source": "REC",
+        "target": "BILL",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "PurchaseInvoiceLine",
+            "field": "GoodsReceiptLineID",
+            "parent": "GoodsReceiptLine",
+            "parentField": "GoodsReceiptLineID"
+          }
+        ]
+      },
+      {
+        "source": "BILL",
+        "target": "HEADER",
+        "label": "",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "PurchaseInvoiceLine",
+            "field": "PurchaseInvoiceID",
+            "parent": "PurchaseInvoice",
+            "parentField": "PurchaseInvoiceID"
+          }
+        ]
+      },
+      {
+        "source": "HEADER",
+        "target": "PAY",
+        "label": "",
+        "kind": "reference",
+        "id": "r5",
+        "recordLinks": [
+          {
+            "child": "DisbursementPayment",
+            "field": "PurchaseInvoiceID",
+            "parent": "PurchaseInvoice",
+            "parentField": "PurchaseInvoiceID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Receipt-matched purchase evidence. Requisition connects to a purchase-order line, goods-receipt line, supplier-invoice line and header, then disbursement. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "PurchaseRequisition — record",
+      "PurchaseOrderLine — record",
+      "GoodsReceiptLine — record",
+      "PurchaseInvoiceLine — record",
+      "PurchaseInvoice — record",
+      "DisbursementPayment — record"
+    ]
+  },
+  {
+    "id": "purchase-planning",
+    "title": "Forecast and policy support a purchase request",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "Demand forecast and inventory policy feed a supply-plan recommendation that supports a purchase requisition.",
+    "page": "docs/processes/p2p.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "DF",
+        "title": "DemandForecast",
+        "description": "One item/location forecast for a weekly bucket",
+        "role": "record",
+        "tables": [
+          "DemandForecast"
+        ]
+      },
+      {
+        "id": "IP",
+        "title": "InventoryPolicy",
+        "description": "One item/location replenishment policy",
+        "role": "record",
+        "tables": [
+          "InventoryPolicy"
+        ]
+      },
+      {
+        "id": "SPR",
+        "title": "SupplyPlanRecommendation",
+        "description": "One item/location supply recommendation in a planning bucket",
+        "role": "record",
+        "tables": [
+          "SupplyPlanRecommendation"
+        ]
+      },
+      {
+        "id": "PR",
+        "title": "PurchaseRequisition",
+        "description": "One internal item requisition",
+        "role": "record",
+        "tables": [
+          "PurchaseRequisition"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "DF",
+        "target": "SPR",
+        "label": "Item and warehouse; relevant weekly bucket",
+        "kind": "aggregate",
+        "id": "r1",
+        "recordLinks": []
+      },
+      {
+        "source": "IP",
+        "target": "SPR",
+        "label": "Item and warehouse; active policy and driver",
+        "kind": "aggregate",
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "SPR",
+        "target": "PR",
+        "label": "SupplyPlanRecommendationID",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "PurchaseRequisition",
+            "field": "SupplyPlanRecommendationID",
+            "parent": "SupplyPlanRecommendation",
+            "parentField": "SupplyPlanRecommendationID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Forecast and policy support a purchase request. Demand forecast and inventory policy feed a supply-plan recommendation that supports a purchase requisition. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "DemandForecast — record",
+      "InventoryPolicy — record",
+      "SupplyPlanRecommendation — record",
+      "PurchaseRequisition — record"
+    ]
+  },
+  {
+    "id": "requisition-receipt",
+    "title": "Purchase request order and receipt",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "Solid arrows label stored requisition and purchase-order-line keys. Headers supply document context through their line keys.",
+    "page": "docs/processes/p2p.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "PR",
+        "title": "PurchaseRequisition",
+        "description": "One internal item requisition",
+        "role": "record",
+        "tables": [
+          "PurchaseRequisition"
+        ]
+      },
+      {
+        "id": "PO",
+        "title": "PurchaseOrderLine",
+        "description": "One ordered purchasing line",
+        "role": "record",
+        "tables": [
+          "PurchaseOrderLine"
+        ]
+      },
+      {
+        "id": "GR",
+        "title": "GoodsReceiptLine",
+        "description": "One received purchasing-line quantity",
+        "role": "record",
+        "tables": [
+          "GoodsReceiptLine"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "PR",
+        "target": "PO",
+        "label": "RequisitionID",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "PurchaseOrderLine",
+            "field": "RequisitionID",
+            "parent": "PurchaseRequisition",
+            "parentField": "RequisitionID"
+          }
+        ]
+      },
+      {
+        "source": "PO",
+        "target": "GR",
+        "label": "POLineID",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "GoodsReceiptLine",
+            "field": "POLineID",
+            "parent": "PurchaseOrderLine",
+            "parentField": "POLineID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Purchase request order and receipt. Solid arrows label stored requisition and purchase-order-line keys. Headers supply document context through their line keys. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "PurchaseRequisition — record",
+      "PurchaseOrderLine — record",
+      "GoodsReceiptLine — record"
+    ]
+  },
+  {
+    "id": "goods-settlement-path",
+    "title": "Goods sale and customer settlement records",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "An order leads to shipment and invoice records. A separate cash receipt passes through an application to the invoice.",
+    "page": "docs/processes/o2c.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "SO",
+        "title": "SalesOrder / SalesOrderLine",
+        "description": "One customer order header\nOne ordered item or service line",
+        "role": "record",
+        "tables": [
+          "SalesOrder",
+          "SalesOrderLine"
+        ]
+      },
+      {
+        "id": "SH",
+        "title": "Shipment / ShipmentLine",
+        "description": "One goods-shipment header\nOne shipped order-line quantity",
+        "role": "record",
+        "tables": [
+          "Shipment",
+          "ShipmentLine"
+        ]
+      },
+      {
+        "id": "SI",
+        "title": "SalesInvoice / SalesInvoiceLine",
+        "description": "One customer invoice header\nOne billed goods or service line",
+        "role": "record",
+        "tables": [
+          "SalesInvoice",
+          "SalesInvoiceLine"
+        ]
+      },
+      {
+        "id": "CR",
+        "title": "CashReceipt",
+        "description": "One incoming customer cash event",
+        "role": "record",
+        "tables": [
+          "CashReceipt"
+        ]
+      },
+      {
+        "id": "APP",
+        "title": "CashReceiptApplication",
+        "description": "One dated receipt allocation to an invoice",
+        "role": "record",
+        "tables": [
+          "CashReceiptApplication"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "SO",
+        "target": "SH",
+        "label": "",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "Shipment",
+            "field": "SalesOrderID",
+            "parent": "SalesOrder",
+            "parentField": "SalesOrderID"
+          },
+          {
+            "child": "ShipmentLine",
+            "field": "SalesOrderLineID",
+            "parent": "SalesOrderLine",
+            "parentField": "SalesOrderLineID"
+          }
+        ]
+      },
+      {
+        "source": "SH",
+        "target": "SI",
+        "label": "",
+        "kind": "reference",
+        "id": "r2",
+        "recordLinks": [
+          {
+            "child": "SalesInvoiceLine",
+            "field": "ShipmentLineID",
+            "parent": "ShipmentLine",
+            "parentField": "ShipmentLineID"
+          }
+        ]
+      },
+      {
+        "source": "CR",
+        "target": "APP",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "CashReceiptApplication",
+            "field": "CashReceiptID",
+            "parent": "CashReceipt",
+            "parentField": "CashReceiptID"
+          }
+        ]
+      },
+      {
+        "source": "APP",
+        "target": "SI",
+        "label": "Applied to",
+        "kind": "reference",
+        "id": "r4",
+        "recordLinks": [
+          {
+            "child": "CashReceiptApplication",
+            "field": "SalesInvoiceID",
+            "parent": "SalesInvoice",
+            "parentField": "SalesInvoiceID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Goods sale and customer settlement records. An order leads to shipment and invoice records. A separate cash receipt passes through an application to the invoice. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "SalesOrder / SalesOrderLine — record",
+      "Shipment / ShipmentLine — record",
+      "SalesInvoice / SalesInvoiceLine — record",
+      "CashReceipt — record",
+      "CashReceiptApplication — record"
+    ]
+  },
+  {
+    "id": "pricing-evidence",
+    "title": "Pricing support for the sales order",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "Customer and item context connects through price lists, promotions, and override approval to a sales order.",
+    "page": "docs/processes/o2c.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "CTX",
+        "title": "Customer and Item Context",
+        "description": "Context for interpreting the named evidence",
+        "role": "business context",
+        "tables": []
+      },
+      {
+        "id": "PL",
+        "title": "PriceList",
+        "description": "One customer or segment price-list scope",
+        "role": "record",
+        "tables": [
+          "PriceList"
+        ]
+      },
+      {
+        "id": "PROMO",
+        "title": "PromotionProgram",
+        "description": "One promotion definition",
+        "role": "record",
+        "tables": [
+          "PromotionProgram"
+        ]
+      },
+      {
+        "id": "OVR",
+        "title": "PriceOverrideApproval",
+        "description": "One recorded order-line price approval",
+        "role": "record",
+        "tables": [
+          "PriceOverrideApproval"
+        ]
+      },
+      {
+        "id": "SO",
+        "title": "SalesOrderLine",
+        "description": "One ordered item or service line",
+        "role": "record",
+        "tables": [
+          "SalesOrderLine"
+        ]
+      },
+      {
+        "id": "PLL",
+        "title": "PriceListLine",
+        "description": "One item price within a price list",
+        "role": "record",
+        "tables": [
+          "PriceListLine"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "CTX",
+        "target": "PL",
+        "label": "Business context; no direct foreign key is depicted",
+        "kind": "context",
+        "id": "r1",
+        "recordLinks": []
+      },
+      {
+        "source": "CTX",
+        "target": "PROMO",
+        "label": "Business context; no direct foreign key is depicted",
+        "kind": "context",
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "PROMO",
+        "target": "SO",
+        "label": "",
+        "kind": "reference",
+        "id": "r3",
+        "recordLinks": [
+          {
+            "child": "SalesOrderLine",
+            "field": "PromotionID",
+            "parent": "PromotionProgram",
+            "parentField": "PromotionID"
+          }
+        ]
+      },
+      {
+        "source": "CTX",
+        "target": "OVR",
+        "label": "Business context; no direct foreign key is depicted",
+        "kind": "context",
+        "id": "r4",
+        "recordLinks": []
+      },
+      {
+        "source": "OVR",
+        "target": "SO",
+        "label": "",
+        "kind": "reference",
+        "id": "r5",
+        "recordLinks": [
+          {
+            "child": "SalesOrderLine",
+            "field": "PriceOverrideApprovalID",
+            "parent": "PriceOverrideApproval",
+            "parentField": "PriceOverrideApprovalID"
+          },
+          {
+            "child": "PriceOverrideApproval",
+            "field": "SalesOrderLineID",
+            "parent": "SalesOrderLine",
+            "parentField": "SalesOrderLineID"
+          }
+        ]
+      },
+      {
+        "source": "PL",
+        "target": "PLL",
+        "label": "PriceListID",
+        "kind": "reference",
+        "id": "r6",
+        "recordLinks": [
+          {
+            "child": "PriceListLine",
+            "field": "PriceListID",
+            "parent": "PriceList",
+            "parentField": "PriceListID"
+          }
+        ]
+      },
+      {
+        "source": "PLL",
+        "target": "SO",
+        "label": "PriceListLineID",
+        "kind": "reference",
+        "id": "r7",
+        "recordLinks": [
+          {
+            "child": "SalesOrderLine",
+            "field": "PriceListLineID",
+            "parent": "PriceListLine",
+            "parentField": "PriceListLineID"
+          }
+        ]
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Pricing support for the sales order. Customer and item context connects through price lists, promotions, and override approval to a sales order. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "Customer and Item Context — business context",
+      "PriceList — record",
+      "PromotionProgram — record",
+      "PriceOverrideApproval — record",
+      "SalesOrderLine — record",
+      "PriceListLine — record"
+    ]
+  },
+  {
+    "id": "backorder-context",
+    "title": "Available inventory and backordered quantity",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "A sales order reaches available finished goods. Enough stock proceeds to shipment and invoice; short stock leads through backordered quantity to a later shipment.",
+    "page": "docs/processes/o2c.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "SOL",
+        "title": "Sales Order",
+        "description": "Context for interpreting the named evidence",
+        "role": "business context",
+        "tables": []
+      },
+      {
+        "id": "FG",
+        "title": "Available Finished Goods",
+        "description": "Context for interpreting the named evidence",
+        "role": "business context",
+        "tables": []
+      },
+      {
+        "id": "BO",
+        "title": "Backordered Quantity",
+        "description": "Context for interpreting the named evidence",
+        "role": "business context",
+        "tables": []
+      },
+      {
+        "id": "SHL",
+        "title": "Later Shipment",
+        "description": "Context for interpreting the named evidence",
+        "role": "business context",
+        "tables": []
+      },
+      {
+        "id": "SIL",
+        "title": "Later Sales Invoice",
+        "description": "Context for interpreting the named evidence",
+        "role": "business context",
+        "tables": []
+      }
+    ],
+    "relationships": [
+      {
+        "source": "SOL",
+        "target": "FG",
+        "label": "Business context; no direct foreign key is depicted",
+        "kind": "context",
+        "id": "r1",
+        "recordLinks": []
+      },
+      {
+        "source": "FG",
+        "target": "SHL",
+        "label": "Enough stock",
+        "kind": "context",
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "SHL",
+        "target": "SIL",
+        "label": "Business context; no direct foreign key is depicted",
+        "kind": "context",
+        "id": "r3",
+        "recordLinks": []
+      },
+      {
+        "source": "FG",
+        "target": "BO",
+        "label": "Short stock",
+        "kind": "context",
+        "id": "r4",
+        "recordLinks": []
+      },
+      {
+        "source": "BO",
+        "target": "SHL",
+        "label": "Business context; no direct foreign key is depicted",
+        "kind": "context",
+        "id": "r5",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Conceptual fulfillment branches. Check the actual order-line and shipment-line quantities and dates; the diagram does not identify one receipt-to-shipment inventory lot.",
+    "alt": "Available inventory and backordered quantity. A sales order reaches available finished goods. Enough stock proceeds to shipment and invoice; short stock leads through backordered quantity to a later shipment. Conceptual fulfillment branches. Check the actual order-line and shipment-line quantities and dates; the diagram does not identify one receipt-to-shipment inventory lot.",
+    "steps": [
+      "Sales Order — business context",
+      "Available Finished Goods — business context",
+      "Backordered Quantity — business context",
+      "Later Shipment — business context",
+      "Later Sales Invoice — business context"
+    ]
+  },
+  {
+    "id": "customer-credit-path",
+    "title": "Credit memo and remaining customer credit",
+    "question": "Which connections use foreign keys, and which supply analytical or business context?",
+    "description": "The solid arrow identifies the original-invoice key. Dashed arrows describe accounting allocation and conditional later refund chronology, not database joins.",
+    "page": "docs/processes/o2c.md",
+    "technical": false,
+    "nodes": [
+      {
+        "id": "INV",
+        "title": "SalesInvoice",
+        "description": "One customer invoice header",
+        "role": "record",
+        "tables": [
+          "SalesInvoice"
+        ]
+      },
+      {
+        "id": "CM",
+        "title": "CreditMemo",
+        "description": "One customer credit-memo header",
+        "role": "record",
+        "tables": [
+          "CreditMemo"
+        ]
+      },
+      {
+        "id": "CC",
+        "title": "Customer Credit",
+        "description": "Context for interpreting the named evidence",
+        "role": "business context",
+        "tables": []
+      },
+      {
+        "id": "RF",
+        "title": "CustomerRefund",
+        "description": "One cash refund against a credit memo",
+        "role": "record",
+        "tables": [
+          "CustomerRefund"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "source": "INV",
+        "target": "CM",
+        "label": "OriginalSalesInvoiceID on memo",
+        "kind": "reference",
+        "id": "r1",
+        "recordLinks": [
+          {
+            "child": "CreditMemo",
+            "field": "OriginalSalesInvoiceID",
+            "parent": "SalesInvoice",
+            "parentField": "SalesInvoiceID"
+          }
+        ]
+      },
+      {
+        "source": "CM",
+        "target": "INV",
+        "label": "Reduces remaining AR when present",
+        "kind": "aggregate",
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "CM",
+        "target": "CC",
+        "label": "Excess credit after AR allocation",
+        "kind": "aggregate",
+        "id": "r3",
+        "recordLinks": []
+      },
+      {
+        "source": "CC",
+        "target": "RF",
+        "label": "Later refund if paid out",
+        "kind": "aggregate",
+        "id": "r4",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "alt": "Credit memo and remaining customer credit. The solid arrow identifies the original-invoice key. Dashed arrows describe accounting allocation and conditional later refund chronology, not database joins. Keep the record grains separate. Foreign-key paths, analytical matches, and business context answer different questions; read the numbered evidence table before joining.",
+    "steps": [
+      "SalesInvoice — record",
+      "CreditMemo — record",
+      "Customer Credit — business context",
+      "CustomerRefund — record"
+    ]
+  },
+  {
+    "id": "technical-build",
+    "title": "Local dataset build from settings to exported teaching files",
+    "question": "What order does the local generator follow?",
+    "description": "Settings initialize the generation context, tables and master data precede operating activity, and accounting postings and year-end close precede validation, anomaly injection and file exports. This documents the local generator workflow; classroom users begin with the published files.",
+    "page": "docs/technical/technical-guide.md",
+    "technical": true,
+    "nodes": [
+      {
+        "id": "S",
+        "title": "Load Settings",
+        "description": "Stage 1",
+        "role": "workflow step",
+        "tables": []
+      },
+      {
+        "id": "C",
+        "title": "Initialize GenerationContext",
+        "description": "Stage 2",
+        "role": "workflow step",
+        "tables": []
+      },
+      {
+        "id": "E",
+        "title": "Create Empty Tables",
+        "description": "Stage 3",
+        "role": "workflow step",
+        "tables": []
+      },
+      {
+        "id": "M",
+        "title": "Generate Master Data, BOMs, Routings, and Calendar",
+        "description": "Stage 4",
+        "role": "workflow step",
+        "tables": []
+      },
+      {
+        "id": "B",
+        "title": "Generate Opening Balances and Budgets",
+        "description": "Stage 5",
+        "role": "workflow step",
+        "tables": []
+      },
+      {
+        "id": "O",
+        "title": "Generate O2C, P2P, Manufacturing, Payroll, and Labor Activity",
+        "description": "Stage 6",
+        "role": "workflow step",
+        "tables": []
+      },
+      {
+        "id": "J",
+        "title": "Generate Recurring Journals and Accrual Activity",
+        "description": "Stage 7",
+        "role": "workflow step",
+        "tables": []
+      },
+      {
+        "id": "P",
+        "title": "Post Events to GLEntry",
+        "description": "Stage 8",
+        "role": "workflow step",
+        "tables": []
+      },
+      {
+        "id": "Y",
+        "title": "Generate Year-End Close Journals",
+        "description": "Stage 9",
+        "role": "workflow step",
+        "tables": []
+      },
+      {
+        "id": "V",
+        "title": "Run Validations",
+        "description": "Stage 10",
+        "role": "workflow step",
+        "tables": []
+      },
+      {
+        "id": "A",
+        "title": "Inject Anomalies",
+        "description": "Stage 11",
+        "role": "workflow step",
+        "tables": []
+      },
+      {
+        "id": "X",
+        "title": "Export SQLite, Excel, Curated Reports, CSV Zip, and Log",
+        "description": "Stage 12",
+        "role": "workflow step",
+        "tables": []
+      }
+    ],
+    "relationships": [
+      {
+        "source": "S",
+        "target": "C",
+        "label": "Next build stage",
+        "kind": "workflow",
+        "id": "r1",
+        "recordLinks": []
+      },
+      {
+        "source": "C",
+        "target": "E",
+        "label": "Next build stage",
+        "kind": "workflow",
+        "id": "r2",
+        "recordLinks": []
+      },
+      {
+        "source": "E",
+        "target": "M",
+        "label": "Next build stage",
+        "kind": "workflow",
+        "id": "r3",
+        "recordLinks": []
+      },
+      {
+        "source": "M",
+        "target": "B",
+        "label": "Next build stage",
+        "kind": "workflow",
+        "id": "r4",
+        "recordLinks": []
+      },
+      {
+        "source": "B",
+        "target": "O",
+        "label": "Next build stage",
+        "kind": "workflow",
+        "id": "r5",
+        "recordLinks": []
+      },
+      {
+        "source": "O",
+        "target": "J",
+        "label": "Next build stage",
+        "kind": "workflow",
+        "id": "r6",
+        "recordLinks": []
+      },
+      {
+        "source": "J",
+        "target": "P",
+        "label": "Next build stage",
+        "kind": "workflow",
+        "id": "r7",
+        "recordLinks": []
+      },
+      {
+        "source": "P",
+        "target": "Y",
+        "label": "Next build stage",
+        "kind": "workflow",
+        "id": "r8",
+        "recordLinks": []
+      },
+      {
+        "source": "Y",
+        "target": "V",
+        "label": "Next build stage",
+        "kind": "workflow",
+        "id": "r9",
+        "recordLinks": []
+      },
+      {
+        "source": "V",
+        "target": "A",
+        "label": "Next build stage",
+        "kind": "workflow",
+        "id": "r10",
+        "recordLinks": []
+      },
+      {
+        "source": "A",
+        "target": "X",
+        "label": "Next build stage",
+        "kind": "workflow",
+        "id": "r11",
+        "recordLinks": []
+      }
+    ],
+    "boundary": "Technical maintainer workflow. Classroom work begins with the published files; these are build steps, not business transactions.",
+    "alt": "Local dataset build from settings to exported teaching files. Settings initialize the generation context, tables and master data precede operating activity, and accounting postings and year-end close precede validation, anomaly injection and file exports. This documents the local generator workflow; classroom users begin with the published files. Technical maintainer workflow. Classroom work begins with the published files; these are build steps, not business transactions.",
+    "steps": [
+      "Load Settings — workflow step",
+      "Initialize GenerationContext — workflow step",
+      "Create Empty Tables — workflow step",
+      "Generate Master Data, BOMs, Routings, and Calendar — workflow step",
+      "Generate Opening Balances and Budgets — workflow step",
+      "Generate O2C, P2P, Manufacturing, Payroll, and Labor Activity — workflow step",
+      "Generate Recurring Journals and Accrual Activity — workflow step",
+      "Post Events to GLEntry — workflow step",
+      "Generate Year-End Close Journals — workflow step",
+      "Run Validations — workflow step",
+      "Inject Anomalies — workflow step",
+      "Export SQLite, Excel, Curated Reports, CSV Zip, and Log — workflow step"
+    ]
+  }
+]

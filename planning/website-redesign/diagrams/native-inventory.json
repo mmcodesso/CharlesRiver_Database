@@ -1,0 +1,858 @@
+[
+  {
+    "family": "er",
+    "id": "company-data-overview",
+    "title": "Company data areas and shared records",
+    "source": "static/diagrams/er/company-data-overview.drawio",
+    "sourceSha256": "8f7611402a4c4e46923960a8d8eec4b398b58de2625ec41535a58cac7769e459",
+    "svgSha256": "03450f37d5f182c2152338588f68810601603565db3f7377288ebcf8f72096b1"
+  },
+  {
+    "family": "er",
+    "id": "accounting-core",
+    "title": "Accounts, journals, and posted detail",
+    "source": "static/diagrams/er/accounting-core.drawio",
+    "sourceSha256": "3319fd89174eb90719c2f5af936167e3aabf7a2fa65d1c3bf973ef4cfde4b98e",
+    "svgSha256": "569bff6b16dc8cc416a524f4234e927b2c2857a65e0fdb7dfcb091ce0f982ef7"
+  },
+  {
+    "family": "er",
+    "id": "asset-financing",
+    "title": "Asset events and financing",
+    "source": "static/diagrams/er/asset-financing.drawio",
+    "sourceSha256": "c39caa8753539c2cae1180816bb80119046670580822422101468afd6cee023d",
+    "svgSha256": "fd6345bec058179a21505f61d43f763995800e95b13ba30ec78cb3407f233c8c"
+  },
+  {
+    "family": "er",
+    "id": "commercial-terms",
+    "title": "Customer orders and commercial terms",
+    "source": "static/diagrams/er/commercial-terms.drawio",
+    "sourceSha256": "9a056f91fc468d2564d34d6a6af8169977752fdd66eb9511a40b729914e20d02",
+    "svgSha256": "6e97be3ce6415c19e05e73c6c511bbc234b54d5751ef2133f61dac7222e91757"
+  },
+  {
+    "family": "er",
+    "id": "goods-fulfillment",
+    "title": "Goods fulfillment and customer billing",
+    "source": "static/diagrams/er/goods-fulfillment.drawio",
+    "sourceSha256": "a2c913e2d90f2ff1ccee30d6206848f41e85b18c08f059df2c3a6b87a0eb5f6c",
+    "svgSha256": "ce9e16f09f3216b2b59f4ba19e242e0d29b5a0614291d8fb3ce4d47456c16e7f"
+  },
+  {
+    "family": "er",
+    "id": "service-delivery",
+    "title": "Design work, time, and billing",
+    "source": "static/diagrams/er/service-delivery.drawio",
+    "sourceSha256": "27f7c609db4343af5dbbe7f5b6b7618c6b4d40625b265d1a4455be726fe41ca7",
+    "svgSha256": "3c3f2e686f254223e67eb2340a3929265514820a3b9c684d780ca0dd70b50af6"
+  },
+  {
+    "family": "er",
+    "id": "cash-allocation",
+    "title": "Received cash and invoice allocation",
+    "source": "static/diagrams/er/cash-allocation.drawio",
+    "sourceSha256": "38a8f6f61daf00adf5ffa3203ea54618bd655c2ee0c50686fe14778400143bc9",
+    "svgSha256": "91ecac304b4f7b98c564e7884fc83e9871fdce0b3167ca345cb84fec31fb2f7b"
+  },
+  {
+    "family": "er",
+    "id": "returns-credit",
+    "title": "Returns, customer credit, and refunds",
+    "source": "static/diagrams/er/returns-credit.drawio",
+    "sourceSha256": "9d6605454137bda69af8b4572d895da8a83dfb41b8b25da84112f1d11e20c8dd",
+    "svgSha256": "34719cfd39dee9c20ade8d9dd44dc3a5befc6aba8d60557f74b99f5a0b958d30"
+  },
+  {
+    "family": "er",
+    "id": "commissions",
+    "title": "Commission accrual, clawback, and payment",
+    "source": "static/diagrams/er/commissions.drawio",
+    "sourceSha256": "128f3a7d8776ffda710e0ac9283751c4174718f9c796740dd7f34e0ae42c95d4",
+    "svgSha256": "ddf82b1141e3626abfe43da8b20b98a6304fd0c452dcb6917e681748f6660c1c"
+  },
+  {
+    "family": "er",
+    "id": "procurement-receiving",
+    "title": "Procurement and goods receiving",
+    "source": "static/diagrams/er/procurement-receiving.drawio",
+    "sourceSha256": "8afd682b32b89917af257f906cac9778b8c773061196b5021710d5cbee66b2d0",
+    "svgSha256": "d6f30b174ed4a1ac4140051263be686ef50497694988f993ea6fb376f58d7d1f"
+  },
+  {
+    "family": "er",
+    "id": "supplier-liabilities",
+    "title": "Supplier invoices and separate settlement",
+    "source": "static/diagrams/er/supplier-liabilities.drawio",
+    "sourceSha256": "68d6ac5fb27444be0806ab7207557db1cc4bbc1ae7f3dc0a6390981edf32ac93",
+    "svgSha256": "d22a71c5da4c7332a1fe2982056be56fb2aa7f168f148e51cbe34365aa431146"
+  },
+  {
+    "family": "er",
+    "id": "manufacturing-definitions",
+    "title": "Product recipes and production capacity",
+    "source": "static/diagrams/er/manufacturing-definitions.drawio",
+    "sourceSha256": "7af787a0dbbb9bab73b14e96717e3b5ced503a2c36435fda22ee20eb3e62affb",
+    "svgSha256": "debea3b5b5c995b7b131938c4e949fc315de9aa54167c17bee8d52c8dfe3e07c"
+  },
+  {
+    "family": "er",
+    "id": "work-order-scheduling",
+    "title": "Work orders and daily operation schedules",
+    "source": "static/diagrams/er/work-order-scheduling.drawio",
+    "sourceSha256": "50bc3068233738c5af3d8ef6d1dc2bb6bb6b206fc2bfcf8378ceef0b419ff04e",
+    "svgSha256": "360ee8ed2446ae54fcd1c580d612c25da2e0c9f479d0502e7a85ca1f3c1c988d"
+  },
+  {
+    "family": "er",
+    "id": "manufacturing-cost-events",
+    "title": "Material, completion, and accounting close",
+    "source": "static/diagrams/er/manufacturing-cost-events.drawio",
+    "sourceSha256": "8218e37691fcffe8d95ed20929e11d78a937ee2bbebc085f7eb5d418f8cc7972",
+    "svgSha256": "7fa0a17e098b57d42d959e82538b78d8139ce453e9af8de32c018ddb155efad1"
+  },
+  {
+    "family": "er",
+    "id": "attendance-time",
+    "title": "Attendance support and approved daily time",
+    "source": "static/diagrams/er/attendance-time.drawio",
+    "sourceSha256": "d82eeb9200d709241167dc4f8b819b89bf59353cfb478629266175a71661910f",
+    "svgSha256": "c891c0a39e78811998523b6fe65ea5781e6702f285d68b4d1f9dd05055f31694"
+  },
+  {
+    "family": "er",
+    "id": "payroll-settlement",
+    "title": "Payroll support, employee pay, and remittances",
+    "source": "static/diagrams/er/payroll-settlement.drawio",
+    "sourceSha256": "782342521a4cc21f538f9556b468b9550a63ee7d9061f8b08826358441934271",
+    "svgSha256": "233aeb02904411655b8b890ad6506c5735f3eb33c39dd2a2fce280cf5e50f2d6"
+  },
+  {
+    "family": "er",
+    "id": "shared-masters",
+    "title": "Shared item, warehouse, and employee records",
+    "source": "static/diagrams/er/shared-masters.drawio",
+    "sourceSha256": "644cfd1cbeddeefc109f84898a2b5b263f4dbabe60e028e3e0505d7cc99bfd0f",
+    "svgSha256": "88b947f5bc3d20e931c5de4c9554ebea238c9cc3c9d2ec21c3a719ba31df9430"
+  },
+  {
+    "family": "er",
+    "id": "budgets-responsibility",
+    "title": "Budgets and reporting responsibility",
+    "source": "static/diagrams/er/budgets-responsibility.drawio",
+    "sourceSha256": "4fd794ecd571e97ea955a8cca7e0a7af00f0e4de72e6f0ae94cc44652d2b9638",
+    "svgSha256": "6aa2672d540edf5815c6938c389aac79aec4456db2be69346b75b99330d5c1e8"
+  },
+  {
+    "family": "er",
+    "id": "demand-supply-planning",
+    "title": "Demand, supply recommendations, and requirements",
+    "source": "static/diagrams/er/demand-supply-planning.drawio",
+    "sourceSha256": "5de8d0fb0c9dc2a45283c63c06ffd13cac3bd7ce10bf076a879bbdb221fbd700",
+    "svgSha256": "ea162d7a87024a6ddef97ca8c6a963289be28e570e9b2875b8f6fc379669a28d"
+  },
+  {
+    "family": "evidence",
+    "id": "company-dependencies",
+    "title": "Connections across six Charles River processes",
+    "source": "static/diagrams/evidence/company-dependencies.drawio",
+    "sourceSha256": "06204dba85730fe9d173b3c5a5f2cc9356d93da3de6ea8d0f0cc0dac47fb8e94",
+    "svgSha256": "594a05de62b110632fce8e6bebf26e00bb707863d0f5c6426e6c6c74f6a8f2c0"
+  },
+  {
+    "family": "evidence",
+    "id": "accrual-posting",
+    "title": "Accrual invoice adjustment and payment evidence",
+    "source": "static/diagrams/evidence/accrual-posting.drawio",
+    "sourceSha256": "386bf4c7168bc71fc50b1153627f7da35d3f9b38232e2f128529deae857ec56c",
+    "svgSha256": "a348a2bba1acb65f00372a66b423d321ce8a42fefe93c8711d2b0cde61cc37e4"
+  },
+  {
+    "family": "evidence",
+    "id": "work-order-evidence",
+    "title": "Manufacturing records around one work order",
+    "source": "static/diagrams/evidence/work-order-evidence.drawio",
+    "sourceSha256": "91a17914bfc2ded7e7c8d9f23301929418f7e310c8b051e9d5d11a666346c3b6",
+    "svgSha256": "7bdb60ab67df074c052477f4134502898d0f69148784b10ac07180880b429d06"
+  },
+  {
+    "family": "evidence",
+    "id": "component-availability",
+    "title": "Purchased component support and subsequent material issue",
+    "source": "static/diagrams/evidence/component-availability.drawio",
+    "sourceSha256": "607d4fd9ae4090a6d5a5c48b89ce9fcf3129a29be6cde1193fce0de56e88b361",
+    "svgSha256": "c5412b8dc1a58dbefd1067c2cfdf96f7390578db1f90db23262c5f0e3caf6eed"
+  },
+  {
+    "family": "evidence",
+    "id": "manufacturing-payroll-support",
+    "title": "Operational labor evidence and payroll cost support",
+    "source": "static/diagrams/evidence/manufacturing-payroll-support.drawio",
+    "sourceSha256": "192be7764e934190f03cd0bb4fb855a92187f29a3f6bc956da5128c73785d5cb",
+    "svgSha256": "8b3d2191f09309e73342a6c04b45f0388c5760ff13d9cd29feb844c4082c3c61"
+  },
+  {
+    "family": "evidence",
+    "id": "completion-close",
+    "title": "Separate completion and close branches of a work order",
+    "source": "static/diagrams/evidence/completion-close.drawio",
+    "sourceSha256": "e0a8e7a7912c5b8bf1b0ac79db7d9dcfd994ddd2226424131fa10c2f9bc37682",
+    "svgSha256": "717bdc6ae91431a3415732b8374ab0142d08b657e2a5f861cc15d196ed2aa5b0"
+  },
+  {
+    "family": "evidence",
+    "id": "commission-posting",
+    "title": "Sales commission accrual adjustment and payment",
+    "source": "static/diagrams/evidence/commission-posting.drawio",
+    "sourceSha256": "8d00e7b3860706ad9287cadf0144a99ccc45fb228bc26fa3094e0b23b0be3f5c",
+    "svgSha256": "4246b565bb31a009d3e370d9cf0199a84d1d4e9a53a1c7c9e29ab46c1f084edb"
+  },
+  {
+    "family": "evidence",
+    "id": "goods-posting",
+    "title": "Customer order shipment invoice and ledger",
+    "source": "static/diagrams/evidence/goods-posting.drawio",
+    "sourceSha256": "7b959fe6362d86123af9db923f36fa7a1a872a422b8c77a264a0a347c9227cef",
+    "svgSha256": "d5223477039f9e39805d6967503c29e9ce9d320e31e3e51ad5e6ba9364e3de2a"
+  },
+  {
+    "family": "evidence",
+    "id": "cash-posting",
+    "title": "Receipt to unapplied money and invoice application",
+    "source": "static/diagrams/evidence/cash-posting.drawio",
+    "sourceSha256": "2336f370f84413793c493f11da3fc6af8b37f499b8a893e171ca51c2c134cb61",
+    "svgSha256": "2ec354dbc60b72bb552978678e53136d9b6d35cfeb8afc42aabfb21480dc8c46"
+  },
+  {
+    "family": "evidence",
+    "id": "returns-posting",
+    "title": "Return credit and refund accounting evidence",
+    "source": "static/diagrams/evidence/returns-posting.drawio",
+    "sourceSha256": "eab86623eb1d3b6c7d0503506bd085091e8b14064ee7ab6e88899c3d0b05efcf",
+    "svgSha256": "1395dd4b4a02127bd11a42d065db3e63d53898a7b08a3fc42d81918b44f19c47"
+  },
+  {
+    "family": "evidence",
+    "id": "receipt-invoice-posting",
+    "title": "Receipt invoice and ledger evidence",
+    "source": "static/diagrams/evidence/receipt-invoice-posting.drawio",
+    "sourceSha256": "d8ed1425f716eaf3147b511bf31fcc0df1429183a5ffbd90e1605016cc34e2a5",
+    "svgSha256": "13b0660ad3289f80847da3a62864310045829424d73c6497a71aa2063e206809"
+  },
+  {
+    "family": "evidence",
+    "id": "supplier-settlement-posting",
+    "title": "Supplier invoice payable and disbursement",
+    "source": "static/diagrams/evidence/supplier-settlement-posting.drawio",
+    "sourceSha256": "d26df886628b449f9155c0ded8def4a7569aeefd8750f7b380c38162c470f942",
+    "svgSha256": "498f2a19a02c3a34c7d99b7a811537197b08076b09b7a39d5d87633d3131e4e3"
+  },
+  {
+    "family": "evidence",
+    "id": "payroll-evidence",
+    "title": "Approved time employee payroll and period remittances",
+    "source": "static/diagrams/evidence/payroll-evidence.drawio",
+    "sourceSha256": "ec77091aae772d928ad96bc9d4f5709319b5c28cdc91b6eef164a312ec567f4d",
+    "svgSha256": "ba9201ffbdaf9fa9abf20cd1a790c50f6860444ef6c80bf6e320e0eb53ea4914"
+  },
+  {
+    "family": "evidence",
+    "id": "attendance-evidence",
+    "title": "Roster punch and approval support for daily time",
+    "source": "static/diagrams/evidence/attendance-evidence.drawio",
+    "sourceSha256": "6cab1da1e656de8f3a405306f72f0ef8cfc61a95f05925b0c1ae6a35a7c22d9a",
+    "svgSha256": "9e679a959b181e86ecb44bc7a5515d42f6d60e8afefa30aabd412a5ce8f0f288"
+  },
+  {
+    "family": "evidence",
+    "id": "payroll-obligations",
+    "title": "Employee net pay and other payroll-liability settlement",
+    "source": "static/diagrams/evidence/payroll-obligations.drawio",
+    "sourceSha256": "2dc485a624c884b75a6ba04d63e4cca8a97d8e6977942fd0096bc48f2c9a8295",
+    "svgSha256": "1e015554a3fd1ccd286f71a8d36d3971b7b0364415e9ab6229891d319c6e7fa1"
+  },
+  {
+    "family": "evidence",
+    "id": "attendance-review",
+    "title": "Attendance evidence exceptions and payroll",
+    "source": "static/diagrams/evidence/attendance-review.drawio",
+    "sourceSha256": "8773a764159e96c0870e36ef5a7e4270d543a5acafa3726b1a12f0d2c1158984",
+    "svgSha256": "f7b50ae7c7c2cd436120fb4449a060ed80eb5e7e20facab8977d5bfa4af327b6"
+  },
+  {
+    "family": "evidence",
+    "id": "weekly-planning",
+    "title": "Weekly planning and manufacturing requirements",
+    "source": "static/diagrams/evidence/weekly-planning.drawio",
+    "sourceSha256": "b9e11f706321af63a10bdd0fbb44a36da2d0af61e6aec14e7c912ceb6651a4ff",
+    "svgSha256": "4218a87356fca320ca79737ff89a17ded6f868452cb28ddd38f0045f29d04aae"
+  },
+  {
+    "family": "evidence",
+    "id": "recipe-routing",
+    "title": "Manufacturing recipe and routing records",
+    "source": "static/diagrams/evidence/recipe-routing.drawio",
+    "sourceSha256": "8327ede7ccd880fc1d74b0223c3ec436e7d1c4197e7b30f63abb5bf0b512e48a",
+    "svgSha256": "4a5ca02d28549eda87a81fa10fcb31912820a9d50156373e6836b99bc465cf1e"
+  },
+  {
+    "family": "evidence",
+    "id": "operation-scheduling",
+    "title": "Work-order release and daily operation schedules",
+    "source": "static/diagrams/evidence/operation-scheduling.drawio",
+    "sourceSha256": "7be88d4e8b392976edcedc9671b775a7246d29fd35e53fd2f95ae33d296249fd",
+    "svgSha256": "4f98be4069bdbf1494a14facec8df9145b6cd337b48676faeca0d32f661eb8e8"
+  },
+  {
+    "family": "evidence",
+    "id": "approved-time-register",
+    "title": "Approved time and payroll-period support for the register",
+    "source": "static/diagrams/evidence/approved-time-register.drawio",
+    "sourceSha256": "06a710266e7e0107aab84ee16c55c3189a12c13746e80e2f715cbca32c758bc2",
+    "svgSha256": "a68da62339d762833ec0ea486fa91575faabb1d4b862a0b280833d74dd1faba8"
+  },
+  {
+    "family": "evidence",
+    "id": "recurring-journal",
+    "title": "Recurring journal category and ledger accounts",
+    "source": "static/diagrams/evidence/recurring-journal.drawio",
+    "sourceSha256": "13b61933cfb606441d91f45ba9aa96d9ccdafbabce3a05879fd0d1dc11d3a593",
+    "svgSha256": "5726c1015cd83ff1bd848fef2e1307d4272375d40922c6daa4182706c13ebdd7"
+  },
+  {
+    "family": "evidence",
+    "id": "overhead-support",
+    "title": "Factory overhead journals and manufacturing cost support",
+    "source": "static/diagrams/evidence/overhead-support.drawio",
+    "sourceSha256": "f3c037ce501a2df7d2b3b53ad1e14d42fe4424aa4eb5e876f2958c0f78381f90",
+    "svgSha256": "d7d7cec5ffae1a94b910fc94b894907815ac0988ac06dedce980b65ec1cb2de9"
+  },
+  {
+    "family": "evidence",
+    "id": "service-time-billing",
+    "title": "Design work approved time and invoice evidence",
+    "source": "static/diagrams/evidence/service-time-billing.drawio",
+    "sourceSha256": "175094b3ace94dc8b623b6811ddee997ab19a0a36ca3f924288f691815c7834e",
+    "svgSha256": "223a72a28132c8ea24265ac1824db8272a2baf11a9192a230ff05b803171cdc8"
+  },
+  {
+    "family": "evidence",
+    "id": "service-demand",
+    "title": "Customer demand and the service engagement",
+    "source": "static/diagrams/evidence/service-demand.drawio",
+    "sourceSha256": "e214ba19021a5c8d4694b66001c0c4fee788ad4967b92eebb0dbf60042541b78",
+    "svgSha256": "4cf9c139de2b05b451f7a312f34407320d15fbd41dc767c7100b01c9e6a24db1"
+  },
+  {
+    "family": "evidence",
+    "id": "service-staffing",
+    "title": "Service engagement staff and time evidence",
+    "source": "static/diagrams/evidence/service-staffing.drawio",
+    "sourceSha256": "d5b7c33ed66c4d29e9ddbcd09cf5fefda22f16383561aafe004a9c1f2deb562e",
+    "svgSha256": "feea849a22f5c818067bb7c2849fce9eba5dd9fa110fc2e99f6dbcbf678b1301"
+  },
+  {
+    "family": "evidence",
+    "id": "service-billing-settlement",
+    "title": "Approved service time billing and settlement",
+    "source": "static/diagrams/evidence/service-billing-settlement.drawio",
+    "sourceSha256": "2953d6dcb2bedf9e73e2619cc7fef13cf1423f3b36ef5f7bfd5753063670a2d9",
+    "svgSha256": "3bc7fc1fe21238fcf9e7414742313560f2722aeea1622d1d26ee4717f769e61f"
+  },
+  {
+    "family": "evidence",
+    "id": "goods-purchase-path",
+    "title": "Receipt-matched purchase evidence",
+    "source": "static/diagrams/evidence/goods-purchase-path.drawio",
+    "sourceSha256": "1663f26d81df5a3d40cc94ec3710ff426a8f7e32fe97429d8f465303cc2d6127",
+    "svgSha256": "b1398ac2570223492b48d65d1b7668dbd898cba713a248a4d5af969c3a6af817"
+  },
+  {
+    "family": "evidence",
+    "id": "purchase-planning",
+    "title": "Forecast and policy support a purchase request",
+    "source": "static/diagrams/evidence/purchase-planning.drawio",
+    "sourceSha256": "74141665a8ff52e2598869065b75f62297d7d2b1e1cb85f0871d8309e663aa9b",
+    "svgSha256": "3772651d2c25ab7b11062a77d9016793fea413934658713ba93084333e4aef30"
+  },
+  {
+    "family": "evidence",
+    "id": "requisition-receipt",
+    "title": "Purchase request order and receipt",
+    "source": "static/diagrams/evidence/requisition-receipt.drawio",
+    "sourceSha256": "558e6b70363451c3725da6193c6464fbce9972629a0a9e7aa6726186474de7b9",
+    "svgSha256": "505444a53b00f29ff7496391dfcaf91e54f4e54886ae195d10d6647997d124e4"
+  },
+  {
+    "family": "evidence",
+    "id": "goods-settlement-path",
+    "title": "Goods sale and customer settlement records",
+    "source": "static/diagrams/evidence/goods-settlement-path.drawio",
+    "sourceSha256": "8d8c0769a5c68f8dd54aaf178c155feac5edbe6e29fbe044340f082f1b923b64",
+    "svgSha256": "03e9d1ac0a0a03c744e52a43825f96d389c4d0f7fce9ce998130500f98cf716f"
+  },
+  {
+    "family": "evidence",
+    "id": "pricing-evidence",
+    "title": "Pricing support for the sales order",
+    "source": "static/diagrams/evidence/pricing-evidence.drawio",
+    "sourceSha256": "7cb0ba81664d81442a5513e67b2f28d29a7b56f09f7ab6d5d134c8b8d6b00e4b",
+    "svgSha256": "643908f1153f3d7979622f5850424c69af31217677abc523c6ef382d7301bba3"
+  },
+  {
+    "family": "evidence",
+    "id": "backorder-context",
+    "title": "Available inventory and backordered quantity",
+    "source": "static/diagrams/evidence/backorder-context.drawio",
+    "sourceSha256": "376fa390affcab3ffbf570fde96cdc6c0d98ee3a60ef95512f7f933a454c52b5",
+    "svgSha256": "7ac8645b1c1717ead1a46760d7e13deb0f3f962c4726964dc0099d070c9d75af"
+  },
+  {
+    "family": "evidence",
+    "id": "customer-credit-path",
+    "title": "Credit memo and remaining customer credit",
+    "source": "static/diagrams/evidence/customer-credit-path.drawio",
+    "sourceSha256": "31b6a30e4d5249e42801432f25df35f1c2b294c499fa53bd0cdff44167bec8fa",
+    "svgSha256": "27d8f1652a23afc8b951f75949c78f6f5f45b4cd7a55e8d3ebb41bb2b531e542"
+  },
+  {
+    "family": "evidence",
+    "id": "technical-build",
+    "title": "Local dataset build from settings to exported teaching files",
+    "source": "static/diagrams/evidence/technical-build.drawio",
+    "sourceSha256": "02e120f64612d8ae07c99c8b874c03871578968574a8ae9c56e00e8407daabf6",
+    "svgSha256": "c8295aa2191f75f141cdb7f9b5af8797dd4e54e9f1f4d1180c191d94339f4021"
+  },
+  {
+    "family": "bpmn",
+    "id": "order-to-cash",
+    "title": "Order-to-Cash",
+    "source": "static/diagrams/bpmn/order-to-cash.drawio",
+    "sourceSha256": "e8a67ed359fa40b35499c24f87139261abd0fbf416ccfdfddea4846582e00c53",
+    "svgSha256": "a34893d71be0975f72636d101a9ae68246f853f50ea869a22cb3e0761ee355eb"
+  },
+  {
+    "family": "bpmn",
+    "id": "procure-to-pay",
+    "title": "Procure-to-Pay",
+    "source": "static/diagrams/bpmn/procure-to-pay.drawio",
+    "sourceSha256": "622e22e9048cd256180902a0b2d2206db80bb243d78c8a7b84a19b0fd7878fd1",
+    "svgSha256": "6f837826eec03f6081921c102f60fd5ebed1857053353fcf35c0c44ec70e8f2c"
+  },
+  {
+    "family": "bpmn",
+    "id": "manufacturing-conversion",
+    "title": "Manufacturing and Conversion",
+    "source": "static/diagrams/bpmn/manufacturing-conversion.drawio",
+    "sourceSha256": "7b879f27e0fdd763dbc0da79e9b7d463d27ef19af2e6d3daaee0cbcb1d93a768",
+    "svgSha256": "1e068b1ac5198bda80954b117bc94dbc0591c0942380408f4770d1d10599adb1"
+  },
+  {
+    "family": "bpmn",
+    "id": "design-services",
+    "title": "Design Services",
+    "source": "static/diagrams/bpmn/design-services.drawio",
+    "sourceSha256": "376e2678d2ed4873df04566e094e6a8cde332147375f23d80be73da4314c250d",
+    "svgSha256": "9f6c4651dd5c6455f208b8129ab1ee0825ca9249a1c38df39e2abda43cbcf0e3"
+  },
+  {
+    "family": "bpmn",
+    "id": "payroll",
+    "title": "Payroll",
+    "source": "static/diagrams/bpmn/payroll.drawio",
+    "sourceSha256": "e10ea696cdead395477f320554acca4b1417aed9c325977f0b173f321e7881de",
+    "svgSha256": "d356e4845dd0eaf800cdc32fbfe8da00601245762520fa42c2544a7dd0dbe12c"
+  },
+  {
+    "family": "bpmn",
+    "id": "manual-journals-close",
+    "title": "Manual Journals and Close",
+    "source": "static/diagrams/bpmn/manual-journals-close.drawio",
+    "sourceSha256": "bce36881f53aa38bc757201922e81286a4e363a9ba951e18d4816bd038bdf7aa",
+    "svgSha256": "309cddc4638af29f632e32fb6bd7951a818abd315782cecf79a6f298e3b2a4dc"
+  },
+  {
+    "family": "bpmn",
+    "id": "returns-credit-refunds",
+    "title": "Returns, Credit Memos and Refunds",
+    "source": "static/diagrams/bpmn/returns-credit-refunds.drawio",
+    "sourceSha256": "6c7253cb790ef34f3670f1a1a15cda810145d68dfdb211cbde8aabb7c09ae85f",
+    "svgSha256": "7bcac9582baac460aef9105c0fb7559e4b0fdd9baaad9e4f5e44835e03fac72a"
+  },
+  {
+    "family": "bpmn",
+    "id": "cash-application",
+    "title": "Cash Application",
+    "source": "static/diagrams/bpmn/cash-application.drawio",
+    "sourceSha256": "fdcf2506c7b497f245d610300aef2701affbf7b03e3921694dc3aec5c96f5c1e",
+    "svgSha256": "5d2901a8df0e61aee0ebf1612b08581bd0616f7c66257c75d4307e6f042ff6f7"
+  },
+  {
+    "family": "bpmn",
+    "id": "accrual-settlement",
+    "title": "Accrued-Service Settlement",
+    "source": "static/diagrams/bpmn/accrual-settlement.drawio",
+    "sourceSha256": "f8c036bf123d8592d258fb5bc55e10d72a935260dc450f8205ae09362a6f0b02",
+    "svgSha256": "10c91fe6d3374e37e0762801785cd69e039afdab0d9555fb217cee8d7e79d74a"
+  },
+  {
+    "family": "bpmn",
+    "id": "manufacturing-variances",
+    "title": "Manufacturing Variances",
+    "source": "static/diagrams/bpmn/manufacturing-variances.drawio",
+    "sourceSha256": "fd6514902d21920a8e032c35e6c44422fcebd5bb27804d2c29cb71d3d90c8366",
+    "svgSha256": "4329123d0898bedcb9ec2747b7416cdb05affac3bd02dbf0a0e49ad974d34a4e"
+  },
+  {
+    "family": "bpmn",
+    "id": "process-architecture",
+    "title": "Business-Process Architecture",
+    "source": "static/diagrams/bpmn/process-architecture.drawio",
+    "sourceSha256": "a97c05edd7a6fd496aa572e3837f7540cc98187b32e3f441c899a7c69723079d",
+    "svgSha256": "69aaa19ecc83540d040382f16015c731c25243fa4410fff511b7bc61d6643959"
+  },
+  {
+    "family": "tutorials",
+    "id": "meet-the-records",
+    "title": "Meet the Records",
+    "source": "static/diagrams/tutorials/meet-the-records.drawio",
+    "sourceSha256": "655cf0b68c5f917080330bff8ea9cd03065d0024196623fc2f254af746616aec",
+    "svgSha256": "c3ee8a898fb63b502ae111d860989dd68ee36e1e6d894a2d6f5e3a4f13a81e89"
+  },
+  {
+    "family": "tutorials",
+    "id": "read-an-order",
+    "title": "Read an Order",
+    "source": "static/diagrams/tutorials/read-an-order.drawio",
+    "sourceSha256": "6e8d2c0be11cad864f41f10cf4afe8ac4ce9c64a45c38272b68baaf268f8896a",
+    "svgSha256": "3e03e296822b2d14d217b6ad213d131db43eb3a83d9813f2bc9bd8bd87f9376f"
+  },
+  {
+    "family": "tutorials",
+    "id": "connect-the-records",
+    "title": "Connect the Records",
+    "source": "static/diagrams/tutorials/connect-the-records.drawio",
+    "sourceSha256": "6e1e07f86fce77535f60a977fb07b42faedf4be0eab8718b7799539fd77332cc",
+    "svgSha256": "24eb70f10d8e2f057f0ce2832e905b44aefcd16830604ea004aa0bb7531266f3"
+  },
+  {
+    "family": "tutorials",
+    "id": "source-to-ledger",
+    "title": "Follow a Goods Sale",
+    "source": "static/diagrams/tutorials/source-to-ledger.drawio",
+    "sourceSha256": "392bde509ccc94ff7e66204ca65313070ecdb12719de5169f78841a4da70f4c7",
+    "svgSha256": "6ff0f44c4c9a4e905c7bbf61ace703e6d0f05456f5d5c915dffe4046d2724120"
+  },
+  {
+    "family": "tutorials",
+    "id": "follow-customer-settlement",
+    "title": "Follow Customer Settlement",
+    "source": "static/diagrams/tutorials/follow-customer-settlement.drawio",
+    "sourceSha256": "f12a34b6a8fb282ce734cec29bdcb379eda5c08b046101f838ec91cc76dee1b8",
+    "svgSha256": "df88dae6ed9b8efb9266bd09c8d460abc2ac218cc757bc6031b1fb42f30c41a0"
+  },
+  {
+    "family": "tutorials",
+    "id": "find-the-accounting-entries",
+    "title": "Find the Accounting Entries",
+    "source": "static/diagrams/tutorials/find-the-accounting-entries.drawio",
+    "sourceSha256": "04949c0e3708904ca74087b9f9c50e98eff631d55971048e3711a1261408a9fe",
+    "svgSha256": "f61ddb728f14fba0eb5ecc207e80e2eadae7672d8f61b77723da9dd112ed8d2f"
+  },
+  {
+    "family": "tutorials",
+    "id": "follow-design-time-into-billing",
+    "title": "Follow Design Time into Billing",
+    "source": "static/diagrams/tutorials/follow-design-time-into-billing.drawio",
+    "sourceSha256": "f48e43ded002973659246bf61e8634eb532254236864e900d48421299102c6ec",
+    "svgSha256": "0e551a3c305e5cc493f9bc5758dd693096a208e9efe276ddcb34e8cb20e215a2"
+  },
+  {
+    "family": "tutorials",
+    "id": "receipt-to-payable",
+    "title": "Follow a Purchase",
+    "source": "static/diagrams/tutorials/receipt-to-payable.drawio",
+    "sourceSha256": "67a1cd4f3c6af63adaad398666a639a7263a4c2a980568b97ed08cb9784e4e1d",
+    "svgSha256": "9aeab3725bda3080abcd6cfd64d296b6b71aa5ca01054a299efeba450d22910b"
+  },
+  {
+    "family": "tutorials",
+    "id": "manufacturing-cost-flow",
+    "title": "Follow Manufacturing Costs",
+    "source": "static/diagrams/tutorials/manufacturing-cost-flow.drawio",
+    "sourceSha256": "5c40b82c37f5ba1f6f0510c40bb0e12c957b95469e1ac9947f7045b0178fd752",
+    "svgSha256": "dec07a8e7a55bd1aaa3f01e0c4dd33ea46180ef167d2aa1bba216de3c5a4833a"
+  },
+  {
+    "family": "tutorials",
+    "id": "follow-hours-into-payroll",
+    "title": "Follow Hours into Payroll",
+    "source": "static/diagrams/tutorials/follow-hours-into-payroll.drawio",
+    "sourceSha256": "bef9c73121d3b9fc5cb00526ebbe53cdc88634694230b61eeef59122fa9b5dd6",
+    "svgSha256": "a92baa6b4eba8d1acc978a5966dbad2b73123235ea87744664923f9afb8104a2"
+  },
+  {
+    "family": "tutorials",
+    "id": "follow-an-estimate-into-settlement",
+    "title": "Follow an Estimate into Settlement",
+    "source": "static/diagrams/tutorials/follow-an-estimate-into-settlement.drawio",
+    "sourceSha256": "23a859b54046e8af9d9ab3cbd7733e4c1b5c276893bf0bdd57297ab2c4e51ef9",
+    "svgSha256": "a325fa7501417bc6c0daf412251d89b7aaf4d7c8940d3f5fca693f19fe55cfe5"
+  },
+  {
+    "family": "tutorials",
+    "id": "turn-records-into-a-conclusion",
+    "title": "Turn Records into a Conclusion",
+    "source": "static/diagrams/tutorials/turn-records-into-a-conclusion.drawio",
+    "sourceSha256": "2c21d557e4af5c3f7c91c0a11a2485d075f7225a61f0e40c70443119321a54b8",
+    "svgSha256": "812d77d7a4d1bb134506c856f456e71f9dd3032b2f4f8e6510525146ea4d3f4d"
+  },
+  {
+    "family": "cases",
+    "id": "case01-handoffs",
+    "title": "Who must contribute to the customer response?",
+    "source": "static/diagrams/cases/case01-handoffs.drawio",
+    "sourceSha256": "1911e463f9f907128301d93aeada5d332a5e6e235d81be8ed446d72643a92e1d",
+    "svgSha256": "80331cb78eae0a07929acdeadf9fdcd3584f5db038d3cab8d3cd3085c84bb5ec"
+  },
+  {
+    "family": "cases",
+    "id": "case01-relationships",
+    "title": "Why must settlement records be summarized separately?",
+    "source": "static/diagrams/cases/case01-relationships.drawio",
+    "sourceSha256": "944138ba32ed7f26d366641454e0532d64ff035898c306828bcdc633b5cfb41d",
+    "svgSha256": "32d87caa287b0d7e29ed9d3567c87f38e93ab5363da968b96e3f989db8a64d9e"
+  },
+  {
+    "family": "cases",
+    "id": "case01-timeline",
+    "title": "What changed between the two reviews?",
+    "source": "static/diagrams/cases/case01-timeline.drawio",
+    "sourceSha256": "642776cc68796940cab9819aa8023bafdcd4b25604ddd4776a39dc7f0787bf7e",
+    "svgSha256": "9c5a069431b735acfef097fa6be01f737d675169341489bba9e04dad467d1772"
+  },
+  {
+    "family": "cases",
+    "id": "case02-responsibilities",
+    "title": "Who turns time into a customer bill?",
+    "source": "static/diagrams/cases/case02-responsibilities.drawio",
+    "sourceSha256": "22c88934a28a5f5d658771397663d559eff4e6cbae4643020a1df78bc8d7a8c2",
+    "svgSha256": "3e3f1d105f9b07d24646a3fdc5b09012a242b98f8a3cff115a83f8885b1d56f1"
+  },
+  {
+    "family": "cases",
+    "id": "case02-billing",
+    "title": "How does a billing period connect time and invoice evidence?",
+    "source": "static/diagrams/cases/case02-billing.drawio",
+    "sourceSha256": "630627ce2236e0b4fca6de3bb59f1994644c138452742025d7ee0923d6b43923",
+    "svgSha256": "3d603743f908c224a04a29dbae57bd39db5e477f61b92e9b51dcb40e3973ecdd"
+  },
+  {
+    "family": "cases",
+    "id": "case02-bridge",
+    "title": "Which measures belong in the design review?",
+    "source": "static/diagrams/cases/case02-bridge.drawio",
+    "sourceSha256": "a9ae5c566c25694c29111887b0f7ee11afab08db7b9bdb4ea52dc0c0241c13fa",
+    "svgSha256": "73d1cb688b78accca88fc64caf3832f050b5056fdeba64a2e2d7bf90d7060c2d"
+  },
+  {
+    "family": "cases",
+    "id": "case03-branches",
+    "title": "Why do purchasing obligations follow two paths?",
+    "source": "static/diagrams/cases/case03-branches.drawio",
+    "sourceSha256": "fa4712b1627d70519dbc61e11e28e328a2efb9b8f0e0c5994933b192931d8144",
+    "svgSha256": "8cfe2984974a7998530a997f4b8fd03a0e35b917ff4e30a377b9e63aab441568"
+  },
+  {
+    "family": "cases",
+    "id": "case03-transitions",
+    "title": "How does the obligation change its accounting form?",
+    "source": "static/diagrams/cases/case03-transitions.drawio",
+    "sourceSha256": "e8af1a7d71e0dfdddd803250a2cf28f720c688e9e1dd0edfde910b3d8b9076e5",
+    "svgSha256": "7a29be2c0d7357533887b0d2884e42f81c533cdab5b5360567e39993d3119195"
+  },
+  {
+    "family": "cases",
+    "id": "case03-timeline",
+    "title": "What does the later evidence change?",
+    "source": "static/diagrams/cases/case03-timeline.drawio",
+    "sourceSha256": "0144d86d1a08a099caff7da9cb70088a21a7ee8c6ff415eba5362de4f2b0380f",
+    "svgSha256": "874cbdc1e90294d1affccf6faa824c54bcf73a30fe623a8c7308ce6b94c9a042"
+  },
+  {
+    "family": "cases",
+    "id": "case04-decision",
+    "title": "Which evidence can support a product priority?",
+    "source": "static/diagrams/cases/case04-decision.drawio",
+    "sourceSha256": "70c7ca260249fd6a6d67c5b3cbd6f53ccf86eb76f20f615f342c441861e5c04f",
+    "svgSha256": "08e185a4722423569a932b5eae07c34431b10a1de3cd442cd7fd650b0dc46019"
+  },
+  {
+    "family": "cases",
+    "id": "case04-relationships",
+    "title": "Which records explain a billed price?",
+    "source": "static/diagrams/cases/case04-relationships.drawio",
+    "sourceSha256": "7914c4a05aa89879df538420db6291a2688625dd0cee2fd7a6cc0ee8e3b6b038",
+    "svgSha256": "e9561a72e3ed5b6d257d9ab63e53a5e6a294db3cece88bc1336827b11e51d337"
+  },
+  {
+    "family": "cases",
+    "id": "case04-measures",
+    "title": "Which comparisons can be combined responsibly?",
+    "source": "static/diagrams/cases/case04-measures.drawio",
+    "sourceSha256": "67c7a4382297804674824598396bd304708fe912fd00416e337450c09026a9ce",
+    "svgSha256": "9ed7d4e01e1fa9cf9ab947d1171e68b2e5f9aa05c268babe4b0390fe4222ae00"
+  },
+  {
+    "family": "cases",
+    "id": "case04-conclusion",
+    "title": "How does a comparison become a decision?",
+    "source": "static/diagrams/cases/case04-conclusion.drawio",
+    "sourceSha256": "9694a1ed4dfc39a673df7d3a1d5d1fbfbbc4a3e2c9573ce845c1a9c92d142a1a",
+    "svgSha256": "31871798fc7df484a46f279cd78816a06fffeeada7f97df84757155622d9f0f0"
+  },
+  {
+    "family": "cases",
+    "id": "case05-planning",
+    "title": "How does a plan become production evidence?",
+    "source": "static/diagrams/cases/case05-planning.drawio",
+    "sourceSha256": "6bed5911b8740612722fff71c46e6232b0b1206be9f36eb52f80a2740fa9de71",
+    "svgSha256": "85798fa2f65fd8bf1a59bb9f358150c4fea2907d5b085a21f896ee3eaf25aea7"
+  },
+  {
+    "family": "cases",
+    "id": "case05-costs",
+    "title": "What changes when materials become finished goods?",
+    "source": "static/diagrams/cases/case05-costs.drawio",
+    "sourceSha256": "f44fa47eaec69c0348df9de35ba3394aa47146523c5d0293af0d81ae06da7cf0",
+    "svgSha256": "1cf733bcdc9192ce4af097a26da507c230e0d867daa0adf1bfcce89590263694"
+  },
+  {
+    "family": "cases",
+    "id": "case05-grains",
+    "title": "Which totals can be joined without multiplication?",
+    "source": "static/diagrams/cases/case05-grains.drawio",
+    "sourceSha256": "58c28b14f795b7ed7f8976e2ced8164b0b4278c24a92dc31489fce861de0cbc9",
+    "svgSha256": "326baaa0c2b5eb701fa2c6e65518b26c0f24a6e624419c9d0c1dfbe3f9b2d7dc"
+  },
+  {
+    "family": "cases",
+    "id": "case05-timeline",
+    "title": "When are goods available, and when is accounting complete?",
+    "source": "static/diagrams/cases/case05-timeline.drawio",
+    "sourceSha256": "736d5cab4bf2778f84d8ead9851dd8364dc7d5d094cce3ba4ee0b6f853354621",
+    "svgSha256": "aa30a333b4cea032c769ec00dc51ea8daba4a416854dea8b43a133ba3d7f44fc"
+  },
+  {
+    "family": "cases",
+    "id": "case06-attendance",
+    "title": "Which evidence describes an employee\u2019s work?",
+    "source": "static/diagrams/cases/case06-attendance.drawio",
+    "sourceSha256": "5d962702b731ea833d089d456768f407b111740ff31022d717765e20b10f9324",
+    "svgSha256": "3d26c1a9acd32c343a96c3763a76ad6629585eff9b6d9be18dfa26676ba24ea2"
+  },
+  {
+    "family": "cases",
+    "id": "case06-grains",
+    "title": "At what level should pay be connected?",
+    "source": "static/diagrams/cases/case06-grains.drawio",
+    "sourceSha256": "7b9577bfa20c80a742040a3481835bfe7d1900e9e8e106f00e2282bfdb0da12f",
+    "svgSha256": "7eb1f7077b2f6d9311e198b56cbd801d46eda8814f23dfcd71c2760b486acb20"
+  },
+  {
+    "family": "cases",
+    "id": "case06-pay",
+    "title": "How do approved hours become pay and cost?",
+    "source": "static/diagrams/cases/case06-pay.drawio",
+    "sourceSha256": "07c2e697d9e8651442564dc0175c5e51512e436da5c36d49a2ee8dbddc98eecf",
+    "svgSha256": "6740a165645f5c4d0891a6f9145c9961cb4a1f8455814756e22f6d00e110f048"
+  },
+  {
+    "family": "cases",
+    "id": "case06-settlement",
+    "title": "Which obligations remain after employees receive net pay?",
+    "source": "static/diagrams/cases/case06-settlement.drawio",
+    "sourceSha256": "d23ad18c6916c7c518d069a269ab384707a1be161d216eaf47c30882e1839edf",
+    "svgSha256": "04ea1b450853e1ab5bda7764fbbc9b33c2df8ef2737fa36923dd5d46f1833774"
+  },
+  {
+    "family": "cases",
+    "id": "case07-statements",
+    "title": "How do source events reach the management review?",
+    "source": "static/diagrams/cases/case07-statements.drawio",
+    "sourceSha256": "d092abdcdb2facfdfeb52fe6a6471817667643b54ef769d7d11790f351fb6f0c",
+    "svgSha256": "89dc0500f72e731ce09ad3bc31a53ad15238051471e50bc0b2b44e6ead800861"
+  },
+  {
+    "family": "cases",
+    "id": "case07-rollforward",
+    "title": "Which history belongs in each column?",
+    "source": "static/diagrams/cases/case07-rollforward.drawio",
+    "sourceSha256": "4da6b5469788370f813e0acf8b454f3e884a4f52115887649a99356c5b7dc755",
+    "svgSha256": "e97f09ae0e0aad60c6baf56eee92db006d5ed6a198bfe9a163a210ae0032ff71"
+  },
+  {
+    "family": "cases",
+    "id": "case07-close",
+    "title": "What does the annual closing sequence do?",
+    "source": "static/diagrams/cases/case07-close.drawio",
+    "sourceSha256": "a073db5c4a8b4cc640b3254bf70a96357c0242c56134075ce3acb850fd1e6c16",
+    "svgSha256": "ee18cc12fe7b3532badac82345ffe13a938b980212ed73699e9c987688381bf5"
+  },
+  {
+    "family": "cases",
+    "id": "case07-profit-cash",
+    "title": "How should management read the quarter?",
+    "source": "static/diagrams/cases/case07-profit-cash.drawio",
+    "sourceSha256": "d4e3f0d0ea174d8e189783db764b7b655cad65aef66bb9996d775db96f03fa9b",
+    "svgSha256": "e4f0ddeef7fc8418d7ee5d960444e8370dc6199f5930eab9411e75a42f3dd523"
+  },
+  {
+    "family": "cases",
+    "id": "case07-asset",
+    "title": "How does a financed asset affect cost and cash?",
+    "source": "static/diagrams/cases/case07-asset.drawio",
+    "sourceSha256": "d0b9395cea3879d8594e3a4496d5f74b61a02dd138e1c7c699fd8841c1062e05",
+    "svgSha256": "d9b16965eff0c2effa7ae86569ff550a5bd9afdfd888f4d950c7e1dee89d1dae"
+  },
+  {
+    "family": "cases",
+    "id": "case08-risk",
+    "title": "What turns a risk into an investigation?",
+    "source": "static/diagrams/cases/case08-risk.drawio",
+    "sourceSha256": "1d2e3090b251191fa5cf304517d4d83ccca8fffa9147d72502d605daae9d643c",
+    "svgSha256": "8357af57c885579f46aea4c6ef5b834e5162dba782362bfb2c1ed7c988ec527e"
+  },
+  {
+    "family": "cases",
+    "id": "case08-ap",
+    "title": "What evidence distinguishes a repeated reference from duplicate payment?",
+    "source": "static/diagrams/cases/case08-ap.drawio",
+    "sourceSha256": "f0d807a83b9a21234068ce469cd4234001cdfb785fd810aa6f390e96547e3c32",
+    "svgSha256": "f1b743d224fea5d33ba0144e2ba609f1bea7047d572e6a3210762db09ff4c98e"
+  },
+  {
+    "family": "cases",
+    "id": "case08-overtime",
+    "title": "Which approval supports the overtime hours?",
+    "source": "static/diagrams/cases/case08-overtime.drawio",
+    "sourceSha256": "003496b0ae3918705696fe264aed992bb8d5760105507f3fa9020c6976dfa76f",
+    "svgSha256": "a1e5c90dead75447d7e2dba020e1281610e152c03bc88179396abb34882cec4f"
+  },
+  {
+    "family": "cases",
+    "id": "case08-finding",
+    "title": "How should an exception be classified?",
+    "source": "static/diagrams/cases/case08-finding.drawio",
+    "sourceSha256": "2b9d437f5149949b3d02662f38e97b98999dcbbbe3a075f67c9e725a42036977",
+    "svgSha256": "dcc13a9f38d52d9a0fe96e6d5fae7410b77819693428cff6719ca497cf719755"
+  },
+  {
+    "family": "cases",
+    "id": "case08-assessment",
+    "title": "How can the proposed control be assessed?",
+    "source": "static/diagrams/cases/case08-assessment.drawio",
+    "sourceSha256": "e8b77d9bcb344f80fe9ec93b995fab3301d5c20ab55c9d8c45ca12dc717b481c",
+    "svgSha256": "a0451abbbdb8231b078bebcfa0f855f8be3daed0a52383bba964bd339ff8b6ed"
+  }
+]

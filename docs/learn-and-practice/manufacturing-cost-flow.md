@@ -21,7 +21,7 @@ The operations planner sees that work order **1** has produced its finished good
 
 <span id="learning-objectives"></span>
 
-**Your task:** Separate material issue, standard-cost completion, and the later close of one work order.
+**Your task.** Separate material issue, standard-cost completion, and the later close of one work order.
 
 <TutorialFigure figureId="manufacturing-cost-flow" />
 
@@ -32,12 +32,21 @@ Read [Manufacturing](../processes/manufacturing.md). This work order is a separa
 <ToolSteps>
 <TabItem value="excel">
 
-In `Lesson09.xlsx`, import `T51_WorkOrder` as `WorkOrderData` filtered to ID 1; `T54_MaterialIssue` as `IssueData` filtered to WorkOrderID 1; `T55_MaterialIssueLine` as `IssueLineData` filtered to MaterialIssueID 1; `T56_ProductionCompletion` as `CompletionData` filtered to WorkOrderID 1; `T57_ProductionCompletionLine` as `CompletionLineData` filtered to ProductionCompletionID 1 **or** 2; and `T58_WorkOrderClose` as `CloseData` filtered to WorkOrderID 1.
+In `Lesson09.xlsx`, import the following tables and apply the stated filters in Power Query.
+
+| Published table | Working name | Filter |
+|---|---|---|
+| `T51_WorkOrder` | `WorkOrderData` | `WorkOrderID = 1` |
+| `T54_MaterialIssue` | `IssueData` | `WorkOrderID = 1` |
+| `T55_MaterialIssueLine` | `IssueLineData` | `MaterialIssueID = 1` |
+| `T56_ProductionCompletion` | `CompletionData` | `WorkOrderID = 1` |
+| `T57_ProductionCompletionLine` | `CompletionLineData` | `ProductionCompletionID = 1` or `2` |
+| `T58_WorkOrderClose` | `CloseData` | `WorkOrderID = 1` |
 
 </TabItem>
 <TabItem value="sql">
 
-Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson09.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson09.sql**. Run each supplied query separately, using its filters to identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
@@ -120,7 +129,7 @@ Merge `CompletionData` with `CompletionLineData` on `ProductionCompletionID`, us
 =SUM(CompletionTrace[ExtendedStandardTotalCost])
 ```
 
-Read CloseData and compare its date with the last completion date. Label Notes!B7 Variance components and B8 Stored variance; enter:
+Read CloseData and compare its date with the last completion date. Label Notes!B7 Variance components and B8 Stored variance, then enter the corresponding formulas below.
 
 ```text title="Excel — Notes!B7"
 =SUM(CloseData[MaterialVarianceAmount])+SUM(CloseData[ConversionVarianceAmount])
@@ -165,7 +174,7 @@ WHERE WorkOrderID = 1;
 
 Completions on **January 25 and 26** total **7.03 units**, **729.36** standard material cost, **290.49** standard conversion cost, and **1,019.85** total standard cost. Close occurs on **February 1**.
 
-The close records material variance **24.93** and conversion variance **718.23**, totaling **743.16**. Conversion variance already includes direct labor **6.22** and overhead **712.01**; adding all four variance columns would count parts twice.
+The close records material variance **24.93** and conversion variance **718.23**, totaling **743.16**. Conversion variance already includes direct labor **6.22** and overhead **712.01**, so adding all four variance columns would count parts twice.
 
 ## 3. Read Actual Labor Support Separately
 
@@ -199,13 +208,17 @@ ORDER BY WorkDate, LaborTimeEntryID;
 </TabItem>
 </ToolSteps>
 
-Expect **five labor entries**, IDs **213, 214, 215, 429, and 501**, with recorded labor support totaling **191.89**. Compare the meaning of this result with completion's standard conversion cost. Labor records describe work and its stored cost basis; conversion also includes overhead. Do not claim a complete variance reconciliation from labor rows alone.
+Expect **five labor entries**, IDs **213, 214, 215, 429, and 501**, with recorded labor support totaling **191.89**. Compare the meaning of this result with completion's standard conversion cost. Labor records describe work and its stored cost basis, while conversion also includes overhead. Do not claim a complete variance reconciliation from labor rows alone.
 
 <span id="assessed-deliverable"></span>
 
 ## Keep Your Evidence
 
 Save separate issue, completion, close, and labor-support sections. Explain what had occurred by January 31 and what was recorded on February 1. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
+
+For the AIS checkpoint, retrieve the complete vouchers for material issue **1**, production completions **1 and 2**, and work-order close **1**, using the source types `MaterialIssue`, `ProductionCompletion`, and `WorkOrderClose` with their paired IDs. Apply the [Lesson 6 method](find-the-accounting-entries.md#1-locate-the-complete-event-vouchers) in Excel or SQL. After balancing each voucher, retain the `1046` WIP rows separately. Its selected opening contribution is **0.00** on January 1, 2024. At January 31, **754.29** issue debits less **729.36** completion credits leave **24.93** debit WIP. The February 1 close credits that 24.93, leaving **0.00**. Explain why work-order release and labor-support records create no independent additional WIP posting.
+
+The [optional account reconciliation](#optional-account-reconciliation) supplies the detailed source schedule and wider pooled clearing analysis. The short selected-WIP checkpoint above is sufficient before an AIS handoff. Full pooled clearing remains an extension.
 
 <span id="interpretation-and-limitations"></span>
 
@@ -215,10 +228,21 @@ At January 31, the selected goods are completed but work-order close has not yet
 
 Compare the issued material cost with the standard material cost completed. Which recorded variance does their difference explain?
 
+Then repeat the event selection for **work order 2**. Find its issue and completion IDs from their WorkOrderID links rather than reusing work order 1's IDs.
+
+<details>
+<summary>Hint for the second work order</summary>
+
+Inspect MaterialIssue, ProductionCompletion, and WorkOrderClose separately for WorkOrderID 2. Collect every matching source ID before retrieving ledger rows. Multiple events in one branch must remain visible.
+
+</details>
+
 <details>
 <summary>Compare your reasoning</summary>
 
 754.29 − 729.36 = 24.93, matching the selected material variance. It does not explain the 718.23 conversion variance or make the completed standard total an actual-cost total.
+
+Work order 2 has material issues **2 and 3**, completions **3 and 4**, and close **2** on February 1. Its material variance is **0.69**. A trace containing only the first issue or first completion would be incomplete even if its selected voucher balanced. Reconcile all matching events at the cutoff before explaining the order's residual WIP.
 
 </details>
 
@@ -259,7 +283,7 @@ GROUP BY g.PostingDate, g.VoucherNumber, g.SourceDocumentType,
 ORDER BY g.PostingDate, g.VoucherNumber, a.AccountNumber;
 ```
 
-In Excel, filter `GLEntry` on each of those type/ID pairs, append the four complete voucher populations, merge `Account` on `AccountID`, and group by the displayed fields with separate debit and credit sums. Retain the ungrouped detail to check each voucher's balance. There are **14 original ledger rows**; grouping produces **11 account rows**, and each of the four complete vouchers balances.
+In Excel, filter `GLEntry` on each of those type/ID pairs, append the four complete voucher populations, merge `Account` on `AccountID`, and group by the displayed fields with separate debit and credit sums. Retain the ungrouped detail to check each voucher's balance. Grouping the **14 original ledger rows** produces **11 account rows**, and each of the four complete vouchers balances.
 
 | Event | `1045` materials | `1046` WIP | `1040` finished goods | `1090` clearing | `5080` variance |
 |---|---:|---:|---:|---:|---:|
@@ -267,7 +291,7 @@ In Excel, filter `GLEntry` on each of those type/ID pairs, append the four compl
 | January 25–26 completions, combined | — | Credit 729.36 | Debit 1,019.85 | Credit 290.49 | — |
 | February 1 close | — | Credit 24.93 | — | Credit 718.23 | Debit 743.16 |
 
-`1045` holds components before issue; `1046` holds their issued cost awaiting completion or close. `1040` receives the standard completed cost. `1090` connects conversion cost recognition and relief across a wider manufacturing population. `5080` records the close differences.
+`1045` holds components before issue, while `1046` holds their issued cost awaiting completion or close. `1040` receives the standard completed cost. `1090` connects conversion cost recognition and relief across a wider manufacturing population. `5080` records the close differences.
 
 ### 2. Roll Forward Selected WIP at Two Cutoffs
 
@@ -279,7 +303,7 @@ For February 1 alone:
 
 **24.93 opening + 0.00 new selected WIP debits − 24.93 close credit = 0.00 selected WIP.**
 
-The February close is excluded from January 31. The selected `1040` completion debits of **1,019.85** measure goods received from this order; they are not the company's finished-goods balance or proof those goods remain unsold. Likewise, the selected `1045` credits are an issue movement, not the materials account's ending balance. The `5080` close debits total **743.16**; they do not summarize all company manufacturing variances.
+The February close is excluded from January 31. The selected `1040` completion debits of **1,019.85** measure goods received from this order without establishing the company's finished-goods balance or whether those goods remain unsold. Likewise, the selected `1045` credits are an issue movement, not the materials account's ending balance. The selected `5080` close debits of **743.16** do not summarize all company manufacturing variances.
 
 ### 3. Separate Operational Labor from Conversion Valuation
 
@@ -308,11 +332,11 @@ CROSS JOIN labor_support AS l
 JOIN WorkOrderClose AS c ON c.WorkOrderID = 1;
 ```
 
-In Excel, sum those two standard-cost columns in `CompletionTrace` separately; sum `LaborData[ExtendedLaborCost]` at its retained labor-entry grain. The labor difference **191.89 − 185.67 = 6.22** agrees with the stored direct-labor variance. The close separately stores **712.01** overhead variance, giving **6.22 + 712.01 = 718.23** conversion variance. The five labor rows do not substantiate a work-order overhead amount. Adding an unexplained remainder to them and calling it “actual overhead” would go beyond this evidence.
+In Excel, sum the two standard-cost columns in `CompletionTrace` separately and sum `LaborData[ExtendedLaborCost]` at its retained labor-entry grain. The labor difference **191.89 − 185.67 = 6.22** agrees with the stored direct-labor variance. The close separately stores **712.01** overhead variance, giving **6.22 + 712.01 = 718.23** conversion variance. The five labor rows do not substantiate a work-order overhead amount. Adding an unexplained remainder to them and calling it “actual overhead” would go beyond this evidence.
 
 ### 4. Roll Forward the Complete Clearing Account
 
-An order's completion and close credits to `1090` do not carry the pooled payroll or depreciation debits for that order. Widen this part to **every company `1090` posting**, keeping posting-date cutoffs explicit. Positive signed balances below mean debit; negative means credit.
+An order's completion and close credits to `1090` do not carry the pooled payroll or depreciation debits for that order. Widen this part to **every company `1090` posting**, keeping posting-date cutoffs explicit. Positive signed balances below mean debit, while negative balances mean credit.
 
 ```sql
 WITH periods AS (
@@ -346,9 +370,9 @@ ORDER BY p.StartDate;
 | February 1 | −2,452.60 | 0.00 | 12,894.16 | −15,346.76 |
 | February 2 | −15,346.76 | 169,382.48 | 8,968.64 | 145,067.08 |
 
-For an Excel equivalent, retain a separate reference containing **all** `GLEntry` rows for account `1090`. Use posting dates before each start date for opening, dates from the start inclusive to the end exclusive for period debit/credit, and dates before the end for closing. Check **opening + debits − credits = closing**; do not filter this reference to work order 1's four vouchers.
+For an Excel equivalent, retain a separate reference containing **all** `GLEntry` rows for account `1090`. Use posting dates before each start date for opening, dates from the start inclusive to the end exclusive for period debit/credit, and dates before the end for closing. Check **opening + debits − credits = closing** using the full account population rather than work order 1's four vouchers.
 
-Every movement here has a ledger source. January's **20,875.00** debit is the five manufacturing-equipment depreciation lines in `JournalEntryID = 6` on January 31; January credits are production completions. February 1 credits comprise **8,666.21** completions and **4,227.95** work-order closes. February 2 has **8,968.64** completion credits and a **169,382.48** payroll-summary debit, voucher **PRS-0002-004**, source ID **1002004**. That summary covers payroll period **2**, manufacturing cost center **4**; its debit is not allocated by `GLEntry` to work order 1. Use the [PayrollSummary mapping](../reference/posting.md#payrollsummary-register-summaries) rather than a direct employee-register-ID join.
+Every movement here has a ledger source. January's **20,875.00** debit is the five manufacturing-equipment depreciation lines in `JournalEntryID = 6` on January 31, while January credits are production completions. February 1 credits comprise **8,666.21** completions and **4,227.95** work-order closes. February 2 has **8,968.64** completion credits and a **169,382.48** payroll-summary debit, voucher **PRS-0002-004**, source ID **1002004**. That summary covers payroll period **2**, manufacturing cost center **4**. Its debit is not allocated by `GLEntry` to work order 1. Use the [PayrollSummary mapping](../reference/posting.md#payrollsummary-register-summaries) rather than a direct employee-register-ID join.
 
 The pooled balance changes with payroll, depreciation, completion, and close posting dates. A credit balance at a cutoff does not establish negative physical production cost, and this short window does not represent the full manufacturing cycle. **Attribution limit:** the selected evidence supports the work-order WIP roll-forward, standard completion, stored variances, and the complete pooled clearing roll-forward. It does not provide a work-order-specific allocation of every pooled debit, independently verify the overhead allocation underlying the stored close, or establish a complete actual-cost valuation for work order 1. State that limit rather than inventing an allocation or unexplained overhead residual.
 

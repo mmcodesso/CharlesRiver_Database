@@ -1,22 +1,120 @@
-<mxfile host="Electron" agent="Charles River website" version="29.6.6" type="device"><diagram id="accrual-settlement" name="Accrued-Service Settlement | estimate, invoice and cash"><mxGraphModel dx="1800" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1920" pageHeight="1280" math="0" shadow="0" background="#FFFFFF"><root><mxCell id="0"/>
-<mxCell id="1" parent="0"/>
-<object id="title" label="Accrued-Service Settlement | estimate, invoice and cash" bpmnType="heading" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=28;align=left;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="40" y="15" width="1800" height="40" as="geometry"/></mxCell></object>
-<object id="subtitle" label="BPMN 2.0 teaching model • a supplier service invoice links to an original accrual; no goods receipt is created for this path." bpmnType="heading" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=14;align=left;" vertex="1" parent="1"><mxGeometry x="40" y="62" width="1800" height="34" as="geometry"/></mxCell></object>
-<object id="charles-river" label="Charles River Home Furnishings, Inc. — organizational responsibilities are a teaching allocation" bpmnType="pool" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=1;startSize=38;collapsible=0;fontStyle=1;fillColor=#E9EFEA;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="40" y="245" width="1800" height="578" as="geometry"/></mxCell></object>
-<object id="finance" label="Finance / accrual preparer" bpmnType="lane" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river"><mxGeometry x="0" y="38" width="1800" height="180" as="geometry"/></mxCell></object>
-<object id="ap" label="Accounts payable" bpmnType="lane" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river"><mxGeometry x="0" y="218" width="1800" height="180" as="geometry"/></mxCell></object>
-<object id="treasury" label="Treasury" bpmnType="lane" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river"><mxGeometry x="0" y="398" width="1800" height="180" as="geometry"/></mxCell></object>
-<object id="supplier" label="Service supplier" bpmnType="pool" blackBox="true"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=35;collapsible=0;fillColor=#F2F4EF;swimlaneFillColor=#FAF9F5;" vertex="1" parent="1"><mxGeometry x="40" y="125" width="1800" height="65" as="geometry"/></mxCell></object>
-<object id="expense" label="Service cost&#xa;incurred" bpmnType="start" participant="charles-river"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=standard;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;" vertex="1" parent="finance"><mxGeometry x="185" y="47" width="42" height="42" as="geometry"/></mxCell></object>
-<object id="estimate" label="Record expense estimate&#xa;and accrued liability" bpmnType="task" participant="charles-river" evidenceTables="JournalEntry,GLEntry"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;" vertex="1" parent="finance"><mxGeometry x="290" y="32" width="220" height="66" as="geometry"/></mxCell></object>
-<object id="invoice-arrives" label="Supplier invoice&#xa;received" bpmnType="messageCatch" participant="charles-river"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=catching;symbol=message;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;" vertex="1" parent="ap"><mxGeometry x="620" y="57" width="42" height="42" as="geometry"/></mxCell></object>
-<object id="invoice" label="Link invoice to accrual;&#xa;record AP / any excess" bpmnType="task" participant="charles-river" evidenceTables="PurchaseInvoice,PurchaseInvoiceLine,GLEntry"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;" vertex="1" parent="ap"><mxGeometry x="780" y="42" width="230" height="66" as="geometry"/></mxCell></object>
-<object id="payment" label="Pay supplier&#xa;accounts payable" bpmnType="task" participant="charles-river" evidenceTables="DisbursementPayment,GLEntry"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;" vertex="1" parent="treasury"><mxGeometry x="1210" y="42" width="200" height="66" as="geometry"/></mxCell></object>
-<object id="end" label="AP payment&#xa;recorded" bpmnType="end" participant="charles-river"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=end;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;" vertex="1" parent="treasury"><mxGeometry x="1600" y="52" width="42" height="42" as="geometry"/></mxCell></object>
-<object id="flow-1" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="expense" target="estimate"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="flow-2" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="estimate" target="invoice-arrives"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="595" y="348"/><mxPoint x="595" y="541"/></Array></mxGeometry></mxCell></object>
-<object id="flow-3" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="invoice-arrives" target="invoice"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="flow-4" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="invoice" target="payment"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1135" y="538"/><mxPoint x="1135" y="718"/></Array></mxGeometry></mxCell></object>
-<object id="flow-5" label="" flowType="sequence"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="payment" target="end"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="flow-6" label="Service invoice" flowType="message"><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;startArrow=oval;startFill=0;startSize=5;endArrow=blockThin;endFill=0;endSize=9;exitX=0.356;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="supplier" target="invoice-arrives"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell></object>
-<object id="scope" label="PurchaseInvoiceLine.AccrualJournalEntryID points to the estimate; GoodsReceiptLineID is absent on this service path. An invoice below estimate may leave a residual accrual.&#xa;Later Accrual Adjustment journals use reversal links; they do not have to wait for AP cash payment. Residual-aging reconciliation is a proposed teaching control, not a stored workflow queue." bpmnType="heading" ><mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=13;align=left;" vertex="1" parent="1"><mxGeometry x="40" y="847" width="1800" height="48" as="geometry"/></mxCell></object></root></mxGraphModel></diagram></mxfile>
+<mxfile host="Electron" agent="Charles River website" version="29.6.6" type="device">
+  <diagram id="accrual-settlement" name="Accrued-Service Settlement | estimate, invoice and cash">
+    <mxGraphModel dx="1800" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1920" pageHeight="1280" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="Accrued-Service Settlement | estimate, invoice and cash" bpmnType="heading">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=28;align=left;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="15" width="1800" height="40" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="BPMN 2.0 teaching model • a supplier service invoice links to an original accrual; no goods receipt is created for this path." bpmnType="heading">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=14;align=left;" vertex="1" parent="1">
+            <mxGeometry x="40" y="62" width="1800" height="34" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="charles-river" label="Charles River Home Furnishings, Inc. — organizational responsibilities are a teaching allocation" bpmnType="pool">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=1;startSize=38;collapsible=0;fontStyle=1;fillColor=#E9EFEA;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="40" y="245" width="1800" height="578" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="finance" label="Finance / accrual preparer" bpmnType="lane">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river">
+            <mxGeometry x="0" y="38" width="1800" height="180" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="ap" label="Accounts payable" bpmnType="lane">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river">
+            <mxGeometry x="0" y="218" width="1800" height="180" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="treasury" label="Treasury" bpmnType="lane">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=135;collapsible=0;fontStyle=1;fillColor=#F2F4EF;swimlaneFillColor=#FFFFFF;" vertex="1" parent="charles-river">
+            <mxGeometry x="0" y="398" width="1800" height="180" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="supplier" label="Service supplier" bpmnType="pool" blackBox="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;swimlane;horizontal=0;startSize=35;collapsible=0;fillColor=#F2F4EF;swimlaneFillColor=#FAF9F5;" vertex="1" parent="1">
+            <mxGeometry x="40" y="125" width="1800" height="65" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="expense" label="Service cost&#10;incurred" bpmnType="start" participant="charles-river">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=standard;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;fontSize=16;" vertex="1" parent="finance">
+            <mxGeometry x="185" y="47" width="42" height="42" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="estimate" label="Record expense estimate&#10;and accrued liability" bpmnType="task" participant="charles-river" evidenceTables="JournalEntry,GLEntry">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;fontSize=16;" vertex="1" parent="finance">
+            <mxGeometry x="290" y="32" width="220" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="invoice-arrives" label="Supplier invoice&#10;received" bpmnType="messageCatch" participant="charles-river">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=catching;symbol=message;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;fontSize=16;" vertex="1" parent="ap">
+            <mxGeometry x="620" y="57" width="42" height="42" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="invoice" label="Link invoice to accrual;&#10;record AP / any excess" bpmnType="task" participant="charles-river" evidenceTables="PurchaseInvoice,PurchaseInvoiceLine,GLEntry">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;fontSize=16;" vertex="1" parent="ap">
+            <mxGeometry x="780" y="42" width="230" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="payment" label="Pay supplier&#10;accounts payable" bpmnType="task" participant="charles-river" evidenceTables="DisbursementPayment,GLEntry">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.task2;rectStyle=rounded;size=10;taskMarker=abstract;container=0;expand=0;collapsible=0;fontSize=16;" vertex="1" parent="treasury">
+            <mxGeometry x="1210" y="42" width="200" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="end" label="AP payment&#10;recorded" bpmnType="end" participant="charles-river">
+          <mxCell style="html=0;fontFamily=Arial;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;shape=mxgraph.bpmn.event;outline=end;symbol=general;perimeter=ellipsePerimeter;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;labelBackgroundColor=#FFFFFF;labelWidth=140;fontSize=16;" vertex="1" parent="treasury">
+            <mxGeometry x="1600" y="52" width="42" height="42" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-1" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="expense" target="estimate">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-2" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="estimate" target="invoice-arrives">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="595" y="348" />
+                <mxPoint x="595" y="541" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="flow-3" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="invoice-arrives" target="invoice">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-4" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="invoice" target="payment">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1135" y="538" />
+                <mxPoint x="1135" y="718" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="flow-5" label="" flowType="sequence">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=blockThin;endFill=1;endSize=9;" edge="1" parent="1" source="payment" target="end">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="flow-6" label="Service invoice" flowType="message">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;jettySize=15;fontSize=12;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;startArrow=oval;startFill=0;startSize=5;endArrow=blockThin;endFill=0;endSize=9;exitX=0.356;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="supplier" target="invoice-arrives">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="scope" label="PurchaseInvoiceLine.AccrualJournalEntryID points to the estimate; GoodsReceiptLineID is absent on this service path. An invoice below estimate may leave a residual accrual.&#10;Later Accrual Adjustment journals use reversal links; they do not have to wait for AP cash payment. Residual-aging reconciliation is a proposed teaching control, not a stored workflow queue." bpmnType="heading">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=14;fontColor=#152b35;strokeColor=#196252;strokeWidth=1.5;fillColor=#FFFFFF;whiteSpace=wrap;text;strokeColor=none;fillColor=none;fontSize=13;align=left;" vertex="1" parent="1">
+            <mxGeometry x="40" y="847" width="1800" height="48" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

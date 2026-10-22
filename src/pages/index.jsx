@@ -36,9 +36,9 @@ export default function Home() {
           <div className={styles.heroCopy}>
             <p className={styles.eyebrow}>Accounting Analytics Hub / {displayName}</p>
             <p className={styles.environment}>Learn accounting through one connected business</p>
-            <h1 id="home-title">One company.<br />A connected<br /><em>accounting story.</em></h1>
+            <h1 id="home-title">{displayName}<br />Accounting processes<br /><em>and evidence.</em></h1>
             <p className={styles.lede}>Meet {displayName}, a home-furnishings business in Greater Boston. Follow its sales, purchases, production, and people through source documents to the general ledger. Use SQL, Excel, and guided cases to explain what happened and support a decision.</p>
-            <p className={styles.principle}>Learn the business before the joins.</p>
+            <p className={styles.principle}>Understand the company before analyzing its records.</p>
             <div className={styles.actions}>
               <Link className="button button--primary" to="/docs/company-story">Meet the company <span aria-hidden="true">→</span></Link>
               <Link className="button button--outline button--primary" to="/docs/">Begin learning</Link>
@@ -54,7 +54,7 @@ export default function Home() {
           <p><strong>82</strong><span>connected accounting tables</span></p><p><strong>2024–2026</strong><span>main operating years</span></p><p><strong>SQLite · Excel · CSV</strong><span>three published formats</span></p><p><strong>Open educational resource</strong><span>CC BY-SA 4.0</span></p>
         </div></div>
         <section className={styles.section} aria-labelledby="company-heading"><div className={styles.companyGrid}>
-          <div><p className={styles.eyebrow}>The business behind the data</p><h2 id="company-heading">Furniture, materials,<br />and a different kind<br />of revenue: time.</h2></div>
+          <div><p className={styles.eyebrow}>The business behind the data</p><h2 id="company-heading">Merchandise, manufacturing,<br />and hourly<br />Design Services.</h2></div>
           <div className={styles.companyCopy}><p>{branding.companyName ?? "Charles River Home Furnishings, Inc."} combines purchased merchandise, selected in-house manufacturing, and hourly Design Services. These operating choices connect demand to inventory, labor, receivables, payables, and financial close.</p><p>Start with the customer and the people doing the work. Follow their documents through the process guides, then examine the records to explain a balance, investigate a difference, or recommend a next step.</p><Link className={styles.textLink} to="/docs/company-story">Read the Company Story <span aria-hidden="true">→</span></Link></div>
         </div></section>
         <section className={styles.tintedSection} aria-labelledby="pathways-heading"><div className={styles.sectionInner}>
@@ -67,7 +67,7 @@ export default function Home() {
           <div className={styles.caseGrid}>{cases.map((item) => <article className={styles.case} key={item.href}><p className={styles.pathLabel}>{item.tag}</p><h3><Link to={item.href}>{item.title}</Link></h3><p>{item.text}</p><Link className={styles.textLink} to={item.href}>Open the guided case <span aria-hidden="true">→</span></Link></article>)}</div>
         </div></section>
         <section className={styles.section} aria-labelledby="resources-heading"><div className={styles.resourceGrid}>
-          <div><p className={styles.eyebrow}>One environment, connected resources</p><h2 id="resources-heading">Teach the concepts.<br />Examine the company.<br />Interpret the results.</h2><p className={styles.lede}>Accounting Analytics Hub brings the learning resources together. The textbook develops the concepts; {displayName} provides the company, data, and investigations.</p><a className={styles.textLink} href="https://aa.accountinganalyticshub.com/">Read Accounting Analytics: An Integrated Approach <span aria-hidden="true">↗</span></a></div>
+          <div><p className={styles.eyebrow}>One environment, connected resources</p><h2 id="resources-heading">Teach the concepts.<br />Examine the company.<br />Interpret the results.</h2><p className={styles.lede}>Accounting Analytics Hub brings the learning resources together. The textbook develops the concepts, while {displayName} provides the company, data, and investigations.</p><a className={styles.textLink} href="https://aa.accountinganalyticshub.com/">Read Accounting Analytics: An Integrated Approach <span aria-hidden="true">↗</span></a></div>
           <div className={styles.resourceList}>
             <Link to="/docs/analytics"><strong>Reports & analytics</strong><span>{reportCount} reports organized by business topic, with interpretation guidance.</span><span aria-hidden="true">→</span></Link>
             <Link to="/docs/analytics/analysis-tracks"><strong>SQL Query Library</strong><span>{queryCount} SQL files, source tables, and guided reconciliation paths.</span><span aria-hidden="true">→</span></Link>

@@ -20,7 +20,7 @@ The design lead has approved the team's January work. Customer accounting must d
 
 <span id="learning-objectives"></span>
 
-**Your task:** Reconcile approved time to one service billing period and distinguish revenue from time-cost support.
+**Your task.** Reconcile approved time to one service billing period and distinguish revenue from time-cost support.
 
 <TutorialFigure figureId="follow-design-time-into-billing" />
 
@@ -31,12 +31,19 @@ Finish the sales tutorials and read [Design Services](../processes/design-servic
 <ToolSteps>
 <TabItem value="excel">
 
-For `Lesson07.xlsx`, import `T11_ServiceEngagement` as `EngagementData` filtered to ID 2; `T13_ServiceTimeEntry` as `ServiceTimeData` filtered to engagement 2 and January WorkDate; `T18_ServiceBillingLine` as `BillingData` filtered to ID 2; and `T17_SalesInvoiceLine` as `InvoiceLineData` filtered to ID 387. Convert date fields to Date.
+In `Lesson07.xlsx`, import the following tables and convert date fields to Date.
+
+| Published table | Working name | Power Query filter |
+|---|---|---|
+| `T11_ServiceEngagement` | `EngagementData` | `ServiceEngagementID = 2` |
+| `T13_ServiceTimeEntry` | `ServiceTimeData` | `ServiceEngagementID = 2` and January 2024 `WorkDate` |
+| `T18_ServiceBillingLine` | `BillingData` | `ServiceBillingLineID = 2` |
+| `T17_SalesInvoiceLine` | `InvoiceLineData` | `SalesInvoiceLineID = 387` |
 
 </TabItem>
 <TabItem value="sql">
 
-Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson07.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson07.sql**. Run each supplied query separately, using its filters to identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
@@ -80,7 +87,7 @@ Read `EngagementData`: engagement **SE-2024-000002**, customer **30**, hourly ra
 </TabItem>
 <TabItem value="sql">
 
-Read the agreement, then total approved time for this engagement and work period. Approval and date filters make the population explicit. `IS NOT NULL` requires an approval date to be present; the following date condition checks when approval occurred.
+Read the agreement, then total approved time for this engagement and work period. Approval and date filters make the population explicit. `IS NOT NULL` requires an approval date to be present, and the following date condition checks when approval occurred.
 
 ```sql title="l07-engagement.sql"
 SELECT ServiceEngagementID, EngagementNumber, CustomerID, HourlyRate
@@ -104,11 +111,11 @@ WHERE ServiceEngagementID = 2
 </TabItem>
 </ToolSteps>
 
-Expect **7 approved entries**, **32.67 billable hours**, **1.21 non-billable hours**, and **937.02** of recorded time cost. Non-billable hours are still work; they are not included in this billing quantity.
+Expect **7 approved entries**, **32.67 billable hours**, **1.21 non-billable hours**, and **937.02** of recorded time cost. Non-billable hours represent work that is excluded from this billing quantity.
 
 ## 2. Check the Billing Bridge
 
-The billing record identifies the engagement, covered dates, and invoice line. Time entries link to this calculation through the engagement and work period; they do not each carry an invoice-line key.
+The billing record identifies the engagement, covered dates, and invoice line. Time entries support this calculation through their engagement and work period rather than an invoice-line key on each entry.
 
 <ToolSteps>
 <TabItem value="excel">
@@ -141,7 +148,13 @@ WHERE b.ServiceBillingLineID = 2;
 </TabItem>
 </ToolSteps>
 
-**32.67 × 210.00 = 6,860.70**, agreeing with the billing amount and invoice-line amount. In this dataset, the invoice posts service revenue; approved time by itself does not post that revenue. Collection uses the receipt/application process you already investigated.
+**32.67 × 210.00 = 6,860.70**, agreeing with the billing amount and invoice-line amount. In this dataset, the invoice posts service revenue, while approved time supports billing without an additional revenue posting. Collection uses the receipt/application process you already investigated.
+
+## 3. Retrieve the Invoice Voucher
+
+Reuse the [complete-voucher method from Lesson 6](find-the-accounting-entries.md#1-locate-the-complete-event-vouchers). In Excel, import `T3_GLEntry` as `ServiceInvoiceGL`, filtered to `SourceDocumentType = SalesInvoice` and `SourceDocumentID = 241`, and add account names from `T1_Account`. In SQL, adapt Lesson 6's paired source filters to the same type and ID. Retrieve all accounts before totaling debits and credits.
+
+Expect three ledger rows dated **January 31, 2024**, with **7,306.65** on each side. AR is debited for 7,306.65, service revenue is credited for 6,860.70, and sales tax payable is credited for 445.95. Explain why the seven approved time entries support the invoice without recognizing another 6,860.70 of revenue. Approval establishes a billing input, while the invoice is the revenue posting source.
 
 <span id="assessed-deliverable"></span>
 
@@ -155,12 +168,21 @@ The 937.02 is recorded time-cost support, including the selected non-billable wo
 
 ## Try One Change
 
-Calculate the total hours worked and the billable share of those hours. Explain why neither number is an invoice amount.
+Calculate the total hours worked and the billable share of those hours. Explain why neither number is an invoice amount. Then transfer the billing and ledger method to billing line **3**, a separate engagement example. Predict the posting route before retrieving its linked invoice.
+
+<details>
+<summary>Hint for the second billing record</summary>
+
+Filter ServiceBillingLine to ID 3 and follow its stored SalesInvoiceLineID to the invoice header. Keep this engagement and billing period separate from engagement 2. Retrieve that invoice's complete voucher with its actual source type and ID.
+
+</details>
 
 <details>
 <summary>Compare your reasoning</summary>
 
-Total recorded hours are 33.88; 32.67 ÷ 33.88 is about 96.43% billable. Hours are a quantity of work. Applying the billing rate to the appropriate billable hours produces a billing amount; payroll expense uses different evidence.
+Of the 33.88 recorded hours, 32.67 are billable, a share of about 96.43%. Hours are a quantity of work. Applying the billing rate to the appropriate billable hours produces a billing amount, while payroll expense requires different evidence.
+
+Billing line 3 identifies invoice line **388** on invoice **242**. Its **31.18** billed hours at **185.00** produce **5,768.30** service revenue. The complete invoice voucher balances at **6,143.24**, including **374.94** tax payable. A different total from invoice 241 is expected because the selected work, rate, and tax differ. Time approval is still support for billing rather than an additional revenue event.
 
 </details>
 

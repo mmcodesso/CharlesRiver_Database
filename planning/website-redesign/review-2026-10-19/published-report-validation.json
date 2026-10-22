@@ -1,0 +1,9 @@
+{
+  "sourceWorkflowRun": 39154833086,
+  "sourceCommit": "6424f57b684030817fde232e94eb8084238493cf",
+  "reportSetsPassed": 48,
+  "reportFilesReused": 144,
+  "validation": "Existing row-level SQL, preview, CSV and XLSX assertions executed read-only against the downloaded published build in /tmp",
+  "elapsedSeconds": 23.74,
+  "localFrozenReportAssetsChanged": false
+}

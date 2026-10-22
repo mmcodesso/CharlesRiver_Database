@@ -1,0 +1,229 @@
+<mxfile host="Electron" version="29.6.6" type="device">
+  <diagram id="demand-supply-planning" name="Demand, supply recommendations, and requirements">
+    <mxGraphModel grid="1" gridSize="10" page="0" pageWidth="1160" pageHeight="1000" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="Demand, supply recommendations, and requirements">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="25" y="15" width="1110" height="70" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="Which links are stored, and which are analytical planning context?">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="87" width="1110" height="55" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DemandForecast" label="DemandForecast" tableName="DemandForecast" primaryHome="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=42;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#e9f1ed;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="25" y="170" width="330" height="214.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DemandForecast__grain" label="One item/location forecast for a&#10;weekly bucket" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DemandForecast">
+            <mxGeometry x="0" y="42.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DemandForecast__DemandForecastID" label="DemandForecastID (PK)" fieldName="DemandForecastID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DemandForecast">
+            <mxGeometry x="0" y="94.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DemandForecast__ItemID" label="ItemID (FK)" fieldName="ItemID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DemandForecast">
+            <mxGeometry x="0" y="124.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DemandForecast__WarehouseID" label="WarehouseID (FK)" fieldName="WarehouseID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DemandForecast">
+            <mxGeometry x="0" y="154.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="DemandForecast__ForecastWeekStartDate" label="ForecastWeekStartDate" fieldName="ForecastWeekStartDate">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DemandForecast">
+            <mxGeometry x="0" y="184.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="InventoryPolicy" label="InventoryPolicy" tableName="InventoryPolicy" primaryHome="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=42;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#e9f1ed;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="410" y="170" width="330" height="214.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="InventoryPolicy__grain" label="One item/location replenishment&#10;policy" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="InventoryPolicy">
+            <mxGeometry x="0" y="42.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="InventoryPolicy__InventoryPolicyID" label="InventoryPolicyID (PK)" fieldName="InventoryPolicyID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="InventoryPolicy">
+            <mxGeometry x="0" y="94.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="InventoryPolicy__ItemID" label="ItemID (FK)" fieldName="ItemID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="InventoryPolicy">
+            <mxGeometry x="0" y="124.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="InventoryPolicy__WarehouseID" label="WarehouseID (FK)" fieldName="WarehouseID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="InventoryPolicy">
+            <mxGeometry x="0" y="154.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="InventoryPolicy__IsActive" label="IsActive" fieldName="IsActive">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="InventoryPolicy">
+            <mxGeometry x="0" y="184.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="SupplyPlanRecommendation" label="SupplyPlanRecommendation" tableName="SupplyPlanRecommendation" primaryHome="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=42;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#e9f1ed;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="795" y="170" width="330" height="258.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="SupplyPlanRecommendation__grain" label="One item/location supply&#10;recommendation in a planning&#10;bucket" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="SupplyPlanRecommendation">
+            <mxGeometry x="0" y="42.0" width="330" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="SupplyPlanRecommendation__SupplyPlanRecommendationID" label="SupplyPlanRecommendationID (PK)" fieldName="SupplyPlanRecommendationID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="SupplyPlanRecommendation">
+            <mxGeometry x="0" y="108.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="SupplyPlanRecommendation__ItemID" label="ItemID (FK)" fieldName="ItemID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="SupplyPlanRecommendation">
+            <mxGeometry x="0" y="138.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="SupplyPlanRecommendation__WarehouseID" label="WarehouseID (FK)" fieldName="WarehouseID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="SupplyPlanRecommendation">
+            <mxGeometry x="0" y="168.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="SupplyPlanRecommendation__BucketWeekStartDate" label="BucketWeekStartDate" fieldName="BucketWeekStartDate">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="SupplyPlanRecommendation">
+            <mxGeometry x="0" y="198.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="SupplyPlanRecommendation__DriverType" label="DriverType" fieldName="DriverType">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="SupplyPlanRecommendation">
+            <mxGeometry x="0" y="228.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="MaterialRequirementPlan" label="MaterialRequirementPlan" tableName="MaterialRequirementPlan" primaryHome="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=42;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#e9f1ed;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="25" y="610" width="330" height="244.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="MaterialRequirementPlan__grain" label="One component requirement for a&#10;supply recommendation" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="MaterialRequirementPlan">
+            <mxGeometry x="0" y="42.0" width="330" height="52" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="MaterialRequirementPlan__MaterialRequirementPlanID" label="MaterialRequirementPlanID (PK)" fieldName="MaterialRequirementPlanID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="MaterialRequirementPlan">
+            <mxGeometry x="0" y="94.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="MaterialRequirementPlan__SupplyPlanRecommendationID" label="SupplyPlanRecommendationID (FK)" fieldName="SupplyPlanRecommendationID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="MaterialRequirementPlan">
+            <mxGeometry x="0" y="124.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="MaterialRequirementPlan__BucketWeekStartDate" label="BucketWeekStartDate" fieldName="BucketWeekStartDate">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="MaterialRequirementPlan">
+            <mxGeometry x="0" y="154.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="MaterialRequirementPlan__ParentItemID" label="ParentItemID (FK)" fieldName="ParentItemID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="MaterialRequirementPlan">
+            <mxGeometry x="0" y="184.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="MaterialRequirementPlan__ComponentItemID" label="ComponentItemID (FK)" fieldName="ComponentItemID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="MaterialRequirementPlan">
+            <mxGeometry x="0" y="214.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="RoughCutCapacityPlan" label="RoughCutCapacityPlan" tableName="RoughCutCapacityPlan" primaryHome="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;swimlane;horizontal=1;startSize=42;collapsible=0;align=center;verticalAlign=top;fontSize=20;fontStyle=1;fillColor=#e9f1ed;swimlaneFillColor=#FFFFFF;" vertex="1" parent="1">
+            <mxGeometry x="410" y="610" width="330" height="228.0" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="RoughCutCapacityPlan__grain" label="One work-center capacity&#10;requirement for a supply&#10;recommendation" rowMeaning="true">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="RoughCutCapacityPlan">
+            <mxGeometry x="0" y="42.0" width="330" height="66" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="RoughCutCapacityPlan__RoughCutCapacityPlanID" label="RoughCutCapacityPlanID (PK)" fieldName="RoughCutCapacityPlanID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="RoughCutCapacityPlan">
+            <mxGeometry x="0" y="108.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="RoughCutCapacityPlan__SupplyPlanRecommendationID" label="SupplyPlanRecommendationID (FK)" fieldName="SupplyPlanRecommendationID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="RoughCutCapacityPlan">
+            <mxGeometry x="0" y="138.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="RoughCutCapacityPlan__BucketWeekStartDate" label="BucketWeekStartDate" fieldName="BucketWeekStartDate">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="RoughCutCapacityPlan">
+            <mxGeometry x="0" y="168.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="RoughCutCapacityPlan__WorkCenterID" label="WorkCenterID (FK)" fieldName="WorkCenterID">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=8;overflow=hidden;rotatable=0;fontSize=18;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="RoughCutCapacityPlan">
+            <mxGeometry x="0" y="198.0" width="330" height="30" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="r1" label="r1" relationKind="reference" childTable="MaterialRequirementPlan" childFields="SupplyPlanRecommendationID" parentTable="SupplyPlanRecommendation" parentFields="SupplyPlanRecommendationID" condition="">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=ERmandOne;endArrow=ERzeroToMany;endFill=1;dashed=0;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="SupplyPlanRecommendation__SupplyPlanRecommendationID" target="MaterialRequirementPlan__SupplyPlanRecommendationID">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="771.0" y="293.0" />
+                <mxPoint x="771.0" y="162.0" />
+                <mxPoint x="1.0" y="162.0" />
+                <mxPoint x="1.0" y="749.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r2" label="r2" relationKind="reference" childTable="RoughCutCapacityPlan" childFields="SupplyPlanRecommendationID" parentTable="SupplyPlanRecommendation" parentFields="SupplyPlanRecommendationID" condition="">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=ERmandOne;endArrow=ERzeroToMany;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="SupplyPlanRecommendation__SupplyPlanRecommendationID" target="RoughCutCapacityPlan__SupplyPlanRecommendationID">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1195.0" y="293.0" />
+                <mxPoint x="1195.0" y="763.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r3" label="r3" relationKind="aggregate" childTable="SupplyPlanRecommendation" childFields="ItemID,WarehouseID" parentTable="DemandForecast" parentFields="ItemID,WarehouseID" condition="">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=open;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="DemandForecast__ItemID" target="SupplyPlanRecommendation__ItemID">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="379.0" y="309.0" />
+                <mxPoint x="379.0" y="452.0" />
+                <mxPoint x="1149.0" y="452.0" />
+                <mxPoint x="1149.0" y="323.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="r4" label="r4" relationKind="aggregate" childTable="SupplyPlanRecommendation" childFields="ItemID,WarehouseID" parentTable="InventoryPolicy" parentFields="ItemID,WarehouseID" condition="">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=open;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="InventoryPolicy__ItemID" target="SupplyPlanRecommendation__ItemID">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="764.0" y="309.0" />
+                <mxPoint x="764.0" y="323.0" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="footer" label="(PK) = primary key. (FK) = foreign key.&#10;Solid crow’s-foot lines show foreign-key relationships; dashed labeled lines show conditional traces or analytical matches. See r1, r2… in the relationship table.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="886.0" width="1110" height="60" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

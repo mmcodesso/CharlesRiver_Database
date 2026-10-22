@@ -21,7 +21,7 @@ The operations planner can identify the ordered products. Customer accounting no
 
 <span id="learning-objectives"></span>
 
-**Your task:** Trace a released goods line from order to shipment and invoice with Excel or simple SQL.
+**Your task.** Trace a released goods line from order to shipment and invoice with Excel or simple SQL.
 
 <TutorialFigure figureId="source-to-ledger" />
 
@@ -32,12 +32,18 @@ Finish [Connect the Records](connect-the-records.md) and recall the [Order-to-Ca
 <ToolSteps>
 <TabItem value="excel">
 
-In `Lesson04.xlsx`, import `T10_SalesOrderLine` as `OrderLineData` filtered to `SalesOrderLineID = 43`; `T15_ShipmentLine` as `ShipmentLineData` filtered to `SalesOrderLineID = 43`; and `T17_SalesInvoiceLine` as `InvoiceLineData` filtered to `SalesOrderLineID = 43`. Keep the identifier columns.
+In `Lesson04.xlsx`, import the following tables with `SalesOrderLineID = 43` as the Power Query filter. Retain the identifier columns.
+
+| Published table | Working name |
+|---|---|
+| `T10_SalesOrderLine` | `OrderLineData` |
+| `T15_ShipmentLine` | `ShipmentLineData` |
+| `T17_SalesInvoiceLine` | `InvoiceLineData` |
 
 </TabItem>
 <TabItem value="sql">
 
-Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson04.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson04.sql**. Run each supplied query separately, using its filters to identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
@@ -55,13 +61,13 @@ The shipment line stores the order-line key. This is the link between what was r
 1. Open the `OrderLineData` query in Power Query. Choose **Home → Merge Queries → Merge Queries as New**.
 2. Choose `ShipmentLineData` as the second query. Select `SalesOrderLineID` in each preview.
 3. Choose **Left Outer** so the order line would remain visible even without a shipment. Select **OK**.
-4. Expand the resulting table column; clear **Use original column name as prefix**, then retain `ShipmentLineID`, `ShipmentID`, and `QuantityShipped`. Name the new query `GoodsTrace`.
+4. Expand the resulting table column, clear **Use original column name as prefix**, and retain `ShipmentLineID`, `ShipmentID`, and `QuantityShipped`. Name the new query `GoodsTrace`.
 5. Confirm one row before adding another relationship. An order line with two shipments would legitimately produce two rows.
 
 </TabItem>
 <TabItem value="sql">
 
-The left join retains the chosen order line. A missing shipment would appear as `NULL` in the shipment columns; it would not automatically mean the order was erroneous.
+The left join retains the chosen order line. A missing shipment would appear as `NULL` in the shipment columns without establishing that the order was erroneous.
 
 ```sql title="l04-shipment-link.sql"
 SELECT sol.SalesOrderLineID, sol.Quantity AS OrderedQuantity,
@@ -117,7 +123,7 @@ The document headers supply dates and totals shared by their lines. Read them se
 <ToolSteps>
 <TabItem value="excel">
 
-Import `T14_Shipment` as `ShipmentData`, filtered to `ShipmentID = 87`, and `T16_SalesInvoice` as `InvoiceData`, filtered to `SalesInvoiceID = 202`. Read the shipment and invoice dates. On `Notes`, record invoice `SubTotal`, `FreightAmount`, `TaxAmount`, and `GrandTotal`; add the first three and check the fourth.
+Import `T14_Shipment` as `ShipmentData`, filtered to `ShipmentID = 87`, and `T16_SalesInvoice` as `InvoiceData`, filtered to `SalesInvoiceID = 202`. Read the shipment and invoice dates. On `Notes`, record invoice `SubTotal`, `FreightAmount`, `TaxAmount`, and `GrandTotal`. Add the first three amounts and compare their sum with the fourth.
 
 </TabItem>
 <TabItem value="sql">

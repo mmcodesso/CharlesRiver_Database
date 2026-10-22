@@ -9,7 +9,7 @@ pagination_next: start-here/dataset-overview
 
 # Downloads
 
-Choose the format your assignment uses. The published teaching files contain the same company records in different working formats. Download your source file, keep it unchanged, and create a separate analysis file; no generator setup is needed.
+Choose the format your assignment uses. The published teaching files contain the same company records in different working formats. Download your source file, keep it unchanged, and create a separate analysis file without setting up the generator.
 
 The links below always download the **latest published version**. <TeachingReleaseLink /> for its version number, file details, and checksums. [Previous versions](https://github.com/mmcodesso/CharlesRiver_Database/releases) remain available in the release history.
 
@@ -30,17 +30,17 @@ If you are still reading the company and process chapters, you can return here l
 | Excel | <ReleaseDownloadLink type="excel">Download the Excel workbook</ReleaseDownloadLink> | Filters, PivotTables, and analysis in a familiar workbook |
 | CSV | <ReleaseDownloadLink type="csv">Download the CSV package</ReleaseDownloadLink> | Importing individual tables into another tool |
 
-Follow your instructor's choice when one is specified. Otherwise, choose a format that fits the task and a tool you can already use. Excel supports an initial inspection of tables; SQLite is useful when the task requires reproducible relationships across several tables. CSV requires you to manage the import settings in the receiving tool.
+Follow your instructor's choice when one is specified. Otherwise, choose a format that fits the task and a tool you can already use. Excel supports an initial inspection of tables, while SQLite supports reproducible relationships across several tables. CSV requires you to manage the import settings in the receiving tool.
 
 Download the complete file before opening it. Keep the published source unchanged and make a separate working copy for your analysis. Record the release version and file format in your notes so another person can understand which evidence you used.
 
-The asset filenames are <FileName type="sqlite" />, <FileName type="excel" />, and <FileName type="csv" />. A filename alone does not identify the release; keep the version label too.
+The asset filenames are <FileName type="sqlite" />, <FileName type="excel" />, and <FileName type="csv" />. Retain the version label because a filename alone does not identify the release.
 
 ## Verify the SQLite Teaching Source
 
 <TeachingReleaseIntegrity />
 
-For an initial workbook or CSV population check, locate `Customer` and confirm **220 customer records**, excluding the header. This checks the imported population; comparing the SQLite checksum checks the complete file. A readable file or a matching row count alone does not verify every value.
+For an initial workbook or CSV population check, locate `Customer` and confirm **220 customer records**, excluding the header. This checks the imported population, while comparing the SQLite checksum checks the complete file. A readable file or a matching row count alone does not verify every value.
 
 <span id="open-your-first-file"></span>
 
@@ -66,7 +66,7 @@ The main operating window is **2024–2026**. Some supplier payments settle in e
 
 The records include intentional anomalies and control exceptions. Preserve them as evidence to investigate. A discrepancy alone does not establish its cause.
 
-The public package provides SQLite, Excel, and CSV downloads. A support workbook may be supplied separately for a course; it is not an additional public release download here. The [license](../technical/license.md) explains attribution and reuse.
+The public package provides SQLite, Excel, and CSV downloads. A course may supply a support workbook separately from the public release downloads. The [license](../technical/license.md) explains attribution and reuse.
 
 <span id="before-the-first-assignment"></span>
 

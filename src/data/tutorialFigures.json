@@ -14,7 +14,9 @@
       "A name describes the customer|Jones, Richardson and Beard\nCustomerName",
       "A segment classifies it|Design Trade\nCustomerSegment"
     ],
-    "edges": []
+    "edges": [],
+    "layoutKind": "record-columns",
+    "readingRule": "Three attributes describe one customer row; they are not three tables or three events."
   },
   {
     "id": "read-an-order",
@@ -40,7 +42,9 @@
         0,
         2
       ]
-    ]
+    ],
+    "layoutKind": "header-lines",
+    "readingRule": "One selected order header supports two separate line records. Connect each line directly to the header."
   },
   {
     "id": "connect-the-records",
@@ -66,7 +70,9 @@
         1,
         2
       ]
-    ]
+    ],
+    "layoutKind": "record-links",
+    "readingRule": "Match stored foreign keys (FK) while keeping headers, lines, and master records at their own grains."
   },
   {
     "id": "source-to-ledger",
@@ -92,7 +98,9 @@
         1,
         2
       ]
-    ]
+    ],
+    "layoutKind": "record-links",
+    "readingRule": "Match stored foreign keys (FK) while keeping headers, lines, and master records at their own grains."
   },
   {
     "id": "follow-customer-settlement",
@@ -118,7 +126,9 @@
         1,
         2
       ]
-    ]
+    ],
+    "layoutKind": "allocation",
+    "readingRule": "An invoice and an incoming receipt meet through a dated application. Their existence alone does not establish allocation."
   },
   {
     "id": "find-the-accounting-entries",
@@ -144,7 +154,9 @@
         1,
         2
       ]
-    ]
+    ],
+    "layoutKind": "dated-events",
+    "readingRule": "Read document dates and accounting effects separately. The timeline does not create additional database relationships."
   },
   {
     "id": "follow-design-time-into-billing",
@@ -170,7 +182,9 @@
         1,
         2
       ]
-    ]
+    ],
+    "layoutKind": "billing-match",
+    "readingRule": "Match engagement and the inclusive billing period, then aggregate approved billable time. This is distinct from a stored billing-line key on each time entry."
   },
   {
     "id": "receipt-to-payable",
@@ -196,7 +210,9 @@
         1,
         2
       ]
-    ]
+    ],
+    "layoutKind": "dated-events",
+    "readingRule": "Read document dates and accounting effects separately. The timeline does not create additional database relationships."
   },
   {
     "id": "manufacturing-cost-flow",
@@ -222,7 +238,9 @@
         1,
         2
       ]
-    ]
+    ],
+    "layoutKind": "dated-events",
+    "readingRule": "Read document dates and accounting effects separately. The timeline does not create additional database relationships."
   },
   {
     "id": "follow-hours-into-payroll",
@@ -248,7 +266,9 @@
         1,
         2
       ]
-    ]
+    ],
+    "layoutKind": "payroll-branches",
+    "readingRule": "Employee-register net pay and period-level remittances have separate grains, source records, and settlement dates."
   },
   {
     "id": "follow-an-estimate-into-settlement",
@@ -274,7 +294,9 @@
         1,
         2
       ]
-    ]
+    ],
+    "layoutKind": "accrual-branches",
+    "readingRule": "Invoice payment settles AP; a residual-accrual adjustment refers back to the estimate independently of payment."
   },
   {
     "id": "turn-records-into-a-conclusion",
@@ -300,6 +322,8 @@
         1,
         2
       ]
-    ]
+    ],
+    "layoutKind": "analytical-workflow",
+    "readingRule": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result."
   }
 ]

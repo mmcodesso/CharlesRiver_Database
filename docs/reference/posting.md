@@ -6,13 +6,13 @@ sidebar_label: GLEntry Posting
 
 # GLEntry Posting Reference
 
-This reference explains which business events post to `GLEntry`, which documents remain operational only, which accounts move, and which posting date the dataset uses.
+This reference explains how business events reach `GLEntry`, which records support those postings, which accounts move, and which posting dates apply. Start with the [four posting routes](../start-here/dataset-overview.md#classify-the-posting-route) and classify the selected event before retrieving its accounting evidence.
 
 Students can use it with the process guides and Schema Reference to understand how source documents turn into accounting results.
 
 ## Non-Posting Documents
 
-These documents are generated for process analysis but do **not** create `GLEntry` rows:
+The following tables do not originate an independent additional posting under their own table-name source label. Some describe commitments or operational support. Others, including `FixedAssetEvent` and `DebtScheduleLine`, document accounting events carried through linked journals. **Non-posting does not mean no accounting relevance.** Inspect the event and its actual posting route before concluding that no accounting effect occurred.
 
 - `SalesOrder`
 - `SalesOrderLine`
@@ -42,6 +42,21 @@ These documents are generated for process analysis but do **not** create `GLEntr
 - `FixedAssetEvent`
 - `DebtAgreement`
 - `DebtScheduleLine`
+
+## Journal-Mediated Accounting Events
+
+`FixedAssetEventID = 14` is an acquisition event dated July 18, 2024. Its stored `JournalEntryID = 103` identifies a **Debt Reclass** journal. Retrieve `GLEntry` with `SourceDocumentType = 'JournalEntry'` and `SourceDocumentID = 103`. Its complete two-row voucher debits Accounts Payable (`2010`) and credits Notes Payable (`2110`) for **360,000.00**. The event's own source label has no separate posting, but the linked journal changes the liability classification.
+
+`DebtScheduleLineID = 1`, dated August 1, 2024, stores `JournalEntryID = 121`. That complete two-row voucher debits Notes Payable and credits Cash for principal of **6,553.95**. The schedule also records **2,025.00** interest within a total payment of **8,578.95**. The principal journal alone cannot establish the full payment's accounting. Inspect the separate interest journal before making that broader claim.
+
+For either example, first inspect the source row and its journal link. In Excel, import the relevant source table and JournalEntry into separate filtered queries, then filter GLEntry by the journal source type and ID. In SQL, reuse the [complete-voucher retrieval method](../learn-and-practice/find-the-accounting-entries.md#1-locate-the-complete-event-vouchers) with the same paired filters. Keep the operational event date and actual posting date separately in your evidence template.
+
+<details>
+<summary>Practice a second posting-route explanation</summary>
+
+After tracing the acquisition event, use schedule line 1 without copying the acquisition's account explanation. First predict whether the payment changes AP, notes payable, or expense. If you need a hint, follow its stored journal key and read the journal's entry type before inspecting the accounts. The principal voucher reduces notes payable and cash. It does not recognize the schedule's interest. A balanced principal voucher supports that narrower conclusion, even though more evidence is needed for the full scheduled payment.
+
+</details>
 
 ## Posting Matrix
 
@@ -135,7 +150,7 @@ Sales commissions are a separate O2C payable, not payroll. `SalesCommissionAccru
 
 ## PayrollSummary Register Summaries
 
-`PayrollSummary` is a ledger source label, **not a table**. Payroll-register postings summarize employee register facts by **payroll period, cost center, and account**. A summary ledger line therefore represents several employee records; its `SourceDocumentID` is not a `PayrollRegisterID` foreign key.
+`PayrollSummary` is a ledger source label, **not a table**. Payroll-register postings summarize employee register facts by **payroll period, cost center, and account**. A summary ledger line represents several employee records rather than a `PayrollRegisterID` foreign-key relationship in `SourceDocumentID`.
 
 | Released posting | `VoucherType` / `SourceDocumentType` | Source identifier and grain |
 |---|---|---|
@@ -149,7 +164,7 @@ SourceDocumentID = 1,000,000 + PayrollPeriodID × 1,000 + CostCenterID
 VoucherNumber = PRS-<four-digit period>-<three-digit cost center>
 ```
 
-Thus `PRS-0001-001` means period **1**, cost center **1**, and constructed source ID **1001001**. This encoding identifies a period/cost-center summary. Never join it directly to `PayrollRegister.PayrollRegisterID`. `SourceLineID` is null because no single employee register line represents the summary; null does not establish missing payroll support.
+Thus `PRS-0001-001` means period **1**, cost center **1**, and constructed source ID **1001001**. This encoding identifies a period/cost-center summary. Never join it directly to `PayrollRegister.PayrollRegisterID`. `SourceLineID` is null because no single employee register line represents the summary. A null value therefore does not establish missing payroll support.
 
 Aggregate the employee facts first, aggregate the relevant ledger account separately, then compare the two results at period/cost-center grain. Joining each register row to every voucher line before summing would repeat net pay.
 
@@ -180,13 +195,13 @@ JOIN ledger_totals AS l
  AND l.CostCenterID = r.CostCenterID;
 ```
 
-The result has **three register rows**, net pay **23,489.30**, a `2030` credit of **23,489.30**, and difference **0.00**. This compares net pay only. The complete six-line voucher also recognizes gross-pay expense, employer expense, and the other payroll liabilities; its debits and credits each total **31,560.24**.
+The result has **three register rows**, net pay **23,489.30**, a `2030` credit of **23,489.30**, and difference **0.00**. This compares net pay only. The complete six-line voucher also recognizes gross-pay expense, employer expense, and the other payroll liabilities, with debits and credits each totaling **31,560.24**.
 
 Payments retain detailed `PayrollPayment` source IDs and null `SourceLineID`. Do not apply the register-summary formula to them. A ledger source label does not guarantee that its referenced record exists: some payment evidence is missing, so test the relationship before concluding that the source trail is complete. Continue with [Follow Hours into Payroll](../learn-and-practice/follow-hours-into-payroll.md) to distinguish recognition, employee payment, and liability remittance.
 
 ## Annual Closing Directions
 
-Closing reverses each P&L account's annual balance. **Debit a credit-balance account and credit a debit-balance account.** A debit-balance contra-revenue account such as `4060` Sales Returns and Allowances therefore receives a closing credit, as does a debit-balance expense. The balancing amount goes to `8010` Income Summary: a credit for net income or a debit for net loss. The released journal combines these P&L closing lines and the net Income Summary line in one voucher; it does not create a separate Income Summary line for every account.
+Closing reverses each P&L account's annual balance. **Debit a credit-balance account and credit a debit-balance account.** A debit-balance contra-revenue account such as `4060` Sales Returns and Allowances therefore receives a closing credit, as does a debit-balance expense. The balancing amount goes to `8010` Income Summary: a credit for net income or a debit for net loss. The released journal combines these P&L closing lines and the net Income Summary line in one voucher rather than creating a separate Income Summary line for every account.
 
 For example, `JournalEntryID = 846`, voucher **JE-2024-000265**, is dated **December 31, 2024**. These are **four selected evidence rows, not the complete voucher**:
 
@@ -209,4 +224,4 @@ WHERE SourceDocumentType = 'JournalEntry' AND SourceDocumentID = 846
 GROUP BY VoucherNumber;
 ```
 
-All **42 ledger rows** balance: total debits and credits are each **27,503,887.96**, with difference **0.00**. Balance establishes arithmetic equality at this scope; it does not independently prove every account or amount is appropriate. The later Income Summary-to-retained-earnings entry is a separate closing event, as shown in the matrix.
+All **42 ledger rows** balance: total debits and credits are each **27,503,887.96**, with difference **0.00**. Balance establishes arithmetic equality at this scope without independently proving that every account or amount is appropriate. The later Income Summary-to-retained-earnings entry is a separate closing event, as shown in the matrix.

@@ -26,17 +26,17 @@ The design lead is preparing a quarterly review with the controller. Several eng
 
 <CaseOverview slug="design-services-performance-case" />
 
-**Worked scope.** Service work dated January 1–March 31, 2024: 204 time entries across 21 engagements. Begin with engagement 2, then use the whole defined population. Billing periods are selected by their work coverage; invoice dates remain visible.
+**Worked scope.** Service work dated January 1–March 31, 2024: 204 time entries across 21 engagements. Begin with engagement 2, then use the whole defined population. Select billing periods by their work coverage and retain the invoice dates separately.
 
-Choose Excel or SQL; your selection carries between lessons and cases.
+Choose Excel or SQL. The site retains your selection between lessons and cases.
 
-**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [7. Follow Design Time into Billing](/docs/learn-and-practice/follow-design-time-into-billing); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records), [2. Read an Order](/docs/learn-and-practice/read-an-order), [3. Connect the Records](/docs/learn-and-practice/connect-the-records), [7. Follow Design Time into Billing](/docs/learn-and-practice/follow-design-time-into-billing), [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
 **Ready to begin:**
 
-- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
 - Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
-- Distinguish work dates, approval dates, billing coverage, and invoice dates; summarize hours and costs at engagement/month grain.
+- Distinguish work dates, approval dates, billing coverage, and invoice dates when summarizing hours and costs at engagement/month grain.
 
 ## Key Data Sources
 
@@ -68,9 +68,9 @@ Create Case02.xlsx or Case02.sql. Your Review note should distinguish work perfo
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `ServiceTimeEntryData ← ServiceTimeEntry (import here; filter Q1 2024 into TimeData)`; `Engagements ← ServiceEngagement (import here)`.
+**Named inputs:** `ServiceTimeEntryData ← ServiceTimeEntry (import here; filter Q1 2024 into TimeData)`, `Engagements ← ServiceEngagement (import here)`.
 
-**Produced outputs:** `TimeData: 204 time-entry rows with HourlyRate formula`; `SelectedEngagements: unique selected engagements`.
+**Produced outputs:** `TimeData: 204 time-entry rows with HourlyRate formula`, `SelectedEngagements: unique selected engagements`.
 
 1. Import ServiceTimeEntry as ServiceTimeEntryData; reference it as TimeData and filter WorkDate from January 1 through March 31, 2024.
 
@@ -97,7 +97,7 @@ Create Case02.xlsx or Case02.sql. Your Review note should distinguish work perfo
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c02-terms.sql"
 SELECT ServiceEngagementID,
        CustomerID,
@@ -138,7 +138,7 @@ A lookup is appropriate here because ServiceEngagementID is unique in the terms 
 
 **Named inputs:** `TimeData and its HourlyRate column (Session 1.1)`.
 
-**Produced outputs:** `TimeData: WorkMonth and ApprovedBillable columns`; `TimeByEngagementMonth: time/approval/cost PivotTable`.
+**Produced outputs:** `TimeData: WorkMonth and ApprovedBillable columns`, `TimeByEngagementMonth: time/approval/cost PivotTable`.
 
 1. In TimeData add WorkMonth:
 
@@ -217,7 +217,7 @@ Save terms, the 204-row source selection, and the engagement-month summary. Writ
 
 ## Session 2 — Connect covered time to billing
 
-A time row is not a billing row. Aggregate within the billing period before comparing hours; otherwise each invoice amount could repeat once for every time entry.
+A time row is not a billing row. Aggregate within the billing period before comparing hours to avoid repeating each invoice amount for every time entry.
 
 <CaseFigure figureId="case02-billing" />
 
@@ -229,7 +229,7 @@ A time row is not a billing row. Aggregate within the billing period before comp
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `ServiceBillingLineData ← ServiceBillingLine (import here; filter Q1 2024 into Billing)`; `InvoiceLines ← SalesInvoiceLine and Invoices ← SalesInvoice (import here)`; `TimeData (Session 1)`.
+**Named inputs:** `ServiceBillingLineData ← ServiceBillingLine (import here; filter Q1 2024 into Billing)`, `InvoiceLines ← SalesInvoiceLine and Invoices ← SalesInvoice (import here)`, `TimeData (Session 1)`.
 
 **Produced outputs:** `Billing: billing-line detail with invoice date, covered hours, and approval comparison`.
 
@@ -304,7 +304,7 @@ ORDER BY b.ServiceEngagementID,b.BillingPeriodStartDate,b.ServiceBillingLineID;
 
 **Checkpoint.** 33 billing lines cover 1,409.88 hours and 244,865.45 of line amounts. Every billed-hours comparison agrees. Billing line 2 covers January 12–30 for engagement 2; its 32.67 hours become 6,860.70 on invoice 241 dated January 31.
 
-Coverage dates explain which work is billed. Invoice date explains when it is invoiced. A future population may have uncovered time, overlapping periods, or approval after invoicing; retain those as exceptions rather than filling in a match.
+Coverage dates explain which work is billed. Invoice date explains when it is invoiced. A future population may have uncovered time, overlapping periods, or approval after invoicing. Retain those exceptions rather than filling in a match. For a complete accounting checkpoint, retrieve invoice 241 and explain why approved time creates no additional revenue posting. Follow the paired Excel and SQL procedure in [Lesson 7](../../learn-and-practice/follow-design-time-into-billing.md#3-retrieve-the-invoice-voucher). Keep this single-engagement example separate from the case population.
 
 <details>
 <summary>If your result differs</summary>
@@ -324,7 +324,7 @@ If totals multiply, check whether you merged raw time rows into Billing. SUMIFS 
 
 **Named inputs:** `TimeData and Billing (earlier stages)`.
 
-**Produced outputs:** `EffortByEngagementMonth and BillingByEngagementMonth: separate PivotTables`; `Review: billable share and limited cost comparison; chart`.
+**Produced outputs:** `EffortByEngagementMonth and BillingByEngagementMonth: separate PivotTables`, `Review: billable share and limited cost comparison; chart`.
 
 1. Create a PivotTable from TimeData with ServiceEngagementID and WorkMonth in Rows and sums of BillableHours, NonBillableHours, and ExtendedCost in Values.
 
@@ -361,7 +361,7 @@ If totals multiply, check whether you merged raw time rows into Billing. SUMIFS 
 </TabItem>
 <TabItem value="sql">
 
-effort and billing each return one aggregate row before they are combined. The ratio uses all selected hours; the difference uses billed line amounts and recorded time cost with the stated boundary.
+effort and billing each return one aggregate row before they are combined. The ratio uses all selected hours, while the difference compares billed line amounts with recorded time cost within the stated boundary.
 
 Run each complete statement separately and retain its result before continuing.
 ```sql title="c02-bridge.sql"
@@ -387,7 +387,7 @@ JOIN billing b;
 
 **Checkpoint.** Engagement 2: January billed amount 6,860.70 and time cost 937.02; February 7,753.20 and 1,042.22. Quarter billable share is 95.04%; billed amounts less recorded time cost is 195,843.05.
 
-The release supports an hours-to-billing reconciliation and a limited time-cost comparison. It does not allocate every overhead, selling, support, or financing cost to each engagement. Also, an invoice is not evidence of cash collection; use Case 1 for settlement.
+The release supports an hours-to-billing reconciliation and a limited time-cost comparison. It does not allocate every overhead, selling, support, or financing cost to each engagement. Also, an invoice does not establish cash collection. Use Case 1 to investigate settlement.
 
 <details>
 <summary>If your result differs</summary>
@@ -410,7 +410,7 @@ Your memo should explain that the worked hours reconcile, state the cost boundar
 
 The reconciliation does not reveal unapproved quarter-end time or a billed-hours mismatch in this population. A useful management response is to discuss where non-billable effort occurred and whether it was planned, while preserving the distinction between billing rates and staff-cost snapshots. The evidence supports a focused operational conversation, not a claim that all engagements are equally profitable.
 
-**Deliverable:** An engagement-period reconciliation, an hours/billing/cost bridge, and a design review memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** An engagement-period reconciliation, an hours/billing/cost bridge, and a design review memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A clearly ordered SQL result table can support the conclusion, with a chart added if useful.
 
 ## Independent Challenge
 
@@ -423,7 +423,7 @@ Begin with the new work-date population. Check whether each billing period stays
 
 </details>
 
-**Assessment criteria:** Assess population completeness, approval-date handling, unique billing rows, aligned coverage, precise cost labels, and a conclusion supported by source evidence. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+**Assessment criteria:** Assess population completeness, approval-date handling, unique billing rows, aligned coverage, precise cost labels, and a conclusion supported by source evidence. Your instructor evaluates the method, evidence, and reasoning. Model answers for this challenge remain in private course materials.
 
 <details>
 <summary>Further queries and earlier case topics</summary>
@@ -432,9 +432,9 @@ Begin with the new work-date population. Check whether each billing period stays
 
 ## Recommended Query Sequence
 
-These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. These optional references extend the complete guided routes above. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-<QuerySequence items={caseQuerySequences["design-services-performance-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
+<QuerySequence items={caseQuerySequences["design-services-performance-case"]} helperText="Choose a reference after completing the guided investigation and verify its scope before comparing totals." />
 
 </details>
 

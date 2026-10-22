@@ -30,15 +30,15 @@ Accounts payable and the controller are reviewing quarter-end obligations. Recei
 
 **Worked scope.** Supplier 27’s five first-quarter 2024 goods receipts, plus the separate repairs-and-maintenance accrual journals 9, 26, and 43. Review March 31 and subsequent evidence through June 30. The accruals are a separate population, not purchases from supplier 27.
 
-Choose Excel or SQL; your selection carries between lessons and cases.
+Choose Excel or SQL. The site retains your selection between lessons and cases.
 
-**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records); [2. Read an Order](/docs/learn-and-practice/read-an-order); [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [8. Follow a Purchase](/docs/learn-and-practice/receipt-to-payable); [11. Follow an Estimate into Settlement](/docs/learn-and-practice/follow-an-estimate-into-settlement). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+**Preparation:** [1. Meet the Records](/docs/learn-and-practice/meet-the-records), [2. Read an Order](/docs/learn-and-practice/read-an-order), [3. Connect the Records](/docs/learn-and-practice/connect-the-records), [8. Follow a Purchase](/docs/learn-and-practice/receipt-to-payable), [11. Follow an Estimate into Settlement](/docs/learn-and-practice/follow-an-estimate-into-settlement). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
 **Ready to begin:**
 
-- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
 - Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
-- Aggregate receipt, invoice, payment, and estimate evidence separately; explain GRNI, AP, and accrued-service obligations at each cutoff.
+- Aggregate receipt, invoice, payment, and estimate evidence separately before explaining GRNI, AP, and accrued-service obligations at each cutoff.
 
 ## Key Data Sources
 
@@ -65,7 +65,7 @@ Each source below has a distinct row meaning. Import only the fields and populat
 
 ## Session 1 — Follow received goods into supplier liabilities
 
-Create Case03.xlsx or Case03.sql. Label the goods schedule and accrual schedule separately. A purchase order records a commitment; a receipt establishes a different event.
+Create Case03.xlsx or Case03.sql. Label the goods schedule and accrual schedule separately. A purchase order records a commitment, while a receipt establishes arrival.
 
 <CaseFigure figureId="case03-branches" />
 
@@ -77,9 +77,9 @@ Create Case03.xlsx or Case03.sql. Label the goods schedule and accrual schedule 
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `PurchaseOrderData ← PurchaseOrder (import here)`; `GoodsReceiptData ← GoodsReceipt and GoodsReceiptLineData ← GoodsReceiptLine (import here)`.
+**Named inputs:** `PurchaseOrderData ← PurchaseOrder (import here)`, `GoodsReceiptData ← GoodsReceipt and GoodsReceiptLineData ← GoodsReceiptLine (import here)`.
 
-**Produced outputs:** `SupplierOrders: supplier 27 order headers`; `SelectedGoodsReceipts: Q1 2024 receipt headers`; `Receipts: selected receipt-line detail`.
+**Produced outputs:** `SupplierOrders: supplier 27 order headers`, `SelectedGoodsReceipts: Q1 2024 receipt headers`, `Receipts: selected receipt-line detail`.
 
 1. Import PurchaseOrder as PurchaseOrderData, GoodsReceipt as GoodsReceiptData, and GoodsReceiptLine as GoodsReceiptLineData.
 
@@ -98,7 +98,7 @@ Create Case03.xlsx or Case03.sql. Label the goods schedule and accrual schedule 
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c03-receipts.sql"
 SELECT r.GoodsReceiptID,
        r.ReceiptDate,
@@ -124,7 +124,7 @@ The receipt amount is inventory at standard cost. The supplier invoice may conta
 <details>
 <summary>If your result differs</summary>
 
-Filter by receipt date, not purchase-order date. Receipt line IDs are 175, 176, 254, 397, and 341; they differ from header IDs.
+Filter by receipt date, not purchase-order date. Receipt line IDs 175, 176, 254, 397, and 341 identify a different grain from the headers.
 
 </details>
 
@@ -137,9 +137,9 @@ Filter by receipt date, not purchase-order date. Receipt line IDs are 175, 176, 
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `Receipts (Session 1.1)`; `PurchaseInvoiceLineData ← PurchaseInvoiceLine and PurchaseInvoiceData ← PurchaseInvoice (import here)`; `DisbursementPaymentData ← DisbursementPayment (import here)`.
+**Named inputs:** `Receipts (Session 1.1)`, `PurchaseInvoiceLineData ← PurchaseInvoiceLine and PurchaseInvoiceData ← PurchaseInvoice (import here)`, `DisbursementPaymentData ← DisbursementPayment (import here)`.
 
-**Produced outputs:** `GoodsInvoices: matched goods-invoice lines through June 30, 2024`; `Payments: selected goods-invoice payments; raw payment query preserved`.
+**Produced outputs:** `GoodsInvoices: matched goods-invoice lines through June 30, 2024`, `Payments: selected goods-invoice payments; raw payment query preserved`.
 
 1. Import PurchaseInvoiceLine as PurchaseInvoiceLineData, PurchaseInvoice as PurchaseInvoiceData, and DisbursementPayment as DisbursementPaymentData.
 
@@ -172,7 +172,7 @@ Filter by receipt date, not purchase-order date. Receipt line IDs are 175, 176, 
 </TabItem>
 <TabItem value="sql">
 
-One result row is one matched supplier invoice line. The two correlated payment totals are calculated independently. InvoiceDate limits subsequent evidence to June 30; it does not imply payment by that date.
+One result row is one matched supplier invoice line. The two correlated payment totals are calculated independently. InvoiceDate limits subsequent invoice evidence to June 30 without establishing payment by that date.
 
 Run each complete statement separately and retain its result before continuing.
 ```sql title="c03-matches.sql"
@@ -222,9 +222,9 @@ An eighth match dated July 14 lies beyond this follow-up window. Preserve it as 
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `AccountData ← Account and GLEntryData ← GLEntry (import here)`; `Payments (Session 1.2)`.
+**Named inputs:** `AccountData ← Account and GLEntryData ← GLEntry (import here)`, `Payments (Session 1.2)`.
 
-**Produced outputs:** `GoodsLiability: selected 2010/2020 ledger detail`; `Obligations: four account/cutoff rows`.
+**Produced outputs:** `GoodsLiability: selected 2010/2020 ledger detail`, `Obligations: four account/cutoff rows`.
 
 1. Import Account as AccountData and GLEntry as GLEntryData; retain the raw ledger in Power Query.
 
@@ -299,7 +299,7 @@ Save the receipt-to-invoice matches and two-date liability schedule. Explain the
 
 ## Session 2 — Replace estimates with later evidence
 
-The controller’s three repairs-and-maintenance estimates follow a different path. An invoice consumes the estimate; any difference must be explained from the actual postings.
+The controller’s three repairs-and-maintenance estimates follow a different path. An invoice consumes the estimate, and the actual postings explain any difference.
 
 <CaseFigure figureId="case03-transitions" />
 
@@ -311,9 +311,9 @@ The controller’s three repairs-and-maintenance estimates follow a different pa
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `JournalEntryData ← JournalEntry (import here)`; `PurchaseInvoiceLineData and PurchaseInvoiceData (raw queries from Session 1.2)`.
+**Named inputs:** `JournalEntryData ← JournalEntry (import here)`, `PurchaseInvoiceLineData and PurchaseInvoiceData (raw queries from Session 1.2)`.
 
-**Produced outputs:** `Estimates: three journal headers`; `AccrualInvoices: linked invoice-line detail`; `EstimateReview: estimate/invoice comparison`.
+**Produced outputs:** `Estimates: three journal headers`, `AccrualInvoices: linked invoice-line detail`, `EstimateReview: estimate/invoice comparison`.
 
 1. Import JournalEntry as JournalEntryData and preserve the raw query.
 
@@ -382,9 +382,9 @@ Use AccrualJournalEntryID, not a description search, to identify the invoice lin
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `JournalEntryData (raw query from Session 2.1)`; `GLEntryData and AccountData (raw queries from Session 1.3)`.
+**Named inputs:** `JournalEntryData (raw query from Session 2.1)`, `GLEntryData and AccountData (raw queries from Session 1.3)`.
 
-**Produced outputs:** `Adjustments: selected estimate/reversal headers`; `AccrualLedger: complete selected journal/invoice vouchers`; `VoucherChecks: debit/credit PivotTable; two accrued-liability totals`.
+**Produced outputs:** `Adjustments: selected estimate/reversal headers`, `AccrualLedger: complete selected journal/invoice vouchers`, `VoucherChecks: debit/credit PivotTable; two accrued-liability totals`.
 
 1. Reference the raw JournalEntryData as Adjustments; filter JournalEntryID 9,26,43 or ReversesJournalEntryID 9,26,43.
 
@@ -411,7 +411,7 @@ Use AccrualJournalEntryID, not a description search, to identify the invoice lin
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c03-journals.sql"
 SELECT JournalEntryID,
        PostingDate,
@@ -463,9 +463,9 @@ Keep all voucher lines for a balance check. Use only account 2040 when calculati
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `DisbursementPaymentData (raw query from Session 1.2)`; `Payments, AccrualInvoices, and Obligations (earlier stages)`.
+**Named inputs:** `DisbursementPaymentData (raw query from Session 1.2)`, `Payments, AccrualInvoices, and Obligations (earlier stages)`.
 
-**Produced outputs:** `Payments: expanded goods/accrual selection through June 30, 2024`; `Review: separate goods and accrual settlement schedules`.
+**Produced outputs:** `Payments: expanded goods/accrual selection through June 30, 2024`, `Review: separate goods and accrual settlement schedules`.
 
 1. Edit the Payments reference selection on the raw DisbursementPaymentData to include goods invoice IDs 143, 278, 1499, 179, 422, 614, 947 and accrual invoice IDs 39851, 39861, 39872, filter PaymentDate through June 30, and sort by PurchaseInvoiceID and PaymentDate.
 
@@ -484,7 +484,7 @@ Keep all voucher lines for a balance check. Use only account 2040 when calculati
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c03-payments.sql"
 SELECT PurchaseInvoiceID,
        DisbursementID,
@@ -501,7 +501,7 @@ ORDER BY PurchaseInvoiceID,PaymentDate,DisbursementID;
 
 **Checkpoint.** Seven payments appear. Goods payments total 5,132.04. The three accrual-related invoices are paid May 20, June 13, and June 22, totaling 29,823.52.
 
-At March 31 the selected expenses include the two open estimates and the first invoice’s AP. Later settlement explains what happened afterward; it does not remove the March obligation.
+At March 31 the selected expenses include the two open estimates and the first invoice’s AP. Later settlement explains subsequent events without removing the obligation at March 31.
 
 <details>
 <summary>If your result differs</summary>
@@ -526,7 +526,7 @@ Retain both schedules, their source links, and the review note. The note should 
 
 The worked schedules support a bounded quarter-end explanation. Some goods remain partly uninvoiced and some bills unpaid in June. The maintenance estimates are fully consumed and their invoices paid by June. A useful next action is to ask AP and receiving to resolve the residual goods matches, while retaining the estimate comparison for improving the next close.
 
-**Deliverable:** Separate goods and expense-obligation schedules, selected posting checks, and a quarter-end review note. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** Separate goods and expense-obligation schedules, selected posting checks, and a quarter-end review note. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A clearly ordered SQL result table can support the conclusion, with a chart added if useful.
 
 ## Independent Challenge
 
@@ -539,7 +539,7 @@ Find the second-quarter accrual journals by EntryType, PostingDate, and the repa
 
 </details>
 
-**Assessment criteria:** Assess correct receipt and estimate populations, partial matches, date boundaries, liability signs, complete postings, and separation of recognition from payment. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+**Assessment criteria:** Assess correct receipt and estimate populations, partial matches, date boundaries, liability signs, complete postings, and separation of recognition from payment. Your instructor evaluates the method, evidence, and reasoning. Model answers for this challenge remain in private course materials.
 
 <details>
 <summary>Further queries and earlier case topics</summary>
@@ -548,9 +548,9 @@ Find the second-quarter accrual journals by EntryType, PostingDate, and the repa
 
 ## Recommended Query Sequence
 
-These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. These optional references extend the complete guided routes above. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-<QuerySequence items={caseQuerySequences["p2p-accrual-settlement-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
+<QuerySequence items={caseQuerySequences["p2p-accrual-settlement-case"]} helperText="Choose a reference after completing the guided investigation and verify its scope before comparing totals." />
 
 </details>
 

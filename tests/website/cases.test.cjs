@@ -40,7 +40,7 @@ test('eight cases retain the learning sequence, both routes, session outputs, an
 });
 
 test('all authored case SQL executes read-only and matches reviewed results',()=>{
-  const file=path.join(root,'outputs/CharlesRiver.sqlite');
+  const file=path.resolve(root,process.env.CHARLES_RIVER_TEACHING_SQLITE || 'outputs/CharlesRiver.sqlite');
   assert.equal(crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),examples.sha256);
   const db=new DatabaseSync(file,{readOnly:true});
   try {

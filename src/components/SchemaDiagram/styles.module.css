@@ -1,0 +1,10 @@
+.section { margin: 2rem 0; scroll-margin-top: 6rem; }
+.section > details > summary { min-height: 44px; padding: .65rem 0; }
+.tableRegion { width: 100%; overflow-x: auto; margin: 1rem 0; }
+.tableRegion:focus-visible { outline: 3px solid var(--ifm-color-primary); outline-offset: 3px; }
+.tableRegion table { margin: 0; font-size: .9rem; }
+.tableRegion code { overflow-wrap: anywhere; }
+.legend { margin-top: .85rem; font-size: .9rem; }
+.links { margin: .8rem 0 0; font-size: .9rem; }
+.links a { display: inline-block; min-height: 44px; padding: .5rem 0; }
+.index { margin: 1.5rem 0; }

@@ -8,6 +8,7 @@ toc_max_heading_level: 2
 ---
 
 import BpmnDiagram from "@site/src/components/BpmnDiagram";
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
 
 # Manual Journals and Close Cycle
 
@@ -49,7 +50,7 @@ When the later service invoice arrives, accounts payable links its line to the o
 
 If the estimate is larger than the later invoice, an unused accrual balance remains. A linked accrual adjustment reverses that residual liability and the corresponding expense. The old estimate, supplier invoice, and adjustment remain separate events with their own dates.
 
-This model usually settles finance-managed accruals through later AP activity. It does not blanket-reverse every estimate at the next month end. Stale uninvoiced estimates can also have separate partial-cleanup adjustments; inspect their actual links and dates.
+This model usually settles finance-managed accruals through later AP activity. It does not blanket-reverse every estimate at the next month end. Inspect the actual links and dates of stale uninvoiced estimates because they can have separate partial-cleanup adjustments.
 
 Treasury subsequently pays the supplier invoice. That payment reduces AP and cash. It does not recognize the original expense again.
 
@@ -69,7 +70,7 @@ The relationship lets you explain the full sequence without counting expense at 
 
 The model includes annual close as a separate branch. Ordinary monthly entries do not all pass through that branch. The optional accrued-service model shows the handoff to AP and Treasury in more detail.
 
-Use actual creator and approver fields when investigating responsibility. The diagram explains the roles; it does not establish that every journal received an effective independent review.
+Use actual creator and approver fields when investigating responsibility. The diagram explains the roles without establishing that every journal received an effective independent review.
 
 <span id="normal-process-overview"></span>
 
@@ -79,21 +80,9 @@ Use actual creator and approver fields when investigating responsibility. The di
 
 The record map asks **how a finance estimate connects to a later supplier bill and its accounting detail**.
 
-```mermaid
-flowchart LR
-    accTitle: Accrual invoice adjustment and payment evidence
-    accDescr: An accrual journal links to supplier-invoice lines through AccrualJournalEntryID. Invoice leads to payment, and adjustment points back through ReversesJournalEntryID. These posting events connect separately to ledger detail.
-    EST[JournalEntry: accrual] -->|AccrualJournalEntryID| LINE[PurchaseInvoiceLine]
-    LINE --> BILL[PurchaseInvoice]
-    BILL --> PAY[DisbursementPayment]
-    ADJ[JournalEntry: adjustment] -->|ReversesJournalEntryID| EST
-    EST -. Posted detail .-> GL[GLEntry]
-    BILL -. Posted detail .-> GL
-    ADJ -. Posted detail .-> GL
-    PAY -. Posted detail .-> GL
-```
+<EvidenceDiagram modelId="accrual-posting" />
 
-The journal header identifies the finance-controlled entry. `GLEntry` contains its posted account detail; there is no separate journal-line table in this model.
+The journal header identifies the finance-controlled entry. `GLEntry` contains the posted account detail because this model has no separate journal-line table.
 
 | Event | Accounting purpose in the accrued-service path |
 |---|---|
@@ -120,7 +109,7 @@ This distinction prevents the same annual result from being misunderstood as bot
 
 The controller may see an accrual before period end and its invoice afterward. That sequence can support an outstanding estimate at the earlier cutoff and later settlement activity. Use the dates to explain the change rather than forcing every related document into one period.
 
-Likewise, an unused accrual balance needs to be understood in relation to the invoice and adjustment dates. The adjustment described above clears the excess of the estimate over the invoice; it is not a reversal of an amount by which the expense was underestimated.
+Likewise, an unused accrual balance needs to be understood in relation to the invoice and adjustment dates. The adjustment described above clears the amount by which the estimate exceeded the invoice. It does not reverse an expense underestimate.
 
 The company-wide review now connects all the chapters. Orders, receipts, shipments, service hours, payroll, completions, and journals explain different parts of the accounting. Each conclusion should identify its event, support, date, and remaining uncertainty.
 
@@ -136,14 +125,14 @@ Begin with [Lesson 11’s accrual journal 9](../learn-and-practice/follow-an-est
 | Residual adjustment, March 11 | JournalEntry 698; ReversesJournalEntryID 9 | Debit accrued expenses / credit repairs expense, 19.74 each | Has the excess estimate been reversed by cutoff? |
 | Supplier payment, May 20 | DisbursementPayment 39818 | Debit AP / credit cash, 10,019.59 each | Has the supplier payable actually been paid by cutoff? |
 
-Each numerical row summarizes its **complete two-row balanced voucher**. The estimate, invoice, residual adjustment, and cash settlement are separate events. Annual close instead transfers credit-balance P&L accounts with debits and debit-balance P&L accounts, including contra-revenue, with credits; the balancing income-summary direction depends on net income or loss. Follow the [Posting Reference](../reference/posting.md) for that distinct purpose.
+Each numerical row summarizes its **complete two-row balanced voucher**. The estimate, invoice, residual adjustment, and cash settlement are separate events. Annual close instead transfers credit-balance P&L accounts with debits and debit-balance P&L accounts, including contra-revenue, with credits. The balancing income-summary direction depends on net income or loss. Follow the [Posting Reference](../reference/posting.md) for that distinct purpose.
 
 **Predict before revealing:** What remains on March 10? Does removing the unused estimate also pay the supplier?
 
 <details>
 <summary>Reveal the liability and timing distinction</summary>
 
-The selected accrual has a 19.74 residual until March 11, while 10,019.59 is AP after the March 9 invoice. The adjustment removes the unused accrued liability and reduces expense; it does not pay AP. At March 31 the selected accrual is cleared but the supplier payable remains until May 20. Later events cannot replace the January 31 cutoff position.
+The selected accrual has a 19.74 residual until March 11, while 10,019.59 is AP after the March 9 invoice. The adjustment removes the unused accrued liability and reduces expense without paying AP. At March 31 the selected accrual is cleared but the supplier payable remains until May 20. Later events cannot replace the January 31 cutoff position.
 
 </details>
 
@@ -228,17 +217,7 @@ Return to these sections when you have a specific question or an assignment that
 
 Which recurring entries explain the month's finance-controlled expenses and estimates? Follow journal headers for rent, utilities, depreciation, and accruals into their posted account detail.
 
-```mermaid
-flowchart LR
-    accTitle: Recurring journal category and ledger accounts
-    accDescr: A recurring category connects to its journal entry, ledger detail, and account.
-    RC[Recurring category]
-    JE[JournalEntry]
-    GL[GLEntry]
-    AC[Account]
-
-    RC --> JE --> GL --> AC
-```
+<EvidenceDiagram modelId="recurring-journal" />
 
 **Tables involved**
 
@@ -261,17 +240,7 @@ flowchart LR
 
 How does finance-controlled activity support manufacturing cost? Follow factory-overhead journals into their ledger entries. These postings complement the material, labor, completion, and close evidence rather than replacing the operational documents.
 
-```mermaid
-flowchart LR
-    accTitle: Factory overhead journals and manufacturing cost support
-    accDescr: Factory overhead connects through journal entry and ledger detail to manufacturing costing support.
-    FO[Factory Overhead]
-    JE[JournalEntry]
-    GL[GLEntry]
-    MFG[Manufacturing costing support]
-
-    FO --> JE --> GL --> MFG
-```
+<EvidenceDiagram modelId="overhead-support" />
 
 **Tables involved**
 
@@ -295,24 +264,7 @@ Warehouse payroll, warehouse rent, and warehouse supplies stay in operating expe
 
 How was the finance estimate cleared? Follow the original accrual into the direct service invoice, any residual adjustment, and payment. When the estimate exceeds the linked invoice, an adjustment reverses the unused balance. Stale uninvoiced accruals can have separate partial-cleanup adjustments. Outbound freight also uses account `2040` in O2C, but it belongs to a different operational path.
 
-```mermaid
-flowchart LR
-    accTitle: Accrual settlement and adjustment branches
-    accDescr: An accrual journal connects through a linked supplier invoice to payment, while a separate branch leads to adjustment. Each accounting event connects separately to ledger detail.
-    AC[Accrual JournalEntry]
-    PIL[Purchase Invoice AccrualJournalEntryID]
-    PI[Purchase Invoice]
-    DP[Disbursement Payment]
-    AJ[Accrual Adjustment]
-    GL[GLEntry]
-
-    AC --> PIL --> PI --> DP
-    AC --> AJ
-    AC --> GL
-    PI --> GL
-    DP --> GL
-    AJ --> GL
-```
+The [accrual evidence map above](#evidence-accrual-posting) shows both invoice settlement and the independent residual adjustment. Compare those branches rather than treating them as one payment sequence.
 
 **Tables involved**
 
@@ -348,7 +300,7 @@ Use `PurchaseInvoiceLine.AccrualJournalEntryID` for accrued-service settlement. 
 
 <BpmnDiagram modelId="accrual-settlement" />
 
-The original estimate, a later direct service invoice, any linked residual adjustment, and disbursement remain separate events. The invoice uses `AccrualJournalEntryID`; it does not require a physical receipt. An estimate can remain outstanding at a reporting date.
+The original estimate, a later direct service invoice, any linked residual adjustment, and disbursement remain separate events. The invoice uses `AccrualJournalEntryID` without requiring a physical receipt. An estimate can remain outstanding at a reporting date.
 
 </details>
 
@@ -370,7 +322,7 @@ The original estimate, a later direct service invoice, any linked residual adjus
 **Prerequisites, tools, and sources:** review accrual recognition, liabilities, and closing entries. Use a SQL tool with the published SQLite file, or Excel filters and lookups, plus a copy of the editable Draw.io model. Sources are `JournalEntry`, `GLEntry`, `Account`, and, for an accrued service, `PurchaseInvoiceLine`, `PurchaseInvoice`, and `DisbursementPayment`. Use fixed-asset and debt records only when the chosen journal family requires them.
 
 1. Record the source file, journal type, reporting date, and actual keys. Mark the entry's purpose, preparation, approval, and posting on the model.
-2. Trace the entry to ledger detail and retain the relevant date boundaries. For an accrual, inspect linked invoices and adjustments without assuming blanket reversal; for close, distinguish operating activity from the annual transfer.
+2. Trace the entry to ledger detail and retain the relevant date boundaries. For an accrual, inspect linked invoices and adjustments without assuming blanket reversal. For close, distinguish operating activity from the annual transfer.
 3. Add one **proposed teaching control** for approval, accrual review, or close reconciliation. Specify the risk, objective, owner, evidence, test, and limitation in the [workshop matrix](../learn-and-practice/bpmn-controls-workshop.md).
 
 **Assessed deliverable:** submit an annotated model, a reproducible journal-to-ledger schedule, and the risk/control row. Explain what finding would warrant follow-up and what additional support would be needed. The file does not establish a complete finance-calendar workflow or prove review quality merely through an approver field. Continue through the existing accrual, financial query, and statement-bridge links on this page.

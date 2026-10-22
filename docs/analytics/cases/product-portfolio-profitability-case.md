@@ -24,21 +24,21 @@ import { caseQuerySequences } from "@site/src/generated/queryDocCollections";
 <span id="the-problem-to-solve"></span>
 <span id="learning-objectives"></span>
 
-Commercial leadership has time for one product review. The sales coordinator proposes looking at discounts; the controller asks whether product mix, cost assumptions, or delivery performance could explain the same pattern. Your job is to compare those explanations and recommend a bounded next investigation, not to declare a product group unprofitable from one percentage.
+Commercial leadership has time for one product review. The sales coordinator proposes reviewing discounts, while the controller asks whether product mix, cost assumptions, or delivery performance could explain the same pattern. Your job is to compare those explanations and recommend a bounded next investigation, not to declare a product group unprofitable from one percentage.
 
 <CaseOverview slug="product-portfolio-profitability-case" />
 
 **Worked scope.** Goods invoice lines dated January 1–March 31, 2024. Compare product groups using the same population. Credits are a separate credit-date population. Current product-master attributes and standard costs are descriptive reference data, not historical snapshots.
 
-Choose Excel or SQL; your selection carries between lessons and cases.
+Choose Excel or SQL. The site retains your selection between lessons and cases.
 
-**Preparation:** [3. Connect the Records](/docs/learn-and-practice/connect-the-records); [9. Follow Manufacturing Costs](/docs/learn-and-practice/manufacturing-cost-flow); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+**Preparation:** [3. Connect the Records](/docs/learn-and-practice/connect-the-records), [9. Follow Manufacturing Costs](/docs/learn-and-practice/manufacturing-cost-flow), [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
 **Ready to begin:**
 
-- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
 - Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
-- Preserve invoice-line grain; state the limits of current standard costs and separately dated credits in historical comparisons.
+- Preserve invoice-line grain and state the limits of current standard costs and separately dated credits in historical comparisons.
 
 ## Key Data Sources
 
@@ -83,7 +83,7 @@ Create Case04.xlsx or Case04.sql. Write the measure before calculating it: invoi
 
 **Named inputs:** `Items ← Item (import here)`.
 
-**Produced outputs:** `Items: unique item lookup`; `ItemClassification: ItemType PivotTable`.
+**Produced outputs:** `Items: unique item lookup`, `ItemClassification: ItemType PivotTable`.
 
 1. Import Item as Items.
 
@@ -93,12 +93,12 @@ Create Case04.xlsx or Case04.sql. Write the measure before calculating it: invoi
 
 4. Inspect IsActive, LifecycleStatus, LaunchDate, and ItemGroup.
 
-5. Do not remove inactive items before selecting historical sales; current inactivity does not mean an item could not be sold in 2024.
+5. Retain currently inactive items when selecting historical sales because current inactivity does not establish their status in 2024.
 
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c04-master.sql"
 SELECT ItemType,
        COUNT(*) AS Items,
@@ -133,9 +133,9 @@ The exact goods label is Finished Good, including the space. A spelling mismatch
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `Items (Session 1.1)`; `SalesInvoiceData ← SalesInvoice and SalesInvoiceLineData ← SalesInvoiceLine (import here)`.
+**Named inputs:** `Items (Session 1.1)`, `SalesInvoiceData ← SalesInvoice and SalesInvoiceLineData ← SalesInvoiceLine (import here)`.
 
-**Produced outputs:** `QuarterInvoices: Q1 2024 invoice headers`; `ProductLines: finished-good invoice-line detail`; `InvoiceCounts: distinct SalesInvoiceID reference`.
+**Produced outputs:** `QuarterInvoices: Q1 2024 invoice headers`, `ProductLines: finished-good invoice-line detail`, `InvoiceCounts: distinct SalesInvoiceID reference`.
 
 1. Import SalesInvoice as SalesInvoiceData and SalesInvoiceLine as SalesInvoiceLineData; preserve both raw queries.
 
@@ -168,7 +168,7 @@ The exact goods label is Finished Good, including the space. A spelling mismatch
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c04-population.sql"
 SELECT COUNT(*) AS Lines,
        COUNT(DISTINCT i.SalesInvoiceID) AS Invoices,
@@ -224,7 +224,7 @@ Weighted realization asks how much was billed relative to the list value of the 
 
 **Named inputs:** `ProductLines with ListValue and CurrentStandardCost (Session 1.2)`.
 
-**Produced outputs:** `ProductReview: four ItemGroup rows with realization and standard-margin measures`; `StandardMarginChart`.
+**Produced outputs:** `ProductReview: four ItemGroup rows with realization and standard-margin measures`, `StandardMarginChart`.
 
 1. From ProductLines create a PivotTable: Rows = ItemGroup; Values = sums of LineTotal, ListValue, CurrentStandardCost, Quantity and Count of SalesInvoiceLineID.
 
@@ -304,9 +304,9 @@ Calculate the ratio of summed dollars. Do not average line percentages or mistak
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `ProductLines (Session 1.2)`; `Overrides ← PriceOverrideApproval and Promotions ← PromotionProgram (import here)`; `SalesOrderLineData ← SalesOrderLine and SalesOrderData ← SalesOrder (import here)`.
+**Named inputs:** `ProductLines (Session 1.2)`, `Overrides ← PriceOverrideApproval and Promotions ← PromotionProgram (import here)`, `SalesOrderLineData ← SalesOrderLine and SalesOrderData ← SalesOrder (import here)`.
 
-**Produced outputs:** `ProductLines: approval and order-date lookup columns`; `Review: separately scoped override and promotion evidence`.
+**Produced outputs:** `ProductLines: approval and order-date lookup columns`, `Review: separately scoped override and promotion evidence`.
 
 1. Import PriceOverrideApproval as Overrides, PromotionProgram as Promotions, SalesOrderLine as SalesOrderLineData, and SalesOrder as SalesOrderData.
 
@@ -353,7 +353,7 @@ Calculate the ratio of summed dollars. Do not average line percentages or mistak
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c04-pricing.sql"
 SELECT l.SalesInvoiceLineID,
        l.SalesOrderLineID,
@@ -423,9 +423,9 @@ ORDER BY l.SalesInvoiceLineID;
 </TabItem>
 </ToolSteps>
 
-**Checkpoint.** Line 69 carries approval 9; approved price 417.96 agrees with its unit price and approval date January 10. Line 1548 links promotion 1, whose recorded effective dates are March 1–March 1, while its order is dated March 11. That is a date-support exception requiring follow-up; the invoice is dated March 19.
+**Checkpoint.** Line 69 carries approval 9; approved price 417.96 agrees with its unit price and approval date January 10. Line 1548 links promotion 1, whose recorded effective dates are March 1–March 1, while its order is dated March 11. The March 19 invoice date does not resolve this order-date support exception.
 
-An approval explains authorization, not whether the discount was commercially successful. A promoted line and a non-promoted line can differ in product, customer, volume, and date. A causal promotion-effect claim needs more evidence. For promotion 1, ask for the intended effective period and supporting approval rather than assuming the recorded date range was valid.
+The linked approval records the stated authorization basis. Verify the actor's authority, status, and date before concluding that authorization was valid. It does not establish commercial success. A promoted line and a non-promoted line can differ in product, customer, volume, and date. A causal promotion-effect claim needs more evidence. For promotion 1, ask for the intended effective period and supporting approval rather than assuming the recorded date range was valid.
 
 <details>
 <summary>If your result differs</summary>
@@ -458,9 +458,9 @@ Return to the commercial request. A single ranking can hide different problems. 
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `ProductLines, SalesOrderLineData, SalesOrderData, and Items (earlier stages)`; `ShipmentLineData ← ShipmentLine and ShipmentData ← Shipment (import here)`; `CreditMemoLineData ← CreditMemoLine and CreditMemoData ← CreditMemo (import here)`.
+**Named inputs:** `ProductLines, SalesOrderLineData, SalesOrderData, and Items (earlier stages)`, `ShipmentLineData ← ShipmentLine and ShipmentData ← Shipment (import here)`, `CreditMemoLineData ← CreditMemoLine and CreditMemoData ← CreditMemo (import here)`.
 
-**Produced outputs:** `DeliveryDetail: retained invoice-line delivery comparisons`; `DeliveryReview: ItemGroup summary`; `CreditReview: separately dated credit summary`.
+**Produced outputs:** `DeliveryDetail: retained invoice-line delivery comparisons`, `DeliveryReview: ItemGroup summary`, `CreditReview: separately dated credit summary`.
 
 1. Import ShipmentLine as ShipmentLineData and Shipment as ShipmentData.
 
@@ -595,9 +595,9 @@ A reviewer should be able to trace the priority to the table, the table to the p
 
 ## Prepare the Decision
 
-Furniture merits a focused review in the worked analysis, but the first action should diagnose cost assumptions, product mix, and delivery performance alongside pricing. Similar realization rates across groups weaken a simple discount-only explanation. The recommendation remains provisional because current standard costs are not a complete historical cost-of-sales measure.
+Furniture merits a focused review in the worked analysis, but the first action should diagnose cost assumptions, product mix, and delivery performance alongside pricing. Similar realization rates across groups weaken a simple discount-only explanation. The recommendation remains provisional because current standard costs are not a complete historical cost-of-sales measure. To investigate historical posted cost, retain the selected invoice-line and shipment-line keys, retrieve complete Shipment vouchers, and isolate their COGS rows after checking balance. Aggregate selected line costs separately from whole vouchers. Align the invoice and shipment dates and population before comparing them with current Item.StandardCost. The [monthly posted revenue and COGS query](../analysis-tracks.md#query-financial-01-monthly-revenue-and-gross-margin) is a company-level reference, not a directly comparable product-group profit measure. Its source filters exclude returns and credit memos, so it is not net profit.
 
-**Deliverable:** A product comparison, selected pricing evidence, a simple analytical chart, and a recommendation memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** A product comparison, selected pricing evidence, a simple analytical chart, and a recommendation memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A clearly ordered SQL result table can support the conclusion, with a chart added if useful.
 
 ## Independent Challenge
 
@@ -610,7 +610,7 @@ Use the same invoice-date population for the main comparison and a separately la
 
 </details>
 
-**Assessment criteria:** Assess comparable populations, weighted ratios, cost labels, source tracing, alternative explanations, and a proportionate recommendation. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+**Assessment criteria:** Assess comparable populations, weighted ratios, cost labels, source tracing, alternative explanations, and a proportionate recommendation. Your instructor evaluates the method, evidence, and reasoning. Model answers for this challenge remain in private course materials.
 
 <details>
 <summary>Further queries and earlier case topics</summary>
@@ -619,9 +619,9 @@ Use the same invoice-date population for the main comparison and a separately la
 
 ## Recommended Query Sequence
 
-These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. These optional references extend the complete guided routes above. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-<QuerySequence items={caseQuerySequences["product-portfolio-profitability-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
+<QuerySequence items={caseQuerySequences["product-portfolio-profitability-case"]} helperText="Choose a reference after completing the guided investigation and verify its scope before comparing totals." />
 
 </details>
 

@@ -8,6 +8,7 @@ toc_max_heading_level: 2
 ---
 
 import BpmnDiagram from "@site/src/components/BpmnDiagram";
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
 
 # Procure-to-Pay Process
 
@@ -17,7 +18,7 @@ import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
 ## Operations Needs Goods and Materials
 
-The operations planner in our company story considers how to support customer demand. Some goods can come from available inventory; other needs require merchandise or components from suppliers. The question becomes **what should the company obtain, what actually arrived, and what does it owe?**
+The operations planner in our company story considers how to support customer demand. Available inventory can meet some needs, while others require merchandise or components from suppliers. The question becomes **what should the company obtain, what actually arrived, and what does it owe?**
 
 Follow an inventory purchase from the planner's request to supplier payment. Purchasing supports customer demand and ongoing stock needs across the company. When investigating a particular purchase, use its document links to establish which request, receipt, and invoice belong together.
 
@@ -31,7 +32,7 @@ Purchasing prepares the purchase order and its lines. One order can bring togeth
 
 The purchase order communicates the supplier commitment. It does not establish that goods arrived or that payment occurred. In the dataset, the requisition and purchase order do not themselves create the inventory and payable postings that follow.
 
-Approval records help identify recorded authorization. Understanding who approved a selected transaction requires inspecting its fields; the model's department lanes alone do not establish that independent approval took place.
+Approval records help identify recorded authorization. Understanding who approved a selected transaction requires inspecting the transaction fields because the model's department lanes alone do not establish independent approval.
 
 ## Record What Receiving Actually Obtains
 
@@ -87,16 +88,7 @@ Notice that the supplier is external to the company. The requisition is an inter
 
 This map answers **how the ordinary inventory purchase can be followed from request to payment**.
 
-```mermaid
-flowchart LR
-    accTitle: Receipt-matched purchase evidence
-    accDescr: Requisition connects to a purchase-order line, goods-receipt line, supplier-invoice line and header, then disbursement.
-    REQ[PurchaseRequisition] --> PO[PurchaseOrderLine]
-    PO --> REC[GoodsReceiptLine]
-    REC --> BILL[PurchaseInvoiceLine]
-    BILL --> HEADER[PurchaseInvoice]
-    HEADER --> PAY[DisbursementPayment]
-```
+<EvidenceDiagram modelId="goods-purchase-path" />
 
 Read each record as the document stage just described. The detailed reference retains the exact keys, including how lines connect when orders batch requests or receipts arrive in parts.
 
@@ -107,19 +99,19 @@ Read each record as the document stage just described. The detailed reference re
 | Supplier invoice | GRNI is cleared, applicable variance is recorded, and AP is created |
 | Supplier payment | AP and cash decrease |
 
-Some purchases take other paths. An accrued service can be invoiced without a physical goods receipt, and a capital purchase has asset and potentially financing consequences. Keep those branches separate from this first inventory trace; they are available in the optional reference.
+Some purchases take other paths. An accrued service can be invoiced without a physical goods receipt, and a capital purchase has asset and potentially financing consequences. Keep those branches separate from this first inventory trace and consult them in the optional reference when needed.
 
 ## Explain a Receipt Without an Invoice
 
 Suppose the controller reviews goods received near period end. Receiving has recorded the delivery, but the supplier invoice is posted later. The useful question is whether the receipt and its GRNI balance are supported at the selected date.
 
-Start with what arrived and when. Then inspect the related invoice evidence without importing a later event into the earlier period. An uninvoiced receipt can be a timing difference; establish its age and circumstances before drawing a stronger conclusion.
+Start with what arrived and when. Then inspect the related invoice evidence without importing a later event into the earlier period. Establish the age and circumstances of an uninvoiced receipt before deciding whether it reflects more than a timing difference.
 
 The same reasoning applies to a partially received order. The supplier commitment and the actual receipt tell different parts of the story. The remaining quantity needs its own explanation.
 
 ## Bridge an Event to an Entry
 
-Reuse [Lesson 8’s receipt-matched purchase](../learn-and-practice/receipt-to-payable.md); keep the separate [accrued-service trace in Lesson 11](../learn-and-practice/follow-an-estimate-into-settlement.md) available for purchases without goods receipts.
+Reuse [Lesson 8’s receipt-matched purchase](../learn-and-practice/receipt-to-payable.md) and keep the separate [accrued-service trace in Lesson 11](../learn-and-practice/follow-an-estimate-into-settlement.md) available for purchases without goods receipts.
 
 | Event and date | Supporting evidence | Why the accounts change | Cutoff question |
 |---|---|---|---|
@@ -128,7 +120,7 @@ Reuse [Lesson 8’s receipt-matched purchase](../learn-and-practice/receipt-to-p
 | Supplier document November 29; GL posting November 30 | PurchaseInvoice 36461; invoice line 36861 | Debit GRNI 8.83 and purchase price variance 0.13 / credit AP 8.96 | Which date governs the source analysis, and which governs the ledger balance? |
 | Payment, 2027-01-08 | DisbursementPayment 39645 | Debit AP / credit cash, 8.96 each | Was that payment recorded by December 31? |
 
-The invoice’s 0.13 tax contributes to the 8.96 bill; the released **ledger** places the 0.13 difference in purchase price variance. The 2-row receipt, 3-row invoice, and 2-row payment vouchers each balance. Do not describe the invoice date as the ledger posting date.
+The invoice's 0.13 tax contributes to the 8.96 bill, with the released **ledger** recording that difference in purchase price variance. The 2-row receipt, 3-row invoice, and 2-row payment vouchers each balance. Do not describe the invoice date as the ledger posting date.
 
 **Predict before revealing:** Which liability belongs at September 30 and December 31, 2026? Does a payment visible in the file settle the earlier cutoff?
 
@@ -159,7 +151,7 @@ No. Establish the balance using events up to the reporting date. The later disbu
 
 **Continue the company story.** Purchased components connect the supply story to production. Continue to [Manufacturing](manufacturing.md) to see how materials and labor support selected finished goods.
 
-**Investigate this process.** Finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Then follow [Lesson 8: Follow a Purchase](../learn-and-practice/receipt-to-payable.md); use [Lesson 11: Follow an Estimate into Settlement](../learn-and-practice/follow-an-estimate-into-settlement.md) for the accrued-service branch. Check the selected lesson’s further prerequisites before beginning.
+**Investigate this process.** Finish [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus [Excel setup](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md). Then follow [Lesson 8: Follow a Purchase](../learn-and-practice/receipt-to-payable.md). Use [Lesson 11: Follow an Estimate into Settlement](../learn-and-practice/follow-an-estimate-into-settlement.md) for the accrued-service branch. Check the selected lesson’s further prerequisites before beginning.
 
 **Find analytical evidence.** Browse [Purchasing and Inventory queries](../analytics/analysis-tracks.md#purchasing-and-inventory) and [related reports](../analytics/index.md#purchasing-and-inventory). Use the [Schema Reference](../reference/schema.md) for join keys and the [Posting Reference](../reference/posting.md) for accounting effects.
 
@@ -210,18 +202,7 @@ Return to these sections when you have a specific question or an assignment that
 
 What supported the decision to replenish? Follow weekly forecast, policy, and projected availability into `SupplyPlanRecommendation`, then into the requisition. This establishes the planning context before the supplier commitment.
 
-```mermaid
-flowchart LR
-    accTitle: Forecast and policy support a purchase request
-    accDescr: Demand forecast and inventory policy feed a supply-plan recommendation that supports a purchase requisition.
-    DF[Demand Forecast]
-    IP[Inventory Policy]
-    SPR[Supply Plan Recommendation]
-    PR[Purchase Requisition]
-
-    DF --> SPR
-    IP --> SPR --> PR
-```
+<EvidenceDiagram modelId="purchase-planning" />
 
 **Tables involved**
 
@@ -244,16 +225,7 @@ flowchart LR
 
 What was ordered, and how much arrived? Follow the requisition into the supplier-order line and its receipt lines. Retain the dates and quantities to explain partial receipts and receiving delays.
 
-```mermaid
-flowchart LR
-    accTitle: Purchase request order and receipt
-    accDescr: Purchase requisition connects to purchase order and goods receipt.
-    PR[Purchase Requisition]
-    PO[Purchase Order]
-    GR[GoodsReceipt]
-
-    PR --> PO -->  GR
-```
+<EvidenceDiagram modelId="requisition-receipt" />
 
 **Tables involved**
 
@@ -279,16 +251,7 @@ flowchart LR
 
 Which receipt supports the supplier's billed line? Follow `GoodsReceiptLine` into `PurchaseInvoiceLine` for the ordinary inventory and materials path, then inspect the resulting AP and GRNI postings.
 
-```mermaid
-flowchart LR
-    accTitle: Receipt invoice and ledger evidence
-    accDescr: Goods-receipt evidence connects to a purchase invoice and its ledger detail.
-    GRL[Goods Receipt]
-    PI[Purchase Invoice]
-    GL[GLEntry]
-
-    GRL --> PI --> GL
-```
+<EvidenceDiagram modelId="receipt-invoice-posting" />
 
 **Tables involved**
 
@@ -304,23 +267,13 @@ flowchart LR
 
 - Objective: Trace receipt-based invoicing through the three-way-match path.
 - Evidence path: GoodsReceiptLine -> PurchaseInvoiceLine -> PurchaseInvoice.
-- Comparison: Compare receipt date and invoice date by supplier, item, or month-end.
+- Compare `ReceiptDate` with `InvoiceDate` for document lag. Use `ApprovedDate` and `GLEntry.PostingDate` for liability recognition at month end. Use `DueDate` for overdue status.
 
 ### Supplier Payment and Open AP
 
 What remained payable at the reporting date? Follow the supplier invoice into its disbursement, comparing invoice, due, and payment dates. A later payment can explain eventual settlement while AP was still open earlier.
 
-```mermaid
-flowchart LR
-    accTitle: Supplier invoice payable and disbursement
-    accDescr: A purchase invoice establishes accounts payable, followed by disbursement and ledger detail.
-    PI[Purchase Invoice]
-    AP[Accounts Payable]
-    DP[Disbursement Payment]
-    GL[GLEntry]
-
-    PI --> AP --> DP --> GL
-```
+<EvidenceDiagram modelId="supplier-settlement-posting" />
 
 **Tables involved**
 
@@ -336,7 +289,7 @@ flowchart LR
 
 - Objective: Separate supplier invoicing from supplier payment.
 - Evidence path: PurchaseInvoice -> DisbursementPayment, with GLEntry for posted effect.
-- Comparison: Compare invoice date, due date, and payment date by supplier or spend type.
+- Compare `InvoiceDate` with `PaymentDate` for payment lag and `DueDate` with the reporting date for overdue status. Establish recognized AP using `ApprovedDate` and `GLEntry.PostingDate`, then deduct payments dated within the cutoff.
 
 </details>
 
@@ -368,7 +321,7 @@ An accrued service uses the finance estimate and `PurchaseInvoiceLine.AccrualJou
 
 1. State the release, reporting date, and selected line keys. Trace the receipt-matched path and identify the represented responsibility at each activity.
 2. Compare quantities, approval support, and event dates. Explain any unmatched quantity or open balance as of the date before labeling it an exception.
-3. Annotate a **proposed teaching control**, such as independent match review. Specify its risk, objective, owner, evidence, test, and escalation question; do not depict the database as enforcing that proposal.
+3. Annotate a **proposed teaching control**, such as independent match review. Specify its risk, objective, owner, evidence, test, and escalation question without depicting the database as enforcing the proposal.
 
 **Assessed deliverable:** submit an annotated BPMN copy, a line-level evidence schedule, and one risk/control-matrix row using the [workshop format](../learn-and-practice/bpmn-controls-workshop.md). Explain how the proposal could be assessed and what the stored records cannot prove. A receipt-matched sample does not establish controls for direct accrued services, CAPEX financing, or the full payable population. Continue to the existing P2P case and reports below for the wider analysis.
 

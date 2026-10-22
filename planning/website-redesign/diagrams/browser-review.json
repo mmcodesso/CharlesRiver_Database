@@ -1,0 +1,54 @@
+{
+  "viewports": [
+    {
+      "controlMinimum": 44,
+      "fitZoom": "27%",
+      "overflow": false,
+      "theme": "light",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "actualZoom": "100%",
+      "canvas": "rgb(255, 255, 255)",
+      "overflow": false,
+      "theme": "dark",
+      "viewport": [
+        768,
+        1024
+      ]
+    },
+    {
+      "actualZoom": "100%",
+      "overflow": false,
+      "theme": "light",
+      "viewport": [
+        1440,
+        1000
+      ]
+    }
+  ],
+  "checks": {
+    "firstActualSizeTap": true,
+    "keyboardPan": true,
+    "keyboardZoom": true,
+    "resetFit": true,
+    "escape": true,
+    "exactOpenerFocus": true,
+    "imageSpaceActivation": true,
+    "modalTabWrap": true,
+    "reducedMotion": true,
+    "whiteCanvasInDarkTheme": true
+  },
+  "samplePages": [
+    "/docs/reference/schema",
+    "/docs/learn-and-practice/connect-the-records",
+    "/docs/processes/design-services",
+    "/docs/analytics/cases/manufacturing-labor-cost-case"
+  ],
+  "temporaryEmulationOverridesRestored": true,
+  "humanLearnerStudy": false,
+  "fullAccessibilityConformanceAssessment": false
+}

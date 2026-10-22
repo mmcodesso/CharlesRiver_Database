@@ -21,6 +21,7 @@ export default function BpmnDiagram({ modelId }) {
   const model = models.find((entry) => entry.id === modelId);
   if (!model) throw new Error(`Unknown BPMN model: ${modelId}`);
   return <StaticDiagram model={model} assetRoot="/diagrams/bpmn/" kind="model">
+    <p className={styles.note}><strong>Model scope:</strong> {model.instanceScope}</p>
     <details className={styles.description}>
       <summary>Text description and database evidence</summary>
       <ol>{model.steps.map((step) => <li key={step}>{step}</li>)}</ol>

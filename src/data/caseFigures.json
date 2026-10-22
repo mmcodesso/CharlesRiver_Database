@@ -10,7 +10,9 @@
       "Operations explains shipments and remaining quantities.",
       "Controller and treasury explain invoices, cash, and allocation."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "responsibilities",
+    "readingRule": "Rows show proposed teaching responsibilities. They do not establish employee access independence or control operation."
   },
   {
     "id": "case01-relationships",
@@ -23,7 +25,9 @@
       "One receipt can support several invoice applications.",
       "Aggregate applications and credits by invoice before comparing balances."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "aggregate-join",
+    "readingRule": "Summarize each many-side independently to the comparison grain before joining; keep other analytical grains separate."
   },
   {
     "id": "case01-timeline",
@@ -36,7 +40,9 @@
       "April adds invoices, applications, and credit memo 30.",
       "April 30: the same order cohort leaves 7,293.32."
     ],
-    "kind": "Selected released evidence and teaching explanation"
+    "kind": "Selected released evidence and teaching explanation",
+    "layoutKind": "dated-events",
+    "readingRule": "Read document dates and accounting effects separately. The timeline does not create additional database relationships."
   },
   {
     "id": "case02-responsibilities",
@@ -49,7 +55,9 @@
       "Staff record billable and non-billable time; approval supports billing.",
       "Billing connects covered time to an invoice; the controller compares measures."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "responsibilities",
+    "readingRule": "Rows show proposed teaching responsibilities. They do not establish employee access independence or control operation."
   },
   {
     "id": "case02-billing",
@@ -62,7 +70,9 @@
       "A billing line supplies an inclusive start/end period and billed hours.",
       "SalesInvoiceLine identifies the invoice; InvoiceDate establishes billing timing."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "billing-match",
+    "readingRule": "Match engagement and the inclusive billing period, then aggregate approved billable time. This is distinct from a stored billing-line key on each time entry."
   },
   {
     "id": "case02-bridge",
@@ -75,7 +85,9 @@
       "33 billing lines total 244,865.45 for covered work.",
       "Time cost of 49,022.40 supports a limited comparison, not complete profit."
     ],
-    "kind": "Selected released evidence and teaching explanation"
+    "kind": "Selected released evidence and teaching explanation",
+    "layoutKind": "measure-comparison",
+    "readingRule": "These measures are compared side by side. Their different definitions and grains do not form a transaction sequence."
   },
   {
     "id": "case03-branches",
@@ -88,7 +100,9 @@
       "Services: estimate, linked invoice, residual adjustment, payment.",
       "Keep the two selected populations separate before interpreting obligations."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "two-populations",
+    "readingRule": "Goods and accrued services follow separate evidence paths. Compare their obligations without joining their populations together."
   },
   {
     "id": "case03-transitions",
@@ -101,7 +115,9 @@
       "The supplier invoice transfers the supported amount into accounts payable.",
       "Payment settles AP; an estimate difference may need a separate adjustment."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "liability-states",
+    "readingRule": "Distinguish pre-invoice obligations, accounts payable, payment, and any independent residual-accrual adjustment."
   },
   {
     "id": "case03-timeline",
@@ -114,7 +130,9 @@
       "April–June adds invoices, expense differences, and payments.",
       "June 30 still has selected goods AP and GRNI, while the three expense estimates are settled."
     ],
-    "kind": "Selected released evidence and teaching explanation"
+    "kind": "Selected released evidence and teaching explanation",
+    "layoutKind": "dated-events",
+    "readingRule": "Read document dates and accounting effects separately. The timeline does not create additional database relationships."
   },
   {
     "id": "case04-decision",
@@ -127,7 +145,9 @@
       "Compare billed amounts, weighted prices, and a stated cost basis.",
       "Inspect source records and competing explanations before recommending action."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "analytical-workflow",
+    "readingRule": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result."
   },
   {
     "id": "case04-relationships",
@@ -140,7 +160,9 @@
       "Order lines and approvals explain the commercial decision.",
       "Product master supplies current grouping and standard-cost assumptions."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "support-branches",
+    "readingRule": "A billed line has several kinds of supporting context. Foreign keys, approval validity, and cost assumptions answer different questions."
   },
   {
     "id": "case04-measures",
@@ -153,7 +175,9 @@
       "Standard-cost margin uses current item cost assumptions.",
       "Delivery-line counts and credit-date amounts retain separate scopes."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "measure-comparison",
+    "readingRule": "These measures are compared side by side. Their different definitions and grains do not form a transaction sequence."
   },
   {
     "id": "case04-conclusion",
@@ -166,7 +190,9 @@
       "Trace selected prices and examine delivery and credit evidence separately.",
       "Choose a focused review, identify an owner, and state what evidence could change it."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "analytical-workflow",
+    "readingRule": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result."
   },
   {
     "id": "case05-planning",
@@ -179,7 +205,9 @@
       "Operations and daily schedules describe planned work-center activity.",
       "Actual events establish issue, completion, and financial close."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "planning-evidence",
+    "readingRule": "Planning and schedules describe intended activity; dated issue, completion, and close records establish execution."
   },
   {
     "id": "case05-costs",
@@ -192,7 +220,9 @@
       "Completion records finished goods at standard material and conversion cost.",
       "Close records material and conversion variances after completion."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "cost-events",
+    "readingRule": "Material issue, standard-cost completion, and variance close have distinct account effects and evidence populations."
   },
   {
     "id": "case05-grains",
@@ -205,7 +235,9 @@
       "Join each one-row summary to the fixed 336-order cohort.",
       "Analyze daily work-center capacity separately from order cost."
     ],
-    "kind": "Selected released evidence and teaching explanation"
+    "kind": "Selected released evidence and teaching explanation",
+    "layoutKind": "aggregate-join",
+    "readingRule": "Summarize each many-side independently to the comparison grain before joining; keep other analytical grains separate."
   },
   {
     "id": "case05-timeline",
@@ -218,7 +250,9 @@
       "WO67 completes February 7 and closes February 13.",
       "Across the cohort, 336 are complete but only 290 closed by February 29."
     ],
-    "kind": "Selected released evidence and teaching explanation"
+    "kind": "Selected released evidence and teaching explanation",
+    "layoutKind": "parallel-timelines",
+    "readingRule": "Compare work orders on parallel dated tracks. Finished-goods availability and accounting close are different milestones."
   },
   {
     "id": "case06-attendance",
@@ -231,7 +265,9 @@
       "Punches are raw observations; approved time records authorized payroll hours.",
       "Payroll calculates pay from its approved support and other pay rules."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "support-layers",
+    "readingRule": "Roster expectations, observations, approved time, and payroll supply different evidence; reconcile their grains and linked keys."
   },
   {
     "id": "case06-grains",
@@ -244,7 +280,9 @@
       "Summarize hours by employee and payroll period.",
       "Join to a unique employee-period payroll register; retain location analysis separately."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "aggregate-join",
+    "readingRule": "Summarize each many-side independently to the comparison grain before joining; keep other analytical grains separate."
   },
   {
     "id": "case06-pay",
@@ -257,7 +295,9 @@
       "Employee deductions reduce gross pay to net pay.",
       "Employer tax and benefits add cost and separate liabilities."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "pay-cost-branches",
+    "readingRule": "Employee deductions explain net pay. Employer taxes and benefits add separate cost and obligations."
   },
   {
     "id": "case06-settlement",
@@ -270,7 +310,9 @@
       "Employee payments settle individual net-pay registers.",
       "Period-wide remittances settle separate agency and provider obligations."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "settlement-branches",
+    "readingRule": "Employee net-pay payments and period-level liability remittances settle separate obligations; neither proves the other is complete."
   },
   {
     "id": "case07-statements",
@@ -283,7 +325,9 @@
       "The ledger supplies period activity and cumulative account balances.",
       "Statement definitions select and classify those amounts for interpretation."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "analytical-workflow",
+    "readingRule": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result."
   },
   {
     "id": "case07-rollforward",
@@ -296,7 +340,9 @@
       "Movement: October 1–December 31, with close treatment stated.",
       "Closing: opening plus movement through December 31."
     ],
-    "kind": "Selected released evidence and teaching explanation"
+    "kind": "Selected released evidence and teaching explanation",
+    "layoutKind": "balance-equation",
+    "readingRule": "Opening balance plus in-scope movement equals closing balance. State the cutoff and treatment of closing entries."
   },
   {
     "id": "case07-close",
@@ -309,7 +355,9 @@
       "Journal 851 transfers 4,503,611.24 from income summary to retained earnings.",
       "Quarterly performance remains the pre-close activity, not the transfer to equity."
     ],
-    "kind": "Selected released evidence and teaching explanation"
+    "kind": "Selected released evidence and teaching explanation",
+    "layoutKind": "dated-events",
+    "readingRule": "Read document dates and accounting effects separately. The timeline does not create additional database relationships."
   },
   {
     "id": "case07-profit-cash",
@@ -322,7 +370,9 @@
       "Other account effects explain why cash movement is −743,539.66.",
       "Cash closes at 8,442,255.80; outstanding obligations require separate follow-up."
     ],
-    "kind": "Selected released evidence and teaching explanation"
+    "kind": "Selected released evidence and teaching explanation",
+    "layoutKind": "measure-comparison",
+    "readingRule": "These measures are compared side by side. Their different definitions and grains do not form a transaction sequence."
   },
   {
     "id": "case07-asset",
@@ -335,7 +385,9 @@
       "Journal 445 replaces AP with a 280,000 note.",
       "Depreciation records asset use; debt payments separate principal and interest."
     ],
-    "kind": "Selected released evidence and teaching explanation"
+    "kind": "Selected released evidence and teaching explanation",
+    "layoutKind": "asset-branches",
+    "readingRule": "Asset acquisition and financing lead to separate depreciation and debt-service evidence; separate principal from interest."
   },
   {
     "id": "case08-risk",
@@ -348,7 +400,9 @@
       "Select a population with a stated denominator and date boundary.",
       "Collect source evidence before classifying a finding."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "analytical-workflow",
+    "readingRule": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result."
   },
   {
     "id": "case08-ap",
@@ -361,7 +415,9 @@
       "Read each flagged document, its receipt links, and payment trail.",
       "Classify what repeats and what additional evidence is required."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "analytical-workflow",
+    "readingRule": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result."
   },
   {
     "id": "case08-overtime",
@@ -374,7 +430,9 @@
       "Left join the linked overtime approval so missing links remain visible.",
       "Inspect hours, identity, period, dates, and status before concluding."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "analytical-workflow",
+    "readingRule": "Arrows show steps in the investigation. Confirm record keys, dates, and scope before interpreting a result."
   },
   {
     "id": "case08-finding",
@@ -387,7 +445,9 @@
       "Investigation: compare supporting documents and alternative explanations.",
       "Conclusion: supported exception, explained circumstance, unresolved evidence, or no exception under the test."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "classification",
+    "readingRule": "An investigation can reach several defensible classifications. A query flag alone does not determine the conclusion."
   },
   {
     "id": "case08-assessment",
@@ -400,6 +460,8 @@
       "Test a stated population and trace both flagged and unflagged examples.",
       "Evaluate failures, investigate causes, and repeat the assessment without changing the denominator silently."
     ],
-    "kind": "Conceptual teaching diagram"
+    "kind": "Conceptual teaching diagram",
+    "layoutKind": "assessment-cycle",
+    "readingRule": "This is a proposed classroom assessment cycle. Preserve its population and denominator when repeating the assessment."
   }
 ]

@@ -1,0 +1,54 @@
+(node:32411) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ eight cases retain the learning sequence, both routes, session outputs, and challenge boundary (8.764041ms)
+✔ all authored case SQL executes read-only and matches reviewed results (927.1705ms)
+✔ 31 Draw.io sources match accessible native SVG exports (4.324834ms)
+✔ retired routes redirect directly and all established case fragments survive (36.767542ms)
+✔ schema renders every focused view and all primary table grains before JavaScript (27.896083ms)
+✔ all 107 native sources and SVG exports reach the production build unchanged (267.596959ms)
+✔ every published diagram uses Draw.io with a named native asset (8.699292ms)
+✔ learning sequence is shallow and every authored doc is discoverable once (2.858958ms)
+✔ established public routes and redirects remain stable (9.314167ms)
+✔ navigation retains Downloads, Hub and textbook while release links stay on Downloads (0.182541ms)
+✔ one report hub covers the frozen catalog once and redirects every former report page (1.546458ms)
+✔ query and report topics agree and every SQL file appears once in the unified library (4.450917ms)
+✔ indexing, sitemap, breadcrumb, and canonical settings remain enabled (0.770083ms)
+✔ dataset schema shares one identity with verified creator and only published formats (0.604083ms)
+✔ learning schema describes visible page metadata without invented outcomes (0.117209ms)
+✔ JSON-LD serialization cannot close its script element (1.016792ms)
+✔ every authored page is rendered with a unique title, description, canonical, H1, and breadcrumbs (41.074ms)
+✔ learning activities have server-rendered accurate LearningResource metadata (22.700375ms)
+✔ case discovery renders eight investigations in three levels without tool filters (2.249708ms)
+✔ dataset metadata and direct release links are present before JavaScript runs (52.145125ms)
+✔ unified report catalog renders every report, topic, learning prompt, and unchanged download (21.591709ms)
+✔ top-level query library renders every SQL file with shared browsing controls (5.16125ms)
+✔ rendered internal links and static downloads point to existing build files (69.078417ms)
+✔ BPMN library publishes every editable source, SVG, evidence explanation, and learning connection (4.179667ms)
+(node:32415) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ manufacturing payroll recognizes costs directly and preserves legitimate debt reclassification (17.085542ms)
+✔ posting routes distinguish commitments, support, linked journals, and direct sources (0.319792ms)
+✔ new service, purchase, payroll and transfer checkpoints retain complete vouchers and real keys (1.557875ms)
+✔ all three additional manufacturing queries retain stable reviewed rows (19.871959ms)
+✔ F01/F02/F12 corrected procedure stays in authoring source and all eight published routes (3.76475ms)
+✔ F06 March and Q1 filters name their distinct explicit inclusive/exclusive bounds (0.150458ms)
+✔ F07 first model activities match the same transaction event (0.106167ms)
+✔ F08/E03 catalog, authored cases, sidebar, homepage and rendered index have inventory parity (6.055791ms)
+✔ F11 public downloads follow latest while verified examples retain their private baseline (1.243583ms)
+✔ E03 every prerequisite is individually reachable and matches its authored source (11.149625ms)
+✔ E04 every report resolves to its exact existing SQL anchor and has teaching metadata (76.489833ms)
+✔ E05 repeated query and report controls expose distinct names in server-rendered content (7.421833ms)
+(node:32417) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ twelve tutorials form a complete path with both tool routes and accurate metadata (12.638167ms)
+✔ every published worked SQL block executes against the verified read-only release (292.814834ms)
+✔ tutorial diagrams preserve editable Draw.io sources and matching accessible exports (1.44075ms)
+✔ all established tutorial and setup section anchors remain available (2.062125ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1058.68525

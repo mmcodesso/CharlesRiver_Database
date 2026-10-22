@@ -20,7 +20,7 @@ The controller asks you to explain the accounting behind the sale. You already k
 
 <span id="learning-objectives"></span>
 
-**Your task:** Connect selected business events to complete ledger vouchers and explain their debit and credit effects.
+**Your task.** Connect selected business events to complete ledger vouchers and explain their debit and credit effects.
 
 <TutorialFigure figureId="find-the-accounting-entries" />
 
@@ -28,15 +28,17 @@ The controller asks you to explain the accounting behind the sale. You already k
 
 Finish [Follow Customer Settlement](follow-customer-settlement.md). Use shipment **87**, sales invoice **202**, cash receipt **173**, and cash application **225**. Review basic debits and credits.
 
+Before running a query, use the [four posting routes](../start-here/dataset-overview.md#classify-the-posting-route) to classify order **11** and the four events. Predict the direction of cash, receivables, inventory, revenue, expense, and liabilities on your evidence template. Then retrieve the complete vouchers and compare your prediction with the accounts actually used.
+
 <ToolSteps>
 <TabItem value="excel">
 
-For Excel, start `Lesson06.xlsx`; import `T1_Account` as `AccountData`. The ledger import is large, so apply the filters below in Power Query **before** loading.
+Start `Lesson06.xlsx` in Excel and import `T1_Account` as `AccountData`. The ledger import is large, so apply the filters below in Power Query **before** loading.
 
 </TabItem>
 <TabItem value="sql">
 
-Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson06.sql**. Run each supplied query separately; its filters identify the records and dates for that step.
+Open the SQLite database in your SQL tool. Save this lesson's statements as **Lesson06.sql**. Run each supplied query separately, using its filters to identify the records and dates for that step.
 
 </TabItem>
 </ToolSteps>
@@ -90,7 +92,7 @@ ORDER BY g.PostingDate, g.GLEntryID;
 </TabItem>
 </ToolSteps>
 
-Expect **15 ledger rows**. Shipment records inventory/COGS and freight cost; the invoice records the customer receivable, sales, freight revenue, and tax. Receipt 173 increases cash and customer deposits. Application 225 reduces deposits and the receivable.
+Expect **15 ledger rows**. Shipment records inventory, COGS, and freight cost, while the invoice records the customer receivable, sales, freight revenue, and tax. Receipt 173 increases cash and customer deposits. Application 225 reduces deposits and the receivable.
 
 ## 2. Check and Explain Each Voucher
 
@@ -99,7 +101,7 @@ Balance is a necessary accounting check. It does not establish that the event wa
 <ToolSteps>
 <TabItem value="excel">
 
-On `Notes`, keep four rows for Shipment, Invoice, Receipt, and Application. Label columns B Debits, C Credits, and D Difference. Enter each formula in the named cell; each source table must contain only the selected event.
+On `Notes`, keep four rows for Shipment, Invoice, Receipt, and Application. Label columns B Debits, C Credits, and D Difference. Before entering each formula in the named cell, confirm that its source table contains only the selected event.
 
 
 ```text title="Excel — Notes!B2"
@@ -205,7 +207,7 @@ ORDER BY SourceDocumentType, SourceDocumentID, VoucherNumber;
 | Receipt 173 | 2 | 952.07 |
 | Application 225 | 2 | 952.07 |
 
-Each difference is **0.00**. The two 952.07 vouchers describe different events; adding them does not mean the customer sent 1,904.14.
+Each difference is **0.00**. The two 952.07 vouchers describe different events, so adding them does not mean the customer sent 1,904.14.
 
 ## 3. Tell the Event-to-Entry Story
 
@@ -221,11 +223,11 @@ Each difference is **0.00**. The two 952.07 vouchers describe different events; 
 | Receipt 173, February 22, 2024 | 1010 cash 952.07 | 2060 customer deposits and unapplied cash 952.07 | All 2 ledger rows; each side 952.07 |
 | Application 225, February 23, 2024 | 2060 customer deposits and unapplied cash 952.07 | 1020 AR 952.07 | All 2 ledger rows; each side 952.07 |
 
-These are **all 15 rows** returned in Step 1, grouped for explanation rather than reduced to a selected sales line. Earlier lessons followed order line 42; this shipment and invoice also include the other goods line. The shipment’s total goods cost is 5,985.33, while the invoice’s total goods revenue is 11,397.78. Freight-out expense 104.01 and freight revenue 103.00 are different accounts and amounts. Tax payable is a liability, not revenue.
+These are **all 15 rows** returned in Step 1, grouped for explanation rather than reduced to a selected sales line. Lesson 4 followed order line 43, while its practice variation followed line 42. The complete shipment and invoice vouchers here include both goods lines. The shipment’s total goods cost is 5,985.33, while the invoice’s total goods revenue is 11,397.78. Freight-out expense 104.01 and freight revenue 103.00 are different accounts and amounts. Tax payable is a liability, not revenue.
 
-The order established demand without a posting. Shipment records cost and inventory movement; invoice records this dataset’s goods revenue and receivable. Receipt records cash arrival, and application allocates it to AR without another inflow. The January events do not wait for February’s cash.
+The order established demand without a posting. Shipment records cost and inventory movement, while the invoice records goods revenue and the receivable. Receipt records cash arrival, and application allocates it to AR without another inflow. The January events do not wait for February’s cash.
 
-At January 31, exclude both later cash events. At February 22, exclude application 225; receipt 173 itself has not reduced invoice 202’s receivable. These observations describe the **selected events**, not the invoice’s entire open balance. Retrieve all its dated applications and relevant credits before calculating that balance; one 952.07 application cannot establish full settlement.
+At January 31, exclude both later cash events. At February 22, exclude application 225 because receipt 173 itself has not reduced invoice 202’s receivable. These observations describe the **selected events**, not the invoice’s entire open balance. One 952.07 application cannot establish full settlement, so retrieve all dated applications and relevant credits before calculating that balance.
 
 </details>
 
@@ -246,6 +248,8 @@ If a total differs, check the paired filters, retained source lines, date types,
 
 Save the four voucher checks and an event-to-accounting explanation. Identify which entries recognize inventory movement, billing, cash receipt, and invoice settlement. Record the source file, selected keys, filters, and what one result row represents. Keep your workbook or saved SQL with your explanation.
 
+Complete the [evidence template](pathname:///teaching/evidence-template.md) for January 31, February 22, and February 23, 2024. Explain why the order creates no posting, why cash arrival is not new revenue, and what each selected application establishes. Before claiming full settlement, retrieve the invoice's remaining dated applications and credits. Retain the result grid using the [SQL export procedure](../analytics/sql-guide.md#save-the-result-not-just-the-query), or save the filtered Excel tables with their checks.
+
 <span id="interpretation-and-limitations"></span>
 
 A source-to-ledger match supports this selected trace. A balanced voucher does not prove authorization or population completeness. Keep the [Posting Reference](../reference/posting.md) available for fuller definitions.
@@ -257,7 +261,7 @@ Find the ledger rows for cash receipt **528**, then for application **1194**. Pr
 <details>
 <summary>Compare your reasoning</summary>
 
-They should not match: receipt 528 records 7,092.79; application 1194 assigns 3,130.89 to invoice 202. Change both the source type and its paired identifier when adapting a filter.
+The totals differ because receipt 528 records 7,092.79, while application 1194 assigns 3,130.89 to invoice 202. Change both the source type and its paired identifier when adapting a filter.
 
 </details>
 

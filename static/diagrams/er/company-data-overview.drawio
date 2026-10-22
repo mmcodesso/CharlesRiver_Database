@@ -1,0 +1,70 @@
+<mxfile host="Electron" version="29.6.6" type="device">
+  <diagram id="company-data-overview" name="Company data areas and shared records">
+    <mxGraphModel grid="1" gridSize="10" page="0" pageWidth="1160" pageHeight="1000" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="Company data areas and shared records">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="25" y="15" width="1110" height="70" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="Where should you start an investigation, and which records are shared?">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="87" width="1110" height="55" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="area-0" label="Accounting&#10;&#10;3 primary tables&#10;1 focused view&#10;&#10;Find each table in the index below.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="170" width="355" height="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="area-1" label="Fixed assets&#10;&#10;4 primary tables&#10;1 focused view&#10;&#10;Find each table in the index below.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="400" y="170" width="355" height="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="area-2" label="Sales&#10;&#10;23 primary tables&#10;5 focused views&#10;&#10;Find each table in the index below.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="775" y="170" width="355" height="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="area-3" label="Design Services&#10;&#10;4 primary tables&#10;1 focused view&#10;&#10;Find each table in the index below.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="460" width="355" height="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="area-4" label="Purchasing&#10;&#10;9 primary tables&#10;2 focused views&#10;&#10;Find each table in the index below.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="400" y="460" width="355" height="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="area-5" label="Manufacturing&#10;&#10;14 primary tables&#10;3 focused views&#10;&#10;Find each table in the index below.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="775" y="460" width="355" height="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="area-6" label="Payroll&#10;&#10;14 primary tables&#10;2 focused views&#10;&#10;Find each table in the index below.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="750" width="355" height="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="area-7" label="Planning&#10;&#10;8 primary tables&#10;2 focused views&#10;&#10;Find each table in the index below.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="400" y="750" width="355" height="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="area-8" label="Shared records&#10;&#10;3 primary tables&#10;1 focused view&#10;&#10;Find each table in the index below.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="775" y="750" width="355" height="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="footer" label="Choose a process area, then use the table index to find a focused map. Cards are areas of evidence, not a workflow.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="1042" width="1110" height="60" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,222 @@
+{
+  "missingFiles": 27,
+  "missingReportSets": 9,
+  "staleReportSets": 5,
+  "recoveryAttempt": "Published HTTPS report URL returned HTTP 403 with cf-mitigated challenge. No file restored or generated.",
+  "problems": [
+    {
+      "slug": "monthly-income-statement",
+      "status": "stale-local-assets",
+      "actualColumns": [
+        "FiscalYear",
+        "FiscalPeriod",
+        "StatementSection",
+        "LineLabel",
+        "LineType",
+        "DisplayOrder",
+        "Amount"
+      ],
+      "expectedColumns": [
+        "FiscalYear",
+        "FiscalPeriod",
+        "StatementSection",
+        "LineLabel",
+        "AccountNumber",
+        "LineType",
+        "DisplayOrder",
+        "Amount"
+      ],
+      "actualRows": 2052,
+      "expectedRows": 1836
+    },
+    {
+      "slug": "monthly-balance-sheet",
+      "status": "stale-local-assets",
+      "actualColumns": [
+        "FiscalYear",
+        "FiscalPeriod",
+        "StatementSection",
+        "LineLabel",
+        "LineType",
+        "DisplayOrder",
+        "Amount"
+      ],
+      "expectedColumns": [
+        "FiscalYear",
+        "FiscalPeriod",
+        "StatementSection",
+        "LineLabel",
+        "AccountNumber",
+        "LineType",
+        "DisplayOrder",
+        "Amount"
+      ],
+      "actualRows": 1872,
+      "expectedRows": 1872
+    },
+    {
+      "slug": "monthly-indirect-cash-flow",
+      "status": "stale-local-assets",
+      "actualColumns": [
+        "FiscalYear",
+        "FiscalPeriod",
+        "StatementSection",
+        "LineLabel",
+        "LineType",
+        "DisplayOrder",
+        "Amount"
+      ],
+      "expectedColumns": [
+        "FiscalYear",
+        "FiscalPeriod",
+        "StatementSection",
+        "LineLabel",
+        "LineType",
+        "DisplayOrder",
+        "Amount"
+      ],
+      "actualRows": 648,
+      "expectedRows": 684
+    },
+    {
+      "slug": "pro-forma-monthly-income-statement",
+      "status": "missing",
+      "files": [
+        "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/preview.json",
+        "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/pro-forma-monthly-income-statement.csv",
+        "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/pro-forma-monthly-income-statement.xlsx"
+      ]
+    },
+    {
+      "slug": "pro-forma-monthly-balance-sheet",
+      "status": "missing",
+      "files": [
+        "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/preview.json",
+        "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/pro-forma-monthly-balance-sheet.csv",
+        "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/pro-forma-monthly-balance-sheet.xlsx"
+      ]
+    },
+    {
+      "slug": "pro-forma-monthly-indirect-cash-flow",
+      "status": "missing",
+      "files": [
+        "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/preview.json",
+        "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/pro-forma-monthly-indirect-cash-flow.csv",
+        "static/reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/pro-forma-monthly-indirect-cash-flow.xlsx"
+      ]
+    },
+    {
+      "slug": "budget-vs-actual-statement-bridge-monthly",
+      "status": "missing",
+      "files": [
+        "static/reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/preview.json",
+        "static/reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/budget-vs-actual-statement-bridge-monthly.csv",
+        "static/reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/budget-vs-actual-statement-bridge-monthly.xlsx"
+      ]
+    },
+    {
+      "slug": "design-service-revenue-and-billed-hours",
+      "status": "missing",
+      "files": [
+        "static/reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/preview.json",
+        "static/reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/design-service-revenue-and-billed-hours.csv",
+        "static/reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/design-service-revenue-and-billed-hours.xlsx"
+      ]
+    },
+    {
+      "slug": "working-capital-bridge-by-month",
+      "status": "stale-local-assets",
+      "actualColumns": [
+        "FiscalYear",
+        "FiscalPeriod",
+        "AccountsReceivableEndingBalance",
+        "InventoryAndWIPEndingBalance",
+        "AccountsPayableEndingBalance",
+        "GRNIEndingBalance",
+        "CustomerDepositsEndingBalance",
+        "AccruedExpensesEndingBalance",
+        "PayrollLiabilitiesEndingBalance",
+        "NetWorkingCapital"
+      ],
+      "expectedColumns": [
+        "FiscalYear",
+        "FiscalPeriod",
+        "AccountsReceivableEndingBalance",
+        "InventoryAndWIPEndingBalance",
+        "AccountsPayableEndingBalance",
+        "GRNIEndingBalance",
+        "CustomerDepositsEndingBalance",
+        "SalesCommissionPayableEndingBalance",
+        "AccruedExpensesEndingBalance",
+        "PayrollLiabilitiesEndingBalance",
+        "NetWorkingCapital"
+      ],
+      "actualRows": 38,
+      "expectedRows": 38
+    },
+    {
+      "slug": "budget-vs-actual-working-capital-and-cash-bridge",
+      "status": "missing",
+      "files": [
+        "static/reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/preview.json",
+        "static/reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/budget-vs-actual-working-capital-and-cash-bridge.csv",
+        "static/reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/budget-vs-actual-working-capital-and-cash-bridge.xlsx"
+      ]
+    },
+    {
+      "slug": "sales-commission-payable-rollforward",
+      "status": "missing",
+      "files": [
+        "static/reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/preview.json",
+        "static/reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/sales-commission-payable-rollforward.csv",
+        "static/reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/sales-commission-payable-rollforward.xlsx"
+      ]
+    },
+    {
+      "slug": "budget-vs-actual-by-cost-center",
+      "status": "stale-local-assets",
+      "actualColumns": [
+        "FiscalYear",
+        "Month",
+        "CostCenterName",
+        "AccountNumber",
+        "AccountName",
+        "BudgetAmount",
+        "ActualAmount",
+        "VarianceAmount",
+        "VariancePct"
+      ],
+      "expectedColumns": [
+        "FiscalYear",
+        "Month",
+        "CostCenterName",
+        "AccountNumber",
+        "AccountName",
+        "BudgetAmount",
+        "ActualAmount",
+        "VarianceAmount",
+        "VariancePct"
+      ],
+      "actualRows": 1385,
+      "expectedRows": 960
+    },
+    {
+      "slug": "sales-commission-expense-by-rep-segment",
+      "status": "missing",
+      "files": [
+        "static/reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/preview.json",
+        "static/reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/sales-commission-expense-by-rep-segment.csv",
+        "static/reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/sales-commission-expense-by-rep-segment.xlsx"
+      ]
+    },
+    {
+      "slug": "budget-vs-actual-revenue-price-volume-cost-bridge",
+      "status": "missing",
+      "files": [
+        "static/reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/preview.json",
+        "static/reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/budget-vs-actual-revenue-price-volume-cost-bridge.csv",
+        "static/reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/budget-vs-actual-revenue-price-volume-cost-bridge.xlsx"
+      ]
+    }
+  ]
+}

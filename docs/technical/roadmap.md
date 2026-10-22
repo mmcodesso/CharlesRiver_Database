@@ -48,7 +48,7 @@ This page separates the available data and teaching resources from planned futur
 
 ### Technical delivery and validation
 
-- public SQLite, Excel, and CSV zip formats; separate local/instructor support-workbook and generation-log outputs
+- public SQLite, Excel, and CSV zip formats, with separate local/instructor support-workbook and generation-log outputs
 - validation scopes for `core`, `operational`, and `full` checks
 - anomaly logging and validation exception reporting
 - local generation settings for full release, fast validation, and performance profiling

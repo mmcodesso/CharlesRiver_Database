@@ -6,10 +6,11 @@ export default function CaseFigure({ figureId }) {
   if (!model) throw new Error('Unknown case figure: ' + figureId);
   return <section aria-label={model.question}>
     <p><strong>{model.question}</strong></p>
+    <p><strong>Reading guide:</strong> {model.readingRule}</p>
     <StaticDiagram model={model} assetRoot="/diagrams/cases/">
       <details><summary>Read the figure in words</summary>
-        <ol>{model.steps.map((step) => <li key={step}>{step}</li>)}</ol>
-        <p>{model.kind}. Arrows guide the investigation; they do not imply one-to-one database relationships.</p>
+        <ul>{model.steps.map((step) => <li key={step}>{step}</li>)}</ul>
+        <p>{model.kind}. {model.readingRule}</p>
       </details>
     </StaticDiagram>
   </section>;

@@ -48,7 +48,7 @@ As you investigate, you will encounter intentional anomalies and control excepti
 
 [Why This Dataset](why-this-dataset.md) explains the value of connected records. [Downloads](downloads.md) provides the teaching files, while the [Dataset Guide](dataset-overview.md) explains how to read their tables. These supporting pages remain available throughout your work.
 
-Charles River belongs to [Accounting Analytics Hub](https://accountinganalyticshub.com/). The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) develops the analytical methods behind later investigations. The Hub's AIS and tool courses are planned resources; they are not prerequisites for this reading.
+Charles River belongs to [Accounting Analytics Hub](https://accountinganalyticshub.com/). The [Accounting Analytics textbook](https://aa.accountinganalyticshub.com/) develops the analytical methods behind later investigations. The Hub's AIS and tool courses are planned resources rather than prerequisites for this reading.
 
 Teaching a class? The [Instructor Adoption Guide](../teach-with-data/instructor-guide.md) connects the material to course preparation and assignments.
 

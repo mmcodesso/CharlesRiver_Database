@@ -1,1 +1,70 @@
-<mxfile host="app.diagrams.net" version="28.0.0"><diagram id="case05-timeline" name="When are goods available, and when is accounting complete?"><mxGraphModel dx="1000" dy="500" grid="1" gridSize="10" page="1" pageWidth="1000" pageHeight="500" background="#f5f5ee"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="title" value="When are goods available, and when is accounting complete?" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=28;fontStyle=1;fontColor=#17333e;fontFamily=Arial;" vertex="1" parent="1"><mxGeometry x="25" y="25" width="950" height="95" as="geometry"/></mxCell><mxCell id="n0" value="&lt;div style=&quot;font-size:28px;color:#087e83;font-weight:bold;margin-bottom:20px&quot;&gt;01&lt;/div&gt;&lt;div style=&quot;font-size:20px;line-height:1.4&quot;&gt;WO1 completes January 26 and closes February 1.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a8bfc1;fontColor=#17333e;align=left;verticalAlign=top;spacing=24;fontFamily=Arial;fontSize=20;" vertex="1" parent="1"><mxGeometry x="25" y="150" width="300" height="260" as="geometry"/></mxCell><mxCell id="n1" value="&lt;div style=&quot;font-size:28px;color:#087e83;font-weight:bold;margin-bottom:20px&quot;&gt;02&lt;/div&gt;&lt;div style=&quot;font-size:20px;line-height:1.4&quot;&gt;WO67 completes February 7 and closes February 13.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a8bfc1;fontColor=#17333e;align=left;verticalAlign=top;spacing=24;fontFamily=Arial;fontSize=20;" vertex="1" parent="1"><mxGeometry x="350" y="150" width="300" height="260" as="geometry"/></mxCell><mxCell id="n2" value="&lt;div style=&quot;font-size:28px;color:#087e83;font-weight:bold;margin-bottom:20px&quot;&gt;03&lt;/div&gt;&lt;div style=&quot;font-size:20px;line-height:1.4&quot;&gt;Across the cohort, 336 are complete but only 290 closed by February 29.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a8bfc1;fontColor=#17333e;align=left;verticalAlign=top;spacing=24;fontFamily=Arial;fontSize=20;" vertex="1" parent="1"><mxGeometry x="675" y="150" width="300" height="260" as="geometry"/></mxCell><mxCell id="e0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#087e83;strokeWidth=2;" edge="1" parent="1" source="n0" target="n1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#087e83;strokeWidth=2;" edge="1" parent="1" source="n1" target="n2"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="footer" value="Charles River | Case 5 | Selected released evidence and teaching explanation" style="text;html=0;strokeColor=none;fillColor=none;align=left;fontSize=15;fontColor=#38535b;fontFamily=Arial;" vertex="1" parent="1"><mxGeometry x="25" y="440" width="950" height="35" as="geometry"/></mxCell></root></mxGraphModel></diagram></mxfile>
+<mxfile host="Electron" version="29.6.6" type="device">
+  <diagram id="case05-timeline" name="When are goods available, and when is accounting complete?">
+    <mxGraphModel grid="1" gridSize="10" page="0" pageWidth="1160" pageHeight="1000" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="When are goods available, and when is accounting complete?">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="25" y="15" width="1110" height="70" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="Compare work orders on parallel dated tracks. Finished-goods availability and accounting close are different milestones.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="87" width="1110" height="55" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="n0" label="Work order 1&#10;&#10;Completion and close">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="170" width="220" height="170" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="n1" label="Work order 67&#10;&#10;Completion and close">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="435" width="220" height="170" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="complete-1" label="26 January&#10;&#10;Finished goods complete">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="300" y="170" width="240" height="170" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="close-1" label="1 February&#10;&#10;Accounting close">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="570" y="170" width="240" height="170" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="complete-67" label="7 February&#10;&#10;Finished goods complete">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="570" y="435" width="240" height="170" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="close-67" label="13 February&#10;&#10;Accounting close">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="840" y="435" width="240" height="170" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="time-1" label="6 days" relationKind="chronology">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="complete-1" target="close-1">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="time-67" label="6 days" relationKind="chronology">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="complete-67" target="close-67">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="n2" label="Cohort at 29 February&#10;&#10;Across the cohort, 336 are complete but only 290 closed by February 29.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="700" width="1100" height="150" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="footer" label="Chronological arrows show elapsed time, not stored keys. The tracks separate completion from financial close.&#10;Compare work orders on parallel dated tracks. Finished-goods availability and accounting close are different milestones.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="922" width="1110" height="60" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

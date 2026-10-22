@@ -1,1 +1,70 @@
-<mxfile host="app.diagrams.net" version="28.0.0"><diagram id="case07-asset" name="How does a financed asset affect cost and cash?"><mxGraphModel dx="1000" dy="500" grid="1" gridSize="10" page="1" pageWidth="1000" pageHeight="500" background="#f5f5ee"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="title" value="How does a financed asset affect cost and cash?" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=28;fontStyle=1;fontColor=#17333e;fontFamily=Arial;" vertex="1" parent="1"><mxGeometry x="25" y="25" width="950" height="95" as="geometry"/></mxCell><mxCell id="n0" value="&lt;div style=&quot;font-size:28px;color:#087e83;font-weight:bold;margin-bottom:20px&quot;&gt;01&lt;/div&gt;&lt;div style=&quot;font-size:20px;line-height:1.4&quot;&gt;Receipt 15616 records the asset; invoice 21692 creates AP.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a8bfc1;fontColor=#17333e;align=left;verticalAlign=top;spacing=24;fontFamily=Arial;fontSize=20;" vertex="1" parent="1"><mxGeometry x="25" y="150" width="300" height="260" as="geometry"/></mxCell><mxCell id="n1" value="&lt;div style=&quot;font-size:28px;color:#087e83;font-weight:bold;margin-bottom:20px&quot;&gt;02&lt;/div&gt;&lt;div style=&quot;font-size:20px;line-height:1.4&quot;&gt;Journal 445 replaces AP with a 280,000 note.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a8bfc1;fontColor=#17333e;align=left;verticalAlign=top;spacing=24;fontFamily=Arial;fontSize=20;" vertex="1" parent="1"><mxGeometry x="350" y="150" width="300" height="260" as="geometry"/></mxCell><mxCell id="n2" value="&lt;div style=&quot;font-size:28px;color:#087e83;font-weight:bold;margin-bottom:20px&quot;&gt;03&lt;/div&gt;&lt;div style=&quot;font-size:20px;line-height:1.4&quot;&gt;Depreciation records asset use; debt payments separate principal and interest.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a8bfc1;fontColor=#17333e;align=left;verticalAlign=top;spacing=24;fontFamily=Arial;fontSize=20;" vertex="1" parent="1"><mxGeometry x="675" y="150" width="300" height="260" as="geometry"/></mxCell><mxCell id="e0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#087e83;strokeWidth=2;" edge="1" parent="1" source="n0" target="n1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#087e83;strokeWidth=2;" edge="1" parent="1" source="n1" target="n2"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="footer" value="Charles River | Case 7 | Selected released evidence and teaching explanation" style="text;html=0;strokeColor=none;fillColor=none;align=left;fontSize=15;fontColor=#38535b;fontFamily=Arial;" vertex="1" parent="1"><mxGeometry x="25" y="440" width="950" height="35" as="geometry"/></mxCell></root></mxGraphModel></diagram></mxfile>
+<mxfile host="Electron" version="29.6.6" type="device">
+  <diagram id="case07-asset" name="How does a financed asset affect cost and cash?">
+    <mxGraphModel grid="1" gridSize="10" page="0" pageWidth="1160" pageHeight="1000" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="title" label="How does a financed asset affect cost and cash?">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="25" y="15" width="1110" height="70" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="subtitle" label="Asset acquisition and financing lead to separate depreciation and debt-service evidence; separate principal from interest.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="87" width="1110" height="55" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="n0" label="Asset acquisition&#10;&#10;Receipt 15616 records the asset; invoice 21692 creates AP.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="170" width="330" height="250" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="n1" label="Financing&#10;&#10;Journal 445 replaces AP with a 280,000 note.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="410" y="170" width="330" height="250" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="n2" label="Depreciation&#10;&#10;Periodic asset-use expense and accumulated depreciation; inspect the asset event and linked journal.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="25" y="535" width="330" height="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="debt-service" label="Debt service&#10;&#10;Debt installments separate principal reduction from interest. Inspect the agreement, schedule, and linked journal.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;rounded=1;arcSize=6;fillColor=#f6f4ee;align=left;verticalAlign=top;spacing=18;" vertex="1" parent="1">
+            <mxGeometry x="795" y="535" width="330" height="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="finance" label="replace AP" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="n0" target="n1">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object id="asset-use" label="asset use" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="n0" target="n2">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="5" y="295" />
+                <mxPoint x="5" y="657" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="debt-service-link" label="installments" relationKind="context">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=none;fontSize=17;labelBackgroundColor=#FFFFFF;startArrow=none;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="n1" target="debt-service">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="765" y="295" />
+                <mxPoint x="765" y="657" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object id="footer" label="Asset acquisition and financing lead to separate depreciation and debt-service evidence; separate principal from interest.">
+          <mxCell style="html=0;fontFamily=Arial;fontSize=20;fontColor=#17333e;strokeColor=#196252;strokeWidth=1.5;whiteSpace=wrap;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontStyle=0;" vertex="1" parent="1">
+            <mxGeometry x="25" y="852" width="1110" height="60" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

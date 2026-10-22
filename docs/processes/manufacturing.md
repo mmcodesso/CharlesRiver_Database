@@ -8,6 +8,7 @@ toc_max_heading_level: 2
 ---
 
 import BpmnDiagram from "@site/src/components/BpmnDiagram";
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
 
 # Manufacturing Process
 
@@ -33,7 +34,7 @@ Planning considers expected demand, inventory policy, and available supply. A re
 
 A recommendation is therefore an expectation or proposed supply action. The work order moves the story into execution. Detailed capacity planning and daily operation schedules answer different questions and are retained in the optional reference.
 
-The operations planner must also consider components. Purchasing can help supply raw materials and packaging, but buying a component and issuing it into production are separate events. The receipt belongs to P2P; its subsequent use belongs to manufacturing.
+The operations planner must also consider components. Purchasing can help supply raw materials and packaging, but buying a component and issuing it into production are separate events. The receipt belongs to P2P, while its subsequent use belongs to manufacturing.
 
 ## Issue Materials into Production
 
@@ -49,7 +50,7 @@ The production recipe supplies a comparison point, while the material-issue reco
 
 Production staff perform the work-order operations. Approved attendance and labor allocations support the explanation of employee time used in production.
 
-Those records answer operational questions about hours and their allocation. Payroll records employee earnings and obligations through its own cycle. Finance then uses payroll-supported reclassification entries to connect manufacturing labor and burden to costing.
+Those records explain hours and their allocation. Payroll records employee earnings and obligations through its own cycle. PayrollSummary posts capitalizable manufacturing labor and related burden directly to Manufacturing Cost Clearing (`1090`). Manufacturing payroll in months with no capitalizable direct labor is recorded in Manufacturing Variance (`5080`). Nonmanufacturing wages and burden remain period expense. Separate factory-overhead and depreciation journals provide other manufacturing cost support.
 
 This means the labor-support records and the inventory valuation method are related but distinct. Charles River's dataset remains **standard-cost based**. Recording actual hours does not turn every finished item into an inventory value calculated from the complete actual cost of that individual order.
 
@@ -63,7 +64,7 @@ The model values the completion at standard manufacturing cost. Its accounting i
 
 The practical distinction comes first: goods can be physically complete and available even while their work order awaits accounting close. To explain availability, inspect the completion evidence. To explain whether costs and residual balances have been resolved, inspect the close evidence.
 
-A completed quantity is also different from a customer's delivered quantity. Completion brings goods into inventory; a later shipment takes goods out through Order-to-Cash. Those events have their own documents and dates.
+A completed quantity is also different from a customer's delivered quantity. Completion brings goods into inventory, and a later shipment takes them out through Order-to-Cash. Those events have their own documents and dates.
 
 <span id="decisions-and-evidence"></span>
 
@@ -93,7 +94,7 @@ Keep the event dates separate as you explain what was complete at January 31 and
 | Completion, January 25–26 | `ProductionCompletionID = 1` and `2` | Debit `1040` finished goods **1,019.85**; credit `1046` WIP **729.36** and `1090` manufacturing clearing **290.49** | At January 31 the goods are completed; **24.93** selected WIP remains until close |
 | Close, February 1 | `WorkOrderCloseID = 1` | Debit `5080` manufacturing variance **743.16**; credit `1046` **24.93** and `1090` **718.23** | What supports the variance, and which conversion support is pooled rather than traceable to this order? |
 
-The issue, both completions, and close are complete event-voucher populations; the completion row combines the two completion vouchers. Follow the [existing Lesson 9 evidence](../learn-and-practice/manufacturing-cost-flow.md), then its [optional reconciliation](../learn-and-practice/manufacturing-cost-flow.md#optional-account-reconciliation), to reproduce the amounts. Manufacturing clearing is not a work-order-specific actual-cost account: the selected credits alone do not establish its company-wide balance or one order's actual overhead.
+The issue, both completions, and close are complete event-voucher populations. The completion row combines the two completion vouchers. Follow the [existing Lesson 9 evidence](../learn-and-practice/manufacturing-cost-flow.md), then its [optional reconciliation](../learn-and-practice/manufacturing-cost-flow.md#optional-account-reconciliation), to reproduce the amounts. Manufacturing clearing pools costs across work orders. The selected credits alone do not establish its company-wide balance or one order's actual overhead.
 
 </details>
 
@@ -109,7 +110,7 @@ The issue, both completions, and close are complete event-voucher populations; t
 
 <BpmnDiagram modelId="manufacturing-conversion" />
 
-Read the model in three stages: prepare the work, make the goods, and resolve the accounting. The purchasing handoff supplies needed components; the payroll connection supplies labor-cost support.
+Read the model in three stages: prepare the work, make the goods, and resolve the accounting. The purchasing handoff supplies needed components, while the payroll connection supplies labor-cost support.
 
 The model describes teaching responsibilities. Its lanes and recorded close fields do not establish an independently enforced release or variance-approval workflow.
 
@@ -121,19 +122,9 @@ The model describes teaching responsibilities. Its lanes and recorded close fiel
 
 This map asks **which records show that materials were used, goods were completed, and the order was closed**.
 
-```mermaid
-flowchart LR
-    accTitle: Manufacturing records around one work order
-    accDescr: Planning supports a work order with separate material issue, operation, completion, and close branches. Labor entries support operations.
-    PLAN[SupplyPlanRecommendation] --> WO[WorkOrder]
-    WO --> ISSUE[MaterialIssue and lines]
-    WO --> OPS[WorkOrderOperation]
-    LABOR[LaborTimeEntry] -->|Labor support| OPS
-    WO --> DONE[ProductionCompletion and lines]
-    WO --> CLOSE[WorkOrderClose]
-```
+<EvidenceDiagram modelId="work-order-evidence" />
 
-Begin with the work order and follow each related event. The branches are different kinds of evidence around the same order; they are not interchangeable measures of progress or cost.
+Begin with the work order and follow each related event. The branches provide different kinds of evidence around the same order and cannot be treated as interchangeable measures of progress or cost.
 
 | Event | Accounting meaning in the published model |
 |---|---|
@@ -145,7 +136,7 @@ Begin with the work order and follow each related event. The branches are differ
 
 ## Explain Completed Goods on an Open Order
 
-Suppose the controller finds a completion dated before period end and a close dated afterward. The first question is whether the finished-goods event was recorded; the second is what remained unresolved in the work-order accounting.
+Suppose the controller finds a completion dated before period end and a close dated afterward. Ask whether the finished-goods event was recorded and what remained unresolved in the work-order accounting.
 
 Use the reporting date to explain both positions. The later close can explain the resolution of residual balances without implying that the goods were unavailable before it.
 
@@ -171,7 +162,7 @@ No. Actual labor support helps explain production and payroll-supported costing,
 
 **Continue the company story:** the production story depends on people's work. Continue to [Payroll](payroll.md) to follow that work from attendance and approval into employee pay and later liability settlement.
 
-**Investigate this process:** complete [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus the [Excel](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md), before the [manufacturing cost-flow exercise](../learn-and-practice/manufacturing-cost-flow.md). It follows one work order through its accounting events; the optional account reconciliation then extends that same example.
+**Investigate this process:** complete [Lesson 1](../learn-and-practice/meet-the-records.md), [Lesson 2](../learn-and-practice/read-an-order.md), and [Lesson 3](../learn-and-practice/connect-the-records.md), plus the [Excel](../analytics/excel-guide.md) or [SQL setup](../analytics/sql-guide.md), before the [manufacturing cost-flow exercise](../learn-and-practice/manufacturing-cost-flow.md). It follows one work order through its accounting events, with an optional account reconciliation extending that example.
 
 **Find analytical evidence.** Browse [Production and Planning queries](../analytics/analysis-tracks.md#production-and-planning) and [related reports](../analytics/index.md#production-and-planning). Use the [Schema Reference](../reference/schema.md) for join keys and the [Posting Reference](../reference/posting.md) for accounting effects.
 
@@ -190,7 +181,7 @@ Return to these sections when you have a specific question or an assignment that
 | Standard manufacturing design | `Item`, `BillOfMaterial`, `BillOfMaterialLine`, `Routing`, `RoutingOperation`, `WorkCenter`, `WorkCenterCalendar` | Product recipe, operation sequence, and available work-center capacity | Understand how an item is supposed to be built |
 | Work-order release and schedule | `WorkOrder`, `WorkOrderOperation`, `WorkOrderOperationSchedule` | One production order, its operation sequence, and its daily scheduled hours | Review finite scheduling, execution timing, and open production activity |
 | Component support and issue | `PurchaseRequisition`, `PurchaseOrder`, `GoodsReceipt`, `MaterialIssue`, `MaterialIssueLine` | Purchased support for missing components and the physical issue of material into WIP | Trace whether materials were available and when they were consumed |
-| Labor support and cost traceability | `EmployeeShiftRoster`, `TimeClockEntry`, `LaborTimeEntry`, `PayrollRegister`, `JournalEntry` | Approved attendance, labor allocation, payroll support, and later reclass activity | Connect factory labor support to work-order cost analysis |
+| Labor support and cost traceability | `EmployeeShiftRoster`, `TimeClockEntry`, `LaborTimeEntry`, `PayrollRegister`, `PayrollRegisterLine`, `GLEntry`, `JournalEntry` | Approved attendance, labor allocation, summarized payroll recognition, and separate overhead and depreciation journals | Compare operational labor support with manufacturing accounting at its actual grain |
 | Completion and close | `ProductionCompletion`, `ProductionCompletionLine`, `WorkOrderClose` | Finished-goods completion event and final variance close | Separate physical completion from accounting close and variance analysis |
 
 ### When Accounting Happens
@@ -200,7 +191,8 @@ Return to these sections when you have a specific question or an assignment that
 | Material issue | Components are moved from stock into work in process | Debit `1046` Inventory - Work in Process and credit `1045` Inventory - Materials and Packaging |
 | Production completion | Finished goods are completed from WIP at standard manufacturing cost | Debit `1040` Inventory - Finished Goods, credit `1046` Inventory - Work in Process, and credit `1090` Manufacturing Cost Clearing |
 | Work-order close | Accounting clears residual WIP and clearing balances and recognizes manufacturing variance | Debit or credit `5080` Manufacturing Variance with the offset to unresolved WIP or clearing balances |
-| Direct labor and overhead reclass support | Payroll-supported manufacturing labor and burden are moved into manufacturing costing flows | Journal-driven reclass from payroll expense pools into direct labor or manufacturing overhead paths |
+| Manufacturing payroll recognition | Payroll recognizes qualifying manufacturing wages and related burden by period and cost center | PayrollSummary debits `1090` directly, or `5080` in months with no capitalizable direct labor, and credits payroll liabilities |
+| Factory overhead | A separate journal records other factory costs | Debit `1090`, or `5080` in months with no capitalizable direct labor, and credit cash |
 | Manufacturing equipment depreciation | Monthly fixed-asset depreciation is recorded for plant equipment tied to manufacturing work centers | Debit `1090` Manufacturing Cost Clearing and credit `1186` Accumulated Depreciation - Manufacturing Equipment |
 
 ### Key Traceability and Data Notes
@@ -225,21 +217,7 @@ Return to these sections when you have a specific question or an assignment that
 
 Why was manufacture recommended? Follow weekly planning into component requirements and rough-cut capacity. These records describe expected demand and load before detailed production execution.
 
-```mermaid
-flowchart LR
-    accTitle: Weekly planning and manufacturing requirements
-    accDescr: Demand forecasts and inventory policies support supply recommendations, which feed material requirements and rough-cut capacity planning.
-    DF[Demand Forecast]
-    IP[Inventory Policy]
-    SPR[Supply Plan Recommendation]
-    MRP[Material Requirement Plan]
-    RCCP[Rough Cut Capacity Plan]
-
-    DF --> SPR
-    IP --> SPR
-    SPR --> MRP
-    SPR --> RCCP
-```
+<EvidenceDiagram modelId="weekly-planning" />
 
 **Tables involved**
 
@@ -267,20 +245,7 @@ flowchart LR
 
 What recipe and production steps define the item? Follow its bill of material into component requirements and its routing into work-center operations. This is the standard design against which execution can be compared.
 
-```mermaid
-flowchart LR
-    accTitle: Manufacturing recipe and routing records
-    accDescr: An item links to its bill of material and routing. Routing operations identify work centers, whose calendars provide daily capacity.
-    ITEM[Item]
-    BOM[Bill of Material]
-    RT[Routing]
-    RTO[Routing Operation]
-    WC[Work Center]
-    WCC[Work Center Calendar]
-
-    ITEM --> BOM
-    ITEM --> RT --> RTO --> WC --> WCC
-```
+<EvidenceDiagram modelId="recipe-routing" />
 
 **Tables involved**
 
@@ -303,19 +268,7 @@ flowchart LR
 
 How was the recommendation put into production? Follow the released work order into its operations and daily schedule. Compare release, due, scheduled, and actual dates when explaining the progress of the work.
 
-```mermaid
-flowchart LR
-    accTitle: Work-order release and daily operation schedules
-    accDescr: A supply recommendation supports a work order and its operations. Daily schedules match work-center calendar records on both center and date.
-    SPR[Supply Plan Recommendation]
-    WO[Work Order]
-    WOO[Work Order Operation]
-    WOS[Work Order Operation Schedule]
-    WCC[Work Center Calendar]
-
-    SPR --> WO --> WOO --> WOS
-    WCC --> WOS
-```
+<EvidenceDiagram modelId="operation-scheduling" />
 
 **Tables involved**
 
@@ -334,7 +287,7 @@ flowchart LR
 - `WorkOrderOperationSchedule.WorkOrderOperationID -> WorkOrderOperation.WorkOrderOperationID`
 - Match `WorkOrderOperationSchedule.WorkCenterID = WorkCenterCalendar.WorkCenterID` **and** `WorkOrderOperationSchedule.ScheduleDate = WorkCenterCalendar.CalendarDate` together.
 
-Work center alone is not a daily key. Schedule **5** is center **4** on **January 19, 2024**, with **0.42 scheduled hours**. A center-only calendar join produces **1,180 matches**; adding the date produces **one**:
+Work center alone is not a daily key. Schedule **5** is center **4** on **January 19, 2024**, with **0.42 scheduled hours**. Adding the date reduces a center-only calendar join from **1,180 matches** to **one**, as the following queries show.
 
 ```sql
 SELECT s.WorkOrderOperationScheduleID, s.WorkCenterID, s.ScheduleDate,
@@ -374,23 +327,9 @@ For this center/day, **four schedule rows** total **6.45 hours** against **101.7
 
 ### Purchased Component Support and Material Issue
 
-How did purchased components support production? Inspect the purchasing and receiving evidence alongside the later material issue to the work order. Receipt brings components into stock; issue moves their cost into WIP.
+How did purchased components support production? Inspect the purchasing and receiving evidence alongside the later material issue to the work order. Receipt brings components into stock, while issue moves their cost into WIP.
 
-```mermaid
-flowchart LR
-    accTitle: Purchased component support and subsequent material issue
-    accDescr: Purchasing and receiving support component availability. A separate work-order material issue records components moving into production.
-    SPR[Supply Plan Recommendation]
-    PR[Purchase Requisition]
-    PO[Purchase Order]
-    GR[Goods Receipt]
-    WO[Work Order]
-    MI[Material Issue]
-
-    SPR --> PR --> PO --> GR
-    WO --> MI
-    GR --> MI
-```
+<EvidenceDiagram modelId="component-availability" />
 
 **Tables involved**
 
@@ -410,22 +349,9 @@ flowchart LR
 
 ### Labor Capture, Payroll Bridge, and Manufacturing Cost
 
-Which approved work supports the operation's labor explanation? Follow `TimeClockEntry` into `LaborTimeEntry` and the work-order operation. Payroll supplies the pay-cycle accounting support, while journals carry the subsequent labor and overhead reclassifications.
+Which approved work supports the operation's labor explanation? Follow `TimeClockEntry` into `LaborTimeEntry` and the work-order operation. PayrollSummary recognizes qualifying manufacturing payroll directly in clearing. Factory overhead and depreciation use separate journals. These accounting sources do not allocate every pooled cost to an individual work order.
 
-```mermaid
-flowchart LR
-    accTitle: Operational labor evidence and payroll cost support
-    accDescr: Shift rosters and time-clock entries support labor records linked to work-order operations. Payroll and journals supply separate accounting support.
-    ESR[Employee Shift Roster]
-    TCE[Time Clock Entry]
-    LTE[Labor Time Entry]
-    PR[Payroll Register]
-    JE[Journal Entry Reclass]
-    WOO[Work Order Operation]
-
-    ESR --> TCE --> LTE --> WOO
-    LTE --> PR --> JE
-```
+<EvidenceDiagram modelId="manufacturing-payroll-support" />
 
 **Tables involved**
 
@@ -434,39 +360,22 @@ flowchart LR
 | `EmployeeShiftRoster`, `TimeClockEntry` | Show planned and approved labor support beneath payroll |
 | `LaborTimeEntry` | Shows the costing bridge from approved time into production analysis |
 | `WorkOrderOperation` | Shows which operation consumed the direct labor support |
-| `PayrollRegister` | Shows the payroll-side source behind later reclass activity |
-| `JournalEntry` | Shows direct-labor and manufacturing-overhead reclass support |
+| `PayrollRegister`, `PayrollRegisterLine` | Provide employee facts summarized into PayrollSummary postings |
+| `JournalEntry`, `GLEntry` | Show separate factory-overhead and depreciation entries alongside summarized payroll recognition |
 
 **Starter analytical question:** Which work centers or work orders show the highest approved labor support relative to planned operation timing?
 
 **Analytical plan**
 
-- Objective: Connect approved factory time to work-order operations and payroll-supported reclass activity.
-- Evidence path: TimeClockEntry -> LaborTimeEntry -> WorkOrderOperation, plus PayrollRegister and JournalEntry.
-- Comparison: Group by work center, work order, payroll period, or labor type.
+- Connect approved factory time to work-order operations, then compare payroll support with its summarized recognition.
+- Follow `TimeClockEntry` and `LaborTimeEntry` through stored keys. Compare `PayrollRegister` totals independently with PayrollSummary at period/cost-center grain using the [Posting Reference](../reference/posting.md#payrollsummary-register-summaries).
+- Group operational support by work center, work order, or labor type. Preserve period/cost-center grain for the payroll-to-ledger comparison.
 
 ### Production Completion, Close, and Finished-Goods Availability
 
-When were goods available, and when was their order closed? Compare `ProductionCompletion` and `WorkOrderClose` separately. Completion recognizes finished goods at standard cost; close resolves the remaining variance and balances.
+When were goods available, and when was their order closed? Compare `ProductionCompletion` and `WorkOrderClose` separately. Completion recognizes finished goods at standard cost, while close resolves the remaining variance and balances.
 
-```mermaid
-flowchart LR
-    accTitle: Separate completion and close branches of a work order
-    accDescr: A work order links separately to material issues, labor, production completion lines, and accounting close. Completion makes finished goods available before close.
-    WO[Work Order]
-    MI[Material Issue]
-    LTE[Labor Time Entry]
-    PC[Production Completion]
-    PCL[Production Completion Line]
-    WOC[WorkOrderClose]
-    FG[Finished goods available to O2C]
-
-    WO --> MI
-    WO --> LTE
-    WO --> PC --> PCL
-    PC --> FG
-    WO --> WOC
-```
+<EvidenceDiagram modelId="completion-close" />
 
 **Tables involved**
 
@@ -482,7 +391,7 @@ flowchart LR
 **Analytical plan**
 
 - Objective: Separate physical completion from accounting close and finished-goods availability.
-- Evidence paths: WorkOrder -> ProductionCompletion -> ProductionCompletionLine, and separately WorkOrder -> WorkOrderClose. `WorkOrderClose.WorkOrderID` connects close to the order; there is no `ProductionCompletionLineID` foreign key to close.
+- Evidence paths: WorkOrder -> ProductionCompletion -> ProductionCompletionLine, and separately WorkOrder -> WorkOrderClose. `WorkOrderClose.WorkOrderID` connects close to the order without a `ProductionCompletionLineID` foreign key.
 - Comparison: Compare completion date, close date, quantity completed, and variance amount by month.
 
 Aggregate each branch before joining at `WorkOrderID`. Otherwise, two completion lines can repeat the same close amount. This worked comparison retains the two different event dates:
@@ -512,7 +421,7 @@ LEFT JOIN close_totals AS c ON c.WorkOrderID = w.WorkOrderID
 WHERE w.WorkOrderID = 1;
 ```
 
-Work order **1** has **two completion lines**, last completed **January 26, 2024**, totaling **7.03 units** and **1,019.85** standard cost. Its **one close** is dated **February 1**, with **743.16** total variance. A missing close stays null in this comparison; it is not a zero recorded variance.
+Work order **1** has **two completion lines**, last completed **January 26, 2024**, totaling **7.03 units** and **1,019.85** standard cost. Its **one close** is dated **February 1**, with **743.16** total variance. A missing close stays null in this comparison rather than becoming a zero recorded variance.
 
 </details>
 
@@ -566,11 +475,11 @@ Read completion, cost support, and `WorkOrderClose` as distinct evidence. A reco
 - Which work orders were completed but not yet closed?
 - How much manufacturing variance was posted by month, work center, or item group?
 
-- Read [Production and Planning](../analytics/index.md#production-and-planning) to compare utilization, forecasts, and capacity; add [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory) for supply reliability and coverage.
+- Read [Production and Planning](../analytics/index.md#production-and-planning) to compare utilization, forecasts, and capacity, and add [Purchasing and Inventory](../analytics/index.md#purchasing-and-inventory) for supply reliability and coverage.
 - Read [Manufacturing Labor Case](../analytics/cases/manufacturing-labor-cost-case.md) when you want a guided walkthrough from production support into costing and close.
 - Read [Explain Profit, Cash, and the Year-End Close](../analytics/cases/financial-statement-bridge-case.md) when you want to add plant-equipment depreciation and note-financed equipment into the manufacturing-cost story.
 - Read [P2P](p2p.md) to see how raw materials and packaging are replenished when manufacturing needs purchased support.
-- Read [Payroll](payroll.md#time-attendance-and-approved-hours) for approved attendance support and [Payroll](payroll.md#direct-labor-and-manufacturing-reclass) for the labor and reclass side of the same production story.
+- Read [Payroll](payroll.md#time-attendance-and-approved-hours) for approved attendance support and [Manufacturing Payroll and Cost Support](payroll.md#manufacturing-payroll-and-cost-support) for direct payroll recognition and the separate cost-support sources.
 - Read [GLEntry Posting Reference](../reference/posting.md) and [Schema Reference](../reference/schema.md) when you need the detailed posting or join logic.
 
 </details>

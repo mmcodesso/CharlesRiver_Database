@@ -1,0 +1,4252 @@
+[
+  {
+    "id": "company-data-overview",
+    "title": "Company data areas and shared records",
+    "area": "Overview",
+    "question": "Where should you start an investigation, and which records are shared?",
+    "alt": "Nine data areas organize all 82 tables. Sales, Design Services, purchasing, manufacturing, payroll, accounting, fixed assets, planning, and shared master records have focused linked views. The layout groups evidence rather than imposing a company-wide sequence.",
+    "tables": [],
+    "relationships": [],
+    "primary": [],
+    "context": [],
+    "boundary": "These are learning areas, not additional database tables or proof of departmental independence.",
+    "processPath": "/docs/process-flows",
+    "exercisePath": "/docs/learn-and-practice/meet-the-records",
+    "casePath": "/docs/analytics/cases/o2c-trace-case"
+  },
+  {
+    "id": "accounting-core",
+    "title": "Accounts, journals, and posted detail",
+    "area": "Accounting",
+    "primary": [
+      "Account",
+      "JournalEntry",
+      "GLEntry"
+    ],
+    "context": [],
+    "question": "Which source identifier identifies the posted event?",
+    "relationships": [
+      {
+        "child": "GLEntry",
+        "childFields": [
+          "AccountID"
+        ],
+        "parent": "Account",
+        "parentFields": [
+          "AccountID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "GLEntry",
+        "childFields": [
+          "SourceDocumentID"
+        ],
+        "parent": "JournalEntry",
+        "parentFields": [
+          "JournalEntryID"
+        ],
+        "kind": "conditional",
+        "condition": "SourceDocumentType = 'JournalEntry'",
+        "note": "Other posting types have their own source records.",
+        "optionalParent": false,
+        "id": "r2"
+      }
+    ],
+    "boundary": "JournalEntry is one posting route. Operational sources and constructed PayrollSummary identifiers must not be treated as journal headers.",
+    "processPath": "/docs/processes/manual-journals-and-close",
+    "exercisePath": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+    "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
+    "tables": [
+      {
+        "name": "Account",
+        "primary": true,
+        "pk": "AccountID",
+        "grain": "One chart-of-accounts account",
+        "fields": [
+          {
+            "name": "AccountID",
+            "label": "AccountID (PK)"
+          },
+          {
+            "name": "AccountNumber",
+            "label": "AccountNumber"
+          },
+          {
+            "name": "AccountType",
+            "label": "AccountType"
+          }
+        ]
+      },
+      {
+        "name": "JournalEntry",
+        "primary": true,
+        "pk": "JournalEntryID",
+        "grain": "One finance-controlled journal header",
+        "fields": [
+          {
+            "name": "JournalEntryID",
+            "label": "JournalEntryID (PK)"
+          },
+          {
+            "name": "EntryType",
+            "label": "EntryType"
+          },
+          {
+            "name": "PostingDate",
+            "label": "PostingDate"
+          },
+          {
+            "name": "ReversesJournalEntryID",
+            "label": "ReversesJournalEntryID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "GLEntry",
+        "primary": true,
+        "pk": "GLEntryID",
+        "grain": "One posted account line in a voucher",
+        "fields": [
+          {
+            "name": "GLEntryID",
+            "label": "GLEntryID (PK)"
+          },
+          {
+            "name": "AccountID",
+            "label": "AccountID (FK)"
+          },
+          {
+            "name": "SourceDocumentID",
+            "label": "SourceDocumentID (source)"
+          },
+          {
+            "name": "SourceDocumentType",
+            "label": "SourceDocumentType"
+          },
+          {
+            "name": "PostingDate",
+            "label": "PostingDate"
+          }
+        ]
+      }
+    ],
+    "alt": "Accounts, journals, and posted detail. Which source identifier identifies the posted event? Primary tables: Account, JournalEntry, GLEntry. JournalEntry is one posting route. Operational sources and constructed PayrollSummary identifiers must not be treated as journal headers."
+  },
+  {
+    "id": "asset-financing",
+    "title": "Asset events and financing",
+    "area": "Fixed assets",
+    "primary": [
+      "FixedAsset",
+      "FixedAssetEvent",
+      "DebtAgreement",
+      "DebtScheduleLine"
+    ],
+    "context": [
+      "JournalEntry"
+    ],
+    "question": "Which asset event or debt installment links to a journal?",
+    "relationships": [
+      {
+        "child": "FixedAssetEvent",
+        "childFields": [
+          "FixedAssetID"
+        ],
+        "parent": "FixedAsset",
+        "parentFields": [
+          "FixedAssetID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "DebtAgreement",
+        "childFields": [
+          "FixedAssetID"
+        ],
+        "parent": "FixedAsset",
+        "parentFields": [
+          "FixedAssetID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "DebtScheduleLine",
+        "childFields": [
+          "DebtAgreementID"
+        ],
+        "parent": "DebtAgreement",
+        "parentFields": [
+          "DebtAgreementID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "FixedAssetEvent",
+        "childFields": [
+          "JournalEntryID"
+        ],
+        "parent": "JournalEntry",
+        "parentFields": [
+          "JournalEntryID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r4"
+      },
+      {
+        "child": "DebtScheduleLine",
+        "childFields": [
+          "JournalEntryID"
+        ],
+        "parent": "JournalEntry",
+        "parentFields": [
+          "JournalEntryID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r5"
+      }
+    ],
+    "boundary": "Asset and debt records link to journals when present; they do not post under their own GLEntry source labels.",
+    "processPath": "/docs/processes/manual-journals-and-close",
+    "exercisePath": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+    "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
+    "tables": [
+      {
+        "name": "FixedAsset",
+        "primary": true,
+        "pk": "FixedAssetID",
+        "grain": "One asset in the asset register",
+        "fields": [
+          {
+            "name": "FixedAssetID",
+            "label": "FixedAssetID (PK)"
+          },
+          {
+            "name": "AssetCode",
+            "label": "AssetCode"
+          },
+          {
+            "name": "BehaviorGroup",
+            "label": "BehaviorGroup"
+          },
+          {
+            "name": "AssetAccountID",
+            "label": "AssetAccountID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "FixedAssetEvent",
+        "primary": true,
+        "pk": "FixedAssetEventID",
+        "grain": "One recorded asset lifecycle event",
+        "fields": [
+          {
+            "name": "FixedAssetEventID",
+            "label": "FixedAssetEventID (PK)"
+          },
+          {
+            "name": "FixedAssetID",
+            "label": "FixedAssetID (FK)"
+          },
+          {
+            "name": "JournalEntryID",
+            "label": "JournalEntryID (FK)"
+          },
+          {
+            "name": "EventType",
+            "label": "EventType"
+          },
+          {
+            "name": "EventDate",
+            "label": "EventDate"
+          }
+        ]
+      },
+      {
+        "name": "DebtAgreement",
+        "primary": true,
+        "pk": "DebtAgreementID",
+        "grain": "One financing agreement",
+        "fields": [
+          {
+            "name": "DebtAgreementID",
+            "label": "DebtAgreementID (PK)"
+          },
+          {
+            "name": "FixedAssetID",
+            "label": "FixedAssetID (FK)"
+          },
+          {
+            "name": "AgreementNumber",
+            "label": "AgreementNumber"
+          },
+          {
+            "name": "OriginationDate",
+            "label": "OriginationDate"
+          }
+        ]
+      },
+      {
+        "name": "DebtScheduleLine",
+        "primary": true,
+        "pk": "DebtScheduleLineID",
+        "grain": "One scheduled debt-payment installment",
+        "fields": [
+          {
+            "name": "DebtScheduleLineID",
+            "label": "DebtScheduleLineID (PK)"
+          },
+          {
+            "name": "DebtAgreementID",
+            "label": "DebtAgreementID (FK)"
+          },
+          {
+            "name": "JournalEntryID",
+            "label": "JournalEntryID (FK)"
+          },
+          {
+            "name": "PaymentSequence",
+            "label": "PaymentSequence"
+          },
+          {
+            "name": "PaymentDate",
+            "label": "PaymentDate"
+          }
+        ]
+      },
+      {
+        "name": "JournalEntry",
+        "primary": false,
+        "pk": "JournalEntryID",
+        "grain": "One finance-controlled journal header",
+        "fields": [
+          {
+            "name": "JournalEntryID",
+            "label": "JournalEntryID (PK)"
+          },
+          {
+            "name": "EntryType",
+            "label": "EntryType"
+          },
+          {
+            "name": "PostingDate",
+            "label": "PostingDate"
+          },
+          {
+            "name": "ReversesJournalEntryID",
+            "label": "ReversesJournalEntryID (FK)"
+          }
+        ]
+      }
+    ],
+    "alt": "Asset events and financing. Which asset event or debt installment links to a journal? Primary tables: FixedAsset, FixedAssetEvent, DebtAgreement, DebtScheduleLine. Asset and debt records link to journals when present; they do not post under their own GLEntry source labels."
+  },
+  {
+    "id": "commercial-terms",
+    "title": "Customer orders and commercial terms",
+    "area": "Sales",
+    "primary": [
+      "Customer",
+      "PriceList",
+      "PriceListLine",
+      "PromotionProgram",
+      "PriceOverrideApproval",
+      "SalesOrder",
+      "SalesOrderLine"
+    ],
+    "context": [],
+    "question": "Which terms describe an order without recognizing revenue?",
+    "relationships": [
+      {
+        "child": "PriceList",
+        "childFields": [
+          "CustomerID"
+        ],
+        "parent": "Customer",
+        "parentFields": [
+          "CustomerID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r1"
+      },
+      {
+        "child": "PriceListLine",
+        "childFields": [
+          "PriceListID"
+        ],
+        "parent": "PriceList",
+        "parentFields": [
+          "PriceListID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "SalesOrder",
+        "childFields": [
+          "CustomerID"
+        ],
+        "parent": "Customer",
+        "parentFields": [
+          "CustomerID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "SalesOrderLine",
+        "childFields": [
+          "SalesOrderID"
+        ],
+        "parent": "SalesOrder",
+        "parentFields": [
+          "SalesOrderID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r4"
+      },
+      {
+        "child": "SalesOrderLine",
+        "childFields": [
+          "PriceListLineID"
+        ],
+        "parent": "PriceListLine",
+        "parentFields": [
+          "PriceListLineID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r5"
+      },
+      {
+        "child": "SalesOrderLine",
+        "childFields": [
+          "PromotionID"
+        ],
+        "parent": "PromotionProgram",
+        "parentFields": [
+          "PromotionID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r6"
+      },
+      {
+        "child": "SalesOrderLine",
+        "childFields": [
+          "PriceOverrideApprovalID"
+        ],
+        "parent": "PriceOverrideApproval",
+        "parentFields": [
+          "PriceOverrideApprovalID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r7"
+      }
+    ],
+    "boundary": "Segment price lists need no CustomerID. A linked approval records an authorization basis; inspect authority, dates, and status separately.",
+    "processPath": "/docs/processes/o2c",
+    "exercisePath": "/docs/learn-and-practice/source-to-ledger",
+    "casePath": "/docs/analytics/cases/product-portfolio-profitability-case",
+    "tables": [
+      {
+        "name": "Customer",
+        "primary": true,
+        "pk": "CustomerID",
+        "grain": "One customer",
+        "fields": [
+          {
+            "name": "CustomerID",
+            "label": "CustomerID (PK)"
+          },
+          {
+            "name": "CustomerName",
+            "label": "CustomerName"
+          },
+          {
+            "name": "CustomerSegment",
+            "label": "CustomerSegment"
+          },
+          {
+            "name": "Region",
+            "label": "Region"
+          }
+        ]
+      },
+      {
+        "name": "PriceList",
+        "primary": true,
+        "pk": "PriceListID",
+        "grain": "One customer or segment price-list scope",
+        "fields": [
+          {
+            "name": "PriceListID",
+            "label": "PriceListID (PK)"
+          },
+          {
+            "name": "CustomerID",
+            "label": "CustomerID (FK)"
+          },
+          {
+            "name": "ScopeType",
+            "label": "ScopeType"
+          },
+          {
+            "name": "CustomerSegment",
+            "label": "CustomerSegment"
+          }
+        ]
+      },
+      {
+        "name": "PriceListLine",
+        "primary": true,
+        "pk": "PriceListLineID",
+        "grain": "One item price within a price list",
+        "fields": [
+          {
+            "name": "PriceListLineID",
+            "label": "PriceListLineID (PK)"
+          },
+          {
+            "name": "PriceListID",
+            "label": "PriceListID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          },
+          {
+            "name": "UnitPrice",
+            "label": "UnitPrice"
+          }
+        ]
+      },
+      {
+        "name": "PromotionProgram",
+        "primary": true,
+        "pk": "PromotionID",
+        "grain": "One promotion definition",
+        "fields": [
+          {
+            "name": "PromotionID",
+            "label": "PromotionID (PK)"
+          },
+          {
+            "name": "PromotionCode",
+            "label": "PromotionCode"
+          },
+          {
+            "name": "ScopeType",
+            "label": "ScopeType"
+          },
+          {
+            "name": "DiscountPct",
+            "label": "DiscountPct"
+          }
+        ]
+      },
+      {
+        "name": "PriceOverrideApproval",
+        "primary": true,
+        "pk": "PriceOverrideApprovalID",
+        "grain": "One recorded order-line price approval",
+        "fields": [
+          {
+            "name": "PriceOverrideApprovalID",
+            "label": "PriceOverrideApprovalID (PK)"
+          },
+          {
+            "name": "SalesOrderLineID",
+            "label": "SalesOrderLineID (FK)"
+          },
+          {
+            "name": "RequestedByEmployeeID",
+            "label": "RequestedByEmployeeID (FK)"
+          },
+          {
+            "name": "ApprovedByEmployeeID",
+            "label": "ApprovedByEmployeeID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "SalesOrder",
+        "primary": true,
+        "pk": "SalesOrderID",
+        "grain": "One customer order header",
+        "fields": [
+          {
+            "name": "SalesOrderID",
+            "label": "SalesOrderID (PK)"
+          },
+          {
+            "name": "CustomerID",
+            "label": "CustomerID (FK)"
+          },
+          {
+            "name": "OrderDate",
+            "label": "OrderDate"
+          }
+        ]
+      },
+      {
+        "name": "SalesOrderLine",
+        "primary": true,
+        "pk": "SalesOrderLineID",
+        "grain": "One ordered item or service line",
+        "fields": [
+          {
+            "name": "SalesOrderLineID",
+            "label": "SalesOrderLineID (PK)"
+          },
+          {
+            "name": "SalesOrderID",
+            "label": "SalesOrderID (FK)"
+          },
+          {
+            "name": "PriceListLineID",
+            "label": "PriceListLineID (FK)"
+          },
+          {
+            "name": "PromotionID",
+            "label": "PromotionID (FK)"
+          },
+          {
+            "name": "PriceOverrideApprovalID",
+            "label": "PriceOverrideApprovalID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          }
+        ]
+      }
+    ],
+    "alt": "Customer orders and commercial terms. Which terms describe an order without recognizing revenue? Primary tables: Customer, PriceList, PriceListLine, PromotionProgram, PriceOverrideApproval, SalesOrder, SalesOrderLine. Segment price lists need no CustomerID. A linked approval records an authorization basis; inspect authority, dates, and status separately."
+  },
+  {
+    "id": "goods-fulfillment",
+    "title": "Goods fulfillment and customer billing",
+    "area": "Sales",
+    "primary": [
+      "Shipment",
+      "ShipmentLine",
+      "SalesInvoice",
+      "SalesInvoiceLine"
+    ],
+    "context": [
+      "SalesOrder",
+      "SalesOrderLine"
+    ],
+    "question": "Which line-level keys connect ordered, shipped, and billed quantities?",
+    "relationships": [
+      {
+        "child": "SalesOrderLine",
+        "childFields": [
+          "SalesOrderID"
+        ],
+        "parent": "SalesOrder",
+        "parentFields": [
+          "SalesOrderID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "Shipment",
+        "childFields": [
+          "SalesOrderID"
+        ],
+        "parent": "SalesOrder",
+        "parentFields": [
+          "SalesOrderID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "ShipmentLine",
+        "childFields": [
+          "ShipmentID"
+        ],
+        "parent": "Shipment",
+        "parentFields": [
+          "ShipmentID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "ShipmentLine",
+        "childFields": [
+          "SalesOrderLineID"
+        ],
+        "parent": "SalesOrderLine",
+        "parentFields": [
+          "SalesOrderLineID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r4"
+      },
+      {
+        "child": "SalesInvoiceLine",
+        "childFields": [
+          "SalesInvoiceID"
+        ],
+        "parent": "SalesInvoice",
+        "parentFields": [
+          "SalesInvoiceID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r5"
+      },
+      {
+        "child": "SalesInvoiceLine",
+        "childFields": [
+          "ShipmentLineID"
+        ],
+        "parent": "ShipmentLine",
+        "parentFields": [
+          "ShipmentLineID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r6"
+      }
+    ],
+    "boundary": "ShipmentLineID is optional on customer invoice lines because services use ServiceBillingLine. This view focuses on the goods path; an order is non-posting.",
+    "processPath": "/docs/processes/o2c",
+    "exercisePath": "/docs/learn-and-practice/source-to-ledger",
+    "casePath": "/docs/analytics/cases/o2c-trace-case",
+    "tables": [
+      {
+        "name": "Shipment",
+        "primary": true,
+        "pk": "ShipmentID",
+        "grain": "One goods-shipment header",
+        "fields": [
+          {
+            "name": "ShipmentID",
+            "label": "ShipmentID (PK)"
+          },
+          {
+            "name": "SalesOrderID",
+            "label": "SalesOrderID (FK)"
+          },
+          {
+            "name": "ShipmentDate",
+            "label": "ShipmentDate"
+          }
+        ]
+      },
+      {
+        "name": "ShipmentLine",
+        "primary": true,
+        "pk": "ShipmentLineID",
+        "grain": "One shipped order-line quantity",
+        "fields": [
+          {
+            "name": "ShipmentLineID",
+            "label": "ShipmentLineID (PK)"
+          },
+          {
+            "name": "ShipmentID",
+            "label": "ShipmentID (FK)"
+          },
+          {
+            "name": "SalesOrderLineID",
+            "label": "SalesOrderLineID (FK)"
+          },
+          {
+            "name": "QuantityShipped",
+            "label": "QuantityShipped"
+          }
+        ]
+      },
+      {
+        "name": "SalesInvoice",
+        "primary": true,
+        "pk": "SalesInvoiceID",
+        "grain": "One customer invoice header",
+        "fields": [
+          {
+            "name": "SalesInvoiceID",
+            "label": "SalesInvoiceID (PK)"
+          },
+          {
+            "name": "CustomerID",
+            "label": "CustomerID (FK)"
+          },
+          {
+            "name": "InvoiceDate",
+            "label": "InvoiceDate"
+          }
+        ]
+      },
+      {
+        "name": "SalesInvoiceLine",
+        "primary": true,
+        "pk": "SalesInvoiceLineID",
+        "grain": "One billed goods or service line",
+        "fields": [
+          {
+            "name": "SalesInvoiceLineID",
+            "label": "SalesInvoiceLineID (PK)"
+          },
+          {
+            "name": "SalesInvoiceID",
+            "label": "SalesInvoiceID (FK)"
+          },
+          {
+            "name": "ShipmentLineID",
+            "label": "ShipmentLineID (FK)"
+          },
+          {
+            "name": "SalesOrderLineID",
+            "label": "SalesOrderLineID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "SalesOrder",
+        "primary": false,
+        "pk": "SalesOrderID",
+        "grain": "One customer order header",
+        "fields": [
+          {
+            "name": "SalesOrderID",
+            "label": "SalesOrderID (PK)"
+          },
+          {
+            "name": "CustomerID",
+            "label": "CustomerID (FK)"
+          },
+          {
+            "name": "OrderDate",
+            "label": "OrderDate"
+          }
+        ]
+      },
+      {
+        "name": "SalesOrderLine",
+        "primary": false,
+        "pk": "SalesOrderLineID",
+        "grain": "One ordered item or service line",
+        "fields": [
+          {
+            "name": "SalesOrderLineID",
+            "label": "SalesOrderLineID (PK)"
+          },
+          {
+            "name": "SalesOrderID",
+            "label": "SalesOrderID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          }
+        ]
+      }
+    ],
+    "alt": "Goods fulfillment and customer billing. Which line-level keys connect ordered, shipped, and billed quantities? Primary tables: Shipment, ShipmentLine, SalesInvoice, SalesInvoiceLine. ShipmentLineID is optional on customer invoice lines because services use ServiceBillingLine. This view focuses on the goods path; an order is non-posting."
+  },
+  {
+    "id": "service-delivery",
+    "title": "Design work, time, and billing",
+    "area": "Design Services",
+    "primary": [
+      "ServiceEngagement",
+      "ServiceEngagementAssignment",
+      "ServiceTimeEntry",
+      "ServiceBillingLine"
+    ],
+    "context": [
+      "SalesOrderLine",
+      "SalesInvoiceLine"
+    ],
+    "question": "How are dated time entries matched to a billing-period rollup?",
+    "relationships": [
+      {
+        "child": "ServiceEngagement",
+        "childFields": [
+          "SalesOrderLineID"
+        ],
+        "parent": "SalesOrderLine",
+        "parentFields": [
+          "SalesOrderLineID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "ServiceEngagementAssignment",
+        "childFields": [
+          "ServiceEngagementID"
+        ],
+        "parent": "ServiceEngagement",
+        "parentFields": [
+          "ServiceEngagementID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "ServiceTimeEntry",
+        "childFields": [
+          "ServiceEngagementAssignmentID"
+        ],
+        "parent": "ServiceEngagementAssignment",
+        "parentFields": [
+          "ServiceEngagementAssignmentID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "ServiceBillingLine",
+        "childFields": [
+          "ServiceEngagementID"
+        ],
+        "parent": "ServiceEngagement",
+        "parentFields": [
+          "ServiceEngagementID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r4"
+      },
+      {
+        "child": "ServiceBillingLine",
+        "childFields": [
+          "SalesInvoiceLineID"
+        ],
+        "parent": "SalesInvoiceLine",
+        "parentFields": [
+          "SalesInvoiceLineID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r5"
+      },
+      {
+        "child": "ServiceTimeEntry",
+        "childFields": [
+          "ServiceEngagementID",
+          "WorkDate"
+        ],
+        "parent": "ServiceBillingLine",
+        "parentFields": [
+          "ServiceEngagementID",
+          "BillingPeriodStartDate"
+        ],
+        "kind": "aggregate",
+        "condition": "",
+        "note": "Match engagement; WorkDate lies within BillingPeriodStartDate and BillingPeriodEndDate. Aggregate approved billable hours before comparing.",
+        "optionalParent": true,
+        "id": "r6"
+      }
+    ],
+    "boundary": "The time-to-billing match is an engagement/date-interval analysis, not a stored billing-line ID on each time entry. Non-billable time retains cost support without customer billing.",
+    "processPath": "/docs/processes/design-services",
+    "exercisePath": "/docs/learn-and-practice/follow-design-time-into-billing",
+    "casePath": "/docs/analytics/cases/design-services-performance-case",
+    "tables": [
+      {
+        "name": "ServiceEngagement",
+        "primary": true,
+        "pk": "ServiceEngagementID",
+        "grain": "One engagement for a service order line",
+        "fields": [
+          {
+            "name": "ServiceEngagementID",
+            "label": "ServiceEngagementID (PK)"
+          },
+          {
+            "name": "SalesOrderLineID",
+            "label": "SalesOrderLineID (FK)"
+          },
+          {
+            "name": "EngagementNumber",
+            "label": "EngagementNumber"
+          },
+          {
+            "name": "CustomerID",
+            "label": "CustomerID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "ServiceEngagementAssignment",
+        "primary": true,
+        "pk": "ServiceEngagementAssignmentID",
+        "grain": "One employee assignment to an engagement",
+        "fields": [
+          {
+            "name": "ServiceEngagementAssignmentID",
+            "label": "ServiceEngagementAssignmentID (PK)"
+          },
+          {
+            "name": "ServiceEngagementID",
+            "label": "ServiceEngagementID (FK)"
+          },
+          {
+            "name": "EmployeeID",
+            "label": "EmployeeID (FK)"
+          },
+          {
+            "name": "AssignedRole",
+            "label": "AssignedRole"
+          }
+        ]
+      },
+      {
+        "name": "ServiceTimeEntry",
+        "primary": true,
+        "pk": "ServiceTimeEntryID",
+        "grain": "One employee service-time entry on a work date",
+        "fields": [
+          {
+            "name": "ServiceTimeEntryID",
+            "label": "ServiceTimeEntryID (PK)"
+          },
+          {
+            "name": "ServiceEngagementAssignmentID",
+            "label": "ServiceEngagementAssignmentID (FK)"
+          },
+          {
+            "name": "ServiceEngagementID",
+            "label": "ServiceEngagementID (FK)"
+          },
+          {
+            "name": "WorkDate",
+            "label": "WorkDate"
+          },
+          {
+            "name": "BillableHours",
+            "label": "BillableHours"
+          }
+        ]
+      },
+      {
+        "name": "ServiceBillingLine",
+        "primary": true,
+        "pk": "ServiceBillingLineID",
+        "grain": "One engagement billing-period rollup linked to an invoice line",
+        "fields": [
+          {
+            "name": "ServiceBillingLineID",
+            "label": "ServiceBillingLineID (PK)"
+          },
+          {
+            "name": "ServiceEngagementID",
+            "label": "ServiceEngagementID (FK)"
+          },
+          {
+            "name": "SalesInvoiceLineID",
+            "label": "SalesInvoiceLineID (FK)"
+          },
+          {
+            "name": "BillingPeriodStartDate",
+            "label": "BillingPeriodStartDate"
+          },
+          {
+            "name": "BillingPeriodEndDate",
+            "label": "BillingPeriodEndDate"
+          }
+        ]
+      },
+      {
+        "name": "SalesOrderLine",
+        "primary": false,
+        "pk": "SalesOrderLineID",
+        "grain": "One ordered item or service line",
+        "fields": [
+          {
+            "name": "SalesOrderLineID",
+            "label": "SalesOrderLineID (PK)"
+          },
+          {
+            "name": "SalesOrderID",
+            "label": "SalesOrderID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "SalesInvoiceLine",
+        "primary": false,
+        "pk": "SalesInvoiceLineID",
+        "grain": "One billed goods or service line",
+        "fields": [
+          {
+            "name": "SalesInvoiceLineID",
+            "label": "SalesInvoiceLineID (PK)"
+          },
+          {
+            "name": "SalesInvoiceID",
+            "label": "SalesInvoiceID (FK)"
+          },
+          {
+            "name": "ShipmentLineID",
+            "label": "ShipmentLineID (FK)"
+          },
+          {
+            "name": "SalesOrderLineID",
+            "label": "SalesOrderLineID (FK)"
+          }
+        ]
+      }
+    ],
+    "alt": "Design work, time, and billing. How are dated time entries matched to a billing-period rollup? Primary tables: ServiceEngagement, ServiceEngagementAssignment, ServiceTimeEntry, ServiceBillingLine. The time-to-billing match is an engagement/date-interval analysis, not a stored billing-line ID on each time entry. Non-billable time retains cost support without customer billing."
+  },
+  {
+    "id": "cash-allocation",
+    "title": "Received cash and invoice allocation",
+    "area": "Sales",
+    "primary": [
+      "CashReceipt",
+      "CashReceiptApplication"
+    ],
+    "context": [
+      "SalesInvoice"
+    ],
+    "question": "Why can received cash and an open invoice coexist?",
+    "relationships": [
+      {
+        "child": "CashReceiptApplication",
+        "childFields": [
+          "CashReceiptID"
+        ],
+        "parent": "CashReceipt",
+        "parentFields": [
+          "CashReceiptID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "CashReceiptApplication",
+        "childFields": [
+          "SalesInvoiceID"
+        ],
+        "parent": "SalesInvoice",
+        "parentFields": [
+          "SalesInvoiceID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      }
+    ],
+    "boundary": "Receipt and invoice dates do not establish allocation. CashReceiptApplication supplies the amount and application date; CashReceipt.SalesInvoiceID is compatibility metadata.",
+    "processPath": "/docs/processes/o2c",
+    "exercisePath": "/docs/learn-and-practice/follow-customer-settlement",
+    "casePath": "/docs/analytics/cases/o2c-trace-case",
+    "tables": [
+      {
+        "name": "CashReceipt",
+        "primary": true,
+        "pk": "CashReceiptID",
+        "grain": "One incoming customer cash event",
+        "fields": [
+          {
+            "name": "CashReceiptID",
+            "label": "CashReceiptID (PK)"
+          },
+          {
+            "name": "CustomerID",
+            "label": "CustomerID (FK)"
+          },
+          {
+            "name": "ReceiptDate",
+            "label": "ReceiptDate"
+          },
+          {
+            "name": "Amount",
+            "label": "Amount"
+          }
+        ]
+      },
+      {
+        "name": "CashReceiptApplication",
+        "primary": true,
+        "pk": "CashReceiptApplicationID",
+        "grain": "One dated receipt allocation to an invoice",
+        "fields": [
+          {
+            "name": "CashReceiptApplicationID",
+            "label": "CashReceiptApplicationID (PK)"
+          },
+          {
+            "name": "CashReceiptID",
+            "label": "CashReceiptID (FK)"
+          },
+          {
+            "name": "SalesInvoiceID",
+            "label": "SalesInvoiceID (FK)"
+          },
+          {
+            "name": "ApplicationDate",
+            "label": "ApplicationDate"
+          },
+          {
+            "name": "AppliedAmount",
+            "label": "AppliedAmount"
+          }
+        ]
+      },
+      {
+        "name": "SalesInvoice",
+        "primary": false,
+        "pk": "SalesInvoiceID",
+        "grain": "One customer invoice header",
+        "fields": [
+          {
+            "name": "SalesInvoiceID",
+            "label": "SalesInvoiceID (PK)"
+          },
+          {
+            "name": "CustomerID",
+            "label": "CustomerID (FK)"
+          },
+          {
+            "name": "InvoiceDate",
+            "label": "InvoiceDate"
+          }
+        ]
+      }
+    ],
+    "alt": "Received cash and invoice allocation. Why can received cash and an open invoice coexist? Primary tables: CashReceipt, CashReceiptApplication. Receipt and invoice dates do not establish allocation. CashReceiptApplication supplies the amount and application date; CashReceipt.SalesInvoiceID is compatibility metadata."
+  },
+  {
+    "id": "returns-credit",
+    "title": "Returns, customer credit, and refunds",
+    "area": "Sales",
+    "primary": [
+      "SalesReturn",
+      "SalesReturnLine",
+      "CreditMemo",
+      "CreditMemoLine",
+      "CustomerRefund"
+    ],
+    "context": [
+      "ShipmentLine",
+      "SalesInvoice"
+    ],
+    "question": "Which records distinguish returned goods, credit, and cash paid back?",
+    "relationships": [
+      {
+        "child": "SalesReturnLine",
+        "childFields": [
+          "SalesReturnID"
+        ],
+        "parent": "SalesReturn",
+        "parentFields": [
+          "SalesReturnID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "SalesReturnLine",
+        "childFields": [
+          "ShipmentLineID"
+        ],
+        "parent": "ShipmentLine",
+        "parentFields": [
+          "ShipmentLineID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "CreditMemo",
+        "childFields": [
+          "SalesReturnID"
+        ],
+        "parent": "SalesReturn",
+        "parentFields": [
+          "SalesReturnID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "CreditMemo",
+        "childFields": [
+          "OriginalSalesInvoiceID"
+        ],
+        "parent": "SalesInvoice",
+        "parentFields": [
+          "SalesInvoiceID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r4"
+      },
+      {
+        "child": "CreditMemoLine",
+        "childFields": [
+          "CreditMemoID"
+        ],
+        "parent": "CreditMemo",
+        "parentFields": [
+          "CreditMemoID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r5"
+      },
+      {
+        "child": "CreditMemoLine",
+        "childFields": [
+          "SalesReturnLineID"
+        ],
+        "parent": "SalesReturnLine",
+        "parentFields": [
+          "SalesReturnLineID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r6"
+      },
+      {
+        "child": "CustomerRefund",
+        "childFields": [
+          "CreditMemoID"
+        ],
+        "parent": "CreditMemo",
+        "parentFields": [
+          "CreditMemoID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r7"
+      }
+    ],
+    "boundary": "A memo can reduce AR and retain excess customer credit. A refund is a separate optional cash event; do not infer one from a return.",
+    "processPath": "/docs/processes/o2c",
+    "exercisePath": "/docs/learn-and-practice/source-to-ledger",
+    "casePath": "/docs/analytics/cases/o2c-trace-case",
+    "tables": [
+      {
+        "name": "SalesReturn",
+        "primary": true,
+        "pk": "SalesReturnID",
+        "grain": "One goods-return header",
+        "fields": [
+          {
+            "name": "SalesReturnID",
+            "label": "SalesReturnID (PK)"
+          },
+          {
+            "name": "ReturnNumber",
+            "label": "ReturnNumber"
+          },
+          {
+            "name": "CustomerID",
+            "label": "CustomerID (FK)"
+          },
+          {
+            "name": "ReturnDate",
+            "label": "ReturnDate"
+          }
+        ]
+      },
+      {
+        "name": "SalesReturnLine",
+        "primary": true,
+        "pk": "SalesReturnLineID",
+        "grain": "One returned shipment-line quantity",
+        "fields": [
+          {
+            "name": "SalesReturnLineID",
+            "label": "SalesReturnLineID (PK)"
+          },
+          {
+            "name": "SalesReturnID",
+            "label": "SalesReturnID (FK)"
+          },
+          {
+            "name": "ShipmentLineID",
+            "label": "ShipmentLineID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "CreditMemo",
+        "primary": true,
+        "pk": "CreditMemoID",
+        "grain": "One customer credit-memo header",
+        "fields": [
+          {
+            "name": "CreditMemoID",
+            "label": "CreditMemoID (PK)"
+          },
+          {
+            "name": "SalesReturnID",
+            "label": "SalesReturnID (FK)"
+          },
+          {
+            "name": "OriginalSalesInvoiceID",
+            "label": "OriginalSalesInvoiceID (FK)"
+          },
+          {
+            "name": "CreditMemoNumber",
+            "label": "CreditMemoNumber"
+          }
+        ]
+      },
+      {
+        "name": "CreditMemoLine",
+        "primary": true,
+        "pk": "CreditMemoLineID",
+        "grain": "One credited return line",
+        "fields": [
+          {
+            "name": "CreditMemoLineID",
+            "label": "CreditMemoLineID (PK)"
+          },
+          {
+            "name": "CreditMemoID",
+            "label": "CreditMemoID (FK)"
+          },
+          {
+            "name": "SalesReturnLineID",
+            "label": "SalesReturnLineID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "CustomerRefund",
+        "primary": true,
+        "pk": "CustomerRefundID",
+        "grain": "One cash refund against a credit memo",
+        "fields": [
+          {
+            "name": "CustomerRefundID",
+            "label": "CustomerRefundID (PK)"
+          },
+          {
+            "name": "CreditMemoID",
+            "label": "CreditMemoID (FK)"
+          },
+          {
+            "name": "CustomerID",
+            "label": "CustomerID (FK)"
+          },
+          {
+            "name": "RefundDate",
+            "label": "RefundDate"
+          }
+        ]
+      },
+      {
+        "name": "ShipmentLine",
+        "primary": false,
+        "pk": "ShipmentLineID",
+        "grain": "One shipped order-line quantity",
+        "fields": [
+          {
+            "name": "ShipmentLineID",
+            "label": "ShipmentLineID (PK)"
+          },
+          {
+            "name": "ShipmentID",
+            "label": "ShipmentID (FK)"
+          },
+          {
+            "name": "SalesOrderLineID",
+            "label": "SalesOrderLineID (FK)"
+          },
+          {
+            "name": "QuantityShipped",
+            "label": "QuantityShipped"
+          }
+        ]
+      },
+      {
+        "name": "SalesInvoice",
+        "primary": false,
+        "pk": "SalesInvoiceID",
+        "grain": "One customer invoice header",
+        "fields": [
+          {
+            "name": "SalesInvoiceID",
+            "label": "SalesInvoiceID (PK)"
+          },
+          {
+            "name": "CustomerID",
+            "label": "CustomerID (FK)"
+          },
+          {
+            "name": "InvoiceDate",
+            "label": "InvoiceDate"
+          }
+        ]
+      }
+    ],
+    "alt": "Returns, customer credit, and refunds. Which records distinguish returned goods, credit, and cash paid back? Primary tables: SalesReturn, SalesReturnLine, CreditMemo, CreditMemoLine, CustomerRefund. A memo can reduce AR and retain excess customer credit. A refund is a separate optional cash event; do not infer one from a return."
+  },
+  {
+    "id": "commissions",
+    "title": "Commission accrual, clawback, and payment",
+    "area": "Sales",
+    "primary": [
+      "SalesCommissionRate",
+      "SalesCommissionAccrual",
+      "SalesCommissionAdjustment",
+      "SalesCommissionPayment",
+      "SalesCommissionPaymentLine"
+    ],
+    "context": [
+      "SalesInvoiceLine"
+    ],
+    "question": "How does a payment identify its accruals and adjustments?",
+    "relationships": [
+      {
+        "child": "SalesCommissionAccrual",
+        "childFields": [
+          "SalesInvoiceLineID"
+        ],
+        "parent": "SalesInvoiceLine",
+        "parentFields": [
+          "SalesInvoiceLineID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "SalesCommissionAccrual",
+        "childFields": [
+          "SalesCommissionRateID"
+        ],
+        "parent": "SalesCommissionRate",
+        "parentFields": [
+          "SalesCommissionRateID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "SalesCommissionAdjustment",
+        "childFields": [
+          "SalesCommissionAccrualID"
+        ],
+        "parent": "SalesCommissionAccrual",
+        "parentFields": [
+          "SalesCommissionAccrualID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "SalesCommissionPaymentLine",
+        "childFields": [
+          "SalesCommissionPaymentID"
+        ],
+        "parent": "SalesCommissionPayment",
+        "parentFields": [
+          "SalesCommissionPaymentID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r4"
+      },
+      {
+        "child": "SalesCommissionPaymentLine",
+        "childFields": [
+          "SourceDocumentID"
+        ],
+        "parent": "SalesCommissionAccrual",
+        "parentFields": [
+          "SalesCommissionAccrualID"
+        ],
+        "kind": "conditional",
+        "condition": "SourceDocumentType = 'SalesCommissionAccrual'",
+        "note": "",
+        "optionalParent": false,
+        "id": "r5"
+      },
+      {
+        "child": "SalesCommissionPaymentLine",
+        "childFields": [
+          "SourceDocumentID"
+        ],
+        "parent": "SalesCommissionAdjustment",
+        "parentFields": [
+          "SalesCommissionAdjustmentID"
+        ],
+        "kind": "conditional",
+        "condition": "SourceDocumentType = 'SalesCommissionAdjustment'",
+        "note": "",
+        "optionalParent": false,
+        "id": "r6"
+      }
+    ],
+    "boundary": "The accrual stores both the invoice-line and rate keys. Payment lines use a type-qualified source ID; commissions settle separately from payroll.",
+    "processPath": "/docs/processes/o2c",
+    "exercisePath": "/docs/learn-and-practice/source-to-ledger",
+    "casePath": "/docs/analytics/cases/o2c-trace-case",
+    "tables": [
+      {
+        "name": "SalesCommissionRate",
+        "primary": true,
+        "pk": "SalesCommissionRateID",
+        "grain": "One commission rate by revenue type, segment, and effective period",
+        "fields": [
+          {
+            "name": "SalesCommissionRateID",
+            "label": "SalesCommissionRateID (PK)"
+          },
+          {
+            "name": "RevenueType",
+            "label": "RevenueType"
+          },
+          {
+            "name": "CustomerSegment",
+            "label": "CustomerSegment"
+          },
+          {
+            "name": "RatePct",
+            "label": "RatePct"
+          }
+        ]
+      },
+      {
+        "name": "SalesCommissionAccrual",
+        "primary": true,
+        "pk": "SalesCommissionAccrualID",
+        "grain": "One invoice-line commission accrual",
+        "fields": [
+          {
+            "name": "SalesCommissionAccrualID",
+            "label": "SalesCommissionAccrualID (PK)"
+          },
+          {
+            "name": "SalesInvoiceLineID",
+            "label": "SalesInvoiceLineID (FK)"
+          },
+          {
+            "name": "SalesCommissionRateID",
+            "label": "SalesCommissionRateID (FK)"
+          },
+          {
+            "name": "SalesRepEmployeeID",
+            "label": "SalesRepEmployeeID (FK)"
+          },
+          {
+            "name": "CommissionBaseAmount",
+            "label": "CommissionBaseAmount"
+          }
+        ]
+      },
+      {
+        "name": "SalesCommissionAdjustment",
+        "primary": true,
+        "pk": "SalesCommissionAdjustmentID",
+        "grain": "One credit-related commission clawback",
+        "fields": [
+          {
+            "name": "SalesCommissionAdjustmentID",
+            "label": "SalesCommissionAdjustmentID (PK)"
+          },
+          {
+            "name": "SalesCommissionAccrualID",
+            "label": "SalesCommissionAccrualID (FK)"
+          },
+          {
+            "name": "CreditMemoLineID",
+            "label": "CreditMemoLineID (FK)"
+          },
+          {
+            "name": "CommissionBaseReductionAmount",
+            "label": "CommissionBaseReductionAmount"
+          }
+        ]
+      },
+      {
+        "name": "SalesCommissionPayment",
+        "primary": true,
+        "pk": "SalesCommissionPaymentID",
+        "grain": "One sales-rep commission payment",
+        "fields": [
+          {
+            "name": "SalesCommissionPaymentID",
+            "label": "SalesCommissionPaymentID (PK)"
+          },
+          {
+            "name": "PaymentNumber",
+            "label": "PaymentNumber"
+          },
+          {
+            "name": "PaymentDate",
+            "label": "PaymentDate"
+          },
+          {
+            "name": "SalesRepEmployeeID",
+            "label": "SalesRepEmployeeID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "SalesCommissionPaymentLine",
+        "primary": true,
+        "pk": "SalesCommissionPaymentLineID",
+        "grain": "One accrual or adjustment included in a commission payment",
+        "fields": [
+          {
+            "name": "SalesCommissionPaymentLineID",
+            "label": "SalesCommissionPaymentLineID (PK)"
+          },
+          {
+            "name": "SalesCommissionPaymentID",
+            "label": "SalesCommissionPaymentID (FK)"
+          },
+          {
+            "name": "SourceDocumentID",
+            "label": "SourceDocumentID (source)"
+          },
+          {
+            "name": "SourceDocumentType",
+            "label": "SourceDocumentType"
+          }
+        ]
+      },
+      {
+        "name": "SalesInvoiceLine",
+        "primary": false,
+        "pk": "SalesInvoiceLineID",
+        "grain": "One billed goods or service line",
+        "fields": [
+          {
+            "name": "SalesInvoiceLineID",
+            "label": "SalesInvoiceLineID (PK)"
+          },
+          {
+            "name": "SalesInvoiceID",
+            "label": "SalesInvoiceID (FK)"
+          },
+          {
+            "name": "ShipmentLineID",
+            "label": "ShipmentLineID (FK)"
+          },
+          {
+            "name": "SalesOrderLineID",
+            "label": "SalesOrderLineID (FK)"
+          }
+        ]
+      }
+    ],
+    "alt": "Commission accrual, clawback, and payment. How does a payment identify its accruals and adjustments? Primary tables: SalesCommissionRate, SalesCommissionAccrual, SalesCommissionAdjustment, SalesCommissionPayment, SalesCommissionPaymentLine. The accrual stores both the invoice-line and rate keys. Payment lines use a type-qualified source ID; commissions settle separately from payroll."
+  },
+  {
+    "id": "procurement-receiving",
+    "title": "Procurement and goods receiving",
+    "area": "Purchasing",
+    "primary": [
+      "Supplier",
+      "PurchaseRequisition",
+      "PurchaseOrder",
+      "PurchaseOrderLine",
+      "GoodsReceipt",
+      "GoodsReceiptLine"
+    ],
+    "context": [],
+    "question": "Which requisition and PO line support a received quantity?",
+    "relationships": [
+      {
+        "child": "PurchaseOrder",
+        "childFields": [
+          "SupplierID"
+        ],
+        "parent": "Supplier",
+        "parentFields": [
+          "SupplierID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "PurchaseOrderLine",
+        "childFields": [
+          "RequisitionID"
+        ],
+        "parent": "PurchaseRequisition",
+        "parentFields": [
+          "RequisitionID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "PurchaseOrderLine",
+        "childFields": [
+          "PurchaseOrderID"
+        ],
+        "parent": "PurchaseOrder",
+        "parentFields": [
+          "PurchaseOrderID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "GoodsReceipt",
+        "childFields": [
+          "PurchaseOrderID"
+        ],
+        "parent": "PurchaseOrder",
+        "parentFields": [
+          "PurchaseOrderID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r4"
+      },
+      {
+        "child": "GoodsReceiptLine",
+        "childFields": [
+          "GoodsReceiptID"
+        ],
+        "parent": "GoodsReceipt",
+        "parentFields": [
+          "GoodsReceiptID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r5"
+      },
+      {
+        "child": "GoodsReceiptLine",
+        "childFields": [
+          "POLineID"
+        ],
+        "parent": "PurchaseOrderLine",
+        "parentFields": [
+          "POLineID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r6"
+      }
+    ],
+    "boundary": "Use PurchaseOrderLine.RequisitionID for a batched order. A stored receipt/invoice relationship does not prove a system-enforced matching control.",
+    "processPath": "/docs/processes/p2p",
+    "exercisePath": "/docs/learn-and-practice/receipt-to-payable",
+    "casePath": "/docs/analytics/cases/p2p-accrual-settlement-case",
+    "tables": [
+      {
+        "name": "Supplier",
+        "primary": true,
+        "pk": "SupplierID",
+        "grain": "One supplier",
+        "fields": [
+          {
+            "name": "SupplierID",
+            "label": "SupplierID (PK)"
+          },
+          {
+            "name": "SupplierName",
+            "label": "SupplierName"
+          },
+          {
+            "name": "PaymentTerms",
+            "label": "PaymentTerms"
+          },
+          {
+            "name": "SupplierCategory",
+            "label": "SupplierCategory"
+          }
+        ]
+      },
+      {
+        "name": "PurchaseRequisition",
+        "primary": true,
+        "pk": "RequisitionID",
+        "grain": "One internal item requisition",
+        "fields": [
+          {
+            "name": "RequisitionID",
+            "label": "RequisitionID (PK)"
+          },
+          {
+            "name": "RequisitionNumber",
+            "label": "RequisitionNumber"
+          },
+          {
+            "name": "RequestDate",
+            "label": "RequestDate"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "PurchaseOrder",
+        "primary": true,
+        "pk": "PurchaseOrderID",
+        "grain": "One supplier purchase-order header",
+        "fields": [
+          {
+            "name": "PurchaseOrderID",
+            "label": "PurchaseOrderID (PK)"
+          },
+          {
+            "name": "SupplierID",
+            "label": "SupplierID (FK)"
+          },
+          {
+            "name": "PONumber",
+            "label": "PONumber"
+          },
+          {
+            "name": "OrderDate",
+            "label": "OrderDate"
+          }
+        ]
+      },
+      {
+        "name": "PurchaseOrderLine",
+        "primary": true,
+        "pk": "POLineID",
+        "grain": "One ordered purchasing line",
+        "fields": [
+          {
+            "name": "POLineID",
+            "label": "POLineID (PK)"
+          },
+          {
+            "name": "RequisitionID",
+            "label": "RequisitionID (FK)"
+          },
+          {
+            "name": "PurchaseOrderID",
+            "label": "PurchaseOrderID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "GoodsReceipt",
+        "primary": true,
+        "pk": "GoodsReceiptID",
+        "grain": "One supplier goods-receipt header",
+        "fields": [
+          {
+            "name": "GoodsReceiptID",
+            "label": "GoodsReceiptID (PK)"
+          },
+          {
+            "name": "PurchaseOrderID",
+            "label": "PurchaseOrderID (FK)"
+          },
+          {
+            "name": "ReceiptNumber",
+            "label": "ReceiptNumber"
+          },
+          {
+            "name": "ReceiptDate",
+            "label": "ReceiptDate"
+          }
+        ]
+      },
+      {
+        "name": "GoodsReceiptLine",
+        "primary": true,
+        "pk": "GoodsReceiptLineID",
+        "grain": "One received purchasing-line quantity",
+        "fields": [
+          {
+            "name": "GoodsReceiptLineID",
+            "label": "GoodsReceiptLineID (PK)"
+          },
+          {
+            "name": "GoodsReceiptID",
+            "label": "GoodsReceiptID (FK)"
+          },
+          {
+            "name": "POLineID",
+            "label": "POLineID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          }
+        ]
+      }
+    ],
+    "alt": "Procurement and goods receiving. Which requisition and PO line support a received quantity? Primary tables: Supplier, PurchaseRequisition, PurchaseOrder, PurchaseOrderLine, GoodsReceipt, GoodsReceiptLine. Use PurchaseOrderLine.RequisitionID for a batched order. A stored receipt/invoice relationship does not prove a system-enforced matching control."
+  },
+  {
+    "id": "supplier-liabilities",
+    "title": "Supplier invoices and separate settlement",
+    "area": "Purchasing",
+    "primary": [
+      "PurchaseInvoice",
+      "PurchaseInvoiceLine",
+      "DisbursementPayment"
+    ],
+    "context": [
+      "GoodsReceiptLine",
+      "JournalEntry",
+      "PurchaseOrderLine"
+    ],
+    "question": "Does the supplier line match received goods or an accrued-service estimate?",
+    "relationships": [
+      {
+        "child": "PurchaseInvoiceLine",
+        "childFields": [
+          "PurchaseInvoiceID"
+        ],
+        "parent": "PurchaseInvoice",
+        "parentFields": [
+          "PurchaseInvoiceID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "PurchaseInvoiceLine",
+        "childFields": [
+          "POLineID"
+        ],
+        "parent": "PurchaseOrderLine",
+        "parentFields": [
+          "POLineID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r2"
+      },
+      {
+        "child": "PurchaseInvoiceLine",
+        "childFields": [
+          "GoodsReceiptLineID"
+        ],
+        "parent": "GoodsReceiptLine",
+        "parentFields": [
+          "GoodsReceiptLineID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r3"
+      },
+      {
+        "child": "PurchaseInvoiceLine",
+        "childFields": [
+          "AccrualJournalEntryID"
+        ],
+        "parent": "JournalEntry",
+        "parentFields": [
+          "JournalEntryID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r4"
+      },
+      {
+        "child": "DisbursementPayment",
+        "childFields": [
+          "PurchaseInvoiceID"
+        ],
+        "parent": "PurchaseInvoice",
+        "parentFields": [
+          "PurchaseInvoiceID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r5"
+      }
+    ],
+    "boundary": "GoodsReceiptLineID and POLineID are absent on direct accrued-service invoice lines. Payment clears AP; it does not prove that a residual estimate has cleared.",
+    "processPath": "/docs/processes/p2p",
+    "exercisePath": "/docs/learn-and-practice/receipt-to-payable",
+    "casePath": "/docs/analytics/cases/p2p-accrual-settlement-case",
+    "tables": [
+      {
+        "name": "PurchaseInvoice",
+        "primary": true,
+        "pk": "PurchaseInvoiceID",
+        "grain": "One supplier invoice header",
+        "fields": [
+          {
+            "name": "PurchaseInvoiceID",
+            "label": "PurchaseInvoiceID (PK)"
+          },
+          {
+            "name": "InvoiceNumber",
+            "label": "InvoiceNumber"
+          },
+          {
+            "name": "SupplierID",
+            "label": "SupplierID (FK)"
+          },
+          {
+            "name": "PurchaseOrderID",
+            "label": "PurchaseOrderID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "PurchaseInvoiceLine",
+        "primary": true,
+        "pk": "PILineID",
+        "grain": "One goods or accrued-service supplier invoice line",
+        "fields": [
+          {
+            "name": "PILineID",
+            "label": "PILineID (PK)"
+          },
+          {
+            "name": "PurchaseInvoiceID",
+            "label": "PurchaseInvoiceID (FK)"
+          },
+          {
+            "name": "POLineID",
+            "label": "POLineID (FK)"
+          },
+          {
+            "name": "GoodsReceiptLineID",
+            "label": "GoodsReceiptLineID (FK)"
+          },
+          {
+            "name": "AccrualJournalEntryID",
+            "label": "AccrualJournalEntryID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "DisbursementPayment",
+        "primary": true,
+        "pk": "DisbursementID",
+        "grain": "One supplier invoice payment",
+        "fields": [
+          {
+            "name": "DisbursementID",
+            "label": "DisbursementID (PK)"
+          },
+          {
+            "name": "PurchaseInvoiceID",
+            "label": "PurchaseInvoiceID (FK)"
+          },
+          {
+            "name": "SupplierID",
+            "label": "SupplierID (FK)"
+          },
+          {
+            "name": "PaymentDate",
+            "label": "PaymentDate"
+          }
+        ]
+      },
+      {
+        "name": "GoodsReceiptLine",
+        "primary": false,
+        "pk": "GoodsReceiptLineID",
+        "grain": "One received purchasing-line quantity",
+        "fields": [
+          {
+            "name": "GoodsReceiptLineID",
+            "label": "GoodsReceiptLineID (PK)"
+          },
+          {
+            "name": "GoodsReceiptID",
+            "label": "GoodsReceiptID (FK)"
+          },
+          {
+            "name": "POLineID",
+            "label": "POLineID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "JournalEntry",
+        "primary": false,
+        "pk": "JournalEntryID",
+        "grain": "One finance-controlled journal header",
+        "fields": [
+          {
+            "name": "JournalEntryID",
+            "label": "JournalEntryID (PK)"
+          },
+          {
+            "name": "EntryType",
+            "label": "EntryType"
+          },
+          {
+            "name": "PostingDate",
+            "label": "PostingDate"
+          },
+          {
+            "name": "ReversesJournalEntryID",
+            "label": "ReversesJournalEntryID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "PurchaseOrderLine",
+        "primary": false,
+        "pk": "POLineID",
+        "grain": "One ordered purchasing line",
+        "fields": [
+          {
+            "name": "POLineID",
+            "label": "POLineID (PK)"
+          },
+          {
+            "name": "PurchaseOrderID",
+            "label": "PurchaseOrderID (FK)"
+          },
+          {
+            "name": "RequisitionID",
+            "label": "RequisitionID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          }
+        ]
+      }
+    ],
+    "alt": "Supplier invoices and separate settlement. Does the supplier line match received goods or an accrued-service estimate? Primary tables: PurchaseInvoice, PurchaseInvoiceLine, DisbursementPayment. GoodsReceiptLineID and POLineID are absent on direct accrued-service invoice lines. Payment clears AP; it does not prove that a residual estimate has cleared."
+  },
+  {
+    "id": "manufacturing-definitions",
+    "title": "Product recipes and production capacity",
+    "area": "Manufacturing",
+    "primary": [
+      "BillOfMaterial",
+      "BillOfMaterialLine",
+      "Routing",
+      "RoutingOperation",
+      "WorkCenter",
+      "WorkCenterCalendar"
+    ],
+    "context": [
+      "Item"
+    ],
+    "question": "Which item, component, operation, and work center define production?",
+    "relationships": [
+      {
+        "child": "BillOfMaterial",
+        "childFields": [
+          "ParentItemID"
+        ],
+        "parent": "Item",
+        "parentFields": [
+          "ItemID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "BillOfMaterialLine",
+        "childFields": [
+          "BOMID"
+        ],
+        "parent": "BillOfMaterial",
+        "parentFields": [
+          "BOMID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "Routing",
+        "childFields": [
+          "ParentItemID"
+        ],
+        "parent": "Item",
+        "parentFields": [
+          "ItemID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "RoutingOperation",
+        "childFields": [
+          "RoutingID"
+        ],
+        "parent": "Routing",
+        "parentFields": [
+          "RoutingID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r4"
+      },
+      {
+        "child": "RoutingOperation",
+        "childFields": [
+          "WorkCenterID"
+        ],
+        "parent": "WorkCenter",
+        "parentFields": [
+          "WorkCenterID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r5"
+      },
+      {
+        "child": "WorkCenterCalendar",
+        "childFields": [
+          "WorkCenterID"
+        ],
+        "parent": "WorkCenter",
+        "parentFields": [
+          "WorkCenterID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r6"
+      }
+    ],
+    "boundary": "BOM and routing definitions support planned work. Their existence does not establish material issue, completion, or cost close.",
+    "processPath": "/docs/processes/manufacturing",
+    "exercisePath": "/docs/learn-and-practice/manufacturing-cost-flow",
+    "casePath": "/docs/analytics/cases/manufacturing-labor-cost-case",
+    "tables": [
+      {
+        "name": "BillOfMaterial",
+        "primary": true,
+        "pk": "BOMID",
+        "grain": "One versioned manufactured-item recipe",
+        "fields": [
+          {
+            "name": "BOMID",
+            "label": "BOMID (PK)"
+          },
+          {
+            "name": "ParentItemID",
+            "label": "ParentItemID (FK)"
+          },
+          {
+            "name": "VersionNumber",
+            "label": "VersionNumber"
+          },
+          {
+            "name": "Status",
+            "label": "Status"
+          }
+        ]
+      },
+      {
+        "name": "BillOfMaterialLine",
+        "primary": true,
+        "pk": "BOMLineID",
+        "grain": "One component within a BOM",
+        "fields": [
+          {
+            "name": "BOMLineID",
+            "label": "BOMLineID (PK)"
+          },
+          {
+            "name": "BOMID",
+            "label": "BOMID (FK)"
+          },
+          {
+            "name": "ComponentItemID",
+            "label": "ComponentItemID (FK)"
+          },
+          {
+            "name": "QuantityPerUnit",
+            "label": "QuantityPerUnit"
+          }
+        ]
+      },
+      {
+        "name": "Routing",
+        "primary": true,
+        "pk": "RoutingID",
+        "grain": "One versioned manufactured-item routing",
+        "fields": [
+          {
+            "name": "RoutingID",
+            "label": "RoutingID (PK)"
+          },
+          {
+            "name": "ParentItemID",
+            "label": "ParentItemID (FK)"
+          },
+          {
+            "name": "VersionNumber",
+            "label": "VersionNumber"
+          },
+          {
+            "name": "Status",
+            "label": "Status"
+          }
+        ]
+      },
+      {
+        "name": "RoutingOperation",
+        "primary": true,
+        "pk": "RoutingOperationID",
+        "grain": "One operation within a routing",
+        "fields": [
+          {
+            "name": "RoutingOperationID",
+            "label": "RoutingOperationID (PK)"
+          },
+          {
+            "name": "RoutingID",
+            "label": "RoutingID (FK)"
+          },
+          {
+            "name": "WorkCenterID",
+            "label": "WorkCenterID (FK)"
+          },
+          {
+            "name": "OperationSequence",
+            "label": "OperationSequence"
+          },
+          {
+            "name": "OperationCode",
+            "label": "OperationCode"
+          }
+        ]
+      },
+      {
+        "name": "WorkCenter",
+        "primary": true,
+        "pk": "WorkCenterID",
+        "grain": "One production work center",
+        "fields": [
+          {
+            "name": "WorkCenterID",
+            "label": "WorkCenterID (PK)"
+          },
+          {
+            "name": "WorkCenterCode",
+            "label": "WorkCenterCode"
+          },
+          {
+            "name": "Department",
+            "label": "Department"
+          },
+          {
+            "name": "WarehouseID",
+            "label": "WarehouseID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "WorkCenterCalendar",
+        "primary": true,
+        "pk": "WorkCenterCalendarID",
+        "grain": "One work center on one calendar date",
+        "fields": [
+          {
+            "name": "WorkCenterCalendarID",
+            "label": "WorkCenterCalendarID (PK)"
+          },
+          {
+            "name": "WorkCenterID",
+            "label": "WorkCenterID (FK)"
+          },
+          {
+            "name": "CalendarDate",
+            "label": "CalendarDate"
+          },
+          {
+            "name": "IsWorkingDay",
+            "label": "IsWorkingDay"
+          }
+        ]
+      },
+      {
+        "name": "Item",
+        "primary": false,
+        "pk": "ItemID",
+        "grain": "One item in the product or service master",
+        "fields": [
+          {
+            "name": "ItemID",
+            "label": "ItemID (PK)"
+          },
+          {
+            "name": "ItemCode",
+            "label": "ItemCode"
+          },
+          {
+            "name": "ItemGroup",
+            "label": "ItemGroup"
+          },
+          {
+            "name": "CollectionName",
+            "label": "CollectionName"
+          }
+        ]
+      }
+    ],
+    "alt": "Product recipes and production capacity. Which item, component, operation, and work center define production? Primary tables: BillOfMaterial, BillOfMaterialLine, Routing, RoutingOperation, WorkCenter, WorkCenterCalendar. BOM and routing definitions support planned work. Their existence does not establish material issue, completion, or cost close."
+  },
+  {
+    "id": "work-order-scheduling",
+    "title": "Work orders and daily operation schedules",
+    "area": "Manufacturing",
+    "primary": [
+      "WorkOrder",
+      "WorkOrderOperation",
+      "WorkOrderOperationSchedule"
+    ],
+    "context": [
+      "SupplyPlanRecommendation",
+      "WorkCenterCalendar"
+    ],
+    "question": "Which two fields match a scheduled operation to available daily capacity?",
+    "relationships": [
+      {
+        "child": "WorkOrder",
+        "childFields": [
+          "SupplyPlanRecommendationID"
+        ],
+        "parent": "SupplyPlanRecommendation",
+        "parentFields": [
+          "SupplyPlanRecommendationID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r1"
+      },
+      {
+        "child": "WorkOrderOperation",
+        "childFields": [
+          "WorkOrderID"
+        ],
+        "parent": "WorkOrder",
+        "parentFields": [
+          "WorkOrderID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "WorkOrderOperationSchedule",
+        "childFields": [
+          "WorkOrderOperationID"
+        ],
+        "parent": "WorkOrderOperation",
+        "parentFields": [
+          "WorkOrderOperationID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "WorkOrderOperationSchedule",
+        "childFields": [
+          "WorkCenterID",
+          "ScheduleDate"
+        ],
+        "parent": "WorkCenterCalendar",
+        "parentFields": [
+          "WorkCenterID",
+          "CalendarDate"
+        ],
+        "kind": "aggregate",
+        "condition": "",
+        "note": "Match BOTH work center and date. Aggregate scheduled operations at work-center/date grain before comparing available hours.",
+        "optionalParent": true,
+        "id": "r4"
+      }
+    ],
+    "boundary": "No WorkCenterCalendarID is stored on the schedule. Joining on work center alone repeats calendar capacity.",
+    "processPath": "/docs/processes/manufacturing",
+    "exercisePath": "/docs/learn-and-practice/manufacturing-cost-flow",
+    "casePath": "/docs/analytics/cases/manufacturing-labor-cost-case",
+    "tables": [
+      {
+        "name": "WorkOrder",
+        "primary": true,
+        "pk": "WorkOrderID",
+        "grain": "One manufacturing work-order header",
+        "fields": [
+          {
+            "name": "WorkOrderID",
+            "label": "WorkOrderID (PK)"
+          },
+          {
+            "name": "SupplyPlanRecommendationID",
+            "label": "SupplyPlanRecommendationID (FK)"
+          },
+          {
+            "name": "WorkOrderNumber",
+            "label": "WorkOrderNumber"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          },
+          {
+            "name": "BOMID",
+            "label": "BOMID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "WorkOrderOperation",
+        "primary": true,
+        "pk": "WorkOrderOperationID",
+        "grain": "One operation within a work order",
+        "fields": [
+          {
+            "name": "WorkOrderOperationID",
+            "label": "WorkOrderOperationID (PK)"
+          },
+          {
+            "name": "WorkOrderID",
+            "label": "WorkOrderID (FK)"
+          },
+          {
+            "name": "RoutingOperationID",
+            "label": "RoutingOperationID (FK)"
+          },
+          {
+            "name": "OperationSequence",
+            "label": "OperationSequence"
+          }
+        ]
+      },
+      {
+        "name": "WorkOrderOperationSchedule",
+        "primary": true,
+        "pk": "WorkOrderOperationScheduleID",
+        "grain": "One scheduled operation on a work-center date",
+        "fields": [
+          {
+            "name": "WorkOrderOperationScheduleID",
+            "label": "WorkOrderOperationScheduleID (PK)"
+          },
+          {
+            "name": "WorkOrderOperationID",
+            "label": "WorkOrderOperationID (FK)"
+          },
+          {
+            "name": "WorkCenterID",
+            "label": "WorkCenterID (FK)"
+          },
+          {
+            "name": "ScheduleDate",
+            "label": "ScheduleDate"
+          }
+        ]
+      },
+      {
+        "name": "SupplyPlanRecommendation",
+        "primary": false,
+        "pk": "SupplyPlanRecommendationID",
+        "grain": "One item/location supply recommendation in a planning bucket",
+        "fields": [
+          {
+            "name": "SupplyPlanRecommendationID",
+            "label": "SupplyPlanRecommendationID (PK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          },
+          {
+            "name": "WarehouseID",
+            "label": "WarehouseID (FK)"
+          },
+          {
+            "name": "BucketWeekStartDate",
+            "label": "BucketWeekStartDate"
+          },
+          {
+            "name": "DriverType",
+            "label": "DriverType"
+          }
+        ]
+      },
+      {
+        "name": "WorkCenterCalendar",
+        "primary": false,
+        "pk": "WorkCenterCalendarID",
+        "grain": "One work center on one calendar date",
+        "fields": [
+          {
+            "name": "WorkCenterCalendarID",
+            "label": "WorkCenterCalendarID (PK)"
+          },
+          {
+            "name": "WorkCenterID",
+            "label": "WorkCenterID (FK)"
+          },
+          {
+            "name": "CalendarDate",
+            "label": "CalendarDate"
+          },
+          {
+            "name": "IsWorkingDay",
+            "label": "IsWorkingDay"
+          }
+        ]
+      }
+    ],
+    "alt": "Work orders and daily operation schedules. Which two fields match a scheduled operation to available daily capacity? Primary tables: WorkOrder, WorkOrderOperation, WorkOrderOperationSchedule. No WorkCenterCalendarID is stored on the schedule. Joining on work center alone repeats calendar capacity."
+  },
+  {
+    "id": "manufacturing-cost-events",
+    "title": "Material, completion, and accounting close",
+    "area": "Manufacturing",
+    "primary": [
+      "MaterialIssue",
+      "MaterialIssueLine",
+      "ProductionCompletion",
+      "ProductionCompletionLine",
+      "WorkOrderClose"
+    ],
+    "context": [
+      "WorkOrder",
+      "LaborTimeEntry"
+    ],
+    "question": "Which independent branches must be summarized before a work-order comparison?",
+    "relationships": [
+      {
+        "child": "MaterialIssue",
+        "childFields": [
+          "WorkOrderID"
+        ],
+        "parent": "WorkOrder",
+        "parentFields": [
+          "WorkOrderID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "MaterialIssueLine",
+        "childFields": [
+          "MaterialIssueID"
+        ],
+        "parent": "MaterialIssue",
+        "parentFields": [
+          "MaterialIssueID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "ProductionCompletion",
+        "childFields": [
+          "WorkOrderID"
+        ],
+        "parent": "WorkOrder",
+        "parentFields": [
+          "WorkOrderID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "ProductionCompletionLine",
+        "childFields": [
+          "ProductionCompletionID"
+        ],
+        "parent": "ProductionCompletion",
+        "parentFields": [
+          "ProductionCompletionID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r4"
+      },
+      {
+        "child": "WorkOrderClose",
+        "childFields": [
+          "WorkOrderID"
+        ],
+        "parent": "WorkOrder",
+        "parentFields": [
+          "WorkOrderID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r5"
+      },
+      {
+        "child": "LaborTimeEntry",
+        "childFields": [
+          "WorkOrderID"
+        ],
+        "parent": "WorkOrder",
+        "parentFields": [
+          "WorkOrderID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r6"
+      }
+    ],
+    "boundary": "Close does not store a ProductionCompletionLineID. Aggregate issues, labor, completions, and close independently. Payroll clearing remains pooled by period/cost center.",
+    "processPath": "/docs/processes/manufacturing",
+    "exercisePath": "/docs/learn-and-practice/manufacturing-cost-flow",
+    "casePath": "/docs/analytics/cases/manufacturing-labor-cost-case",
+    "tables": [
+      {
+        "name": "MaterialIssue",
+        "primary": true,
+        "pk": "MaterialIssueID",
+        "grain": "One work-order material-issue header",
+        "fields": [
+          {
+            "name": "MaterialIssueID",
+            "label": "MaterialIssueID (PK)"
+          },
+          {
+            "name": "WorkOrderID",
+            "label": "WorkOrderID (FK)"
+          },
+          {
+            "name": "IssueDate",
+            "label": "IssueDate"
+          },
+          {
+            "name": "WarehouseID",
+            "label": "WarehouseID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "MaterialIssueLine",
+        "primary": true,
+        "pk": "MaterialIssueLineID",
+        "grain": "One issued component line",
+        "fields": [
+          {
+            "name": "MaterialIssueLineID",
+            "label": "MaterialIssueLineID (PK)"
+          },
+          {
+            "name": "MaterialIssueID",
+            "label": "MaterialIssueID (FK)"
+          },
+          {
+            "name": "BOMLineID",
+            "label": "BOMLineID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "ProductionCompletion",
+        "primary": true,
+        "pk": "ProductionCompletionID",
+        "grain": "One work-order completion event",
+        "fields": [
+          {
+            "name": "ProductionCompletionID",
+            "label": "ProductionCompletionID (PK)"
+          },
+          {
+            "name": "WorkOrderID",
+            "label": "WorkOrderID (FK)"
+          },
+          {
+            "name": "CompletionDate",
+            "label": "CompletionDate"
+          },
+          {
+            "name": "WarehouseID",
+            "label": "WarehouseID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "ProductionCompletionLine",
+        "primary": true,
+        "pk": "ProductionCompletionLineID",
+        "grain": "One completed-product cost line",
+        "fields": [
+          {
+            "name": "ProductionCompletionLineID",
+            "label": "ProductionCompletionLineID (PK)"
+          },
+          {
+            "name": "ProductionCompletionID",
+            "label": "ProductionCompletionID (FK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          },
+          {
+            "name": "QuantityCompleted",
+            "label": "QuantityCompleted"
+          }
+        ]
+      },
+      {
+        "name": "WorkOrderClose",
+        "primary": true,
+        "pk": "WorkOrderCloseID",
+        "grain": "One work-order accounting-close record",
+        "fields": [
+          {
+            "name": "WorkOrderCloseID",
+            "label": "WorkOrderCloseID (PK)"
+          },
+          {
+            "name": "WorkOrderID",
+            "label": "WorkOrderID (FK)"
+          },
+          {
+            "name": "CloseDate",
+            "label": "CloseDate"
+          },
+          {
+            "name": "TotalVarianceAmount",
+            "label": "TotalVarianceAmount"
+          }
+        ]
+      },
+      {
+        "name": "WorkOrder",
+        "primary": false,
+        "pk": "WorkOrderID",
+        "grain": "One manufacturing work-order header",
+        "fields": [
+          {
+            "name": "WorkOrderID",
+            "label": "WorkOrderID (PK)"
+          },
+          {
+            "name": "WorkOrderNumber",
+            "label": "WorkOrderNumber"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          },
+          {
+            "name": "BOMID",
+            "label": "BOMID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "LaborTimeEntry",
+        "primary": false,
+        "pk": "LaborTimeEntryID",
+        "grain": "One labor allocation supporting an operation and pay period",
+        "fields": [
+          {
+            "name": "LaborTimeEntryID",
+            "label": "LaborTimeEntryID (PK)"
+          },
+          {
+            "name": "WorkOrderID",
+            "label": "WorkOrderID (FK)"
+          },
+          {
+            "name": "PayrollPeriodID",
+            "label": "PayrollPeriodID (FK)"
+          },
+          {
+            "name": "TimeClockEntryID",
+            "label": "TimeClockEntryID (FK)"
+          }
+        ]
+      }
+    ],
+    "alt": "Material, completion, and accounting close. Which independent branches must be summarized before a work-order comparison? Primary tables: MaterialIssue, MaterialIssueLine, ProductionCompletion, ProductionCompletionLine, WorkOrderClose. Close does not store a ProductionCompletionLineID. Aggregate issues, labor, completions, and close independently. Payroll clearing remains pooled by period/cost center."
+  },
+  {
+    "id": "attendance-time",
+    "title": "Attendance support and approved daily time",
+    "area": "Payroll",
+    "primary": [
+      "ShiftDefinition",
+      "EmployeeShiftAssignment",
+      "EmployeeShiftRoster",
+      "EmployeeAbsence",
+      "OvertimeApproval",
+      "TimeClockPunch",
+      "TimeClockEntry",
+      "AttendanceException"
+    ],
+    "context": [],
+    "question": "Which stored keys connect a daily time record to its supporting evidence?",
+    "relationships": [
+      {
+        "child": "EmployeeShiftAssignment",
+        "childFields": [
+          "ShiftDefinitionID"
+        ],
+        "parent": "ShiftDefinition",
+        "parentFields": [
+          "ShiftDefinitionID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "EmployeeShiftRoster",
+        "childFields": [
+          "ShiftDefinitionID"
+        ],
+        "parent": "ShiftDefinition",
+        "parentFields": [
+          "ShiftDefinitionID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "EmployeeAbsence",
+        "childFields": [
+          "EmployeeShiftRosterID"
+        ],
+        "parent": "EmployeeShiftRoster",
+        "parentFields": [
+          "EmployeeShiftRosterID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "OvertimeApproval",
+        "childFields": [
+          "EmployeeShiftRosterID"
+        ],
+        "parent": "EmployeeShiftRoster",
+        "parentFields": [
+          "EmployeeShiftRosterID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r4"
+      },
+      {
+        "child": "TimeClockEntry",
+        "childFields": [
+          "EmployeeShiftRosterID"
+        ],
+        "parent": "EmployeeShiftRoster",
+        "parentFields": [
+          "EmployeeShiftRosterID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r5"
+      },
+      {
+        "child": "TimeClockPunch",
+        "childFields": [
+          "TimeClockEntryID"
+        ],
+        "parent": "TimeClockEntry",
+        "parentFields": [
+          "TimeClockEntryID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r6"
+      },
+      {
+        "child": "AttendanceException",
+        "childFields": [
+          "TimeClockEntryID"
+        ],
+        "parent": "TimeClockEntry",
+        "parentFields": [
+          "TimeClockEntryID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r7"
+      }
+    ],
+    "boundary": "There is no assignment ID on the roster or punch ID on AttendanceException. Effective-date matching and shared roster/time records supply those investigations; a flag does not prove a payment block.",
+    "processPath": "/docs/processes/payroll",
+    "exercisePath": "/docs/learn-and-practice/follow-hours-into-payroll",
+    "casePath": "/docs/analytics/cases/workforce-coverage-and-attendance-case",
+    "tables": [
+      {
+        "name": "ShiftDefinition",
+        "primary": true,
+        "pk": "ShiftDefinitionID",
+        "grain": "One shift template",
+        "fields": [
+          {
+            "name": "ShiftDefinitionID",
+            "label": "ShiftDefinitionID (PK)"
+          },
+          {
+            "name": "ShiftCode",
+            "label": "ShiftCode"
+          },
+          {
+            "name": "Department",
+            "label": "Department"
+          },
+          {
+            "name": "WorkCenterID",
+            "label": "WorkCenterID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "EmployeeShiftAssignment",
+        "primary": true,
+        "pk": "EmployeeShiftAssignmentID",
+        "grain": "One employee shift assignment over effective dates",
+        "fields": [
+          {
+            "name": "EmployeeShiftAssignmentID",
+            "label": "EmployeeShiftAssignmentID (PK)"
+          },
+          {
+            "name": "ShiftDefinitionID",
+            "label": "ShiftDefinitionID (FK)"
+          },
+          {
+            "name": "EmployeeID",
+            "label": "EmployeeID (FK)"
+          },
+          {
+            "name": "WorkCenterID",
+            "label": "WorkCenterID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "EmployeeShiftRoster",
+        "primary": true,
+        "pk": "EmployeeShiftRosterID",
+        "grain": "One employee planned shift on a roster date",
+        "fields": [
+          {
+            "name": "EmployeeShiftRosterID",
+            "label": "EmployeeShiftRosterID (PK)"
+          },
+          {
+            "name": "ShiftDefinitionID",
+            "label": "ShiftDefinitionID (FK)"
+          },
+          {
+            "name": "EmployeeID",
+            "label": "EmployeeID (FK)"
+          },
+          {
+            "name": "RosterDate",
+            "label": "RosterDate"
+          }
+        ]
+      },
+      {
+        "name": "EmployeeAbsence",
+        "primary": true,
+        "pk": "EmployeeAbsenceID",
+        "grain": "One absence record against a roster",
+        "fields": [
+          {
+            "name": "EmployeeAbsenceID",
+            "label": "EmployeeAbsenceID (PK)"
+          },
+          {
+            "name": "EmployeeShiftRosterID",
+            "label": "EmployeeShiftRosterID (FK)"
+          },
+          {
+            "name": "AbsenceDate",
+            "label": "AbsenceDate"
+          },
+          {
+            "name": "AbsenceType",
+            "label": "AbsenceType"
+          }
+        ]
+      },
+      {
+        "name": "OvertimeApproval",
+        "primary": true,
+        "pk": "OvertimeApprovalID",
+        "grain": "One recorded overtime approval",
+        "fields": [
+          {
+            "name": "OvertimeApprovalID",
+            "label": "OvertimeApprovalID (PK)"
+          },
+          {
+            "name": "EmployeeShiftRosterID",
+            "label": "EmployeeShiftRosterID (FK)"
+          },
+          {
+            "name": "WorkDate",
+            "label": "WorkDate"
+          },
+          {
+            "name": "ApprovedHours",
+            "label": "ApprovedHours"
+          }
+        ]
+      },
+      {
+        "name": "TimeClockPunch",
+        "primary": true,
+        "pk": "TimeClockPunchID",
+        "grain": "One raw clock-punch event",
+        "fields": [
+          {
+            "name": "TimeClockPunchID",
+            "label": "TimeClockPunchID (PK)"
+          },
+          {
+            "name": "TimeClockEntryID",
+            "label": "TimeClockEntryID (FK)"
+          },
+          {
+            "name": "EmployeeShiftRosterID",
+            "label": "EmployeeShiftRosterID (FK)"
+          },
+          {
+            "name": "PunchTimestamp",
+            "label": "PunchTimestamp"
+          }
+        ]
+      },
+      {
+        "name": "TimeClockEntry",
+        "primary": true,
+        "pk": "TimeClockEntryID",
+        "grain": "One approved-time record for an employee work date",
+        "fields": [
+          {
+            "name": "TimeClockEntryID",
+            "label": "TimeClockEntryID (PK)"
+          },
+          {
+            "name": "EmployeeShiftRosterID",
+            "label": "EmployeeShiftRosterID (FK)"
+          },
+          {
+            "name": "EmployeeID",
+            "label": "EmployeeID (FK)"
+          },
+          {
+            "name": "PayrollPeriodID",
+            "label": "PayrollPeriodID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "AttendanceException",
+        "primary": true,
+        "pk": "AttendanceExceptionID",
+        "grain": "One logged attendance-review exception",
+        "fields": [
+          {
+            "name": "AttendanceExceptionID",
+            "label": "AttendanceExceptionID (PK)"
+          },
+          {
+            "name": "TimeClockEntryID",
+            "label": "TimeClockEntryID (FK)"
+          },
+          {
+            "name": "EmployeeShiftRosterID",
+            "label": "EmployeeShiftRosterID (FK)"
+          },
+          {
+            "name": "ExceptionType",
+            "label": "ExceptionType"
+          }
+        ]
+      }
+    ],
+    "alt": "Attendance support and approved daily time. Which stored keys connect a daily time record to its supporting evidence? Primary tables: ShiftDefinition, EmployeeShiftAssignment, EmployeeShiftRoster, EmployeeAbsence, OvertimeApproval, TimeClockPunch, TimeClockEntry, AttendanceException. There is no assignment ID on the roster or punch ID on AttendanceException. Effective-date matching and shared roster/time records supply those investigations; a flag does not prove a payment block."
+  },
+  {
+    "id": "payroll-settlement",
+    "title": "Payroll support, employee pay, and remittances",
+    "area": "Payroll",
+    "primary": [
+      "PayrollPeriod",
+      "LaborTimeEntry",
+      "PayrollRegister",
+      "PayrollRegisterLine",
+      "PayrollPayment",
+      "PayrollLiabilityRemittance"
+    ],
+    "context": [
+      "TimeClockEntry"
+    ],
+    "question": "Which obligation is employee-specific, and which is period-level?",
+    "relationships": [
+      {
+        "child": "LaborTimeEntry",
+        "childFields": [
+          "TimeClockEntryID"
+        ],
+        "parent": "TimeClockEntry",
+        "parentFields": [
+          "TimeClockEntryID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "PayrollRegisterLine",
+        "childFields": [
+          "LaborTimeEntryID"
+        ],
+        "parent": "LaborTimeEntry",
+        "parentFields": [
+          "LaborTimeEntryID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r2"
+      },
+      {
+        "child": "PayrollRegisterLine",
+        "childFields": [
+          "PayrollRegisterID"
+        ],
+        "parent": "PayrollRegister",
+        "parentFields": [
+          "PayrollRegisterID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r3"
+      },
+      {
+        "child": "PayrollRegister",
+        "childFields": [
+          "PayrollPeriodID"
+        ],
+        "parent": "PayrollPeriod",
+        "parentFields": [
+          "PayrollPeriodID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r4"
+      },
+      {
+        "child": "PayrollPayment",
+        "childFields": [
+          "PayrollRegisterID"
+        ],
+        "parent": "PayrollRegister",
+        "parentFields": [
+          "PayrollRegisterID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r5"
+      },
+      {
+        "child": "PayrollLiabilityRemittance",
+        "childFields": [
+          "PayrollPeriodID"
+        ],
+        "parent": "PayrollPeriod",
+        "parentFields": [
+          "PayrollPeriodID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r6"
+      }
+    ],
+    "boundary": "PayrollSummary is a constructed GLEntry source label, not a table. Aggregate registers by period, cost center, and account to reconcile recognition; remittances have a different grain from employee payments.",
+    "processPath": "/docs/processes/payroll",
+    "exercisePath": "/docs/learn-and-practice/follow-hours-into-payroll",
+    "casePath": "/docs/analytics/cases/workforce-coverage-and-attendance-case",
+    "tables": [
+      {
+        "name": "PayrollPeriod",
+        "primary": true,
+        "pk": "PayrollPeriodID",
+        "grain": "One payroll calendar period",
+        "fields": [
+          {
+            "name": "PayrollPeriodID",
+            "label": "PayrollPeriodID (PK)"
+          },
+          {
+            "name": "PeriodNumber",
+            "label": "PeriodNumber"
+          },
+          {
+            "name": "PeriodStartDate",
+            "label": "PeriodStartDate"
+          },
+          {
+            "name": "PeriodEndDate",
+            "label": "PeriodEndDate"
+          }
+        ]
+      },
+      {
+        "name": "LaborTimeEntry",
+        "primary": true,
+        "pk": "LaborTimeEntryID",
+        "grain": "One labor allocation supporting an operation and pay period",
+        "fields": [
+          {
+            "name": "LaborTimeEntryID",
+            "label": "LaborTimeEntryID (PK)"
+          },
+          {
+            "name": "TimeClockEntryID",
+            "label": "TimeClockEntryID (FK)"
+          },
+          {
+            "name": "PayrollPeriodID",
+            "label": "PayrollPeriodID (FK)"
+          },
+          {
+            "name": "WorkOrderID",
+            "label": "WorkOrderID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "PayrollRegister",
+        "primary": true,
+        "pk": "PayrollRegisterID",
+        "grain": "One employee payroll register in a pay period",
+        "fields": [
+          {
+            "name": "PayrollRegisterID",
+            "label": "PayrollRegisterID (PK)"
+          },
+          {
+            "name": "PayrollPeriodID",
+            "label": "PayrollPeriodID (FK)"
+          },
+          {
+            "name": "EmployeeID",
+            "label": "EmployeeID (FK)"
+          },
+          {
+            "name": "CostCenterID",
+            "label": "CostCenterID (FK)"
+          },
+          {
+            "name": "NetPay",
+            "label": "NetPay"
+          }
+        ]
+      },
+      {
+        "name": "PayrollRegisterLine",
+        "primary": true,
+        "pk": "PayrollRegisterLineID",
+        "grain": "One earning, deduction, tax, or benefit line",
+        "fields": [
+          {
+            "name": "PayrollRegisterLineID",
+            "label": "PayrollRegisterLineID (PK)"
+          },
+          {
+            "name": "LaborTimeEntryID",
+            "label": "LaborTimeEntryID (FK)"
+          },
+          {
+            "name": "PayrollRegisterID",
+            "label": "PayrollRegisterID (FK)"
+          },
+          {
+            "name": "LineType",
+            "label": "LineType"
+          },
+          {
+            "name": "Hours",
+            "label": "Hours"
+          }
+        ]
+      },
+      {
+        "name": "PayrollPayment",
+        "primary": true,
+        "pk": "PayrollPaymentID",
+        "grain": "One employee net-pay payment",
+        "fields": [
+          {
+            "name": "PayrollPaymentID",
+            "label": "PayrollPaymentID (PK)"
+          },
+          {
+            "name": "PayrollRegisterID",
+            "label": "PayrollRegisterID (FK)"
+          },
+          {
+            "name": "PaymentDate",
+            "label": "PaymentDate"
+          },
+          {
+            "name": "PaymentMethod",
+            "label": "PaymentMethod"
+          }
+        ]
+      },
+      {
+        "name": "PayrollLiabilityRemittance",
+        "primary": true,
+        "pk": "PayrollLiabilityRemittanceID",
+        "grain": "One period-level liability remittance",
+        "fields": [
+          {
+            "name": "PayrollLiabilityRemittanceID",
+            "label": "PayrollLiabilityRemittanceID (PK)"
+          },
+          {
+            "name": "PayrollPeriodID",
+            "label": "PayrollPeriodID (FK)"
+          },
+          {
+            "name": "RemittanceDate",
+            "label": "RemittanceDate"
+          },
+          {
+            "name": "Amount",
+            "label": "Amount"
+          }
+        ]
+      },
+      {
+        "name": "TimeClockEntry",
+        "primary": false,
+        "pk": "TimeClockEntryID",
+        "grain": "One approved-time record for an employee work date",
+        "fields": [
+          {
+            "name": "TimeClockEntryID",
+            "label": "TimeClockEntryID (PK)"
+          },
+          {
+            "name": "EmployeeID",
+            "label": "EmployeeID (FK)"
+          },
+          {
+            "name": "PayrollPeriodID",
+            "label": "PayrollPeriodID (FK)"
+          },
+          {
+            "name": "EmployeeShiftRosterID",
+            "label": "EmployeeShiftRosterID (FK)"
+          }
+        ]
+      }
+    ],
+    "alt": "Payroll support, employee pay, and remittances. Which obligation is employee-specific, and which is period-level? Primary tables: PayrollPeriod, LaborTimeEntry, PayrollRegister, PayrollRegisterLine, PayrollPayment, PayrollLiabilityRemittance. PayrollSummary is a constructed GLEntry source label, not a table. Aggregate registers by period, cost center, and account to reconcile recognition; remittances have a different grain from employee payments."
+  },
+  {
+    "id": "shared-masters",
+    "title": "Shared item, warehouse, and employee records",
+    "area": "Shared records",
+    "primary": [
+      "Item",
+      "Warehouse",
+      "Employee"
+    ],
+    "context": [],
+    "question": "Which identifiers let an investigation move across processes?",
+    "relationships": [],
+    "boundary": "These records recur as shared references in process views. Item account mappings, employee approvals, and warehouse context answer different questions; a shared item does not identify one receipt-to-issue transaction.",
+    "processPath": "/docs/processes/o2c",
+    "exercisePath": "/docs/learn-and-practice/connect-the-records",
+    "casePath": "/docs/analytics/cases/o2c-trace-case",
+    "tables": [
+      {
+        "name": "Item",
+        "primary": true,
+        "pk": "ItemID",
+        "grain": "One item in the product or service master",
+        "fields": [
+          {
+            "name": "ItemID",
+            "label": "ItemID (PK)"
+          },
+          {
+            "name": "ItemCode",
+            "label": "ItemCode"
+          },
+          {
+            "name": "ItemGroup",
+            "label": "ItemGroup"
+          },
+          {
+            "name": "CollectionName",
+            "label": "CollectionName"
+          }
+        ]
+      },
+      {
+        "name": "Warehouse",
+        "primary": true,
+        "pk": "WarehouseID",
+        "grain": "One warehouse",
+        "fields": [
+          {
+            "name": "WarehouseID",
+            "label": "WarehouseID (PK)"
+          },
+          {
+            "name": "WarehouseName",
+            "label": "WarehouseName"
+          },
+          {
+            "name": "ManagerID",
+            "label": "ManagerID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "Employee",
+        "primary": true,
+        "pk": "EmployeeID",
+        "grain": "One employee",
+        "fields": [
+          {
+            "name": "EmployeeID",
+            "label": "EmployeeID (PK)"
+          },
+          {
+            "name": "EmployeeNumber",
+            "label": "EmployeeNumber"
+          },
+          {
+            "name": "JobTitle",
+            "label": "JobTitle"
+          },
+          {
+            "name": "JobFamily",
+            "label": "JobFamily"
+          }
+        ]
+      }
+    ],
+    "alt": "Shared item, warehouse, and employee records. Which identifiers let an investigation move across processes? Primary tables: Item, Warehouse, Employee. These records recur as shared references in process views. Item account mappings, employee approvals, and warehouse context answer different questions; a shared item does not identify one receipt-to-issue transaction."
+  },
+  {
+    "id": "budgets-responsibility",
+    "title": "Budgets and reporting responsibility",
+    "area": "Planning",
+    "primary": [
+      "CostCenter",
+      "Budget",
+      "BudgetLine"
+    ],
+    "context": [
+      "Account"
+    ],
+    "question": "How do detailed budget drivers differ from a cost-center summary?",
+    "relationships": [
+      {
+        "child": "Budget",
+        "childFields": [
+          "CostCenterID"
+        ],
+        "parent": "CostCenter",
+        "parentFields": [
+          "CostCenterID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "Budget",
+        "childFields": [
+          "AccountID"
+        ],
+        "parent": "Account",
+        "parentFields": [
+          "AccountID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "BudgetLine",
+        "childFields": [
+          "CostCenterID"
+        ],
+        "parent": "CostCenter",
+        "parentFields": [
+          "CostCenterID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": true,
+        "id": "r3"
+      },
+      {
+        "child": "BudgetLine",
+        "childFields": [
+          "AccountID"
+        ],
+        "parent": "Account",
+        "parentFields": [
+          "AccountID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r4"
+      }
+    ],
+    "boundary": "Some BudgetLine rows have no CostCenterID. Budget and BudgetLine are separate grains; do not join their amounts as if they were matching individual transactions.",
+    "processPath": "/docs/processes/manual-journals-and-close",
+    "exercisePath": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+    "casePath": "/docs/analytics/cases/financial-statement-bridge-case",
+    "tables": [
+      {
+        "name": "CostCenter",
+        "primary": true,
+        "pk": "CostCenterID",
+        "grain": "One organizational reporting cost center",
+        "fields": [
+          {
+            "name": "CostCenterID",
+            "label": "CostCenterID (PK)"
+          },
+          {
+            "name": "CostCenterName",
+            "label": "CostCenterName"
+          },
+          {
+            "name": "ParentCostCenterID",
+            "label": "ParentCostCenterID (FK)"
+          },
+          {
+            "name": "ManagerID",
+            "label": "ManagerID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "Budget",
+        "primary": true,
+        "pk": "BudgetID",
+        "grain": "One monthly cost-center/account budget summary",
+        "fields": [
+          {
+            "name": "BudgetID",
+            "label": "BudgetID (PK)"
+          },
+          {
+            "name": "CostCenterID",
+            "label": "CostCenterID (FK)"
+          },
+          {
+            "name": "AccountID",
+            "label": "AccountID (FK)"
+          },
+          {
+            "name": "FiscalYear",
+            "label": "FiscalYear"
+          },
+          {
+            "name": "Month",
+            "label": "Month"
+          }
+        ]
+      },
+      {
+        "name": "BudgetLine",
+        "primary": true,
+        "pk": "BudgetLineID",
+        "grain": "One monthly budget driver or statement-planning detail",
+        "fields": [
+          {
+            "name": "BudgetLineID",
+            "label": "BudgetLineID (PK)"
+          },
+          {
+            "name": "CostCenterID",
+            "label": "CostCenterID (FK)"
+          },
+          {
+            "name": "AccountID",
+            "label": "AccountID (FK)"
+          },
+          {
+            "name": "FiscalYear",
+            "label": "FiscalYear"
+          },
+          {
+            "name": "Month",
+            "label": "Month"
+          }
+        ]
+      },
+      {
+        "name": "Account",
+        "primary": false,
+        "pk": "AccountID",
+        "grain": "One chart-of-accounts account",
+        "fields": [
+          {
+            "name": "AccountID",
+            "label": "AccountID (PK)"
+          },
+          {
+            "name": "AccountNumber",
+            "label": "AccountNumber"
+          },
+          {
+            "name": "AccountType",
+            "label": "AccountType"
+          }
+        ]
+      }
+    ],
+    "alt": "Budgets and reporting responsibility. How do detailed budget drivers differ from a cost-center summary? Primary tables: CostCenter, Budget, BudgetLine. Some BudgetLine rows have no CostCenterID. Budget and BudgetLine are separate grains; do not join their amounts as if they were matching individual transactions."
+  },
+  {
+    "id": "demand-supply-planning",
+    "title": "Demand, supply recommendations, and requirements",
+    "area": "Planning",
+    "primary": [
+      "DemandForecast",
+      "InventoryPolicy",
+      "SupplyPlanRecommendation",
+      "MaterialRequirementPlan",
+      "RoughCutCapacityPlan"
+    ],
+    "context": [],
+    "question": "Which links are stored, and which are analytical planning context?",
+    "relationships": [
+      {
+        "child": "MaterialRequirementPlan",
+        "childFields": [
+          "SupplyPlanRecommendationID"
+        ],
+        "parent": "SupplyPlanRecommendation",
+        "parentFields": [
+          "SupplyPlanRecommendationID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r1"
+      },
+      {
+        "child": "RoughCutCapacityPlan",
+        "childFields": [
+          "SupplyPlanRecommendationID"
+        ],
+        "parent": "SupplyPlanRecommendation",
+        "parentFields": [
+          "SupplyPlanRecommendationID"
+        ],
+        "kind": "reference",
+        "condition": "",
+        "note": "",
+        "optionalParent": false,
+        "id": "r2"
+      },
+      {
+        "child": "SupplyPlanRecommendation",
+        "childFields": [
+          "ItemID",
+          "WarehouseID"
+        ],
+        "parent": "DemandForecast",
+        "parentFields": [
+          "ItemID",
+          "WarehouseID"
+        ],
+        "kind": "aggregate",
+        "condition": "",
+        "note": "Match item/location and the relevant weekly bucket and DriverType; there is no stored DemandForecastID.",
+        "optionalParent": true,
+        "id": "r3"
+      },
+      {
+        "child": "SupplyPlanRecommendation",
+        "childFields": [
+          "ItemID",
+          "WarehouseID"
+        ],
+        "parent": "InventoryPolicy",
+        "parentFields": [
+          "ItemID",
+          "WarehouseID"
+        ],
+        "kind": "aggregate",
+        "condition": "",
+        "note": "Inspect item/location, active policy, planning bucket, and DriverType; there is no stored InventoryPolicyID.",
+        "optionalParent": true,
+        "id": "r4"
+      }
+    ],
+    "boundary": "Planning context is not a one-record foreign-key trace. Requisitions and work orders reference SupplyPlanRecommendationID when converted into execution documents.",
+    "processPath": "/docs/processes/manufacturing",
+    "exercisePath": "/docs/learn-and-practice/manufacturing-cost-flow",
+    "casePath": "/docs/analytics/cases/manufacturing-labor-cost-case",
+    "tables": [
+      {
+        "name": "DemandForecast",
+        "primary": true,
+        "pk": "DemandForecastID",
+        "grain": "One item/location forecast for a weekly bucket",
+        "fields": [
+          {
+            "name": "DemandForecastID",
+            "label": "DemandForecastID (PK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          },
+          {
+            "name": "WarehouseID",
+            "label": "WarehouseID (FK)"
+          },
+          {
+            "name": "ForecastWeekStartDate",
+            "label": "ForecastWeekStartDate"
+          }
+        ]
+      },
+      {
+        "name": "InventoryPolicy",
+        "primary": true,
+        "pk": "InventoryPolicyID",
+        "grain": "One item/location replenishment policy",
+        "fields": [
+          {
+            "name": "InventoryPolicyID",
+            "label": "InventoryPolicyID (PK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          },
+          {
+            "name": "WarehouseID",
+            "label": "WarehouseID (FK)"
+          },
+          {
+            "name": "IsActive",
+            "label": "IsActive"
+          }
+        ]
+      },
+      {
+        "name": "SupplyPlanRecommendation",
+        "primary": true,
+        "pk": "SupplyPlanRecommendationID",
+        "grain": "One item/location supply recommendation in a planning bucket",
+        "fields": [
+          {
+            "name": "SupplyPlanRecommendationID",
+            "label": "SupplyPlanRecommendationID (PK)"
+          },
+          {
+            "name": "ItemID",
+            "label": "ItemID (FK)"
+          },
+          {
+            "name": "WarehouseID",
+            "label": "WarehouseID (FK)"
+          },
+          {
+            "name": "BucketWeekStartDate",
+            "label": "BucketWeekStartDate"
+          },
+          {
+            "name": "DriverType",
+            "label": "DriverType"
+          }
+        ]
+      },
+      {
+        "name": "MaterialRequirementPlan",
+        "primary": true,
+        "pk": "MaterialRequirementPlanID",
+        "grain": "One component requirement for a supply recommendation",
+        "fields": [
+          {
+            "name": "MaterialRequirementPlanID",
+            "label": "MaterialRequirementPlanID (PK)"
+          },
+          {
+            "name": "SupplyPlanRecommendationID",
+            "label": "SupplyPlanRecommendationID (FK)"
+          },
+          {
+            "name": "BucketWeekStartDate",
+            "label": "BucketWeekStartDate"
+          },
+          {
+            "name": "ParentItemID",
+            "label": "ParentItemID (FK)"
+          },
+          {
+            "name": "ComponentItemID",
+            "label": "ComponentItemID (FK)"
+          }
+        ]
+      },
+      {
+        "name": "RoughCutCapacityPlan",
+        "primary": true,
+        "pk": "RoughCutCapacityPlanID",
+        "grain": "One work-center capacity requirement for a supply recommendation",
+        "fields": [
+          {
+            "name": "RoughCutCapacityPlanID",
+            "label": "RoughCutCapacityPlanID (PK)"
+          },
+          {
+            "name": "SupplyPlanRecommendationID",
+            "label": "SupplyPlanRecommendationID (FK)"
+          },
+          {
+            "name": "BucketWeekStartDate",
+            "label": "BucketWeekStartDate"
+          },
+          {
+            "name": "WorkCenterID",
+            "label": "WorkCenterID (FK)"
+          }
+        ]
+      }
+    ],
+    "alt": "Demand, supply recommendations, and requirements. Which links are stored, and which are analytical planning context? Primary tables: DemandForecast, InventoryPolicy, SupplyPlanRecommendation, MaterialRequirementPlan, RoughCutCapacityPlan. Planning context is not a one-record foreign-key trace. Requisitions and work orders reference SupplyPlanRecommendationID when converted into execution documents."
+  }
+]

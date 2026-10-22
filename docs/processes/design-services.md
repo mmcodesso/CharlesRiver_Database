@@ -9,6 +9,9 @@ toc_max_heading_level: 2
 
 import BpmnDiagram from "@site/src/components/BpmnDiagram";
 
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
+
+
 # Design Services Process
 
 <span id="business-storyline"></span>
@@ -43,7 +46,7 @@ The design lead's operational question is about the work and its support. Accoun
 
 In this dataset, monthly service billing brings approved billable time into a customer invoice. The billing record connects billed hours to the invoice line. It does not rely on a physical shipment.
 
-The service invoice creates accounts receivable and design-service revenue, with applicable tax recorded. Creating an engagement or approving time does not itself post that customer revenue in this model. This describes the dataset's posting design; it is not a rule for every service contract.
+The service invoice creates accounts receivable and design-service revenue, with applicable tax recorded. Creating an engagement or approving time does not itself post that customer revenue in this model. This posting design applies to the selected records and should not be assumed for every service contract.
 
 The customer's eventual payment follows the [cash receipt and application path](o2c.md#receive-the-money-and-apply-it) already introduced. A service invoice can be open at a reporting date just as a goods invoice can. The receipt and its applications establish settlement.
 
@@ -59,7 +62,7 @@ The customer's eventual payment follows the [cash receipt and application path](
 
 <BpmnDiagram modelId="design-services" />
 
-The design team supplies the support for hours; accounting uses the billing records to establish what reached the invoice. Treasury and customer accounting handle money and its application after billing.
+The design team supplies hour records that accounting compares with the billing records to establish what reached the invoice. Treasury and customer accounting handle money and its application after billing.
 
 Read the model as responsibilities and activities. It does not establish an additional customer-acceptance workflow or prove that every approval was independent. Those claims would require their own evidence.
 
@@ -69,18 +72,9 @@ Read the model as responsibilities and activities. It does not establish an addi
 
 The record map asks **how work and billing are related without using shipment evidence**.
 
-```mermaid
-flowchart LR
-    accTitle: Design work approved time and invoice evidence
-    accDescr: A service order line leads to an engagement, staff assignments, approved time, monthly billing support, and an invoice line.
-    ORDER[Service order line] --> ENG[ServiceEngagement]
-    ENG --> STAFF[ServiceEngagementAssignment]
-    STAFF --> TIME[ServiceTimeEntry: approved hours]
-    TIME -->|Monthly billing support| BILL[ServiceBillingLine]
-    BILL --> INV[SalesInvoiceLine]
-```
+<EvidenceDiagram modelId="service-time-billing" />
 
-Follow the engagement through its staff support, then compare approved time with the monthly billing records. The map summarizes the path; a monthly billing row must not be treated as a separate invoice for every daily time row.
+Follow the engagement through its staff support, then compare approved time with the monthly billing records. The map summarizes the path without implying that each daily time row creates a separate invoice from the monthly billing record.
 
 Four amounts answer different questions. The **billing price** determines the customer charge for billed hours. The **time-cost snapshot** supports analysis of the labor associated with an engagement. **Payroll expense** records employee costs in the pay cycle. **Service revenue** comes from the posted invoice.
 
@@ -98,7 +92,7 @@ Approved time can establish supported work without establishing that it has alre
 
 ## Bridge an Event to an Entry
 
-Reuse [Lesson 7’s engagement 2](../learn-and-practice/follow-design-time-into-billing.md). This is a separate verified example; it is not an extension of the selected goods sale.
+Reuse [Lesson 7’s engagement 2](../learn-and-practice/follow-design-time-into-billing.md). This separate verified example does not extend the selected goods sale.
 
 | Event and date basis | Supporting evidence | Why the accounts change | Cutoff question |
 |---|---|---|---|
@@ -112,7 +106,7 @@ Reuse [Lesson 7’s engagement 2](../learn-and-practice/follow-design-time-into-
 <details>
 <summary>Reveal the recognition and cost boundaries</summary>
 
-No. Lesson 7 verifies 32.67 billed hours × 210.00 = 6,860.70 on invoice line 387. The **complete invoice** debits AR 7,306.65 and credits service revenue 6,860.70 plus tax payable 445.95; its three ledger rows balance. The 937.02 is time-cost support including selected non-billable work, rather than a payroll reconciliation or all engagement costs. This release recognizes service revenue at invoicing; use that dataset convention when interpreting the trace.
+No. Lesson 7 verifies 32.67 billed hours × 210.00 = 6,860.70 on invoice line 387. The **complete invoice** debits AR 7,306.65 and credits service revenue 6,860.70 plus tax payable 445.95, balancing its three ledger rows. The 937.02 is time-cost support including selected non-billable work, rather than a payroll reconciliation or all engagement costs. Interpret the trace using the dataset convention that service revenue is recognized at invoicing.
 
 </details>
 
@@ -189,17 +183,7 @@ Return to these sections when you have a specific question or an assignment that
 
 The process begins on the customer side. A service line is created on the sales order, then the operating team opens an engagement that carries planned hours, the lead employee, and the expected delivery window.
 
-```mermaid
-flowchart LR
-    accTitle: Customer demand and the service engagement
-    accDescr: Customer and sales order connect through a service order line to its engagement.
-    C[Customer]
-    SO[Sales Order]
-    SOL[Service Order Line]
-    ENG[Service Engagement]
-
-    C --> SO --> SOL --> ENG
-```
+<EvidenceDiagram modelId="service-demand" />
 
 **Starter analytical question:** Which customers create the most planned design-service hours, and how concentrated is that workload?
 
@@ -207,19 +191,7 @@ flowchart LR
 
 Once the engagement is active, the company assigns one or more employees to it. Approved daily service time then accumulates by employee and date. This layer is where students can compare planned hours, assigned hours, billable hours, non-billable hours, and cost snapshots.
 
-```mermaid
-flowchart LR
-    accTitle: Service engagement staff and time evidence
-    accDescr: An engagement leads to assignments and time entries. Employee records support both assignments and time.
-    ENG[Service Engagement]
-    ASG[Assignments]
-    TIME[Service Time Entry]
-    EMP[Employee]
-
-    ENG --> ASG --> TIME
-    EMP --> ASG
-    EMP --> TIME
-```
+<EvidenceDiagram modelId="service-staffing" />
 
 **Starter analytical question:** Which engagements rely most on senior-designer time versus designer time, and where do non-billable hours accumulate?
 
@@ -227,23 +199,13 @@ flowchart LR
 
 Billing does not happen every time an employee works. The dataset bills approved billable hours monthly. `ServiceBillingLine` stores the rolled-up hours for that invoice line, which makes it the main student bridge between approved service delivery and posted customer revenue.
 
-```mermaid
-flowchart LR
-    accTitle: Approved service time billing and settlement
-    accDescr: Approved service time supports a service billing line and invoice line, followed by cash application.
-    TIME[Approved Service Time]
-    BILL[Service Billing Line]
-    INV[Sales Invoice Line]
-    CASH[Cash Application]
-
-    TIME --> BILL --> INV --> CASH
-```
+<EvidenceDiagram modelId="service-billing-settlement" />
 
 **Starter analytical question:** Which customers show the biggest difference between approved service hours and billed service hours at month-end?
 
 ### 4. Payroll and Service Margin Interpretation
 
-Service employees also pass through normal payroll. Billing and receivables belong to the customer process; employee costs and payroll liabilities belong to the pay cycle. Compare billed revenue with the included `ServiceTimeEntry.ExtendedCost` snapshots to explain a labor-margin view, stating its cost and timing limits.
+Service employees also pass through normal payroll. Billing and receivables belong to the customer process, while employee costs and payroll liabilities belong to the pay cycle. Compare billed revenue with the included `ServiceTimeEntry.ExtendedCost` snapshots to explain a labor-margin view, stating its cost and timing limits.
 
 **Starter analytical question:** Which engagements show the strongest labor margin after comparing billed revenue to the approved time-cost snapshot?
 
@@ -264,7 +226,7 @@ Service employees also pass through normal payroll. Billing and receivables belo
 
 **Context and objective:** an engagement lead and accounting need to understand whether approved service effort was billed on the intended monthly basis. Interpret the service process and evaluate one risk at the handoff from time approval to billing.
 
-**Prerequisites, tools, and sources:** read the O2C cash-application discussion and this page's billing bridge. Use a SQL tool with the published SQLite file, or Excel filters and lookups, plus a copy of the editable Draw.io model. Sources are `SalesOrderLine`, `ServiceEngagement`, `ServiceEngagementAssignment`, `ServiceTimeEntry`, `ServiceBillingLine`, `SalesInvoiceLine`, `SalesInvoice`, and `GLEntry`; add payroll records only when explaining the separately defined employee-cost scope.
+**Prerequisites, tools, and sources:** read the O2C cash-application discussion and this page's billing bridge. Use a SQL tool with the published SQLite file, or Excel filters and lookups, plus a copy of the editable Draw.io model. Sources are `SalesOrderLine`, `ServiceEngagement`, `ServiceEngagementAssignment`, `ServiceTimeEntry`, `ServiceBillingLine`, `SalesInvoiceLine`, `SalesInvoice`, and `GLEntry`. Add payroll records only when explaining the separately defined employee-cost scope.
 
 1. Record the source file, engagement, billing period, and reporting date. Mark the relevant activities and responsible roles on the model.
 2. Compare approved billable hours, non-billable hours, and billed hours for the period. Preserve the monthly rollup grain and explain date or scope differences before calling them missing revenue.

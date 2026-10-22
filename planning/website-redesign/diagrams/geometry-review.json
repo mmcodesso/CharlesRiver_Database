@@ -1,0 +1,430 @@
+{
+  "static/diagrams/bpmn/accrual-settlement.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/bpmn/cash-application.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/bpmn/design-services.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/bpmn/manual-journals-close.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/bpmn/manufacturing-conversion.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/bpmn/manufacturing-variances.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/bpmn/order-to-cash.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/bpmn/payroll.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/bpmn/process-architecture.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/bpmn/procure-to-pay.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/bpmn/returns-credit-refunds.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case01-handoffs.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case01-relationships.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case01-timeline.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case02-billing.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case02-bridge.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case02-responsibilities.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case03-branches.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case03-timeline.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case03-transitions.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case04-conclusion.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case04-decision.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case04-measures.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case04-relationships.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case05-costs.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case05-grains.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case05-planning.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case05-timeline.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case06-attendance.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case06-grains.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case06-pay.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case06-settlement.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case07-asset.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case07-close.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case07-profit-cash.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case07-rollforward.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case07-statements.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case08-ap.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case08-assessment.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case08-finding.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case08-overtime.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/cases/case08-risk.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/accounting-core.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/asset-financing.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/attendance-time.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/budgets-responsibility.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/cash-allocation.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/commercial-terms.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/commissions.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/company-data-overview.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/demand-supply-planning.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/goods-fulfillment.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/manufacturing-cost-events.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/manufacturing-definitions.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/payroll-settlement.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/procurement-receiving.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/returns-credit.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/service-delivery.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/shared-masters.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/supplier-liabilities.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/er/work-order-scheduling.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/accrual-posting.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/approved-time-register.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/attendance-evidence.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/attendance-review.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/backorder-context.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/cash-posting.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/commission-posting.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/company-dependencies.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/completion-close.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/component-availability.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/customer-credit-path.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/goods-posting.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/goods-purchase-path.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/goods-settlement-path.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/manufacturing-payroll-support.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/operation-scheduling.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/overhead-support.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/payroll-evidence.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/payroll-obligations.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/pricing-evidence.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/purchase-planning.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/receipt-invoice-posting.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/recipe-routing.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/recurring-journal.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/requisition-receipt.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/returns-posting.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/service-billing-settlement.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/service-demand.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/service-staffing.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/service-time-billing.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/supplier-settlement-posting.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/technical-build.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/weekly-planning.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/evidence/work-order-evidence.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/connect-the-records.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/find-the-accounting-entries.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/follow-an-estimate-into-settlement.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/follow-customer-settlement.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/follow-design-time-into-billing.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/follow-hours-into-payroll.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/manufacturing-cost-flow.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/meet-the-records.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/read-an-order.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/receipt-to-payable.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/source-to-ledger.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  },
+  "static/diagrams/tutorials/turn-records-into-a-conclusion.drawio": {
+    "crossings": [],
+    "nodeCollisions": []
+  }
+}

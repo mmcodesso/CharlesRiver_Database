@@ -28,17 +28,17 @@ The controller is preparing the year-end management review. Management wants an 
 
 <CaseOverview slug="financial-statement-bridge-case" />
 
-**Worked scope.** Fourth-quarter 2026 activity and December 31 balances. Opening balances include all recorded history before October 1, including the opening journal and earlier years. The fixed-asset extension follows asset 18 across its 2026 lifecycle. The working file includes later supplier payments; exclude 2027 events from year-end balances.
+**Worked scope.** Fourth-quarter 2026 activity and December 31 balances. Opening balances include all recorded history before October 1, including the opening journal and earlier years. The fixed-asset extension follows asset 18 across its 2026 lifecycle. Exclude the working file's later 2027 supplier payments from year-end balances.
 
-Choose Excel or SQL; your selection carries between lessons and cases.
+Choose Excel or SQL. The site retains your selection between lessons and cases.
 
-**Preparation:** [6. Find the Accounting Entries](/docs/learn-and-practice/find-the-accounting-entries); [11. Follow an Estimate into Settlement](/docs/learn-and-practice/follow-an-estimate-into-settlement); [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion); [Case 1: customer account review](/docs/analytics/cases/o2c-trace-case) (recommended); [Case 3: supplier obligations](/docs/analytics/cases/p2p-accrual-settlement-case) (recommended). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
+**Preparation:** [6. Find the Accounting Entries](/docs/learn-and-practice/find-the-accounting-entries), [11. Follow an Estimate into Settlement](/docs/learn-and-practice/follow-an-estimate-into-settlement), [12. Turn Records into a Conclusion](/docs/learn-and-practice/turn-records-into-a-conclusion), [Case 1: customer account review](/docs/analytics/cases/o2c-trace-case) (recommended), [Case 3: supplier obligations](/docs/analytics/cases/p2p-accrual-settlement-case) (recommended). Use the [Excel setup](../excel-guide.md) or [SQL setup](../sql-guide.md) for your chosen tool.
 
 **Ready to begin:**
 
-- Complete your chosen Excel or SQL setup; preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
+- Complete your chosen Excel or SQL setup. Preserve source row keys and check row counts, unique keys, and amounts after descriptive joins.
 - Before starting, state the cohort, cutoff, row key, independently aggregated measures, and one evidence limitation.
-- Retain full ledger history for openings; distinguish pre-close performance, cash movements, balance snapshots, and complete closing vouchers.
+- Retain full ledger history for openings and distinguish pre-close performance, cash movements, balance snapshots, and complete closing vouchers.
 
 ## Key Data Sources
 
@@ -83,7 +83,7 @@ Create Case07.xlsx or Case07.sql. This case begins with the complete ledger, the
 
 **Named inputs:** `LedgerHistory ← T3_GLEntry and AccountData ← Account (import here)`.
 
-**Produced outputs:** `LedgerHistory: full history through December 31, 2026; retained ungrouped in Power Query`; `Rollforward: one row per account; only summary loaded`.
+**Produced outputs:** `LedgerHistory: full history through December 31, 2026; retained ungrouped in Power Query`, `Rollforward: one row per account; only summary loaded`.
 
 1. Import T3_GLEntry into Power Query as LedgerHistory and import Account as AccountData.
 
@@ -169,7 +169,7 @@ Check the Applied Steps list for an accidental lower-date filter. Numeric source
 
 **Named inputs:** `Rollforward (Session 1.1)`.
 
-**Produced outputs:** `Rollforward: arithmetic Check and NormalClosing display columns`; `Review: three ledger balance checks`.
+**Produced outputs:** `Rollforward: arithmetic Check and NormalClosing display columns`, `Review: three ledger balance checks`.
 
 1. In Rollforward add Check:
 
@@ -246,9 +246,9 @@ Calculate profit before closing entries, then reconcile it to the cash movement 
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `LedgerHistory and AccountData (Session 1.1)`; `JournalEntryData ← JournalEntry (import here; full history retained)`.
+**Named inputs:** `LedgerHistory and AccountData (Session 1.1)`, `JournalEntryData ← JournalEntry (import here; full history retained)`.
 
-**Produced outputs:** `LedgerPrepared: full-history detail with account and conditional journal fields`; `QuarterLedger: all account types in Q4, excluding close; retained ungrouped`; `ProfitDetail: pre-close P&L detail`; `ProfitSummary: three monthly rows`; `CashActivity: Q4 cash by source type`.
+**Produced outputs:** `LedgerPrepared: full-history detail with account and conditional journal fields`, `QuarterLedger: all account types in Q4, excluding close; retained ungrouped`, `ProfitDetail: pre-close P&L detail`, `ProfitSummary: three monthly rows`, `CashActivity: Q4 cash by source type`.
 
 1. Import JournalEntry as JournalEntryData and retain its full history.
 
@@ -322,7 +322,7 @@ ORDER BY g.SourceDocumentType;
 
 **Checkpoint.** Pre-close profit: October 255,812.14; November 405,751.40; December 502,693.70; quarter 1,164,257.24. Cash falls 743,539.66. Customer cash receipts add 7,816,054.56; supplier payments use 5,912,239.65.
 
-Profit and cash are different measures of the same business period. A customer receipt may settle an earlier invoice; a supplier payment may settle an earlier obligation. The annual close must not erase the quarter’s performance measure.
+Profit and cash are different measures of the same business period. Customer receipts and supplier payments may settle invoices or obligations from earlier periods. The annual close must not erase the quarter’s performance measure.
 
 <details>
 <summary>If your result differs</summary>
@@ -342,7 +342,7 @@ Preserve null journal matches for operational events. Filtering null EntryType o
 
 **Named inputs:** `QuarterLedger, ProfitSummary, and CashActivity (Session 2.1)`.
 
-**Produced outputs:** `BridgeEffects: nonzero Q4 noncash/non-P&L effects`; `Review: profit-to-cash reconciliation and chart`.
+**Produced outputs:** `BridgeEffects: nonzero Q4 noncash/non-P&L effects`, `Review: profit-to-cash reconciliation and chart`.
 
 1. Reference the retained QuarterLedger as BridgeEffects; it already has the conditional journal join and close exclusion, with all account types still present.
 
@@ -435,9 +435,9 @@ Do not use post-close retained-earnings movement as an additional profit effect:
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `LedgerPrepared (full-history detail from Session 2.1)`; `PurchaseInvoiceData ← PurchaseInvoice and PurchaseInvoiceLineData ← PurchaseInvoiceLine (import here)`; `GoodsReceiptData ← GoodsReceipt and GoodsReceiptLineData ← GoodsReceiptLine (import here)`.
+**Named inputs:** `LedgerPrepared (full-history detail from Session 2.1)`, `PurchaseInvoiceData ← PurchaseInvoice and PurchaseInvoiceLineData ← PurchaseInvoiceLine (import here)`, `GoodsReceiptData ← GoodsReceipt and GoodsReceiptLineData ← GoodsReceiptLine (import here)`.
 
-**Produced outputs:** `LiabilityTrace: selected December 2026 2020 ledger rows`; `ReceiptInvoiceTrace: invoice 39692 / receipt support`.
+**Produced outputs:** `LiabilityTrace: selected December 2026 2020 ledger rows`, `ReceiptInvoiceTrace: invoice 39692 / receipt support`.
 
 1. Reference LedgerPrepared as LiabilityTrace and filter AccountNumber 2020 and December 1–31, 2026.
 
@@ -458,7 +458,7 @@ Do not use post-close retained-earnings movement as an additional profit effect:
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c07-source.sql"
 SELECT g.PostingDate,
        g.SourceDocumentType,
@@ -531,7 +531,7 @@ The close transfers a year’s profit into equity. Its scope is the entire year,
 
 **Named inputs:** `JournalEntryData and LedgerPrepared (full-history queries from Session 2.1)`.
 
-**Produced outputs:** `ClosingJournals: two December 31, 2026 close headers`; `ClosingJournalDetail: retained full selected vouchers`; `ClosingJournalSummary: journal/account amounts`; `FullYearPerformance: retained 2026 P&L detail; AnnualPreClose and AnnualPostClose: separate annual-profit summaries`.
+**Produced outputs:** `ClosingJournals: two December 31, 2026 close headers`, `ClosingJournalDetail: retained full selected vouchers`, `ClosingJournalSummary: journal/account amounts`, `FullYearPerformance: retained 2026 P&L detail; AnnualPreClose and AnnualPostClose: separate annual-profit summaries`.
 
 1. Reference the raw JournalEntryData as ClosingJournals and filter PostingDate December 31, 2026 and EntryType beginning Year-End Close.
 
@@ -564,7 +564,7 @@ The close transfers a year’s profit into equity. Its scope is the entire year,
 </TabItem>
 <TabItem value="sql">
 
-Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question; compare the checkpoint before continuing.
+Run each statement separately in the SQL editor. Save its text and result with the stage title. Read the result at the grain described in the question and compare the checkpoint before continuing.
 ```sql title="c07-close.sql"
 SELECT j.JournalEntryID,
        j.EntryType,
@@ -594,7 +594,7 @@ WHERE g.PostingDate BETWEEN '2026-01-01' AND '2026-12-31' AND a.AccountType IN('
 
 **Checkpoint.** Journals 850 and 851 transfer annual pre-close profit of 4,503,611.24. The annual post-close revenue/expense net is zero. This is different from fourth-quarter profit of 1,164,257.24.
 
-A zero post-close P&L balance confirms the transfer for the selected definition; it does not mean the business earned no profit. Do not add the annual transfer to the quarter’s operating result.
+A zero post-close P&L balance confirms the transfer for the selected definition without implying that the business earned no profit. Do not add the annual transfer to the quarter’s operating result.
 
 <details>
 <summary>If your result differs</summary>
@@ -627,7 +627,7 @@ Use published reports as an independent presentation check after building the an
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `Existing Monthly Income Statement report download`; `Existing Monthly Indirect Cash Flow report download`.
+**Named inputs:** `Existing Monthly Income Statement report download`, `Existing Monthly Indirect Cash Flow report download`.
 
 **Produced outputs:** `StatementComparison: Q4 2026 income/cash movements and October/December cash endpoints`.
 
@@ -650,7 +650,7 @@ Use published reports as an independent presentation check after building the an
 </TabItem>
 <TabItem value="sql">
 
-Open the published Monthly Income Statement and Monthly Indirect Cash Flow CSV downloads from Reports and Analytics in a text editor. Read the header, then locate FiscalYear 2026 and FiscalPeriod 10, 11, and 12. Retain only Net Income subtotal rows for the profit comparison, and Net Change in Cash rows for cash movement. Compare with c07-profit.sql and c07-cash.sql. Read October Beginning Cash and December Ending Cash once; do not sum monthly balances. This inspection does not require importing the reports into your database.
+Open the published Monthly Income Statement and Monthly Indirect Cash Flow CSV downloads from Reports and Analytics in a text editor. Read the header, then locate FiscalYear 2026 and FiscalPeriod 10, 11, and 12. Retain only Net Income subtotal rows for the profit comparison, and Net Change in Cash rows for cash movement. Compare with c07-profit.sql and c07-cash.sql. Retain October Beginning Cash and December Ending Cash once each rather than summing monthly balances. This inspection does not require importing the reports into your database.
 
 </TabItem>
 </ToolSteps>
@@ -721,7 +721,7 @@ The completed review should stand on its own: definitions, reproducible schedule
 
 The quarter produces positive pre-close profit while cash falls. The complete ledger bridge explains that difference and the selected receipt/invoice trace illustrates a liability transition. The annual closing entries transfer full-year profit to retained earnings without creating cash. Management can now discuss inventory and obligation timing using reconciled evidence, while recognizing that an arithmetic tie-out alone does not establish transaction validity.
 
-**Deliverable:** A full-history balance rollforward, profit/cash bridge, selected source reconciliation, and management review memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A chart is optional in the SQL route; a clearly ordered result table can support the same conclusion.
+**Deliverable:** A full-history balance rollforward, profit/cash bridge, selected source reconciliation, and management review memo. Include the source file, selection dates, source IDs, measure definitions, checks, evidence limitations, and the next action. A clearly ordered SQL result table can support the conclusion, with a chart added if useful.
 
 ## Independent Challenge
 
@@ -734,7 +734,7 @@ Do not reuse the worked opening balances. Reconstruct all earlier history throug
 
 </details>
 
-**Assessment criteria:** Assess opening history, signs, close exclusions, complete cash bridge, matched report definitions, source support, and priorities that reflect uncertainty. Your instructor evaluates the method, evidence, and reasoning; there is no public model answer for this challenge.
+**Assessment criteria:** Assess opening history, signs, close exclusions, complete cash bridge, matched report definitions, source support, and priorities that reflect uncertainty. Your instructor evaluates the method, evidence, and reasoning. Model answers for this challenge remain in private course materials.
 
 ## Worked extension — Trace a financed asset
 
@@ -745,9 +745,9 @@ Asset 18 is the Finishing Booth Upgrade and Air Handling Retrofit. Its 280,000 c
 <ToolSteps>
 <TabItem value="excel">
 
-**Named inputs:** `FixedAssetData ← FixedAsset and FixedAssetEventData ← FixedAssetEvent (import here; use selected references)`; `DebtScheduleLineData ← DebtScheduleLine (import here; raw query retained)`; `LedgerHistory (full-history query from Session 1.1)`.
+**Named inputs:** `FixedAssetData ← FixedAsset and FixedAssetEventData ← FixedAssetEvent (import here; use selected references)`, `DebtScheduleLineData ← DebtScheduleLine (import here; raw query retained)`, `LedgerHistory (full-history query from Session 1.1)`.
 
-**Produced outputs:** `AssetReview: asset 18 and depreciation formula`; `AssetLedgerExcerpt: selected source rows, with partial voucher labeled`; `DebtReview: agreement 2 payment schedule and Q4 principal/interest check`.
+**Produced outputs:** `AssetReview: asset 18 and depreciation formula`, `AssetLedgerExcerpt: selected source rows, with partial voucher labeled`, `DebtReview: agreement 2 payment schedule and Q4 principal/interest check`.
 
 1. Import FixedAsset as FixedAssetData, FixedAssetEvent as FixedAssetEventData, and DebtScheduleLine as DebtScheduleLineData; preserve the raw queries.
 
@@ -856,7 +856,7 @@ ORDER BY PaymentDate,DebtScheduleLineID;
 </TabItem>
 </ToolSteps>
 
-**Worked check.** Asset cost is 280,000 and monthly depreciation 2,333.33. December’s asset-specific depreciation debits manufacturing cost clearing, not cash. The note-financing entry has no cash line. Q4 debt-2 payments total 16,396.26: principal 12,500.72 and interest 3,895.54. Principal reduces debt; interest is a separate expense/cash classification. The description-based depreciation excerpt is not a unique formal asset-to-ledger key.
+**Worked check.** Asset cost is 280,000 and monthly depreciation 2,333.33. December’s asset-specific depreciation debits manufacturing cost clearing, not cash. The note-financing entry has no cash line. Q4 debt-2 payments total 16,396.26: principal 12,500.72 and interest 3,895.54. Principal reduces debt, while interest has a separate expense and cash classification. The description-based depreciation excerpt is not a unique formal asset-to-ledger key.
 
 <details>
 <summary>Further queries and earlier case topics</summary>
@@ -865,9 +865,9 @@ ORDER BY PaymentDate,DebtScheduleLineID;
 
 ## Recommended Query Sequence
 
-These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. They are optional references; both guided routes above are complete without them. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
+These canonical queries extend the investigation. Their populations, dates, and measures may differ from the worked case, so read their definitions before comparing results. These optional references extend the complete guided routes above. Earlier specialist topics consolidated into this case remain accessible through this reference sequence.
 
-<QuerySequence items={caseQuerySequences["financial-statement-bridge-case"]} helperText="Choose a reference after completing the guided investigation; verify its scope before comparing totals." />
+<QuerySequence items={caseQuerySequences["financial-statement-bridge-case"]} helperText="Choose a reference after completing the guided investigation and verify its scope before comparing totals." />
 
 </details>
 

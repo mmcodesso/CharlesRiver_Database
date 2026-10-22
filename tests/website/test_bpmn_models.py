@@ -11,6 +11,7 @@ import sqlite3
 import xml.etree.ElementTree as ET
 
 import pytest
+from release_database import select_release_database
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -268,9 +269,12 @@ def test_svg_export_preserves_source_and_safe_accessible_graphics(model):
 
 
 def test_table_references_exist_in_local_published_database():
-    database = ROOT / "outputs" / "CharlesRiver.sqlite"
+    database = select_release_database()
     if not database.exists():
         pytest.skip("Published SQLite is unavailable; release claim verification must be run separately")
+    verified = json.loads((ROOT / "planning/website-redesign/cases/verified-examples.json").read_text())
+    with database.open("rb") as stream:
+        assert hashlib.file_digest(stream, "sha256").hexdigest() == verified["sha256"], "Select the checksum-matched published SQLite with CHARLES_RIVER_TEACHING_SQLITE"
     with sqlite3.connect(database.resolve().as_uri() + "?mode=ro", uri=True) as connection:
         tables = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     for model in MODELS:

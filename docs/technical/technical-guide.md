@@ -5,13 +5,16 @@ slug: /technical-guide
 sidebar_label: Technical Guide
 ---
 
+import EvidenceDiagram from "@site/src/components/EvidenceDiagram";
+
+
 # Technical Guide
 
 This page gives the codebase-level view of how the dataset is generated.
 
 For table structure and join fields, use [Schema Reference](../reference/schema.md). For event-to-ledger behavior, use [GLEntry Posting Reference](../reference/posting.md). For current scope and planned improvements, use [Roadmap](roadmap.md).
 
-The current system includes demand forecasts, inventory policies, supply recommendations, component-demand planning, rough-cut capacity tieout, explicit O2C pricing lineage through price lists, promotions, and override approvals, and a separate O2C sales-commission subledger. Its workforce-planning layer includes raw `TimeClockPunch` events beneath approved daily time-clock records; the table contains **165,137 punch rows**.
+The current system includes demand forecasts, inventory policies, supply recommendations, component-demand planning, rough-cut capacity tieout, explicit O2C pricing lineage through price lists, promotions, and override approvals, and a separate O2C sales-commission subledger. Its workforce-planning layer includes raw `TimeClockPunch` events beneath approved daily time-clock records. The table contains **165,137 punch rows**.
 
 ## Current System at a Glance
 
@@ -41,25 +44,7 @@ The two runtime objects that matter most are:
 
 ## End-to-End Build Flow
 
-```mermaid
-flowchart LR
-    accTitle: Local dataset build from settings to exported teaching files
-    accDescr: Settings initialize the generation context, tables and master data precede operating activity, and accounting postings and year-end close precede validation, anomaly injection and file exports. This documents the local generator workflow; classroom users begin with the published files.
-    S[Load Settings]
-    C[Initialize GenerationContext]
-    E[Create Empty Tables]
-    M[Generate Master Data, BOMs, Routings, and Calendar]
-    B[Generate Opening Balances and Budgets]
-    O[Generate O2C, P2P, Manufacturing, Payroll, and Labor Activity]
-    J[Generate Recurring Journals and Accrual Activity]
-    P[Post Events to GLEntry]
-    Y[Generate Year-End Close Journals]
-    V[Run Validations]
-    A[Inject Anomalies]
-    X[Export SQLite, Excel, Curated Reports, CSV Zip, and Log]
-
-    S --> C --> E --> M --> B --> O --> J --> P --> Y --> V --> A --> X
-```
+<EvidenceDiagram modelId="technical-build" />
 
 In plain language, the build:
 
@@ -142,4 +127,4 @@ The current generator exports:
 - CSV zip package with one CSV per dataset table
 - text generation log
 
-Most course users should start with the three public formats on [Downloads](../start-here/downloads.md) and the documentation site. Local generation can also provide a separate support workbook and instructor generation log; those are not additional public downloads. The [Customize guide](dataset-delivery.md) distinguishes that local workflow from classroom adoption and from the legacy GitHub Pages workflow. The current public documentation site uses Cloudflare hosting.
+Most course users should start with the three public formats on [Downloads](../start-here/downloads.md) and the documentation site. Local generation can also provide a separate support workbook and instructor generation log outside the public downloads. The [Customize guide](dataset-delivery.md) distinguishes that local workflow from classroom adoption and from the legacy GitHub Pages workflow. The current public documentation site uses Cloudflare hosting.

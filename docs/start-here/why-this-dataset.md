@@ -29,7 +29,7 @@ This is the value of a connected dataset: you can move between a business questi
 
 Begin by describing the event in ordinary language. Identify who acted, what changed, and which document records that change. Then explain the accounting effect and the reporting date that matters.
 
-Once those pieces are clear, use the data to test an explanation. An open balance might reflect timing, incomplete settlement, or an issue needing follow-up. The records help you distinguish those possibilities; the first unusual result does not settle the question.
+Once those pieces are clear, use the data to test an explanation. An open balance might reflect timing, incomplete settlement, or an issue needing follow-up. The records help distinguish those possibilities, but the first unusual result does not settle the question.
 
 Your eventual output is more than a calculation. It is a conclusion supported by identified evidence, with its scope and limitations made clear. The foundational exercises develop that habit before the integrated cases ask you to combine several processes.
 

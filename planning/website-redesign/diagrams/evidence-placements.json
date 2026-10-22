@@ -1,0 +1,92 @@
+[
+  {
+    "page": "docs/learn-the-business/process-flows.md",
+    "title": "Connections across six Charles River processes",
+    "modelId": "company-dependencies"
+  },
+  {
+    "page": "docs/processes/manual-journals-and-close.md",
+    "title": "Accrual invoice adjustment and payment evidence",
+    "modelId": "accrual-posting"
+  },
+  {
+    "page": "docs/processes/manual-journals-and-close.md",
+    "title": "Accrual settlement and adjustment branches",
+    "modelId": "accrual-posting"
+  },
+  {
+    "page": "docs/processes/manufacturing.md",
+    "title": "Manufacturing records around one work order",
+    "modelId": "work-order-evidence"
+  },
+  {
+    "page": "docs/processes/manufacturing.md",
+    "title": "Purchased component support and subsequent material issue",
+    "modelId": "component-availability"
+  },
+  {
+    "page": "docs/processes/manufacturing.md",
+    "title": "Operational labor evidence and payroll cost support",
+    "modelId": "manufacturing-payroll-support"
+  },
+  {
+    "page": "docs/processes/manufacturing.md",
+    "title": "Separate completion and close branches of a work order",
+    "modelId": "completion-close"
+  },
+  {
+    "page": "docs/processes/o2c.md",
+    "title": "Sales commission accrual adjustment and payment",
+    "modelId": "commission-posting"
+  },
+  {
+    "page": "docs/processes/o2c.md",
+    "title": "Customer order shipment invoice and ledger",
+    "modelId": "goods-posting"
+  },
+  {
+    "page": "docs/processes/o2c.md",
+    "title": "Receipt to unapplied money and invoice application",
+    "modelId": "cash-posting"
+  },
+  {
+    "page": "docs/processes/o2c.md",
+    "title": "Return credit and refund accounting evidence",
+    "modelId": "returns-posting"
+  },
+  {
+    "page": "docs/processes/p2p.md",
+    "title": "Receipt invoice and ledger evidence",
+    "modelId": "receipt-invoice-posting"
+  },
+  {
+    "page": "docs/processes/p2p.md",
+    "title": "Supplier invoice payable and disbursement",
+    "modelId": "supplier-settlement-posting"
+  },
+  {
+    "page": "docs/processes/payroll.md",
+    "title": "Approved time employee payroll and period remittances",
+    "modelId": "payroll-evidence"
+  },
+  {
+    "page": "docs/processes/payroll.md",
+    "title": "Roster punch and approval support for daily time",
+    "modelId": "attendance-evidence"
+  },
+  {
+    "page": "docs/processes/payroll.md",
+    "title": "Employee net pay and other payroll-liability settlement",
+    "modelId": "payroll-obligations"
+  },
+  {
+    "page": "docs/processes/payroll.md",
+    "title": "Manufacturing labor support and direct payroll recognition",
+    "modelId": "manufacturing-payroll-support"
+  },
+  {
+    "page": "docs/processes/payroll.md",
+    "title": "Attendance evidence exceptions and payroll",
+    "modelId": "attendance-review"
+  }
+]
