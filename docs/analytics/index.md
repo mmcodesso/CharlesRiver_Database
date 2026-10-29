@@ -1,6 +1,6 @@
 ---
 title: Reports and Analytics
-description: Browse all 48 Charles River reports by business topic, preview results, download Excel or CSV files, and connect findings to SQL and teaching cases.
+description: Explore 20 core Charles River reports and 23 specialist reports, with formatted statements, filtered PDF and Excel downloads, source SQL, and teaching cases.
 slug: /analytics
 sidebar_label: Reports and Analytics
 ---
@@ -10,9 +10,13 @@ import reportTopics from "@site/src/data/reportTopics.json";
 
 # Reports and Analytics
 
-Start with a question from the [company story](../learn-the-business/company-story.md) or a [business process](../learn-the-business/process-flows.md), then choose a report below. Reports are grouped by the part of the business you are investigating, with previews and Excel or CSV downloads together in each card.
+Start with a question from the [company story](../learn-the-business/company-story.md) or a [business process](../learn-the-business/process-flows.md), then choose a report below. The collection starts with 20 core reports across six business topics. Select **Include specialist reports** to explore 23 additional evidence reports. Search also includes specialist reports.
 
-Each card identifies its row grain and period basis, links to the matching process and practice lesson, and opens the exact **View source SQL** destination in the existing Query Library. Check these before interpreting a result. Downloads contain the full report, while previews show a limited number of rows. Expand **Interpret this report** for discussion questions and suggested analysis where available.
+Each card identifies its row grain and period basis, links to the matching process and practice lesson, and opens the exact **View source SQL** destination in the existing Query Library. **Open report** displays complete selected results with period and evidence filters. Download a formatted **PDF** or **Excel** workbook matching that selection. Downloads include all selected rows, regardless of the current screen page. Expand **Interpret this report** for discussion questions and suggested analysis where available.
+
+Financial statements provide selected-month, previous-month comparison, and fiscal-year views. Balance-sheet columns show ending balances rather than sums across months. Snapshot and cumulative reports retain their stated scope. For very large evidence selections, narrow the filters before exporting PDF; Excel retains the complete selection.
+
+Choose **Export Data** in a report view to download its full CSV. This existing data file contains the complete report, independent of your selected period and filters.
 
 ## Start with a Guided Investigation
 

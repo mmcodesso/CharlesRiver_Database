@@ -1,0 +1,3428 @@
+{
+  "origin": "https://greenfield.mmcodesso.workers.dev",
+  "files": [
+    {
+      "path": "reports/audit/control-review/approval-and-sod-review/approval-and-sod-review.csv",
+      "sha256": "83f4c1b8b7095b9a41dace4b51a8c1259269754d5d4b29ad1b7258a88f609968"
+    },
+    {
+      "path": "reports/audit/control-review/approval-and-sod-review/approval-and-sod-review.xlsx",
+      "sha256": "5ac628d9efaac3cc9dbd91aec31daa8a5ffa692fca609130d5eb392fca8bc20c"
+    },
+    {
+      "path": "reports/audit/control-review/approval-and-sod-review/preview.json",
+      "sha256": "31ce4d1568cc065f2cb679245e7075b4760374956f625fd47575b8ddd6e34460"
+    },
+    {
+      "path": "reports/audit/control-review/potential-anomaly-review/potential-anomaly-review.csv",
+      "sha256": "8c37207183100f1acb1e453c7ccac8ae4bdb8c4ed2843d68471488eabc818d09"
+    },
+    {
+      "path": "reports/audit/control-review/potential-anomaly-review/potential-anomaly-review.xlsx",
+      "sha256": "f1c0455644cd380bf36829c06c34d259425cf9bb80176cfa3df790c7f492eef1"
+    },
+    {
+      "path": "reports/audit/control-review/potential-anomaly-review/preview.json",
+      "sha256": "c1de108458118c56638aec763e27094cd287f327f87d69dcd73dec9ffc2a46fe"
+    },
+    {
+      "path": "reports/audit/payroll-and-time-controls/paid-without-clock-and-clock-without-pay-review/paid-without-clock-and-clock-without-pay-review.csv",
+      "sha256": "4c08bd6c440ad7e75ca575527337bd76a6c4efb14b15c6a4ebbb9489de5d4a03"
+    },
+    {
+      "path": "reports/audit/payroll-and-time-controls/paid-without-clock-and-clock-without-pay-review/paid-without-clock-and-clock-without-pay-review.xlsx",
+      "sha256": "253f3e79b9452093dbcaa71e8c00cdc492f2b931065e51f4ca18cd170e429fd3"
+    },
+    {
+      "path": "reports/audit/payroll-and-time-controls/paid-without-clock-and-clock-without-pay-review/preview.json",
+      "sha256": "e34ae1e488f013de9befbd7ea7def56b939df6d3c7c13a4e85670f17f184f727"
+    },
+    {
+      "path": "reports/audit/payroll-and-time-controls/payroll-control-review/payroll-control-review.csv",
+      "sha256": "5d93b00b162f885527458e874781f225b5feafea450b0bd8f43f751700896a2a"
+    },
+    {
+      "path": "reports/audit/payroll-and-time-controls/payroll-control-review/payroll-control-review.xlsx",
+      "sha256": "adb4a2a51fadf8cf9230d5d3707eea7cc0fd40de26c65d9cb95e5589d46ada1c"
+    },
+    {
+      "path": "reports/audit/payroll-and-time-controls/payroll-control-review/preview.json",
+      "sha256": "f26ebe39acc7c0a3672897c76e5c7a91a8aad8523260b07f564158ebb3ca3ced"
+    },
+    {
+      "path": "reports/financial/customer-pricing-and-settlement/customer-credit-and-refunds/customer-credit-and-refunds.csv",
+      "sha256": "b37445c29532a7e9c960112a4c8aeab0f9ffb57462e1c236169e8dd9c66cfb88"
+    },
+    {
+      "path": "reports/financial/customer-pricing-and-settlement/customer-credit-and-refunds/customer-credit-and-refunds.xlsx",
+      "sha256": "562262846f26e239f16fe07531a953bdc9045bcd52a6139883d8066aa8b135e8"
+    },
+    {
+      "path": "reports/financial/customer-pricing-and-settlement/customer-credit-and-refunds/preview.json",
+      "sha256": "c0c85df5cac5872b6b2f13a7a7d2c84f64b6fe71146007798a6a18e25e22c39e"
+    },
+    {
+      "path": "reports/financial/customer-pricing-and-settlement/price-realization-vs-list-by-customer-and-portfolio/preview.json",
+      "sha256": "b4b49c27bbac38c37da16d368aaa975e27114460a4de1b6a62e3e5166b252b62"
+    },
+    {
+      "path": "reports/financial/customer-pricing-and-settlement/price-realization-vs-list-by-customer-and-portfolio/price-realization-vs-list-by-customer-and-portfolio.csv",
+      "sha256": "afe6c9575d193020fd5cc696d8b679a3a2098d593b0d241d7bd47c68c0c16dea"
+    },
+    {
+      "path": "reports/financial/customer-pricing-and-settlement/price-realization-vs-list-by-customer-and-portfolio/price-realization-vs-list-by-customer-and-portfolio.xlsx",
+      "sha256": "60988315e78889eb0ae44df2259ee6233e7e3496553220a56933aaabab5cafa5"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/budget-vs-actual-statement-bridge-monthly.csv",
+      "sha256": "70bf23981d8fb3cd1f99842577a87ead24642da885728f40a8ffc8f3e966031e"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/budget-vs-actual-statement-bridge-monthly.xlsx",
+      "sha256": "b58494189761f33278f6983906caef3a2c46a3a15c82b995e3c464b611d72263"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/budget-vs-actual-statement-bridge-monthly/preview.json",
+      "sha256": "6593f49c6ed75c35f011b547aab4c00e2cbad844e278e90ae7e0fd1401326c60"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/monthly-balance-sheet/monthly-balance-sheet.csv",
+      "sha256": "a0377f71f317b4fd02d05ab4be0586b9969aa06d0c777a4aa0f4305155a6bf73"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/monthly-balance-sheet/monthly-balance-sheet.xlsx",
+      "sha256": "685cbbbb285939436c8c3b83421fff1ed594d0779b462e29597546d72fcd9ae4"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/monthly-balance-sheet/preview.json",
+      "sha256": "d9827be7e636e2523ba4fdede13c60e1380a98773a3f0d3be944d4c08edaac8c"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/monthly-income-statement/monthly-income-statement.csv",
+      "sha256": "6760805c509047313def7164334acb9e387f64e2ef39f4fab2959d9a980710c3"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/monthly-income-statement/monthly-income-statement.xlsx",
+      "sha256": "246c78851fb0bf454039aec8000f0d16fc5eb3821a06e7f240975b97fb033fd8"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/monthly-income-statement/preview.json",
+      "sha256": "80fd8027874d55a85d6435dd5a1f22675910385161d099782db39a4eb096e9fd"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/monthly-indirect-cash-flow/monthly-indirect-cash-flow.csv",
+      "sha256": "45a7c17d7708ed8a3eb342f60842151402e38f0ffad538a4c4ea4c5b6eb3e235"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/monthly-indirect-cash-flow/monthly-indirect-cash-flow.xlsx",
+      "sha256": "fecd2914b9e4e501806ed873c3ec1c07322582298f2a7f90e57df9f347cce3d9"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/monthly-indirect-cash-flow/preview.json",
+      "sha256": "6756c9e2d60e48611438ac886d1619fa00472f870ffa884e3f3e6f09a7380b48"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/preview.json",
+      "sha256": "7bab812e8ff64c7aa58ae77ce73a1a69b787bfe4299033be7852706df5dc7924"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/pro-forma-monthly-balance-sheet.csv",
+      "sha256": "8e5686f25bbe3916eaddf05a141697549cc8cfb10aadf1293a179f6ded407c26"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/pro-forma-monthly-balance-sheet/pro-forma-monthly-balance-sheet.xlsx",
+      "sha256": "533fc28e45f61a387e30389df33ba143ff943c5d4b82c581ab44fc088bc2bbc3"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/preview.json",
+      "sha256": "9782ffec16bddb16cb4214034b5e4b2ed31957a83ea939c9f02eac36edaf5bb4"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/pro-forma-monthly-income-statement.csv",
+      "sha256": "e599ec8eb597566e9fc701c293b840b662d01260014a1266be417fa7eadc76b9"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/pro-forma-monthly-income-statement/pro-forma-monthly-income-statement.xlsx",
+      "sha256": "6bcf430cc4d85043e6553121ab9aae8a920219a8fb804d76fc04a558b3188996"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/preview.json",
+      "sha256": "27ddd5f4ec59f1e172544dd2bfedef58c5822433ba44434e724a7e8f78b75334"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/pro-forma-monthly-indirect-cash-flow.csv",
+      "sha256": "2561e729f98d95fe7e7073b3cc40c8c1174e79344f7aa8062f09abc3d620c9bc"
+    },
+    {
+      "path": "reports/financial/monthly-close-and-statements/pro-forma-monthly-indirect-cash-flow/pro-forma-monthly-indirect-cash-flow.xlsx",
+      "sha256": "aeb91a46014f66ac9695bea115ffd0b030b914a8cc47b8bda53f3d2e541cf5cf"
+    },
+    {
+      "path": "reports/financial/payroll-cash-and-liabilities/payroll-cash-payments-and-remittances/payroll-cash-payments-and-remittances.csv",
+      "sha256": "9ab037ab741c38db44a804c4cfe9a5cbba8b7e91c268a996531484056e5890f9"
+    },
+    {
+      "path": "reports/financial/payroll-cash-and-liabilities/payroll-cash-payments-and-remittances/payroll-cash-payments-and-remittances.xlsx",
+      "sha256": "7b6def8390d56d8ba23fd24b5c36b3dff13229385af09596d49cc3947af91b54"
+    },
+    {
+      "path": "reports/financial/payroll-cash-and-liabilities/payroll-cash-payments-and-remittances/preview.json",
+      "sha256": "e27b125dd873e5d6ef04b7efd83bdefe97d4248f497bee2204ddd823641ff419"
+    },
+    {
+      "path": "reports/financial/payroll-cash-and-liabilities/payroll-liability-rollforward/payroll-liability-rollforward.csv",
+      "sha256": "7ffd3f07e8ce1c3aaf5967947c6ac3c2916fcea2f622fff3fa93b5f3a54e0d76"
+    },
+    {
+      "path": "reports/financial/payroll-cash-and-liabilities/payroll-liability-rollforward/payroll-liability-rollforward.xlsx",
+      "sha256": "dd74394721c73984a9d8bdfad5899d827e8ea96d1f3cd843f470c3226996e091"
+    },
+    {
+      "path": "reports/financial/payroll-cash-and-liabilities/payroll-liability-rollforward/preview.json",
+      "sha256": "851bc08020549d125a9c2676a949f1a2c75cfda9936eb00b05b6e5e1990c112b"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/gross-to-net-payroll-review/gross-to-net-payroll-review.csv",
+      "sha256": "492f8770e7981695a258103696b56073bc3c0318b4c5abda4eb8b0fe2bcd0994"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/gross-to-net-payroll-review/gross-to-net-payroll-review.xlsx",
+      "sha256": "08b968465b1ee4460d119c95a2690b2d54912271d739893efa1b499fd51620b2"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/gross-to-net-payroll-review/preview.json",
+      "sha256": "34be4a4a018a4bd73900e4646574ded4d53d7c99d0f5b65055769489ee0f510d"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/hourly-payroll-hours-to-paid-earnings-bridge/hourly-payroll-hours-to-paid-earnings-bridge.csv",
+      "sha256": "9d1abc115678c43798e667e92a32b2b08c2201d821946e98bcdc1d56aa708bfa"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/hourly-payroll-hours-to-paid-earnings-bridge/hourly-payroll-hours-to-paid-earnings-bridge.xlsx",
+      "sha256": "8f2d68656a10be63e3c29c54c72d3a3e39b0ebe70c6be0c1c529a876a96d3e13"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/hourly-payroll-hours-to-paid-earnings-bridge/preview.json",
+      "sha256": "f8bf7a16e1915557208b42bdef6527a4f5aa9a47c70e0c4fbde6af5b869b939e"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/payroll-and-people-cost-mix-by-cost-center-job-family-level/payroll-and-people-cost-mix-by-cost-center-job-family-level.csv",
+      "sha256": "cdc8b4e72bf6c71ac45af942d818e921e6d31d0b2381c7771adcb45bb2d48eb0"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/payroll-and-people-cost-mix-by-cost-center-job-family-level/payroll-and-people-cost-mix-by-cost-center-job-family-level.xlsx",
+      "sha256": "212459bfe26384592c4b3079d654d289c8600e204cfe05ea52305ff76798856d"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/payroll-and-people-cost-mix-by-cost-center-job-family-level/preview.json",
+      "sha256": "03f723167bb4900ce938978af9ed6e32548180b7b0018b2975655ca8dd67b0a0"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/payroll-expense-mix-by-cost-center-and-pay-class/payroll-expense-mix-by-cost-center-and-pay-class.csv",
+      "sha256": "7b0a2209b3c05a50f34b7b8b1503578bd0a271546d92f6806272009b7aa683ee"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/payroll-expense-mix-by-cost-center-and-pay-class/payroll-expense-mix-by-cost-center-and-pay-class.xlsx",
+      "sha256": "7fd93da971a7482dd3be9761c9dbc74f785e55850aabafb681ede80b484505b7"
+    },
+    {
+      "path": "reports/financial/payroll-cost-and-mix/payroll-expense-mix-by-cost-center-and-pay-class/preview.json",
+      "sha256": "63f96824fff91832476cd4187cf24579e3cc9ab2a322e31ec5383316f76fb564"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/ap-aging/ap-aging.csv",
+      "sha256": "217fd9e9db9f908c3dd281f5c21d20d57aecbe257fd7d6526b772cabe83bbc42"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/ap-aging/ap-aging.xlsx",
+      "sha256": "0ae4e31165b9e946574e5efdbf3abe86db08c22a0cab23e60470823b9631f1dc"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/ap-aging/preview.json",
+      "sha256": "eb20a45bc69b87cfcc24ec977c162a5f2d36bf1f979eb9bb467ba48242c7834c"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/ar-aging/ar-aging.csv",
+      "sha256": "d9ad10a26b7d15c153352772f984b736c90197bf0be0e41ad8ddfbf8397f69dd"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/ar-aging/ar-aging.xlsx",
+      "sha256": "9df6be4732489f3646bac203faca43586ee494faff9f73505039f44bb0fad902"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/ar-aging/preview.json",
+      "sha256": "9b9ba2aef05586db62a13cd2f57e73a9403c95c40f850e5c5b28f2231495844b"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ap-aging-detail/monthly-ap-aging-detail.csv",
+      "sha256": "1183befcbd4d3aa2661770fb827a6bc44ef94dc0642457477bf3adc482eb056b"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ap-aging-detail/monthly-ap-aging-detail.xlsx",
+      "sha256": "5d2742178e723221526aa86e1830bee68784cee708ca4eab626e29db1f752068"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ap-aging-detail/preview.json",
+      "sha256": "80ce5e497002a41f138442b4b4ab86524eb5259b8ce2f192160f0f638128ea60"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ap-aging-summary/monthly-ap-aging-summary.csv",
+      "sha256": "04d23dd146a89db2d0d2539ae4a450e5e23c5fcddeae395e908d60ee65b1b191"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ap-aging-summary/monthly-ap-aging-summary.xlsx",
+      "sha256": "5732910803929fb0acf915ccaa6e521ba1947aa581fb8bc1156f8c6038806c8e"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ap-aging-summary/preview.json",
+      "sha256": "aa82fca83d122d2a0950ef4b875666f7697f943ac7544d9d2c089a57ab35ad91"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ar-aging-detail/monthly-ar-aging-detail.csv",
+      "sha256": "5bf97d707681af6e8a4e7db215d81e942c701c49224badea3e9ebea6fef93354"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ar-aging-detail/monthly-ar-aging-detail.xlsx",
+      "sha256": "db575e6ebb7accceca5b663f19eee7bfdba84a96f94937921e0657bc90f2709a"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ar-aging-detail/preview.json",
+      "sha256": "d1872c9e3f8d6022c835bf6bb1bd89311146de3f78713681ab890f0ec2d4c5db"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ar-aging-summary/monthly-ar-aging-summary.csv",
+      "sha256": "5afaa31ec48292e58533b9bf3d5a6b712122900610f24bc5d67ae39f30594154"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ar-aging-summary/monthly-ar-aging-summary.xlsx",
+      "sha256": "97805f61eee07e41d167ff4aa37515fe67338932ff260a2c2b6d0d06a2eaf8a3"
+    },
+    {
+      "path": "reports/financial/receivables-and-payables-aging/monthly-ar-aging-summary/preview.json",
+      "sha256": "65ed3292f6af23c97352f71b23123d57817fef376ec5c78c1e403dc67d58c69c"
+    },
+    {
+      "path": "reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/design-service-revenue-and-billed-hours.csv",
+      "sha256": "358f0d6ea7730d8774fa06e5dc31ad4a083ed8a391a9ec6d9a052c02aeecc025"
+    },
+    {
+      "path": "reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/design-service-revenue-and-billed-hours.xlsx",
+      "sha256": "a4708162b94e3bd8b700e7faf5b13599bd2e036c730abf96f1332bcbe78201ad"
+    },
+    {
+      "path": "reports/financial/revenue-and-working-capital/design-service-revenue-and-billed-hours/preview.json",
+      "sha256": "6806ac5191034d9cd4babc0d872d996cec2bdbf922e6c839e0a3a457eb87285f"
+    },
+    {
+      "path": "reports/financial/revenue-and-working-capital/monthly-revenue-and-gross-margin/monthly-revenue-and-gross-margin.csv",
+      "sha256": "90a1a015618a5a1e68a7462bb132bb9a0f96acddae1440c8f6c040bd41218813"
+    },
+    {
+      "path": "reports/financial/revenue-and-working-capital/monthly-revenue-and-gross-margin/monthly-revenue-and-gross-margin.xlsx",
+      "sha256": "56171794b03d43661da143c0f8e4e2ecd70eecb7695ac820f7fd186e35094284"
+    },
+    {
+      "path": "reports/financial/revenue-and-working-capital/monthly-revenue-and-gross-margin/preview.json",
+      "sha256": "a7c741edd9ae3cd0c0de49ce70e7dce4b50cd7526f7cc18eb1a20b7564a4e01b"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/budget-vs-actual-working-capital-and-cash-bridge.csv",
+      "sha256": "ba279d4df6f9c1b0ceae72ef1f4e79d4abcbcee67049985dc6dcb5eef28f5420"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/budget-vs-actual-working-capital-and-cash-bridge.xlsx",
+      "sha256": "939dcc3ae855ffc77c85183b31452053b4be042872596bdd94d36b66ef7a8025"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/budget-vs-actual-working-capital-and-cash-bridge/preview.json",
+      "sha256": "3e45564ff891ce25d840484aea4ea0cf77134a4bef8b7c8dff7dc8f342e2b1ae"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/cash-conversion-timing-review/cash-conversion-timing-review.csv",
+      "sha256": "ebdca199e19142271c4d3e1f3de1e6c13cdda11e225fb709bca78f74355b3bb5"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/cash-conversion-timing-review/cash-conversion-timing-review.xlsx",
+      "sha256": "528b8b7596e2c2ce7ac15b6b0837f1aee9f3b40f5f6061f0db4da66c5f047ef1"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/cash-conversion-timing-review/preview.json",
+      "sha256": "534f466ab672ce2b205b11060f8e5753a3f2548b475a619d396b60dc8e9d9b67"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/customer-deposits-and-unapplied-cash-aging/customer-deposits-and-unapplied-cash-aging.csv",
+      "sha256": "b189456ce96cdc2a0d373d2dbcc7ffc6dcd98eb34b4e12a500e1848af898a584"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/customer-deposits-and-unapplied-cash-aging/customer-deposits-and-unapplied-cash-aging.xlsx",
+      "sha256": "1f8957f88afb56f2c030932ace9b19e65a701e48217d9e9770fc7f9f0d7dcb6d"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/customer-deposits-and-unapplied-cash-aging/preview.json",
+      "sha256": "68a0bbf4a2a50096d409f74b2e502eca3fd5011a8250a0d98473641459b5bed9"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/preview.json",
+      "sha256": "f2f0389c508766689e949fa1f4674b54e80dde71646b2e696221431d47f1d54a"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/sales-commission-payable-rollforward.csv",
+      "sha256": "a4cedc3ba60949ece2f9faccee732a75df60c93a1b3b9fddcdbf62165ec5cf84"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/sales-commission-payable-rollforward/sales-commission-payable-rollforward.xlsx",
+      "sha256": "b0317bb37a68581e1c96dcfeaef8d8b995f5f59cf102df0235bb5699cb22e5e4"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/working-capital-bridge-by-month/preview.json",
+      "sha256": "cf31d0265bf164ec3aceac36c59c7445ea762c5f536af5ef052047cf6ff0a8bf"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/working-capital-bridge-by-month/working-capital-bridge-by-month.csv",
+      "sha256": "af9eceac2d2d2dd9fceec985b391f567a0cb08cbae9e7447526537cbd5c942a9"
+    },
+    {
+      "path": "reports/financial/working-capital-and-cash-conversion/working-capital-bridge-by-month/working-capital-bridge-by-month.xlsx",
+      "sha256": "21bed2cab499a3da8d6ab65a9c4f91cb4bf58f9a3673c984bd14e0956d319cf6"
+    },
+    {
+      "path": "reports/managerial/customer-and-supplier-analysis/customer-sales-mix-by-region-and-item-group/customer-sales-mix-by-region-and-item-group.csv",
+      "sha256": "eaf93af90c6ed7cb4a0b4f6077cbd728316320411e399e2accc59e07262d1524"
+    },
+    {
+      "path": "reports/managerial/customer-and-supplier-analysis/customer-sales-mix-by-region-and-item-group/customer-sales-mix-by-region-and-item-group.xlsx",
+      "sha256": "ef637e242909965038c575f7ead5e4b4199fd986648353906cea205e6be3aac0"
+    },
+    {
+      "path": "reports/managerial/customer-and-supplier-analysis/customer-sales-mix-by-region-and-item-group/preview.json",
+      "sha256": "212f30cb0b6ae06a3a1f1f2d874376f2ca5671b6451a7b003e0e8f3a13cfa93e"
+    },
+    {
+      "path": "reports/managerial/customer-and-supplier-analysis/supplier-purchasing-activity-by-category/preview.json",
+      "sha256": "1f3a9f3728752032502fa407f5a7d7e8304b728d2d92c7669a3ea5a75d054d67"
+    },
+    {
+      "path": "reports/managerial/customer-and-supplier-analysis/supplier-purchasing-activity-by-category/supplier-purchasing-activity-by-category.csv",
+      "sha256": "dbf66fb59cf006c35a1ddd471abac0c222177e2cb15b4dd6b81e89da0dc203fa"
+    },
+    {
+      "path": "reports/managerial/customer-and-supplier-analysis/supplier-purchasing-activity-by-category/supplier-purchasing-activity-by-category.xlsx",
+      "sha256": "4e307a6a633efc839d49fd3a1c9073cefef814c18e86e9fa63bdf9b961f4afad"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/budget-vs-actual-by-cost-center/budget-vs-actual-by-cost-center.csv",
+      "sha256": "98026cfde443b60f26957ac38b13cdd01f09a187ee38ff1806f0f900fb04511a"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/budget-vs-actual-by-cost-center/budget-vs-actual-by-cost-center.xlsx",
+      "sha256": "f862b36ebd6b4e1a270e2f4239b489692b3a66112ec9ece797903ba7e91da3da"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/budget-vs-actual-by-cost-center/preview.json",
+      "sha256": "38235a8600f72fb906f5bf588bbcc75661d0913812bcab68685a15bbbb48aa83"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/budget-vs-actual-revenue-price-volume-cost-bridge.csv",
+      "sha256": "eb2c9629077c807f05acb1917ba330a86a633915605defe0871bb730237f8a23"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/budget-vs-actual-revenue-price-volume-cost-bridge.xlsx",
+      "sha256": "33292c1a68c412e7f5ab8c7d4d1f880296a2f757891a7be26b09de761f9c3a99"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/budget-vs-actual-revenue-price-volume-cost-bridge/preview.json",
+      "sha256": "17982bdd1fc8951eceeb0b64a32cd8e09ff8c2ef63630bc3c06bd13754f2a569"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/headcount-by-cost-center-and-job-family/headcount-by-cost-center-and-job-family.csv",
+      "sha256": "776b3aa95460c264c29d98edaea456fd1fad7a4ecb3f583e6a2127713405db66"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/headcount-by-cost-center-and-job-family/headcount-by-cost-center-and-job-family.xlsx",
+      "sha256": "faf89c42ef9fe814a93028469199fd31286cee46cf59edb1fae5dca1a14f2630"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/headcount-by-cost-center-and-job-family/preview.json",
+      "sha256": "bd4ffa4263b8b97855ba273c94938a19593da7f56a3d2eece132184ebb57431b"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/monthly-work-center-utilization/monthly-work-center-utilization.csv",
+      "sha256": "d8f9413a58ae5028273bc56f816d7830f50f6b062473227a678b2347a997d894"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/monthly-work-center-utilization/monthly-work-center-utilization.xlsx",
+      "sha256": "2e234c0c29b4848b6cd8763ba01009ea83657f1c7272f705fd132b25e573ec36"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/monthly-work-center-utilization/preview.json",
+      "sha256": "c90512d3c41a71c9c49e2aa4f573fc91e214cf7e943ee0d877c5e5152cc026e9"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/sales-and-margin-by-collection-and-style/preview.json",
+      "sha256": "4b55df6567b2f85e6d44fadb38cd4ee69b86410b2dde6dcbee71717a08b0ba63"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/sales-and-margin-by-collection-and-style/sales-and-margin-by-collection-and-style.csv",
+      "sha256": "e6aba43ffb662bc7038f4b86028b879b88476db8d58dedbabd1723361dfc2c06"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/sales-and-margin-by-collection-and-style/sales-and-margin-by-collection-and-style.xlsx",
+      "sha256": "4f0353c58d2bd816134ade116f630cc553dcdfb0441d038016d5169a561db75c"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/preview.json",
+      "sha256": "1b6d05a273c503dad09b70015f48c04affdb2a34b9bcf16f28070754c69da683"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/sales-commission-expense-by-rep-segment.csv",
+      "sha256": "ad0cac13d80f4cd50c0173b117abdc7960e6bfc4603a279c968a636e93e6e19f"
+    },
+    {
+      "path": "reports/managerial/performance-and-planning/sales-commission-expense-by-rep-segment/sales-commission-expense-by-rep-segment.xlsx",
+      "sha256": "c1124636a8b646be70103b4e2551e6c19a2c6e8c34299301a85fa384e16778dc"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/forecast-error-and-bias-by-collection-and-style-family/forecast-error-and-bias-by-collection-and-style-family.csv",
+      "sha256": "380ed815a9cd8ddbd1a29a8375b2170e7dbb3d96cf1f29938583faf3928b735c"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/forecast-error-and-bias-by-collection-and-style-family/forecast-error-and-bias-by-collection-and-style-family.xlsx",
+      "sha256": "2dbfcbd45ce61ed74d040a0185f4c0bf8bc00763701c0c95655a353ec521ca4f"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/forecast-error-and-bias-by-collection-and-style-family/preview.json",
+      "sha256": "8ae121ec870e57b6d304e2a2f7b262c82cdfd19a43f46cfe1d8d9060c8559a3d"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/inventory-coverage-and-projected-stockout-risk/inventory-coverage-and-projected-stockout-risk.csv",
+      "sha256": "2e737d61db5748c7ffbea2ab970edcbb461cb79c597a3dc24888b973d0fff85f"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/inventory-coverage-and-projected-stockout-risk/inventory-coverage-and-projected-stockout-risk.xlsx",
+      "sha256": "11d9258b2ae4d40ee657bc2a520df8c81c3670f0d3962065025e2f6d1f084656"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/inventory-coverage-and-projected-stockout-risk/preview.json",
+      "sha256": "e39a50295293d927b9bc1e5f910aa0a703024afc5f9b4502d7439ace77cef4b9"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/rough-cut-capacity-load-vs-available-hours/preview.json",
+      "sha256": "c1aa38f58b6c9864b48d414d2a17a7969cc06d9e8272c06233f080fff8c244f9"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/rough-cut-capacity-load-vs-available-hours/rough-cut-capacity-load-vs-available-hours.csv",
+      "sha256": "fb8195e3851926142cecf49dd05c2a8b882288c68443064964ed14a9896cea7e"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/rough-cut-capacity-load-vs-available-hours/rough-cut-capacity-load-vs-available-hours.xlsx",
+      "sha256": "607020328f90e626ee036548881ff5d3a605aff814f4030a17cf7bcfc94298a3"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/supplier-lead-time-and-receipt-reliability/preview.json",
+      "sha256": "688d125015ee798049a6ad3460a0ef5011643d19867a00e3a4be39409535c10c"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/supplier-lead-time-and-receipt-reliability/supplier-lead-time-and-receipt-reliability.csv",
+      "sha256": "9f1b94c757831f936c562b48d00debe51ea011687214150449051392714eb8d4"
+    },
+    {
+      "path": "reports/managerial/planning-and-supply-risk/supplier-lead-time-and-receipt-reliability/supplier-lead-time-and-receipt-reliability.xlsx",
+      "sha256": "c836b733283b15706476bcf658c018d844e79414aa3eadd76f728ec26a3f0037"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/absence-rate-by-work-location-job-family-month/absence-rate-by-work-location-job-family-month.csv",
+      "sha256": "6288f7c43481ee2c57be7af84566446ea5640bafd062b3560217b29d3c0498de"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/absence-rate-by-work-location-job-family-month/absence-rate-by-work-location-job-family-month.xlsx",
+      "sha256": "13371ebe4c9d43435b2fdd3ee40c8c10890453263b4fe177f11097d653985091"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/absence-rate-by-work-location-job-family-month/preview.json",
+      "sha256": "fe5a86766c361e1bd7413d7290c60660ab9c3f0f71d8c51469b238a261f407b4"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/labor-and-headcount-by-work-location-job-family-cost-center/labor-and-headcount-by-work-location-job-family-cost-center.csv",
+      "sha256": "50e78440c4b92b4e9152589fdfe6d89dd054d4c65c910bbadae23bbab931499b"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/labor-and-headcount-by-work-location-job-family-cost-center/labor-and-headcount-by-work-location-job-family-cost-center.xlsx",
+      "sha256": "c82425c1e45330bd49647be7742fab8eac82202549547ded8f35b79d4f13f2d9"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/labor-and-headcount-by-work-location-job-family-cost-center/preview.json",
+      "sha256": "713d717006c3ae36ba59b8312a3d270a383240040c8f47f8e46c9f0cd765ebdf"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/overtime-approval-coverage-and-concentration/overtime-approval-coverage-and-concentration.csv",
+      "sha256": "9b8a2696096a785f4c7003e3b01c3b4c0af90797dc72b94ed1085884cf58efab"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/overtime-approval-coverage-and-concentration/overtime-approval-coverage-and-concentration.xlsx",
+      "sha256": "f753ca01beb65a3ba3757e89de26c0db3b9af81a48be2038a59b07bf262e6e57"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/overtime-approval-coverage-and-concentration/preview.json",
+      "sha256": "ee27022f8f6a837f180f85a77e283433a555307f1a06e7630a95ec96a21ec641"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/punch-to-pay-bridge-for-hourly-workers/preview.json",
+      "sha256": "8418b7d28fb84c6715473e21d9c2291f550e1a66e2e4dc549b009f2b4a665d35"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/punch-to-pay-bridge-for-hourly-workers/punch-to-pay-bridge-for-hourly-workers.csv",
+      "sha256": "25e0219dc5c544628a326c4ad7a612b0174a088e6cc9d904bd2bb7f5c3da30ff"
+    },
+    {
+      "path": "reports/managerial/workforce-and-payroll-operations/punch-to-pay-bridge-for-hourly-workers/punch-to-pay-bridge-for-hourly-workers.xlsx",
+      "sha256": "dad9d8c3d8b8d46dfe5d4be757d42f635d17f5c042f94f51fea9377b3d67f79e"
+    }
+  ],
+  "reports": {
+    "monthly-income-statement": {
+      "csv": "6760805c509047313def7164334acb9e387f64e2ef39f4fab2959d9a980710c3",
+      "sql": "8d93b921a158efdd3e0f458e9b2adf9d242a658fec92d56ad55f6db025eca902",
+      "rows": 1836,
+      "fields": [
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalPeriod",
+          "label": "Fiscal Period",
+          "kind": "text"
+        },
+        {
+          "key": "StatementSection",
+          "label": "Statement Section",
+          "kind": "text"
+        },
+        {
+          "key": "LineLabel",
+          "label": "Line Label",
+          "kind": "text"
+        },
+        {
+          "key": "AccountNumber",
+          "label": "Account Number",
+          "kind": "text"
+        },
+        {
+          "key": "LineType",
+          "label": "Line Type",
+          "kind": "text"
+        },
+        {
+          "key": "DisplayOrder",
+          "label": "Display Order",
+          "kind": "decimal"
+        },
+        {
+          "key": "Amount",
+          "label": "Amount",
+          "kind": "money"
+        }
+      ]
+    },
+    "monthly-balance-sheet": {
+      "csv": "a0377f71f317b4fd02d05ab4be0586b9969aa06d0c777a4aa0f4305155a6bf73",
+      "sql": "6d38e2c4852c81593aa4141e778ac5177b39e264d88c7b953afc1823015c7dea",
+      "rows": 1872,
+      "fields": [
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalPeriod",
+          "label": "Fiscal Period",
+          "kind": "text"
+        },
+        {
+          "key": "StatementSection",
+          "label": "Statement Section",
+          "kind": "text"
+        },
+        {
+          "key": "LineLabel",
+          "label": "Line Label",
+          "kind": "text"
+        },
+        {
+          "key": "AccountNumber",
+          "label": "Account Number",
+          "kind": "text"
+        },
+        {
+          "key": "LineType",
+          "label": "Line Type",
+          "kind": "text"
+        },
+        {
+          "key": "DisplayOrder",
+          "label": "Display Order",
+          "kind": "decimal"
+        },
+        {
+          "key": "Amount",
+          "label": "Amount",
+          "kind": "money"
+        }
+      ]
+    },
+    "monthly-indirect-cash-flow": {
+      "csv": "45a7c17d7708ed8a3eb342f60842151402e38f0ffad538a4c4ea4c5b6eb3e235",
+      "sql": "dda0d3bb44941828d126a7b2b4c55bc41a977159dbd26978d50c9f5ad4581276",
+      "rows": 684,
+      "fields": [
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalPeriod",
+          "label": "Fiscal Period",
+          "kind": "text"
+        },
+        {
+          "key": "StatementSection",
+          "label": "Statement Section",
+          "kind": "text"
+        },
+        {
+          "key": "LineLabel",
+          "label": "Line Label",
+          "kind": "text"
+        },
+        {
+          "key": "LineType",
+          "label": "Line Type",
+          "kind": "text"
+        },
+        {
+          "key": "DisplayOrder",
+          "label": "Display Order",
+          "kind": "decimal"
+        },
+        {
+          "key": "Amount",
+          "label": "Amount",
+          "kind": "money"
+        }
+      ]
+    },
+    "monthly-revenue-and-gross-margin": {
+      "csv": "90a1a015618a5a1e68a7462bb132bb9a0f96acddae1440c8f6c040bd41218813",
+      "sql": "e07f707ac4c127f177700a2bf76a65da447a7994fabadd6202a949bd8f0d3a7a",
+      "rows": 36,
+      "fields": [
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalPeriod",
+          "label": "Fiscal Period",
+          "kind": "text"
+        },
+        {
+          "key": "RevenueAmount",
+          "label": "Revenue Amount",
+          "kind": "money"
+        },
+        {
+          "key": "COGSAmount",
+          "label": "COGSAmount",
+          "kind": "money"
+        },
+        {
+          "key": "GrossMargin",
+          "label": "Gross Margin",
+          "kind": "money"
+        },
+        {
+          "key": "GrossMarginPct",
+          "label": "Gross Margin Pct",
+          "kind": "percent"
+        }
+      ]
+    },
+    "design-service-revenue-and-billed-hours": {
+      "csv": "358f0d6ea7730d8774fa06e5dc31ad4a083ed8a391a9ec6d9a052c02aeecc025",
+      "sql": "7f543f125234bf8c488121809c912352df25a5aaa2694a7c641f5b5995b5165c",
+      "rows": 368,
+      "fields": [
+        {
+          "key": "InvoiceMonth",
+          "label": "Invoice Month",
+          "kind": "text"
+        },
+        {
+          "key": "CustomerName",
+          "label": "Customer Name",
+          "kind": "text"
+        },
+        {
+          "key": "Region",
+          "label": "Region",
+          "kind": "text"
+        },
+        {
+          "key": "CustomerSegment",
+          "label": "Customer Segment",
+          "kind": "text"
+        },
+        {
+          "key": "InvoiceCount",
+          "label": "Invoice Count",
+          "kind": "integer"
+        },
+        {
+          "key": "EngagementCount",
+          "label": "Engagement Count",
+          "kind": "integer"
+        },
+        {
+          "key": "BilledHours",
+          "label": "Billed Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "ServiceRevenueAmount",
+          "label": "Service Revenue Amount",
+          "kind": "money"
+        },
+        {
+          "key": "AverageHourlyRate",
+          "label": "Average Hourly Rate",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "ar-aging": {
+      "csv": "d9ad10a26b7d15c153352772f984b736c90197bf0be0e41ad8ddfbf8397f69dd",
+      "sql": "759ab2e4969ae9903f49d7b6e0afed12c9de64f3a9c4c25da02b6874d19cc23e",
+      "rows": 1079,
+      "fields": [
+        {
+          "key": "InvoiceNumber",
+          "label": "Invoice Number",
+          "kind": "text"
+        },
+        {
+          "key": "CustomerName",
+          "label": "Customer Name",
+          "kind": "text"
+        },
+        {
+          "key": "Region",
+          "label": "Region",
+          "kind": "text"
+        },
+        {
+          "key": "CustomerSegment",
+          "label": "Customer Segment",
+          "kind": "text"
+        },
+        {
+          "key": "InvoiceDate",
+          "label": "Invoice Date",
+          "kind": "date"
+        },
+        {
+          "key": "DueDate",
+          "label": "Due Date",
+          "kind": "date"
+        },
+        {
+          "key": "InvoiceAmount",
+          "label": "Invoice Amount",
+          "kind": "money"
+        },
+        {
+          "key": "CashApplied",
+          "label": "Cash Applied",
+          "kind": "money"
+        },
+        {
+          "key": "CreditMemoApplied",
+          "label": "Credit Memo Applied",
+          "kind": "money"
+        },
+        {
+          "key": "OpenAmount",
+          "label": "Open Amount",
+          "kind": "money"
+        },
+        {
+          "key": "DaysPastDue",
+          "label": "Days Past Due",
+          "kind": "decimal"
+        },
+        {
+          "key": "AgingBucket",
+          "label": "Aging Bucket",
+          "kind": "text"
+        }
+      ]
+    },
+    "ap-aging": {
+      "csv": "217fd9e9db9f908c3dd281f5c21d20d57aecbe257fd7d6526b772cabe83bbc42",
+      "sql": "ac06a074de5baf3d6c40b673b7a7191195a1c4a774076a6c5e9ea9ea97e97e5e",
+      "rows": 3224,
+      "fields": [
+        {
+          "key": "InvoiceNumber",
+          "label": "Invoice Number",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierName",
+          "label": "Supplier Name",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierCategory",
+          "label": "Supplier Category",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierRiskRating",
+          "label": "Supplier Risk Rating",
+          "kind": "text"
+        },
+        {
+          "key": "InvoiceDate",
+          "label": "Invoice Date",
+          "kind": "date"
+        },
+        {
+          "key": "DueDate",
+          "label": "Due Date",
+          "kind": "date"
+        },
+        {
+          "key": "InvoiceAmount",
+          "label": "Invoice Amount",
+          "kind": "money"
+        },
+        {
+          "key": "CashPaid",
+          "label": "Cash Paid",
+          "kind": "money"
+        },
+        {
+          "key": "OpenAmount",
+          "label": "Open Amount",
+          "kind": "money"
+        },
+        {
+          "key": "DaysPastDue",
+          "label": "Days Past Due",
+          "kind": "decimal"
+        },
+        {
+          "key": "AgingBucket",
+          "label": "Aging Bucket",
+          "kind": "text"
+        }
+      ]
+    },
+    "monthly-ar-aging-detail": {
+      "csv": "5bf97d707681af6e8a4e7db215d81e942c701c49224badea3e9ebea6fef93354",
+      "sql": "4e17eac2fda080c701f16b47b7a07d3027e703668234e0533b5747fcb8aa1480",
+      "rows": 38633,
+      "fields": [
+        {
+          "key": "MonthEndDate",
+          "label": "Month End Date",
+          "kind": "date"
+        },
+        {
+          "key": "InvoiceMonth",
+          "label": "Invoice Month",
+          "kind": "text"
+        },
+        {
+          "key": "InvoiceNumber",
+          "label": "Invoice Number",
+          "kind": "text"
+        },
+        {
+          "key": "CustomerName",
+          "label": "Customer Name",
+          "kind": "text"
+        },
+        {
+          "key": "Region",
+          "label": "Region",
+          "kind": "text"
+        },
+        {
+          "key": "CustomerSegment",
+          "label": "Customer Segment",
+          "kind": "text"
+        },
+        {
+          "key": "InvoiceDate",
+          "label": "Invoice Date",
+          "kind": "date"
+        },
+        {
+          "key": "DueDate",
+          "label": "Due Date",
+          "kind": "date"
+        },
+        {
+          "key": "DaysFromDueAtMonthEnd",
+          "label": "Days From Due At Month End",
+          "kind": "decimal"
+        },
+        {
+          "key": "AgingBucket",
+          "label": "Aging Bucket",
+          "kind": "text"
+        },
+        {
+          "key": "InvoiceAmount",
+          "label": "Invoice Amount",
+          "kind": "money"
+        },
+        {
+          "key": "CashAppliedAsOfMonthEnd",
+          "label": "Cash Applied As Of Month End",
+          "kind": "decimal"
+        },
+        {
+          "key": "CreditMemoAppliedAsOfMonthEnd",
+          "label": "Credit Memo Applied As Of Month End",
+          "kind": "decimal"
+        },
+        {
+          "key": "OpenAmountAsOfMonthEnd",
+          "label": "Open Amount As Of Month End",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "monthly-ar-aging-summary": {
+      "csv": "5afaa31ec48292e58533b9bf3d5a6b712122900610f24bc5d67ae39f30594154",
+      "sql": "a11bcfd63a2b68f82871b7bbec4915531b69097d40098d3b518a5cd82abbe018",
+      "rows": 7130,
+      "fields": [
+        {
+          "key": "MonthEndDate",
+          "label": "Month End Date",
+          "kind": "date"
+        },
+        {
+          "key": "CustomerName",
+          "label": "Customer Name",
+          "kind": "text"
+        },
+        {
+          "key": "Region",
+          "label": "Region",
+          "kind": "text"
+        },
+        {
+          "key": "CustomerSegment",
+          "label": "Customer Segment",
+          "kind": "text"
+        },
+        {
+          "key": "OpenInvoiceCount",
+          "label": "Open Invoice Count",
+          "kind": "integer"
+        },
+        {
+          "key": "TotalOpenAmount",
+          "label": "Total Open Amount",
+          "kind": "money"
+        },
+        {
+          "key": "CurrentAmount",
+          "label": "Current Amount",
+          "kind": "money"
+        },
+        {
+          "key": "Days1To30Amount",
+          "label": "Days1 To30 Amount",
+          "kind": "money"
+        },
+        {
+          "key": "Days31To60Amount",
+          "label": "Days31 To60 Amount",
+          "kind": "money"
+        },
+        {
+          "key": "Days61To90Amount",
+          "label": "Days61 To90 Amount",
+          "kind": "money"
+        },
+        {
+          "key": "Days90PlusAmount",
+          "label": "Days90 Plus Amount",
+          "kind": "money"
+        },
+        {
+          "key": "PastDueAmount",
+          "label": "Past Due Amount",
+          "kind": "money"
+        },
+        {
+          "key": "OldestDaysPastDue",
+          "label": "Oldest Days Past Due",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "monthly-ap-aging-detail": {
+      "csv": "1183befcbd4d3aa2661770fb827a6bc44ef94dc0642457477bf3adc482eb056b",
+      "sql": "b1001333fa568d7d228f9db3e809f8d09dba70db42a11d7fdd21b7c0f31835d6",
+      "rows": 80521,
+      "fields": [
+        {
+          "key": "MonthEndDate",
+          "label": "Month End Date",
+          "kind": "date"
+        },
+        {
+          "key": "InvoiceMonth",
+          "label": "Invoice Month",
+          "kind": "text"
+        },
+        {
+          "key": "InvoiceNumber",
+          "label": "Invoice Number",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierName",
+          "label": "Supplier Name",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierCategory",
+          "label": "Supplier Category",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierRiskRating",
+          "label": "Supplier Risk Rating",
+          "kind": "text"
+        },
+        {
+          "key": "InvoiceDate",
+          "label": "Invoice Date",
+          "kind": "date"
+        },
+        {
+          "key": "DueDate",
+          "label": "Due Date",
+          "kind": "date"
+        },
+        {
+          "key": "DaysFromDueAtMonthEnd",
+          "label": "Days From Due At Month End",
+          "kind": "decimal"
+        },
+        {
+          "key": "AgingBucket",
+          "label": "Aging Bucket",
+          "kind": "text"
+        },
+        {
+          "key": "InvoiceAmount",
+          "label": "Invoice Amount",
+          "kind": "money"
+        },
+        {
+          "key": "CashPaidAsOfMonthEnd",
+          "label": "Cash Paid As Of Month End",
+          "kind": "decimal"
+        },
+        {
+          "key": "OpenAmountAsOfMonthEnd",
+          "label": "Open Amount As Of Month End",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "monthly-ap-aging-summary": {
+      "csv": "04d23dd146a89db2d0d2539ae4a450e5e23c5fcddeae395e908d60ee65b1b191",
+      "sql": "ff44217ffe31a3de3eede953ee4663c2fa62bb3d5c81aa5d698ebb6018a448f4",
+      "rows": 3793,
+      "fields": [
+        {
+          "key": "MonthEndDate",
+          "label": "Month End Date",
+          "kind": "date"
+        },
+        {
+          "key": "SupplierName",
+          "label": "Supplier Name",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierCategory",
+          "label": "Supplier Category",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierRiskRating",
+          "label": "Supplier Risk Rating",
+          "kind": "text"
+        },
+        {
+          "key": "OpenInvoiceCount",
+          "label": "Open Invoice Count",
+          "kind": "integer"
+        },
+        {
+          "key": "TotalOpenAmount",
+          "label": "Total Open Amount",
+          "kind": "money"
+        },
+        {
+          "key": "CurrentAmount",
+          "label": "Current Amount",
+          "kind": "money"
+        },
+        {
+          "key": "Days1To30Amount",
+          "label": "Days1 To30 Amount",
+          "kind": "money"
+        },
+        {
+          "key": "Days31To60Amount",
+          "label": "Days31 To60 Amount",
+          "kind": "money"
+        },
+        {
+          "key": "Days61To90Amount",
+          "label": "Days61 To90 Amount",
+          "kind": "money"
+        },
+        {
+          "key": "Days90PlusAmount",
+          "label": "Days90 Plus Amount",
+          "kind": "money"
+        },
+        {
+          "key": "PastDueAmount",
+          "label": "Past Due Amount",
+          "kind": "money"
+        },
+        {
+          "key": "OldestDaysPastDue",
+          "label": "Oldest Days Past Due",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "working-capital-bridge-by-month": {
+      "csv": "af9eceac2d2d2dd9fceec985b391f567a0cb08cbae9e7447526537cbd5c942a9",
+      "sql": "a1ab33b46f30e03951e8e9843c85f8fb5270b786e1f078fb99fe473a1cf8230a",
+      "rows": 38,
+      "fields": [
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalPeriod",
+          "label": "Fiscal Period",
+          "kind": "text"
+        },
+        {
+          "key": "AccountsReceivableEndingBalance",
+          "label": "Accounts Receivable Ending Balance",
+          "kind": "money"
+        },
+        {
+          "key": "InventoryAndWIPEndingBalance",
+          "label": "Inventory And WIPEnding Balance",
+          "kind": "money"
+        },
+        {
+          "key": "AccountsPayableEndingBalance",
+          "label": "Accounts Payable Ending Balance",
+          "kind": "money"
+        },
+        {
+          "key": "GRNIEndingBalance",
+          "label": "GRNIEnding Balance",
+          "kind": "money"
+        },
+        {
+          "key": "CustomerDepositsEndingBalance",
+          "label": "Customer Deposits Ending Balance",
+          "kind": "money"
+        },
+        {
+          "key": "SalesCommissionPayableEndingBalance",
+          "label": "Sales Commission Payable Ending Balance",
+          "kind": "money"
+        },
+        {
+          "key": "AccruedExpensesEndingBalance",
+          "label": "Accrued Expenses Ending Balance",
+          "kind": "money"
+        },
+        {
+          "key": "PayrollLiabilitiesEndingBalance",
+          "label": "Payroll Liabilities Ending Balance",
+          "kind": "money"
+        },
+        {
+          "key": "NetWorkingCapital",
+          "label": "Net Working Capital",
+          "kind": "money"
+        }
+      ]
+    },
+    "sales-commission-payable-rollforward": {
+      "csv": "a4cedc3ba60949ece2f9faccee732a75df60c93a1b3b9fddcdbf62165ec5cf84",
+      "sql": "db388ca6f7396e916f2e3c93dbc685cd6aca73fb639b8bfe7942d922d3b1e111",
+      "rows": 36,
+      "fields": [
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalPeriod",
+          "label": "Fiscal Period",
+          "kind": "text"
+        },
+        {
+          "key": "AccruedCommissionAmount",
+          "label": "Accrued Commission Amount",
+          "kind": "money"
+        },
+        {
+          "key": "ClawbackAmount",
+          "label": "Clawback Amount",
+          "kind": "money"
+        },
+        {
+          "key": "PaymentAmount",
+          "label": "Payment Amount",
+          "kind": "money"
+        },
+        {
+          "key": "CreditAmount",
+          "label": "Credit Amount",
+          "kind": "money"
+        },
+        {
+          "key": "DebitAmount",
+          "label": "Debit Amount",
+          "kind": "money"
+        },
+        {
+          "key": "NetIncrease",
+          "label": "Net Increase",
+          "kind": "money"
+        },
+        {
+          "key": "EndingCommissionPayable",
+          "label": "Ending Commission Payable",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "customer-credit-and-refunds": {
+      "csv": "b37445c29532a7e9c960112a4c8aeab0f9ffb57462e1c236169e8dd9c66cfb88",
+      "sql": "5eaf322f55f6afdd313bf2427cf2f39ff8b0922f64b63d4b4c9d30d976e745c7",
+      "rows": 225,
+      "fields": [
+        {
+          "key": "CreditMemoNumber",
+          "label": "Credit Memo Number",
+          "kind": "text"
+        },
+        {
+          "key": "CreditMemoDate",
+          "label": "Credit Memo Date",
+          "kind": "date"
+        },
+        {
+          "key": "CustomerName",
+          "label": "Customer Name",
+          "kind": "text"
+        },
+        {
+          "key": "OriginalInvoiceNumber",
+          "label": "Original Invoice Number",
+          "kind": "text"
+        },
+        {
+          "key": "CreditMemoAmount",
+          "label": "Credit Memo Amount",
+          "kind": "money"
+        },
+        {
+          "key": "RemainingARBeforeMemo",
+          "label": "Remaining ARBefore Memo",
+          "kind": "money"
+        },
+        {
+          "key": "CustomerCreditCreated",
+          "label": "Customer Credit Created",
+          "kind": "money"
+        },
+        {
+          "key": "RefundedAmount",
+          "label": "Refunded Amount",
+          "kind": "money"
+        },
+        {
+          "key": "OpenCustomerCredit",
+          "label": "Open Customer Credit",
+          "kind": "money"
+        }
+      ]
+    },
+    "customer-deposits-and-unapplied-cash-aging": {
+      "csv": "b189456ce96cdc2a0d373d2dbcc7ffc6dcd98eb34b4e12a500e1848af898a584",
+      "sql": "fab245abc3d3d975eacf92e80b614b773ee1c29e72b57d81746a08f89f31f28d",
+      "rows": 7409,
+      "fields": [
+        {
+          "key": "ReceiptNumber",
+          "label": "Receipt Number",
+          "kind": "text"
+        },
+        {
+          "key": "ReceiptDate",
+          "label": "Receipt Date",
+          "kind": "date"
+        },
+        {
+          "key": "CustomerName",
+          "label": "Customer Name",
+          "kind": "text"
+        },
+        {
+          "key": "ReceiptAmount",
+          "label": "Receipt Amount",
+          "kind": "money"
+        },
+        {
+          "key": "AppliedAmount",
+          "label": "Applied Amount",
+          "kind": "money"
+        },
+        {
+          "key": "OpenUnappliedAmount",
+          "label": "Open Unapplied Amount",
+          "kind": "money"
+        },
+        {
+          "key": "AppliedInvoiceCount",
+          "label": "Applied Invoice Count",
+          "kind": "integer"
+        },
+        {
+          "key": "FirstApplicationDate",
+          "label": "First Application Date",
+          "kind": "date"
+        },
+        {
+          "key": "LastApplicationDate",
+          "label": "Last Application Date",
+          "kind": "date"
+        },
+        {
+          "key": "AgeDaysAtSnapshot",
+          "label": "Age Days At Snapshot",
+          "kind": "decimal"
+        },
+        {
+          "key": "DaysToFirstApplication",
+          "label": "Days To First Application",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "cash-conversion-timing-review": {
+      "csv": "ebdca199e19142271c4d3e1f3de1e6c13cdda11e225fb709bca78f74355b3bb5",
+      "sql": "535e79d1b15d4641879167f1d84ebd8dbd8a45b7b3b0f25f1924a3d556fd3883",
+      "rows": 108,
+      "fields": [
+        {
+          "key": "MetricFamily",
+          "label": "Metric Family",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalPeriod",
+          "label": "Fiscal Period",
+          "kind": "text"
+        },
+        {
+          "key": "DocumentCount",
+          "label": "Document Count",
+          "kind": "integer"
+        },
+        {
+          "key": "SettledDocumentCount",
+          "label": "Settled Document Count",
+          "kind": "integer"
+        },
+        {
+          "key": "OpenDocumentCount",
+          "label": "Open Document Count",
+          "kind": "integer"
+        },
+        {
+          "key": "AvgDaysToFirstSettlement",
+          "label": "Avg Days To First Settlement",
+          "kind": "decimal"
+        },
+        {
+          "key": "MaxDaysToFirstSettlement",
+          "label": "Max Days To First Settlement",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "price-realization-vs-list-by-customer-and-portfolio": {
+      "csv": "afe6c9575d193020fd5cc696d8b679a3a2098d593b0d241d7bd47c68c0c16dea",
+      "sql": "bffe6de03c28ea62dd72c90bd974b833167603da86a5109e822031eb5e768114",
+      "rows": 26020,
+      "fields": [
+        {
+          "key": "InvoiceMonth",
+          "label": "Invoice Month",
+          "kind": "text"
+        },
+        {
+          "key": "Region",
+          "label": "Region",
+          "kind": "text"
+        },
+        {
+          "key": "CustomerSegment",
+          "label": "Customer Segment",
+          "kind": "text"
+        },
+        {
+          "key": "CustomerName",
+          "label": "Customer Name",
+          "kind": "text"
+        },
+        {
+          "key": "CollectionName",
+          "label": "Collection Name",
+          "kind": "text"
+        },
+        {
+          "key": "StyleFamily",
+          "label": "Style Family",
+          "kind": "text"
+        },
+        {
+          "key": "InvoicedQuantity",
+          "label": "Invoiced Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "BaseListRevenue",
+          "label": "Base List Revenue",
+          "kind": "money"
+        },
+        {
+          "key": "NetRevenue",
+          "label": "Net Revenue",
+          "kind": "money"
+        },
+        {
+          "key": "AveragePromotionDiscountPct",
+          "label": "Average Promotion Discount Pct",
+          "kind": "percent"
+        },
+        {
+          "key": "PriceRealizationPct",
+          "label": "Price Realization Pct",
+          "kind": "percent"
+        }
+      ]
+    },
+    "payroll-expense-mix-by-cost-center-and-pay-class": {
+      "csv": "7b0a2209b3c05a50f34b7b8b1503578bd0a271546d92f6806272009b7aa683ee",
+      "sql": "0dc773de245658ff6f487ac48276d53684cb6e389f36d688f831c6394db4bcbe",
+      "rows": 504,
+      "fields": [
+        {
+          "key": "PayMonth",
+          "label": "Pay Month",
+          "kind": "text"
+        },
+        {
+          "key": "CostCenterName",
+          "label": "Cost Center Name",
+          "kind": "text"
+        },
+        {
+          "key": "PayClass",
+          "label": "Pay Class",
+          "kind": "text"
+        },
+        {
+          "key": "EmployeeCount",
+          "label": "Employee Count",
+          "kind": "integer"
+        },
+        {
+          "key": "GrossPay",
+          "label": "Gross Pay",
+          "kind": "money"
+        },
+        {
+          "key": "EmployeeWithholdings",
+          "label": "Employee Withholdings",
+          "kind": "money"
+        },
+        {
+          "key": "EmployerPayrollTax",
+          "label": "Employer Payroll Tax",
+          "kind": "decimal"
+        },
+        {
+          "key": "EmployerBenefits",
+          "label": "Employer Benefits",
+          "kind": "money"
+        },
+        {
+          "key": "NetPay",
+          "label": "Net Pay",
+          "kind": "money"
+        }
+      ]
+    },
+    "payroll-and-people-cost-mix-by-cost-center-job-family-level": {
+      "csv": "cdc8b4e72bf6c71ac45af942d818e921e6d31d0b2381c7771adcb45bb2d48eb0",
+      "sql": "71cd31b2e53ccdbf009ff9afb8b971f59dc5a5d6d8cb8b348bba1d35f7084382",
+      "rows": 25,
+      "fields": [
+        {
+          "key": "CostCenterName",
+          "label": "Cost Center Name",
+          "kind": "text"
+        },
+        {
+          "key": "JobFamily",
+          "label": "Job Family",
+          "kind": "text"
+        },
+        {
+          "key": "JobLevel",
+          "label": "Job Level",
+          "kind": "text"
+        },
+        {
+          "key": "PayClass",
+          "label": "Pay Class",
+          "kind": "text"
+        },
+        {
+          "key": "EndStateHeadcount",
+          "label": "End State Headcount",
+          "kind": "integer"
+        },
+        {
+          "key": "ActiveHeadcount",
+          "label": "Active Headcount",
+          "kind": "integer"
+        },
+        {
+          "key": "TerminatedHeadcount",
+          "label": "Terminated Headcount",
+          "kind": "integer"
+        },
+        {
+          "key": "EmployeesWithPayroll",
+          "label": "Employees With Payroll",
+          "kind": "decimal"
+        },
+        {
+          "key": "GrossPay",
+          "label": "Gross Pay",
+          "kind": "money"
+        },
+        {
+          "key": "EmployerPayrollTax",
+          "label": "Employer Payroll Tax",
+          "kind": "decimal"
+        },
+        {
+          "key": "EmployerBenefits",
+          "label": "Employer Benefits",
+          "kind": "money"
+        },
+        {
+          "key": "TotalPeopleCost",
+          "label": "Total People Cost",
+          "kind": "money"
+        }
+      ]
+    },
+    "gross-to-net-payroll-review": {
+      "csv": "492f8770e7981695a258103696b56073bc3c0318b4c5abda4eb8b0fe2bcd0994",
+      "sql": "3bd46b95dc8e71c7a906cb4e2e26df9b9729e8058e08fc855c319f2e8c583e72",
+      "rows": 8197,
+      "fields": [
+        {
+          "key": "PeriodNumber",
+          "label": "Period Number",
+          "kind": "text"
+        },
+        {
+          "key": "PayDate",
+          "label": "Pay Date",
+          "kind": "date"
+        },
+        {
+          "key": "EmployeeID",
+          "label": "Employee ID",
+          "kind": "text"
+        },
+        {
+          "key": "EmployeeName",
+          "label": "Employee Name",
+          "kind": "text"
+        },
+        {
+          "key": "CostCenterName",
+          "label": "Cost Center Name",
+          "kind": "text"
+        },
+        {
+          "key": "PayClass",
+          "label": "Pay Class",
+          "kind": "text"
+        },
+        {
+          "key": "GrossPay",
+          "label": "Gross Pay",
+          "kind": "money"
+        },
+        {
+          "key": "EmployeeWithholdings",
+          "label": "Employee Withholdings",
+          "kind": "money"
+        },
+        {
+          "key": "EmployerPayrollTax",
+          "label": "Employer Payroll Tax",
+          "kind": "decimal"
+        },
+        {
+          "key": "EmployerBenefits",
+          "label": "Employer Benefits",
+          "kind": "money"
+        },
+        {
+          "key": "NetPay",
+          "label": "Net Pay",
+          "kind": "money"
+        },
+        {
+          "key": "GrossLessWithholdings",
+          "label": "Gross Less Withholdings",
+          "kind": "money"
+        },
+        {
+          "key": "EmployerBurden",
+          "label": "Employer Burden",
+          "kind": "money"
+        },
+        {
+          "key": "Status",
+          "label": "Status",
+          "kind": "text"
+        }
+      ]
+    },
+    "hourly-payroll-hours-to-paid-earnings-bridge": {
+      "csv": "9d1abc115678c43798e667e92a32b2b08c2201d821946e98bcdc1d56aa708bfa",
+      "sql": "aecc3966d8b41df6edfd7a6b9853913b4001b4a30ecf454d8101aa3e681b446a",
+      "rows": 5537,
+      "fields": [
+        {
+          "key": "PeriodNumber",
+          "label": "Period Number",
+          "kind": "text"
+        },
+        {
+          "key": "PayDate",
+          "label": "Pay Date",
+          "kind": "date"
+        },
+        {
+          "key": "EmployeeID",
+          "label": "Employee ID",
+          "kind": "text"
+        },
+        {
+          "key": "EmployeeName",
+          "label": "Employee Name",
+          "kind": "text"
+        },
+        {
+          "key": "CostCenterName",
+          "label": "Cost Center Name",
+          "kind": "text"
+        },
+        {
+          "key": "ApprovedRegularHours",
+          "label": "Approved Regular Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "ApprovedOvertimeHours",
+          "label": "Approved Overtime Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "LaborHoursSupported",
+          "label": "Labor Hours Supported",
+          "kind": "decimal"
+        },
+        {
+          "key": "PayrollRegularHours",
+          "label": "Payroll Regular Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "PayrollOvertimeHours",
+          "label": "Payroll Overtime Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "HourlyEarningsAmount",
+          "label": "Hourly Earnings Amount",
+          "kind": "money"
+        },
+        {
+          "key": "GrossPay",
+          "label": "Gross Pay",
+          "kind": "money"
+        },
+        {
+          "key": "NetPay",
+          "label": "Net Pay",
+          "kind": "money"
+        },
+        {
+          "key": "FirstPaymentDate",
+          "label": "First Payment Date",
+          "kind": "date"
+        },
+        {
+          "key": "Status",
+          "label": "Status",
+          "kind": "text"
+        }
+      ]
+    },
+    "payroll-cash-payments-and-remittances": {
+      "csv": "9ab037ab741c38db44a804c4cfe9a5cbba8b7e91c268a996531484056e5890f9",
+      "sql": "88e889e9582537df6002f4fec7592ce06882873b5bb748457fe67a3f4da31815",
+      "rows": 36,
+      "fields": [
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalPeriod",
+          "label": "Fiscal Period",
+          "kind": "text"
+        },
+        {
+          "key": "NetPayCash",
+          "label": "Net Pay Cash",
+          "kind": "money"
+        },
+        {
+          "key": "EmployeeTaxRemittance",
+          "label": "Employee Tax Remittance",
+          "kind": "money"
+        },
+        {
+          "key": "EmployerTaxRemittance",
+          "label": "Employer Tax Remittance",
+          "kind": "money"
+        },
+        {
+          "key": "BenefitsRemittance",
+          "label": "Benefits Remittance",
+          "kind": "money"
+        },
+        {
+          "key": "TotalLiabilityRemittances",
+          "label": "Total Liability Remittances",
+          "kind": "decimal"
+        },
+        {
+          "key": "TotalPayrollCashOutflow",
+          "label": "Total Payroll Cash Outflow",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "payroll-liability-rollforward": {
+      "csv": "7ffd3f07e8ce1c3aaf5967947c6ac3c2916fcea2f622fff3fa93b5f3a54e0d76",
+      "sql": "5d42e21ae5f0b4d72fae26f0f3ca9a5b49ea80738d417535cb47cedf44792ba2",
+      "rows": 144,
+      "fields": [
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalPeriod",
+          "label": "Fiscal Period",
+          "kind": "text"
+        },
+        {
+          "key": "AccountNumber",
+          "label": "Account Number",
+          "kind": "text"
+        },
+        {
+          "key": "AccountName",
+          "label": "Account Name",
+          "kind": "text"
+        },
+        {
+          "key": "DebitAmount",
+          "label": "Debit Amount",
+          "kind": "money"
+        },
+        {
+          "key": "CreditAmount",
+          "label": "Credit Amount",
+          "kind": "money"
+        },
+        {
+          "key": "NetIncrease",
+          "label": "Net Increase",
+          "kind": "money"
+        },
+        {
+          "key": "EndingBalance",
+          "label": "Ending Balance",
+          "kind": "money"
+        }
+      ]
+    },
+    "budget-vs-actual-by-cost-center": {
+      "csv": "98026cfde443b60f26957ac38b13cdd01f09a187ee38ff1806f0f900fb04511a",
+      "sql": "b498b06ba6985c9f5a4ec6c7c1c4d31f0488c5bc7c787f5b1a6ce19d0f329940",
+      "rows": 960,
+      "fields": [
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "Month",
+          "label": "Month",
+          "kind": "text"
+        },
+        {
+          "key": "CostCenterName",
+          "label": "Cost Center Name",
+          "kind": "text"
+        },
+        {
+          "key": "AccountNumber",
+          "label": "Account Number",
+          "kind": "text"
+        },
+        {
+          "key": "AccountName",
+          "label": "Account Name",
+          "kind": "text"
+        },
+        {
+          "key": "BudgetAmount",
+          "label": "Budget Amount",
+          "kind": "money"
+        },
+        {
+          "key": "ActualAmount",
+          "label": "Actual Amount",
+          "kind": "money"
+        },
+        {
+          "key": "VarianceAmount",
+          "label": "Variance Amount",
+          "kind": "money"
+        },
+        {
+          "key": "VariancePct",
+          "label": "Variance Pct",
+          "kind": "percent"
+        }
+      ]
+    },
+    "sales-commission-expense-by-rep-segment": {
+      "csv": "ad0cac13d80f4cd50c0173b117abdc7960e6bfc4603a279c968a636e93e6e19f",
+      "sql": "4c784494f74db38458b069a71fb94e5ac9ed17a5a3eba5c05e575bd5a8eea085",
+      "rows": 979,
+      "fields": [
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalPeriod",
+          "label": "Fiscal Period",
+          "kind": "text"
+        },
+        {
+          "key": "SalesRepName",
+          "label": "Sales Rep Name",
+          "kind": "text"
+        },
+        {
+          "key": "RevenueType",
+          "label": "Revenue Type",
+          "kind": "text"
+        },
+        {
+          "key": "CustomerSegment",
+          "label": "Customer Segment",
+          "kind": "text"
+        },
+        {
+          "key": "CommissionedInvoiceLineCount",
+          "label": "Commissioned Invoice Line Count",
+          "kind": "integer"
+        },
+        {
+          "key": "CommissionBaseAmount",
+          "label": "Commission Base Amount",
+          "kind": "money"
+        },
+        {
+          "key": "AverageCommissionRatePct",
+          "label": "Average Commission Rate Pct",
+          "kind": "percent"
+        },
+        {
+          "key": "GrossCommissionExpense",
+          "label": "Gross Commission Expense",
+          "kind": "decimal"
+        },
+        {
+          "key": "ClawedBackBaseAmount",
+          "label": "Clawed Back Base Amount",
+          "kind": "money"
+        },
+        {
+          "key": "ClawbackAmount",
+          "label": "Clawback Amount",
+          "kind": "money"
+        },
+        {
+          "key": "NetCommissionExpense",
+          "label": "Net Commission Expense",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "budget-vs-actual-revenue-price-volume-cost-bridge": {
+      "csv": "eb2c9629077c807f05acb1917ba330a86a633915605defe0871bb730237f8a23",
+      "sql": "7b11e0d80a9637069f57a0f18c6eff068f449cca424a93e7a0f78e9bff5479ea",
+      "rows": 4555,
+      "fields": [
+        {
+          "key": "FiscalYear",
+          "label": "Fiscal Year",
+          "kind": "text"
+        },
+        {
+          "key": "FiscalPeriod",
+          "label": "Fiscal Period",
+          "kind": "text"
+        },
+        {
+          "key": "CollectionName",
+          "label": "Collection Name",
+          "kind": "text"
+        },
+        {
+          "key": "StyleFamily",
+          "label": "Style Family",
+          "kind": "text"
+        },
+        {
+          "key": "BudgetQuantity",
+          "label": "Budget Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "ActualQuantity",
+          "label": "Actual Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "BudgetNetRevenue",
+          "label": "Budget Net Revenue",
+          "kind": "money"
+        },
+        {
+          "key": "ActualNetRevenue",
+          "label": "Actual Net Revenue",
+          "kind": "money"
+        },
+        {
+          "key": "BudgetCOGS",
+          "label": "Budget COGS",
+          "kind": "money"
+        },
+        {
+          "key": "ActualCOGS",
+          "label": "Actual COGS",
+          "kind": "money"
+        },
+        {
+          "key": "RevenueVariance",
+          "label": "Revenue Variance",
+          "kind": "money"
+        },
+        {
+          "key": "PriceVariance",
+          "label": "Price Variance",
+          "kind": "money"
+        },
+        {
+          "key": "VolumeVariance",
+          "label": "Volume Variance",
+          "kind": "money"
+        },
+        {
+          "key": "CostVariance",
+          "label": "Cost Variance",
+          "kind": "money"
+        }
+      ]
+    },
+    "sales-and-margin-by-collection-and-style": {
+      "csv": "e6aba43ffb662bc7038f4b86028b879b88476db8d58dedbabd1723361dfc2c06",
+      "sql": "2c09c66c6fdde4f57c0886aefee0d067faf33ae6d864461f66eda5bfc3647138",
+      "rows": 180,
+      "fields": [
+        {
+          "key": "ItemGroup",
+          "label": "Item Group",
+          "kind": "text"
+        },
+        {
+          "key": "CollectionName",
+          "label": "Collection Name",
+          "kind": "text"
+        },
+        {
+          "key": "StyleFamily",
+          "label": "Style Family",
+          "kind": "text"
+        },
+        {
+          "key": "PrimaryMaterial",
+          "label": "Primary Material",
+          "kind": "text"
+        },
+        {
+          "key": "LifecycleStatus",
+          "label": "Lifecycle Status",
+          "kind": "text"
+        },
+        {
+          "key": "BilledQuantity",
+          "label": "Billed Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "CreditedReturnQuantity",
+          "label": "Credited Return Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "BilledSales",
+          "label": "Billed Sales",
+          "kind": "money"
+        },
+        {
+          "key": "CreditMemoValue",
+          "label": "Credit Memo Value",
+          "kind": "money"
+        },
+        {
+          "key": "NetSales",
+          "label": "Net Sales",
+          "kind": "money"
+        },
+        {
+          "key": "NetStandardCost",
+          "label": "Net Standard Cost",
+          "kind": "money"
+        },
+        {
+          "key": "GrossMargin",
+          "label": "Gross Margin",
+          "kind": "money"
+        }
+      ]
+    },
+    "monthly-work-center-utilization": {
+      "csv": "d8f9413a58ae5028273bc56f816d7830f50f6b062473227a678b2347a997d894",
+      "sql": "79f447f83e42f0df672baee28915cb97fc83199378db3ad3e729feea5b125d09",
+      "rows": 195,
+      "fields": [
+        {
+          "key": "PeriodMonth",
+          "label": "Period Month",
+          "kind": "text"
+        },
+        {
+          "key": "WorkCenterCode",
+          "label": "Work Center Code",
+          "kind": "text"
+        },
+        {
+          "key": "WorkCenterName",
+          "label": "Work Center Name",
+          "kind": "text"
+        },
+        {
+          "key": "AvailableHours",
+          "label": "Available Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "ScheduledHours",
+          "label": "Scheduled Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "UtilizationPct",
+          "label": "Utilization Pct",
+          "kind": "percent"
+        },
+        {
+          "key": "FullyBookedDays",
+          "label": "Fully Booked Days",
+          "kind": "integer"
+        }
+      ]
+    },
+    "headcount-by-cost-center-and-job-family": {
+      "csv": "776b3aa95460c264c29d98edaea456fd1fad7a4ecb3f583e6a2127713405db66",
+      "sql": "44c8c2932d2eae97448adefcdb91d6d66a656e9b69d491904a3bc20f0cb42fc8",
+      "rows": 35,
+      "fields": [
+        {
+          "key": "CostCenterName",
+          "label": "Cost Center Name",
+          "kind": "text"
+        },
+        {
+          "key": "JobFamily",
+          "label": "Job Family",
+          "kind": "text"
+        },
+        {
+          "key": "JobLevel",
+          "label": "Job Level",
+          "kind": "text"
+        },
+        {
+          "key": "EmploymentStatus",
+          "label": "Employment Status",
+          "kind": "text"
+        },
+        {
+          "key": "Headcount",
+          "label": "Headcount",
+          "kind": "integer"
+        },
+        {
+          "key": "HourlyEmployees",
+          "label": "Hourly Employees",
+          "kind": "integer"
+        },
+        {
+          "key": "SalariedEmployees",
+          "label": "Salaried Employees",
+          "kind": "integer"
+        },
+        {
+          "key": "ActiveAtRangeEnd",
+          "label": "Active At Range End",
+          "kind": "decimal"
+        },
+        {
+          "key": "AverageTenureYears",
+          "label": "Average Tenure Years",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "customer-sales-mix-by-region-and-item-group": {
+      "csv": "eaf93af90c6ed7cb4a0b4f6077cbd728316320411e399e2accc59e07262d1524",
+      "sql": "561ba16f340115a2df722d6de6bd6c80981382e084ac8d8b849a2452e9738623",
+      "rows": 22906,
+      "fields": [
+        {
+          "key": "InvoiceMonth",
+          "label": "Invoice Month",
+          "kind": "text"
+        },
+        {
+          "key": "Region",
+          "label": "Region",
+          "kind": "text"
+        },
+        {
+          "key": "CustomerSegment",
+          "label": "Customer Segment",
+          "kind": "text"
+        },
+        {
+          "key": "ItemGroup",
+          "label": "Item Group",
+          "kind": "text"
+        },
+        {
+          "key": "ItemCode",
+          "label": "Item Code",
+          "kind": "text"
+        },
+        {
+          "key": "ItemName",
+          "label": "Item Name",
+          "kind": "text"
+        },
+        {
+          "key": "BilledQuantity",
+          "label": "Billed Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "RevenueAmount",
+          "label": "Revenue Amount",
+          "kind": "money"
+        },
+        {
+          "key": "AverageUnitPrice",
+          "label": "Average Unit Price",
+          "kind": "money"
+        }
+      ]
+    },
+    "supplier-purchasing-activity-by-category": {
+      "csv": "dbf66fb59cf006c35a1ddd471abac0c222177e2cb15b4dd6b81e89da0dc203fa",
+      "sql": "0ce4a9c4cf8c5eb2e537f0e72848b934af0744c791b6aaff717185525b4898b9",
+      "rows": 5479,
+      "fields": [
+        {
+          "key": "OrderMonth",
+          "label": "Order Month",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierCategory",
+          "label": "Supplier Category",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierRiskRating",
+          "label": "Supplier Risk Rating",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierName",
+          "label": "Supplier Name",
+          "kind": "text"
+        },
+        {
+          "key": "ItemGroup",
+          "label": "Item Group",
+          "kind": "text"
+        },
+        {
+          "key": "PurchaseOrderCount",
+          "label": "Purchase Order Count",
+          "kind": "integer"
+        },
+        {
+          "key": "PurchaseOrderLineCount",
+          "label": "Purchase Order Line Count",
+          "kind": "integer"
+        },
+        {
+          "key": "OrderedQuantity",
+          "label": "Ordered Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "OrderedValue",
+          "label": "Ordered Value",
+          "kind": "money"
+        }
+      ]
+    },
+    "supplier-lead-time-and-receipt-reliability": {
+      "csv": "9f1b94c757831f936c562b48d00debe51ea011687214150449051392714eb8d4",
+      "sql": "356564451a97c5405d514a04502cde92d5d19731e03e04d6cd208c7c2b317b69",
+      "rows": 3493,
+      "fields": [
+        {
+          "key": "OrderMonth",
+          "label": "Order Month",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierName",
+          "label": "Supplier Name",
+          "kind": "text"
+        },
+        {
+          "key": "SupplierCategory",
+          "label": "Supplier Category",
+          "kind": "text"
+        },
+        {
+          "key": "PurchaseOrderCount",
+          "label": "Purchase Order Count",
+          "kind": "integer"
+        },
+        {
+          "key": "AvgDaysToFirstReceipt",
+          "label": "Avg Days To First Receipt",
+          "kind": "decimal"
+        },
+        {
+          "key": "AvgDaysToFullReceipt",
+          "label": "Avg Days To Full Receipt",
+          "kind": "decimal"
+        },
+        {
+          "key": "FullyReceivedPOCount",
+          "label": "Fully Received POCount",
+          "kind": "integer"
+        },
+        {
+          "key": "PartiallyReceivedPOCount",
+          "label": "Partially Received POCount",
+          "kind": "integer"
+        },
+        {
+          "key": "NoReceiptPOCount",
+          "label": "No Receipt POCount",
+          "kind": "integer"
+        },
+        {
+          "key": "FirstReceiptOver14DaysCount",
+          "label": "First Receipt Over14 Days Count",
+          "kind": "integer"
+        }
+      ]
+    },
+    "inventory-coverage-and-projected-stockout-risk": {
+      "csv": "2e737d61db5748c7ffbea2ab970edcbb461cb79c597a3dc24888b973d0fff85f",
+      "sql": "2414cd3eb825dae5fe33da49d376d731b454bb74aabdaf3592dd29c7533108f1",
+      "rows": 115,
+      "fields": [
+        {
+          "key": "ItemCode",
+          "label": "Item Code",
+          "kind": "text"
+        },
+        {
+          "key": "ItemName",
+          "label": "Item Name",
+          "kind": "text"
+        },
+        {
+          "key": "ItemGroup",
+          "label": "Item Group",
+          "kind": "text"
+        },
+        {
+          "key": "CollectionName",
+          "label": "Collection Name",
+          "kind": "text"
+        },
+        {
+          "key": "StyleFamily",
+          "label": "Style Family",
+          "kind": "text"
+        },
+        {
+          "key": "WarehouseName",
+          "label": "Warehouse Name",
+          "kind": "text"
+        },
+        {
+          "key": "AvgWeeklyForecastQuantity",
+          "label": "Avg Weekly Forecast Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "ProjectedAvailableQuantity",
+          "label": "Projected Available Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "NetRequirementQuantity",
+          "label": "Net Requirement Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "RecommendedOrderQuantity",
+          "label": "Recommended Order Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "WeeksOfCoverage",
+          "label": "Weeks Of Coverage",
+          "kind": "decimal"
+        },
+        {
+          "key": "StockoutRisk",
+          "label": "Stockout Risk",
+          "kind": "text"
+        }
+      ]
+    },
+    "rough-cut-capacity-load-vs-available-hours": {
+      "csv": "fb8195e3851926142cecf49dd05c2a8b882288c68443064964ed14a9896cea7e",
+      "sql": "1bd18ab146a55f58fc3f385707580207b8ca1350e24f734eaba7e6406946f310",
+      "rows": 804,
+      "fields": [
+        {
+          "key": "BucketWeekStartDate",
+          "label": "Bucket Week Start Date",
+          "kind": "date"
+        },
+        {
+          "key": "BucketWeekEndDate",
+          "label": "Bucket Week End Date",
+          "kind": "date"
+        },
+        {
+          "key": "WorkCenterCode",
+          "label": "Work Center Code",
+          "kind": "text"
+        },
+        {
+          "key": "WorkCenterName",
+          "label": "Work Center Name",
+          "kind": "text"
+        },
+        {
+          "key": "PlannedLoadHours",
+          "label": "Planned Load Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "AvailableHours",
+          "label": "Available Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "UtilizationPct",
+          "label": "Utilization Pct",
+          "kind": "percent"
+        },
+        {
+          "key": "CapacityStatus",
+          "label": "Capacity Status",
+          "kind": "text"
+        }
+      ]
+    },
+    "forecast-error-and-bias-by-collection-and-style-family": {
+      "csv": "380ed815a9cd8ddbd1a29a8375b2170e7dbb3d96cf1f29938583faf3928b735c",
+      "sql": "ed745a6a47907efe44893cab6ef3823cac7bf9ff27985e34c112bde2082ddf72",
+      "rows": 96,
+      "fields": [
+        {
+          "key": "CollectionName",
+          "label": "Collection Name",
+          "kind": "text"
+        },
+        {
+          "key": "StyleFamily",
+          "label": "Style Family",
+          "kind": "text"
+        },
+        {
+          "key": "ForecastQuantity",
+          "label": "Forecast Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "ActualOrderQuantity",
+          "label": "Actual Order Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "BiasQuantity",
+          "label": "Bias Quantity",
+          "kind": "decimal"
+        },
+        {
+          "key": "AbsoluteErrorQuantity",
+          "label": "Absolute Error Quantity",
+          "kind": "decimal"
+        }
+      ]
+    },
+    "labor-and-headcount-by-work-location-job-family-cost-center": {
+      "csv": "50e78440c4b92b4e9152589fdfe6d89dd054d4c65c910bbadae23bbab931499b",
+      "sql": "4b85235d968749d59b7a5d0bcabd29ad792d908f0175da6ad5ec99142142dfab",
+      "rows": 13,
+      "fields": [
+        {
+          "key": "WorkLocation",
+          "label": "Work Location",
+          "kind": "text"
+        },
+        {
+          "key": "CostCenterName",
+          "label": "Cost Center Name",
+          "kind": "text"
+        },
+        {
+          "key": "JobFamily",
+          "label": "Job Family",
+          "kind": "text"
+        },
+        {
+          "key": "EndStateHeadcount",
+          "label": "End State Headcount",
+          "kind": "integer"
+        },
+        {
+          "key": "ActiveHeadcount",
+          "label": "Active Headcount",
+          "kind": "integer"
+        },
+        {
+          "key": "TerminatedHeadcount",
+          "label": "Terminated Headcount",
+          "kind": "integer"
+        },
+        {
+          "key": "GrossPay",
+          "label": "Gross Pay",
+          "kind": "money"
+        },
+        {
+          "key": "EmployerBurden",
+          "label": "Employer Burden",
+          "kind": "money"
+        },
+        {
+          "key": "TotalPeopleCost",
+          "label": "Total People Cost",
+          "kind": "money"
+        },
+        {
+          "key": "ApprovedClockHours",
+          "label": "Approved Clock Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "DirectLaborHours",
+          "label": "Direct Labor Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "ExtendedLaborCost",
+          "label": "Extended Labor Cost",
+          "kind": "money"
+        }
+      ]
+    },
+    "absence-rate-by-work-location-job-family-month": {
+      "csv": "6288f7c43481ee2c57be7af84566446ea5640bafd062b3560217b29d3c0498de",
+      "sql": "68e30f3dce2a33f395ee8065f07beaaef24270a6b7edf791e655ca0b76acb314",
+      "rows": 180,
+      "fields": [
+        {
+          "key": "YearMonth",
+          "label": "Year Month",
+          "kind": "text"
+        },
+        {
+          "key": "WorkLocation",
+          "label": "Work Location",
+          "kind": "text"
+        },
+        {
+          "key": "JobFamily",
+          "label": "Job Family",
+          "kind": "text"
+        },
+        {
+          "key": "RosteredHours",
+          "label": "Rostered Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "HoursAbsent",
+          "label": "Hours Absent",
+          "kind": "decimal"
+        },
+        {
+          "key": "PaidAbsenceHours",
+          "label": "Paid Absence Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "UnpaidAbsenceHours",
+          "label": "Unpaid Absence Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "AbsenceRate",
+          "label": "Absence Rate",
+          "kind": "percent"
+        }
+      ]
+    },
+    "overtime-approval-coverage-and-concentration": {
+      "csv": "9b8a2696096a785f4c7003e3b01c3b4c0af90797dc72b94ed1085884cf58efab",
+      "sql": "d5757bd0ff0b1804b758b84808ce5451ed64786ec95804b83a07644173975d69",
+      "rows": 216,
+      "fields": [
+        {
+          "key": "YearMonth",
+          "label": "Year Month",
+          "kind": "text"
+        },
+        {
+          "key": "WorkCenterCode",
+          "label": "Work Center Code",
+          "kind": "text"
+        },
+        {
+          "key": "WorkCenterName",
+          "label": "Work Center Name",
+          "kind": "text"
+        },
+        {
+          "key": "OvertimeHours",
+          "label": "Overtime Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "ApprovedOvertimeHours",
+          "label": "Approved Overtime Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "OvertimeEntryCount",
+          "label": "Overtime Entry Count",
+          "kind": "integer"
+        },
+        {
+          "key": "ApprovedOvertimeEntryCount",
+          "label": "Approved Overtime Entry Count",
+          "kind": "integer"
+        },
+        {
+          "key": "MissingApprovalEntryCount",
+          "label": "Missing Approval Entry Count",
+          "kind": "integer"
+        },
+        {
+          "key": "OvertimeApprovalCoveragePct",
+          "label": "Overtime Approval Coverage Pct",
+          "kind": "percent"
+        }
+      ]
+    },
+    "punch-to-pay-bridge-for-hourly-workers": {
+      "csv": "25e0219dc5c544628a326c4ad7a612b0174a088e6cc9d904bd2bb7f5c3da30ff",
+      "sql": "0fdb3caedb550adcd19d5a6fa2df4c5bcc3e25dca4fb880032db5703d5b42827",
+      "rows": 5537,
+      "fields": [
+        {
+          "key": "PeriodNumber",
+          "label": "Period Number",
+          "kind": "text"
+        },
+        {
+          "key": "PeriodStartDate",
+          "label": "Period Start Date",
+          "kind": "date"
+        },
+        {
+          "key": "PeriodEndDate",
+          "label": "Period End Date",
+          "kind": "date"
+        },
+        {
+          "key": "EmployeeNumber",
+          "label": "Employee Number",
+          "kind": "text"
+        },
+        {
+          "key": "EmployeeName",
+          "label": "Employee Name",
+          "kind": "text"
+        },
+        {
+          "key": "JobTitle",
+          "label": "Job Title",
+          "kind": "text"
+        },
+        {
+          "key": "JobFamily",
+          "label": "Job Family",
+          "kind": "text"
+        },
+        {
+          "key": "PunchCount",
+          "label": "Punch Count",
+          "kind": "integer"
+        },
+        {
+          "key": "ApprovedClockHours",
+          "label": "Approved Clock Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "ApprovedOvertimeHours",
+          "label": "Approved Overtime Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "LaborHours",
+          "label": "Labor Hours",
+          "kind": "decimal"
+        },
+        {
+          "key": "LaborCost",
+          "label": "Labor Cost",
+          "kind": "money"
+        },
+        {
+          "key": "GrossPay",
+          "label": "Gross Pay",
+          "kind": "money"
+        },
+        {
+          "key": "NetPay",
+          "label": "Net Pay",
+          "kind": "money"
+        }
+      ]
+    },
+    "approval-and-sod-review": {
+      "csv": "83f4c1b8b7095b9a41dace4b51a8c1259269754d5d4b29ad1b7258a88f609968",
+      "sql": "06ddd1de02263fc180f2d834b2ce388fc0944b91beb4f67446183e5fec2c4b85",
+      "rows": 373,
+      "fields": [
+        {
+          "key": "DocumentType",
+          "label": "Document Type",
+          "kind": "text"
+        },
+        {
+          "key": "DocumentNumber",
+          "label": "Document Number",
+          "kind": "text"
+        },
+        {
+          "key": "DocumentDate",
+          "label": "Document Date",
+          "kind": "date"
+        },
+        {
+          "key": "IssueType",
+          "label": "Issue Type",
+          "kind": "text"
+        },
+        {
+          "key": "PrimaryEmployee",
+          "label": "Primary Employee",
+          "kind": "text"
+        },
+        {
+          "key": "SecondaryEmployee",
+          "label": "Secondary Employee",
+          "kind": "text"
+        },
+        {
+          "key": "Status",
+          "label": "Status",
+          "kind": "text"
+        }
+      ]
+    },
+    "potential-anomaly-review": {
+      "csv": "8c37207183100f1acb1e453c7ccac8ae4bdb8c4ed2843d68471488eabc818d09",
+      "sql": "06c061dc0f36fe9d309ef3be73b190d579eccc5d446c9969fd4fa8935e447c88",
+      "rows": 46,
+      "fields": [
+        {
+          "key": "PotentialIssue",
+          "label": "Potential Issue",
+          "kind": "text"
+        },
+        {
+          "key": "TableName",
+          "label": "Table Name",
+          "kind": "text"
+        },
+        {
+          "key": "DocumentNumber",
+          "label": "Document Number",
+          "kind": "text"
+        },
+        {
+          "key": "EventDate",
+          "label": "Event Date",
+          "kind": "date"
+        },
+        {
+          "key": "Details",
+          "label": "Details",
+          "kind": "text"
+        }
+      ]
+    },
+    "payroll-control-review": {
+      "csv": "5d93b00b162f885527458e874781f225b5feafea450b0bd8f43f751700896a2a",
+      "sql": "d714fdb22d886b5982e0ca11b7228cd35745d889d2acb5ebe59a5f61d2ad5697",
+      "rows": 70,
+      "fields": [
+        {
+          "key": "PotentialIssue",
+          "label": "Potential Issue",
+          "kind": "text"
+        },
+        {
+          "key": "ReferenceNumber",
+          "label": "Reference Number",
+          "kind": "text"
+        },
+        {
+          "key": "EmployeeReference",
+          "label": "Employee Reference",
+          "kind": "text"
+        },
+        {
+          "key": "EmployeeName",
+          "label": "Employee Name",
+          "kind": "text"
+        },
+        {
+          "key": "EventDate",
+          "label": "Event Date",
+          "kind": "date"
+        },
+        {
+          "key": "Amount",
+          "label": "Amount",
+          "kind": "money"
+        }
+      ]
+    },
+    "paid-without-clock-and-clock-without-pay-review": {
+      "csv": "4c08bd6c440ad7e75ca575527337bd76a6c4efb14b15c6a4ebbb9489de5d4a03",
+      "sql": "214842da2d8e98639548ef951c877abec7a8349521a5528db0757cbc980c5fea",
+      "rows": 9,
+      "fields": [
+        {
+          "key": "PotentialIssue",
+          "label": "Potential Issue",
+          "kind": "text"
+        },
+        {
+          "key": "ReferenceNumber",
+          "label": "Reference Number",
+          "kind": "text"
+        },
+        {
+          "key": "EmployeeName",
+          "label": "Employee Name",
+          "kind": "text"
+        },
+        {
+          "key": "EventDate",
+          "label": "Event Date",
+          "kind": "date"
+        },
+        {
+          "key": "HoursOrAmount",
+          "label": "Hours Or Amount",
+          "kind": "money"
+        }
+      ]
+    }
+  },
+  "catalog": [
+    {
+      "slug": "monthly-income-statement",
+      "title": "Monthly Income Statement",
+      "area": "financial",
+      "process_group": "monthly-close-and-statements",
+      "cadence": "Monthly",
+      "description": "Review revenue, cost of goods sold, operating expenses, and net income by fiscal period.",
+      "query_path": "queries/financial/27_income_statement_monthly.sql"
+    },
+    {
+      "slug": "monthly-balance-sheet",
+      "title": "Monthly Balance Sheet",
+      "area": "financial",
+      "process_group": "monthly-close-and-statements",
+      "cadence": "Monthly",
+      "description": "Analyze monthly ending balances for assets, liabilities, equity, and current year earnings.",
+      "query_path": "queries/financial/30_balance_sheet_monthly.sql"
+    },
+    {
+      "slug": "monthly-indirect-cash-flow",
+      "title": "Monthly Indirect Cash Flow",
+      "area": "financial",
+      "process_group": "monthly-close-and-statements",
+      "cadence": "Monthly",
+      "description": "Reconcile net income to cash movement and review monthly operating, investing, and financing activity.",
+      "query_path": "queries/financial/33_cash_flow_statement_indirect_monthly.sql"
+    },
+    {
+      "slug": "pro-forma-monthly-income-statement",
+      "title": "Pro Forma Monthly Income Statement",
+      "area": "financial",
+      "process_group": "monthly-close-and-statements",
+      "cadence": "Monthly budget horizon",
+      "description": "Review the driver-based monthly income statement budget built from forecast volume, planned pricing, standard cost, payroll, and recurring expense drivers.",
+      "query_path": "queries/financial/49_pro_forma_income_statement_monthly.sql"
+    },
+    {
+      "slug": "pro-forma-monthly-balance-sheet",
+      "title": "Pro Forma Monthly Balance Sheet",
+      "area": "financial",
+      "process_group": "monthly-close-and-statements",
+      "cadence": "Monthly budget horizon",
+      "description": "Review the driver-based monthly balance-sheet roll-forward for receivables, inventory, payables, accruals, fixed assets, equity, and cash.",
+      "query_path": "queries/financial/50_pro_forma_balance_sheet_monthly.sql"
+    },
+    {
+      "slug": "pro-forma-monthly-indirect-cash-flow",
+      "title": "Pro Forma Monthly Indirect Cash Flow",
+      "area": "financial",
+      "process_group": "monthly-close-and-statements",
+      "cadence": "Monthly budget horizon",
+      "description": "Reconcile the pro forma budget from net income to operating, investing, financing, and ending-cash movement.",
+      "query_path": "queries/financial/51_pro_forma_cash_flow_indirect_monthly.sql"
+    },
+    {
+      "slug": "budget-vs-actual-statement-bridge-monthly",
+      "title": "Budget vs Actual Statement Bridge by Month",
+      "area": "financial",
+      "process_group": "monthly-close-and-statements",
+      "cadence": "Monthly",
+      "description": "Compare key income statement, balance sheet, and cash lines between the pro forma budget and posted actual results.",
+      "query_path": "queries/financial/52_budget_vs_actual_statement_bridge_monthly.sql"
+    },
+    {
+      "slug": "monthly-revenue-and-gross-margin",
+      "title": "Monthly Revenue and Gross Margin",
+      "area": "financial",
+      "process_group": "revenue-and-working-capital",
+      "cadence": "Monthly",
+      "description": "Compare invoiced revenue, gross margin, discounts, and returns across fiscal periods.",
+      "query_path": "queries/financial/01_monthly_revenue_and_gross_margin.sql"
+    },
+    {
+      "slug": "design-service-revenue-and-billed-hours",
+      "title": "Design Service Revenue and Billed Hours",
+      "area": "financial",
+      "process_group": "revenue-and-working-capital",
+      "cadence": "Monthly",
+      "description": "Review billed design-service hours and posted service revenue by customer and invoice month.",
+      "query_path": "queries/financial/57_design_service_revenue_and_billed_hours_by_customer_month.sql"
+    },
+    {
+      "slug": "ar-aging",
+      "title": "AR Aging",
+      "area": "financial",
+      "process_group": "receivables-and-payables-aging",
+      "cadence": "Current snapshot",
+      "description": "Review open customer invoices by aging bucket and identify collection pressure.",
+      "query_path": "queries/financial/02_ar_aging_open_invoices.sql"
+    },
+    {
+      "slug": "ap-aging",
+      "title": "AP Aging",
+      "area": "financial",
+      "process_group": "receivables-and-payables-aging",
+      "cadence": "Current snapshot",
+      "description": "Review open supplier invoices by aging bucket and identify upcoming cash commitments.",
+      "query_path": "queries/financial/03_ap_aging_open_invoices.sql"
+    },
+    {
+      "slug": "monthly-ar-aging-detail",
+      "title": "Monthly AR Aging Detail",
+      "area": "financial",
+      "process_group": "receivables-and-payables-aging",
+      "cadence": "Monthly month-end",
+      "description": "Track open customer invoices at each month-end with due-day aging based on the last day of the month.",
+      "query_path": "queries/financial/45_monthly_ar_aging_detail.sql"
+    },
+    {
+      "slug": "monthly-ar-aging-summary",
+      "title": "Monthly AR Aging Summary",
+      "area": "financial",
+      "process_group": "receivables-and-payables-aging",
+      "cadence": "Monthly month-end",
+      "description": "Summarize month-end receivables exposure by customer, region, and segment.",
+      "query_path": "queries/financial/46_monthly_ar_aging_summary.sql"
+    },
+    {
+      "slug": "monthly-ap-aging-detail",
+      "title": "Monthly AP Aging Detail",
+      "area": "financial",
+      "process_group": "receivables-and-payables-aging",
+      "cadence": "Monthly month-end",
+      "description": "Track open supplier invoices at each month-end with due-day aging based on the last day of the month.",
+      "query_path": "queries/financial/47_monthly_ap_aging_detail.sql"
+    },
+    {
+      "slug": "monthly-ap-aging-summary",
+      "title": "Monthly AP Aging Summary",
+      "area": "financial",
+      "process_group": "receivables-and-payables-aging",
+      "cadence": "Monthly month-end",
+      "description": "Summarize month-end payables exposure by supplier, category, and risk rating.",
+      "query_path": "queries/financial/48_monthly_ap_aging_summary.sql"
+    },
+    {
+      "slug": "working-capital-bridge-by-month",
+      "title": "Working Capital Bridge by Month",
+      "area": "financial",
+      "process_group": "working-capital-and-cash-conversion",
+      "cadence": "Monthly",
+      "description": "Compare the month-end balances of the main working-capital buckets and track net working capital over time.",
+      "query_path": "queries/financial/19_working_capital_bridge_by_month.sql"
+    },
+    {
+      "slug": "budget-vs-actual-working-capital-and-cash-bridge",
+      "title": "Budget vs Actual Working Capital and Cash Bridge",
+      "area": "financial",
+      "process_group": "working-capital-and-cash-conversion",
+      "cadence": "Monthly",
+      "description": "Compare budgeted and actual balances for the main working-capital buckets plus ending cash across the planning horizon.",
+      "query_path": "queries/financial/53_budget_vs_actual_working_capital_and_cash_bridge.sql"
+    },
+    {
+      "slug": "sales-commission-payable-rollforward",
+      "title": "Sales Commission Payable Rollforward",
+      "area": "financial",
+      "process_group": "working-capital-and-cash-conversion",
+      "cadence": "Monthly",
+      "description": "Reconcile commission payable from invoice-line accruals through credit-memo clawbacks and sales-rep payments.",
+      "query_path": "queries/financial/58_sales_commission_payable_rollforward.sql"
+    },
+    {
+      "slug": "customer-credit-and-refunds",
+      "title": "Customer Credit and Refunds",
+      "area": "financial",
+      "process_group": "customer-pricing-and-settlement",
+      "cadence": "Current snapshot",
+      "description": "Review customer credits created by credit memos and whether those balances have been refunded or remain open.",
+      "query_path": "queries/financial/07_customer_credit_and_refunds.sql"
+    },
+    {
+      "slug": "customer-deposits-and-unapplied-cash-aging",
+      "title": "Customer Deposits and Unapplied Cash Aging",
+      "area": "financial",
+      "process_group": "working-capital-and-cash-conversion",
+      "cadence": "Current snapshot",
+      "description": "Review customer receipts, open unapplied balances, and how long cash remained unapplied before first use.",
+      "query_path": "queries/financial/15_customer_deposits_and_unapplied_cash_aging.sql"
+    },
+    {
+      "slug": "cash-conversion-timing-review",
+      "title": "Cash Conversion Timing Review",
+      "area": "financial",
+      "process_group": "working-capital-and-cash-conversion",
+      "cadence": "Monthly",
+      "description": "Compare invoice-to-settlement and receipt-to-payment timing across sales, purchasing, and goods receipts.",
+      "query_path": "queries/financial/20_cash_conversion_timing_review.sql"
+    },
+    {
+      "slug": "price-realization-vs-list-by-customer-and-portfolio",
+      "title": "Price Realization vs List by Customer and Portfolio",
+      "area": "financial",
+      "process_group": "customer-pricing-and-settlement",
+      "cadence": "Monthly",
+      "description": "Compare realized billed pricing to base list price by customer, segment, region, collection, and style family.",
+      "query_path": "queries/financial/25_price_realization_vs_list_by_segment_customer_region_collection_style.sql"
+    },
+    {
+      "slug": "payroll-expense-mix-by-cost-center-and-pay-class",
+      "title": "Payroll Expense Mix by Cost Center and Pay Class",
+      "area": "financial",
+      "process_group": "payroll-cost-and-mix",
+      "cadence": "Monthly",
+      "description": "Review payroll register totals by pay month, cost center, and pay class before moving into ledger-only expense analysis.",
+      "query_path": "queries/financial/18_payroll_expense_mix_by_cost_center_and_pay_class.sql"
+    },
+    {
+      "slug": "payroll-and-people-cost-mix-by-cost-center-job-family-level",
+      "title": "Payroll and People Cost Mix by Cost Center Job Family and Level",
+      "area": "financial",
+      "process_group": "payroll-cost-and-mix",
+      "cadence": "Current cumulative view",
+      "description": "Compare payroll concentration to current workforce structure by cost center, job family, job level, and pay class.",
+      "query_path": "queries/financial/22_payroll_and_people_cost_mix_by_cost_center_job_family_level.sql"
+    },
+    {
+      "slug": "gross-to-net-payroll-review",
+      "title": "Gross to Net Payroll Review",
+      "area": "financial",
+      "process_group": "payroll-cost-and-mix",
+      "cadence": "Payroll period",
+      "description": "Trace payroll registers from gross pay to withholdings, employer burden, and net pay by employee and pay period.",
+      "query_path": "queries/financial/10_gross_to_net_payroll_review.sql"
+    },
+    {
+      "slug": "hourly-payroll-hours-to-paid-earnings-bridge",
+      "title": "Hourly Payroll Hours to Paid Earnings Bridge",
+      "area": "financial",
+      "process_group": "payroll-cost-and-mix",
+      "cadence": "Payroll period",
+      "description": "Bridge approved hourly time, labor support, paid earnings hours, and payment timing by employee and pay period.",
+      "query_path": "queries/financial/14_hourly_payroll_hours_to_paid_earnings_bridge.sql"
+    },
+    {
+      "slug": "payroll-cash-payments-and-remittances",
+      "title": "Payroll Cash Payments and Remittances",
+      "area": "financial",
+      "process_group": "payroll-cash-and-liabilities",
+      "cadence": "Monthly",
+      "description": "Compare employee net-pay cash outflows to payroll-liability remittances by month.",
+      "query_path": "queries/financial/11_payroll_cash_payments_and_remittances.sql"
+    },
+    {
+      "slug": "payroll-liability-rollforward",
+      "title": "Payroll Liability Rollforward",
+      "area": "financial",
+      "process_group": "payroll-cash-and-liabilities",
+      "cadence": "Monthly",
+      "description": "Track payroll-liability account movement and ending balances by fiscal period.",
+      "query_path": "queries/financial/09_payroll_liability_rollforward.sql"
+    },
+    {
+      "slug": "budget-vs-actual-by-cost-center",
+      "title": "Budget vs Actual by Cost Center",
+      "area": "managerial",
+      "process_group": "performance-and-planning",
+      "cadence": "Monthly",
+      "description": "Compare budgeted and actual spend by cost center and account classification.",
+      "query_path": "queries/managerial/01_budget_vs_actual_by_cost_center.sql"
+    },
+    {
+      "slug": "sales-commission-expense-by-rep-segment",
+      "title": "Sales Commission Expense by Rep and Segment",
+      "area": "managerial",
+      "process_group": "performance-and-planning",
+      "cadence": "Monthly",
+      "description": "Review gross commission expense, clawbacks, and net commission expense by sales rep, revenue type, customer segment, and month.",
+      "query_path": "queries/managerial/53_sales_commission_expense_by_rep_segment.sql"
+    },
+    {
+      "slug": "budget-vs-actual-revenue-price-volume-cost-bridge",
+      "title": "Budget vs Actual Revenue Price Volume Cost Bridge",
+      "area": "managerial",
+      "process_group": "performance-and-planning",
+      "cadence": "Monthly",
+      "description": "Compare budgeted and actual quantity, net revenue, price realization, and standard-cost consumption by collection and style family.",
+      "query_path": "queries/managerial/51_budget_vs_actual_revenue_price_volume_cost_bridge.sql"
+    },
+    {
+      "slug": "sales-and-margin-by-collection-and-style",
+      "title": "Sales and Margin by Collection and Style",
+      "area": "managerial",
+      "process_group": "performance-and-planning",
+      "cadence": "Monthly",
+      "description": "Review sales volume, margin, and portfolio mix by collection, style family, and material.",
+      "query_path": "queries/managerial/30_sales_margin_by_collection_style_material.sql"
+    },
+    {
+      "slug": "monthly-work-center-utilization",
+      "title": "Monthly Work Center Utilization",
+      "area": "managerial",
+      "process_group": "performance-and-planning",
+      "cadence": "Monthly",
+      "description": "Compare scheduled and available hours to evaluate manufacturing capacity usage by month.",
+      "query_path": "queries/managerial/20_monthly_work_center_utilization.sql"
+    },
+    {
+      "slug": "headcount-by-cost-center-and-job-family",
+      "title": "Headcount by Cost Center and Job Family",
+      "area": "managerial",
+      "process_group": "performance-and-planning",
+      "cadence": "Current snapshot",
+      "description": "Review workforce structure by cost center, job family, and employment status.",
+      "query_path": "queries/managerial/29_headcount_by_cost_center_job_family_status.sql"
+    },
+    {
+      "slug": "customer-sales-mix-by-region-and-item-group",
+      "title": "Customer Sales Mix by Region and Item Group",
+      "area": "managerial",
+      "process_group": "customer-and-supplier-analysis",
+      "cadence": "Monthly",
+      "description": "Review billed sales mix by customer geography, segment, and item group.",
+      "query_path": "queries/managerial/02_sales_mix_by_customer_region_item_group.sql"
+    },
+    {
+      "slug": "supplier-purchasing-activity-by-category",
+      "title": "Supplier Purchasing Activity by Category",
+      "area": "managerial",
+      "process_group": "customer-and-supplier-analysis",
+      "cadence": "Monthly",
+      "description": "Review purchasing commitments by supplier, category, risk rating, and item group.",
+      "query_path": "queries/managerial/04_purchasing_activity_by_supplier_category.sql"
+    },
+    {
+      "slug": "supplier-lead-time-and-receipt-reliability",
+      "title": "Supplier Lead Time and Receipt Reliability",
+      "area": "managerial",
+      "process_group": "planning-and-supply-risk",
+      "cadence": "Monthly",
+      "description": "Review how quickly suppliers begin and complete receipts after purchase orders are issued.",
+      "query_path": "queries/managerial/27_supplier_lead_time_and_receipt_reliability.sql"
+    },
+    {
+      "slug": "inventory-coverage-and-projected-stockout-risk",
+      "title": "Inventory Coverage and Projected Stockout Risk",
+      "area": "managerial",
+      "process_group": "planning-and-supply-risk",
+      "cadence": "Current planning snapshot",
+      "description": "Review the latest projected inventory coverage, net requirements, and stockout-risk signals by item and warehouse.",
+      "query_path": "queries/managerial/42_inventory_coverage_and_projected_stockout_risk.sql"
+    },
+    {
+      "slug": "rough-cut-capacity-load-vs-available-hours",
+      "title": "Rough-Cut Capacity Load vs Available Hours",
+      "area": "managerial",
+      "process_group": "planning-and-supply-risk",
+      "cadence": "Weekly planning bucket",
+      "description": "Compare planned rough-cut load to available hours by work center and week.",
+      "query_path": "queries/managerial/43_rough_cut_capacity_load_vs_available_hours.sql"
+    },
+    {
+      "slug": "forecast-error-and-bias-by-collection-and-style-family",
+      "title": "Forecast Error and Bias by Collection and Style Family",
+      "area": "managerial",
+      "process_group": "planning-and-supply-risk",
+      "cadence": "Current cumulative view",
+      "description": "Review where forecast quantities systematically overstate or understate actual order demand by portfolio group.",
+      "query_path": "queries/managerial/45_forecast_error_and_bias_by_collection_style_family.sql"
+    },
+    {
+      "slug": "labor-and-headcount-by-work-location-job-family-cost-center",
+      "title": "Labor and Headcount by Work Location Job Family and Cost Center",
+      "area": "managerial",
+      "process_group": "workforce-and-payroll-operations",
+      "cadence": "Current cumulative view",
+      "description": "Compare workforce structure, people cost, approved hours, and direct labor by work location, cost center, and job family.",
+      "query_path": "queries/managerial/34_labor_and_headcount_by_work_location_job_family_cost_center.sql"
+    },
+    {
+      "slug": "absence-rate-by-work-location-job-family-month",
+      "title": "Absence Rate by Work Location and Job Family",
+      "area": "managerial",
+      "process_group": "workforce-and-payroll-operations",
+      "cadence": "Monthly",
+      "description": "Compare monthly absence pressure by work location and job family, with paid and unpaid absence separated.",
+      "query_path": "queries/managerial/38_absence_rate_by_work_location_job_family_month.sql"
+    },
+    {
+      "slug": "overtime-approval-coverage-and-concentration",
+      "title": "Overtime Approval Coverage and Concentration",
+      "area": "managerial",
+      "process_group": "workforce-and-payroll-operations",
+      "cadence": "Monthly",
+      "description": "Review where overtime hours concentrate by work center and how consistently those hours carry approvals.",
+      "query_path": "queries/managerial/39_overtime_approval_coverage_and_concentration.sql"
+    },
+    {
+      "slug": "punch-to-pay-bridge-for-hourly-workers",
+      "title": "Punch to Pay Bridge for Hourly Workers",
+      "area": "managerial",
+      "process_group": "workforce-and-payroll-operations",
+      "cadence": "Payroll period",
+      "description": "Trace hourly payroll from raw punches through approved time, labor allocation, and pay by employee and payroll period.",
+      "query_path": "queries/managerial/40_punch_to_pay_bridge_for_hourly_workers.sql"
+    },
+    {
+      "slug": "approval-and-sod-review",
+      "title": "Approval and SOD Review",
+      "area": "audit",
+      "process_group": "control-review",
+      "cadence": "Exception review",
+      "description": "Review approval assignments, same-user conflicts, and segregation-of-duties issues across source documents.",
+      "query_path": "queries/audit/03_approval_and_sod_review.sql"
+    },
+    {
+      "slug": "potential-anomaly-review",
+      "title": "Potential Anomaly Review",
+      "area": "audit",
+      "process_group": "control-review",
+      "cadence": "Exception review",
+      "description": "Run a broad control-screening report that surfaces anomalies across journals, purchasing, sales, and payments.",
+      "query_path": "queries/audit/06_potential_anomaly_review.sql"
+    },
+    {
+      "slug": "payroll-control-review",
+      "title": "Payroll Control Review",
+      "area": "audit",
+      "process_group": "payroll-and-time-controls",
+      "cadence": "Exception review",
+      "description": "Review payroll approval, payment-timing, and register-integrity exceptions across payroll periods.",
+      "query_path": "queries/audit/11_payroll_control_review.sql"
+    },
+    {
+      "slug": "paid-without-clock-and-clock-without-pay-review",
+      "title": "Paid Without Clock and Clock Without Pay Review",
+      "area": "audit",
+      "process_group": "payroll-and-time-controls",
+      "cadence": "Exception review",
+      "description": "Review hourly payroll lines without approved clock support and approved clock entries that do not flow into pay.",
+      "query_path": "queries/audit/21_paid_without_clock_and_clock_without_pay_review.sql"
+    }
+  ]
+}

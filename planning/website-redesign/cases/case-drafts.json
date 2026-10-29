@@ -1651,7 +1651,7 @@
             "check": "Published Net Income agrees with the three monthly profit values. Cash movements are −44,374.25, −203,901.73, and −495,263.68, summing to −743,539.66. October beginning cash and December ending cash agree with the rollforward.",
             "meaning": "Matching totals support the reconciliation on these definitions. They do not prove every underlying transaction is error-free. The source trace and unresolved items remain part of the review.",
             "keep": "Save a compact report tie-out table with difference columns.",
-            "mismatch": "Choose actual reports, not the pro forma reports. Do not add both subtotal and detail rows.",
+            "mismatch": "Use the actual-results statements. Read each supplied subtotal once; do not add subtotal rows to their underlying account rows.",
             "sqlText": "Open the published Monthly Income Statement and Monthly Indirect Cash Flow CSV downloads from Reports and Analytics in a text editor. Read the header, then locate FiscalYear 2026 and FiscalPeriod 10, 11, and 12. Retain only Net Income subtotal rows for the profit comparison, and Net Change in Cash rows for cash movement. Compare with c07-profit.sql and c07-cash.sql. Retain October Beginning Cash and December Ending Cash once each rather than summing monthly balances. This inspection does not require importing the reports into your database.",
             "excelInputs": [
               "Existing Monthly Income Statement report download",

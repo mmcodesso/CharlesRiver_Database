@@ -1,0 +1,47 @@
+.main { width: 100%; min-width: 0; max-width: 1480px; margin: 0 auto; padding: 2rem clamp(1rem, 3vw, 3rem); }
+.header { max-width: 900px; margin: 2rem 0; }
+.header h1, .reportHeading h2 { font-family: Georgia, serif; }
+.company { color: var(--ifm-color-primary); font-weight: 700; letter-spacing: .04em; font-size: .85rem; }
+.filters { display: flex; flex-wrap: wrap; gap: 1rem; padding: 1rem 0; }
+.filters label, .pagination label { display: flex; flex-direction: column; font-weight: 600; gap: .35rem; font-size: .85rem; }
+.filters select, .filters input, .pagination select { max-width: 260px; min-height: 44px; padding: .6rem; border: 1px solid var(--ifm-color-emphasis-400); border-radius: 4px; background: var(--ifm-background-color); color: var(--ifm-font-color-base); font: inherit; }
+.actions { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; margin: 1rem 0; }
+.main button, .exportData { min-height: 44px; border: 1px solid var(--ifm-color-primary); border-radius: 4px; padding: .55rem 1rem; background: var(--ifm-background-color); color: var(--ifm-font-color-base); font: inherit; cursor: pointer; }
+.exportData { display: inline-flex; align-items: center; text-decoration: none; }
+.exportData:hover { color: var(--ifm-font-color-base); text-decoration: none; background: var(--ifm-color-emphasis-100); }
+.actions button:first-child { background: var(--ifm-color-primary); color: var(--ifm-background-color); }
+.main button:disabled { opacity: .55; cursor: default; }
+.main :is(button, input, select, a, summary):focus-visible { outline: 3px solid var(--ifm-color-primary); outline-offset: 3px; }
+.paper { border: 1px solid var(--ifm-color-emphasis-300); border-top: 5px solid var(--ifm-color-primary); margin: 2rem 0 1rem; padding: clamp(1rem, 3vw, 2.5rem); background: var(--ifm-background-surface-color); }
+.reportHeading { border-bottom: 1px solid var(--ifm-color-emphasis-300); padding-bottom: 1rem; margin-bottom: 1rem; }
+.reportHeading h2 { margin: .5rem 0 1rem; }
+.basis, .recordCount { font-size: .85rem; color: var(--ifm-color-emphasis-700); }
+.tableWrap { overflow: auto; max-width: 100%; }
+.table { border-collapse: collapse; font-size: .9rem; width: 100%; display: table; margin: 0; }
+.table th, .table td { border: 0; border-bottom: 1px solid var(--ifm-color-emphasis-200); padding: .65rem .8rem; vertical-align: top; min-width: 125px; }
+.table thead th { background: #193f4a; color: #fff; font-weight: 600; }
+.table tbody th { text-align: left; font-weight: 400; min-width: 240px; }
+.table tbody tr:nth-child(even) { background: var(--ifm-color-emphasis-100); }
+.table .number { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.table .group th { font-weight: 700; background: var(--ifm-color-emphasis-200); padding-top: 1rem; }
+.table .subtotal :is(th, td) { font-weight: 700; border-top: 1px solid var(--ifm-color-emphasis-600); border-bottom: 3px double var(--ifm-color-emphasis-600); }
+.table .account { padding-left: 1.7rem; }
+.pagination { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.printTable { display: none; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); }
+@media (max-width: 600px) { .filters label, .filters select, .filters input { width: 100%; max-width: none; } .filters { display: grid; } .paper { padding: .75rem; } }
+@media print {
+  @page { size: letter landscape; margin: .5in; }
+  :global(.navbar), :global(.footer), :global(.theme-back-to-top-button), .controls, .header, .screenTable, .recordCount { display: none !important; }
+  .main, .paper { width: 100%; max-width: none; padding: 0; margin: 0; border: 0; color: #193f4a; background: white; }
+  .printTable { display: block; }
+  .tableWrap { overflow: visible; }
+  .table { font-size: 8pt; }
+  .table th, .table td { min-width: 0; padding: 4pt; white-space: normal; }
+  .table .number { white-space: normal; }
+  .table tbody th { min-width: 0; }
+  .table thead { display: table-header-group; }
+  .table tr { break-inside: avoid; }
+  .table .group { break-after: avoid; }
+  .basis, .company { color: #193f4a; }
+}

@@ -8,4 +8,5 @@ build/
 outputs/*
 !outputs/.gitkeep
 static/reports/
+static/report-data/
 .DS_Store

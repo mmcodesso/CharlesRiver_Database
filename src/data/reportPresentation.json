@@ -1,0 +1,551 @@
+{
+  "approval-and-sod-review": {
+    "visibility": "core",
+    "family": "register",
+    "periodFields": [],
+    "filters": [
+      "IssueType",
+      "Status"
+    ],
+    "groupBy": "IssueType",
+    "totals": []
+  },
+  "potential-anomaly-review": {
+    "visibility": "core",
+    "family": "register",
+    "periodFields": [],
+    "filters": [
+      "PotentialIssue"
+    ],
+    "groupBy": "PotentialIssue",
+    "totals": []
+  },
+  "paid-without-clock-and-clock-without-pay-review": {
+    "visibility": "specialist",
+    "family": "register",
+    "periodFields": [],
+    "filters": [
+      "EmployeeName",
+      "PotentialIssue"
+    ],
+    "groupBy": "PotentialIssue",
+    "totals": []
+  },
+  "payroll-control-review": {
+    "visibility": "specialist",
+    "family": "register",
+    "periodFields": [],
+    "filters": [
+      "EmployeeName",
+      "PotentialIssue"
+    ],
+    "groupBy": "PotentialIssue",
+    "totals": []
+  },
+  "customer-credit-and-refunds": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [],
+    "filters": [
+      "CustomerName"
+    ],
+    "groupBy": "CustomerName",
+    "totals": []
+  },
+  "price-realization-vs-list-by-customer-and-portfolio": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [
+      "InvoiceMonth"
+    ],
+    "filters": [
+      "CustomerName",
+      "CustomerSegment",
+      "Region",
+      "CollectionName"
+    ],
+    "groupBy": "CustomerName",
+    "totals": []
+  },
+  "budget-vs-actual-statement-bridge-monthly": {
+    "visibility": "retired",
+    "replacement": "monthly-income-statement"
+  },
+  "monthly-balance-sheet": {
+    "visibility": "core",
+    "family": "statement",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [],
+    "groupBy": "StatementSection",
+    "totals": []
+  },
+  "monthly-income-statement": {
+    "visibility": "core",
+    "family": "statement",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [],
+    "groupBy": "StatementSection",
+    "totals": []
+  },
+  "monthly-indirect-cash-flow": {
+    "visibility": "core",
+    "family": "statement",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [],
+    "groupBy": "StatementSection",
+    "totals": []
+  },
+  "pro-forma-monthly-balance-sheet": {
+    "visibility": "retired",
+    "replacement": "monthly-balance-sheet"
+  },
+  "pro-forma-monthly-income-statement": {
+    "visibility": "retired",
+    "replacement": "monthly-income-statement"
+  },
+  "pro-forma-monthly-indirect-cash-flow": {
+    "visibility": "retired",
+    "replacement": "monthly-indirect-cash-flow"
+  },
+  "payroll-cash-payments-and-remittances": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [],
+    "groupBy": null,
+    "totals": []
+  },
+  "payroll-liability-rollforward": {
+    "visibility": "core",
+    "family": "rollforward",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [],
+    "groupBy": null,
+    "totals": []
+  },
+  "gross-to-net-payroll-review": {
+    "visibility": "core",
+    "family": "register",
+    "periodFields": [
+      "PayDate"
+    ],
+    "filters": [
+      "CostCenterName",
+      "EmployeeName",
+      "Status"
+    ],
+    "groupBy": "CostCenterName",
+    "totals": []
+  },
+  "hourly-payroll-hours-to-paid-earnings-bridge": {
+    "visibility": "specialist",
+    "family": "rollforward",
+    "periodFields": [
+      "PayDate"
+    ],
+    "filters": [
+      "CostCenterName",
+      "EmployeeName",
+      "Status"
+    ],
+    "groupBy": "CostCenterName",
+    "totals": []
+  },
+  "payroll-and-people-cost-mix-by-cost-center-job-family-level": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [],
+    "filters": [
+      "CostCenterName",
+      "JobFamily"
+    ],
+    "groupBy": "CostCenterName",
+    "totals": []
+  },
+  "payroll-expense-mix-by-cost-center-and-pay-class": {
+    "visibility": "core",
+    "family": "summary",
+    "periodFields": [
+      "PayMonth"
+    ],
+    "filters": [
+      "CostCenterName"
+    ],
+    "groupBy": "CostCenterName",
+    "totals": []
+  },
+  "ap-aging": {
+    "visibility": "specialist",
+    "family": "register",
+    "periodFields": [],
+    "filters": [
+      "SupplierName",
+      "AgingBucket"
+    ],
+    "groupBy": "SupplierName",
+    "totals": []
+  },
+  "ar-aging": {
+    "visibility": "specialist",
+    "family": "register",
+    "periodFields": [],
+    "filters": [
+      "CustomerName",
+      "CustomerSegment",
+      "Region",
+      "AgingBucket"
+    ],
+    "groupBy": "CustomerName",
+    "totals": []
+  },
+  "monthly-ap-aging-detail": {
+    "visibility": "specialist",
+    "family": "register",
+    "periodFields": [
+      "MonthEndDate"
+    ],
+    "filters": [
+      "SupplierName",
+      "AgingBucket"
+    ],
+    "groupBy": "SupplierName",
+    "totals": []
+  },
+  "monthly-ap-aging-summary": {
+    "visibility": "core",
+    "family": "summary",
+    "periodFields": [
+      "MonthEndDate"
+    ],
+    "filters": [
+      "SupplierName"
+    ],
+    "groupBy": "SupplierName",
+    "totals": [
+      "TotalOpenAmount",
+      "CurrentAmount",
+      "Days1To30Amount",
+      "Days31To60Amount",
+      "Days61To90Amount",
+      "Days90PlusAmount",
+      "PastDueAmount"
+    ]
+  },
+  "monthly-ar-aging-detail": {
+    "visibility": "specialist",
+    "family": "register",
+    "periodFields": [
+      "MonthEndDate"
+    ],
+    "filters": [
+      "CustomerName",
+      "CustomerSegment",
+      "Region",
+      "AgingBucket"
+    ],
+    "groupBy": "CustomerName",
+    "totals": []
+  },
+  "monthly-ar-aging-summary": {
+    "visibility": "core",
+    "family": "summary",
+    "periodFields": [
+      "MonthEndDate"
+    ],
+    "filters": [
+      "CustomerName",
+      "CustomerSegment",
+      "Region"
+    ],
+    "groupBy": "CustomerName",
+    "totals": [
+      "TotalOpenAmount",
+      "CurrentAmount",
+      "Days1To30Amount",
+      "Days31To60Amount",
+      "Days61To90Amount",
+      "Days90PlusAmount",
+      "PastDueAmount"
+    ]
+  },
+  "design-service-revenue-and-billed-hours": {
+    "visibility": "core",
+    "family": "summary",
+    "periodFields": [
+      "InvoiceMonth"
+    ],
+    "filters": [
+      "CustomerName",
+      "CustomerSegment",
+      "Region"
+    ],
+    "groupBy": "CustomerName",
+    "totals": []
+  },
+  "monthly-revenue-and-gross-margin": {
+    "visibility": "core",
+    "family": "summary",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [],
+    "groupBy": null,
+    "totals": []
+  },
+  "budget-vs-actual-working-capital-and-cash-bridge": {
+    "visibility": "retired",
+    "replacement": "working-capital-bridge-by-month"
+  },
+  "cash-conversion-timing-review": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [
+      "MetricFamily"
+    ],
+    "groupBy": "MetricFamily",
+    "totals": []
+  },
+  "customer-deposits-and-unapplied-cash-aging": {
+    "visibility": "specialist",
+    "family": "register",
+    "periodFields": [],
+    "filters": [
+      "CustomerName"
+    ],
+    "groupBy": "CustomerName",
+    "totals": []
+  },
+  "sales-commission-payable-rollforward": {
+    "visibility": "specialist",
+    "family": "rollforward",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [],
+    "groupBy": null,
+    "totals": []
+  },
+  "working-capital-bridge-by-month": {
+    "visibility": "core",
+    "family": "rollforward",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [],
+    "groupBy": null,
+    "totals": []
+  },
+  "customer-sales-mix-by-region-and-item-group": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [
+      "InvoiceMonth"
+    ],
+    "filters": [
+      "CustomerSegment",
+      "Region"
+    ],
+    "groupBy": "ItemGroup",
+    "totals": []
+  },
+  "supplier-purchasing-activity-by-category": {
+    "visibility": "core",
+    "family": "summary",
+    "periodFields": [
+      "OrderMonth"
+    ],
+    "filters": [
+      "SupplierName"
+    ],
+    "groupBy": "SupplierName",
+    "totals": []
+  },
+  "budget-vs-actual-by-cost-center": {
+    "visibility": "core",
+    "family": "summary",
+    "periodFields": [
+      "FiscalYear",
+      "Month"
+    ],
+    "filters": [
+      "CostCenterName"
+    ],
+    "groupBy": "CostCenterName",
+    "totals": []
+  },
+  "budget-vs-actual-revenue-price-volume-cost-bridge": {
+    "visibility": "specialist",
+    "family": "rollforward",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [
+      "CollectionName"
+    ],
+    "groupBy": "CollectionName",
+    "totals": []
+  },
+  "headcount-by-cost-center-and-job-family": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [],
+    "filters": [
+      "CostCenterName",
+      "JobFamily"
+    ],
+    "groupBy": "CostCenterName",
+    "totals": []
+  },
+  "monthly-work-center-utilization": {
+    "visibility": "core",
+    "family": "summary",
+    "periodFields": [
+      "PeriodMonth"
+    ],
+    "filters": [
+      "WorkCenterName"
+    ],
+    "groupBy": "WorkCenterName",
+    "totals": []
+  },
+  "sales-and-margin-by-collection-and-style": {
+    "visibility": "core",
+    "family": "summary",
+    "periodFields": [],
+    "filters": [
+      "CollectionName"
+    ],
+    "groupBy": "ItemGroup",
+    "totals": []
+  },
+  "sales-commission-expense-by-rep-segment": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [
+      "CustomerSegment"
+    ],
+    "groupBy": null,
+    "totals": []
+  },
+  "forecast-error-and-bias-by-collection-and-style-family": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [],
+    "filters": [
+      "CollectionName"
+    ],
+    "groupBy": "CollectionName",
+    "totals": []
+  },
+  "inventory-coverage-and-projected-stockout-risk": {
+    "visibility": "core",
+    "family": "summary",
+    "periodFields": [],
+    "filters": [
+      "WarehouseName",
+      "CollectionName",
+      "StockoutRisk"
+    ],
+    "groupBy": "ItemGroup",
+    "totals": []
+  },
+  "rough-cut-capacity-load-vs-available-hours": {
+    "visibility": "core",
+    "family": "summary",
+    "periodFields": [
+      "BucketWeekStartDate"
+    ],
+    "filters": [
+      "WorkCenterName"
+    ],
+    "groupBy": "WorkCenterName",
+    "totals": []
+  },
+  "supplier-lead-time-and-receipt-reliability": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [
+      "OrderMonth"
+    ],
+    "filters": [
+      "SupplierName"
+    ],
+    "groupBy": "SupplierName",
+    "totals": []
+  },
+  "absence-rate-by-work-location-job-family-month": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [
+      "YearMonth"
+    ],
+    "filters": [
+      "WorkLocation",
+      "JobFamily"
+    ],
+    "groupBy": null,
+    "totals": []
+  },
+  "labor-and-headcount-by-work-location-job-family-cost-center": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [],
+    "filters": [
+      "CostCenterName",
+      "WorkLocation",
+      "JobFamily"
+    ],
+    "groupBy": "CostCenterName",
+    "totals": []
+  },
+  "overtime-approval-coverage-and-concentration": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [
+      "YearMonth"
+    ],
+    "filters": [
+      "WorkCenterName"
+    ],
+    "groupBy": "WorkCenterName",
+    "totals": []
+  },
+  "punch-to-pay-bridge-for-hourly-workers": {
+    "visibility": "core",
+    "family": "rollforward",
+    "periodFields": [],
+    "filters": [
+      "JobFamily",
+      "EmployeeName"
+    ],
+    "groupBy": null,
+    "totals": []
+  }
+}

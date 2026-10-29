@@ -662,7 +662,7 @@ Matching totals support the reconciliation on these definitions. They do not pro
 <details>
 <summary>If your result differs</summary>
 
-Choose actual reports, not the pro forma reports. Do not add both subtotal and detail rows.
+Use the actual-results statements. Read each supplied subtotal once; do not add subtotal rows to their underlying account rows.
 
 </details>
 

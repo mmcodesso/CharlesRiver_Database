@@ -15,7 +15,7 @@ const config = {
   projectName: "CharlesRiver_Database",
   trailingSlash: false,
   onBrokenLinks: "throw",
-  staticDirectories: ["static", "queries"],
+  staticDirectories: ["static", "queries", ...(process.env.CI === 'true' || process.env.WORKERS_CI === '1' ? ['outputs/_published_report_assets'] : [])],
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
@@ -67,6 +67,7 @@ const config = {
     ],
   ],
   plugins: [
+    require.resolve("./src/plugins/report-pages.cjs"),
     [
       "@docusaurus/plugin-client-redirects",
       {

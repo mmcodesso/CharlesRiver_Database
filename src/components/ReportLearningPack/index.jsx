@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import Link from "@docusaurus/Link";
-import useBaseUrl from "@docusaurus/useBaseUrl";
 
-import { ReportPreviewOverlay } from "@site/src/components/ReportPreviewOverlay";
+
+import presentation from "@site/src/data/reportPresentation.json";
 import reportManifest from "@site/src/generated/reportManifest";
 import reportPackManifest from "@site/src/generated/reportPackManifest";
 import styles from "./styles.module.css";
@@ -28,10 +28,7 @@ function getReportEntry(reportSlug) {
 
 function ReportLearningCard({ item, index }) {
   const reportEntry = getReportEntry(item.reportSlug);
-  const previewUrl = useBaseUrl(reportEntry.previewPath);
-  const excelUrl = useBaseUrl(reportEntry.excelPath);
-  const csvUrl = useBaseUrl(reportEntry.csvPath);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
 
   return (
     <article className={styles.card}>
@@ -49,24 +46,8 @@ function ReportLearningCard({ item, index }) {
               </div>
             </div>
             <div className={styles.actionRow}>
-              <button
-                className={styles.primaryAction}
-                type="button"
-                onClick={() => setIsPreviewOpen(true)}
-                aria-haspopup="dialog"
-              >
-                Preview
-              </button>
-              {reportEntry.excelEnabled ? (
-                <a className={styles.secondaryAction} href={excelUrl}>
-                  Download Excel
-                </a>
-              ) : null}
-              {reportEntry.csvEnabled ? (
-                <a className={styles.secondaryAction} href={csvUrl}>
-                  Download CSV
-                </a>
-              ) : null}
+              <Link className={styles.primaryAction} to={`/docs/analytics/reports/${item.reportSlug}`}>Open report</Link>
+              <span>PDF and Excel available in report</span>
             </div>
           </div>
           <div className={styles.reasonBlock}>
@@ -92,18 +73,14 @@ function ReportLearningCard({ item, index }) {
           </div>
         </div>
       </div>
-      <ReportPreviewOverlay
-        isOpen={isPreviewOpen}
-        onClose={() => setIsPreviewOpen(false)}
-        previewUrl={previewUrl}
-        title={reportEntry.title}
-      />
+
     </article>
   );
 }
 
 export function ReportLearningPack({ pack }) {
-  const resolvedPack = getPack(pack);
+  const sourcePack = getPack(pack);
+  const resolvedPack = { ...sourcePack, reports: sourcePack.reports.filter(item => presentation[item.reportSlug]?.visibility !== "retired") };
 
   return (
     <div className={styles.pack}>

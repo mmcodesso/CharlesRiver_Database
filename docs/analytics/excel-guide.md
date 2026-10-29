@@ -8,6 +8,8 @@ pagination_next: "learn-and-practice/meet-the-records"
 
 # Set Up Excel
 
+For a prepared business report, open a report in [Reports and Analytics](index.md), choose its period and filters, and select **Download Excel**. The **Report** sheet is formatted for reading and printing, **Data** contains the complete selected source rows, and **Read Me** explains scope and units. No pivot table is needed to read the prepared report. The tutorial setup below supports your own analysis from source records.
+
 Your first goal is to open a small, understandable table. You will keep the published workbook as a source and build your own analysis in a separate file.
 
 Use **Microsoft 365 desktop Excel**. The instructions below give the Windows menu path first and the Mac path where it differs. You do not need prior Power Query experience. Power Query is the import window that lets you choose tables and filters before bringing data into your workbook.

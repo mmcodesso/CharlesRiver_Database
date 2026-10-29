@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
+import { useHistory, useLocation } from "@docusaurus/router";
 import Link from "@docusaurus/Link";
 import Heading from "@theme/Heading";
-import useBaseUrl from "@docusaurus/useBaseUrl";
 import useBrokenLinks from "@docusaurus/useBrokenLinks";
 
-import { ReportPreviewOverlay } from "@site/src/components/ReportPreviewOverlay";
+import presentation from "@site/src/data/reportPresentation.json";
 import reportManifest from "@site/src/generated/reportManifest";
 import reportPackManifest from "@site/src/generated/reportPackManifest";
 import reportTeachingMetadata from "@site/src/data/reportTeachingMetadata.json";
@@ -41,10 +41,6 @@ function ReportCard({ reportKey }) {
   const entry = getReportEntry(reportKey);
   const guidance = guidanceByReport[reportKey];
   const teaching = reportTeachingMetadata[reportKey];
-  const previewUrl = useBaseUrl(entry.previewPath);
-  const excelUrl = useBaseUrl(entry.excelPath);
-  const csvUrl = useBaseUrl(entry.csvPath);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   return (
     <article className={styles.card} id={`report-${reportKey}`} aria-labelledby={`title-${reportKey}`}>
@@ -59,29 +55,18 @@ function ReportCard({ reportKey }) {
             <dt>Practice</dt><dd><Link to={teaching.lesson.to}>{teaching.lesson.label}</Link></dd>
           </dl>
           <div className={styles.chipRow}>
-            <span className={styles.chip}>{entry.cadence}</span>
+            <span className={styles.chip}>{presentation[reportKey].visibility === 'core' ? 'Core report' : 'Specialist report'}</span>
           </div>
         </div>
         <div className={styles.actionRow}>
-          <button
+          <Link
             className={styles.primaryAction}
-            type="button"
-            onClick={() => setIsPreviewOpen(true)}
-            aria-haspopup="dialog"
-            aria-label={`Preview ${entry.title}`}
+            to={`/docs/analytics/reports/${reportKey}`}
+            aria-label={`Open ${entry.title}`}
           >
-            Preview
-          </button>
-          {entry.excelEnabled ? (
-            <a className={styles.secondaryAction} href={excelUrl} aria-label={`Download Excel for ${entry.title}`}>
-              Download Excel
-            </a>
-          ) : null}
-          {entry.csvEnabled ? (
-            <a className={styles.secondaryAction} href={csvUrl} aria-label={`Download CSV for ${entry.title}`}>
-              Download CSV
-            </a>
-          ) : null}
+            Open report
+          </Link>
+          <span>PDF and Excel available in report</span>
           <Link className={styles.secondaryAction} to={queryLibraryLink(entry.queryPath)} aria-label={`View source SQL for ${entry.title}`}>View source SQL</Link>
         </div>
       </div>
@@ -97,12 +82,6 @@ function ReportCard({ reportKey }) {
           </div>
         </details>
       ) : null}
-      <ReportPreviewOverlay
-        isOpen={isPreviewOpen}
-        onClose={() => setIsPreviewOpen(false)}
-        previewUrl={previewUrl}
-        title={entry.title}
-      />
     </article>
   );
 }
@@ -114,6 +93,10 @@ function reportSearchText(key, topic) {
 }
 
 export function ReportCatalog({ topics }) {
+  const location = useLocation();
+  const history = useHistory();
+  const includeSpecialists = new URLSearchParams(location.search).get('cr_reports_specialists') === '1';
+  const anchorKey = location.hash.replace('#report-', '');
   const brokenLinks = useBrokenLinks();
   topics.forEach((topic) => topic.reports.forEach((key) => brokenLinks.collectAnchor(`report-${key}`)));
   const targets = useMemo(() => topics.flatMap((topic) => [
@@ -121,13 +104,14 @@ export function ReportCatalog({ topics }) {
     ...topic.reports.map((key) => ({ id: `report-${key}`, topicId: topic.id, text: reportSearchText(key, topic) })),
   ]), [topics]);
   const { query, topicId, setQuery, setTopicId, reset } = useCatalogFilters("cr_reports", topics.map((topic) => topic.id), targets);
-  const total = topics.reduce((count, topic) => count + topic.reports.length, 0);
+  const total = Object.values(presentation).filter(item => item.visibility !== 'retired').length;
   const visibleTopics = topics
     .filter((topic) => topicId === "all" || topic.id === topicId)
     .map((topic) => ({
       ...topic,
       reports: topic.reports.filter((key) => {
-        return matchesSearch(reportSearchText(key, topic), query);
+        const visibility = presentation[key].visibility;
+        return visibility !== 'retired' && (visibility === 'core' || includeSpecialists || query || anchorKey === key) && matchesSearch(reportSearchText(key, topic), query);
       }),
     }))
     .filter((topic) => topic.reports.length);
@@ -138,11 +122,16 @@ export function ReportCatalog({ topics }) {
       <nav className={styles.topicLinks} aria-label="Report topics">
         {topics.map((topic) => (
           <a key={topic.id} href={`#${topic.id}`} onClick={reset}>
-            {topic.title} <span>({topic.reports.length})</span>
+            {topic.title} <span>({topic.reports.filter(key => presentation[key].visibility !== 'retired' && (presentation[key].visibility === 'core' || includeSpecialists || query || anchorKey === key)).length})</span>
           </a>
         ))}
       </nav>
       <div className={styles.filters}>
+        <label><input type="checkbox" checked={includeSpecialists} onChange={event => {
+          const params = new URLSearchParams(location.search);
+          if (event.target.checked) params.set('cr_reports_specialists', '1'); else params.delete('cr_reports_specialists');
+          history.push({ ...location, search: params.toString() ? `?${params}` : '' });
+        }} /> Include specialist reports</label>
         <label htmlFor="report-search">Search reports
           <input id="report-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try cash, aging, payroll…" />
         </label>
@@ -155,6 +144,7 @@ export function ReportCatalog({ topics }) {
         <button className={styles.secondaryAction} type="button" onClick={reset} disabled={!query && topicId === "all"}>Clear filters</button>
       </div>
       <p className={styles.resultCount} role="status" aria-live="polite">Showing {count} of {total} reports</p>
+      {Object.entries(presentation).filter(([, item]) => item.visibility === 'retired').map(([key, item]) => <aside key={key} id={`report-${key}`} hidden={anchorKey !== key}><p>This planning report has been retired. <Link to={`/docs/analytics/reports/${item.replacement}`}>Explore the related actual-results report</Link>.</p></aside>)}
       {count === 0 ? <p className={styles.empty}>No reports match these filters. Try another term or clear the filters to browse all reports.</p> : null}
       {visibleTopics.map((topic) => (
         <section key={topic.id} className={styles.group} aria-labelledby={topic.id}>

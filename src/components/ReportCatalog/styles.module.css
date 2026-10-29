@@ -261,6 +261,7 @@
 }
 
 /* Match the shared keyboard-focus treatment. */
+.filters input[type="checkbox"] { width: 1.15rem; min-height: 1.15rem; height: 1.15rem; margin-right: .5rem; vertical-align: middle; }
 .section :is(button, a, input, select, summary):focus-visible { outline: 3px solid #b36a21; outline-offset: 4px; }
 
 @media (max-width: 540px) {

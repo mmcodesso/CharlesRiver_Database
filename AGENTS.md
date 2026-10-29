@@ -2,6 +2,10 @@
 
 ## Website Redesign Mission and Frozen Baseline
 
+### Report presentation publication scope (28 October 2026)
+
+After reviewing the new report viewer, formatted PDF/Excel exports and the existing-CSV Export Data action, the user explicitly requested "Merge commit and deploy." This authorizes committing this website batch on main, integrating current remote main and publishing through the existing `greenfield` Worker and Git integration. Preserve the dataset generator, canonical queries, existing report files and release/account/hosting settings. Clean CI builds reuse checksum-verified published report bytes in temporary storage through the new website-only preparation scripts; they must not invoke the protected report exporter. See `planning/website-redesign/reports-2026/PUBLICATION.md`.
+
 ### Learning discovery and metadata publication scope (22 October 2026)
 
 After reviewing the educational-site audit and Hub-alignment adjustments, the user explicitly requested, "Merge, commit and deploy." This authorizes committing `feature/charles-river-learning-seo-2026`, integrating current `main`, merging into `main`, and publishing through the existing `greenfield` Worker and main-branch Git integration. It supersedes the review-only restriction for this batch. Preserve the newer teaching/diagram improvements on main, all dataset/report/source freezes, and existing release/account/hosting settings. See `planning/website-redesign/learning-seo-2026/PUBLICATION.md` for integration and acceptance evidence.

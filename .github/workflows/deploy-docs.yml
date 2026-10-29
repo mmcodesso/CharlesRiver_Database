@@ -60,10 +60,6 @@ jobs:
           mkdir -p outputs
           gh release download --repo "$GITHUB_REPOSITORY" --pattern "${{ steps.dataset.outputs.sqlite_asset }}" --dir outputs
 
-      - name: Generate report assets from published SQLite
-        run: |
-          python scripts/generate-site-reports.py --config config/settings.yaml --sqlite-path "outputs/${{ steps.dataset.outputs.sqlite_asset }}" --report-output-dir static/reports
-
       - name: Install dependencies
         run: npm ci
 
