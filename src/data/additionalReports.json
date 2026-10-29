@@ -1,0 +1,122 @@
+{
+  "monthly-direct-cash-flow": {
+    "slug": "monthly-direct-cash-flow",
+    "title": "Monthly Direct Cash Flow",
+    "description": "Posted monthly cash receipts and payments, with beginning and ending cash.",
+    "query_path": "queries/financial/36_cash_flow_statement_direct_monthly.sql",
+    "queryPath": "queries/financial/36_cash_flow_statement_direct_monthly.sql",
+    "area": "financial",
+    "snapshotPath": "/report-snapshots/monthly-direct-cash-flow.json",
+    "csvEnabled": true,
+    "excelEnabled": true,
+    "cadence": "Monthly"
+  },
+  "annual-income-statement": {
+    "slug": "annual-income-statement",
+    "title": "Annual Income Statement",
+    "description": "Read annual revenue, expenses, operating income and net income.",
+    "query_path": "queries/financial/29_income_statement_annual.sql",
+    "queryPath": "queries/financial/29_income_statement_annual.sql",
+    "area": "financial",
+    "snapshotPath": "/report-snapshots/annual-income-statement.json",
+    "csvEnabled": true,
+    "excelEnabled": true,
+    "cadence": "Annual"
+  },
+  "annual-balance-sheet": {
+    "slug": "annual-balance-sheet",
+    "title": "Annual Balance Sheet",
+    "description": "Compare fiscal year-end assets, liabilities and equity.",
+    "query_path": "queries/financial/32_balance_sheet_annual.sql",
+    "queryPath": "queries/financial/32_balance_sheet_annual.sql",
+    "area": "financial",
+    "snapshotPath": "/report-snapshots/annual-balance-sheet.json",
+    "csvEnabled": true,
+    "excelEnabled": true,
+    "cadence": "Annual"
+  },
+  "annual-indirect-cash-flow": {
+    "slug": "annual-indirect-cash-flow",
+    "title": "Annual Indirect Cash Flow",
+    "description": "Reconcile annual net income to operating, investing and financing cash flows.",
+    "query_path": "queries/financial/35_cash_flow_statement_indirect_annual.sql",
+    "queryPath": "queries/financial/35_cash_flow_statement_indirect_annual.sql",
+    "area": "financial",
+    "snapshotPath": "/report-snapshots/annual-indirect-cash-flow.json",
+    "csvEnabled": true,
+    "excelEnabled": true,
+    "cadence": "Annual"
+  },
+  "annual-direct-cash-flow": {
+    "slug": "annual-direct-cash-flow",
+    "title": "Annual Direct Cash Flow",
+    "description": "Compare annual cash receipts and payments across operating, investing and financing activities.",
+    "query_path": "queries/financial/38_cash_flow_statement_direct_annual.sql",
+    "queryPath": "queries/financial/38_cash_flow_statement_direct_annual.sql",
+    "area": "financial",
+    "snapshotPath": "/report-snapshots/annual-direct-cash-flow.json",
+    "csvEnabled": true,
+    "excelEnabled": true,
+    "cadence": "Annual"
+  },
+  "trial-balance-by-period": {
+    "slug": "trial-balance-by-period",
+    "title": "Trial Balance by Period",
+    "description": "Review account debits, credits and net debit less credit by fiscal period.",
+    "query_path": "queries/financial/04_trial_balance_by_period.sql",
+    "queryPath": "queries/financial/04_trial_balance_by_period.sql",
+    "area": "financial",
+    "snapshotPath": "/report-snapshots/trial-balance-by-period.json",
+    "csvEnabled": true,
+    "excelEnabled": true,
+    "cadence": "Monthly"
+  },
+  "fixed-asset-rollforward": {
+    "slug": "fixed-asset-rollforward",
+    "title": "Fixed Asset Rollforward",
+    "description": "Follow asset cost, depreciation and net book value by behavior group.",
+    "query_path": "queries/financial/54_fixed_asset_rollforward_by_behavior_group.sql",
+    "queryPath": "queries/financial/54_fixed_asset_rollforward_by_behavior_group.sql",
+    "area": "financial",
+    "snapshotPath": "/report-snapshots/fixed-asset-rollforward.json",
+    "csvEnabled": true,
+    "excelEnabled": true,
+    "cadence": "Monthly"
+  },
+  "debt-amortization-and-cash-impact": {
+    "slug": "debt-amortization-and-cash-impact",
+    "title": "Debt Amortization and Cash Impact",
+    "description": "Trace scheduled principal, interest and payments by financing agreement.",
+    "query_path": "queries/financial/56_debt_amortization_and_cash_impact.sql",
+    "queryPath": "queries/financial/56_debt_amortization_and_cash_impact.sql",
+    "area": "financial",
+    "snapshotPath": "/report-snapshots/debt-amortization-and-cash-impact.json",
+    "csvEnabled": true,
+    "excelEnabled": true,
+    "cadence": "Monthly"
+  },
+  "work-order-throughput": {
+    "slug": "work-order-throughput",
+    "title": "Work Order Throughput",
+    "description": "Compare released, completed and closed work orders and completion timing.",
+    "query_path": "queries/managerial/08_work_order_throughput_by_month.sql",
+    "queryPath": "queries/managerial/08_work_order_throughput_by_month.sql",
+    "area": "managerial",
+    "snapshotPath": "/report-snapshots/work-order-throughput.json",
+    "csvEnabled": true,
+    "excelEnabled": true,
+    "cadence": "Monthly"
+  },
+  "design-service-utilization-and-labor-margin": {
+    "slug": "design-service-utilization-and-labor-margin",
+    "title": "Design Service Utilization and Labor Margin",
+    "description": "Compare assigned and billable hours, billed revenue and labor margin by engagement.",
+    "query_path": "queries/managerial/52_design_service_engagement_utilization_and_labor_margin.sql",
+    "queryPath": "queries/managerial/52_design_service_engagement_utilization_and_labor_margin.sql",
+    "area": "managerial",
+    "snapshotPath": "/report-snapshots/design-service-utilization-and-labor-margin.json",
+    "csvEnabled": true,
+    "excelEnabled": true,
+    "cadence": "Whole engagement"
+  }
+}

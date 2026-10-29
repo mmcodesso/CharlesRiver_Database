@@ -7,15 +7,39 @@ function periodKey(row, fields) {
   return fields.length ? String(row[fields[0]]) : 'all';
 }
 
-function selectedPeriods(report, state) {
+function periodViews(report) {
+  if (!report.periodFields.length) return [];
+  if (report.temporalType === 'annual' || report.periodFields[0] === 'FiscalYear' && report.periodFields.length === 1) return ['month', 'compare', 'all'];
+  if (report.temporalType === 'snapshot') return ['month', 'compare'];
+  return ['month', 'compare', 'year', 'year-compare', 'all'];
+}
+
+function periodSelection(report, state = {}) {
   const available = Object.keys(report.partitions).sort();
-  const selected = available.includes(state.period) ? state.period : available.at(-1);
-  if (report.family !== 'statement' || state.view === 'month' || !state.view) return [selected];
-  if (state.view === 'year') return available.filter(key => key.startsWith(selected.slice(0, 4)));
+  const modes = periodViews(report);
+  const view = modes.includes(state.view) ? state.view : report.defaultView || 'month';
+  const requested = state.period || '';
+  const selected = available.includes(requested) ? requested : available.filter(key => key.startsWith(requested)).at(-1) || available.at(-1);
+  return { available, selected, view, modes };
+}
+
+function selectedPeriods(report, state = {}) {
+  const { available, selected, view } = periodSelection(report, state);
+  if (!report.periodFields.length) return ['all'];
+  if (view === 'all') return available;
+  if (view === 'month') return [selected];
+  if (view === 'year') return available.filter(key => key.startsWith(selected.slice(0, 4)));
+  if (view === 'year-compare') return available.filter(key => [selected.slice(0, 4), String(Number(selected.slice(0, 4)) - 1)].includes(key.slice(0, 4)));
+  if (selected.length === 4) return [String(Number(selected) - 1), selected].filter(key => available.includes(key));
+  if (selected.length > 7) return [available[available.indexOf(selected) - 1], selected].filter(Boolean);
   const [year, month] = selected.split('-').map(Number);
   const date = new Date(Date.UTC(year, month - 2, 1));
   const previous = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
   return [previous, selected].filter(key => available.includes(key));
+}
+
+function filterOptions(report, input, state, key) {
+  return [...new Set(input.filter(row => matches(row, { ...state, [key]: '' }, report.filters)).map(row => String(row[key] ?? '')))].filter(Boolean).sort();
 }
 
 function matches(row, state, filters) {
@@ -42,18 +66,21 @@ function buildModel(report, input, state = {}) {
     }
     rows = [...lines.values()].sort((a, b) => a.order - b.order);
   } else {
-    columns = fields.filter(field => !report.periodFields.includes(field.key));
-    rows = source.map(row => ({ values: row, group: report.groupBy ? String(row[report.groupBy] ?? 'Unspecified') : '', type: 'detail' }));
-    if (report.groupBy) rows.sort((a, b) => a.group.localeCompare(b.group));
+    columns = [...(periods.length > 1 && report.periodFields.length ? [{ key: 'reportPeriod', label: 'Period', kind: 'text' }] : []), ...fields.filter(field => !report.periodFields.includes(field.key))];
+    rows = source.map(row => ({ values: { ...row, reportPeriod: periodKey(row, report.periodFields) }, group: report.groupBy ? String(row[report.groupBy] ?? 'Unspecified') : '', type: 'detail' }));
+    rows.sort((a, b) => a.group.localeCompare(b.group) || a.values.reportPeriod.localeCompare(b.values.reportPeriod));
     const groupCounts = new Map();
     rows.forEach(row => groupCounts.set(row.group, (groupCounts.get(row.group) || 0) + 1));
     rows.forEach(row => { if (groupCounts.get(row.group) === 1) row.group = ''; });
   }
   const filters = report.filters.filter(key => state[key]).map(key => `${label(key)}: ${state[key]}`);
-  if (state.q) filters.push(`Search: ${state.q}`);
+  if (state.q && report.family !== 'statement') filters.push(`Search: ${state.q}`);
   const totals = {};
-  for (const key of report.totals) totals[key] = Math.round(source.reduce((sum, row) => sum + Math.round(Number(row[key] || 0) * 100), 0)) / 100;
-  return { columns, rows, source, totals, periods, selection: [periods[0] === 'all' ? 'Snapshot / cumulative scope' : periods.join(', '), ...filters].join('; ') };
+  for (const key of report.temporalType === 'snapshot' && periods.length > 1 ? [] : report.totals) totals[key] = Math.round(source.reduce((sum, row) => sum + Math.round(Number(row[key] || 0) * 100), 0)) / 100;
+  const { view, selected } = periodSelection(report, state);
+  const periodLabel = periods[0] === 'all' ? 'Snapshot / cumulative scope' : view === 'year' ? `Year ${selected.slice(0, 4)} — ${periods.length} periods` : view === 'year-compare' ? `Years ${Number(selected.slice(0, 4)) - 1} and ${selected.slice(0, 4)} — ${periods.length} periods` : periods.length > 4 ? `${periods[0]} through ${periods.at(-1)} — ${periods.length} periods` : periods.join(', ');
+  const note = report.temporalType === 'snapshot' && periods.length > 1 ? 'Each date is a separate snapshot. Balances are not added across dates.' : view === 'compare' && periods.length === 1 ? 'No previous period is available for this selection.' : '';
+  return { columns, rows, source, totals, periods, note, selection: [periodLabel, ...filters].join('; ') };
 }
 
 function format(value, kind, key = '') {
@@ -65,4 +92,4 @@ function format(value, kind, key = '') {
   return number < 0 ? `(${absolute})` : absolute;
 }
 
-module.exports = { label, periodKey, selectedPeriods, matches, buildModel, format };
+module.exports = { label, periodKey, periodViews, periodSelection, selectedPeriods, filterOptions, matches, buildModel, format };

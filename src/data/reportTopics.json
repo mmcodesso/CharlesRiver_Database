@@ -14,7 +14,15 @@
       "budget-vs-actual-by-cost-center",
       "working-capital-bridge-by-month",
       "budget-vs-actual-working-capital-and-cash-bridge",
-      "cash-conversion-timing-review"
+      "cash-conversion-timing-review",
+      "monthly-direct-cash-flow",
+      "annual-income-statement",
+      "annual-balance-sheet",
+      "annual-indirect-cash-flow",
+      "annual-direct-cash-flow",
+      "trial-balance-by-period",
+      "fixed-asset-rollforward",
+      "debt-amortization-and-cash-impact"
     ]
   },
   {
@@ -34,7 +42,8 @@
       "customer-credit-and-refunds",
       "customer-deposits-and-unapplied-cash-aging",
       "sales-commission-expense-by-rep-segment",
-      "sales-commission-payable-rollforward"
+      "sales-commission-payable-rollforward",
+      "design-service-utilization-and-labor-margin"
     ]
   },
   {
@@ -57,7 +66,8 @@
     "reports": [
       "forecast-error-and-bias-by-collection-and-style-family",
       "monthly-work-center-utilization",
-      "rough-cut-capacity-load-vs-available-hours"
+      "rough-cut-capacity-load-vs-available-hours",
+      "work-order-throughput"
     ]
   },
   {

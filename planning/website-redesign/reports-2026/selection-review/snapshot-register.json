@@ -1,0 +1,55 @@
+{
+  "databaseSha256": "de861968e07412d71032b6ed6a0fb8eb9825cf6911886b1597c4a628a914474c",
+  "reports": {
+    "monthly-direct-cash-flow": {
+      "querySha256": "899eb58c45c86d9037b3aba5ec88ab41a18c3a3bc6a2f2432204286bf2b0f5b6",
+      "snapshotSha256": "b336ab198610b5aeeb3a991e9c6fe4476d134229c4c5a7c37a1822345fe5871a",
+      "rows": 576
+    },
+    "annual-income-statement": {
+      "querySha256": "b5c006e0fccd51ae4f855a122cd0c3002db7474e61e94fc03d3bbb78e82b0a8b",
+      "snapshotSha256": "c63d07f395cd38d69663a85e503c8a59a11edd28f84b656cde895eb14566dafb",
+      "rows": 153
+    },
+    "annual-balance-sheet": {
+      "querySha256": "d9b8a0e03f69922f2ada058b655877588ccfc5c1036563e3329dd2e368ee4091",
+      "snapshotSha256": "242ec9a2ff8c49c09525993f91ae31c7678db0f9f46cd5a36957f0e167aae665",
+      "rows": 156
+    },
+    "annual-indirect-cash-flow": {
+      "querySha256": "521bab5dcd60de57fc67943ada327f341bfba0e8edf7115f54c6c68da05598f9",
+      "snapshotSha256": "75fb30f4a749c2c9a14dc8de48eaebab18c58a7d8b39a55275e5f20981af05d1",
+      "rows": 57
+    },
+    "annual-direct-cash-flow": {
+      "querySha256": "7bc7599f556cff92f69ff1001046a926e74d9e1e323e174f83e21bf1c63353bf",
+      "snapshotSha256": "90d71277b88d63c64efa1f80489f33ebe6700609ce065ebae5ff8dc34c5fc4c0",
+      "rows": 48
+    },
+    "trial-balance-by-period": {
+      "querySha256": "b7204b1e2829df47f1fdb012c76d5b259a9a4970f74bdc2770759aa25c94be08",
+      "snapshotSha256": "4c6d649e6a5ac4431e8941075587cbd434f4f40840723323d8d89559fa4f45cd",
+      "rows": 2247
+    },
+    "fixed-asset-rollforward": {
+      "querySha256": "05f3ac0a884d981a5ebffd664dda783e94ca1e63d4c560db2b315f866489f82a",
+      "snapshotSha256": "e6159c69db50c0c6ba0b1556e81afd9c5b92d9c989a80a173f56ecba009a65ad",
+      "rows": 108
+    },
+    "debt-amortization-and-cash-impact": {
+      "querySha256": "10ebb2a77707ec147a9942e3c2582925607d3cd1266656168cfc5b17dec9ce85",
+      "snapshotSha256": "f952c2319098308c802573b53096d5b5e63ef1308c1a91a4729d82923706e4ca",
+      "rows": 108
+    },
+    "work-order-throughput": {
+      "querySha256": "9bc7617953451a3d229761f37d12250dfd062fd633936ae5eb61f8b17bbc8dcb",
+      "snapshotSha256": "245bde30f615bf31572cde0c6554cbeab36b3a5879976e406f8cdb54190e7075",
+      "rows": 36
+    },
+    "design-service-utilization-and-labor-margin": {
+      "querySha256": "7ad40c0d2c7aff66cbfb2bf5047f7cf6d4f1f5ceb246db48a3e58e0364471426",
+      "snapshotSha256": "531514f835d3206ef6fd2e355b489bd027c8479de400adc8207e339539153297",
+      "rows": 239
+    }
+  }
+}

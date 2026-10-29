@@ -1,3 +1,4 @@
 # Keep exported diagram source identities stable across Windows and Unix checkouts.
 static/diagrams/**/*.drawio text eol=lf
 static/diagrams/**/*.svg text eol=lf
+static/report-snapshots/*.json text eol=lf

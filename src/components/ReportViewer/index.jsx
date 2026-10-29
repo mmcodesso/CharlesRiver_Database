@@ -6,7 +6,7 @@ import { useHistory, useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import teaching from '@site/src/data/reportTeachingMetadata.json';
-import reportManifest from '@site/src/generated/reportManifest';
+import reportManifest from './registry';
 import packs from '@site/src/generated/reportPackManifest';
 import { CompanyName } from '@site/src/components/SiteBranding';
 import { queryLibraryLink } from '@site/src/components/CatalogNavigation/queryLinks';
@@ -14,7 +14,7 @@ import resolveCaseLink from '@site/src/components/Cases/resolveCaseLink';
 import helpers from './model.cjs';
 import styles from './styles.module.css';
 
-const { selectedPeriods, buildModel, format, label } = helpers;
+const { selectedPeriods, periodSelection, filterOptions, buildModel, format, label } = helpers;
 
 function ReportTable({ model, rows }) {
   let group;
@@ -46,13 +46,17 @@ export default function ReportViewer({ report }) {
   const company = siteConfig.customFields.branding.companyName;
   const baseUrl = useBaseUrl('/');
   const sourceReport = reportManifest[report.slug];
-  const csvUrl = useBaseUrl(sourceReport.csvPath);
+  const csvUrl = useBaseUrl(sourceReport.csvPath || '/');
+  const csvSnapshotUrl = useBaseUrl(report.snapshotPath || '/');
   const params = new URLSearchParams(location.search);
   const state = Object.fromEntries(params);
   const info = teaching[report.slug];
-  const available = Object.keys(report.partitions || {}).sort();
-  const period = available.includes(state.period) ? state.period : available.at(-1);
-  const view = ['month', 'compare', 'year'].includes(state.view) ? state.view : 'month';
+  const selection = report.visibility === 'retired' ? { available: [], selected: '', view: 'month', modes: [] } : periodSelection(report, state);
+  const { available, selected: period, view, modes } = selection;
+  const annual = report.temporalType === 'annual';
+  const yearView = view === 'year' || view === 'year-compare';
+  const periodOptions = yearView ? Array.from(new Set(available.map(key => key.slice(0, 4)))) : available;
+  const viewLabels = { month: annual ? 'Selected year' : report.temporalType === 'snapshot' ? 'Selected snapshot' : 'Selected period', compare: annual ? 'Compare previous year' : report.temporalType === 'snapshot' ? 'Compare previous snapshot' : 'Compare previous period', year: 'Year by period', 'year-compare': 'Compare previous year by period', all: annual ? 'All years' : 'All periods' };
   const canonicalState = { ...state, period, view };
   const periods = report.visibility === 'retired' ? [] : selectedPeriods(report, canonicalState);
   const [records, setRecords] = useState([]);
@@ -62,6 +66,7 @@ export default function ReportViewer({ report }) {
   const [job, setJob] = useState('');
   const [exportError, setExportError] = useState('');
   const workerRef = useRef(null);
+  const csvAbortRef = useRef(null);
   const loadKey = periods.join('|');
   useEffect(() => {
     if (report.visibility === 'retired') return undefined;
@@ -75,9 +80,9 @@ export default function ReportViewer({ report }) {
     });
     return () => controller.abort();
   }, [report.slug, loadKey, attempt]);
-  useEffect(() => () => workerRef.current?.terminate(), []);
+  useEffect(() => () => { workerRef.current?.terminate(); csvAbortRef.current?.abort(); }, []);
   useEffect(() => {
-    workerRef.current?.terminate(); workerRef.current = null; setJob(''); setExportError('');
+    workerRef.current?.terminate(); csvAbortRef.current?.abort(); workerRef.current = null; setJob(''); setExportError('');
   }, [location.search]);
   function update(key, value) {
     const next = new URLSearchParams(location.search);
@@ -90,11 +95,23 @@ export default function ReportViewer({ report }) {
   const page = Math.max(1, Math.min(pageCount, Number.parseInt(state.page, 10) || 1));
   const visibleRows = report.family === 'statement' ? model?.rows : model?.rows.slice((page - 1) * 50, page * 50);
   const guidance = Object.values(packs).flatMap(pack => pack.reports).filter(item => item.reportSlug === report.slug);
-  const questions = [...new Set(guidance.flatMap(item => item.discussionQuestions))];
-  const related = [...new Map(guidance.map(item => resolveCaseLink(item.relatedLink)).filter(Boolean).map(link => [link.href, link])).values()];
-  function cancel() { workerRef.current?.terminate(); workerRef.current = null; setJob(''); }
-  function exportReport(type) {
+  const questions = Array.from(new Set(guidance.flatMap(item => item.discussionQuestions)));
+  const related = Array.from(new Map(guidance.map(item => resolveCaseLink(item.relatedLink)).filter(Boolean).map(link => [link.href, link])).values());
+  function cancel() { workerRef.current?.terminate(); csvAbortRef.current?.abort(); workerRef.current = null; setJob(''); }
+  async function exportReport(type) {
     setExportError(''); setJob('Starting export…');
+    let exportModel = model;
+    if (type === 'csv') {
+      const controller = new AbortController();
+      csvAbortRef.current = controller;
+      try {
+        const response = await fetch(csvSnapshotUrl, { signal: controller.signal });
+        if (!response.ok) throw new Error('Source data could not be loaded.');
+        const payload = await response.json();
+        if (controller.signal.aborted) return;
+        exportModel = { ...model, source: payload.rows };
+      } catch (reason) { if (reason.name !== 'AbortError') setExportError(reason.message); setJob(''); return; }
+    }
     const worker = new Worker(new URL('./export.worker.js', import.meta.url));
     workerRef.current = worker;
     worker.onerror = () => { setExportError('Export could not finish. Please retry.'); cancel(); };
@@ -105,12 +122,12 @@ export default function ReportViewer({ report }) {
         const { bytes, mime, extension } = data.result;
         const url = URL.createObjectURL(new Blob([bytes], { type: mime }));
         const anchor = document.createElement('a');
-        anchor.href = url; anchor.download = `${report.slug}-${period}-${view}-formatted.${extension}`;
+        anchor.href = url; anchor.download = extension === 'csv' ? `${report.slug}.csv` : `${report.slug}-${period}-${view}-formatted.${extension}`;
         document.body.appendChild(anchor); anchor.click(); anchor.remove();
         setTimeout(() => URL.revokeObjectURL(url), 30000); cancel();
       }
     };
-    worker.postMessage({ type, report, model, company, basis: info.periodBasis });
+    worker.postMessage({ type, report, model: exportModel, company, basis: info.periodBasis });
   }
   if (report.visibility === 'retired') return <Layout title={`${report.title} — Retired report`} description="This planning report has been retired from the report collection.">
     <main className="container margin-vert--lg"><h1>{report.title}</h1><p>This report has been retired from the report collection.</p><Link to={`/docs/analytics/reports/${report.replacement}`}>Explore the related actual-results report</Link></main>
@@ -122,20 +139,24 @@ export default function ReportViewer({ report }) {
       <header className={styles.header}><p className={styles.company}><CompanyName /></p><h1>{report.title}</h1><p>{report.description}</p></header>
       <div className={styles.controls}>
         <div className={styles.filters}>
-          {report.periodFields.length > 0 && <label>Reporting period<select value={period} onChange={e => update('period', e.target.value)}>{available.map(key => <option key={key}>{key}</option>)}</select></label>}
-          {report.family === 'statement' && <label>Statement view<select value={view} onChange={e => update('view', e.target.value)}><option value="month">Selected month</option><option value="compare">Previous month comparison</option><option value="year">Fiscal year by month</option></select></label>}
-          {report.family !== 'statement' && <label>Search within selection<input type="search" value={state.q || ''} onChange={e => update('q', e.target.value)} placeholder="Find a name or document…" /></label>}
-          {report.filters.map(key => <label key={key}>{label(key)}<select aria-label={label(key)} value={state[key] || ''} onChange={e => update(key, e.target.value)}><option value="">All</option>{[...new Set(records.map(row => String(row[key] ?? '')))].filter(Boolean).sort().map(value => <option key={value}>{value}</option>)}</select></label>)}
+          {modes.length > 0 && <label>{report.family === 'statement' ? 'Statement view' : 'Period view'}<select aria-label={report.family === 'statement' ? 'Statement view' : 'Period view'} value={view} onChange={e => update('view', e.target.value)}>{modes.map(mode => <option key={mode} value={mode}>{viewLabels[mode]}</option>)}</select></label>}
+          {report.periodFields.length > 0 && view !== 'all' && <label>{annual || yearView ? 'Reporting year' : 'Reporting period'}<select key={`${report.slug}-${yearView ? 'year' : 'period'}`} aria-label={annual || yearView ? 'Reporting year' : 'Reporting period'} value={yearView ? period.slice(0, 4) : period} onChange={e => update('period', e.target.value)}>{periodOptions.map(key => <option key={key} value={key}>{key}</option>)}</select></label>}
+          {report.family !== 'statement' && (report.filters.length > 0 || report.family === 'register') && <label>Search within selection<input type="search" value={state.q || ''} onChange={e => update('q', e.target.value)} placeholder="Find a name or document…" /></label>}
+          {report.filters.map(key => {
+            const options = filterOptions(report, records, state, key);
+            if (options.length < 2 && !state[key]) return null;
+            return <label key={key}>{label(key)}<select aria-label={label(key)} value={state[key] || ''} onChange={e => update(key, e.target.value)}><option value="">All</option>{state[key] && !options.includes(state[key]) && <option value={state[key]}>{state[key]} (not in selection)</option>}{options.map(value => <option key={value} value={value}>{value}</option>)}</select></label>;
+          })}
         </div>
         <div className={styles.actions}>
           <button disabled={status !== 'ready' || !model.source.length || !!job || model.source.length > 10000} onClick={() => exportReport('pdf')}>Download PDF</button>
           <button disabled={status !== 'ready' || !model.source.length || !!job} onClick={() => exportReport('xlsx')}>Download Excel</button>
-          {sourceReport.csvEnabled && <a className={styles.exportData} href={csvUrl} download aria-describedby="report-data-export-note">Export Data</a>}
-          <button disabled={status !== 'ready' || !model.source.length} onClick={() => window.print()}>Print</button>
+          {sourceReport.csvEnabled && (sourceReport.csvPath ? <a className={styles.exportData} href={csvUrl} download aria-describedby="report-data-export-note">Export Data</a> : <button disabled={!!job} onClick={() => exportReport('csv')} aria-describedby="report-data-export-note">Export Data</button>)}
           <button disabled={!location.search} onClick={() => history.push({ ...location, search: '' })}>Reset selection</button>
           <Link to={queryLibraryLink(report.query_path)}>View source SQL</Link>
         </div>
         {sourceReport.csvEnabled && <p id="report-data-export-note" className={styles.basis}>Export Data downloads the full report as CSV, independent of the selected period and filters.</p>}
+        {model.note && <p className={styles.basis}>{model.note}</p>}
         {model.source.length > 10000 && <p>Choose a narrower selection for PDF. Excel includes all selected rows.</p>}
         {job && <p role="status">{job} <button onClick={cancel}>Cancel export</button></p>}
         {exportError && <p role="alert">{exportError}</p>}

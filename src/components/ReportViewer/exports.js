@@ -20,6 +20,11 @@ function flatRows(model) {
 
 export async function createExport({ type, report, model, company, basis }) {
   if (!model.source.length) throw new Error('There are no rows to export.');
+  if (type === 'csv') {
+    const escape = value => `"${String(value ?? '').replace(/"/g, '""')}"`;
+    const lines = [report.fields.map(field => escape(field.key)).join(','), ...model.source.map(row => report.fields.map(field => escape(row[field.key])).join(','))];
+    return { bytes: new TextEncoder().encode(lines.join('\r\n') + '\r\n'), mime: 'text/csv;charset=utf-8', extension: 'csv' };
+  }
   if (type === 'pdf' && model.source.length > 10000) throw new Error('Choose a narrower period or filter for PDF. Excel includes the complete selection.');
   const rows = flatRows(model);
   const metadata = [model.selection, units, basis];
@@ -98,9 +103,10 @@ export async function createExport({ type, report, model, company, basis }) {
   doc.setProperties({ title: report.title, author: company });
   // Repeat the line/entity column on each horizontal panel rather than shrinking text.
   const panels = [];
-  const numeric = model.columns.slice(1);
+  const repeated = model.columns[0].key === 'reportPeriod' ? model.columns.slice(0, 2) : model.columns.slice(0, 1);
+  const numeric = model.columns.slice(repeated.length);
   const panelSize = report.family === 'statement' ? 4 : 5;
-  for (let start = 0; start < numeric.length; start += panelSize) panels.push([model.columns[0], ...numeric.slice(start, start + panelSize)]);
+  for (let start = 0; start < numeric.length; start += panelSize) panels.push([...repeated, ...numeric.slice(start, start + panelSize)]);
   if (!panels.length) panels.push(model.columns);
   let firstPage = true;
   for (const columns of panels) {

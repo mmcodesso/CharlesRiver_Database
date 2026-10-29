@@ -2,6 +2,10 @@
 
 ## Website Redesign Mission and Frozen Baseline
 
+### Report selection refinement publication scope (28 October 2026)
+
+After reviewing the report-by-report filter refinement, removal of Print and duplicate catalog SQL links, and ten additional views from existing queries, the user requested "Commit merge and deploy when you finish." This authorizes committing the reviewed selection-refinement batch, integrating current main and publishing through the existing `greenfield` Worker and Git integration. Preserve all frozen generator, query, dataset and existing report outputs. The separate website presentation snapshots are verified read-only against the published teaching database. See `planning/website-redesign/reports-2026/selection-review/PUBLICATION.md`.
+
 ### Report presentation publication scope (28 October 2026)
 
 After reviewing the new report viewer, formatted PDF/Excel exports and the existing-CSV Export Data action, the user explicitly requested "Merge commit and deploy." This authorizes committing this website batch on main, integrating current remote main and publishing through the existing `greenfield` Worker and Git integration. Preserve the dataset generator, canonical queries, existing report files and release/account/hosting settings. Clean CI builds reuse checksum-verified published report bytes in temporary storage through the new website-only preparation scripts; they must not invoke the protected report exporter. See `planning/website-redesign/reports-2026/PUBLICATION.md`.

@@ -5,10 +5,9 @@ import Heading from "@theme/Heading";
 import useBrokenLinks from "@docusaurus/useBrokenLinks";
 
 import presentation from "@site/src/data/reportPresentation.json";
-import reportManifest from "@site/src/generated/reportManifest";
+import reportManifest from "@site/src/components/ReportViewer/registry";
 import reportPackManifest from "@site/src/generated/reportPackManifest";
 import reportTeachingMetadata from "@site/src/data/reportTeachingMetadata.json";
-import { queryLibraryLink } from "@site/src/components/CatalogNavigation/queryLinks";
 import useCatalogFilters, { matchesSearch } from "@site/src/components/CatalogNavigation/useCatalogFilters";
 import resolveCaseLink from "@site/src/components/Cases/resolveCaseLink";
 import TopicLearningLinks from "@site/src/components/CatalogNavigation/TopicLearningLinks";
@@ -67,7 +66,6 @@ function ReportCard({ reportKey }) {
             Open report
           </Link>
           <span>PDF and Excel available in report</span>
-          <Link className={styles.secondaryAction} to={queryLibraryLink(entry.queryPath)} aria-label={`View source SQL for ${entry.title}`}>View source SQL</Link>
         </div>
       </div>
       {guidance ? (

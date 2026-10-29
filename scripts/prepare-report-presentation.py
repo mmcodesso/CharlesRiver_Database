@@ -131,11 +131,37 @@ def main():
         provenance[slug] = {'csv': digest(source), 'sql': digest(query), 'rows': len(sql_rows)}
     if connection:
         connection.close()
+    # Additional website views use separately authored, checksum-verified presentation
+    # snapshots. They do not extend the frozen generator report catalog or downloads.
+    additional = json.loads((ROOT / 'src/data/additionalReports.json').read_text())
+    register = json.loads((ROOT / 'planning/website-redesign/reports-2026/selection-review/snapshot-register.json').read_text())['reports']
+    for slug, entry in additional.items():
+        snapshot = ROOT / 'static' / entry['snapshotPath'].lstrip('/')
+        query = ROOT / entry['query_path']
+        expected = register[slug]
+        query_hash = hashlib.sha256(query.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+        if digest(snapshot) != expected['snapshotSha256'] or query_hash != expected['querySha256']:
+            raise RuntimeError(f'{slug}: presentation snapshot/source hash mismatch')
+        payload = json.loads(snapshot.read_text(encoding='utf-8'))
+        definition = definitions[slug]
+        periods = {}
+        for row in payload['rows']:
+            keys = definition['periodFields']
+            key = f"{row[keys[0]]}-{int(row[keys[1]]):02d}" if len(keys) == 2 else str(row[keys[0]]) if keys else 'all'
+            periods.setdefault(key, []).append(row)
+        paths = {}
+        directory = output / slug
+        directory.mkdir(exist_ok=True)
+        for key, rows in sorted(periods.items()):
+            filename = key + '.json'
+            (directory / filename).write_text(json.dumps(rows, separators=(',', ':'), ensure_ascii=False), encoding='utf-8')
+            paths[key] = f'/report-data/{slug}/{filename}'
+        manifest[slug] = {**entry, **definition, 'fields': payload['fields'], 'partitions': paths, 'rowCount': len(payload['rows'])}
     (output / 'manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf-8')
     private = ROOT / 'outputs/_website_reports'
     private.mkdir(parents=True, exist_ok=True)
     (private / 'provenance.json').write_text(json.dumps({'database': RELEASE_SHA256, 'definitions': digest(definitions_path), 'reports': provenance}, indent=2))
-    print(f'Prepared {len(provenance)} verified report presentations; preserved all original files.')
+    print(f'Prepared {len(provenance) + len(additional)} verified report presentations; preserved all original files.')
 
 
 if __name__ == '__main__':

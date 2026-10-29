@@ -1,6 +1,6 @@
 ---
 title: Reports and Analytics
-description: Explore 20 core Charles River reports and 23 specialist reports, with formatted statements, filtered PDF and Excel downloads, source SQL, and teaching cases.
+description: Explore 25 core and 28 specialist Charles River reports, including direct cash flow and annual statements, with period comparisons and PDF, Excel, and data downloads.
 slug: /analytics
 sidebar_label: Reports and Analytics
 ---
@@ -10,13 +10,17 @@ import reportTopics from "@site/src/data/reportTopics.json";
 
 # Reports and Analytics
 
-Start with a question from the [company story](../learn-the-business/company-story.md) or a [business process](../learn-the-business/process-flows.md), then choose a report below. The collection starts with 20 core reports across six business topics. Select **Include specialist reports** to explore 23 additional evidence reports. Search also includes specialist reports.
+Start with a question from the [company story](../learn-the-business/company-story.md) or a [business process](../learn-the-business/process-flows.md), then choose a report below. The collection starts with 25 core reports across six business topics. Select **Include specialist reports** to explore 28 additional evidence reports. Search also includes specialist reports.
 
-Each card identifies its row grain and period basis, links to the matching process and practice lesson, and opens the exact **View source SQL** destination in the existing Query Library. **Open report** displays complete selected results with period and evidence filters. Download a formatted **PDF** or **Excel** workbook matching that selection. Downloads include all selected rows, regardless of the current screen page. Expand **Interpret this report** for discussion questions and suggested analysis where available.
+Each card identifies its row grain and period basis and links to the matching process and practice lesson. **Open report** displays complete selected results with period and evidence filters, and a **View source SQL** link for tracing the calculation. Download a formatted **PDF** or **Excel** workbook matching that selection. Downloads include all selected rows, regardless of the current screen page. Expand **Interpret this report** for discussion questions and suggested analysis where available.
 
-Financial statements provide selected-month, previous-month comparison, and fiscal-year views. Balance-sheet columns show ending balances rather than sums across months. Snapshot and cumulative reports retain their stated scope. For very large evidence selections, narrow the filters before exporting PDF; Excel retains the complete selection.
+Time-series reports offer a selected period, a year of periods, previous-period or previous-year comparisons, and all available periods. Monthly Revenue and Gross Margin opens with a full year of monthly results. Multi-period tables identify the period of every row; rates and balances are not added across periods. Entity filters narrow one another, and controls with only one available choice are omitted.
 
-Choose **Export Data** in a report view to download its full CSV. This existing data file contains the complete report, independent of your selected period and filters.
+Choose the [annual income statement](/docs/analytics/reports/annual-income-statement), [annual balance sheet](/docs/analytics/reports/annual-balance-sheet), or [annual cash flows](/docs/analytics/reports/annual-direct-cash-flow) to compare years. Annual balance sheets show fiscal year-end balances. Cash flows retain beginning and ending cash separately from annual activity. The [monthly direct cash flow](/docs/analytics/reports/monthly-direct-cash-flow) presents cash receipts and payments alongside the retained indirect-method reports.
+
+Aging reports offer selected-date and previous-snapshot views. Each snapshot is separate, so repeated invoice balances are not added across dates. Cumulative reports keep their whole-file scope. For very large evidence selections, narrow the filters before exporting PDF; Excel retains the complete selection.
+
+Choose **Export Data** in a report view to download its full CSV, independent of your selected period and filters.
 
 ## Start with a Guided Investigation
 

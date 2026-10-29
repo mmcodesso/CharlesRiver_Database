@@ -574,5 +574,125 @@
       "to": "/docs/learn-and-practice/follow-hours-into-payroll",
       "label": "Lesson 10: Follow Hours into Payroll"
     }
+  },
+  "monthly-direct-cash-flow": {
+    "grain": "One fiscal month and cash-flow statement line.",
+    "periodBasis": "Period cash activity; opening journals establish beginning cash and are excluded from cash-flow sections.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "annual-income-statement": {
+    "grain": "One fiscal year and income-statement line.",
+    "periodBasis": "Annual posted activity excluding year-end closing journals.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "annual-balance-sheet": {
+    "grain": "One fiscal year-end and balance-sheet line.",
+    "periodBasis": "Fiscal period 12 ending balances; monthly balances are not summed.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "annual-indirect-cash-flow": {
+    "grain": "One fiscal year and cash-flow statement line.",
+    "periodBasis": "Annual cash activity, with period 1 beginning cash and period 12 ending cash.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "annual-direct-cash-flow": {
+    "grain": "One fiscal year and cash-flow statement line.",
+    "periodBasis": "Annual posted cash activity, with period 1 beginning cash and period 12 ending cash.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "trial-balance-by-period": {
+    "grain": "One fiscal period and account.",
+    "periodBasis": "Period ledger activity, not cumulative account ending balances.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "fixed-asset-rollforward": {
+    "grain": "One fiscal month and asset behavior group.",
+    "periodBasis": "Monthly opening balances, activity and ending balances; balances are not summed across months.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "debt-amortization-and-cash-impact": {
+    "grain": "One financing agreement and scheduled payment.",
+    "periodBasis": "Scheduled payment period; payment status identifies the recorded schedule state.",
+    "process": {
+      "to": "/docs/processes/manual-journals-and-close",
+      "label": "Journals and Close"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "work-order-throughput": {
+    "grain": "One fiscal month.",
+    "periodBasis": "Monthly release and completion metrics as defined by the source query; timing averages are not added.",
+    "process": {
+      "to": "/docs/processes/manufacturing",
+      "label": "Manufacturing"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
+  },
+  "design-service-utilization-and-labor-margin": {
+    "grain": "One design-service engagement.",
+    "periodBasis": "Whole-engagement assigned, approved and billed activity; engagement dates do not create historical cutoffs.",
+    "process": {
+      "to": "/docs/processes/o2c",
+      "label": "Order-to-Cash"
+    },
+    "lesson": {
+      "to": "/docs/learn-and-practice/turn-records-into-a-conclusion",
+      "label": "Lesson 12: Turn Records into a Conclusion"
+    }
   }
 }

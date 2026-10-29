@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { test } = require('node:test');
-const { buildModel, selectedPeriods, format } = require('../../src/components/ReportViewer/model.cjs');
+const { buildModel, selectedPeriods, filterOptions, format } = require('../../src/components/ReportViewer/model.cjs');
 const root = path.resolve(__dirname, '../..');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'static/report-data/manifest.json')));
 const output = path.join(root, 'outputs/_website_reports/exports');
@@ -12,14 +12,14 @@ function data(report, keys = Object.keys(report.partitions)) {
 }
 
 test('curation covers all reports and preserves the five retirement destinations', () => {
-  assert.equal(Object.keys(manifest).length, 48);
-  for (const [visibility, expected] of [['core', 20], ['specialist', 23], ['retired', 5]]) {
+  assert.equal(Object.keys(manifest).length, 58);
+  for (const [visibility, expected] of [['core', 25], ['specialist', 28], ['retired', 5]]) {
     assert.equal(Object.values(manifest).filter(r => r.visibility === visibility).length, expected);
   }
   for (const report of Object.values(manifest).filter(r => r.visibility === 'retired')) assert.equal(manifest[report.replacement].visibility, 'core');
 });
 
-test('all 43 report partition inventories and default selections are complete', () => {
+test('all 53 report inventories, source dimensions and default selections are complete', () => {
   for (const report of Object.values(manifest).filter(r => r.visibility !== 'retired')) {
     const all = data(report);
     assert.equal(all.length, report.rowCount, report.slug);
@@ -27,8 +27,60 @@ test('all 43 report partition inventories and default selections are complete', 
     const input = data(report, periods);
     const model = buildModel(report, input);
     assert.equal(model.source.length, input.length, report.slug);
-    assert.equal(model.rows.length, input.length, report.slug);
+    if (report.family !== 'statement') assert.equal(model.rows.length, input.length, report.slug);
+    for (const key of [...report.filters, ...report.periodFields]) assert.ok(report.fields.some(field => field.key === key), `${report.slug}: ${key}`);
     assert.ok(model.columns.length > 0);
+  }
+});
+
+test('single-row monthly reports default to a year and preserve monthly metrics in comparisons', () => {
+  const report = manifest['monthly-revenue-and-gross-margin'];
+  const source = data(report);
+  assert.equal(buildModel(report, source).rows.length, 12);
+  assert.equal(buildModel(report, source, { view: 'year-compare', period: '2026' }).rows.length, 24);
+  const all = buildModel(report, source, { view: 'all' });
+  assert.equal(all.rows.length, 36);
+  assert.equal(all.columns[0].key, 'reportPeriod');
+  assert.deepEqual(all.rows.map(row => row.values.GrossMarginPct), source.map(row => row.GrossMarginPct));
+  assert.deepEqual(all.totals, {}, 'No percentage or cross-year totals are invented');
+});
+
+test('snapshot comparisons retain the date and do not total repeated balances', () => {
+  const report = manifest['monthly-ar-aging-summary'];
+  const model = buildModel(report, data(report), { view: 'compare' });
+  assert.equal(model.periods.length, 2);
+  assert.equal(model.columns[0].key, 'reportPeriod');
+  assert.deepEqual(model.totals, {});
+  assert.match(model.note, /not added/);
+  assert.equal(selectedPeriods(report, { view: 'year' }).length, 1);
+});
+
+test('entity filters cascade and payroll bridge exposes actual period ends', () => {
+  const report = manifest['monthly-ar-aging-summary'];
+  const source = data(report, selectedPeriods(report));
+  const region = source[0].Region;
+  const options = filterOptions(report, source, { Region: region }, 'CustomerName');
+  assert.ok(options.length);
+  assert.deepEqual(options, [...new Set(source.filter(row => row.Region === region).map(row => row.CustomerName))].sort());
+  const payroll = manifest['punch-to-pay-bridge-for-hourly-workers'];
+  assert.deepEqual(payroll.periodFields, ['PeriodEndDate']);
+  assert.ok(selectedPeriods(payroll, {}).every(key => /^\d{4}-\d{2}-\d{2}$/.test(key)));
+});
+
+test('annual statements retain year-end balances and cash endpoints from their matching monthly queries', () => {
+  const pairs = [['annual-balance-sheet', 'monthly-balance-sheet'], ['annual-direct-cash-flow', 'monthly-direct-cash-flow'], ['annual-indirect-cash-flow', 'monthly-indirect-cash-flow'], ['annual-income-statement', 'monthly-income-statement']];
+  for (const [annualKey, monthlyKey] of pairs) {
+    const annual = data(manifest[annualKey]);
+    const monthly = data(manifest[monthlyKey]);
+    for (const line of annual) {
+      const candidates = monthly.filter(row => row.FiscalYear === line.FiscalYear && row.LineLabel === line.LineLabel && row.StatementSection === line.StatementSection);
+      const endpoint = annualKey === 'annual-balance-sheet' || line.LineLabel === 'Ending Cash' ? '12' : line.LineLabel === 'Beginning Cash' ? '1' : null;
+      const amount = endpoint ? candidates.find(row => row.FiscalPeriod === endpoint)?.Amount : candidates.reduce((sum, row) => sum + Math.round(row.Amount * 100), 0) / 100;
+      assert.ok(Math.abs(amount - line.Amount) < .02, `${annualKey}: ${line.FiscalYear} ${line.LineLabel}`);
+    }
+    const model = buildModel(manifest[annualKey], annual);
+    assert.equal(model.columns.length, 4, 'All three years are compared by default');
+    assert.equal(buildModel(manifest[annualKey], annual, { view: 'compare', period: '2025' }).columns.length, 3);
   }
 });
 

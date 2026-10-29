@@ -101,9 +101,10 @@ test("one report hub covers the frozen catalog once and redirects every former r
   const ids = topics.flatMap((topic) => topic.reports);
   assert.equal(topics.length, 6);
   assert.equal(new Set(topics.map((topic) => topic.id)).size, topics.length);
-  assert.equal(ids.length, 48);
+  const additional = Object.values(require('../../src/data/additionalReports.json'));
+  assert.equal(ids.length, 48 + additional.length);
   assert.equal(new Set(ids).size, ids.length, "A report must appear in exactly one topic");
-  assert.deepEqual([...ids].sort(), reports.map((report) => report.slug).sort());
+  assert.deepEqual([...ids].sort(), [...reports, ...additional].map((report) => report.slug).sort());
   const redirects = config.plugins.find(([name]) => name === "@docusaurus/plugin-client-redirects")[1].redirects;
   for (const name of ["", "/lens-packs", "/financial", "/managerial", "/audit", "/executive-overview", "/commercial-and-working-capital", "/payroll-perspective", "/operations-and-risk"]) {
     const redirect = redirects.find((item) => item.from.includes(`/docs/analytics/reports${name}`));
@@ -129,7 +130,7 @@ test("query and report topics agree and every SQL file appears once in the unifi
   assert.deepEqual([...keys].sort(), sourceKeys.sort());
   const queryTopics = new Map(topics.flatMap((topic) => topic.queries.map((key) => [key, topic.id])));
   const reports = yaml.load(fs.readFileSync(path.join(root, "config/report_catalog.yaml"), "utf8")).reports;
-  const reportDefinitions = new Map(reports.map((report) => [report.slug, report]));
+  const reportDefinitions = new Map([...reports, ...Object.values(require('../../src/data/additionalReports.json'))].map((report) => [report.slug, report]));
   for (const topic of reportTopics) for (const slug of topic.reports) {
     const key = reportDefinitions.get(slug).query_path.replace(/^queries\//, "");
     assert.equal(queryTopics.get(key), topic.id, `Query/report topic mismatch: ${slug}`);

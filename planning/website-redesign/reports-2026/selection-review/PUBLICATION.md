@@ -1,0 +1,9 @@
+# Selection refinement publication
+
+The user authorized "Commit merge and deploy when you finish" after reviewing this implementation. The reviewed checkout is on main at `5066b14f3fb4bf78c4718d635bd81cf13b6b3192`; fetching origin found no newer main commits or feature branch requiring a separate merge. Commit this batch on main and use the existing Cloudflare `greenfield` main-branch Git deployment.
+
+The accepted scope removes Print and duplicate catalog SQL controls, improves period/entity filters across the collection, and adds ten website report views using unchanged canonical queries. The implementation, report-by-report review, snapshot provenance, source/route preservation, test commands and preview instructions are in HANDOFF.md and AUDIT.md. No dataset or protected report exporter was invoked.
+
+Acceptance before publication: local and clean-CI production builds passed; 33 website checks passed; browser checks covered all 53 active report pages and every displayed entity filter, period and annual comparisons, downloads, keyboard behavior and responsive layouts. Four targeted teaching checks and all ten snapshot-to-read-only-SQL comparisons passed. All 250 original artifact hashes are unchanged. Source snapshot LF attributes preserve checksums in a clean Linux checkout. No new protected-path drift exists against the frozen baseline.
+
+Worker/account/domain/Git trigger and release settings are unchanged. Exact commit, Cloudflare build/version outcome, final preservation inventory and live page/CSV/browser checks will be recorded in ignored `outputs/_report_selection_review/` so recording publication does not itself trigger another deployment. The earlier handoff's no-publication statement describes the completed local-review phase and is superseded by this authorization.

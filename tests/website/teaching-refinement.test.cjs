@@ -137,9 +137,10 @@ test('E04 every report resolves to its exact existing SQL anchor and has teachin
   const teaching = require('../../src/data/reportTeachingMetadata.json');
   const queryHtml = built('/docs/analytics/analysis-tracks');
   const reportHtml = built('/docs/analytics');
-  assert.deepEqual(Object.keys(teaching).sort(), reports.map(report => report.slug).sort());
+  const allReports = [...reports, ...Object.values(require('../../src/data/additionalReports.json'))];
+  assert.deepEqual(Object.keys(teaching).sort(), allReports.map(report => report.slug).sort());
   assert.equal(queryAnchor('queries/financial/27_income_statement_monthly.sql'), 'query-financial-27-income-statement-monthly');
-  for (const report of reports) {
+  for (const report of allReports) {
     const presentation = require('../../src/data/reportPresentation.json')[report.slug];
     assert.equal(queryAnchor(report.query_path), queryAnchor(report.query_path.replace(/^queries\//, '')));
     const link = queryLibraryLink(report.query_path);
@@ -167,10 +168,11 @@ test('E05 repeated query and report controls expose distinct names in server-ren
   assert.equal(queryNames.length, 170);
   assert.equal(new Set(queryNames).size, 170);
   const reportHtml = built('/docs/analytics');
-  for (const prefix of ['Open', 'View source SQL for']) {
+  for (const prefix of ['Open']) {
     const names = [...reportHtml.matchAll(new RegExp(`aria-label="${prefix} ([^"]+)"`, 'g'))].map(match => match[1]);
-    assert.equal(names.length, 20, prefix);
-    assert.equal(new Set(names).size, 20, prefix);
+    assert.equal(names.length, 25, prefix);
+    assert.equal(new Set(names).size, 25, prefix);
   }
+  assert.ok(!/<a\b[^>]*>View source SQL<\/a>/.test(reportHtml));
   assert.ok(!reportHtml.includes('Download CSV'));
 });

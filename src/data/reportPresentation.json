@@ -5,7 +5,10 @@
     "periodFields": [],
     "filters": [
       "IssueType",
-      "Status"
+      "Status",
+      "DocumentType",
+      "PrimaryEmployee",
+      "SecondaryEmployee"
     ],
     "groupBy": "IssueType",
     "totals": []
@@ -15,7 +18,8 @@
     "family": "register",
     "periodFields": [],
     "filters": [
-      "PotentialIssue"
+      "PotentialIssue",
+      "TableName"
     ],
     "groupBy": "PotentialIssue",
     "totals": []
@@ -62,7 +66,8 @@
       "CustomerName",
       "CustomerSegment",
       "Region",
-      "CollectionName"
+      "CollectionName",
+      "StyleFamily"
     ],
     "groupBy": "CustomerName",
     "totals": []
@@ -125,7 +130,8 @@
     ],
     "filters": [],
     "groupBy": null,
-    "totals": []
+    "totals": [],
+    "defaultView": "year"
   },
   "payroll-liability-rollforward": {
     "visibility": "core",
@@ -134,7 +140,9 @@
       "FiscalYear",
       "FiscalPeriod"
     ],
-    "filters": [],
+    "filters": [
+      "AccountName"
+    ],
     "groupBy": null,
     "totals": []
   },
@@ -147,7 +155,8 @@
     "filters": [
       "CostCenterName",
       "EmployeeName",
-      "Status"
+      "Status",
+      "PayClass"
     ],
     "groupBy": "CostCenterName",
     "totals": []
@@ -172,7 +181,9 @@
     "periodFields": [],
     "filters": [
       "CostCenterName",
-      "JobFamily"
+      "JobFamily",
+      "JobLevel",
+      "PayClass"
     ],
     "groupBy": "CostCenterName",
     "totals": []
@@ -184,7 +195,8 @@
       "PayMonth"
     ],
     "filters": [
-      "CostCenterName"
+      "CostCenterName",
+      "PayClass"
     ],
     "groupBy": "CostCenterName",
     "totals": []
@@ -195,7 +207,9 @@
     "periodFields": [],
     "filters": [
       "SupplierName",
-      "AgingBucket"
+      "AgingBucket",
+      "SupplierCategory",
+      "SupplierRiskRating"
     ],
     "groupBy": "SupplierName",
     "totals": []
@@ -221,10 +235,13 @@
     ],
     "filters": [
       "SupplierName",
-      "AgingBucket"
+      "AgingBucket",
+      "SupplierCategory",
+      "SupplierRiskRating"
     ],
     "groupBy": "SupplierName",
-    "totals": []
+    "totals": [],
+    "temporalType": "snapshot"
   },
   "monthly-ap-aging-summary": {
     "visibility": "core",
@@ -233,7 +250,9 @@
       "MonthEndDate"
     ],
     "filters": [
-      "SupplierName"
+      "SupplierName",
+      "SupplierCategory",
+      "SupplierRiskRating"
     ],
     "groupBy": "SupplierName",
     "totals": [
@@ -244,7 +263,8 @@
       "Days61To90Amount",
       "Days90PlusAmount",
       "PastDueAmount"
-    ]
+    ],
+    "temporalType": "snapshot"
   },
   "monthly-ar-aging-detail": {
     "visibility": "specialist",
@@ -259,7 +279,8 @@
       "AgingBucket"
     ],
     "groupBy": "CustomerName",
-    "totals": []
+    "totals": [],
+    "temporalType": "snapshot"
   },
   "monthly-ar-aging-summary": {
     "visibility": "core",
@@ -281,7 +302,8 @@
       "Days61To90Amount",
       "Days90PlusAmount",
       "PastDueAmount"
-    ]
+    ],
+    "temporalType": "snapshot"
   },
   "design-service-revenue-and-billed-hours": {
     "visibility": "core",
@@ -306,7 +328,8 @@
     ],
     "filters": [],
     "groupBy": null,
-    "totals": []
+    "totals": [],
+    "defaultView": "year"
   },
   "budget-vs-actual-working-capital-and-cash-bridge": {
     "visibility": "retired",
@@ -323,7 +346,8 @@
       "MetricFamily"
     ],
     "groupBy": "MetricFamily",
-    "totals": []
+    "totals": [],
+    "defaultView": "year"
   },
   "customer-deposits-and-unapplied-cash-aging": {
     "visibility": "specialist",
@@ -344,7 +368,8 @@
     ],
     "filters": [],
     "groupBy": null,
-    "totals": []
+    "totals": [],
+    "defaultView": "year"
   },
   "working-capital-bridge-by-month": {
     "visibility": "core",
@@ -355,7 +380,8 @@
     ],
     "filters": [],
     "groupBy": null,
-    "totals": []
+    "totals": [],
+    "defaultView": "year"
   },
   "customer-sales-mix-by-region-and-item-group": {
     "visibility": "specialist",
@@ -365,7 +391,9 @@
     ],
     "filters": [
       "CustomerSegment",
-      "Region"
+      "Region",
+      "ItemGroup",
+      "ItemName"
     ],
     "groupBy": "ItemGroup",
     "totals": []
@@ -377,7 +405,10 @@
       "OrderMonth"
     ],
     "filters": [
-      "SupplierName"
+      "SupplierName",
+      "SupplierCategory",
+      "SupplierRiskRating",
+      "ItemGroup"
     ],
     "groupBy": "SupplierName",
     "totals": []
@@ -390,7 +421,8 @@
       "Month"
     ],
     "filters": [
-      "CostCenterName"
+      "CostCenterName",
+      "AccountName"
     ],
     "groupBy": "CostCenterName",
     "totals": []
@@ -403,7 +435,8 @@
       "FiscalPeriod"
     ],
     "filters": [
-      "CollectionName"
+      "CollectionName",
+      "StyleFamily"
     ],
     "groupBy": "CollectionName",
     "totals": []
@@ -414,7 +447,9 @@
     "periodFields": [],
     "filters": [
       "CostCenterName",
-      "JobFamily"
+      "JobFamily",
+      "JobLevel",
+      "EmploymentStatus"
     ],
     "groupBy": "CostCenterName",
     "totals": []
@@ -436,7 +471,11 @@
     "family": "summary",
     "periodFields": [],
     "filters": [
-      "CollectionName"
+      "CollectionName",
+      "StyleFamily",
+      "PrimaryMaterial",
+      "LifecycleStatus",
+      "ItemGroup"
     ],
     "groupBy": "ItemGroup",
     "totals": []
@@ -449,7 +488,9 @@
       "FiscalPeriod"
     ],
     "filters": [
-      "CustomerSegment"
+      "CustomerSegment",
+      "SalesRepName",
+      "RevenueType"
     ],
     "groupBy": null,
     "totals": []
@@ -459,7 +500,8 @@
     "family": "summary",
     "periodFields": [],
     "filters": [
-      "CollectionName"
+      "CollectionName",
+      "StyleFamily"
     ],
     "groupBy": "CollectionName",
     "totals": []
@@ -471,7 +513,10 @@
     "filters": [
       "WarehouseName",
       "CollectionName",
-      "StockoutRisk"
+      "StockoutRisk",
+      "ItemGroup",
+      "StyleFamily",
+      "ItemName"
     ],
     "groupBy": "ItemGroup",
     "totals": []
@@ -483,7 +528,8 @@
       "BucketWeekStartDate"
     ],
     "filters": [
-      "WorkCenterName"
+      "WorkCenterName",
+      "CapacityStatus"
     ],
     "groupBy": "WorkCenterName",
     "totals": []
@@ -495,7 +541,8 @@
       "OrderMonth"
     ],
     "filters": [
-      "SupplierName"
+      "SupplierName",
+      "SupplierCategory"
     ],
     "groupBy": "SupplierName",
     "totals": []
@@ -540,12 +587,147 @@
   "punch-to-pay-bridge-for-hourly-workers": {
     "visibility": "core",
     "family": "rollforward",
-    "periodFields": [],
+    "periodFields": [
+      "PeriodEndDate"
+    ],
     "filters": [
       "JobFamily",
-      "EmployeeName"
+      "EmployeeName",
+      "JobTitle"
     ],
     "groupBy": null,
     "totals": []
+  },
+  "monthly-direct-cash-flow": {
+    "visibility": "core",
+    "family": "statement",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [],
+    "groupBy": "StatementSection",
+    "totals": [],
+    "defaultView": "month"
+  },
+  "annual-income-statement": {
+    "visibility": "core",
+    "family": "statement",
+    "periodFields": [
+      "FiscalYear"
+    ],
+    "filters": [],
+    "groupBy": "StatementSection",
+    "totals": [],
+    "defaultView": "all",
+    "temporalType": "annual"
+  },
+  "annual-balance-sheet": {
+    "visibility": "core",
+    "family": "statement",
+    "periodFields": [
+      "FiscalYear"
+    ],
+    "filters": [],
+    "groupBy": "StatementSection",
+    "totals": [],
+    "defaultView": "all",
+    "temporalType": "annual"
+  },
+  "annual-indirect-cash-flow": {
+    "visibility": "core",
+    "family": "statement",
+    "periodFields": [
+      "FiscalYear"
+    ],
+    "filters": [],
+    "groupBy": "StatementSection",
+    "totals": [],
+    "defaultView": "all",
+    "temporalType": "annual"
+  },
+  "annual-direct-cash-flow": {
+    "visibility": "core",
+    "family": "statement",
+    "periodFields": [
+      "FiscalYear"
+    ],
+    "filters": [],
+    "groupBy": "StatementSection",
+    "totals": [],
+    "defaultView": "all",
+    "temporalType": "annual"
+  },
+  "trial-balance-by-period": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [
+      "AccountType",
+      "AccountSubType",
+      "AccountName"
+    ],
+    "groupBy": null,
+    "totals": [],
+    "defaultView": "month"
+  },
+  "fixed-asset-rollforward": {
+    "visibility": "specialist",
+    "family": "rollforward",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [
+      "BehaviorGroup"
+    ],
+    "groupBy": "BehaviorGroup",
+    "totals": [],
+    "defaultView": "month"
+  },
+  "debt-amortization-and-cash-impact": {
+    "visibility": "specialist",
+    "family": "rollforward",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [
+      "AgreementNumber",
+      "BehaviorGroup",
+      "ScheduleStatus"
+    ],
+    "groupBy": "AgreementNumber",
+    "totals": [],
+    "defaultView": "month"
+  },
+  "work-order-throughput": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [
+      "FiscalYear",
+      "FiscalPeriod"
+    ],
+    "filters": [],
+    "groupBy": null,
+    "totals": [],
+    "defaultView": "year"
+  },
+  "design-service-utilization-and-labor-margin": {
+    "visibility": "specialist",
+    "family": "summary",
+    "periodFields": [],
+    "filters": [
+      "CustomerName",
+      "ServiceName",
+      "LeadEmployeeName",
+      "EngagementStatus"
+    ],
+    "groupBy": null,
+    "totals": [],
+    "defaultView": "month"
   }
 }
